@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAUB — Warm, Rustic Neo-Skeuomorphic CSS Components</title>
+  <meta name="description" content="DAUB is a CSS component library with 28 neo-skeuomorphic UI components and 4 themes. Warm, tactile, and accessible. No build step required.">
+  <meta name="keywords" content="CSS components, neo-skeuomorphic, UI kit, design system, warm UI, rustic, accessible, themes">
+  <meta name="theme-color" content="#C67B5C">
+  <link rel="canonical" href="https://daub.dev">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DAUB — Neo-Skeuomorphic CSS Components">
+  <meta property="og:description" content="28 warm, tactile UI components with 4 themes. Drop-in CSS + JS. No build step.">
+  <meta property="og:url" content="https://daub.dev">
+  <meta property="og:site_name" content="DAUB UI">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DAUB — Neo-Skeuomorphic CSS Components">
+  <meta name="twitter:description" content="28 warm, tactile UI components with 4 themes. Drop-in CSS + JS. No build step.">
+
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": "DAUB UI",
+    "description": "A warm, rustic neo-skeuomorphic CSS component library with 28 components and 4 themes.",
+    "url": "https://daub.dev",
+    "codeRepository": "https://github.com/sliday/daub",
+    "programmingLanguage": ["CSS", "JavaScript"],
+    "license": "https://opensource.org/licenses/MIT",
+    "author": { "@type": "Organization", "name": "Sliday", "url": "https://github.com/sliday" }
+  }
+  </script>
+
+  <!-- FOUC prevention: apply saved theme before paint -->
+  <script>
+    (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Cabin:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- DAUB -->
+  <link rel="stylesheet" href="daub.css">
+
+  <style>
+    /* Demo-only styles */
+    .demo-section {
+      margin-bottom: 64px;
+    }
+    .demo-section__title {
+      font-family: var(--db-font-ui);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--db-terracotta);
+      margin-bottom: 24px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--db-sand);
+    }
+    .demo-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .demo-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .demo-label {
+      font-family: var(--db-font-ui);
+      font-size: 0.6875rem;
+      color: var(--db-warm-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .demo-surface-box {
+      padding: 24px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+      color: var(--db-warm-gray);
+    }
+    .demo-hero {
+      text-align: center;
+      padding: 80px 24px 48px;
+    }
+    .demo-hero h1 {
+      font-family: var(--db-font-heading);
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--db-ink);
+      margin-bottom: 12px;
+      font-variation-settings: 'WONK' 1;
+    }
+    .demo-hero p {
+      font-size: 1.125rem;
+      color: var(--db-warm-gray);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    @media (max-width: 640px) {
+      .demo-hero h1 { font-size: 2rem; }
+      .demo-row { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SVG filters for grunge effects -->
+  <svg style="position:absolute;width:0;height:0" aria-hidden="true">
+    <filter id="db-grunge-distort">
+      <feTurbulence type="turbulence" baseFrequency="0.015 0.06" numOctaves="3" seed="2" result="turbulence"/>
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="db-grunge-rough">
+      <feTurbulence type="turbulence" baseFrequency="0.03 0.08" numOctaves="4" seed="5" result="turbulence"/>
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
+  <!-- Hero -->
+  <div class="demo-hero">
+    <h1>DAUB</h1>
+    <p>A warm, tactile neo-skeuomorphic component library. 28 components, 4 themes, vanilla JS + CSS.</p>
+  </div>
+
+  <div class="db-container">
+
+    <!-- ============================================================
+         1. FOUNDATIONS
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="demo-section__title">1. Foundations — Surfaces &amp; Elevation</div>
+
+      <div class="demo-grid">
+        <div class="demo-surface-box db-surface">Base Surface</div>
+        <div class="demo-surface-box db-surface--raised">Raised Surface</div>
+        <div class="demo-surface-box db-surface--inset">Inset Surface</div>
+        <div class="demo-surface-box db-surface--pressed">Pressed Surface</div>
+      </div>
+
+      <div class="db-mt-6">
+        <div class="demo-label">Elevation Scale</div>
+        <div class="demo-row">
+          <div class="demo-surface-box db-surface db-elevation-1" style="border-radius:12px;">Elevation 1</div>
+          <div class="demo-surface-box db-surface db-elevation-2" style="border-radius:12px;">Elevation 2</div>
+          <div class="demo-surface-box db-surface db-elevation-3" style="border-radius:12px;">Elevation 3</div>
+        </div>
+      </div>
+
+      <div class="db-mt-5">
+        <div class="demo-label">Typography</div>
+        <div class="db-h1">Heading 1</div>
+        <div class="db-h2">Heading 2</div>
+        <div class="db-h3">Heading 3</div>
+        <div class="db-h4">Heading 4</div>
+        <p class="db-body db-mt-3">Body text — The quick brown fox jumps over the lazy dog. Source Serif 4 at 16px with 1.6 line height gives comfortable reading.</p>
+        <p class="db-caption db-mt-2">Caption text — Cabin humanist sans for UI labels and small text.</p>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         2. CONTROLS
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="demo-section__title">2. Controls — Buttons</div>
+
+      <div class="demo-row">
+        <button class="db-btn db-btn--primary">
+          <i data-lucide="plus" style="width:16px;height:16px;"></i>
+          Primary
+        </button>
+        <button class="db-btn db-btn--primary db-btn--pressed">Pressed</button>
+        <button class="db-btn db-btn--secondary">Secondary</button>
+        <button class="db-btn db-btn--secondary" disabled>Disabled</button>
+        <button class="db-btn db-btn--primary db-btn--loading">Loading</button>
+      </div>
+
+      <div class="demo-row">
+        <button class="db-btn db-btn--primary db-btn--sm">Small</button>
+        <button class="db-btn db-btn--primary">Default</button>
+        <button class="db-btn db-btn--primary db-btn--lg">Large</button>
+        <button class="db-btn db-btn--secondary db-btn--icon" aria-label="Settings">
+          <i data-lucide="settings" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">2b. Controls — Text Fields</div>
+
+      <div class="demo-grid">
+        <div class="db-field">
+          <label class="db-field__label" for="demo-name">Full Name</label>
+          <input class="db-field__input" id="demo-name" type="text" placeholder="Enter your name">
+          <span class="db-field__helper">Your display name</span>
+        </div>
+        <div class="db-field">
+          <label class="db-field__label" for="demo-focus">Focused Field</label>
+          <input class="db-field__input" id="demo-focus" type="text" value="Warm terracotta glow">
+        </div>
+        <div class="db-field db-field--error">
+          <label class="db-field__label" for="demo-error">Email</label>
+          <input class="db-field__input" id="demo-error" type="email" value="not-valid">
+          <span class="db-field__helper">Please enter a valid email</span>
+        </div>
+        <div class="db-field">
+          <label class="db-field__label" for="demo-disabled">Disabled</label>
+          <input class="db-field__input" id="demo-disabled" type="text" value="Read only" disabled>
+        </div>
+      </div>
+
+      <div class="db-mt-5" style="max-width:480px;">
+        <div class="db-field">
+          <label class="db-field__label" for="demo-textarea">Message</label>
+          <textarea class="db-field__input" id="demo-textarea" placeholder="Write your message here..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">2c. Controls — Checkbox, Radio, Switch, Slider</div>
+
+      <div class="demo-grid">
+        <div class="demo-col">
+          <div class="demo-label">Checkboxes</div>
+          <label class="db-checkbox">
+            <input class="db-checkbox__input" type="checkbox" checked>
+            <span class="db-checkbox__box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Enable notifications
+          </label>
+          <label class="db-checkbox">
+            <input class="db-checkbox__input" type="checkbox">
+            <span class="db-checkbox__box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Dark mode
+          </label>
+          <label class="db-checkbox">
+            <input class="db-checkbox__input" type="checkbox" checked>
+            <span class="db-checkbox__box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Auto-save
+          </label>
+        </div>
+
+        <div class="demo-col">
+          <div class="demo-label">Radio Group</div>
+          <div class="db-radio-group">
+            <label class="db-radio">
+              <input class="db-radio__input" type="radio" name="demo-radio" value="sm" checked>
+              <span class="db-radio__circle"></span>
+              Small
+            </label>
+            <label class="db-radio">
+              <input class="db-radio__input" type="radio" name="demo-radio" value="md">
+              <span class="db-radio__circle"></span>
+              Medium
+            </label>
+            <label class="db-radio">
+              <input class="db-radio__input" type="radio" name="demo-radio" value="lg">
+              <span class="db-radio__circle"></span>
+              Large
+            </label>
+          </div>
+        </div>
+
+        <div class="demo-col">
+          <div class="demo-label">Switches</div>
+          <div class="db-switch" aria-checked="true" aria-label="Wi-Fi">
+            <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+            Wi-Fi
+          </div>
+          <div class="db-switch" aria-checked="false" aria-label="Bluetooth">
+            <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+            Bluetooth
+          </div>
+          <div class="db-switch" aria-checked="true" aria-label="Location">
+            <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+            Location
+          </div>
+        </div>
+      </div>
+
+      <div class="db-mt-5" style="max-width:400px;">
+        <div class="demo-label">Slider</div>
+        <div class="db-slider">
+          <div class="db-slider__label">
+            <span>Volume</span>
+            <span class="db-slider__value">65</span>
+          </div>
+          <input class="db-slider__input" type="range" min="0" max="100" value="65">
+        </div>
+        <div class="db-slider db-mt-4">
+          <div class="db-slider__label">
+            <span>Brightness</span>
+            <span class="db-slider__value">40</span>
+          </div>
+          <input class="db-slider__input" type="range" min="0" max="100" value="40">
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         3. NAVIGATION
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="demo-section__title">3. Navigation — Tabs</div>
+
+      <div class="db-tabs">
+        <div class="db-tabs__list">
+          <button class="db-tabs__tab" aria-selected="true">Overview</button>
+          <button class="db-tabs__tab">Features</button>
+          <button class="db-tabs__tab">Pricing</button>
+        </div>
+        <div class="db-tabs__panel">
+          <p class="db-body">Welcome to the overview panel. DAUB is a warm, tactile UI kit built with care for the 8px grid, organic typography, and the joy of physical materials translated to screen.</p>
+        </div>
+        <div class="db-tabs__panel">
+          <p class="db-body">28 production-ready components. Vanilla JS + CSS. No build step required. Accessible by default with full keyboard navigation and ARIA attributes.</p>
+        </div>
+        <div class="db-tabs__panel">
+          <p class="db-body">Free and open source. Drop into any project with just two files: <code>daub.css</code> and <code>daub.js</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">3b. Navigation — Breadcrumbs</div>
+
+      <nav aria-label="Breadcrumb">
+        <ol class="db-breadcrumbs">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Components</a></li>
+          <li><a href="#">Navigation</a></li>
+          <li><span aria-current="page">Breadcrumbs</span></li>
+        </ol>
+      </nav>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">3c. Navigation — Pagination</div>
+
+      <nav class="db-pagination" aria-label="Pagination">
+        <button class="db-pagination__btn" disabled aria-label="Previous page">
+          <i data-lucide="chevron-left" style="width:16px;height:16px;"></i>
+        </button>
+        <button class="db-pagination__btn" aria-current="page">1</button>
+        <button class="db-pagination__btn">2</button>
+        <button class="db-pagination__btn">3</button>
+        <span class="db-pagination__ellipsis">&hellip;</span>
+        <button class="db-pagination__btn">12</button>
+        <button class="db-pagination__btn" aria-label="Next page">
+          <i data-lucide="chevron-right" style="width:16px;height:16px;"></i>
+        </button>
+      </nav>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">3d. Navigation — Stepper</div>
+
+      <div class="db-stepper">
+        <div class="db-stepper__step db-stepper__step--completed">
+          <div class="db-stepper__indicator">
+            <i data-lucide="check" style="width:16px;height:16px;"></i>
+          </div>
+          <span class="db-stepper__label">Account</span>
+        </div>
+        <div class="db-stepper__step db-stepper__step--completed">
+          <div class="db-stepper__indicator">
+            <i data-lucide="check" style="width:16px;height:16px;"></i>
+          </div>
+          <span class="db-stepper__label">Profile</span>
+        </div>
+        <div class="db-stepper__step db-stepper__step--active">
+          <div class="db-stepper__indicator">3</div>
+          <span class="db-stepper__label">Settings</span>
+        </div>
+        <div class="db-stepper__step db-stepper__step--pending">
+          <div class="db-stepper__indicator">4</div>
+          <span class="db-stepper__label">Review</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         4. DATA DISPLAY
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="demo-section__title">4. Data Display — Cards</div>
+
+      <div class="demo-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+        <div class="db-card">
+          <div class="db-card__header">
+            <div class="db-avatar db-avatar--md">
+              <i data-lucide="user" style="width:20px;height:20px;"></i>
+            </div>
+            <div>
+              <div class="db-card__title">Sarah Chen</div>
+              <div class="db-caption">Product Designer</div>
+            </div>
+          </div>
+          <p class="db-card__desc">Passionate about creating interfaces that feel as tangible as the real world. Loves texture and warmth in digital spaces.</p>
+          <div class="db-card__footer">
+            <div class="demo-row" style="margin-bottom:0;">
+              <span class="db-badge db-badge--new">New</span>
+              <span class="db-badge db-badge--updated">Updated</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="db-card">
+          <div class="db-card__header">
+            <div class="db-avatar db-avatar--md">JD</div>
+            <div>
+              <div class="db-card__title">James Doe</div>
+              <div class="db-caption">Engineer</div>
+            </div>
+          </div>
+          <p class="db-card__desc">Building the bridge between skeuomorphic beauty and modern performance. Ships CSS that sparks joy.</p>
+          <div class="db-card__footer">
+            <div class="demo-row" style="margin-bottom:0;">
+              <span class="db-badge db-badge--warning">Beta</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="db-card">
+          <div class="db-card__header">
+            <div class="db-avatar db-avatar--md">
+              <i data-lucide="palette" style="width:20px;height:20px;"></i>
+            </div>
+            <div>
+              <div class="db-card__title">Design System</div>
+              <div class="db-caption">v1.1.0</div>
+            </div>
+          </div>
+          <p class="db-card__desc">A complete component library with 28 hand-crafted pieces. Warm cream palette, 8px grid, organic feel.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">4b. Data Display — List Items</div>
+
+      <div class="db-surface--raised" style="max-width:480px;">
+        <div class="db-list">
+          <div class="db-list__item">
+            <div class="db-avatar db-avatar--sm">
+              <i data-lucide="file-text" style="width:14px;height:14px;"></i>
+            </div>
+            <div class="db-list__content">
+              <div class="db-list__title">Project Proposal.pdf</div>
+              <div class="db-list__secondary">Modified 2 hours ago</div>
+            </div>
+            <span class="db-badge db-badge--new">New</span>
+          </div>
+          <div class="db-list__item">
+            <div class="db-avatar db-avatar--sm">
+              <i data-lucide="image" style="width:14px;height:14px;"></i>
+            </div>
+            <div class="db-list__content">
+              <div class="db-list__title">Hero Banner.png</div>
+              <div class="db-list__secondary">Modified yesterday</div>
+            </div>
+          </div>
+          <div class="db-list__item">
+            <div class="db-avatar db-avatar--sm">
+              <i data-lucide="code" style="width:14px;height:14px;"></i>
+            </div>
+            <div class="db-list__content">
+              <div class="db-list__title">daub.css</div>
+              <div class="db-list__secondary">Modified just now</div>
+            </div>
+            <span class="db-badge db-badge--updated">Updated</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">4c. Data Display — Badges &amp; Avatars</div>
+
+      <div class="demo-row">
+        <div class="demo-col">
+          <div class="demo-label">Badges</div>
+          <div class="demo-row">
+            <span class="db-badge db-badge--new">New</span>
+            <span class="db-badge db-badge--updated">Updated</span>
+            <span class="db-badge db-badge--warning">Beta</span>
+            <span class="db-badge db-badge--error">Error</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="db-mt-4">
+        <div class="demo-label">Avatars</div>
+        <div class="demo-row">
+          <div class="db-avatar db-avatar--sm">S</div>
+          <div class="db-avatar db-avatar--md">MD</div>
+          <div class="db-avatar db-avatar--lg">
+            <i data-lucide="user" style="width:24px;height:24px;"></i>
+          </div>
+          <div class="db-avatar db-avatar--lg">LG</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">4d. Data Display — Table</div>
+
+      <div class="db-surface--raised" style="overflow-x:auto;">
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th data-db-sort aria-sort="ascending">
+                Name
+                <span class="db-sort-icon"><i data-lucide="arrow-up" style="width:14px;height:14px;"></i></span>
+              </th>
+              <th data-db-sort>
+                Category
+                <span class="db-sort-icon"><i data-lucide="arrow-up-down" style="width:14px;height:14px;"></i></span>
+              </th>
+              <th data-db-sort>
+                Score
+                <span class="db-sort-icon"><i data-lucide="arrow-up-down" style="width:14px;height:14px;"></i></span>
+              </th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Button</td>
+              <td>Controls</td>
+              <td>98</td>
+              <td><span class="db-badge db-badge--updated">Stable</span></td>
+            </tr>
+            <tr>
+              <td>Modal</td>
+              <td>Feedback</td>
+              <td>95</td>
+              <td><span class="db-badge db-badge--updated">Stable</span></td>
+            </tr>
+            <tr>
+              <td>Stepper</td>
+              <td>Navigation</td>
+              <td>87</td>
+              <td><span class="db-badge db-badge--new">New</span></td>
+            </tr>
+            <tr>
+              <td>Toast</td>
+              <td>Feedback</td>
+              <td>92</td>
+              <td><span class="db-badge db-badge--warning">Beta</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">4e. Data Display — Tooltip</div>
+
+      <div class="demo-row">
+        <span class="db-tooltip-wrap">
+          <button class="db-btn db-btn--secondary" data-db-tooltip>
+            <i data-lucide="info" style="width:16px;height:16px;"></i>
+            Hover me
+          </button>
+          <span class="db-tooltip">This is a tooltip with helpful info</span>
+        </span>
+
+        <span class="db-tooltip-wrap">
+          <button class="db-btn db-btn--secondary db-btn--icon" data-db-tooltip aria-label="Help">
+            <i data-lucide="help-circle" style="width:18px;height:18px;"></i>
+          </button>
+          <span class="db-tooltip">Need help?</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         5. FEEDBACK
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="demo-section__title">5. Feedback — Modal</div>
+
+      <button class="db-btn db-btn--primary" data-db-modal-trigger="demo-modal">
+        <i data-lucide="maximize-2" style="width:16px;height:16px;"></i>
+        Open Modal
+      </button>
+
+      <div class="db-modal-overlay" id="demo-modal" aria-hidden="true">
+        <div class="db-modal" role="dialog" aria-labelledby="demo-modal-title">
+          <div class="db-modal__header">
+            <h2 class="db-modal__title" id="demo-modal-title">Confirm Action</h2>
+            <button class="db-modal__close" aria-label="Close modal">
+              <i data-lucide="x" style="width:20px;height:20px;"></i>
+            </button>
+          </div>
+          <div class="db-modal__body">
+            <p class="db-body">Are you sure you want to proceed? This modal demonstrates focus trapping, Escape dismiss, and overlay click-to-close.</p>
+            <div class="db-field db-mt-4">
+              <label class="db-field__label" for="modal-input">Confirmation</label>
+              <input class="db-field__input" id="modal-input" type="text" placeholder="Type 'confirm'">
+            </div>
+          </div>
+          <div class="db-modal__footer">
+            <button class="db-btn db-btn--secondary" onclick="DAUB.closeModal(document.getElementById('demo-modal'))">Cancel</button>
+            <button class="db-btn db-btn--primary" onclick="DAUB.closeModal(document.getElementById('demo-modal'))">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">5b. Feedback — Toast Stack</div>
+
+      <div class="demo-row">
+        <button class="db-btn db-btn--secondary" onclick="DAUB.toast({ type:'success', title:'Success!', message:'Your changes have been saved.' })">
+          <i data-lucide="check-circle" style="width:16px;height:16px;color:var(--db-success);"></i>
+          Success Toast
+        </button>
+        <button class="db-btn db-btn--secondary" onclick="DAUB.toast({ type:'error', title:'Error', message:'Something went wrong. Please try again.' })">
+          <i data-lucide="x-circle" style="width:16px;height:16px;color:var(--db-error);"></i>
+          Error Toast
+        </button>
+        <button class="db-btn db-btn--secondary" onclick="DAUB.toast({ type:'warning', title:'Warning', message:'Your session will expire in 5 minutes.' })">
+          <i data-lucide="alert-triangle" style="width:16px;height:16px;color:var(--db-warning);"></i>
+          Warning Toast
+        </button>
+        <button class="db-btn db-btn--secondary" onclick="DAUB.toast({ type:'info', title:'Info', message:'New version available. Update now?' })">
+          <i data-lucide="info" style="width:16px;height:16px;color:var(--db-terracotta);"></i>
+          Info Toast
+        </button>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">5c. Feedback — Alert Banners</div>
+
+      <div class="demo-col" style="max-width:560px;">
+        <div class="db-alert db-alert--warning">
+          <span class="db-alert__icon"><i data-lucide="alert-triangle" style="width:20px;height:20px;"></i></span>
+          <div class="db-alert__content">
+            <div class="db-alert__title">Heads up</div>
+            <div>Your trial expires in 3 days. Upgrade to keep all features.</div>
+          </div>
+        </div>
+        <div class="db-alert db-alert--info">
+          <span class="db-alert__icon"><i data-lucide="info" style="width:20px;height:20px;"></i></span>
+          <div class="db-alert__content">
+            <div class="db-alert__title">Did you know?</div>
+            <div>You can customize all colors via CSS custom properties.</div>
+          </div>
+        </div>
+        <div class="db-alert db-alert--error">
+          <span class="db-alert__icon"><i data-lucide="x-circle" style="width:20px;height:20px;"></i></span>
+          <div class="db-alert__content">
+            <div class="db-alert__title">Connection lost</div>
+            <div>Unable to reach the server. Check your internet connection.</div>
+          </div>
+        </div>
+        <div class="db-alert db-alert--success">
+          <span class="db-alert__icon"><i data-lucide="check-circle" style="width:20px;height:20px;"></i></span>
+          <div class="db-alert__content">
+            <div class="db-alert__title">All clear</div>
+            <div>Your account has been verified successfully.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">5d. Feedback — Empty State</div>
+
+      <div class="db-surface--raised" style="max-width:480px;">
+        <div class="db-empty">
+          <div class="db-empty__icon">
+            <i data-lucide="inbox" style="width:64px;height:64px;"></i>
+          </div>
+          <div class="db-empty__title">No items yet</div>
+          <p class="db-empty__message">Get started by creating your first item. It only takes a moment.</p>
+          <button class="db-btn db-btn--primary">
+            <i data-lucide="plus" style="width:16px;height:16px;"></i>
+            Create Item
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-section__title">5e. Feedback — Skeleton &amp; Progress</div>
+
+      <div class="demo-grid">
+        <div class="db-surface--raised" style="padding:24px;">
+          <div class="demo-label db-mb-4">Skeleton Loading</div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div class="db-skeleton db-skeleton--avatar"></div>
+            <div style="flex:1;">
+              <div class="db-skeleton db-skeleton--heading"></div>
+              <div class="db-skeleton db-skeleton--text"></div>
+              <div class="db-skeleton db-skeleton--text"></div>
+              <div class="db-skeleton db-skeleton--text" style="width:70%;"></div>
+            </div>
+          </div>
+          <div class="db-mt-4">
+            <div class="db-skeleton db-skeleton--btn"></div>
+          </div>
+        </div>
+
+        <div class="demo-col" style="justify-content:center;">
+          <div class="demo-label">Linear Progress</div>
+          <div class="db-progress" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
+            <div class="db-progress__bar" style="--db-progress: 65%;"></div>
+          </div>
+          <div class="db-mt-4">
+            <div class="demo-label">Progress — 30%</div>
+            <div class="db-progress" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">
+              <div class="db-progress__bar" style="--db-progress: 30%;"></div>
+            </div>
+          </div>
+          <div class="db-mt-4">
+            <div class="demo-label">Indeterminate</div>
+            <div class="db-progress db-progress--indeterminate" role="progressbar">
+              <div class="db-progress__bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <hr class="db-divider" style="margin:48px 0;">
+    <div style="text-align:center;padding-bottom:48px;">
+      <p class="db-caption">DAUB UI KIT v1.1 — 28 Components, 4 Themes, Vanilla JS + CSS</p>
+    </div>
+
+  </div><!-- /.db-container -->
+
+  <!-- Theme Switcher -->
+  <div class="db-theme-switcher" role="group" aria-label="Theme switcher">
+    <button class="db-theme-switcher__btn" data-theme="light" aria-label="Light theme" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <button class="db-theme-switcher__btn" data-theme="dark" aria-label="Dark theme" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <button class="db-theme-switcher__btn" data-theme="grunge-light" aria-label="Grunge light theme" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/></svg>
+    </button>
+    <button class="db-theme-switcher__btn" data-theme="grunge-dark" aria-label="Grunge dark theme" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/></svg>
+    </button>
+  </div>
+
+  <!-- JS -->
+  <script src="daub.js"></script>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>

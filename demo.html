@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAUB — Layout Demos</title>
+  <meta name="description" content="Layout demos for DAUB: dashboards, settings panels, and real-world compositions using neo-skeuomorphic components.">
+  <meta name="theme-color" content="#C67B5C">
+  <link rel="canonical" href="https://daub.dev/demo.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+
+  <!-- FOUC prevention -->
+  <script>
+    (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Cabin:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- DAUB -->
+  <link rel="stylesheet" href="daub.css">
+
+  <style>
+    /* ---- Demo page layout ---- */
+    body { margin: 0; }
+
+    .demo-page-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--db-cream);
+      border-bottom: 1px solid var(--db-sand);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      height: 56px;
+      font-family: var(--db-font-ui);
+    }
+    .demo-page-nav__brand {
+      font-family: var(--db-font-heading);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      text-decoration: none;
+    }
+    .demo-page-nav__links {
+      display: flex;
+      gap: 4px;
+      flex: 1;
+    }
+    .demo-page-nav__link {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-warm-gray);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: var(--db-radius-2);
+      transition: background 0.15s, color 0.15s;
+      cursor: pointer;
+    }
+    .demo-page-nav__link:hover { background: rgba(var(--db-sand-rgb),0.4); color: var(--db-ink); }
+    .demo-page-nav__link--active { background: rgba(var(--db-accent-rgb),0.12); color: var(--db-terracotta); font-weight: 600; }
+
+    .demo-section-divider {
+      text-align: center;
+      padding: 64px 24px 32px;
+    }
+    .demo-section-divider h2 {
+      font-family: var(--db-font-heading);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      margin: 0 0 8px;
+    }
+    .demo-section-divider p {
+      font-family: var(--db-font-body);
+      color: var(--db-warm-gray);
+      font-size: 0.9375rem;
+      margin: 0;
+    }
+
+    /* ---- 1. Dashboard ---- */
+    .dash {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: 600px;
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-3);
+      overflow: hidden;
+      margin: 0 24px;
+    }
+    .dash__sidebar {
+      background: var(--db-cream-dark);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border-right: 1px solid var(--db-sand);
+    }
+    .dash__sidebar-title {
+      font-family: var(--db-font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      padding: 0 12px 16px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--db-sand);
+    }
+    .dash__nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--db-radius-2);
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-warm-gray);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .dash__nav-item:hover { background: rgba(var(--db-sand-rgb),0.5); color: var(--db-ink); }
+    .dash__nav-item--active { background: rgba(var(--db-accent-rgb),0.12); color: var(--db-terracotta); font-weight: 600; }
+    .dash__nav-item svg { width: 18px; height: 18px; }
+    .dash__main {
+      padding: 32px;
+      overflow: auto;
+    }
+    .dash__topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .dash__topbar h3 {
+      font-family: var(--db-font-heading);
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      margin: 0;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      padding: 20px;
+    }
+    .stat-card__label {
+      font-family: var(--db-font-ui);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--db-warm-gray);
+      margin-bottom: 8px;
+    }
+    .stat-card__value {
+      font-family: var(--db-font-heading);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--db-ink);
+    }
+    .stat-card__change {
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      margin-top: 6px;
+    }
+    .stat-card__change--up { color: var(--db-success); }
+    .stat-card__change--down { color: var(--db-error); }
+    .chart-placeholder {
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--db-warm-gray);
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+    }
+
+    /* ---- 2. Login ---- */
+    .login-wrap {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .login-header h3 {
+      font-family: var(--db-font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      margin: 0 0 8px;
+    }
+    .login-header p {
+      font-family: var(--db-font-body);
+      color: var(--db-warm-gray);
+      font-size: 0.875rem;
+      margin: 0;
+    }
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0;
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      color: var(--db-warm-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .login-divider::before,
+    .login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--db-sand);
+    }
+
+    /* ---- 3. Settings ---- */
+    .settings-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .settings-section {
+      margin-bottom: 40px;
+    }
+    .settings-section__title {
+      font-family: var(--db-font-heading);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      margin: 0 0 4px;
+    }
+    .settings-section__desc {
+      font-family: var(--db-font-body);
+      font-size: 0.8125rem;
+      color: var(--db-warm-gray);
+      margin: 0 0 20px;
+    }
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--db-sand);
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-row__info {
+      flex: 1;
+    }
+    .setting-row__label {
+      font-family: var(--db-font-ui);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--db-ink);
+      margin-bottom: 2px;
+    }
+    .setting-row__desc {
+      font-family: var(--db-font-body);
+      font-size: 0.8125rem;
+      color: var(--db-warm-gray);
+    }
+
+    /* ---- 4. Profile ---- */
+    .profile-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .profile-header__info h3 {
+      font-family: var(--db-font-heading);
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      margin: 0 0 4px;
+    }
+    .profile-header__info p {
+      font-family: var(--db-font-body);
+      color: var(--db-warm-gray);
+      font-size: 0.875rem;
+      margin: 0;
+    }
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .profile-stat {
+      padding: 20px;
+    }
+    .profile-stat__value {
+      font-family: var(--db-font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--db-ink);
+    }
+    .profile-stat__label {
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      color: var(--db-warm-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 4px;
+    }
+
+    /* ---- 5. Inbox ---- */
+    .inbox-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .inbox-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .inbox-toolbar h3 {
+      font-family: var(--db-font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      margin: 0;
+    }
+    .inbox-item__meta {
+      font-family: var(--db-font-ui);
+      font-size: 0.6875rem;
+      color: var(--db-warm-gray);
+      white-space: nowrap;
+    }
+
+    /* ---- 6. File Browser ---- */
+    .files-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+    .files-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      .dash { grid-template-columns: 1fr; }
+      .dash__sidebar { display: none; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .profile-stats { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SVG Filters for grunge themes -->
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <filter id="db-grunge-distort">
+    <feTurbulence type="turbulence" baseFrequency="0.015 0.06" numOctaves="3" seed="2" result="turbulence"/>
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="db-grunge-rough">
+    <feTurbulence type="turbulence" baseFrequency="0.03 0.08" numOctaves="4" seed="5" result="turbulence"/>
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<!-- ====== Top Nav ====== -->
+<nav class="demo-page-nav">
+  <a class="demo-page-nav__brand" href="index.html">DAUB</a>
+  <div class="demo-page-nav__links">
+    <a class="demo-page-nav__link" href="index.html">Components</a>
+    <a class="demo-page-nav__link demo-page-nav__link--active" href="demo.html">Layouts</a>
+  </div>
+  <div class="db-flex db-gap-2" style="align-items:center;">
+    <span class="db-badge db-badge--new">v1.1</span>
+    <div class="db-avatar db-avatar--sm">
+      <i data-lucide="user"></i>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ============================================ -->
+<!--  1. DASHBOARD LAYOUT                         -->
+<!-- ============================================ -->
+<div class="demo-section-divider">
+  <h2>Dashboard</h2>
+  <p>Sidebar navigation, stat cards, data table, and activity feed.</p>
+</div>
+
+<div class="dash db-surface--raised">
+  <!-- Sidebar -->
+  <div class="dash__sidebar">
+    <div class="dash__sidebar-title">Workspace</div>
+    <div class="dash__nav-item dash__nav-item--active">
+      <i data-lucide="layout-dashboard"></i> Dashboard
+    </div>
+    <div class="dash__nav-item">
+      <i data-lucide="inbox"></i> Inbox
+    </div>
+    <div class="dash__nav-item">
+      <i data-lucide="folder"></i> Projects
+    </div>
+    <div class="dash__nav-item">
+      <i data-lucide="users"></i> Team
+    </div>
+    <div class="dash__nav-item">
+      <i data-lucide="bar-chart-3"></i> Analytics
+    </div>
+    <div class="dash__nav-item" style="margin-top:auto;">
+      <i data-lucide="settings"></i> Settings
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="dash__main">
+    <div class="dash__topbar">
+      <h3>Dashboard</h3>
+      <button class="db-btn db-btn--primary db-btn--sm">
+        <i data-lucide="plus" style="width:16px;height:16px"></i> New Project
+      </button>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stat-grid">
+      <div class="stat-card db-surface--raised db-rounded">
+        <div class="stat-card__label">Revenue</div>
+        <div class="stat-card__value">$24.8k</div>
+        <div class="stat-card__change stat-card__change--up">+12.5% vs last month</div>
+      </div>
+      <div class="stat-card db-surface--raised db-rounded">
+        <div class="stat-card__label">Users</div>
+        <div class="stat-card__value">1,429</div>
+        <div class="stat-card__change stat-card__change--up">+8.2% vs last month</div>
+      </div>
+      <div class="stat-card db-surface--raised db-rounded">
+        <div class="stat-card__label">Orders</div>
+        <div class="stat-card__value">312</div>
+        <div class="stat-card__change stat-card__change--down">-3.1% vs last month</div>
+      </div>
+      <div class="stat-card db-surface--raised db-rounded">
+        <div class="stat-card__label">Conversion</div>
+        <div class="stat-card__value">3.6%</div>
+        <div class="stat-card__change stat-card__change--up">+0.4% vs last month</div>
+      </div>
+    </div>
+
+    <!-- Chart + Recent activity side-by-side -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <!-- Chart area -->
+      <div class="db-surface--raised db-rounded" style="padding:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <h4 class="db-h4" style="margin:0;">Revenue Trend</h4>
+          <div class="db-tabs" style="margin:0;">
+            <div class="db-tabs__list" role="tablist">
+              <button class="db-tabs__tab" role="tab" aria-selected="true">Week</button>
+              <button class="db-tabs__tab" role="tab">Month</button>
+              <button class="db-tabs__tab" role="tab">Year</button>
+            </div>
+          </div>
+        </div>
+        <div class="db-surface--inset db-rounded chart-placeholder">
+          <i data-lucide="bar-chart-3" style="width:40px;height:40px;opacity:0.3;margin-right:12px;"></i>
+          Chart visualization area
+        </div>
+      </div>
+
+      <!-- Recent activity -->
+      <div class="db-surface--raised db-rounded" style="padding:20px;">
+        <h4 class="db-h4" style="margin:0 0 16px;">Recent Activity</h4>
+        <div class="db-list">
+          <div class="db-list__item">
+            <div class="db-avatar db-avatar--sm" style="background:rgba(var(--db-success-rgb),0.15);color:var(--db-success);">
+              <i data-lucide="check" style="width:16px;height:16px;"></i>
+            </div>
+            <div class="db-list__content">
+              <div class="db-list__title">Order #1082 completed</div>
+              <div class="db-list__secondary">2 minutes ago</div>
+            </div>
+          </div>
+          <div class="db-list__item">
+            <div class="db-avatar db-avatar--sm" style="background:rgba(var(--db-accent-rgb),0.15);color:var(--db-terracotta);">
+              <i data-lucide="user-plus" style="width:16px;height:16px;"></i>
+            </div>
+            <div class="db-list__content">
+              <div class="db-list__title">New user registered</div>
+              <div class="db-list__secondary">15 minutes ago</div>
+            </div>
+          </div>
+          <div class="db-list__item">
+            <div class="db-avatar db-avatar--sm" style="background:rgba(var(--db-warning-rgb),0.15);color:var(--db-warning);">
+              <i data-lucide="alert-triangle" style="width:16px;height:16px;"></i>
+            </div>
+            <div class="db-list__content">
+              <div class="db-list__title">Low stock alert: Widget Pro</div>
+              <div class="db-list__secondary">1 hour ago</div>
+            </div>
+          </div>
+          <div class="db-list__item">
+            <div class="db-avatar db-avatar--sm" style="background:rgba(var(--db-accent-rgb),0.15);color:var(--db-terracotta);">
+              <i data-lucide="message-square" style="width:16px;height:16px;"></i>
+            </div>
+            <div class="db-list__content">
+              <div class="db-list__title">New feedback from Sarah</div>
+              <div class="db-list__secondary">3 hours ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent orders table -->
+    <div style="margin-top:24px;">
+      <h4 class="db-h4">Recent Orders</h4>
+      <table class="db-table">
+        <thead>
+          <tr>
+            <th data-db-sort aria-sort="descending">Order ID</th>
+            <th data-db-sort>Customer</th>
+            <th data-db-sort>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#1082</td>
+            <td>Elena Rodriguez</td>
+            <td>$249.00</td>
+            <td><span class="db-badge db-badge--new">Completed</span></td>
+          </tr>
+          <tr>
+            <td>#1081</td>
+            <td>Marcus Chen</td>
+            <td>$89.50</td>
+            <td><span class="db-badge db-badge--warning">Pending</span></td>
+          </tr>
+          <tr>
+            <td>#1080</td>
+            <td>Sofia Andersson</td>
+            <td>$432.00</td>
+            <td><span class="db-badge db-badge--new">Completed</span></td>
+          </tr>
+          <tr>
+            <td>#1079</td>
+            <td>James O'Brien</td>
+            <td>$167.25</td>
+            <td><span class="db-badge db-badge--error">Cancelled</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================ -->
+<!--  2. LOGIN / SIGN UP                          -->
+<!-- ============================================ -->
+<div class="demo-section-divider">
+  <h2>Sign In</h2>
+  <p>Authentication form with social login and field validation.</p>
+</div>
+
+<div class="login-wrap">
+  <div class="db-card" style="padding:40px 32px;">
+    <div class="login-header">
+      <h3>Welcome back</h3>
+      <p>Sign in to your account to continue</p>
+    </div>
+
+    <!-- Social buttons -->
+    <div class="db-flex db-gap-2" style="margin-bottom:0;">
+      <button class="db-btn db-btn--secondary" style="flex:1;">
+        <i data-lucide="chrome" style="width:16px;height:16px;"></i> Google
+      </button>
+      <button class="db-btn db-btn--secondary" style="flex:1;">
+        <i data-lucide="github" style="width:16px;height:16px;"></i> GitHub
+      </button>
+    </div>
+
+    <div class="login-divider">or continue with email</div>
+
+    <!-- Form -->
+    <div class="db-field" style="margin-bottom:16px;">
+      <label class="db-field__label" for="login-email">Email</label>
+      <input class="db-field__input" type="email" id="login-email" placeholder="you@example.com">
+    </div>
+    <div class="db-field" style="margin-bottom:24px;">
+      <label class="db-field__label" for="login-pass">Password</label>
+      <input class="db-field__input" type="password" id="login-pass" placeholder="Enter your password">
+      <span class="db-field__helper"><a href="#" style="color:var(--db-terracotta);text-decoration:none;font-size:0.75rem;">Forgot password?</a></span>
+    </div>
+
+    <label class="db-checkbox" style="margin-bottom:24px;">
+      <input type="checkbox" class="db-checkbox__input">
+      <span class="db-checkbox__box"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      Remember me for 30 days
+    </label>
+
+    <button class="db-btn db-btn--primary" style="width:100%;">Sign In</button>
+
+    <p style="text-align:center;margin-top:20px;font-family:var(--db-font-ui);font-size:0.8125rem;color:var(--db-warm-gray);">
+      Don't have an account? <a href="#" style="color:var(--db-terracotta);text-decoration:none;font-weight:600;">Sign up</a>
+    </p>
+  </div>
+</div>
+
+
+<!-- ============================================ -->
+<!--  3. SETTINGS PAGE                            -->
+<!-- ============================================ -->
+<div class="demo-section-divider">
+  <h2>Settings</h2>
+  <p>Account preferences with toggle controls and form fields.</p>
+</div>
+
+<div class="settings-wrap">
+  <div class="db-card" style="padding:32px;">
+    <!-- Profile section -->
+    <div class="settings-section">
+      <div class="settings-section__title">Profile</div>
+      <div class="settings-section__desc">Manage your public profile information.</div>
+
+      <div style="display:flex;align-items:center;gap:20px;margin-bottom:24px;">
+        <div class="db-avatar db-avatar--lg">
+          <i data-lucide="user" style="width:24px;height:24px;"></i>
+        </div>
+        <div>
+          <button class="db-btn db-btn--secondary db-btn--sm">Change Avatar</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="db-field">
+          <label class="db-field__label" for="s-fname">First Name</label>
+          <input class="db-field__input" id="s-fname" value="Sarah">
+        </div>
+        <div class="db-field">
+          <label class="db-field__label" for="s-lname">Last Name</label>
+          <input class="db-field__input" id="s-lname" value="Chen">
+        </div>
+      </div>
+      <div class="db-field" style="margin-top:16px;">
+        <label class="db-field__label" for="s-bio">Bio</label>
+        <textarea class="db-field__input" id="s-bio" rows="3" style="resize:vertical;">Passionate about creating interfaces that feel as tangible as the real world.</textarea>
+      </div>
+    </div>
+
+    <div class="db-divider"></div>
+
+    <!-- Notifications section -->
+    <div class="settings-section" style="margin-top:32px;">
+      <div class="settings-section__title">Notifications</div>
+      <div class="settings-section__desc">Choose how you want to be notified.</div>
+
+      <div class="setting-row">
+        <div class="setting-row__info">
+          <div class="setting-row__label">Email notifications</div>
+          <div class="setting-row__desc">Receive email updates about your account activity.</div>
+        </div>
+        <button class="db-switch" role="switch" aria-checked="true" aria-label="Email notifications">
+          <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+        </button>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row__info">
+          <div class="setting-row__label">Push notifications</div>
+          <div class="setting-row__desc">Get push notifications in your browser.</div>
+        </div>
+        <button class="db-switch" role="switch" aria-checked="false" aria-label="Push notifications">
+          <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+        </button>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row__info">
+          <div class="setting-row__label">Weekly digest</div>
+          <div class="setting-row__desc">A weekly summary of your team's activity.</div>
+        </div>
+        <button class="db-switch" role="switch" aria-checked="true" aria-label="Weekly digest">
+          <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="db-divider"></div>
+
+    <!-- Danger zone -->
+    <div class="settings-section" style="margin-top:32px;margin-bottom:0;">
+      <div class="settings-section__title" style="color:var(--db-error);">Danger Zone</div>
+      <div class="settings-section__desc">Irreversible and destructive actions.</div>
+      <div class="db-alert db-alert--error" style="margin-bottom:16px;">
+        <span class="db-alert__icon"><i data-lucide="alert-triangle"></i></span>
+        <div class="db-alert__content">
+          <div class="db-alert__title">Delete account</div>
+          Once you delete your account, there is no going back. All data will be permanently removed.
+        </div>
+      </div>
+      <button class="db-btn db-btn--secondary db-btn--sm" style="color:var(--db-error);border-color:var(--db-error);">Delete Account</button>
+    </div>
+  </div>
+
+  <!-- Save bar -->
+  <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:24px;">
+    <button class="db-btn db-btn--secondary">Cancel</button>
+    <button class="db-btn db-btn--primary">Save Changes</button>
+  </div>
+</div>
+
+
+<!-- ============================================ -->
+<!--  4. PROFILE PAGE                             -->
+<!-- ============================================ -->
+<div class="demo-section-divider">
+  <h2>Profile</h2>
+  <p>User profile with stats, badges, and activity timeline.</p>
+</div>
+
+<div class="profile-wrap">
+  <!-- Header -->
+  <div class="profile-header">
+    <div class="db-avatar db-avatar--lg" style="width:80px;height:80px;font-size:1.5rem;">SC</div>
+    <div class="profile-header__info">
+      <h3>Sarah Chen</h3>
+      <p>Product Designer at Acme Corp</p>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <span class="db-badge db-badge--new">Pro</span>
+        <span class="db-badge db-badge--updated">Verified</span>
+      </div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:8px;">
+      <button class="db-btn db-btn--secondary db-btn--sm">
+        <i data-lucide="mail" style="width:14px;height:14px;"></i> Message
+      </button>
+      <button class="db-btn db-btn--primary db-btn--sm">
+        <i data-lucide="user-plus" style="width:14px;height:14px;"></i> Follow
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="profile-stats">
+    <div class="profile-stat db-surface--raised db-rounded">
+      <div class="profile-stat__value">142</div>
+      <div class="profile-stat__label">Projects</div>
+    </div>
+    <div class="profile-stat db-surface--raised db-rounded">
+      <div class="profile-stat__value">2.1k</div>
+      <div class="profile-stat__label">Followers</div>
+    </div>
+    <div class="profile-stat db-surface--raised db-rounded">
+      <div class="profile-stat__value">847</div>
+      <div class="profile-stat__label">Following</div>
+    </div>
+  </div>
+
+  <!-- Activity feed -->
+  <div class="db-card" style="padding:24px;">
+    <h4 class="db-h4">Activity</h4>
+
+    <div class="db-stepper" style="flex-direction:column;align-items:flex-start;">
+      <div class="db-stepper__step db-stepper__step--completed" style="flex-direction:row;gap:16px;">
+        <div class="db-stepper__indicator"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+        <div>
+          <div class="db-stepper__label" style="text-align:left;">Published "Design System v2"</div>
+          <div class="db-caption db-text-muted">2 hours ago</div>
+        </div>
+      </div>
+      <div class="db-stepper__step db-stepper__step--completed" style="flex-direction:row;gap:16px;">
+        <div class="db-stepper__indicator"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+        <div>
+          <div class="db-stepper__label" style="text-align:left;">Joined Team Alpha</div>
+          <div class="db-caption db-text-muted">Yesterday</div>
+        </div>
+      </div>
+      <div class="db-stepper__step db-stepper__step--active" style="flex-direction:row;gap:16px;">
+        <div class="db-stepper__indicator">3</div>
+        <div>
+          <div class="db-stepper__label" style="text-align:left;">Working on new component library</div>
+          <div class="db-caption db-text-muted">In progress</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================ -->
+<!--  5. INBOX / MESSAGES                         -->
+<!-- ============================================ -->
+<div class="demo-section-divider">
+  <h2>Inbox</h2>
+  <p>Message list with unread indicators, timestamps, and quick actions.</p>
+</div>
+
+<div class="inbox-wrap">
+  <div class="inbox-toolbar">
+    <h3>Messages <span class="db-badge db-badge--error" style="margin-left:8px;">3</span></h3>
+    <button class="db-btn db-btn--secondary db-btn--sm">
+      <i data-lucide="filter" style="width:14px;height:14px;"></i> Filter
+    </button>
+  </div>
+
+  <!-- Tabs for inbox categories -->
+  <div class="db-tabs" style="margin-bottom:16px;">
+    <div class="db-tabs__list" role="tablist">
+      <button class="db-tabs__tab" role="tab" aria-selected="true">All</button>
+      <button class="db-tabs__tab" role="tab">Unread</button>
+      <button class="db-tabs__tab" role="tab">Starred</button>
+      <button class="db-tabs__tab" role="tab">Archived</button>
+    </div>
+  </div>
+
+  <div class="db-card" style="padding:0;overflow:hidden;">
+    <div class="db-list">
+      <div class="db-list__item" style="padding:16px 20px;">
+        <div class="db-avatar db-avatar--sm" style="background:rgba(var(--db-accent-rgb),0.15);color:var(--db-terracotta);">ER</div>
+        <div class="db-list__content" style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="db-list__title" style="font-weight:700;">Elena Rodriguez</div>
+            <span class="inbox-item__meta">2 min ago</span>
+          </div>
+          <div class="db-list__secondary" style="margin-top:2px;"><strong>Project update:</strong> Hey, I've finished the wireframes for the dashboard. Can you review them when you...</div>
+        </div>
+        <span class="db-badge db-badge--new" style="margin-left:8px;">New</span>
+      </div>
+
+      <div class="db-list__item" style="padding:16px 20px;">
+        <div class="db-avatar db-avatar--sm" style="background:rgba(var(--db-success-rgb),0.15);color:var(--db-success);">MC</div>
+        <div class="db-list__content" style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="db-list__title" style="font-weight:700;">Marcus Chen</div>
+            <span class="inbox-item__meta">1 hour ago</span>
+          </div>
+          <div class="db-list__secondary" style="margin-top:2px;"><strong>Re: API integration:</strong> The endpoints are ready for testing. I've updated the docs with the...</div>
+        </div>
+        <span class="db-badge db-badge--new" style="margin-left:8px;">New</span>
+      </div>
+
+      <div class="db-list__item" style="padding:16px 20px;">
+        <div class="db-avatar db-avatar--sm" style="background:rgba(var(--db-warning-rgb),0.15);color:var(--db-warning);">SA</div>
+        <div class="db-list__content" style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="db-list__title" style="font-weight:700;">Sofia Andersson</div>
+            <span class="inbox-item__meta">3 hours ago</span>
+          </div>
+          <div class="db-list__secondary" style="margin-top:2px;"><strong>Design review:</strong> I left some comments on the Figma file. Mostly looks great, but I think the spacing...</div>
+        </div>
+        <span class="db-badge db-badge--new" style="margin-left:8px;">New</span>
+      </div>
+
+      <div class="db-list__item" style="padding:16px 20px;opacity:0.7;">
+        <div class="db-avatar db-avatar--sm">JO</div>
+        <div class="db-list__content" style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="db-list__title">James O'Brien</div>
+            <span class="inbox-item__meta">Yesterday</span>
+          </div>
+          <div class="db-list__secondary" style="margin-top:2px;">Meeting notes from yesterday's standup. Action items are listed at the bottom of the doc...</div>
+        </div>
+      </div>
+
+      <div class="db-list__item" style="padding:16px 20px;opacity:0.7;">
+        <div class="db-avatar db-avatar--sm">LW</div>
+        <div class="db-list__content" style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="db-list__title">Lisa Wang</div>
+            <span class="inbox-item__meta">2 days ago</span>
+          </div>
+          <div class="db-list__secondary" style="margin-top:2px;">Thanks for the quick turnaround on the logo. The client loved it!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div style="display:flex;justify-content:center;margin-top:20px;">
+    <nav class="db-pagination" aria-label="Messages pagination">
+      <button class="db-pagination__btn" disabled aria-label="Previous page"><i data-lucide="chevron-left" style="width:16px;height:16px;"></i></button>
+      <button class="db-pagination__btn" aria-current="page">1</button>
+      <button class="db-pagination__btn">2</button>
+      <button class="db-pagination__btn">3</button>
+      <button class="db-pagination__btn" aria-label="Next page"><i data-lucide="chevron-right" style="width:16px;height:16px;"></i></button>
+    </nav>
+  </div>
+</div>
+
+
+<!-- ============================================ -->
+<!--  6. FILE BROWSER                             -->
+<!-- ============================================ -->
+<div class="demo-section-divider">
+  <h2>File Browser</h2>
+  <p>Breadcrumb navigation, file table with sorting, and batch actions.</p>
+</div>
+
+<div class="files-wrap">
+  <!-- Breadcrumbs -->
+  <nav class="db-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:20px;">
+    <ol>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Documents</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><span aria-current="page">DAUB</span></li>
+    </ol>
+  </nav>
+
+  <div class="files-toolbar">
+    <div class="db-flex db-gap-2">
+      <button class="db-btn db-btn--primary db-btn--sm">
+        <i data-lucide="upload" style="width:14px;height:14px;"></i> Upload
+      </button>
+      <button class="db-btn db-btn--secondary db-btn--sm">
+        <i data-lucide="folder-plus" style="width:14px;height:14px;"></i> New Folder
+      </button>
+    </div>
+    <div class="db-field" style="margin:0;width:240px;">
+      <input class="db-field__input" placeholder="Search files..." style="padding:8px 12px;font-size:0.8125rem;">
+    </div>
+  </div>
+
+  <!-- Alert -->
+  <div class="db-alert db-alert--info" style="margin-bottom:20px;">
+    <span class="db-alert__icon"><i data-lucide="info"></i></span>
+    <div class="db-alert__content">
+      <div class="db-alert__title">Storage update</div>
+      You're using 4.2 GB of 10 GB. Consider archiving old files to free up space.
+    </div>
+  </div>
+
+  <!-- Files table -->
+  <table class="db-table">
+    <thead>
+      <tr>
+        <th data-db-sort aria-sort="ascending" style="width:40%;">Name</th>
+        <th data-db-sort>Size</th>
+        <th data-db-sort>Modified</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="display:flex;align-items:center;gap:10px;">
+          <i data-lucide="folder" style="width:18px;height:18px;color:var(--db-terracotta);"></i>
+          <strong>assets</strong>
+        </td>
+        <td>--</td>
+        <td>Today, 2:15 PM</td>
+        <td><span class="db-badge">Folder</span></td>
+      </tr>
+      <tr>
+        <td style="display:flex;align-items:center;gap:10px;">
+          <i data-lucide="folder" style="width:18px;height:18px;color:var(--db-terracotta);"></i>
+          <strong>components</strong>
+        </td>
+        <td>--</td>
+        <td>Yesterday</td>
+        <td><span class="db-badge">Folder</span></td>
+      </tr>
+      <tr>
+        <td style="display:flex;align-items:center;gap:10px;">
+          <i data-lucide="file-code" style="width:18px;height:18px;color:var(--db-warm-gray);"></i>
+          daub.css
+        </td>
+        <td>48 KB</td>
+        <td>Today, 4:30 PM</td>
+        <td><span class="db-badge db-badge--updated">CSS</span></td>
+      </tr>
+      <tr>
+        <td style="display:flex;align-items:center;gap:10px;">
+          <i data-lucide="file-code" style="width:18px;height:18px;color:var(--db-warm-gray);"></i>
+          daub.js
+        </td>
+        <td>12 KB</td>
+        <td>Today, 4:28 PM</td>
+        <td><span class="db-badge db-badge--warning">JS</span></td>
+      </tr>
+      <tr>
+        <td style="display:flex;align-items:center;gap:10px;">
+          <i data-lucide="file-text" style="width:18px;height:18px;color:var(--db-warm-gray);"></i>
+          index.html
+        </td>
+        <td>24 KB</td>
+        <td>Today, 4:25 PM</td>
+        <td><span class="db-badge db-badge--error">HTML</span></td>
+      </tr>
+      <tr>
+        <td style="display:flex;align-items:center;gap:10px;">
+          <i data-lucide="image" style="width:18px;height:18px;color:var(--db-warm-gray);"></i>
+          hero-banner.png
+        </td>
+        <td>1.2 MB</td>
+        <td>Last week</td>
+        <td><span class="db-badge db-badge--new">Image</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;">
+    <span class="db-caption db-text-muted">Showing 6 of 24 items</span>
+    <nav class="db-pagination" aria-label="File pagination">
+      <button class="db-pagination__btn" disabled aria-label="Previous page"><i data-lucide="chevron-left" style="width:16px;height:16px;"></i></button>
+      <button class="db-pagination__btn" aria-current="page">1</button>
+      <button class="db-pagination__btn">2</button>
+      <button class="db-pagination__btn">3</button>
+      <span class="db-pagination__ellipsis">...</span>
+      <button class="db-pagination__btn">8</button>
+      <button class="db-pagination__btn" aria-label="Next page"><i data-lucide="chevron-right" style="width:16px;height:16px;"></i></button>
+    </nav>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="db-divider"></div>
+<p style="text-align:center;padding:24px;font-family:var(--db-font-ui);font-size:0.75rem;color:var(--db-warm-gray);">
+  DAUB UI KIT v1.1 — 28 Components, 4 Themes, Vanilla JS + CSS
+</p>
+
+<!-- Theme Switcher -->
+<div class="db-theme-switcher" role="group" aria-label="Theme switcher">
+  <button class="db-theme-switcher__btn" data-theme="light" aria-label="Light theme" aria-pressed="false">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+  <button class="db-theme-switcher__btn" data-theme="dark" aria-label="Dark theme" aria-pressed="false">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+  <button class="db-theme-switcher__btn" data-theme="grunge-light" aria-label="Grunge light theme" aria-pressed="false">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/></svg>
+  </button>
+  <button class="db-theme-switcher__btn" data-theme="grunge-dark" aria-label="Grunge dark theme" aria-pressed="false">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/></svg>
+  </button>
+</div>
+
+<script src="daub.js"></script>
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+</script>
+</body>
+</html>

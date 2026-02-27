@@ -1,0 +1,16 @@
+{
+  "name": "daub-ui",
+  "version": "1.1.0",
+  "description": "Warm, rustic neo-skeuomorphic CSS component library — 28 components, 4 themes",
+  "main": "daub.js",
+  "style": "daub.css",
+  "files": ["daub.css", "daub.js"],
+  "keywords": ["css", "ui-kit", "components", "neo-skeuomorphic", "design-system", "themes", "accessible"],
+  "homepage": "https://daub.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sliday/daub"
+  },
+  "license": "MIT",
+  "author": "Sliday"
+}

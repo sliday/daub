@@ -1,0 +1,325 @@
+# DAUB UI — Component Library for AI Agents
+
+> Version: 1.1
+> URL: https://daub.dev
+> CSS: https://daub.dev/daub.css
+> JS: https://daub.dev/daub.js
+> Repo: https://github.com/sliday/daub
+> License: MIT
+
+## Quick Start
+
+```html
+<link rel="stylesheet" href="https://daub.dev/daub.css">
+<script src="https://daub.dev/daub.js"></script>
+```
+
+Fonts (optional, falls back to Georgia/system-ui):
+```html
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300..900&family=Source+Serif+4:wght@300..900&family=Cabin:wght@400;500;600;700&display=swap" rel="stylesheet">
+```
+
+Icons (optional, used in demos):
+```html
+<script src="https://unpkg.com/lucide@latest"></script>
+```
+
+## Class Prefix
+
+All classes use `db-` prefix. All CSS custom properties use `--db-` prefix.
+
+## Themes
+
+4 themes: `light`, `dark`, `grunge-light`, `grunge-dark`
+
+Set via attribute: `<html data-theme="dark">`
+JS API: `DAUB.setTheme('dark')`, `DAUB.cycleTheme()`, `DAUB.getTheme()`
+Persisted in `localStorage` key `db-theme`.
+
+## Components (28)
+
+### 1. Button — `.db-btn`
+Variants: `db-btn--primary`, `db-btn--secondary`
+States: `db-btn--loading`, `db-btn--disabled`, `db-btn--pressed`
+Sizes: `db-btn--sm`, `db-btn--lg`, `db-btn--icon`
+```html
+<button class="db-btn db-btn--primary">Save</button>
+<button class="db-btn db-btn--secondary db-btn--sm">Cancel</button>
+<button class="db-btn db-btn--primary db-btn--loading" disabled>Saving…</button>
+```
+
+### 2. Text Field — `.db-field`
+```html
+<div class="db-field">
+  <label class="db-field__label">Email</label>
+  <input class="db-field__input" type="email" placeholder="you@example.com">
+  <span class="db-field__helper">We'll never share your email.</span>
+</div>
+```
+Error state: add `db-field--error` to the wrapper.
+
+### 3. Checkbox — `.db-checkbox`
+```html
+<label class="db-checkbox">
+  <input class="db-checkbox__input" type="checkbox">
+  <span class="db-checkbox__box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+  <span>Accept terms</span>
+</label>
+```
+
+### 4. Radio — `.db-radio`
+```html
+<div class="db-radio-group">
+  <label class="db-radio">
+    <input class="db-radio__input" type="radio" name="plan" value="free">
+    <span class="db-radio__circle"></span>
+    <span>Free</span>
+  </label>
+</div>
+```
+
+### 5. Switch — `.db-switch`
+```html
+<div class="db-switch" role="switch" tabindex="0" aria-checked="false">
+  <div class="db-switch__track"><div class="db-switch__thumb"></div></div>
+</div>
+```
+JS auto-initializes. Listen: `element.addEventListener('db:change', e => e.detail.checked)`
+
+### 6. Slider — `.db-slider`
+```html
+<div class="db-slider">
+  <label class="db-slider__label">Volume</label>
+  <input class="db-slider__input" type="range" min="0" max="100" value="50">
+  <span class="db-slider__value">50</span>
+</div>
+```
+
+### 7. Tabs — `.db-tabs`
+```html
+<div class="db-tabs">
+  <div class="db-tabs__list" role="tablist">
+    <button class="db-tabs__tab" aria-selected="true">Tab 1</button>
+    <button class="db-tabs__tab">Tab 2</button>
+  </div>
+  <div class="db-tabs__panel">Content 1</div>
+  <div class="db-tabs__panel" hidden>Content 2</div>
+</div>
+```
+
+### 8. Card — `.db-card`
+```html
+<div class="db-card">
+  <div class="db-card__header">
+    <h3 class="db-card__title">Title</h3>
+    <p class="db-card__desc">Description</p>
+  </div>
+  <div class="db-card__footer">
+    <button class="db-btn db-btn--primary db-btn--sm">Action</button>
+  </div>
+</div>
+```
+
+### 9. Modal — `.db-modal`
+```html
+<div class="db-modal-overlay" id="my-modal" aria-hidden="true">
+  <div class="db-modal">
+    <div class="db-modal__header">
+      <h2 class="db-modal__title">Title</h2>
+      <button class="db-modal__close" aria-label="Close">&times;</button>
+    </div>
+    <div class="db-modal__body">Content</div>
+    <div class="db-modal__footer">
+      <button class="db-btn db-btn--secondary" onclick="DAUB.closeModal(this.closest('.db-modal-overlay'))">Cancel</button>
+      <button class="db-btn db-btn--primary">Confirm</button>
+    </div>
+  </div>
+</div>
+```
+Open: `DAUB.openModal('my-modal')` or add `data-db-modal-trigger="my-modal"` to a button.
+Close: `DAUB.closeModal(overlayElement)`
+
+### 10. Toast — via JS API
+```js
+DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 4000 });
+```
+Types: `success`, `error`, `warning`, `info`
+
+### 11. Alert — `.db-alert`
+```html
+<div class="db-alert db-alert--warning">
+  <span class="db-alert__icon"><!-- icon --></span>
+  <div class="db-alert__content">
+    <div class="db-alert__title">Warning</div>
+    <p>Something needs attention.</p>
+  </div>
+</div>
+```
+Variants: `db-alert--info`, `db-alert--warning`, `db-alert--error`, `db-alert--success`
+
+### 12. Badge — `.db-badge`
+```html
+<span class="db-badge">Default</span>
+<span class="db-badge db-badge--new">New</span>
+```
+Variants: `db-badge--new`, `db-badge--updated`, `db-badge--warning`, `db-badge--error`
+
+### 13. Avatar — `.db-avatar`
+```html
+<div class="db-avatar db-avatar--md">
+  <img src="photo.jpg" alt="User">
+</div>
+<div class="db-avatar db-avatar--sm">AB</div>
+```
+Sizes: `db-avatar--sm` (32px), `db-avatar--md` (40px), `db-avatar--lg` (56px)
+
+### 14. Table — `.db-table`
+```html
+<table class="db-table">
+  <thead><tr><th>Name</th><th>Role</th></tr></thead>
+  <tbody><tr><td>Alice</td><td>Engineer</td></tr></tbody>
+</table>
+```
+Sortable column: add `data-db-sort` to `<th>`.
+
+### 15. List — `.db-list`
+```html
+<div class="db-list">
+  <div class="db-list__item">
+    <div class="db-list__content">
+      <div class="db-list__title">Item</div>
+      <div class="db-list__secondary">Details</div>
+    </div>
+  </div>
+</div>
+```
+
+### 16. Breadcrumbs — `.db-breadcrumbs`
+```html
+<nav class="db-breadcrumbs" aria-label="Breadcrumb">
+  <ol><li><a href="/">Home</a></li><li><a href="/docs">Docs</a></li><li aria-current="page">Current</li></ol>
+</nav>
+```
+
+### 17. Pagination — `.db-pagination`
+```html
+<nav class="db-pagination" aria-label="Pagination">
+  <button class="db-pagination__btn" disabled>&laquo;</button>
+  <button class="db-pagination__btn" aria-current="page">1</button>
+  <button class="db-pagination__btn">2</button>
+  <button class="db-pagination__btn">&raquo;</button>
+</nav>
+```
+
+### 18. Stepper — `.db-stepper`
+```html
+<div class="db-stepper">
+  <div class="db-stepper__step db-stepper__step--completed">
+    <div class="db-stepper__indicator">1</div>
+    <div class="db-stepper__label">Done</div>
+  </div>
+  <div class="db-stepper__step db-stepper__step--active">
+    <div class="db-stepper__indicator">2</div>
+    <div class="db-stepper__label">Current</div>
+  </div>
+  <div class="db-stepper__step db-stepper__step--pending">
+    <div class="db-stepper__indicator">3</div>
+    <div class="db-stepper__label">Next</div>
+  </div>
+</div>
+```
+
+### 19. Tooltip — `.db-tooltip`
+```html
+<span class="db-tooltip-wrap">
+  <button data-db-tooltip>Hover me</button>
+  <span class="db-tooltip">Tooltip text</span>
+</span>
+```
+
+### 20. Progress — `.db-progress`
+```html
+<div class="db-progress">
+  <div class="db-progress__bar" style="--db-progress: 65%;"></div>
+</div>
+```
+Indeterminate: add `db-progress--indeterminate`.
+
+### 21. Skeleton — `.db-skeleton`
+```html
+<div class="db-skeleton db-skeleton--text"></div>
+<div class="db-skeleton db-skeleton--heading"></div>
+<div class="db-skeleton db-skeleton--avatar"></div>
+<div class="db-skeleton db-skeleton--btn"></div>
+```
+
+### 22. Empty State — `.db-empty`
+```html
+<div class="db-empty">
+  <div class="db-empty__icon"><!-- icon --></div>
+  <h3 class="db-empty__title">No items</h3>
+  <p class="db-empty__message">Create your first item to get started.</p>
+</div>
+```
+
+### 23. Surface — `.db-surface`
+Variants: `db-surface--raised`, `db-surface--inset`, `db-surface--pressed`
+
+### 24. Typography — `.db-h1` through `.db-h4`, `.db-body`, `.db-label`, `.db-caption`
+```html
+<h1 class="db-h1">Heading</h1>
+<p class="db-body">Body text</p>
+<span class="db-label">Label</span>
+<span class="db-caption">Caption</span>
+```
+
+### 25. Elevation — `.db-elevation-1`, `.db-elevation-2`, `.db-elevation-3`
+
+### 26. Layout — `.db-container`, `.db-flex`, `.db-grid`
+```html
+<div class="db-container">
+  <div class="db-flex db-gap-3">
+    <div>Col 1</div><div>Col 2</div>
+  </div>
+</div>
+```
+Flex: `db-flex--col`, `db-flex--wrap`, `db-flex--center`
+Grid: `db-grid--2`, `db-grid--3`
+Gap: `db-gap-1` through `db-gap-6`
+Margin: `db-mt-1` through `db-mt-6`, `db-mb-4`, `db-mb-5`
+
+### 27. Theme Switcher — `.db-theme-switcher`
+```html
+<div class="db-theme-switcher">
+  <button class="db-theme-switcher__btn" data-theme="light" aria-pressed="true">Light</button>
+  <button class="db-theme-switcher__btn" data-theme="dark">Dark</button>
+  <button class="db-theme-switcher__btn" data-theme="grunge-light">Grunge</button>
+  <button class="db-theme-switcher__btn" data-theme="grunge-dark">Grunge Dark</button>
+</div>
+```
+
+### 28. Utilities
+- `db-sr-only` — screen reader only
+- `db-text-muted`, `db-text-accent`, `db-text-error`, `db-text-success`
+- `db-border`, `db-border-b`, `db-divider`
+- `db-rounded-sm`, `db-rounded`, `db-rounded-md`, `db-rounded-lg`, `db-rounded-full`
+
+## CSS Custom Properties
+
+Key variables (set on `:root`, themed via `[data-theme]`):
+- `--db-cream`, `--db-sand`, `--db-terracotta`, `--db-clay`, `--db-charcoal`, `--db-ink`, `--db-white`
+- `--db-font-heading` (Fraunces), `--db-font-body` (Source Serif 4), `--db-font-ui` (Cabin)
+- `--db-radius-1` through `--db-radius-4`, `--db-radius-full`
+- `--db-shadow-1` through `--db-shadow-3`
+- `--db-space-1` through `--db-space-6`
+- `--db-error`, `--db-success`, `--db-warning`
+
+## Accessibility
+
+- All interactive components have ARIA attributes
+- Focus-visible outlines on all focusable elements
+- Modal includes focus trapping and Escape key close
+- Switch uses role="switch" with aria-checked
+- Tabs use arrow key navigation
+- Toast stack uses aria-live="polite"
+- `.db-sr-only` for screen reader text

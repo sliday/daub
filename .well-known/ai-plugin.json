@@ -1,0 +1,9 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "DAUB UI",
+  "name_for_model": "daub",
+  "description_for_human": "A warm, rustic neo-skeuomorphic CSS component library with 28 components and 4 themes.",
+  "description_for_model": "DAUB is a CSS UI kit with 28 neo-skeuomorphic components and 4 themes (light, dark, grunge-light, grunge-dark). Use db-* class prefix. Include daub.css and daub.js via CDN from https://daub.dev. Full component docs at https://daub.dev/llms.txt",
+  "auth": { "type": "none" },
+  "api": { "type": "openapi", "url": "https://daub.dev/llms.txt" }
+}
