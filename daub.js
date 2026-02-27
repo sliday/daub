@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Interactive Behaviors
-   Version 1.1
+   Version 2.0
    IIFE module exposing window.DAUB = { init, toast, theme API }
    ============================================================ */
 ;(function() {
@@ -9,7 +9,7 @@
   /* ----------------------------------------------------------
      Theme Manager
      ---------------------------------------------------------- */
-  var THEMES = ['light', 'dark', 'grunge-light', 'grunge-dark'];
+  var THEMES = ['light', 'dark', 'grunge-light', 'grunge-dark', 'parchment', 'ink', 'ember', 'bone'];
   var _grungeFontLoaded = false;
   var _userExplicitTheme = false;
 
@@ -451,6 +451,34 @@
   }
 
   /* ----------------------------------------------------------
+     Warmth — apply filter via CSS custom property
+     ---------------------------------------------------------- */
+  function initWarmth() {
+    var saved = localStorage.getItem('db-warmth');
+    if (saved !== null) {
+      document.documentElement.style.setProperty('--db-warmth', saved);
+    }
+
+    document.querySelectorAll('[data-db-warmth]').forEach(function(slider) {
+      var input = slider.querySelector('.db-slider__input');
+      var valueEl = slider.querySelector('.db-slider__value');
+      if (!input) return;
+
+      if (saved !== null) {
+        input.value = Math.round(parseFloat(saved) * 100);
+        if (valueEl) valueEl.textContent = input.value;
+      }
+
+      input.addEventListener('input', function() {
+        var val = input.value / 100;
+        document.documentElement.style.setProperty('--db-warmth', val);
+        localStorage.setItem('db-warmth', val);
+        if (valueEl) valueEl.textContent = input.value;
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
      Checkbox (CSS handles visual sync via :checked)
      ---------------------------------------------------------- */
   function initCheckboxes(root) {
@@ -477,6 +505,553 @@
   function uid() { return 'db' + (++_uid) + '_' + Math.random().toString(36).slice(2, 6); }
 
   /* ----------------------------------------------------------
+     Accordion
+     ---------------------------------------------------------- */
+  var _dbAccordionInit = false;
+  function initAccordions(root) {
+    if (_dbAccordionInit && root === document) return;
+    root.querySelectorAll('.db-accordion').forEach(function(acc) {
+      if (acc._dbInit) return;
+      acc._dbInit = true;
+      acc.querySelectorAll('.db-accordion__trigger').forEach(function(trigger) {
+        trigger.addEventListener('click', function() {
+          var item = trigger.closest('.db-accordion__item');
+          if (!item) return;
+          var isOpen = item.classList.contains('db-accordion__item--open');
+          // Close siblings if single mode (default)
+          if (!acc.hasAttribute('data-multi')) {
+            acc.querySelectorAll('.db-accordion__item--open').forEach(function(openItem) {
+              openItem.classList.remove('db-accordion__item--open');
+              openItem.querySelector('.db-accordion__trigger').setAttribute('aria-expanded', 'false');
+            });
+          }
+          if (!isOpen) {
+            item.classList.add('db-accordion__item--open');
+            trigger.setAttribute('aria-expanded', 'true');
+          } else {
+            item.classList.remove('db-accordion__item--open');
+            trigger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+    });
+    if (root === document) _dbAccordionInit = true;
+  }
+
+  /* ----------------------------------------------------------
+     Collapsible
+     ---------------------------------------------------------- */
+  var _dbCollapsibleInit = false;
+  function initCollapsibles(root) {
+    if (_dbCollapsibleInit && root === document) return;
+    root.querySelectorAll('.db-collapsible').forEach(function(col) {
+      if (col._dbInit) return;
+      col._dbInit = true;
+      var trigger = col.querySelector('.db-collapsible__trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function() {
+        var isOpen = col.classList.contains('db-collapsible--open');
+        col.classList.toggle('db-collapsible--open');
+        trigger.setAttribute('aria-expanded', String(!isOpen));
+      });
+    });
+    if (root === document) _dbCollapsibleInit = true;
+  }
+
+  /* ----------------------------------------------------------
+     Alert Dialog
+     ---------------------------------------------------------- */
+  function openAlertDialog(id) {
+    var dialog = document.getElementById(id);
+    if (!dialog) return;
+    dialog.classList.add('db-alert-dialog--open');
+    var cancel = dialog.querySelector('[data-action="cancel"]');
+    if (cancel) cancel.focus();
+  }
+
+  function closeAlertDialog(id) {
+    var dialog = document.getElementById(id);
+    if (!dialog) return;
+    dialog.classList.remove('db-alert-dialog--open');
+  }
+
+  function initAlertDialogs(root) {
+    root.querySelectorAll('.db-alert-dialog').forEach(function(dialog) {
+      if (dialog._dbInit) return;
+      dialog._dbInit = true;
+      dialog.querySelector('.db-alert-dialog__overlay')?.addEventListener('click', function() {
+        dialog.classList.remove('db-alert-dialog--open');
+      });
+      dialog.querySelectorAll('[data-action="cancel"]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          dialog.classList.remove('db-alert-dialog--open');
+        });
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Sheet
+     ---------------------------------------------------------- */
+  function openSheet(id) {
+    var sheet = document.getElementById(id);
+    if (!sheet) return;
+    sheet.classList.add('db-sheet--open');
+  }
+
+  function closeSheet(id) {
+    var sheet = document.getElementById(id);
+    if (!sheet) return;
+    sheet.classList.remove('db-sheet--open');
+  }
+
+  function initSheets(root) {
+    root.querySelectorAll('.db-sheet').forEach(function(sheet) {
+      if (sheet._dbInit) return;
+      sheet._dbInit = true;
+      sheet.querySelector('.db-sheet__overlay')?.addEventListener('click', function() {
+        sheet.classList.remove('db-sheet--open');
+      });
+      sheet.querySelectorAll('.db-sheet__close').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          sheet.classList.remove('db-sheet--open');
+        });
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Drawer
+     ---------------------------------------------------------- */
+  function openDrawer(id) {
+    var drawer = document.getElementById(id);
+    if (!drawer) return;
+    drawer.classList.add('db-drawer--open');
+  }
+
+  function closeDrawer(id) {
+    var drawer = document.getElementById(id);
+    if (!drawer) return;
+    drawer.classList.remove('db-drawer--open');
+  }
+
+  function initDrawers(root) {
+    root.querySelectorAll('.db-drawer').forEach(function(drawer) {
+      if (drawer._dbInit) return;
+      drawer._dbInit = true;
+      drawer.querySelector('.db-drawer__overlay')?.addEventListener('click', function() {
+        drawer.classList.remove('db-drawer--open');
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Popover
+     ---------------------------------------------------------- */
+  var _dbPopoverInit = false;
+  function initPopovers(root) {
+    if (_dbPopoverInit && root === document) return;
+    root.querySelectorAll('.db-popover').forEach(function(pop) {
+      if (pop._dbInit) return;
+      pop._dbInit = true;
+      var trigger = pop.querySelector('.db-popover__trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        pop.classList.toggle('db-popover--open');
+      });
+    });
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.db-popover--open').forEach(function(p) {
+        p.classList.remove('db-popover--open');
+      });
+    });
+    if (root === document) _dbPopoverInit = true;
+  }
+
+  /* ----------------------------------------------------------
+     Context Menu
+     ---------------------------------------------------------- */
+  var _dbCtxInit = false;
+  function initContextMenus(root) {
+    if (_dbCtxInit && root === document) return;
+    root.querySelectorAll('[data-context-menu]').forEach(function(el) {
+      if (el._dbCtx) return;
+      el._dbCtx = true;
+      var menuId = el.getAttribute('data-context-menu');
+      el.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.db-context-menu--open').forEach(function(m) {
+          m.classList.remove('db-context-menu--open');
+        });
+        var menu = document.getElementById(menuId);
+        if (!menu) return;
+        menu.style.left = e.clientX + 'px';
+        menu.style.top = e.clientY + 'px';
+        menu.classList.add('db-context-menu--open');
+      });
+    });
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.db-context-menu--open').forEach(function(m) {
+        m.classList.remove('db-context-menu--open');
+      });
+    });
+    if (root === document) _dbCtxInit = true;
+  }
+
+  /* ----------------------------------------------------------
+     Dropdown Menu
+     ---------------------------------------------------------- */
+  var _dbDropInit = false;
+  function initDropdowns(root) {
+    if (_dbDropInit && root === document) return;
+    root.querySelectorAll('.db-dropdown').forEach(function(drop) {
+      if (drop._dbInit) return;
+      drop._dbInit = true;
+      var trigger = drop.querySelector('.db-dropdown__trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var wasOpen = drop.classList.contains('db-dropdown--open');
+        document.querySelectorAll('.db-dropdown--open').forEach(function(d) {
+          d.classList.remove('db-dropdown--open');
+        });
+        if (!wasOpen) drop.classList.add('db-dropdown--open');
+      });
+    });
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.db-dropdown--open').forEach(function(d) {
+        d.classList.remove('db-dropdown--open');
+      });
+    });
+    if (root === document) _dbDropInit = true;
+  }
+
+  /* ----------------------------------------------------------
+     Toggle / Toggle Group
+     ---------------------------------------------------------- */
+  var _dbToggleInit = false;
+  function initToggles(root) {
+    if (_dbToggleInit && root === document) return;
+    root.querySelectorAll('.db-toggle').forEach(function(toggle) {
+      if (toggle._dbInit) return;
+      toggle._dbInit = true;
+      toggle.addEventListener('click', function() {
+        var group = toggle.closest('.db-toggle-group');
+        if (group && !group.hasAttribute('data-multi')) {
+          group.querySelectorAll('.db-toggle').forEach(function(t) {
+            t.setAttribute('aria-pressed', 'false');
+            t.classList.remove('db-toggle--active');
+          });
+        }
+        var wasActive = toggle.getAttribute('aria-pressed') === 'true';
+        toggle.setAttribute('aria-pressed', String(!wasActive));
+        toggle.classList.toggle('db-toggle--active');
+      });
+    });
+    if (root === document) _dbToggleInit = true;
+  }
+
+  /* ----------------------------------------------------------
+     Custom Select
+     ---------------------------------------------------------- */
+  var _dbCustomSelectInit = false;
+  function initCustomSelects(root) {
+    if (_dbCustomSelectInit && root === document) return;
+    root.querySelectorAll('.db-custom-select').forEach(function(sel) {
+      if (sel._dbInit) return;
+      sel._dbInit = true;
+      var trigger = sel.querySelector('.db-custom-select__trigger');
+      if (!trigger) return;
+
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var wasOpen = sel.classList.contains('db-custom-select--open');
+        document.querySelectorAll('.db-custom-select--open').forEach(function(s) {
+          s.classList.remove('db-custom-select--open');
+        });
+        if (!wasOpen) {
+          sel.classList.add('db-custom-select--open');
+          var searchInput = sel.querySelector('.db-custom-select__search input');
+          if (searchInput) searchInput.focus();
+        }
+      });
+
+      sel.querySelectorAll('.db-custom-select__option').forEach(function(opt) {
+        if (opt.classList.contains('db-custom-select__option--disabled')) return;
+        opt.addEventListener('click', function() {
+          sel.querySelectorAll('.db-custom-select__option--selected').forEach(function(s) {
+            s.classList.remove('db-custom-select__option--selected');
+          });
+          opt.classList.add('db-custom-select__option--selected');
+          var valueEl = trigger.querySelector('.db-custom-select__value') || trigger.querySelector('.db-custom-select__placeholder');
+          if (valueEl) {
+            valueEl.textContent = opt.textContent.trim();
+            valueEl.classList.remove('db-custom-select__placeholder');
+            valueEl.classList.add('db-custom-select__value');
+          }
+          sel.classList.remove('db-custom-select--open');
+        });
+      });
+
+      // Search filter
+      var searchInput = sel.querySelector('.db-custom-select__search input');
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          var q = searchInput.value.toLowerCase();
+          sel.querySelectorAll('.db-custom-select__option').forEach(function(opt) {
+            opt.style.display = opt.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+          });
+        });
+        searchInput.addEventListener('click', function(e) { e.stopPropagation(); });
+      }
+    });
+
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.db-custom-select--open').forEach(function(s) {
+        s.classList.remove('db-custom-select--open');
+      });
+    });
+    if (root === document) _dbCustomSelectInit = true;
+  }
+
+  /* ----------------------------------------------------------
+     Command Palette
+     ---------------------------------------------------------- */
+  function openCommand(id) {
+    var cmd = document.getElementById(id);
+    if (!cmd) return;
+    cmd.classList.add('db-command--open');
+    var input = cmd.querySelector('.db-command__input');
+    if (input) { input.value = ''; input.focus(); }
+  }
+
+  function closeCommand(id) {
+    var cmd = document.getElementById(id);
+    if (!cmd) return;
+    cmd.classList.remove('db-command--open');
+  }
+
+  function initCommands(root) {
+    root.querySelectorAll('.db-command').forEach(function(cmd) {
+      if (cmd._dbInit) return;
+      cmd._dbInit = true;
+
+      cmd.querySelector('.db-command__overlay')?.addEventListener('click', function() {
+        cmd.classList.remove('db-command--open');
+      });
+
+      var input = cmd.querySelector('.db-command__input');
+      if (input) {
+        input.addEventListener('input', function() {
+          var q = input.value.toLowerCase();
+          cmd.querySelectorAll('.db-command__item').forEach(function(item) {
+            item.style.display = item.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+          });
+          var empty = cmd.querySelector('.db-command__empty');
+          if (empty) {
+            var anyVisible = cmd.querySelector('.db-command__item:not([style*="display: none"])');
+            empty.style.display = anyVisible ? 'none' : '';
+          }
+        });
+
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') cmd.classList.remove('db-command--open');
+        });
+      }
+    });
+
+    // Ctrl+K / Cmd+K global shortcut
+    document.addEventListener('keydown', function(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        var cmd = document.querySelector('.db-command');
+        if (cmd) {
+          if (cmd.classList.contains('db-command--open')) {
+            cmd.classList.remove('db-command--open');
+          } else {
+            cmd.classList.add('db-command--open');
+            var input = cmd.querySelector('.db-command__input');
+            if (input) { input.value = ''; input.focus(); }
+          }
+        }
+      }
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Menubar
+     ---------------------------------------------------------- */
+  var _dbMenubarInit = false;
+  function initMenubars(root) {
+    if (_dbMenubarInit && root === document) return;
+    root.querySelectorAll('.db-menubar').forEach(function(bar) {
+      if (bar._dbInit) return;
+      bar._dbInit = true;
+      bar.querySelectorAll('.db-menubar__item').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var wasOpen = item.classList.contains('db-menubar__item--open');
+          bar.querySelectorAll('.db-menubar__item--open').forEach(function(i) {
+            i.classList.remove('db-menubar__item--open');
+          });
+          if (!wasOpen) item.classList.add('db-menubar__item--open');
+        });
+        item.addEventListener('mouseenter', function() {
+          if (bar.querySelector('.db-menubar__item--open')) {
+            bar.querySelectorAll('.db-menubar__item--open').forEach(function(i) {
+              i.classList.remove('db-menubar__item--open');
+            });
+            item.classList.add('db-menubar__item--open');
+          }
+        });
+      });
+    });
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.db-menubar__item--open').forEach(function(i) {
+        i.classList.remove('db-menubar__item--open');
+      });
+    });
+    if (root === document) _dbMenubarInit = true;
+  }
+
+  /* ----------------------------------------------------------
+     Calendar / Date Picker
+     ---------------------------------------------------------- */
+  function initCalendars(root) {
+    root.querySelectorAll('.db-calendar').forEach(function(cal) {
+      if (cal._dbInit) return;
+      cal._dbInit = true;
+      cal.querySelectorAll('.db-calendar__day').forEach(function(day) {
+        if (day.classList.contains('db-calendar__day--disabled') || day.classList.contains('db-calendar__day--outside')) return;
+        day.addEventListener('click', function() {
+          cal.querySelectorAll('.db-calendar__day--selected').forEach(function(d) {
+            d.classList.remove('db-calendar__day--selected');
+          });
+          day.classList.add('db-calendar__day--selected');
+        });
+      });
+    });
+
+    root.querySelectorAll('.db-date-picker').forEach(function(dp) {
+      if (dp._dbInit) return;
+      dp._dbInit = true;
+      var trigger = dp.querySelector('.db-date-picker__trigger');
+      if (trigger) {
+        trigger.addEventListener('click', function(e) {
+          e.stopPropagation();
+          dp.classList.toggle('db-date-picker--open');
+        });
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      document.querySelectorAll('.db-date-picker--open').forEach(function(dp) {
+        if (!dp.contains(e.target)) dp.classList.remove('db-date-picker--open');
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Carousel
+     ---------------------------------------------------------- */
+  function initCarousels(root) {
+    root.querySelectorAll('.db-carousel').forEach(function(car) {
+      if (car._dbInit) return;
+      car._dbInit = true;
+      var track = car.querySelector('.db-carousel__track');
+      var slides = car.querySelectorAll('.db-carousel__slide');
+      var dots = car.querySelectorAll('.db-carousel__dot');
+      var current = 0;
+
+      function goTo(idx) {
+        if (idx < 0) idx = slides.length - 1;
+        if (idx >= slides.length) idx = 0;
+        current = idx;
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        dots.forEach(function(d, i) {
+          d.classList.toggle('db-carousel__dot--active', i === current);
+        });
+      }
+
+      var prev = car.querySelector('.db-carousel__btn--prev');
+      var next = car.querySelector('.db-carousel__btn--next');
+      if (prev) prev.addEventListener('click', function() { goTo(current - 1); });
+      if (next) next.addEventListener('click', function() { goTo(current + 1); });
+      dots.forEach(function(d, i) {
+        d.addEventListener('click', function() { goTo(i); });
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Input OTP
+     ---------------------------------------------------------- */
+  function initOTP(root) {
+    root.querySelectorAll('.db-otp').forEach(function(otp) {
+      if (otp._dbInit) return;
+      otp._dbInit = true;
+      var inputs = otp.querySelectorAll('.db-otp__input');
+      inputs.forEach(function(input, idx) {
+        input.setAttribute('maxlength', '1');
+        input.addEventListener('input', function() {
+          if (input.value.length === 1 && idx < inputs.length - 1) {
+            inputs[idx + 1].focus();
+          }
+        });
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !input.value && idx > 0) {
+            inputs[idx - 1].focus();
+          }
+        });
+        input.addEventListener('paste', function(e) {
+          e.preventDefault();
+          var data = (e.clipboardData || window.clipboardData).getData('text').trim();
+          for (var i = 0; i < Math.min(data.length, inputs.length); i++) {
+            inputs[i].value = data[i];
+          }
+          var focusIdx = Math.min(data.length, inputs.length - 1);
+          inputs[focusIdx].focus();
+        });
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Resizable
+     ---------------------------------------------------------- */
+  function initResizables(root) {
+    root.querySelectorAll('.db-resizable').forEach(function(el) {
+      if (el._dbInit) return;
+      el._dbInit = true;
+      el.querySelectorAll('.db-resizable__handle').forEach(function(handle) {
+        var startX, startY, startW, startH;
+        handle.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          startX = e.clientX;
+          startY = e.clientY;
+          startW = el.offsetWidth;
+          startH = el.offsetHeight;
+          function onMove(ev) {
+            if (handle.classList.contains('db-resizable__handle--right') || handle.classList.contains('db-resizable__handle--corner')) {
+              el.style.width = (startW + ev.clientX - startX) + 'px';
+            }
+            if (handle.classList.contains('db-resizable__handle--bottom') || handle.classList.contains('db-resizable__handle--corner')) {
+              el.style.height = (startH + ev.clientY - startY) + 'px';
+            }
+          }
+          function onUp() {
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+          }
+          document.addEventListener('mousemove', onMove);
+          document.addEventListener('mouseup', onUp);
+        });
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
      Init
      ---------------------------------------------------------- */
   function init(root) {
@@ -488,8 +1063,25 @@
     initSteppers(root);
     initTooltips(root);
     initSliders(root);
+    initWarmth();
     initCheckboxes(root);
     initRadios(root);
+    initAccordions(root);
+    initCollapsibles(root);
+    initAlertDialogs(root);
+    initSheets(root);
+    initDrawers(root);
+    initPopovers(root);
+    initContextMenus(root);
+    initDropdowns(root);
+    initToggles(root);
+    initCustomSelects(root);
+    initCommands(root);
+    initMenubars(root);
+    initCalendars(root);
+    initCarousels(root);
+    initOTP(root);
+    initResizables(root);
     initThemeSwitcher();
   }
 
@@ -507,6 +1099,14 @@
     toast: toast,
     openModal: openModal,
     closeModal: closeModal,
+    openAlertDialog: openAlertDialog,
+    closeAlertDialog: closeAlertDialog,
+    openSheet: openSheet,
+    closeSheet: closeSheet,
+    openDrawer: openDrawer,
+    closeDrawer: closeDrawer,
+    openCommand: openCommand,
+    closeCommand: closeCommand,
     getTheme: getTheme,
     setTheme: setTheme,
     cycleTheme: cycleTheme,

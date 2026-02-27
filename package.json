@@ -1,7 +1,7 @@
 {
   "name": "daub-ui",
-  "version": "1.1.0",
-  "description": "Warm, rustic neo-skeuomorphic CSS component library — 28 components, 4 themes",
+  "version": "2.0.0",
+  "description": "Considered CSS component library — 64 components, 8 themes, zero build step",
   "main": "daub.js",
   "style": "daub.css",
   "files": ["daub.css", "daub.js"],

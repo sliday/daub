@@ -3,23 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DAUB — Warm, Rustic Neo-Skeuomorphic CSS Components</title>
-  <meta name="description" content="DAUB is a CSS component library with 28 neo-skeuomorphic UI components and 4 themes. Warm, tactile, and accessible. No build step required.">
-  <meta name="keywords" content="CSS components, neo-skeuomorphic, UI kit, design system, warm UI, rustic, accessible, themes">
+  <title>DAUB — Considered Interface Components</title>
+  <meta name="description" content="DAUB is a CSS component library with 64 considered UI elements and 8 themes. Thoughtful, tactile, and accessible. No build step required.">
+  <meta name="keywords" content="CSS components, neo-skeuomorphic, UI kit, design system, considered UI, tactile, accessible, themes, AI components, llms.txt, drop-in CSS">
   <meta name="theme-color" content="#C67B5C">
   <link rel="canonical" href="https://daub.dev">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="DAUB — Neo-Skeuomorphic CSS Components">
-  <meta property="og:description" content="28 warm, tactile UI components with 4 themes. Drop-in CSS + JS. No build step.">
+  <meta property="og:title" content="DAUB — Considered Interface Components">
+  <meta property="og:description" content="64 considered UI elements with 8 themes. Drop-in CSS + JS. No build step.">
   <meta property="og:url" content="https://daub.dev">
   <meta property="og:site_name" content="DAUB UI">
+  <meta property="og:image" content="https://daub.dev/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="DAUB UI — Considered interface components">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="DAUB — Neo-Skeuomorphic CSS Components">
-  <meta name="twitter:description" content="28 warm, tactile UI components with 4 themes. Drop-in CSS + JS. No build step.">
+  <meta name="twitter:title" content="DAUB — Considered Interface Components">
+  <meta name="twitter:description" content="64 considered UI elements with 8 themes. Drop-in CSS + JS. No build step.">
+  <meta name="twitter:image" content="https://daub.dev/og-image.png">
+  <meta name="twitter:site" content="@staskulesh">
+  <meta name="twitter:creator" content="@staskulesh">
 
   <!-- Favicon (inline SVG) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
@@ -30,12 +37,15 @@
     "@context": "https://schema.org",
     "@type": "SoftwareSourceCode",
     "name": "DAUB UI",
-    "description": "A warm, rustic neo-skeuomorphic CSS component library with 28 components and 4 themes.",
+    "description": "Considered CSS components for discerning interfaces. 64 elements, 8 themes.",
     "url": "https://daub.dev",
     "codeRepository": "https://github.com/sliday/daub",
     "programmingLanguage": ["CSS", "JavaScript"],
     "license": "https://opensource.org/licenses/MIT",
-    "author": { "@type": "Organization", "name": "Sliday", "url": "https://github.com/sliday" }
+    "version": "2.0.0",
+    "dateModified": "2026-02-27",
+    "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
   </script>
 
@@ -44,11 +54,6 @@
     (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();
   </script>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Cabin:wght@400;500;600;700&display=swap" rel="stylesheet">
-
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -56,9 +61,13 @@
   <link rel="stylesheet" href="daub.css">
 
   <style>
+    /* Prevent horizontal overflow on mobile */
+    html, body { overflow-x: hidden; }
+
     /* Demo-only styles */
     .demo-section {
-      margin-bottom: 64px;
+      margin-bottom: 80px;
+      scroll-margin-top: 120px;
     }
     .demo-section__title {
       font-family: var(--db-font-ui);
@@ -66,7 +75,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--db-terracotta);
+      color: var(--db-terracotta-text, var(--db-terracotta));
       margin-bottom: 24px;
       padding-bottom: 8px;
       border-bottom: 1px solid var(--db-sand);
@@ -106,27 +115,243 @@
       font-size: 0.8125rem;
       color: var(--db-warm-gray);
     }
-    .demo-hero {
+    /* Hero */
+    .db-hero {
       text-align: center;
-      padding: 80px 24px 48px;
-    }
-    .demo-hero h1 {
-      font-family: var(--db-font-heading);
-      font-size: 3rem;
-      font-weight: 800;
-      color: var(--db-ink);
-      margin-bottom: 12px;
-      font-variation-settings: 'WONK' 1;
-    }
-    .demo-hero p {
-      font-size: 1.125rem;
-      color: var(--db-warm-gray);
-      max-width: 480px;
+      padding: 96px 24px 48px;
+      max-width: 720px;
       margin: 0 auto;
     }
+    .db-hero__announce {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px 4px 4px;
+      border-radius: var(--db-radius-full);
+      background: var(--db-cream-dark);
+      border: 1px solid var(--db-sand);
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+      color: var(--db-charcoal);
+      margin-bottom: 24px;
+      text-decoration: none;
+      transition: border-color var(--db-transition);
+    }
+    .db-hero__announce:hover {
+      border-color: var(--db-terracotta);
+    }
+    .db-hero__announce .db-badge {
+      font-size: 0.6875rem;
+    }
+    .db-hero__headline {
+      font-family: var(--db-font-heading);
+      font-size: clamp(2.25rem, 5vw, 3.75rem);
+      font-weight: 800;
+      color: var(--db-ink);
+      margin: 0 0 16px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .db-hero__sub {
+      font-family: var(--db-font-body);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--db-warm-gray);
+      max-width: 560px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+    .db-hero__actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .db-hero__install {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      border-radius: var(--db-radius-2);
+      background: var(--db-cream-dark);
+      border: 1px solid var(--db-sand);
+      font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.8125rem;
+      color: var(--db-charcoal);
+      max-width: calc(100vw - 32px);
+      overflow-x: auto;
+    }
+    .db-hero__install code {
+      white-space: nowrap;
+    }
+    .db-hero__copy {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--db-warm-gray);
+      padding: 4px;
+      border-radius: var(--db-radius-1);
+      transition: color var(--db-transition);
+      flex-shrink: 0;
+    }
+    .db-hero__copy:hover {
+      color: var(--db-terracotta);
+    }
     @media (max-width: 640px) {
-      .demo-hero h1 { font-size: 2rem; }
+      .db-hero { padding: 72px 16px 40px; }
+      .db-hero__actions { flex-direction: column; align-items: center; }
       .demo-row { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* Showcase */
+    .db-showcase {
+      max-width: 960px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+    }
+    .db-showcase__frame {
+      border-radius: var(--db-radius-3);
+      background: var(--db-white);
+      border: 1px solid var(--db-sand);
+      box-shadow: var(--db-shadow-3);
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .db-showcase__col {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    @media (max-width: 720px) {
+      .db-showcase__frame { grid-template-columns: 1fr; padding: 24px; }
+    }
+
+    /* AI Section */
+    .db-ai-section {
+      max-width: 960px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .db-ai-section__heading {
+      font-family: var(--db-font-heading);
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 700;
+      color: var(--db-ink);
+      margin: 12px 0 12px;
+    }
+    .db-ai-section__desc {
+      font-family: var(--db-font-body);
+      font-size: 1.0625rem;
+      color: var(--db-warm-gray);
+      max-width: 560px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+    .db-ai-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      text-align: left;
+    }
+    .db-ai-grid .db-card { margin: 0; }
+    .db-ai-grid .db-card__title { font-size: 0.9375rem; }
+    @media (max-width: 720px) {
+      .db-ai-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Nav bar */
+    .db-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--db-cream);
+      border-bottom: 1px solid var(--db-sand);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+      font-family: var(--db-font-ui);
+      backdrop-filter: blur(8px);
+    }
+    .db-nav__brand {
+      font-family: var(--db-font-heading);
+      font-weight: 800;
+      font-size: 1.125rem;
+      color: var(--db-ink);
+      text-decoration: none;
+    }
+    .db-nav__links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .db-nav__links a {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-charcoal);
+      text-decoration: none;
+      transition: color var(--db-transition);
+    }
+    .db-nav__links a:hover {
+      color: var(--db-terracotta);
+    }
+    .db-nav__github {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-charcoal);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: var(--db-radius-2);
+      border: 1px solid var(--db-sand);
+      transition: border-color var(--db-transition);
+    }
+    .db-nav__github:hover {
+      border-color: var(--db-terracotta);
+    }
+    @media (max-width: 640px) {
+      .db-nav__links { gap: 12px; }
+      .db-nav__links a { font-size: 0.75rem; }
+      .db-nav__github span { display: none; }
+    }
+
+    /* Component index bar */
+    .db-comp-index {
+      position: sticky;
+      top: 48px;
+      z-index: 99;
+      background: var(--db-cream-dark);
+      border-bottom: 1px solid var(--db-sand);
+      padding: 8px 24px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+    .db-comp-index a {
+      display: inline-block;
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--db-warm-gray);
+      text-decoration: none;
+      padding: 4px 12px;
+      border-radius: var(--db-radius-full);
+      transition: color var(--db-transition), background var(--db-transition);
+    }
+    .db-comp-index a:hover {
+      color: var(--db-terracotta);
+      background: var(--db-cream);
     }
   </style>
 </head>
@@ -144,10 +369,159 @@
     </filter>
   </svg>
 
+  <!-- Navigation -->
+  <nav class="db-nav" role="navigation" aria-label="Main">
+    <a href="/" class="db-nav__brand">DAUB</a>
+    <ul class="db-nav__links">
+      <li><a href="#components-index">Components</a></li>
+      <li><a href="demo.html">Layouts</a></li>
+      <li><a href="llms.txt">AI Docs</a></li>
+      <li>
+        <a href="https://github.com/sliday/daub" class="db-nav__github" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
   <!-- Hero -->
-  <div class="demo-hero">
-    <h1>DAUB</h1>
-    <p>A warm, tactile neo-skeuomorphic component library. 28 components, 4 themes, vanilla JS + CSS.</p>
+  <section class="db-hero">
+    <a class="db-hero__announce" href="https://github.com/sliday/daub" target="_blank" rel="noopener">
+      <span class="db-badge db-badge--new">Open Source</span>
+      Star on GitHub
+      <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
+    </a>
+    <h1 class="db-hero__headline">Interfaces, Considered.</h1>
+    <p class="db-hero__sub">Thoughtfully composed components that honour materiality. 64 elements, 8 themes, no ceremony. Two files, and your interface has character.</p>
+    <div class="db-hero__actions">
+      <a href="#foundations" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
+      <a href="#controls" class="db-btn db-btn--secondary db-btn--lg">View Components</a>
+    </div>
+    <div class="db-hero__install">
+      <code>&lt;link rel="stylesheet" href="https://daub.dev/daub.css"&gt;</code>
+      <button class="db-hero__copy" aria-label="Copy to clipboard" onclick="navigator.clipboard.writeText('<link rel=&quot;stylesheet&quot; href=&quot;https://daub.dev/daub.css&quot;>').then(function(){DAUB.toast({type:'success',title:'Copied!',message:'CSS link copied to clipboard.',duration:2000})})">
+        <i data-lucide="copy" style="width:16px;height:16px;"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Showcase -->
+  <section class="db-showcase">
+    <div class="db-showcase__frame">
+      <div class="db-showcase__col">
+        <div class="db-card">
+          <div class="db-card__header">
+            <div class="db-avatar db-avatar--md">
+              <i data-lucide="palette" style="width:20px;height:20px;"></i>
+            </div>
+            <div>
+              <div class="db-card__title">Design System</div>
+              <div class="db-caption">v2.0 — 64 components</div>
+            </div>
+          </div>
+          <p class="db-card__desc">Every component is theme-aware. Switch themes with the buttons in the corner and watch this entire page transform.</p>
+        </div>
+        <div class="demo-row" style="margin-bottom:0;">
+          <button class="db-btn db-btn--primary">
+            <i data-lucide="download" style="width:16px;height:16px;"></i>
+            Install
+          </button>
+          <button class="db-btn db-btn--secondary">Learn More</button>
+        </div>
+        <div class="db-alert db-alert--info">
+          <span class="db-alert__icon"><i data-lucide="info" style="width:18px;height:18px;"></i></span>
+          <div class="db-alert__content">
+            <div class="db-alert__title">Zero build step</div>
+            <div>Just two files: daub.css + daub.js</div>
+          </div>
+        </div>
+      </div>
+      <div class="db-showcase__col">
+        <div class="db-field">
+          <label class="db-field__label" for="showcase-email">Email</label>
+          <input class="db-field__input" id="showcase-email" type="email" placeholder="you@example.com">
+        </div>
+        <label class="db-checkbox">
+          <input class="db-checkbox__input" type="checkbox" checked>
+          <span class="db-checkbox__box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          Subscribe to updates
+        </label>
+        <div class="db-switch" aria-checked="true" aria-label="Dark mode">
+          <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+          Dark mode
+        </div>
+        <div class="db-slider" data-db-warmth>
+          <div class="db-slider__label">
+            <span>Warmth</span>
+            <span class="db-slider__value">75</span>
+          </div>
+          <input class="db-slider__input" type="range" min="0" max="100" value="75">
+        </div>
+        <button class="db-btn db-btn--secondary" onclick="DAUB.toast({type:'success',title:'It works!',message:'This toast was triggered from a real DAUB component.'})">
+          <i data-lucide="sparkles" style="width:16px;height:16px;"></i>
+          Show Toast
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Built for AI Section -->
+  <section class="db-ai-section">
+    <span class="db-badge db-badge--updated">AI-Native</span>
+    <h2 class="db-ai-section__heading">Fluent in Machine and Human</h2>
+    <p class="db-ai-section__desc">Every component speaks both languages — structured references for AI agents, refined aesthetics for discerning humans.</p>
+    <div class="db-ai-grid">
+      <div class="db-card">
+        <div class="db-card__header">
+          <div class="db-avatar db-avatar--sm">
+            <i data-lucide="file-text" style="width:16px;height:16px;"></i>
+          </div>
+          <div>
+            <div class="db-card__title">llms.txt</div>
+            <div class="db-caption">LLM Reference</div>
+          </div>
+        </div>
+        <p class="db-card__desc">Point any LLM at <a href="https://daub.dev/llms.txt" style="color:var(--db-terracotta);">daub.dev/llms.txt</a> for full component docs with HTML snippets.</p>
+      </div>
+      <div class="db-card">
+        <div class="db-card__header">
+          <div class="db-avatar db-avatar--sm">
+            <i data-lucide="plug" style="width:16px;height:16px;"></i>
+          </div>
+          <div>
+            <div class="db-card__title">AI Plugin</div>
+            <div class="db-caption">Standard Manifest</div>
+          </div>
+        </div>
+        <p class="db-card__desc">Standard <a href="https://daub.dev/.well-known/ai-plugin.json" style="color:var(--db-terracotta);">ai-plugin.json</a> manifest for AI agent discovery and integration.</p>
+      </div>
+      <div class="db-card">
+        <div class="db-card__header">
+          <div class="db-avatar db-avatar--sm">
+            <i data-lucide="terminal" style="width:16px;height:16px;"></i>
+          </div>
+          <div>
+            <div class="db-card__title">SKILL.md</div>
+            <div class="db-caption">Claude Code</div>
+          </div>
+        </div>
+        <p class="db-card__desc">Claude Code skill for instant DAUB development — components, themes, and patterns at your fingertips.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Component Index -->
+  <div class="db-comp-index" id="components-index">
+    <a href="#foundations">Foundations</a>
+    <a href="#controls">Controls</a>
+    <a href="#navigation">Navigation</a>
+    <a href="#data-display">Data Display</a>
+    <a href="#feedback">Feedback</a>
+    <a href="#overlays">Overlays</a>
+    <a href="#complex">Complex</a>
   </div>
 
   <div class="db-container">
@@ -155,8 +529,8 @@
     <!-- ============================================================
          1. FOUNDATIONS
          ============================================================ -->
-    <div class="demo-section">
-      <div class="demo-section__title">1. Foundations — Surfaces &amp; Elevation</div>
+    <div class="demo-section" id="foundations">
+      <h2 class="demo-section__title">1. Foundations — Surfaces &amp; Elevation</h2>
 
       <div class="demo-grid">
         <div class="demo-surface-box db-surface">Base Surface</div>
@@ -180,16 +554,16 @@
         <div class="db-h2">Heading 2</div>
         <div class="db-h3">Heading 3</div>
         <div class="db-h4">Heading 4</div>
-        <p class="db-body db-mt-3">Body text — The quick brown fox jumps over the lazy dog. Source Serif 4 at 16px with 1.6 line height gives comfortable reading.</p>
-        <p class="db-caption db-mt-2">Caption text — Cabin humanist sans for UI labels and small text.</p>
+        <p class="db-body db-mt-3">Body text — The quick brown fox jumps over the lazy dog. Charter at 16px with 1.6 line height gives comfortable reading.</p>
+        <p class="db-caption db-mt-2">Caption text — System UI sans-serif for labels and small text.</p>
       </div>
     </div>
 
     <!-- ============================================================
          2. CONTROLS
          ============================================================ -->
-    <div class="demo-section">
-      <div class="demo-section__title">2. Controls — Buttons</div>
+    <div class="demo-section" id="controls">
+      <h2 class="demo-section__title">2. Controls — Buttons</h2>
 
       <div class="demo-row">
         <button class="db-btn db-btn--primary">
@@ -213,7 +587,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">2b. Controls — Text Fields</div>
+      <h2 class="demo-section__title">2b. Controls — Text Fields</h2>
 
       <div class="demo-grid">
         <div class="db-field">
@@ -245,7 +619,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">2c. Controls — Checkbox, Radio, Switch, Slider</div>
+      <h2 class="demo-section__title">2c. Controls — Checkbox, Radio, Switch, Slider</h2>
 
       <div class="demo-grid">
         <div class="demo-col">
@@ -333,8 +707,8 @@
     <!-- ============================================================
          3. NAVIGATION
          ============================================================ -->
-    <div class="demo-section">
-      <div class="demo-section__title">3. Navigation — Tabs</div>
+    <div class="demo-section" id="navigation">
+      <h2 class="demo-section__title">3. Navigation — Tabs</h2>
 
       <div class="db-tabs">
         <div class="db-tabs__list">
@@ -355,7 +729,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">3b. Navigation — Breadcrumbs</div>
+      <h2 class="demo-section__title">3b. Navigation — Breadcrumbs</h2>
 
       <nav aria-label="Breadcrumb">
         <ol class="db-breadcrumbs">
@@ -368,7 +742,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">3c. Navigation — Pagination</div>
+      <h2 class="demo-section__title">3c. Navigation — Pagination</h2>
 
       <nav class="db-pagination" aria-label="Pagination">
         <button class="db-pagination__btn" disabled aria-label="Previous page">
@@ -386,7 +760,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">3d. Navigation — Stepper</div>
+      <h2 class="demo-section__title">3d. Navigation — Stepper</h2>
 
       <div class="db-stepper">
         <div class="db-stepper__step db-stepper__step--completed">
@@ -415,8 +789,8 @@
     <!-- ============================================================
          4. DATA DISPLAY
          ============================================================ -->
-    <div class="demo-section">
-      <div class="demo-section__title">4. Data Display — Cards</div>
+    <div class="demo-section" id="data-display">
+      <h2 class="demo-section__title">4. Data Display — Cards</h2>
 
       <div class="demo-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
         <div class="db-card">
@@ -470,7 +844,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">4b. Data Display — List Items</div>
+      <h2 class="demo-section__title">4b. Data Display — List Items</h2>
 
       <div class="db-surface--raised" style="max-width:480px;">
         <div class="db-list">
@@ -508,7 +882,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">4c. Data Display — Badges &amp; Avatars</div>
+      <h2 class="demo-section__title">4c. Data Display — Badges &amp; Avatars</h2>
 
       <div class="demo-row">
         <div class="demo-col">
@@ -536,7 +910,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">4d. Data Display — Table</div>
+      <h2 class="demo-section__title">4d. Data Display — Table</h2>
 
       <div class="db-surface--raised" style="overflow-x:auto;">
         <table class="db-table">
@@ -588,7 +962,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">4e. Data Display — Tooltip</div>
+      <h2 class="demo-section__title">4e. Data Display — Tooltip</h2>
 
       <div class="demo-row">
         <span class="db-tooltip-wrap">
@@ -611,8 +985,8 @@
     <!-- ============================================================
          5. FEEDBACK
          ============================================================ -->
-    <div class="demo-section">
-      <div class="demo-section__title">5. Feedback — Modal</div>
+    <div class="demo-section" id="feedback">
+      <h2 class="demo-section__title">5. Feedback — Modal</h2>
 
       <button class="db-btn db-btn--primary" data-db-modal-trigger="demo-modal">
         <i data-lucide="maximize-2" style="width:16px;height:16px;"></i>
@@ -643,7 +1017,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">5b. Feedback — Toast Stack</div>
+      <h2 class="demo-section__title">5b. Feedback — Toast Stack</h2>
 
       <div class="demo-row">
         <button class="db-btn db-btn--secondary" onclick="DAUB.toast({ type:'success', title:'Success!', message:'Your changes have been saved.' })">
@@ -666,7 +1040,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">5c. Feedback — Alert Banners</div>
+      <h2 class="demo-section__title">5c. Feedback — Alert Banners</h2>
 
       <div class="demo-col" style="max-width:560px;">
         <div class="db-alert db-alert--warning">
@@ -701,7 +1075,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">5d. Feedback — Empty State</div>
+      <h2 class="demo-section__title">5d. Feedback — Empty State</h2>
 
       <div class="db-surface--raised" style="max-width:480px;">
         <div class="db-empty">
@@ -719,7 +1093,7 @@
     </div>
 
     <div class="demo-section">
-      <div class="demo-section__title">5e. Feedback — Skeleton &amp; Progress</div>
+      <h2 class="demo-section__title">5e. Feedback — Skeleton &amp; Progress</h2>
 
       <div class="demo-grid">
         <div class="db-surface--raised" style="padding:24px;">
@@ -759,15 +1133,452 @@
       </div>
     </div>
 
-    <!-- Footer -->
-    <hr class="db-divider" style="margin:48px 0;">
-    <div style="text-align:center;padding-bottom:48px;">
-      <p class="db-caption">DAUB UI KIT v1.1 — 28 Components, 4 Themes, Vanilla JS + CSS</p>
+    <!-- ============================================================
+         NEW IN v2.0 — TIER 1 CSS-ONLY
+         ============================================================ -->
+    <div class="demo-section" id="tier1">
+      <h2 class="demo-section__title">6. New in v2.0 — CSS-Only Components</h2>
+
+      <div class="demo-label">Separator</div>
+      <hr class="db-separator">
+      <hr class="db-separator db-separator--dashed">
+      <div class="db-separator__label">Or continue with</div>
+
+      <div class="demo-row db-mt-5">
+        <div class="demo-col">
+          <div class="demo-label">Kbd</div>
+          <div class="demo-row">
+            <kbd class="db-kbd">Ctrl</kbd>
+            <kbd class="db-kbd">K</kbd>
+            <span class="db-caption" style="margin: 0 4px;">or</span>
+            <kbd class="db-kbd">&#8984;</kbd>
+            <kbd class="db-kbd">K</kbd>
+          </div>
+        </div>
+        <div class="demo-col">
+          <div class="demo-label">Spinner</div>
+          <div class="demo-row">
+            <span class="db-spinner db-spinner--sm"></span>
+            <span class="db-spinner"></span>
+            <span class="db-spinner db-spinner--lg"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-label db-mt-5">Input (standalone) + Input Group</div>
+      <div class="demo-grid" style="max-width:600px;">
+        <input class="db-input" type="text" placeholder="Standalone input">
+        <div class="db-input-group">
+          <span class="db-input-group__addon">https://</span>
+          <input class="db-input" type="text" placeholder="daub.dev">
+        </div>
+        <div class="db-input-group">
+          <input class="db-input" type="email" placeholder="Email address">
+          <button class="db-btn db-btn--primary">Subscribe</button>
+        </div>
+      </div>
+
+      <div class="demo-label db-mt-5">Toggle / Toggle Group</div>
+      <div class="demo-row">
+        <button class="db-toggle" aria-pressed="false">
+          <i data-lucide="bold" style="width:16px;height:16px;"></i>
+          Bold
+        </button>
+        <div class="db-toggle-group">
+          <button class="db-toggle db-toggle--active" aria-pressed="true">
+            <i data-lucide="align-left" style="width:16px;height:16px;"></i>
+          </button>
+          <button class="db-toggle" aria-pressed="false">
+            <i data-lucide="align-center" style="width:16px;height:16px;"></i>
+          </button>
+          <button class="db-toggle" aria-pressed="false">
+            <i data-lucide="align-right" style="width:16px;height:16px;"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="demo-label db-mt-5">Button Group</div>
+      <div class="demo-row">
+        <div class="db-btn-group">
+          <button class="db-btn db-btn--secondary">Copy</button>
+          <button class="db-btn db-btn--secondary">Cut</button>
+          <button class="db-btn db-btn--secondary">Paste</button>
+        </div>
+      </div>
+
+      <div class="demo-label db-mt-5">Native Select</div>
+      <div style="max-width:300px;">
+        <div class="db-select">
+          <label class="db-label">Framework</label>
+          <select class="db-select__input">
+            <option value="">Choose one...</option>
+            <option>Vanilla CSS</option>
+            <option>Tailwind</option>
+            <option>Bootstrap</option>
+            <option>DAUB</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         OVERLAYS & INTERACTIVE
+         ============================================================ -->
+    <div class="demo-section" id="overlays">
+      <h2 class="demo-section__title">7. Overlays and Interactive</h2>
+
+      <div class="demo-label">Accordion</div>
+      <div class="db-accordion" style="max-width:500px;">
+        <div class="db-accordion__item db-accordion__item--open">
+          <button class="db-accordion__trigger" aria-expanded="true">
+            What makes DAUB different?
+            <svg class="db-accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="db-accordion__content">
+            DAUB takes a considered approach to interface design. Every component honours materiality — tactile surfaces, warm shadows, and the subtle satisfaction of real-world interaction.
+          </div>
+        </div>
+        <div class="db-accordion__item">
+          <button class="db-accordion__trigger" aria-expanded="false">
+            How many themes are available?
+            <svg class="db-accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="db-accordion__content">
+            Eight themes ship with DAUB v2.0: Light, Dark, Grunge Light, Grunge Dark, Parchment, Ink, Ember, and Bone. Each one is a complete colour system.
+          </div>
+        </div>
+        <div class="db-accordion__item">
+          <button class="db-accordion__trigger" aria-expanded="false">
+            Do I need a build step?
+            <svg class="db-accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="db-accordion__content">
+            No. DAUB is two files — daub.css and daub.js. Link them from a CDN or serve them locally. No bundler, no framework dependency.
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-label db-mt-5">Collapsible</div>
+      <div class="db-collapsible" style="max-width:500px;">
+        <button class="db-collapsible__trigger" aria-expanded="false">
+          <svg class="db-collapsible__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          Show advanced options
+        </button>
+        <div class="db-collapsible__content">
+          <div class="db-card" style="margin-top:8px;">
+            <p class="db-body--sm">These are the advanced configuration options that are hidden by default. Use the collapsible component for progressive disclosure.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-row db-mt-5">
+        <div class="demo-col">
+          <div class="demo-label">Dropdown Menu</div>
+          <div class="db-dropdown">
+            <button class="db-btn db-btn--secondary db-dropdown__trigger">
+              Options
+              <i data-lucide="chevron-down" style="width:14px;height:14px;"></i>
+            </button>
+            <div class="db-dropdown__content">
+              <div class="db-dropdown__label">Actions</div>
+              <button class="db-dropdown__item">
+                <i data-lucide="copy" style="width:14px;height:14px;color:var(--db-warm-gray);"></i>
+                Duplicate
+              </button>
+              <button class="db-dropdown__item">
+                <i data-lucide="edit" style="width:14px;height:14px;color:var(--db-warm-gray);"></i>
+                Rename
+              </button>
+              <hr class="db-dropdown__separator">
+              <button class="db-dropdown__item" style="color:var(--db-error);">
+                <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-col">
+          <div class="demo-label">Popover</div>
+          <div class="db-popover">
+            <button class="db-btn db-btn--secondary db-popover__trigger">
+              <i data-lucide="settings" style="width:14px;height:14px;"></i>
+              Settings
+            </button>
+            <div class="db-popover__content db-popover__content--bottom">
+              <div class="db-field" style="margin-bottom:12px;">
+                <label class="db-field__label">Display name</label>
+                <input class="db-field__input" type="text" value="DAUB User">
+              </div>
+              <button class="db-btn db-btn--primary db-btn--sm" style="width:100%;">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-col">
+          <div class="demo-label">Tooltip</div>
+          <div class="db-tooltip">
+            <button class="db-btn db-btn--secondary">Hover me</button>
+            <span class="db-tooltip__content db-tooltip__content--top">This is a tooltip</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-row db-mt-5">
+        <button class="db-btn db-btn--secondary" onclick="DAUB.openAlertDialog('demo-alert-dialog')">
+          Open Alert Dialog
+        </button>
+        <button class="db-btn db-btn--secondary" onclick="DAUB.openSheet('demo-sheet')">
+          Open Sheet
+        </button>
+        <button class="db-btn db-btn--secondary" onclick="DAUB.openDrawer('demo-drawer')">
+          Open Drawer
+        </button>
+      </div>
+    </div>
+
+    <!-- Alert Dialog (hidden) -->
+    <div class="db-alert-dialog" id="demo-alert-dialog">
+      <div class="db-alert-dialog__overlay"></div>
+      <div class="db-alert-dialog__panel">
+        <h3 class="db-alert-dialog__title">Are you sure?</h3>
+        <p class="db-alert-dialog__desc">This action cannot be undone. This will permanently delete the selected item from your account.</p>
+        <div class="db-alert-dialog__actions">
+          <button class="db-btn db-btn--secondary" data-action="cancel">Cancel</button>
+          <button class="db-btn db-btn--primary" onclick="DAUB.closeAlertDialog('demo-alert-dialog');DAUB.toast({type:'success',title:'Deleted',message:'Item removed.',duration:2000})">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sheet (hidden) -->
+    <div class="db-sheet db-sheet--right" id="demo-sheet">
+      <div class="db-sheet__overlay"></div>
+      <div class="db-sheet__panel">
+        <div class="db-sheet__header">
+          <span class="db-sheet__title">Sheet Panel</span>
+          <button class="db-sheet__close" aria-label="Close">
+            <i data-lucide="x" style="width:18px;height:18px;"></i>
+          </button>
+        </div>
+        <div class="db-sheet__body">
+          <p class="db-body">This is a sheet panel that slides in from the right. Use it for detail views, settings, or supplementary content.</p>
+          <div class="db-field db-mt-4">
+            <label class="db-field__label">Name</label>
+            <input class="db-field__input" type="text" placeholder="Enter name">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer (hidden) -->
+    <div class="db-drawer" id="demo-drawer">
+      <div class="db-drawer__overlay"></div>
+      <div class="db-drawer__panel">
+        <div class="db-drawer__handle"></div>
+        <div class="db-drawer__body">
+          <div class="db-h3">Drawer</div>
+          <p class="db-body db-mt-3">A mobile-friendly bottom drawer for actions, forms, or navigation.</p>
+          <div class="demo-row db-mt-4">
+            <button class="db-btn db-btn--primary" onclick="DAUB.closeDrawer('demo-drawer')">Done</button>
+            <button class="db-btn db-btn--secondary" onclick="DAUB.closeDrawer('demo-drawer')">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         COMPLEX COMPONENTS
+         ============================================================ -->
+    <div class="demo-section" id="complex">
+      <h2 class="demo-section__title">8. Complex Components</h2>
+
+      <div class="demo-label">Calendar</div>
+      <div class="db-calendar" style="max-width:280px;">
+        <div class="db-calendar__header">
+          <button class="db-calendar__nav"><i data-lucide="chevron-left" style="width:14px;height:14px;"></i></button>
+          <span class="db-calendar__title">February 2026</span>
+          <button class="db-calendar__nav"><i data-lucide="chevron-right" style="width:14px;height:14px;"></i></button>
+        </div>
+        <div class="db-calendar__grid">
+          <span class="db-calendar__day-label">Mo</span>
+          <span class="db-calendar__day-label">Tu</span>
+          <span class="db-calendar__day-label">We</span>
+          <span class="db-calendar__day-label">Th</span>
+          <span class="db-calendar__day-label">Fr</span>
+          <span class="db-calendar__day-label">Sa</span>
+          <span class="db-calendar__day-label">Su</span>
+          <button class="db-calendar__day db-calendar__day--outside">26</button>
+          <button class="db-calendar__day db-calendar__day--outside">27</button>
+          <button class="db-calendar__day db-calendar__day--outside">28</button>
+          <button class="db-calendar__day db-calendar__day--outside">29</button>
+          <button class="db-calendar__day db-calendar__day--outside">30</button>
+          <button class="db-calendar__day db-calendar__day--outside">31</button>
+          <button class="db-calendar__day">1</button>
+          <button class="db-calendar__day">2</button>
+          <button class="db-calendar__day">3</button>
+          <button class="db-calendar__day">4</button>
+          <button class="db-calendar__day">5</button>
+          <button class="db-calendar__day">6</button>
+          <button class="db-calendar__day">7</button>
+          <button class="db-calendar__day">8</button>
+          <button class="db-calendar__day">9</button>
+          <button class="db-calendar__day">10</button>
+          <button class="db-calendar__day">11</button>
+          <button class="db-calendar__day">12</button>
+          <button class="db-calendar__day">13</button>
+          <button class="db-calendar__day">14</button>
+          <button class="db-calendar__day">15</button>
+          <button class="db-calendar__day">16</button>
+          <button class="db-calendar__day">17</button>
+          <button class="db-calendar__day">18</button>
+          <button class="db-calendar__day">19</button>
+          <button class="db-calendar__day">20</button>
+          <button class="db-calendar__day">21</button>
+          <button class="db-calendar__day">22</button>
+          <button class="db-calendar__day">23</button>
+          <button class="db-calendar__day">24</button>
+          <button class="db-calendar__day">25</button>
+          <button class="db-calendar__day">26</button>
+          <button class="db-calendar__day db-calendar__day--today">27</button>
+          <button class="db-calendar__day">28</button>
+        </div>
+      </div>
+
+      <div class="demo-label db-mt-5">Input OTP</div>
+      <div class="db-otp">
+        <input class="db-otp__input" type="text" inputmode="numeric">
+        <input class="db-otp__input" type="text" inputmode="numeric">
+        <input class="db-otp__input" type="text" inputmode="numeric">
+        <span class="db-otp__separator">-</span>
+        <input class="db-otp__input" type="text" inputmode="numeric">
+        <input class="db-otp__input" type="text" inputmode="numeric">
+        <input class="db-otp__input" type="text" inputmode="numeric">
+      </div>
+
+      <div class="demo-label db-mt-5">CSS Bar Chart</div>
+      <div style="max-width:400px;">
+        <div class="db-chart">
+          <div class="db-chart__bar" style="height:40%;"></div>
+          <div class="db-chart__bar" style="height:65%;"></div>
+          <div class="db-chart__bar" style="height:80%;"></div>
+          <div class="db-chart__bar" style="height:55%;"></div>
+          <div class="db-chart__bar" style="height:90%;"></div>
+          <div class="db-chart__bar" style="height:70%;"></div>
+          <div class="db-chart__bar" style="height:45%;"></div>
+        </div>
+        <div class="db-chart__labels">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+        </div>
+      </div>
+
+      <div class="demo-label db-mt-5">Data Table</div>
+      <div class="db-scroll-area" style="max-width:600px;">
+        <table class="db-data-table">
+          <thead>
+            <tr>
+              <th style="width:40px;"><input class="db-data-table__check" type="checkbox"></th>
+              <th data-sortable>Component</th>
+              <th data-sortable>Category</th>
+              <th data-sortable>Tier</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><input class="db-data-table__check" type="checkbox"></td><td>Accordion</td><td>Interactive</td><td>Tier 2</td></tr>
+            <tr><td><input class="db-data-table__check" type="checkbox"></td><td>Calendar</td><td>Complex</td><td>Tier 3</td></tr>
+            <tr><td><input class="db-data-table__check" type="checkbox"></td><td>Carousel</td><td>Complex</td><td>Tier 3</td></tr>
+            <tr><td><input class="db-data-table__check" type="checkbox"></td><td>Command</td><td>Complex</td><td>Tier 3</td></tr>
+            <tr><td><input class="db-data-table__check" type="checkbox"></td><td>Separator</td><td>CSS-only</td><td>Tier 1</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="demo-label db-mt-5">Custom Select (Combobox)</div>
+      <div style="max-width:300px;">
+        <div class="db-custom-select">
+          <button class="db-custom-select__trigger" type="button">
+            <span class="db-custom-select__placeholder">Select a component...</span>
+            <svg class="db-custom-select__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="db-custom-select__dropdown">
+            <div class="db-custom-select__search"><input type="text" placeholder="Search..."></div>
+            <div class="db-custom-select__option">Accordion</div>
+            <div class="db-custom-select__option">Button</div>
+            <div class="db-custom-select__option">Calendar</div>
+            <div class="db-custom-select__option">Card</div>
+            <div class="db-custom-select__option">Carousel</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-label db-mt-5">Command Palette (<kbd class="db-kbd db-kbd--sm">&#8984;K</kbd>)</div>
+      <button class="db-btn db-btn--secondary" onclick="DAUB.openCommand('demo-command')">
+        <i data-lucide="search" style="width:14px;height:14px;"></i>
+        Open Command Palette
+      </button>
+    </div>
+
+    <!-- Command Palette (hidden) -->
+    <div class="db-command" id="demo-command">
+      <div class="db-command__overlay"></div>
+      <div class="db-command__panel">
+        <div class="db-command__input-wrap">
+          <i data-lucide="search" style="width:18px;height:18px;color:var(--db-warm-gray);"></i>
+          <input class="db-command__input" type="text" placeholder="Type a command or search...">
+        </div>
+        <div class="db-command__list">
+          <div class="db-command__group-label">Navigation</div>
+          <div class="db-command__item">
+            <i data-lucide="home" style="width:16px;height:16px;color:var(--db-warm-gray);"></i>
+            Home
+            <span class="db-command__shortcut"><kbd class="db-kbd db-kbd--sm">&#8984;</kbd><kbd class="db-kbd db-kbd--sm">H</kbd></span>
+          </div>
+          <div class="db-command__item">
+            <i data-lucide="settings" style="width:16px;height:16px;color:var(--db-warm-gray);"></i>
+            Settings
+          </div>
+          <div class="db-command__group-label">Theme</div>
+          <div class="db-command__item" onclick="DAUB.setTheme('light');DAUB.closeCommand('demo-command');">
+            <i data-lucide="sun" style="width:16px;height:16px;color:var(--db-warm-gray);"></i>
+            Light Mode
+          </div>
+          <div class="db-command__item" onclick="DAUB.setTheme('dark');DAUB.closeCommand('demo-command');">
+            <i data-lucide="moon" style="width:16px;height:16px;color:var(--db-warm-gray);"></i>
+            Dark Mode
+          </div>
+          <div class="db-command__empty" style="display:none;">No results found.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         PROSE TYPOGRAPHY DEMO
+         ============================================================ -->
+    <div class="demo-section" id="prose">
+      <h2 class="demo-section__title">9. Prose Typography</h2>
+      <div class="db-prose">
+        <h2>The Art of Considered Design</h2>
+        <p>Good interface design is invisible. It operates in the space between intention and action, guiding without commanding. The best components feel <strong>inevitable</strong> rather than clever.</p>
+        <blockquote>Design is not just what it looks like and feels like. Design is how it works.</blockquote>
+        <h3>Principles</h3>
+        <ul>
+          <li>Honour materiality — surfaces should feel real</li>
+          <li>Respect the reader — typography should be comfortable</li>
+          <li>Minimize ceremony — components should require no configuration</li>
+        </ul>
+        <p>Inline code looks like <code>var theme = 'light'</code> and links look like <a href="#">this considered anchor</a>.</p>
+        <pre><code>&lt;link rel="stylesheet" href="https://daub.dev/daub.css"&gt;
+&lt;script src="https://daub.dev/daub.js"&gt;&lt;/script&gt;</code></pre>
+      </div>
     </div>
 
   </div><!-- /.db-container -->
 
-  <!-- Theme Switcher -->
+  <!-- Footer -->
+  <footer style="text-align:center; padding:8px; background:var(--db-cream-dark); color:var(--db-warm-gray); margin-top:16px; font-family:var(--db-font-ui); font-size:0.75rem;">
+    Made by <a href="https://x.com/staskulesh" target="_blank" rel="noopener" style="color:var(--db-terracotta); text-decoration:none;">@staskulesh</a> <a href="https://aichess.co/static/easter-egg/index.html" title="&#127875;" style="text-decoration:none; display:inline-block; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">&#128007;</a>
+  </footer>
+
+  <!-- Theme Switcher (8 themes, 2-row grid) -->
   <div class="db-theme-switcher" role="group" aria-label="Theme switcher">
     <button class="db-theme-switcher__btn" data-theme="light" aria-label="Light theme" aria-pressed="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -780,6 +1591,18 @@
     </button>
     <button class="db-theme-switcher__btn" data-theme="grunge-dark" aria-label="Grunge dark theme" aria-pressed="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/></svg>
+    </button>
+    <button class="db-theme-switcher__btn" data-theme="parchment" aria-label="Parchment theme" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+    </button>
+    <button class="db-theme-switcher__btn" data-theme="ink" aria-label="Ink theme" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+    </button>
+    <button class="db-theme-switcher__btn" data-theme="ember" aria-label="Ember theme" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+    </button>
+    <button class="db-theme-switcher__btn" data-theme="bone" aria-label="Bone theme" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
     </button>
   </div>
 

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@300;400;500;600;700&family=Source+Serif+4:wght@300;400;500;600&family=Cabin:wght@400;500;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      background: #FAF8F0;
+      font-family: 'Cabin', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Subtle texture */
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-conic-gradient(#E8E0D0 0% 25%, transparent 0% 50%) 0 0 / 4px 4px;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+      padding: 0 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .wordmark {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 72px;
+      font-weight: 600;
+      color: #3D3832;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .tagline {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 24px;
+      color: #6B6560;
+      line-height: 1.4;
+      max-width: 420px;
+    }
+
+    .meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: #F0EBE1;
+      border: 1px solid #DDD6C8;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #6B6560;
+      font-weight: 500;
+    }
+
+    .pill strong {
+      color: #C67B5C;
+      font-weight: 700;
+    }
+
+    .right {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      width: 440px;
+    }
+
+    /* Mini component previews */
+    .preview {
+      background: #FFFFFF;
+      border: 1px solid #DDD6C8;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(61,56,50,0.06), 0 1px 3px rgba(61,56,50,0.08);
+    }
+
+    /* Button preview */
+    .preview-btn {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mini-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: 'Cabin', system-ui, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: default;
+    }
+
+    .mini-btn--primary {
+      background: linear-gradient(180deg, #D4845C 0%, #C67B5C 100%);
+      color: #FFFFFF;
+      box-shadow: 0 2px 4px rgba(198,123,92,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+
+    .mini-btn--secondary {
+      background: linear-gradient(180deg, #FAF8F0 0%, #F0EBE1 100%);
+      color: #3D3832;
+      border: 1px solid #DDD6C8;
+      box-shadow: 0 1px 3px rgba(61,56,50,0.06);
+    }
+
+    /* Input preview */
+    .preview-input {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mini-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6B6560;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mini-input {
+      padding: 10px 14px;
+      border: 1px solid #DDD6C8;
+      border-radius: 8px;
+      background: #FAF8F0;
+      font-size: 13px;
+      color: #8E8880;
+      font-family: 'Cabin', system-ui, sans-serif;
+      box-shadow: inset 0 1px 3px rgba(61,56,50,0.06);
+    }
+
+    /* Badge preview */
+    .preview-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .mini-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .mini-badge--new {
+      background: #C67B5C;
+      color: #FFFFFF;
+    }
+
+    .mini-badge--updated {
+      background: #F0EBE1;
+      color: #6B6560;
+      border: 1px solid #DDD6C8;
+    }
+
+    .mini-badge--success {
+      background: #E8F0E8;
+      color: #5A7A5A;
+      border: 1px solid #C8D8C8;
+    }
+
+    /* Card preview */
+    .preview-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mini-card-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #3D3832;
+    }
+
+    .mini-card-text {
+      font-size: 12px;
+      color: #8E8880;
+      line-height: 1.5;
+    }
+
+    .mini-card-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: #F0EBE1;
+      overflow: hidden;
+    }
+
+    .mini-card-bar-fill {
+      height: 100%;
+      width: 65%;
+      background: linear-gradient(90deg, #C67B5C, #D4845C);
+      border-radius: 2px;
+    }
+
+    /* Bottom accent line */
+    .accent-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #C67B5C, #D4845C, #B8860B, #8B9DC3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <div class="wordmark">DAUB</div>
+      <div class="tagline">Considered CSS components for discerning interfaces.</div>
+      <div class="meta">
+        <span class="pill"><strong>64</strong> components</span>
+        <span class="pill"><strong>8</strong> themes</span>
+        <span class="pill"><strong>0</strong> build steps</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="preview preview-btn">
+        <div class="mini-btn mini-btn--primary">Get Started</div>
+        <div class="mini-btn mini-btn--secondary">Documentation</div>
+      </div>
+      <div class="preview preview-input">
+        <div class="mini-label">Email</div>
+        <div class="mini-input">name@example.com</div>
+        <div class="mini-label" style="margin-top: 6px">Password</div>
+        <div class="mini-input">••••••••</div>
+      </div>
+      <div class="preview preview-badges">
+        <span class="mini-badge mini-badge--new">New</span>
+        <span class="mini-badge mini-badge--updated">v2.0</span>
+        <span class="mini-badge mini-badge--success">Accessible</span>
+      </div>
+      <div class="preview preview-card">
+        <div class="mini-card-title">Analytics</div>
+        <div class="mini-card-text">Monthly active users across all themes.</div>
+        <div class="mini-card-bar"><div class="mini-card-bar-fill"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="accent-line"></div>
+</body>
+</html>
