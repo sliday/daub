@@ -399,8 +399,9 @@
       <a href="#controls" class="db-btn db-btn--secondary db-btn--lg">View Components</a>
     </div>
     <div class="db-hero__install">
-      <code>&lt;link rel="stylesheet" href="https://daub.dev/daub.css"&gt;</code>
-      <button class="db-hero__copy" aria-label="Copy to clipboard" onclick="navigator.clipboard.writeText('<link rel=&quot;stylesheet&quot; href=&quot;https://daub.dev/daub.css&quot;>').then(function(){DAUB.toast({type:'success',title:'Copied!',message:'CSS link copied to clipboard.',duration:2000})})">
+      <code>&lt;link rel="stylesheet" href="https://daub.dev/daub.css"&gt;
+&lt;script src="https://daub.dev/daub.js"&gt;&lt;/script&gt;</code>
+      <button class="db-hero__copy" aria-label="Copy to clipboard" onclick="navigator.clipboard.writeText('<link rel=&quot;stylesheet&quot; href=&quot;https://daub.dev/daub.css&quot;>\n<script src=&quot;https://daub.dev/daub.js&quot;><\/script>').then(function(){DAUB.toast({type:'success',title:'Copied!',message:'Both files copied to clipboard.',duration:2000})})">
         <i data-lucide="copy" style="width:16px;height:16px;"></i>
       </button>
     </div>
