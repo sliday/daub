@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB — Considered Interface Components</title>
-  <meta name="description" content="DAUB is a CSS component library with 67 considered UI elements and 6 theme families. Thoughtful, tactile, and accessible. No build step required.">
+  <meta name="description" content="DAUB is a CSS component library with 74 considered UI elements and 6 theme families. Thoughtful, tactile, and accessible. No build step required.">
   <meta name="keywords" content="CSS components, neo-skeuomorphic, UI kit, design system, considered UI, tactile, accessible, themes, AI components, llms.txt, drop-in CSS">
   <meta name="theme-color" content="#C67B5C">
   <link rel="canonical" href="https://daub.dev">
@@ -12,7 +12,7 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="DAUB — Considered Interface Components">
-  <meta property="og:description" content="67 considered UI elements with 6 theme families. Drop-in CSS + JS. No build step.">
+  <meta property="og:description" content="74 considered UI elements with 6 theme families. Drop-in CSS + JS. No build step.">
   <meta property="og:url" content="https://daub.dev">
   <meta property="og:site_name" content="DAUB UI">
   <meta property="og:image" content="https://daub.dev/og-image.png">
@@ -23,7 +23,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="DAUB — Considered Interface Components">
-  <meta name="twitter:description" content="67 considered UI elements with 6 theme families. Drop-in CSS + JS. No build step.">
+  <meta name="twitter:description" content="74 considered UI elements with 6 theme families. Drop-in CSS + JS. No build step.">
   <meta name="twitter:image" content="https://daub.dev/og-image.png">
   <meta name="twitter:site" content="@staskulesh">
   <meta name="twitter:creator" content="@staskulesh">
@@ -37,13 +37,13 @@
     "@context": "https://schema.org",
     "@type": "SoftwareSourceCode",
     "name": "DAUB UI",
-    "description": "Considered CSS components for discerning interfaces. 67 elements, 6 theme families.",
+    "description": "Considered CSS components for discerning interfaces. 74 elements, 6 theme families.",
     "url": "https://daub.dev",
     "codeRepository": "https://github.com/sliday/daub",
     "programmingLanguage": ["CSS", "JavaScript"],
     "license": "https://opensource.org/licenses/MIT",
-    "version": "2.2.0",
-    "dateModified": "2026-02-27",
+    "version": "2.3.0",
+    "dateModified": "2026-03-01",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
@@ -758,7 +758,7 @@
           </div>
           <div class="db-showcase__stats">
             <div class="db-showcase__stat">
-              <span class="db-showcase__stat-num">67</span>
+              <span class="db-showcase__stat-num">74</span>
               <span class="db-showcase__stat-label">Components</span>
             </div>
             <div class="db-showcase__stat">
@@ -829,6 +829,7 @@
     <a href="#feedback">Feedback</a>
     <a href="#overlays">Overlays</a>
     <a href="#complex">Complex</a>
+    <a href="#v230">v2.3</a>
   </div>
 
   <div class="db-container">
@@ -1975,12 +1976,148 @@
       </div>
     </div>
 
+    <!-- v2.3.0 — New Components -->
+    <div class="demo-section" id="v230">
+      <h2 class="demo-section__title">10. New in v2.3 — Layout, Navbar &amp; More</h2>
+
+      <!-- Navbar -->
+      <h3 class="db-h4 db-mb-4">Navbar</h3>
+      <p class="db-body db-mb-4">Sticky top app bar with brand, nav links, spacer, and action area. Responsive hamburger on mobile.</p>
+      <div class="db-card db-mb-5" style="overflow:visible;">
+        <nav class="db-navbar" style="position:relative; border-radius:var(--db-radius-3);">
+          <a class="db-navbar__brand" href="#v230">DAUB</a>
+          <div class="db-navbar__nav">
+            <div class="db-nav-menu">
+              <a class="db-nav-menu__item db-nav-menu__item--active" href="#v230">Home</a>
+              <a class="db-nav-menu__item" href="#v230">Explore</a>
+              <a class="db-nav-menu__item" href="#v230">About</a>
+            </div>
+          </div>
+          <div class="db-navbar__spacer"></div>
+          <div class="db-navbar__actions">
+            <button class="db-btn db-btn--icon db-btn--sm" aria-label="Search"><i data-lucide="search" style="width:16px;height:16px;"></i></button>
+            <div class="db-avatar db-avatar--sm">JD</div>
+          </div>
+          <button class="db-navbar__toggle" aria-label="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Grid 4-6 columns -->
+      <h3 class="db-h4 db-mb-4">Grid — 4, 5 &amp; 6 Columns</h3>
+      <p class="db-body db-mb-4">Extended grid with tablet breakpoint (2 cols at &lt;1024px, 1 col at &lt;640px).</p>
+      <div class="db-grid db-grid--4 db-gap-3 db-mb-4">
+        <div class="db-surface--raised" style="padding:var(--db-space-3); text-align:center; border-radius:var(--db-radius-2);">1</div>
+        <div class="db-surface--raised" style="padding:var(--db-space-3); text-align:center; border-radius:var(--db-radius-2);">2</div>
+        <div class="db-surface--raised" style="padding:var(--db-space-3); text-align:center; border-radius:var(--db-radius-2);">3</div>
+        <div class="db-surface--raised" style="padding:var(--db-space-3); text-align:center; border-radius:var(--db-radius-2);">4</div>
+      </div>
+      <div class="db-grid db-grid--6 db-gap-3 db-mb-5">
+        <div class="db-surface--inset" style="padding:var(--db-space-3); text-align:center; border-radius:var(--db-radius-2);">1</div>
+        <div class="db-surface--inset" style="padding:var(--db-space-3); text-align:center; border-radius:var(--db-radius-2);">2</div>
+        <div class="db-surface--inset" style="padding:var(--db-space-3); text-align:center; border-radius:var(--db-radius-2);">3</div>
+        <div class="db-surface--inset" style="padding:var(--db-space-3); text-align:center; border-radius:var(--db-radius-2);">4</div>
+        <div class="db-surface--inset" style="padding:var(--db-space-3); text-align:center; border-radius:var(--db-radius-2);">5</div>
+        <div class="db-surface--inset" style="padding:var(--db-space-3); text-align:center; border-radius:var(--db-radius-2);">6</div>
+      </div>
+
+      <!-- Container variants -->
+      <h3 class="db-h4 db-mb-4">Container Variants</h3>
+      <p class="db-body db-mb-4"><code>db-container--wide</code> (1200px) and <code>db-container--narrow</code> (640px).</p>
+      <div class="db-mb-5">
+        <div class="db-container--narrow" style="background:var(--db-cream-dark); padding:var(--db-space-3); border-radius:var(--db-radius-2); text-align:center;">
+          Narrow container (640px)
+        </div>
+      </div>
+
+      <!-- Card media variant -->
+      <h3 class="db-h4 db-mb-4">Card — Media Variant</h3>
+      <p class="db-body db-mb-4">Edge-to-edge images with <code>db-card--media</code>. No padding fights.</p>
+      <div class="db-grid db-grid--3 db-gap-4 db-mb-5">
+        <div class="db-card db-card--media">
+          <div class="db-card__media" style="height:140px; background:linear-gradient(135deg, var(--db-terracotta), var(--db-clay));"></div>
+          <div class="db-card__body">
+            <h3 class="db-card__title">Mountain Sunrise</h3>
+            <p class="db-card__desc">Beautiful morning light.</p>
+          </div>
+        </div>
+        <div class="db-card db-card--media">
+          <div class="db-card__media" style="height:140px; background:linear-gradient(135deg, var(--db-clay), var(--db-ink));"></div>
+          <div class="db-card__body">
+            <h3 class="db-card__title">Ocean Depths</h3>
+            <p class="db-card__desc">Deep blue inspiration.</p>
+          </div>
+        </div>
+        <div class="db-card db-card--media">
+          <div class="db-card__media" style="height:140px; background:linear-gradient(135deg, var(--db-sand), var(--db-terracotta));"></div>
+          <div class="db-card__body">
+            <h3 class="db-card__title">Desert Sands</h3>
+            <p class="db-card__desc">Warm desert tones.</p>
+          </div>
+          <div class="db-card__footer">
+            <button class="db-btn db-btn--secondary db-btn--sm">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chip active / toggle -->
+      <h3 class="db-h4 db-mb-4">Chip — Active State &amp; Toggle</h3>
+      <p class="db-body db-mb-4">Filter chips with <code>db-chip--active</code>. Wrap in <code>data-db-chip-toggle</code> for click-to-select.</p>
+      <div data-db-chip-toggle class="db-flex db-flex--wrap db-gap-2 db-mb-5">
+        <span class="db-chip db-chip--blue db-chip--active">All</span>
+        <span class="db-chip db-chip--green">Nature</span>
+        <span class="db-chip db-chip--amber">Food</span>
+        <span class="db-chip db-chip--purple">Art</span>
+        <span class="db-chip db-chip--pink">Travel</span>
+        <span class="db-chip db-chip--red">Sports</span>
+      </div>
+
+      <!-- Avatar Group -->
+      <h3 class="db-h4 db-mb-4">Avatar Group</h3>
+      <p class="db-body db-mb-4">Overlapping stack with overflow counter.</p>
+      <div class="db-flex db-gap-6 db-mb-5" style="align-items:center;">
+        <div class="db-avatar-group">
+          <div class="db-avatar db-avatar--md" style="background:var(--db-terracotta); color:white;">AL</div>
+          <div class="db-avatar db-avatar--md" style="background:var(--db-clay); color:white;">BK</div>
+          <div class="db-avatar db-avatar--md" style="background:var(--db-ink); color:white;">CM</div>
+          <div class="db-avatar db-avatar--md" style="background:var(--db-warm-gray); color:white;">DN</div>
+          <span class="db-avatar-group__overflow">+8</span>
+        </div>
+        <div class="db-avatar-group">
+          <div class="db-avatar db-avatar--sm" style="background:var(--db-terracotta); color:white;">A</div>
+          <div class="db-avatar db-avatar--sm" style="background:var(--db-clay); color:white;">B</div>
+          <div class="db-avatar db-avatar--sm" style="background:var(--db-ink); color:white;">C</div>
+        </div>
+      </div>
+
+      <!-- Search Input -->
+      <h3 class="db-h4 db-mb-4">Search Input</h3>
+      <p class="db-body db-mb-4">Search box with auto-show clear button when input has text.</p>
+      <div style="max-width:400px;" class="db-mb-5">
+        <div class="db-search">
+          <svg class="db-search__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input class="db-input" type="search" placeholder="Search components...">
+          <button class="db-search__clear" aria-label="Clear">&times;</button>
+        </div>
+      </div>
+
+      <!-- Responsive utilities -->
+      <h3 class="db-h4 db-mb-4">Responsive Visibility</h3>
+      <p class="db-body db-mb-4">Show/hide elements by breakpoint: <code>db-hide-mobile</code>, <code>db-show-mobile</code>, <code>db-hide-tablet</code>, <code>db-show-tablet</code>, <code>db-hide-desktop</code>, <code>db-show-desktop</code>.</p>
+      <div class="db-flex db-gap-3 db-mb-5">
+        <span class="db-badge db-badge--new db-hide-mobile">Desktop + Tablet</span>
+        <span class="db-badge db-badge--warning db-show-mobile">Mobile only</span>
+        <span class="db-badge db-badge--updated db-show-desktop">Desktop only</span>
+      </div>
+    </div>
+
   </div><!-- /.db-container -->
 
   <!-- Closing CTA -->
   <section style="max-width:640px; margin:0 auto; padding:64px 24px; text-align:center;">
     <h2 style="font-family:var(--db-font-heading); font-size:clamp(1.5rem, 3vw, 2.25rem); font-weight:700; color:var(--db-ink); margin:0 0 16px; line-height:1.2;">Two files. Full surface.</h2>
-    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px;">67 components that respond to light, texture, and theme. Drop them in, ship something that feels considered — without the ceremony.</p>
+    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px;">74 components that respond to light, texture, and theme. Drop them in, ship something that feels considered — without the ceremony.</p>
     <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
       <a href="#configurator" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
       <a href="https://github.com/sliday/daub" target="_blank" rel="noopener" class="db-btn db-btn--secondary db-btn--lg">

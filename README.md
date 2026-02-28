@@ -3,8 +3,8 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.2.0-3D3832.svg)](https://daub.dev)
-[![Components](https://img.shields.io/badge/components-67-D4C4A8.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.3.0-3D3832.svg)](https://daub.dev)
+[![Components](https://img.shields.io/badge/components-74-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
 
@@ -12,7 +12,7 @@
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 67 components, 6 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 74 components, 6 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
 ## Quick Start
 
@@ -47,7 +47,7 @@ DAUB uses system font stacks by default. For richer typography:
 <script src="https://unpkg.com/lucide@latest"></script>
 ```
 
-## Components (67)
+## Components (74)
 
 ### Foundations
 | Component | Class | Notes |
@@ -57,7 +57,8 @@ DAUB uses system font stacks by default. For richer typography:
 | Prose | `db-prose` | `--sm`, `--lg`, `--xl`, `--2xl` |
 | Elevation | `db-elevation-1` | `1`, `2`, `3` |
 | Separator | `db-separator` | `--vertical`, `--dashed`, `__label` |
-| Layout | `db-container` | `db-flex`, `db-grid`, `db-gap-*` |
+| Layout | `db-container` | `--wide`, `--narrow`, `db-flex`, `db-grid--2`–`--6`, `db-gap-*` |
+| Responsive | `db-hide-mobile` | `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, etc. |
 | Utilities | `db-sr-only` | `db-text-muted`, `db-rounded-*`, etc. |
 
 ### Controls
@@ -69,6 +70,7 @@ DAUB uses system font stacks by default. For richer typography:
 | Input | `db-input` | `--sm`, `--lg`, `--error`, standalone |
 | Input Group | `db-input-group` | Addons + inputs + buttons |
 | Input Icon | `db-input-icon` | `--right`, icon prefix/suffix |
+| Search | `db-search` | `__icon`, `__clear`, auto show/hide clear button |
 | Textarea | `db-textarea` | `--error`, standalone |
 | Checkbox | `db-checkbox` | |
 | Radio | `db-radio` | `db-radio-group` |
@@ -91,6 +93,7 @@ DAUB uses system font stacks by default. For richer typography:
 | Pagination | `db-pagination` | |
 | Stepper | `db-stepper` | `--completed`, `--active`, `--pending` |
 | Nav Menu | `db-nav-menu` | `__item`, `--active` |
+| Navbar | `db-navbar` | `__brand`, `__nav`, `__actions`, `__toggle`, sticky mobile hamburger |
 | Menubar | `db-menubar` | `__item`, `__dropdown` |
 | Sidebar | `db-sidebar` | `__item`, `--active`, `--collapsed`, `__toggle` |
 | Bottom Nav | `db-bottom-nav` | `__item`, `--active`, `__badge`, `--always` |
@@ -98,17 +101,18 @@ DAUB uses system font stacks by default. For richer typography:
 ### Data Display
 | Component | Class | Notes |
 |-----------|-------|-------|
-| Card | `db-card` | |
+| Card | `db-card` | `--media` for edge-to-edge images |
 | Table | `db-table` | `data-db-sort` |
 | Data Table | `db-data-table` | Sortable, selectable rows |
 | List | `db-list` | |
 | Badge | `db-badge` | `--new`, `--updated`, `--warning`, `--error` |
 | Avatar | `db-avatar` | `--sm`, `--md`, `--lg` |
+| Avatar Group | `db-avatar-group` | Overlapping stack + `__overflow` counter |
 | Calendar | `db-calendar` | Day selection, today highlight |
 | Chart | `db-chart` | CSS-only bar chart |
 | Carousel | `db-carousel` | `__track`, `__slide`, `__dots` |
 | Aspect Ratio | `db-aspect` | `--16-9`, `--4-3`, `--1-1`, `--21-9` |
-| Chip | `db-chip` | `--red`, `--green`, `--blue`, `--purple`, `--amber`, `--pink`, `__close` |
+| Chip | `db-chip` | `--red`, `--green`, `--blue`, `--purple`, `--amber`, `--pink`, `--active`, `__close`, `data-db-chip-toggle` |
 | Scroll Area | `db-scroll-area` | `--horizontal`, `--vertical` |
 
 ### Feedback
@@ -246,6 +250,23 @@ Point your AI at `https://daub.dev/llms.txt` for complete component docs with HT
 No polyfills needed.
 
 ## Changelog
+
+### v2.3.0
+
+**Layout system, navbar & developer experience. 74 components.**
+
+- Navbar: sticky top app bar with brand, nav links, spacer, actions, and mobile hamburger toggle
+- Grid 4/5/6 columns: `db-grid--4`, `db-grid--5`, `db-grid--6` with tablet breakpoint (1024px)
+- Responsive visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`
+- Container variants: `db-container--wide` (1200px), `db-container--narrow` (640px)
+- Card media variant: `db-card--media` removes padding for edge-to-edge images
+- Chip active state: `db-chip--active` with `data-db-chip-toggle` container for filter chips
+- Avatar group: `db-avatar-group` with overlapping stack and `__overflow` counter
+- Search input: `db-search` with icon prefix and auto-show clear button
+- Modal API: both `openModal` and `closeModal` now accept string ID or element reference
+- Icon integration: `DAUB.refreshIcons()` helper for Lucide re-initialization after dynamic content
+- Full-page recipes: Dashboard, Pinterest grid, and Settings form templates in llms.txt
+- Data attributes reference: complete table of all `data-*` attributes in llms.txt
 
 ### v2.2.0
 

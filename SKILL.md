@@ -13,7 +13,7 @@ allowed-tools:
 
 # DAUB UI — Component Library
 
-DAUB is a drop-in CSS + JS library with 67 considered components and 6 theme families (12 variants). Thoughtfully composed, no ceremony required.
+DAUB is a drop-in CSS + JS library with 74 considered components and 6 theme families (12 variants). Thoughtfully composed, no ceremony required.
 
 ## Include
 
@@ -47,7 +47,8 @@ Families: default, grunge, solarized, ink, ember, bone (each with light + dark)
 - **Prose**: `db-prose` / `--sm` / `--lg` / `--xl` / `--2xl`
 - **Elevation**: `db-elevation-1` / `-2` / `-3`
 - **Separator**: `db-separator` / `--vertical` / `--dashed` / `__label`
-- **Layout**: `db-container`, `db-flex`, `db-grid--2`, `db-gap-3`, `db-mt-4`
+- **Layout**: `db-container` / `--wide` / `--narrow`, `db-flex`, `db-grid--2` through `--6`, `db-gap-3`, `db-mt-4`
+- **Responsive**: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`
 - **Utilities**: `db-sr-only`, `db-text-muted`, `db-rounded-*`
 
 ### Controls
@@ -58,6 +59,7 @@ Families: default, grunge, solarized, ink, ember, bone (each with light + dark)
 - **Input**: `db-input` / `--sm` / `--lg` / `--error` (standalone)
 - **Input Group**: `db-input-group` > `__addon` + `db-input` + `db-btn`
 - **Input Icon**: `db-input-icon` > `db-input-icon__icon` + `db-input` / `--right`
+- **Search**: `db-search` > `db-search__icon` + `db-input` + `db-search__clear`
 - **Textarea**: `db-textarea` / `--error` (standalone)
 - **Checkbox**: `db-checkbox` > `db-checkbox__input` + `db-checkbox__box`
 - **Radio**: `db-radio-group` > `db-radio` > `db-radio__input` + `db-radio__circle`
@@ -78,18 +80,20 @@ Families: default, grunge, solarized, ink, ember, bone (each with light + dark)
 - **Pagination**: `db-pagination` > `db-pagination__btn`
 - **Stepper**: `db-stepper` > `db-stepper__step--completed/--active/--pending`
 - **Nav Menu**: `db-nav-menu` > `db-nav-menu__item` / `--active`
+- **Navbar**: `db-navbar` > `__brand` + `__nav` + `__spacer` + `__actions` + `__toggle` (sticky, mobile hamburger)
 - **Menubar**: `db-menubar` > `db-menubar__item` + `db-menubar__dropdown`
 - **Sidebar**: `db-sidebar` > `db-sidebar__section` > `db-sidebar__item` / `--active` / `--collapsed` / `__toggle`
 - **Bottom Nav**: `db-bottom-nav` > `db-bottom-nav__item` / `--active` / `__badge` / `--always`
 
 ### Data Display
-- **Card**: `db-card` > `db-card__header` + `db-card__title` + `db-card__footer`
+- **Card**: `db-card` > `db-card__header` + `db-card__title` + `db-card__footer` / `--media` (edge-to-edge images)
 - **Table**: `db-table` (sortable with `data-db-sort` on th)
 - **Data Table**: `db-data-table` — sortable, selectable rows
 - **List**: `db-list` > `db-list__item` > `db-list__title` + `db-list__secondary`
 - **Badge**: `db-badge` / `--new` / `--updated` / `--warning` / `--error`
-- **Chip**: `db-chip` / `--red` / `--green` / `--blue` / `--purple` / `--amber` / `--pink` / `__close`
+- **Chip**: `db-chip` / `--red` / `--green` / `--blue` / `--purple` / `--amber` / `--pink` / `--active` / `__close` / `data-db-chip-toggle`
 - **Avatar**: `db-avatar db-avatar--md` (sm=32px, md=40px, lg=56px)
+- **Avatar Group**: `db-avatar-group` > `db-avatar` + `db-avatar-group__overflow` (overlapping stack)
 - **Calendar**: `db-calendar` — day selection, today highlight
 - **Chart**: `db-chart` — CSS-only bar chart
 - **Carousel**: `db-carousel` > `__track` + `__slide` + `__dots`
@@ -105,7 +109,7 @@ Families: default, grunge, solarized, ink, ember, bone (each with light + dark)
 - **Tooltip**: `db-tooltip` / `--top` / `--bottom` / `--left` / `--right`
 
 ### Overlays
-- **Modal**: `DAUB.openModal('id')` / `DAUB.closeModal(el)` / `data-db-modal-trigger="id"`
+- **Modal**: `DAUB.openModal('id')` / `DAUB.closeModal('id')` / `data-db-modal-trigger="id"`
 - **Alert Dialog**: `DAUB.openAlertDialog('id')` / `DAUB.closeAlertDialog(el)`
 - **Sheet**: `db-sheet` / `--right` / `--left` / `--top` / `--bottom`
 - **Drawer**: `db-drawer` — mobile-friendly bottom panel

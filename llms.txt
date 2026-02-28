@@ -1,12 +1,12 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 2.2
+> Version: 2.3
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
 > Repo: https://github.com/sliday/daub
 > License: MIT
-> Components: 67
+> Components: 74
 > Theme Families: 6 (12 variants total)
 
 ## Quick Start
@@ -235,9 +235,22 @@ Sizes: `db-spinner--sm`, `db-spinner--lg`, `db-spinner--xl`.
 ```
 
 ### 20. Card — `.db-card`
+Media variant: `db-card--media` removes padding for edge-to-edge images.
 ```html
 <div class="db-card">
   <div class="db-card__header">
+    <h3 class="db-card__title">Title</h3>
+    <p class="db-card__desc">Description</p>
+  </div>
+  <div class="db-card__footer">
+    <button class="db-btn db-btn--primary db-btn--sm">Action</button>
+  </div>
+</div>
+
+<!-- Media card (edge-to-edge image) -->
+<div class="db-card db-card--media">
+  <div class="db-card__media"><img src="photo.jpg" alt=""></div>
+  <div class="db-card__body">
     <h3 class="db-card__title">Title</h3>
     <p class="db-card__desc">Description</p>
   </div>
@@ -263,7 +276,7 @@ Sizes: `db-spinner--sm`, `db-spinner--lg`, `db-spinner--xl`.
   </div>
 </div>
 ```
-Open: `DAUB.openModal('my-modal')`. Close: `DAUB.closeModal(overlayEl)`.
+Open: `DAUB.openModal('my-modal')`. Close: `DAUB.closeModal('my-modal')` or `DAUB.closeModal(overlayEl)`.
 
 ### 22. Alert Dialog — `.db-alert-dialog`
 ```html
@@ -340,6 +353,16 @@ Variants: `--new`, `--updated`, `--warning`, `--error`.
 <div class="db-avatar db-avatar--sm">AB</div>
 ```
 Sizes: `--sm` (32px), `--md` (40px), `--lg` (56px).
+
+Avatar Group: overlapping stack with overflow counter.
+```html
+<div class="db-avatar-group">
+  <div class="db-avatar db-avatar--md"><img src="user1.jpg" alt=""></div>
+  <div class="db-avatar db-avatar--md"><img src="user2.jpg" alt=""></div>
+  <div class="db-avatar db-avatar--md"><img src="user3.jpg" alt=""></div>
+  <span class="db-avatar-group__overflow">+5</span>
+</div>
+```
 
 ### 29. Table — `.db-table`
 ```html
@@ -418,7 +441,30 @@ Enhanced table with checkbox selection and sortable headers.
 </nav>
 ```
 
-### 36. Menubar — `.db-menubar`
+### 36. Navbar — `.db-navbar`
+Sticky top app bar with brand, nav links, spacer, and action buttons. Mobile hamburger toggle.
+JS: `DAUB.toggleNavbar(el)`. Mobile auto-close on outside click.
+```html
+<nav class="db-navbar">
+  <a class="db-navbar__brand" href="/"><img src="logo.svg" alt=""> AppName</a>
+  <div class="db-navbar__nav">
+    <div class="db-nav-menu">
+      <a class="db-nav-menu__item db-nav-menu__item--active" href="/">Home</a>
+      <a class="db-nav-menu__item" href="/explore">Explore</a>
+    </div>
+  </div>
+  <div class="db-navbar__spacer"></div>
+  <div class="db-navbar__actions">
+    <button class="db-btn db-btn--icon" aria-label="Notifications">🔔</button>
+    <div class="db-avatar db-avatar--sm"><img src="photo.jpg" alt="User"></div>
+  </div>
+  <button class="db-navbar__toggle" aria-label="Menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</nav>
+```
+
+### 37. Menubar — `.db-menubar`
 ```html
 <div class="db-menubar">
   <button class="db-menubar__item">File
@@ -706,11 +752,16 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 ```
 
 ### 61. Layout — `.db-container`, `.db-flex`, `.db-grid`
+Container: `db-container` (960px), `db-container--wide` (1200px), `db-container--narrow` (640px).
+Grid: `db-grid--2` through `db-grid--6`. Auto-responsive: 4-6 cols → 2 cols at tablet, all → 1 col at mobile.
+Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`.
 ```html
-<div class="db-container">
-  <div class="db-grid db-grid--3 db-gap-4">
-    <div>Col 1</div><div>Col 2</div><div>Col 3</div>
+<div class="db-container db-container--wide">
+  <div class="db-grid db-grid--4 db-gap-4">
+    <div>Col 1</div><div>Col 2</div><div>Col 3</div><div>Col 4</div>
   </div>
+  <p class="db-hide-mobile">Only visible on tablet and desktop</p>
+  <p class="db-show-mobile">Only visible on mobile</p>
 </div>
 ```
 
@@ -760,7 +811,17 @@ Icon highlights on `:focus-within`.
 </div>
 ```
 
-### 66. Bottom Navigation — `.db-bottom-nav`
+### 66. Search Input — `.db-search`
+Search box with icon, clear button (auto-shows when input has text).
+```html
+<div class="db-search">
+  <svg class="db-search__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+  <input class="db-input" type="search" placeholder="Search...">
+  <button class="db-search__clear" aria-label="Clear">×</button>
+</div>
+```
+
+### 67. Bottom Navigation — `.db-bottom-nav`
 Fixed mobile bottom bar. Hidden on desktop unless `db-bottom-nav--always`.
 Badge: `db-bottom-nav__badge`. Safe-area aware via `env(safe-area-inset-bottom)`.
 ```html
@@ -784,14 +845,23 @@ Badge: `db-bottom-nav__badge`. Safe-area aware via `env(safe-area-inset-bottom)`
 ### 67. Chip / Tag — `.db-chip`
 Presets: `db-chip--red`, `--green`, `--blue`, `--purple`, `--amber`, `--pink`.
 Arbitrary color: `style="--db-chip-h:195; --db-chip-s:70%; --db-chip-l:42%"`.
+Active/selected: `db-chip--active` (deeper fill, stronger border, bold).
 Removable: add `db-chip__close` button (JS animated removal).
+Toggle group: wrap chips in a container with `data-db-chip-toggle` — clicks toggle `db-chip--active`.
 ```html
 <span class="db-chip db-chip--blue">Design</span>
+<span class="db-chip db-chip--green db-chip--active">Selected</span>
 <span class="db-chip db-chip--green">
   Active
   <button class="db-chip__close">×</button>
 </span>
-<span class="db-chip" style="--db-chip-h:195; --db-chip-s:70%; --db-chip-l:42%">Custom</span>
+
+<!-- Toggle group (click to select/deselect) -->
+<div data-db-chip-toggle>
+  <span class="db-chip db-chip--blue">Design</span>
+  <span class="db-chip db-chip--green">Dev</span>
+  <span class="db-chip db-chip--amber db-chip--active">Marketing</span>
+</div>
 ```
 
 ## JS API Reference
@@ -799,8 +869,8 @@ Removable: add `db-chip__close` button (JS animated removal).
 ```js
 DAUB.init()                    // Re-initialize all components
 DAUB.toast({ type, title, message, duration })
-DAUB.openModal(id)             // Open modal by id
-DAUB.closeModal(overlayEl)     // Close modal
+DAUB.openModal(idOrEl)         // Open modal by id string or element
+DAUB.closeModal(idOrEl)        // Close modal by id string or element
 DAUB.openAlertDialog(id)       // Open alert dialog
 DAUB.closeAlertDialog(id)      // Close alert dialog
 DAUB.openSheet(id)             // Open sheet panel
@@ -810,6 +880,8 @@ DAUB.closeDrawer(id)           // Close drawer
 DAUB.openCommand(id)           // Open command palette
 DAUB.closeCommand(id)          // Close command palette
 DAUB.toggleSidebar(el)         // Toggle sidebar collapse
+DAUB.toggleNavbar(el)          // Toggle mobile navbar menu
+DAUB.refreshIcons()            // Re-init Lucide icons after dynamic content
 DAUB.setTheme(name)            // Set theme (direct)
 DAUB.getTheme()                // Get current theme
 DAUB.cycleTheme()              // Cycle through 6 families
@@ -836,3 +908,239 @@ Fonts: `--db-font-heading`, `--db-font-body`, `--db-font-ui`
 Spacing: `--db-space-0` through `--db-space-9`
 Radius: `--db-radius-0` through `--db-radius-4`, `--db-radius-full`
 Shadows: `--db-shadow-1`, `--db-shadow-2`, `--db-shadow-3`, `--db-shadow-inset`
+
+## Data Attributes Reference
+
+| Attribute | Element | Purpose |
+|-----------|---------|---------|
+| `data-theme` | `<html>` | Active theme variant (`light`, `dark`, `ink`, etc.) |
+| `data-scheme` | `<html>` | Color scheme preference (`auto`, `light`, `dark`) |
+| `data-db-texture` | `<html>` | Background texture (`grain`, `paper`, `metal`, `wood`, `glass`, `none`) |
+| `data-db-modal-trigger` | button | Opens modal with matching ID on click |
+| `data-db-chip-toggle` | container | Enables click-to-toggle `db-chip--active` on child chips |
+| `data-db-sort` | `<th>` | Makes table column sortable |
+| `data-multi` | accordion/toggle-group | Allows multiple items open simultaneously |
+| `data-tooltip` | sidebar item | Tooltip text shown when sidebar is collapsed |
+| `data-context-menu` | any element | ID of context menu to show on right-click |
+| `data-action="cancel"` | button | Auto-closes parent alert dialog |
+| `data-family` | button | Theme switcher family button (`default`, `grunge`, etc.) |
+| `data-scheme` | button | Theme switcher scheme button (`auto`, `light`, `dark`) |
+| `data-sortable` | `<th>` | Data table sortable column |
+
+## Full-Page Recipes
+
+### Recipe 1: Dashboard with Sidebar
+
+```html
+<!DOCTYPE html>
+<html data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://daub.dev/daub.css">
+</head>
+<body>
+  <nav class="db-navbar">
+    <a class="db-navbar__brand" href="/">Dashboard</a>
+    <div class="db-navbar__nav">
+      <div class="db-nav-menu">
+        <a class="db-nav-menu__item db-nav-menu__item--active" href="/">Overview</a>
+        <a class="db-nav-menu__item" href="/reports">Reports</a>
+      </div>
+    </div>
+    <div class="db-navbar__spacer"></div>
+    <div class="db-navbar__actions">
+      <button class="db-btn db-btn--icon" aria-label="Notifications">🔔</button>
+      <div class="db-avatar db-avatar--sm">JD</div>
+    </div>
+    <button class="db-navbar__toggle" aria-label="Menu">☰</button>
+  </nav>
+
+  <div class="db-flex" style="min-height:calc(100vh - 56px);">
+    <aside class="db-sidebar db-hide-mobile">
+      <div class="db-sidebar__section">
+        <div class="db-sidebar__label">Main</div>
+        <a class="db-sidebar__item db-sidebar__item--active" href="#">Dashboard</a>
+        <a class="db-sidebar__item" href="#">Analytics</a>
+        <a class="db-sidebar__item" href="#">Settings</a>
+      </div>
+    </aside>
+
+    <main class="db-container" style="flex:1; padding-top:var(--db-space-6);">
+      <div class="db-grid db-grid--3 db-gap-4 db-mb-5">
+        <div class="db-card">
+          <div class="db-card__header"><h3 class="db-card__title">Revenue</h3></div>
+          <p class="db-h2">$12,450</p>
+        </div>
+        <div class="db-card">
+          <div class="db-card__header"><h3 class="db-card__title">Users</h3></div>
+          <p class="db-h2">1,284</p>
+        </div>
+        <div class="db-card">
+          <div class="db-card__header"><h3 class="db-card__title">Orders</h3></div>
+          <p class="db-h2">342</p>
+        </div>
+      </div>
+
+      <div class="db-card">
+        <div class="db-card__header"><h3 class="db-card__title">Recent Orders</h3></div>
+        <table class="db-table">
+          <thead><tr><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Alice</td><td>$120</td><td><span class="db-badge db-badge--new">Paid</span></td></tr>
+            <tr><td>Bob</td><td>$85</td><td><span class="db-badge db-badge--warning">Pending</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://daub.dev/daub.js"></script>
+</body>
+</html>
+```
+
+### Recipe 2: Image Card Grid (Pinterest-style)
+
+```html
+<!DOCTYPE html>
+<html data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Explore</title>
+  <link rel="stylesheet" href="https://daub.dev/daub.css">
+</head>
+<body>
+  <nav class="db-navbar">
+    <a class="db-navbar__brand" href="/">Pinboard</a>
+    <div class="db-navbar__nav">
+      <div class="db-nav-menu">
+        <a class="db-nav-menu__item db-nav-menu__item--active" href="/">Home</a>
+        <a class="db-nav-menu__item" href="/explore">Explore</a>
+      </div>
+    </div>
+    <div class="db-navbar__spacer"></div>
+    <div class="db-navbar__actions">
+      <div class="db-search db-hide-mobile">
+        <svg class="db-search__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input class="db-input" type="search" placeholder="Search pins...">
+        <button class="db-search__clear" aria-label="Clear">×</button>
+      </div>
+      <div class="db-avatar db-avatar--sm"><img src="user.jpg" alt=""></div>
+    </div>
+    <button class="db-navbar__toggle" aria-label="Menu">☰</button>
+  </nav>
+
+  <main class="db-container db-container--wide" style="padding-top:var(--db-space-6);">
+    <div data-db-chip-toggle class="db-flex db-flex--wrap db-gap-2 db-mb-5">
+      <span class="db-chip db-chip--blue db-chip--active">All</span>
+      <span class="db-chip db-chip--green">Nature</span>
+      <span class="db-chip db-chip--amber">Food</span>
+      <span class="db-chip db-chip--purple">Art</span>
+      <span class="db-chip db-chip--pink">Travel</span>
+    </div>
+
+    <div class="db-grid db-grid--4 db-gap-4">
+      <div class="db-card db-card--media">
+        <div class="db-card__media"><img src="photo1.jpg" alt=""></div>
+        <div class="db-card__body">
+          <h3 class="db-card__title">Mountain Sunrise</h3>
+          <p class="db-card__desc">Beautiful morning light over the peaks.</p>
+        </div>
+        <div class="db-card__footer">
+          <div class="db-avatar-group">
+            <div class="db-avatar db-avatar--sm"><img src="u1.jpg" alt=""></div>
+            <div class="db-avatar db-avatar--sm"><img src="u2.jpg" alt=""></div>
+            <span class="db-avatar-group__overflow">+3</span>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat cards... -->
+    </div>
+  </main>
+
+  <script src="https://daub.dev/daub.js"></script>
+</body>
+</html>
+```
+
+### Recipe 3: Settings Form
+
+```html
+<!DOCTYPE html>
+<html data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Settings</title>
+  <link rel="stylesheet" href="https://daub.dev/daub.css">
+</head>
+<body>
+  <nav class="db-navbar">
+    <a class="db-navbar__brand" href="/">MyApp</a>
+    <div class="db-navbar__nav">
+      <div class="db-nav-menu">
+        <a class="db-nav-menu__item" href="/">Home</a>
+        <a class="db-nav-menu__item db-nav-menu__item--active" href="/settings">Settings</a>
+      </div>
+    </div>
+    <div class="db-navbar__spacer"></div>
+    <div class="db-navbar__actions">
+      <div class="db-avatar db-avatar--sm">JD</div>
+    </div>
+    <button class="db-navbar__toggle" aria-label="Menu">☰</button>
+  </nav>
+
+  <main class="db-container db-container--narrow" style="padding-top:var(--db-space-6);">
+    <h1 class="db-h2 db-mb-5">Account Settings</h1>
+
+    <div class="db-card db-mb-5">
+      <div class="db-card__header"><h3 class="db-card__title">Profile</h3></div>
+      <div class="db-flex db-gap-4 db-mb-4" style="align-items:center;">
+        <div class="db-avatar db-avatar--lg"><img src="photo.jpg" alt=""></div>
+        <button class="db-btn db-btn--secondary db-btn--sm">Change Photo</button>
+      </div>
+      <div class="db-field db-mb-4">
+        <label class="db-field__label">Display Name</label>
+        <input class="db-field__input" type="text" value="Jane Doe">
+      </div>
+      <div class="db-field db-mb-4">
+        <label class="db-field__label">Email</label>
+        <input class="db-field__input" type="email" value="jane@example.com">
+        <span class="db-field__helper">We'll never share your email.</span>
+      </div>
+      <div class="db-field">
+        <label class="db-field__label">Bio</label>
+        <textarea class="db-textarea" rows="3">Designer & developer</textarea>
+      </div>
+    </div>
+
+    <div class="db-card db-mb-5">
+      <div class="db-card__header"><h3 class="db-card__title">Notifications</h3></div>
+      <div class="db-flex" style="justify-content:space-between; align-items:center;" class="db-mb-4">
+        <span>Email notifications</span>
+        <div class="db-switch" role="switch" tabindex="0" aria-checked="true">
+          <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+        </div>
+      </div>
+      <hr class="db-separator">
+      <div class="db-flex" style="justify-content:space-between; align-items:center;">
+        <span>Push notifications</span>
+        <div class="db-switch" role="switch" tabindex="0" aria-checked="false">
+          <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="db-flex db-gap-3" style="justify-content:flex-end;">
+      <button class="db-btn db-btn--secondary">Cancel</button>
+      <button class="db-btn db-btn--primary">Save Changes</button>
+    </div>
+  </main>
+
+  <script src="https://daub.dev/daub.js"></script>
+</body>
+</html>
+```
