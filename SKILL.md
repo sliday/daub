@@ -13,7 +13,7 @@ allowed-tools:
 
 # DAUB UI — Component Library
 
-DAUB is a drop-in CSS + JS library with 74 considered components and 6 theme families (12 variants). Thoughtfully composed, no ceremony required.
+DAUB is a drop-in CSS + JS library with 74 considered components and 20 theme families (40 variants). Thoughtfully composed, no ceremony required.
 
 ## Include
 
@@ -37,7 +37,9 @@ Set: `<html data-theme="dark">`
 Family API: `DAUB.setFamily('ink')` / `DAUB.setScheme('dark')` / `DAUB.getFamily()`
 Direct API: `DAUB.setTheme('dark')` / `DAUB.cycleTheme()` / `DAUB.getTheme()`
 Accent: `DAUB.setAccent('#6B7C3E')` / `DAUB.resetAccent()`
-Families: default, grunge, solarized, ink, ember, bone (each with light + dark)
+Families (20): default, grunge, solarized, ink, ember, bone, dracula, nord, one-dark, monokai, gruvbox, night-owl, github, catppuccin, tokyo-night, material, synthwave, shades-of-purple, ayu, horizon (each with light + dark)
+Categories: originals, classics, modern, trending
+Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 
 ## Components Quick Reference
 
@@ -124,7 +126,7 @@ Families: default, grunge, solarized, ink, ember, bone (each with light + dark)
 - **Collapsible**: `db-collapsible` — progressive disclosure
 - **Resizable**: `db-resizable` > `__handle--right` / `--bottom` / `--corner`
 - **Date Picker**: `db-date-picker` — wraps Calendar in popover
-- **Theme Switcher**: `db-theme-switcher` — 3x2 family grid + scheme row
+- **Theme Switcher**: `db-theme-switcher` — toggle button + categorized popover with 20 families + scheme row
 
 ## Full Docs
 

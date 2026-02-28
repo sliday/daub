@@ -7,7 +7,7 @@
 > Repo: https://github.com/sliday/daub
 > License: MIT
 > Components: 74
-> Theme Families: 6 (12 variants total)
+> Theme Families: 20 (40 variants total)
 
 ## Quick Start
 
@@ -36,7 +36,12 @@ All classes: `db-`. All CSS custom properties: `--db-`.
 
 ## Themes
 
-6 theme families, each with light & dark modes (12 variants):
+20 theme families in 4 categories, each with light & dark modes (40 variants):
+
+**Originals**: default, grunge, solarized, ink, ember, bone
+**Classics**: dracula, nord, one-dark, monokai, gruvbox
+**Modern**: night-owl, github, catppuccin, tokyo-night, material
+**Trending**: synthwave, shades-of-purple, ayu, horizon
 
 | Family | Light | Dark | Character |
 |--------|-------|------|-----------|
@@ -46,6 +51,20 @@ All classes: `db-`. All CSS custom properties: `--db-`.
 | Ink | `ink-light` | `ink` | Cool editorial / navy silver |
 | Ember | `ember-light` | `ember` | Sunlit pottery / copper glow |
 | Bone | `bone` | `bone-dark` | Stark white / grayscale brutalism |
+| Dracula | `dracula-light` | `dracula` | Alucard warmth / vampire purple |
+| Nord | `nord-light` | `nord` | Snow storm / arctic frost |
+| One Dark | `one-dark-light` | `one-dark` | Soft atom / midnight code |
+| Monokai | `monokai-light` | `monokai` | Warm latte / neon noir |
+| Gruvbox | `gruvbox-light` | `gruvbox` | Retro cream / earthy dark |
+| Night Owl | `night-owl-light` | `night-owl` | Soft dawn / deep twilight |
+| GitHub | `github` | `github-dark` | Clean primer / dimmed slate |
+| Catppuccin | `catppuccin` | `catppuccin-dark` | Latte pastel / mocha warmth |
+| Tokyo Night | `tokyo-night-light` | `tokyo-night` | Storm light / city neon |
+| Material | `material-light` | `material` | Lighter paper / palenight haze |
+| Synthwave | `synthwave-light` | `synthwave` | Warm retro / neon purple |
+| Shades of Purple | `shades-of-purple-light` | `shades-of-purple` | Soft lavender / deep violet |
+| Ayu | `ayu` | `ayu-dark` | Warm light / mirage dark |
+| Horizon | `horizon-light` | `horizon` | Soft rose / warm dusk |
 
 Set via attribute: `<html data-theme="dark">`
 Family API: `DAUB.setFamily('ink')`, `DAUB.setScheme('dark')`, `DAUB.getFamily()`
@@ -766,17 +785,14 @@ Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-table
 ```
 
 ### 62. Theme Switcher — `.db-theme-switcher`
-3x2 family grid + 3-button scheme row.
+Toggle button + categorized popover with 20 families + scheme row.
 ```html
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher">
-  <div class="db-theme-switcher__families">
-    <button class="db-theme-switcher__btn" data-family="default" aria-label="Default"><!-- icon --></button>
-    <!-- ...6 family buttons... -->
-  </div>
-  <div class="db-theme-switcher__scheme">
-    <button class="db-theme-switcher__btn" data-scheme="auto" aria-label="Auto"><!-- icon --></button>
-    <button class="db-theme-switcher__btn" data-scheme="light" aria-label="Light"><!-- icon --></button>
-    <button class="db-theme-switcher__btn" data-scheme="dark" aria-label="Dark"><!-- icon --></button>
+  <button class="db-theme-switcher__toggle" aria-label="Open theme picker" aria-expanded="false">
+    <!-- palette icon -->
+  </button>
+  <div class="db-theme-switcher__popover" id="db-theme-popover">
+    <!-- Auto-populated by daub.js with categorized family dots + scheme buttons -->
   </div>
 </div>
 ```
@@ -884,14 +900,17 @@ DAUB.toggleNavbar(el)          // Toggle mobile navbar menu
 DAUB.refreshIcons()            // Re-init Lucide icons after dynamic content
 DAUB.setTheme(name)            // Set theme (direct)
 DAUB.getTheme()                // Get current theme
-DAUB.cycleTheme()              // Cycle through 6 families
+DAUB.cycleTheme()              // Cycle through 20 families
 DAUB.THEMES                    // Array of all theme names
-DAUB.setFamily(name)           // Set theme family (default/grunge/solarized/ink/ember/bone)
+DAUB.setFamily(name)           // Set theme family (20 families across 4 categories)
 DAUB.getFamily()               // Get current family
 DAUB.setScheme(mode)           // Set color scheme (auto/light/dark)
 DAUB.getScheme()               // Get current scheme
 DAUB.THEME_FAMILIES            // Family → {light, dark} map
-DAUB.FAMILY_NAMES              // Array of family names
+DAUB.FAMILY_NAMES              // Array of 20 family names
+DAUB.THEME_CATEGORIES          // Category → family[] map
+DAUB.CATEGORY_NAMES            // Array of category names
+DAUB.getCategory(family)       // Get category for a family name
 DAUB.setAccent(hex)            // Override accent color
 DAUB.resetAccent()             // Restore theme default accent
 DAUB.getAccent()               // Get current accent color

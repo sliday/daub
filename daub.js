@@ -173,6 +173,7 @@
   function setFamily(family) {
     if (!THEME_FAMILIES[family]) return;
     setTheme(THEME_FAMILIES[family][getEffectiveMode()]);
+    document.dispatchEvent(new CustomEvent('daub:familychange', {detail: {family: family}}));
   }
 
   /* ----------------------------------------------------------
@@ -256,41 +257,164 @@
   /* ----------------------------------------------------------
      Theme Switcher UI
      ---------------------------------------------------------- */
+  var FAMILY_SWATCHES = {
+    'default':{light:'#FAF8F0',dark:'#2C2824'},'grunge':{light:'#EDE8DF',dark:'#1E1B17'},
+    'solarized':{light:'#fdf6e3',dark:'#002b36'},'ink':{light:'#EEF0F5',dark:'#1C2030'},
+    'ember':{light:'#F8F0E8',dark:'#201810'},'bone':{light:'#FAFAFA',dark:'#1A1A1A'},
+    'dracula':{light:'#FFFBEB',dark:'#282A36'},'nord':{light:'#ECEFF4',dark:'#2E3440'},
+    'one-dark':{light:'#FAFAFA',dark:'#282C34'},'monokai':{light:'#FAFAF8',dark:'#272822'},
+    'gruvbox':{light:'#FBF1C7',dark:'#282828'},'night-owl':{light:'#FBFBFB',dark:'#011627'},
+    'github':{light:'#FFFFFF',dark:'#0D1117'},'catppuccin':{light:'#EFF1F5',dark:'#1E1E2E'},
+    'tokyo-night':{light:'#D5D6DB',dark:'#1A1B26'},'material':{light:'#FAFAFA',dark:'#263238'},
+    'synthwave':{light:'#F5E6FF',dark:'#2B213A'},'shades-of-purple':{light:'#F3EFFF',dark:'#2D2B55'},
+    'ayu':{light:'#FAFAFA',dark:'#0B0E14'},'horizon':{light:'#FDF0ED',dark:'#1C1E26'}
+  };
+  var CATEGORY_LABELS = {originals:'Originals',classics:'Classics',modern:'Modern',trending:'Trending'};
+  var FAMILY_LABELS = {
+    'default':'Default','grunge':'Grunge','solarized':'Solar','ink':'Ink','ember':'Ember','bone':'Bone',
+    'dracula':'Dracula','nord':'Nord','one-dark':'One Dark','monokai':'Monokai','gruvbox':'Gruvbox',
+    'night-owl':'Night Owl','github':'GitHub','catppuccin':'Catppuccin','tokyo-night':'Tokyo','material':'Material',
+    'synthwave':'Synthwave','shades-of-purple':'Purple','ayu':'Ayu','horizon':'Horizon'
+  };
+
+  function buildPopoverContent(popover) {
+    while (popover.firstChild) popover.removeChild(popover.firstChild);
+    for (var ci = 0; ci < CATEGORY_NAMES.length; ci++) {
+      var cat = CATEGORY_NAMES[ci];
+      var families = THEME_CATEGORIES[cat];
+      var lbl = document.createElement('div');
+      lbl.className = 'db-theme-switcher__category-label';
+      lbl.textContent = CATEGORY_LABELS[cat];
+      popover.appendChild(lbl);
+      var row = document.createElement('div');
+      row.className = 'db-theme-switcher__category-items';
+      for (var fi = 0; fi < families.length; fi++) {
+        var fam = families[fi];
+        var sw = FAMILY_SWATCHES[fam] || {light:'#ccc',dark:'#333'};
+        var item = document.createElement('button');
+        item.className = 'db-theme-switcher__item';
+        item.setAttribute('data-family', fam);
+        item.setAttribute('aria-label', fam.replace(/-/g,' '));
+        item.setAttribute('aria-pressed', 'false');
+        var dot = document.createElement('span');
+        dot.className = 'db-theme-switcher__dot';
+        var halfL = document.createElement('span');
+        halfL.style.background = sw.light;
+        var halfD = document.createElement('span');
+        halfD.style.background = sw.dark;
+        dot.appendChild(halfL);
+        dot.appendChild(halfD);
+        item.appendChild(dot);
+        var name = document.createElement('span');
+        name.className = 'db-theme-switcher__name';
+        name.textContent = FAMILY_LABELS[fam] || fam;
+        item.appendChild(name);
+        row.appendChild(item);
+      }
+      popover.appendChild(row);
+    }
+    var schemeRow = document.createElement('div');
+    schemeRow.className = 'db-theme-switcher__scheme';
+    ['auto','light','dark'].forEach(function(s) {
+      var btn = document.createElement('button');
+      btn.className = 'db-theme-switcher__scheme-btn';
+      btn.setAttribute('data-scheme', s);
+      btn.setAttribute('aria-label', s + ' mode');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.textContent = s;
+      schemeRow.appendChild(btn);
+    });
+    popover.appendChild(schemeRow);
+  }
+
+  function _createPaletteIcon() {
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+    var p1 = document.createElementNS(ns, 'path');
+    p1.setAttribute('d', 'm2 13.12 7.05-7.05a2 2 0 0 1 1.41-.59H14l2-2 4 4-2 2v3.54a2 2 0 0 1-.59 1.41L10.88 22');
+    var p2 = document.createElementNS(ns, 'path');
+    p2.setAttribute('d', 'm14.5 9.5-5 5');
+    var p3 = document.createElementNS(ns, 'path');
+    p3.setAttribute('d', 'm2.05 13.07 5.88 5.88');
+    svg.appendChild(p1); svg.appendChild(p2); svg.appendChild(p3);
+    return svg;
+  }
+
   function initThemeSwitcher() {
-    // Legacy data-theme buttons
-    document.querySelectorAll('.db-theme-switcher__btn[data-theme], .db-showcase__theme-swatch[data-theme]').forEach(function(btn) {
+    // Auto-populate empty theme switcher containers
+    document.querySelectorAll('.db-theme-switcher').forEach(function(sw) {
+      if (sw.querySelector('.db-theme-switcher__toggle')) return;
+      var toggle = document.createElement('button');
+      toggle.className = 'db-theme-switcher__toggle';
+      toggle.setAttribute('aria-label', 'Open theme picker');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.appendChild(_createPaletteIcon());
+      var popover = document.createElement('div');
+      popover.className = 'db-theme-switcher__popover';
+      sw.appendChild(toggle);
+      sw.appendChild(popover);
+    });
+
+    // Build popover content
+    document.querySelectorAll('.db-theme-switcher__popover').forEach(function(pop) {
+      if (!pop._dbBuilt) { pop._dbBuilt = true; buildPopoverContent(pop); }
+    });
+
+    // Popover toggle
+    document.querySelectorAll('.db-theme-switcher__toggle').forEach(function(btn) {
       if (btn._dbInit) return;
       btn._dbInit = true;
-      btn.addEventListener('click', function() {
-        var theme = btn.getAttribute('data-theme');
-        if (theme) setTheme(theme);
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var popover = btn.parentElement.querySelector('.db-theme-switcher__popover');
+        if (!popover) return;
+        var open = popover.hasAttribute('data-open');
+        if (open) { popover.removeAttribute('data-open'); btn.setAttribute('aria-expanded','false'); }
+        else { popover.setAttribute('data-open',''); btn.setAttribute('aria-expanded','true'); }
       });
     });
 
-    // Family buttons
-    document.querySelectorAll('[data-family]').forEach(function(btn) {
-      if (btn._dbInit) return;
-      btn._dbInit = true;
-      btn.addEventListener('click', function() {
-        var family = btn.getAttribute('data-family');
-        if (family) setFamily(family);
+    // Close popover on outside click
+    if (!document._dbPopoverClose) {
+      document._dbPopoverClose = true;
+      document.addEventListener('click', function(e) {
+        document.querySelectorAll('.db-theme-switcher__popover[data-open]').forEach(function(pop) {
+          var toggle = pop.parentElement.querySelector('.db-theme-switcher__toggle');
+          if (!pop.contains(e.target) && (!toggle || !toggle.contains(e.target))) {
+            pop.removeAttribute('data-open');
+            if (toggle) toggle.setAttribute('aria-expanded','false');
+          }
+        });
       });
+    }
+
+    // Legacy data-theme buttons
+    document.querySelectorAll('.db-showcase__theme-swatch[data-theme]').forEach(function(btn) {
+      if (btn._dbInit) return; btn._dbInit = true;
+      btn.addEventListener('click', function() { var t = btn.getAttribute('data-theme'); if (t) setTheme(t); });
+    });
+
+    // Family buttons (dots + configurator swatches)
+    document.querySelectorAll('[data-family]').forEach(function(btn) {
+      if (btn._dbInit) return; btn._dbInit = true;
+      btn.addEventListener('click', function() { var f = btn.getAttribute('data-family'); if (f) setFamily(f); });
     });
 
     // Scheme buttons
-    document.querySelectorAll('.db-theme-switcher__btn[data-scheme]').forEach(function(btn) {
-      if (btn._dbInit) return;
-      btn._dbInit = true;
-      btn.addEventListener('click', function() {
-        var scheme = btn.getAttribute('data-scheme');
-        if (scheme) setScheme(scheme);
-      });
+    document.querySelectorAll('[data-scheme]').forEach(function(btn) {
+      if (btn._dbInit) return; btn._dbInit = true;
+      btn.addEventListener('click', function() { var s = btn.getAttribute('data-scheme'); if (s) setScheme(s); });
     });
 
     // Accent picker
     document.querySelectorAll('.db-accent-picker__dot').forEach(function(btn) {
-      if (btn._dbInit) return;
-      btn._dbInit = true;
+      if (btn._dbInit) return; btn._dbInit = true;
       btn.addEventListener('click', function() {
         var accent = btn.getAttribute('data-accent');
         if (accent === 'reset') resetAccent();
@@ -306,21 +430,18 @@
     var currentFamily = getFamily();
 
     // Legacy theme buttons
-    document.querySelectorAll('.db-theme-switcher__btn[data-theme], .db-showcase__theme-swatch[data-theme]').forEach(function(btn) {
-      var isActive = btn.getAttribute('data-theme') === current;
-      btn.setAttribute('aria-pressed', String(isActive));
+    document.querySelectorAll('.db-showcase__theme-swatch[data-theme]').forEach(function(btn) {
+      btn.setAttribute('aria-pressed', String(btn.getAttribute('data-theme') === current));
     });
 
-    // Family buttons
+    // Family buttons (dots + swatches)
     document.querySelectorAll('[data-family]').forEach(function(btn) {
-      var isActive = btn.getAttribute('data-family') === currentFamily;
-      btn.setAttribute('aria-pressed', String(isActive));
+      btn.setAttribute('aria-pressed', String(btn.getAttribute('data-family') === currentFamily));
     });
 
     // Scheme buttons
-    document.querySelectorAll('.db-theme-switcher__btn[data-scheme]').forEach(function(btn) {
-      var isActive = btn.getAttribute('data-scheme') === _scheme;
-      btn.setAttribute('aria-pressed', String(isActive));
+    document.querySelectorAll('[data-scheme]').forEach(function(btn) {
+      btn.setAttribute('aria-pressed', String(btn.getAttribute('data-scheme') === _scheme));
     });
 
     updateAccentPickerUI();
@@ -578,6 +699,7 @@
   }
 
   function toast(opts) {
+    if (typeof opts === 'string') opts = { message: opts };
     opts = opts || {};
     var type = opts.type || 'info';
     var title = opts.title || '';
@@ -1029,6 +1151,7 @@
      Dropdown Menu
      ---------------------------------------------------------- */
   var _dbDropInit = false;
+  var _dbDropClickInit = false;
   function initDropdowns(root) {
     if (_dbDropInit && root === document) return;
     root.querySelectorAll('.db-dropdown').forEach(function(drop) {
@@ -1045,11 +1168,14 @@
         if (!wasOpen) drop.classList.add('db-dropdown--open');
       });
     });
-    document.addEventListener('click', function() {
-      document.querySelectorAll('.db-dropdown--open').forEach(function(d) {
-        d.classList.remove('db-dropdown--open');
+    if (!_dbDropClickInit) {
+      _dbDropClickInit = true;
+      document.addEventListener('click', function() {
+        document.querySelectorAll('.db-dropdown--open').forEach(function(d) {
+          d.classList.remove('db-dropdown--open');
+        });
       });
-    });
+    }
     if (root === document) _dbDropInit = true;
   }
 
@@ -1082,6 +1208,7 @@
      Custom Select
      ---------------------------------------------------------- */
   var _dbCustomSelectInit = false;
+  var _dbCustomSelectClickInit = false;
   function initCustomSelects(root) {
     if (_dbCustomSelectInit && root === document) return;
     root.querySelectorAll('.db-custom-select').forEach(function(sel) {
@@ -1133,11 +1260,14 @@
       }
     });
 
-    document.addEventListener('click', function() {
-      document.querySelectorAll('.db-custom-select--open').forEach(function(s) {
-        s.classList.remove('db-custom-select--open');
+    if (!_dbCustomSelectClickInit) {
+      _dbCustomSelectClickInit = true;
+      document.addEventListener('click', function() {
+        document.querySelectorAll('.db-custom-select--open').forEach(function(s) {
+          s.classList.remove('db-custom-select--open');
+        });
       });
-    });
+    }
     if (root === document) _dbCustomSelectInit = true;
   }
 
@@ -1471,6 +1601,33 @@
   }
 
   /* ----------------------------------------------------------
+     Dev-mode validation warnings
+     ---------------------------------------------------------- */
+  function _validate(root) {
+    var host = location.hostname;
+    var isDev = host === 'localhost' || host === '127.0.0.1' || host === '[::1]' || document.documentElement.hasAttribute('data-db-debug');
+    if (!isDev) return;
+    var checks = [
+      ['.db-dropdown', '.db-dropdown__trigger', 'DAUB: .db-dropdown missing __trigger child'],
+      ['.db-custom-select', '.db-custom-select__trigger', 'DAUB: .db-custom-select missing __trigger child'],
+      ['.db-tabs', '.db-tabs__list', 'DAUB: .db-tabs missing __list child'],
+      ['.db-field', '.db-field__input', 'DAUB: .db-field missing __input child'],
+      ['.db-slider', '.db-slider__input', 'DAUB: .db-slider missing __input child'],
+      ['.db-accordion', '.db-accordion__item', 'DAUB: .db-accordion has no __item children'],
+      ['.db-checkbox', '.db-checkbox__input', 'DAUB: .db-checkbox missing __input child'],
+      ['.db-radio', '.db-radio__input', 'DAUB: .db-radio missing __input child']
+    ];
+    checks.forEach(function(c) {
+      root.querySelectorAll(c[0]).forEach(function(el) {
+        if (!el.querySelector(c[1])) console.warn(c[2], el);
+      });
+    });
+    root.querySelectorAll('.db-modal').forEach(function(el) {
+      if (!el.id) console.warn('DAUB: .db-modal missing id attribute', el);
+    });
+  }
+
+  /* ----------------------------------------------------------
      Init
      ---------------------------------------------------------- */
   function init(root) {
@@ -1510,6 +1667,7 @@
     initThemeSwitcher();
     fixNestedRadius(root);
     refreshIcons();
+    _validate(root);
   }
 
   if (document.readyState === 'loading') {

@@ -12,7 +12,7 @@
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 74 components, 6 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 74 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
 ## Quick Start
 
@@ -145,12 +145,13 @@ DAUB uses system font stacks by default. For richer typography:
 | Collapsible | `db-collapsible` | Progressive disclosure |
 | Resizable | `db-resizable` | `__handle--right`, `--bottom`, `--corner` |
 | Date Picker | `db-date-picker` | Wraps Calendar in popover |
-| Theme Switcher | `db-theme-switcher` | 6 families + scheme switcher |
+| Theme Switcher | `db-theme-switcher` | 20 families + scheme switcher |
 
 ## Themes
 
-6 theme families, each with light and dark modes (12 variants total):
+20 theme families in 4 categories, each with light and dark modes (40 variants total):
 
+### Originals
 | Family | Light | Dark | Character |
 |--------|-------|------|-----------|
 | Default | `light` | `dark` | Warm cream / deep charcoal |
@@ -159,6 +160,32 @@ DAUB uses system font stacks by default. For richer typography:
 | Ink | `ink-light` | `ink` | Cool editorial / navy silver |
 | Ember | `ember-light` | `ember` | Sunlit pottery / copper glow |
 | Bone | `bone` | `bone-dark` | Stark white / grayscale brutalism |
+
+### Classics
+| Family | Light | Dark | Character |
+|--------|-------|------|-----------|
+| Dracula | `dracula-light` | `dracula` | Alucard warmth / vampire purple |
+| Nord | `nord-light` | `nord` | Snow storm / arctic frost |
+| One Dark | `one-dark-light` | `one-dark` | Soft atom / midnight code |
+| Monokai | `monokai-light` | `monokai` | Warm latte / neon noir |
+| Gruvbox | `gruvbox-light` | `gruvbox` | Retro cream / earthy dark |
+
+### Modern
+| Family | Light | Dark | Character |
+|--------|-------|------|-----------|
+| Night Owl | `night-owl-light` | `night-owl` | Soft dawn / deep twilight |
+| GitHub | `github` | `github-dark` | Clean primer / dimmed slate |
+| Catppuccin | `catppuccin` | `catppuccin-dark` | Latte pastel / mocha warmth |
+| Tokyo Night | `tokyo-night-light` | `tokyo-night` | Storm light / city neon |
+| Material | `material-light` | `material` | Lighter paper / palenight haze |
+
+### Trending
+| Family | Light | Dark | Character |
+|--------|-------|------|-----------|
+| Synthwave | `synthwave-light` | `synthwave` | Warm retro / neon purple |
+| Shades of Purple | `shades-of-purple-light` | `shades-of-purple` | Soft lavender / deep violet |
+| Ayu | `ayu` | `ayu-dark` | Warm light / mirage dark |
+| Horizon | `horizon-light` | `horizon` | Soft rose / warm dusk |
 
 ### Switching themes
 
@@ -170,7 +197,7 @@ DAUB uses system font stacks by default. For richer typography:
 // Family-based (recommended)
 DAUB.setFamily('ink');       // sets ink-light or ink depending on scheme
 DAUB.setScheme('dark');      // switches current family to dark mode
-DAUB.cycleTheme();           // cycles through 6 families, preserving mode
+DAUB.cycleTheme();           // cycles through 20 families, preserving mode
 
 // Direct theme (backward compatible)
 DAUB.setTheme('ink');        // sets exact theme variant
@@ -222,7 +249,7 @@ Semantic tokens (theme-aware aliases): `--db-color-bg`, `--db-color-surface`, `-
 
 ## Accessibility
 
-- WCAG AA colour contrast across all 12 theme variants
+- WCAG AA colour contrast across all 40 theme variants
 - `aria-*` attributes on all interactive components
 - Focus-visible outlines (keyboard navigation)
 - Modal/Dialog: focus trapping, Escape to close
