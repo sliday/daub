@@ -151,7 +151,7 @@ DAUB uses system font stacks by default. For richer typography:
 |--------|-------|------|-----------|
 | Default | `light` | `dark` | Warm cream / deep charcoal |
 | Grunge | `grunge-light` | `grunge-dark` | Typewriter / ink-stained |
-| Parchment | `parchment` | `parchment-dark` | Aged paper / antiqued leather |
+| Solarized | `solarized` | `solarized-dark` | Warm tinted / dusky amber |
 | Ink | `ink-light` | `ink` | Cool editorial / navy silver |
 | Ember | `ember-light` | `ember` | Sunlit pottery / copper glow |
 | Bone | `bone` | `bone-dark` | Stark white / grayscale brutalism |
@@ -251,8 +251,9 @@ No polyfills needed.
 
 **Theme families + accent color picker.**
 
-- Theme families: 6 families (Default, Grunge, Parchment, Ink, Ember, Bone) × light/dark = 12 variants
-- New palettes: `parchment-dark`, `ink-light`, `ember-light`, `bone-dark`
+- Theme families: 6 families (Default, Grunge, Solarized, Ink, Ember, Bone) × light/dark = 12 variants
+- Solarized theme: replaces Parchment with warm tinted / dusky amber palette
+- New palettes: `solarized-dark`, `ink-light`, `ember-light`, `bone-dark`
 - Scheme control: `DAUB.setScheme('auto'|'light'|'dark')` — separate from family selection
 - Family API: `DAUB.setFamily('ink')`, `DAUB.getFamily()`, `DAUB.cycleTheme()` cycles 6 families
 - Accent color picker: 12 curated natural colors + reset, persisted to localStorage
@@ -260,6 +261,7 @@ No polyfills needed.
 - FOUC prevention: now restores scheme and accent color before paint
 - Theme switcher: 3×2 family grid + 3-button scheme row (replaces 4×2 theme grid)
 - Backward compatible: `DAUB.setTheme('dark')` still works directly
+- Bug fixes: modal centering on all viewports, toast visibility in dark themes, sheet/drawer height consistency, tooltip positioning edge-case corrections
 
 ### v2.1.1
 
@@ -273,7 +275,7 @@ No polyfills needed.
 
 **67 components. Semantic tokens, ghost buttons, input icons, chips, bottom nav, sidebar collapse.**
 
-- Semantic design tokens: theme-aware aliases (`--db-color-bg`, `--db-color-text`, `--db-color-accent`, etc.) that auto-resolve across all 8 themes
+- Semantic design tokens: theme-aware aliases (`--db-color-bg`, `--db-color-text`, `--db-color-accent`, etc.) that auto-resolve across all 12 theme variants
 - Ghost button: transparent `db-btn--ghost` variant for subtle actions
 - Icon button colors: `db-btn--icon-danger`, `--icon-success`, `--icon-accent` with tinted hover backgrounds
 - Input with icon: `db-input-icon` with prefix/suffix icon positions and `:focus-within` highlight
@@ -320,10 +322,10 @@ No polyfills needed.
 
 ### v2.0.0
 
-**64 components. 8 themes. Zero build step.**
+**64 components. 6 theme families (12 variants). Zero build step.**
 
 - 36 new components: Data Table, Custom Select, Command Palette, Carousel, OTP Input, Resizable panels, Hover Card, Context Menu, Menubar, Sidebar, Drawer, Sheet, Alert Dialog, Toggle Group, Button Group, Input Group, Spinner, Kbd, Separator, Native Select, Aspect Ratio, Scroll Area, Date Picker, Chart, Nav Menu, Label, and more
-- 4 new themes: Parchment, Ink, Ember, Bone (total: 8)
+- 4 new themes: Solarized, Ink, Ember, Bone
 - CSS-only components: Separator, Spinner, Kbd, Input, Toggle, Button Group, Native Select
 - Prose typography system with scale variants
 - Layout utilities: `db-container`, `db-flex`, `db-grid`, `db-gap-*`

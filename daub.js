@@ -9,17 +9,17 @@
   /* ----------------------------------------------------------
      Theme Manager
      ---------------------------------------------------------- */
-  var THEMES = ['light','dark','grunge-light','grunge-dark','parchment','parchment-dark','ink-light','ink','ember-light','ember','bone','bone-dark'];
+  var THEMES = ['light','dark','grunge-light','grunge-dark','solarized','solarized-dark','ink-light','ink','ember-light','ember','bone','bone-dark'];
 
   var THEME_FAMILIES = {
-    'default':   { light: 'light',       dark: 'dark' },
-    'grunge':    { light: 'grunge-light', dark: 'grunge-dark' },
-    'parchment': { light: 'parchment',   dark: 'parchment-dark' },
-    'ink':       { light: 'ink-light',    dark: 'ink' },
-    'ember':     { light: 'ember-light',  dark: 'ember' },
-    'bone':      { light: 'bone',        dark: 'bone-dark' }
+    'default':    { light: 'light',        dark: 'dark' },
+    'grunge':     { light: 'grunge-light',  dark: 'grunge-dark' },
+    'solarized':  { light: 'solarized',     dark: 'solarized-dark' },
+    'ink':        { light: 'ink-light',     dark: 'ink' },
+    'ember':      { light: 'ember-light',   dark: 'ember' },
+    'bone':       { light: 'bone',         dark: 'bone-dark' }
   };
-  var FAMILY_NAMES = ['default','grunge','parchment','ink','ember','bone'];
+  var FAMILY_NAMES = ['default','grunge','solarized','ink','ember','bone'];
 
   // Reverse lookup: theme name → { family, mode }
   var THEME_TO_FAMILY = {};
@@ -423,7 +423,7 @@
   var _lastModalTrigger = null;
 
   function openModal(id, trigger) {
-    var overlay = document.getElementById(id);
+    var overlay = typeof id === 'string' ? document.getElementById(id) : id;
     if (!overlay) return;
     _lastModalTrigger = trigger || null;
     overlay.classList.add('db-modal--open');
@@ -451,6 +451,8 @@
   }
 
   function closeModal(overlay) {
+    overlay = typeof overlay === 'string' ? document.getElementById(overlay) : overlay;
+    if (!overlay) return;
     overlay.classList.remove('db-modal--open');
     overlay.setAttribute('aria-hidden', 'true');
     if (overlay._dbTrap) {
@@ -1375,6 +1377,61 @@
   }
 
   /* ----------------------------------------------------------
+     Navbar
+     ---------------------------------------------------------- */
+  function initNavbars(root) {
+    root.querySelectorAll('.db-navbar__toggle').forEach(function(btn) {
+      if (btn._dbNavbar) return;
+      btn._dbNavbar = true;
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var navbar = btn.closest('.db-navbar');
+        if (navbar) navbar.classList.toggle('db-navbar--open');
+      });
+    });
+    // Close on outside click
+    if (!document._dbNavbarOutside) {
+      document._dbNavbarOutside = true;
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.db-navbar')) {
+          document.querySelectorAll('.db-navbar--open').forEach(function(n) {
+            n.classList.remove('db-navbar--open');
+          });
+        }
+      });
+    }
+  }
+
+  function toggleNavbar(el) {
+    if (typeof el === 'string') el = document.querySelector(el);
+    if (el) el.classList.toggle('db-navbar--open');
+  }
+
+  /* ----------------------------------------------------------
+     Chip Toggle
+     ---------------------------------------------------------- */
+  function initChipToggle(root) {
+    root.querySelectorAll('[data-db-chip-toggle]').forEach(function(container) {
+      if (container._dbChipToggle) return;
+      container._dbChipToggle = true;
+      container.addEventListener('click', function(e) {
+        var chip = e.target.closest('.db-chip');
+        if (!chip || e.target.closest('.db-chip__close')) return;
+        chip.classList.toggle('db-chip--active');
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Icon Refresh
+     ---------------------------------------------------------- */
+  function refreshIcons() {
+    if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+      lucide.createIcons();
+    }
+  }
+
+  /* ----------------------------------------------------------
      Init
      ---------------------------------------------------------- */
   function init(root) {
@@ -1408,9 +1465,12 @@
     initOTP(root);
     initResizables(root);
     initChipClose(root);
+    initChipToggle(root);
+    initNavbars(root);
     initSidebarToggle(root);
     initThemeSwitcher();
     fixNestedRadius(root);
+    refreshIcons();
   }
 
   if (document.readyState === 'loading') {
@@ -1457,7 +1517,9 @@
       return document.documentElement.getAttribute('data-db-texture') || 'grain';
     },
     TEXTURES: ['grain', 'paper', 'metal', 'wood', 'glass', 'none'],
-    toggleSidebar: toggleSidebar
+    toggleSidebar: toggleSidebar,
+    toggleNavbar: toggleNavbar,
+    refreshIcons: refreshIcons
   };
 
 })();

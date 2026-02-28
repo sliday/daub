@@ -42,7 +42,7 @@ All classes: `db-`. All CSS custom properties: `--db-`.
 |--------|-------|------|-----------|
 | Default | `light` | `dark` | Warm cream / deep charcoal |
 | Grunge | `grunge-light` | `grunge-dark` | Typewriter / ink-stained |
-| Parchment | `parchment` | `parchment-dark` | Aged paper / antiqued leather |
+| Solarized | `solarized` | `solarized-dark` | Aged paper / antiqued leather |
 | Ink | `ink-light` | `ink` | Cool editorial / navy silver |
 | Ember | `ember-light` | `ember` | Sunlit pottery / copper glow |
 | Bone | `bone` | `bone-dark` | Stark white / grayscale brutalism |
@@ -814,7 +814,7 @@ DAUB.setTheme(name)            // Set theme (direct)
 DAUB.getTheme()                // Get current theme
 DAUB.cycleTheme()              // Cycle through 6 families
 DAUB.THEMES                    // Array of all theme names
-DAUB.setFamily(name)           // Set theme family (default/grunge/parchment/ink/ember/bone)
+DAUB.setFamily(name)           // Set theme family (default/grunge/solarized/ink/ember/bone)
 DAUB.getFamily()               // Get current family
 DAUB.setScheme(mode)           // Set color scheme (auto/light/dark)
 DAUB.getScheme()               // Get current scheme

@@ -37,7 +37,7 @@ Set: `<html data-theme="dark">`
 Family API: `DAUB.setFamily('ink')` / `DAUB.setScheme('dark')` / `DAUB.getFamily()`
 Direct API: `DAUB.setTheme('dark')` / `DAUB.cycleTheme()` / `DAUB.getTheme()`
 Accent: `DAUB.setAccent('#6B7C3E')` / `DAUB.resetAccent()`
-Families: default, grunge, parchment, ink, ember, bone (each with light + dark)
+Families: default, grunge, solarized, ink, ember, bone (each with light + dark)
 
 ## Components Quick Reference
 
