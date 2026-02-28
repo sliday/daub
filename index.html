@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB — Considered Interface Components</title>
-  <meta name="description" content="DAUB is a CSS component library with 64 considered UI elements and 8 themes. Thoughtful, tactile, and accessible. No build step required.">
+  <meta name="description" content="DAUB is a CSS component library with 67 considered UI elements and 8 themes. Thoughtful, tactile, and accessible. No build step required.">
   <meta name="keywords" content="CSS components, neo-skeuomorphic, UI kit, design system, considered UI, tactile, accessible, themes, AI components, llms.txt, drop-in CSS">
   <meta name="theme-color" content="#C67B5C">
   <link rel="canonical" href="https://daub.dev">
@@ -12,7 +12,7 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="DAUB — Considered Interface Components">
-  <meta property="og:description" content="64 considered UI elements with 8 themes. Drop-in CSS + JS. No build step.">
+  <meta property="og:description" content="67 considered UI elements with 8 themes. Drop-in CSS + JS. No build step.">
   <meta property="og:url" content="https://daub.dev">
   <meta property="og:site_name" content="DAUB UI">
   <meta property="og:image" content="https://daub.dev/og-image.png">
@@ -23,7 +23,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="DAUB — Considered Interface Components">
-  <meta name="twitter:description" content="64 considered UI elements with 8 themes. Drop-in CSS + JS. No build step.">
+  <meta name="twitter:description" content="67 considered UI elements with 8 themes. Drop-in CSS + JS. No build step.">
   <meta name="twitter:image" content="https://daub.dev/og-image.png">
   <meta name="twitter:site" content="@staskulesh">
   <meta name="twitter:creator" content="@staskulesh">
@@ -37,12 +37,12 @@
     "@context": "https://schema.org",
     "@type": "SoftwareSourceCode",
     "name": "DAUB UI",
-    "description": "Considered CSS components for discerning interfaces. 64 elements, 8 themes.",
+    "description": "Considered CSS components for discerning interfaces. 67 elements, 8 themes.",
     "url": "https://daub.dev",
     "codeRepository": "https://github.com/sliday/daub",
     "programmingLanguage": ["CSS", "JavaScript"],
     "license": "https://opensource.org/licenses/MIT",
-    "version": "2.0.0",
+    "version": "2.1.1",
     "dateModified": "2026-02-27",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
@@ -151,6 +151,27 @@
       margin: 0 0 16px;
       line-height: 1.1;
       letter-spacing: -0.02em;
+    }
+    .db-hero__definition {
+      font-family: var(--db-font-body);
+      font-size: 0.9375rem;
+      color: var(--db-warm-gray);
+      margin: 0 auto 24px;
+      max-width: 480px;
+      line-height: 1.6;
+      font-style: italic;
+    }
+    .db-hero__definition strong {
+      font-style: normal;
+      color: var(--db-ink);
+      font-family: var(--db-font-heading);
+      font-weight: 700;
+    }
+    .db-hero__definition .db-hero__pos {
+      font-size: 0.75rem;
+      font-style: italic;
+      color: var(--db-terracotta-text, var(--db-terracotta));
+      margin: 0 2px;
     }
     .db-hero__sub {
       font-family: var(--db-font-body);
@@ -611,6 +632,7 @@
       <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
     </a>
     <h1 class="db-hero__headline">Design you can almost touch.</h1>
+    <p class="db-hero__definition"><strong>daub</strong> <span class="db-hero__pos">verb</span> to coat or smear a surface with a thick substance; to apply with rough, expressive strokes.</p>
     <p class="db-hero__sub">A humanistic component library that honours materiality — warm surfaces, honest shadows, textures that feel real. Two files, zero build step, and your interface has substance.</p>
     <div class="db-hero__actions">
       <a href="#foundations" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
@@ -722,7 +744,7 @@
           </div>
           <div class="db-showcase__stats">
             <div class="db-showcase__stat">
-              <span class="db-showcase__stat-num">64</span>
+              <span class="db-showcase__stat-num">67</span>
               <span class="db-showcase__stat-label">Components</span>
             </div>
             <div class="db-showcase__stat">
@@ -1944,7 +1966,7 @@
   <!-- Closing CTA -->
   <section style="max-width:640px; margin:0 auto; padding:64px 24px; text-align:center;">
     <h2 style="font-family:var(--db-font-heading); font-size:clamp(1.5rem, 3vw, 2.25rem); font-weight:700; color:var(--db-ink); margin:0 0 16px; line-height:1.2;">Two files. Full surface.</h2>
-    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px;">64 components that respond to light, texture, and theme. Drop them in, ship something that feels considered — without the ceremony.</p>
+    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px;">67 components that respond to light, texture, and theme. Drop them in, ship something that feels considered — without the ceremony.</p>
     <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
       <a href="#foundations" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
       <a href="https://github.com/sliday/daub" target="_blank" rel="noopener" class="db-btn db-btn--secondary db-btn--lg">

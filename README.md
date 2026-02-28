@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.1.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.1.1-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-67-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
@@ -239,6 +239,14 @@ Point your AI at `https://daub.dev/llms.txt` for complete component docs with HT
 No polyfills needed.
 
 ## Changelog
+
+### v2.1.1
+
+**"Daub" definition + housekeeping.**
+
+- Hero: dictionary-style "daub" definition below the headline
+- Fixed component count across meta tags, structured data, and showcase stats (64 → 67)
+- Updated JSON-LD version to 2.1.1
 
 ### v2.1.0
 
