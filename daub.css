@@ -77,7 +77,7 @@
   --db-shadow-1: 0 1px 2px rgba(var(--db-shadow-rgb),0.08), 0 1px 4px rgba(var(--db-shadow-rgb),0.06);
   --db-shadow-2: 0 2px 4px rgba(var(--db-shadow-rgb),0.1), 0 4px 12px rgba(var(--db-shadow-rgb),0.08);
   --db-shadow-3: 0 4px 8px rgba(var(--db-shadow-rgb),0.12), 0 8px 24px rgba(var(--db-shadow-rgb),0.1);
-  --db-shadow-inset: inset 0 2px 4px rgba(var(--db-shadow-rgb),0.12), inset 0 1px 2px rgba(var(--db-shadow-rgb),0.08);
+  --db-shadow-inset: inset 0 2px 4px rgba(var(--db-shadow-rgb),0.12), inset 0 1px 2px rgba(var(--db-shadow-rgb),0.08), inset 0 -1px 0 rgba(var(--db-glow-rgb),0.15);
 
   /* Focus ring */
   --db-focus-ring: 0 0 0 3px rgba(var(--db-accent-rgb),0.25);
@@ -112,6 +112,15 @@
   --db-color-surface-rgb: var(--db-white-rgb);
   --db-color-accent-rgb: var(--db-accent-rgb);
   --db-color-border-rgb: var(--db-sand-rgb);
+
+  /* Letterpress text shadows — light themes get a white highlight below, dark themes get a dark carve */
+  --db-text-emboss: 0 1px 0 rgba(var(--db-glow-rgb), 0.4);
+  --db-text-emboss-subtle: 0 1px 0 rgba(var(--db-glow-rgb), 0.15);
+
+  /* Per-element texture */
+  --db-element-texture: none;
+  --db-element-texture-opacity: 0;
+  --db-element-texture-blend: overlay;
 }
 
 /* Warmth overlay — uses backdrop-filter on html::after instead of filter on body
@@ -127,6 +136,11 @@ html::after {
 }
 
 /* Texture overlay — type set via [data-db-texture] on <html> */
+:root {
+  --db-texture-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  --db-texture-blend: overlay;
+  --db-texture-element-opacity: calc(var(--db-noise) * 0.5);
+}
 body::before {
   content: '';
   position: fixed;
@@ -135,11 +149,16 @@ body::before {
   pointer-events: none;
   opacity: calc(var(--db-noise) * 0.8);
   background-repeat: repeat;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  mix-blend-mode: var(--db-texture-blend);
+  background-image: var(--db-texture-img);
 }
 
 /* Texture: Paper — soft fibrous texture */
+[data-db-texture="paper"] {
+  --db-texture-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='5' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='1'/%3E%3C/svg%3E");
+  --db-texture-blend: soft-light;
+  --db-texture-element-opacity: calc(var(--db-noise) * 0.7);
+}
 [data-db-texture="paper"] body::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='5' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='1'/%3E%3C/svg%3E");
   mix-blend-mode: soft-light;
@@ -147,25 +166,37 @@ body::before {
 }
 
 /* Texture: Metal — brushed aluminum (fine directional horizontal noise) */
+[data-db-texture="metal"] {
+  --db-texture-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005 0.8' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)' opacity='1'/%3E%3C/svg%3E");
+  --db-texture-blend: overlay;
+  --db-texture-element-opacity: calc(var(--db-noise) * 0.6);
+}
 [data-db-texture="metal"] body::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005 0.8' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)' opacity='1'/%3E%3C/svg%3E");
+  background-image: var(--db-texture-img);
   mix-blend-mode: overlay;
   opacity: calc(var(--db-noise) * 1.0);
 }
 
 /* Texture: Wood — wavy horizontal grain */
+[data-db-texture="wood"] {
+  --db-texture-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.015 0.12' numOctaves='4' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)' opacity='1'/%3E%3C/svg%3E");
+  --db-texture-blend: soft-light;
+  --db-texture-element-opacity: calc(var(--db-noise) * 0.7);
+}
 [data-db-texture="wood"] body::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.015 0.12' numOctaves='4' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)' opacity='1'/%3E%3C/svg%3E");
+  background-image: var(--db-texture-img);
   mix-blend-mode: soft-light;
   opacity: calc(var(--db-noise) * 1.2);
 }
 
 /* Texture: None */
+[data-db-texture="none"] { --db-texture-element-opacity: 0; }
 [data-db-texture="none"] body::before {
   display: none;
 }
 
 /* Texture: Glass — frosted translucency on elevated surfaces */
+[data-db-texture="glass"] { --db-texture-element-opacity: 0; }
 [data-db-texture="glass"] body::before {
   display: none;
 }
@@ -249,6 +280,47 @@ body::before {
   border-color: rgba(var(--db-glow-rgb), 0.15);
 }
 
+/* Per-element texture — applies grain/paper/metal/wood to physical surfaces
+   Note: <input>, <textarea>, <select> are void/replaced elements — cannot have ::after.
+   Texture on form fields comes through their wrapper (.db-field, .db-input-group, etc.) */
+.db-card::after,
+.db-btn--primary::after,
+.db-btn--secondary::after,
+.db-field::after,
+.db-input-group::after,
+.db-input-icon::after,
+.db-search::after,
+.db-navbar::after,
+.db-sidebar::after,
+.db-modal::after,
+.db-sheet__panel::after,
+.db-drawer__panel::after,
+.db-alert::after,
+.db-surface--raised::after,
+.db-surface--inset::after,
+.db-tabs__list::after,
+.db-toggle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--db-texture-img);
+  background-repeat: repeat;
+  mix-blend-mode: var(--db-texture-blend);
+  opacity: var(--db-texture-element-opacity);
+  border-radius: inherit;
+  z-index: 1;
+}
+
+/* Ensure textured elements can contain the ::after */
+.db-card, .db-field, .db-input-group, .db-input-icon, .db-search,
+.db-navbar, .db-sidebar, .db-modal,
+.db-sheet__panel, .db-drawer__panel, .db-alert,
+.db-surface--raised, .db-surface--inset,
+.db-tabs__list, .db-toggle { position: relative; }
+
+.db-btn--primary, .db-btn--secondary { position: relative; }
+
 /* ------------------------------------------------------------
    1b. THEME VARIANTS
    ------------------------------------------------------------ */
@@ -284,6 +356,7 @@ body::before {
   --db-accent-pressed: #A06838;
   --db-success-dark: #6B8F6B;
   --db-overlay-bg: rgba(10,8,5,0.7);
+
 }
 
 /* Grunge Light Theme */
@@ -1582,6 +1655,31 @@ body::before {
   --db-overlay-bg: rgba(28,30,38,0.5);
 }
 
+/* Dark themes: letterpress inverts to carved shadow */
+[data-theme="dark"],
+[data-theme="grunge-dark"],
+[data-theme="solarized-dark"],
+[data-theme="ink"],
+[data-theme="ember"],
+[data-theme="bone-dark"],
+[data-theme="dracula"],
+[data-theme="nord"],
+[data-theme="one-dark"],
+[data-theme="monokai"],
+[data-theme="gruvbox"],
+[data-theme="night-owl"],
+[data-theme="github-dark"],
+[data-theme="catppuccin-dark"],
+[data-theme="tokyo-night"],
+[data-theme="material"],
+[data-theme="synthwave"],
+[data-theme="shades-of-purple"],
+[data-theme="ayu-dark"],
+[data-theme="horizon"] {
+  --db-text-emboss: 0 1px 1px rgba(0,0,0,0.5);
+  --db-text-emboss-subtle: 0 1px 0 rgba(0,0,0,0.3);
+}
+
 /* ------------------------------------------------------------
    2. RESET & BASE
    ------------------------------------------------------------ */
@@ -1629,7 +1727,7 @@ a:hover { color: var(--db-clay); }
 
 .db-surface--raised {
   background: linear-gradient(180deg, var(--db-white) 0%, var(--db-cream) 100%);
-  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
+  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
   border: 1px solid var(--db-sand);
   border-radius: var(--db-radius-3);
 }
@@ -1679,6 +1777,7 @@ a:hover { color: var(--db-clay); }
   color: var(--db-ink);
   line-height: 1.2;
   font-variation-settings: 'WONK' 1;
+  text-shadow: var(--db-text-emboss);
 }
 
 .db-h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: var(--db-space-5); }
@@ -1696,6 +1795,7 @@ a:hover { color: var(--db-clay); }
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--db-charcoal);
+  text-shadow: var(--db-text-emboss-subtle);
 }
 
 .db-caption {
@@ -1761,6 +1861,7 @@ a:hover { color: var(--db-clay); }
   margin-top: 1.5em;
   margin-bottom: 0.5em;
 }
+.db-prose h1, .db-prose h2, .db-prose h3, .db-prose h4 { text-shadow: var(--db-text-emboss); }
 
 .db-prose p { margin-top: 1.25em; margin-bottom: 1.25em; }
 
@@ -1875,6 +1976,7 @@ a:hover { color: var(--db-clay); }
   user-select: none;
   line-height: 1;
   white-space: nowrap;
+  text-shadow: var(--db-text-emboss-subtle);
 }
 
 .db-btn:focus-visible {
@@ -1887,12 +1989,13 @@ a:hover { color: var(--db-clay); }
   background: linear-gradient(180deg, var(--db-terracotta) 0%, var(--db-accent-dark) 100%);
   color: var(--db-white);
   border: 1px solid rgba(var(--db-shadow-rgb),0.15);
-  box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2);
+  box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.15);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.25);
 }
 
 .db-btn--primary:hover {
   background: linear-gradient(180deg, var(--db-accent-hover) 0%, var(--db-terracotta) 100%);
-  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2);
+  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.15);
   color: var(--db-white);
 }
 
@@ -1910,12 +2013,12 @@ a:hover { color: var(--db-clay); }
   background: linear-gradient(180deg, var(--db-white) 0%, var(--db-cream) 100%);
   color: var(--db-charcoal);
   border: 1px solid var(--db-sand);
-  box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
+  box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.06);
 }
 
 .db-btn--secondary:hover {
   background: linear-gradient(180deg, rgba(var(--db-white-rgb),1) 0%, var(--db-cream-dark) 100%);
-  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
+  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.06);
 }
 
 .db-btn--secondary:active {
@@ -2582,13 +2685,13 @@ textarea.db-field__input {
   background: linear-gradient(180deg, var(--db-white) 0%, var(--db-cream) 100%);
   border: 1px solid var(--db-sand);
   border-radius: var(--db-radius-4);
-  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
+  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
   padding: var(--db-space-5);
   transition: box-shadow var(--db-transition);
 }
 
 .db-card:hover {
-  box-shadow: var(--db-shadow-3), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
+  box-shadow: var(--db-shadow-3), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
 }
 
 .db-card__header {
@@ -2603,6 +2706,7 @@ textarea.db-field__input {
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--db-ink);
+  text-shadow: var(--db-text-emboss);
 }
 
 .db-card__desc {
