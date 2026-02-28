@@ -9,7 +9,12 @@
   /* ----------------------------------------------------------
      Theme Manager
      ---------------------------------------------------------- */
-  var THEMES = ['light','dark','grunge-light','grunge-dark','solarized','solarized-dark','ink-light','ink','ember-light','ember','bone','bone-dark'];
+  var THEMES = [
+    'light','dark','grunge-light','grunge-dark','solarized','solarized-dark','ink-light','ink','ember-light','ember','bone','bone-dark',
+    'dracula','dracula-light','nord','nord-light','one-dark','one-dark-light','monokai','monokai-light','gruvbox','gruvbox-light',
+    'night-owl','night-owl-light','github','github-dark','catppuccin','catppuccin-dark','tokyo-night','tokyo-night-light','material','material-light',
+    'synthwave','synthwave-light','shades-of-purple','shades-of-purple-light','ayu','ayu-dark','horizon','horizon-light'
+  ];
 
   var THEME_FAMILIES = {
     'default':    { light: 'light',        dark: 'dark' },
@@ -17,9 +22,43 @@
     'solarized':  { light: 'solarized',     dark: 'solarized-dark' },
     'ink':        { light: 'ink-light',     dark: 'ink' },
     'ember':      { light: 'ember-light',   dark: 'ember' },
-    'bone':       { light: 'bone',         dark: 'bone-dark' }
+    'bone':       { light: 'bone',         dark: 'bone-dark' },
+    'dracula':    { light: 'dracula-light', dark: 'dracula' },
+    'nord':       { light: 'nord-light',    dark: 'nord' },
+    'one-dark':   { light: 'one-dark-light',dark: 'one-dark' },
+    'monokai':    { light: 'monokai-light', dark: 'monokai' },
+    'gruvbox':    { light: 'gruvbox-light', dark: 'gruvbox' },
+    'night-owl':  { light: 'night-owl-light',dark: 'night-owl' },
+    'github':     { light: 'github',        dark: 'github-dark' },
+    'catppuccin': { light: 'catppuccin',    dark: 'catppuccin-dark' },
+    'tokyo-night':{ light: 'tokyo-night-light',dark: 'tokyo-night' },
+    'material':   { light: 'material-light', dark: 'material' },
+    'synthwave':  { light: 'synthwave-light',dark: 'synthwave' },
+    'shades-of-purple':{ light: 'shades-of-purple-light',dark: 'shades-of-purple' },
+    'ayu':        { light: 'ayu',           dark: 'ayu-dark' },
+    'horizon':    { light: 'horizon-light', dark: 'horizon' }
   };
-  var FAMILY_NAMES = ['default','grunge','solarized','ink','ember','bone'];
+  var FAMILY_NAMES = [
+    'default','grunge','solarized','ink','ember','bone',
+    'dracula','nord','one-dark','monokai','gruvbox',
+    'night-owl','github','catppuccin','tokyo-night','material',
+    'synthwave','shades-of-purple','ayu','horizon'
+  ];
+
+  var THEME_CATEGORIES = {
+    'originals': ['default','grunge','solarized','ink','ember','bone'],
+    'classics':  ['dracula','nord','one-dark','monokai','gruvbox'],
+    'modern':    ['night-owl','github','catppuccin','tokyo-night','material'],
+    'trending':  ['synthwave','shades-of-purple','ayu','horizon']
+  };
+  var CATEGORY_NAMES = ['originals','classics','modern','trending'];
+
+  function getCategory(family) {
+    for (var i = 0; i < CATEGORY_NAMES.length; i++) {
+      if (THEME_CATEGORIES[CATEGORY_NAMES[i]].indexOf(family) !== -1) return CATEGORY_NAMES[i];
+    }
+    return 'originals';
+  }
 
   // Reverse lookup: theme name → { family, mode }
   var THEME_TO_FAMILY = {};
@@ -717,7 +756,7 @@
 
     document.querySelectorAll('[data-db-texture-btn]').forEach(function(btn) {
       var type = btn.getAttribute('data-db-texture-btn');
-      if (type === saved) btn.setAttribute('aria-pressed', 'true');
+      btn.setAttribute('aria-pressed', type === saved ? 'true' : 'false');
 
       btn.addEventListener('click', function() {
         document.documentElement.setAttribute('data-db-texture', type);
@@ -1519,7 +1558,10 @@
     TEXTURES: ['grain', 'paper', 'metal', 'wood', 'glass', 'none'],
     toggleSidebar: toggleSidebar,
     toggleNavbar: toggleNavbar,
-    refreshIcons: refreshIcons
+    refreshIcons: refreshIcons,
+    THEME_CATEGORIES: THEME_CATEGORIES,
+    CATEGORY_NAMES: CATEGORY_NAMES,
+    getCategory: getCategory
   };
 
 })();
