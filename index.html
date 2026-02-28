@@ -274,7 +274,7 @@
       background: var(--db-cream);
       border: 1px solid var(--db-sand);
       border-radius: var(--db-radius-3);
-      padding: 16px;
+      padding: 12px;
       transition: all 0.3s ease;
     }
     .db-showcase__snippet-label {
@@ -408,11 +408,12 @@
     .db-showcase__code {
       background: var(--db-charcoal, #3D3832);
       color: var(--db-cream, #FAF8F0);
-      padding: 16px 24px;
+      padding: 10px 14px;
       border-radius: var(--db-radius-2);
-      font-size: 0.8125rem;
-      line-height: 1.6;
+      font-size: 0.6875rem;
+      line-height: 1.5;
       overflow-x: auto;
+      max-height: 140px;
       margin: 0;
       font-family: 'SF Mono', 'Fira Code', monospace;
     }
@@ -420,20 +421,21 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       width: 100%;
-      padding: 10px 16px;
-      margin-top: 8px;
+      padding: 8px 12px;
+      margin-top: 6px;
       background: var(--db-terracotta);
       border: none;
       border-radius: var(--db-radius-2);
       color: #fff;
       font-family: var(--db-font-ui);
-      font-size: 0.8125rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.03em;
       cursor: pointer;
       transition: all var(--db-transition);
+      text-transform: uppercase;
     }
     .db-showcase__code-copy:hover {
       filter: brightness(1.1);
@@ -714,7 +716,6 @@
                   </div>
                 </div>
               </div>
-              <p class="db-body" style="margin:0;padding:0 var(--db-space-4);font-size:0.8125rem;">This is how your theme looks on real components. Every change on the left updates here instantly.</p>
               <div style="padding:var(--db-space-3) var(--db-space-4);display:flex;gap:6px;flex-wrap:wrap;">
                 <span class="db-chip db-chip--green" style="font-size:0.6875rem;">Design</span>
                 <span class="db-chip db-chip--blue" style="font-size:0.6875rem;">Systems</span>
@@ -725,15 +726,6 @@
                 <button class="db-btn db-btn--secondary db-btn--sm" style="flex:1;">Cancel</button>
               </div>
             </div>
-            <div style="display:flex;gap:8px;margin-top:12px;">
-              <div class="db-field" style="flex:1;margin:0;">
-                <label class="db-field__label" style="font-size:0.75rem;">Email</label>
-                <input class="db-field__input db-input db-input--sm" type="email" placeholder="you@example.com" readonly>
-              </div>
-            </div>
-            <div class="db-progress" style="margin-top:12px;">
-              <div class="db-progress__bar" style="--db-progress:65%;"></div>
-            </div>
           </div>
           <div class="db-showcase__snippet-label">
             <i data-lucide="code" style="width:12px;height:12px;"></i>
@@ -743,7 +735,7 @@
             <pre class="db-showcase__code" id="db-config-code"><code></code></pre>
           </div>
           <button class="db-showcase__code-copy" id="db-config-copy-cta" title="Copy to clipboard">
-            <i data-lucide="clipboard-copy" style="width:16px;height:16px;"></i>
+            <i data-lucide="clipboard-copy" style="width:13px;height:13px;"></i>
             Copy Config Code
           </button>
         </div>
