@@ -1676,8 +1676,8 @@ body::before {
 [data-theme="shades-of-purple"],
 [data-theme="ayu-dark"],
 [data-theme="horizon"] {
-  --db-text-emboss: 0 1px 1px rgba(0,0,0,0.5);
-  --db-text-emboss-subtle: 0 1px 0 rgba(0,0,0,0.3);
+  --db-text-emboss: 0 1px 0 rgba(0,0,0,0.4);
+  --db-text-emboss-subtle: 0 1px 0 rgba(0,0,0,0.25);
 }
 
 /* ------------------------------------------------------------
@@ -1990,7 +1990,7 @@ a:hover { color: var(--db-clay); }
   color: var(--db-white);
   border: 1px solid rgba(var(--db-shadow-rgb),0.15);
   box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.15);
-  text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
 }
 
 .db-btn--primary:hover {
@@ -5497,6 +5497,33 @@ textarea.db-field__input {
 @keyframes db-popover-in {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+.db-theme-switcher__tabs {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--db-radius-2);
+}
+.db-theme-switcher__tab {
+  flex: 1;
+  padding: 4px 6px;
+  font-family: var(--db-font-ui);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.45);
+  background: none;
+  border: none;
+  border-radius: var(--db-radius-1);
+  cursor: pointer;
+  transition: all var(--db-transition);
+}
+.db-theme-switcher__tab:hover { color: rgba(255, 255, 255, 0.7); }
+.db-theme-switcher__tab[aria-pressed="true"] {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.12);
 }
 .db-theme-switcher__category-label {
   font-family: var(--db-font-ui);

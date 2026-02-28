@@ -2,6 +2,31 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.5.0
+
+**Skeuomorphism & configurator redesign. 74 components, 20 theme families.**
+
+- Letterpress text shadows: `--db-text-emboss` and `--db-text-emboss-subtle` CSS variables for crisp pressed-in type on headings, buttons, and labels
+- Per-element texture overlay: `::after` pseudo-elements apply grain/paper/metal/wood texture to cards, buttons, navbars, modals, alerts, and surfaces
+- Enhanced inner shadows: `--db-shadow-inset` adds bottom inner glow for realistic recessed surfaces
+- Beveled edges: inset top-glow + bottom-shadow on cards, buttons, and raised surfaces for 3D lit-from-above effect
+- Configurator redesign: tab-based theme selector (Originals/Classics/Modern/Trending), always-visible code snippet with integrated copy button
+- Theme switcher: palette icon replaces paint roller, category tabs in popover, inline popover variant for configurator
+- Texture system: body background texture + per-element texture with blend mode and opacity controls
+- Fix: void elements (`<input>`, `<textarea>`, `<select>`) texture via wrapper elements instead of pseudo-elements
+
+## v2.4.0
+
+**20 theme families (40 variants) in 4 categories.**
+
+- 14 new theme families: Dracula, Nord, One Dark, Monokai, Gruvbox, Night Owl, GitHub, Catppuccin, Tokyo Night, Material, Synthwave, Shades of Purple, Ayu, Horizon
+- Theme categories: Originals, Classics, Modern, Trending — organized in `DAUB.THEME_CATEGORIES`
+- Category API: `DAUB.getCategory('dracula')` returns category name
+- Theme switcher: categorized popover with 3-segment accent swatches (light/accent/dark)
+- Scheme row: Auto/Light/Dark toggle in theme switcher popover
+- AI integration: `components.json` (74 components with HTML examples), `daub.d.ts` TypeScript declarations
+- Backward compatible: all v2.3.0 APIs unchanged
+
 ## v2.3.0
 
 **Layout system, navbar & developer experience. 74 components.**

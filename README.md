@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.3.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.5.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-74-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
@@ -282,7 +282,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v2.3.0** — Layout system, navbar & developer experience. 74 components.
+**Latest: v2.5.0** — Skeuomorphism & configurator redesign. 74 components, 20 theme families.
 
 ## License
 

@@ -289,15 +289,26 @@
 
   function buildPopoverContent(popover) {
     while (popover.firstChild) popover.removeChild(popover.firstChild);
+    var isInline = popover.classList.contains('db-theme-switcher__popover--inline');
+    // Category tabs row
+    var tabRow = document.createElement('div');
+    tabRow.className = 'db-theme-switcher__tabs';
+    var panels = [];
     for (var ci = 0; ci < CATEGORY_NAMES.length; ci++) {
       var cat = CATEGORY_NAMES[ci];
       var families = THEME_CATEGORIES[cat];
-      var lbl = document.createElement('div');
-      lbl.className = 'db-theme-switcher__category-label';
-      lbl.textContent = CATEGORY_LABELS[cat];
-      popover.appendChild(lbl);
+      // Tab button
+      var tab = document.createElement('button');
+      tab.className = 'db-theme-switcher__tab';
+      tab.setAttribute('data-cat', cat);
+      tab.setAttribute('aria-pressed', ci === 0 ? 'true' : 'false');
+      tab.textContent = CATEGORY_LABELS[cat];
+      tabRow.appendChild(tab);
+      // Items panel
       var row = document.createElement('div');
       row.className = 'db-theme-switcher__category-items';
+      row.setAttribute('data-cat', cat);
+      if (ci > 0) row.style.display = 'none';
       for (var fi = 0; fi < families.length; fi++) {
         var fam = families[fi];
         var sw = FAMILY_SWATCHES[fam] || {light:'#ccc',dark:'#333'};
@@ -328,20 +339,36 @@
         item.appendChild(name);
         row.appendChild(item);
       }
-      popover.appendChild(row);
+      panels.push(row);
     }
-    var schemeRow = document.createElement('div');
-    schemeRow.className = 'db-theme-switcher__scheme';
-    ['auto','light','dark'].forEach(function(s) {
-      var btn = document.createElement('button');
-      btn.className = 'db-theme-switcher__scheme-btn';
-      btn.setAttribute('data-scheme', s);
-      btn.setAttribute('aria-label', s + ' mode');
-      btn.setAttribute('aria-pressed', 'false');
-      btn.textContent = s;
-      schemeRow.appendChild(btn);
+    popover.appendChild(tabRow);
+    for (var pi = 0; pi < panels.length; pi++) popover.appendChild(panels[pi]);
+    // Tab click handler
+    tabRow.addEventListener('click', function(e) {
+      var tab = e.target.closest('.db-theme-switcher__tab');
+      if (!tab) return;
+      var activeCat = tab.getAttribute('data-cat');
+      tabRow.querySelectorAll('.db-theme-switcher__tab').forEach(function(t) {
+        t.setAttribute('aria-pressed', t.getAttribute('data-cat') === activeCat ? 'true' : 'false');
+      });
+      popover.querySelectorAll('.db-theme-switcher__category-items').forEach(function(p) {
+        p.style.display = p.getAttribute('data-cat') === activeCat ? '' : 'none';
+      });
     });
-    popover.appendChild(schemeRow);
+    if (!popover.classList.contains('db-theme-switcher__popover--inline')) {
+      var schemeRow = document.createElement('div');
+      schemeRow.className = 'db-theme-switcher__scheme';
+      ['auto','light','dark'].forEach(function(s) {
+        var btn = document.createElement('button');
+        btn.className = 'db-theme-switcher__scheme-btn';
+        btn.setAttribute('data-scheme', s);
+        btn.setAttribute('aria-label', s + ' mode');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.textContent = s;
+        schemeRow.appendChild(btn);
+      });
+      popover.appendChild(schemeRow);
+    }
   }
 
   function _createPaletteIcon() {
@@ -353,13 +380,17 @@
     svg.setAttribute('stroke-width', '2');
     svg.setAttribute('stroke-linecap', 'round');
     svg.setAttribute('stroke-linejoin', 'round');
+    var c = document.createElementNS(ns, 'circle');
+    c.setAttribute('cx', '13.5'); c.setAttribute('cy', '6.5'); c.setAttribute('r', '.5'); c.setAttribute('fill', 'currentColor');
+    var c2 = document.createElementNS(ns, 'circle');
+    c2.setAttribute('cx', '17.5'); c2.setAttribute('cy', '10.5'); c2.setAttribute('r', '.5'); c2.setAttribute('fill', 'currentColor');
+    var c3 = document.createElementNS(ns, 'circle');
+    c3.setAttribute('cx', '8.5'); c3.setAttribute('cy', '7.5'); c3.setAttribute('r', '.5'); c3.setAttribute('fill', 'currentColor');
+    var c4 = document.createElementNS(ns, 'circle');
+    c4.setAttribute('cx', '6.5'); c4.setAttribute('cy', '12.5'); c4.setAttribute('r', '.5'); c4.setAttribute('fill', 'currentColor');
     var p1 = document.createElementNS(ns, 'path');
-    p1.setAttribute('d', 'm2 13.12 7.05-7.05a2 2 0 0 1 1.41-.59H14l2-2 4 4-2 2v3.54a2 2 0 0 1-.59 1.41L10.88 22');
-    var p2 = document.createElementNS(ns, 'path');
-    p2.setAttribute('d', 'm14.5 9.5-5 5');
-    var p3 = document.createElementNS(ns, 'path');
-    p3.setAttribute('d', 'm2.05 13.07 5.88 5.88');
-    svg.appendChild(p1); svg.appendChild(p2); svg.appendChild(p3);
+    p1.setAttribute('d', 'M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z');
+    svg.appendChild(p1); svg.appendChild(c); svg.appendChild(c2); svg.appendChild(c3); svg.appendChild(c4);
     return svg;
   }
 

@@ -42,7 +42,7 @@
     "codeRepository": "https://github.com/sliday/daub",
     "programmingLanguage": ["CSS", "JavaScript"],
     "license": "https://opensource.org/licenses/MIT",
-    "version": "2.3.0",
+    "version": "2.5.0",
     "dateModified": "2026-03-01",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
@@ -270,33 +270,6 @@
       line-height: 1.6;
       margin: 0;
     }
-    .db-showcase__copy-cta {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 12px 20px;
-      margin-top: 4px;
-      font-family: var(--db-font-ui);
-      font-size: 0.9375rem;
-      font-weight: 600;
-      color: #fff;
-      background: var(--db-terracotta);
-      border: none;
-      border-radius: var(--db-radius-2);
-      cursor: pointer;
-      transition: all var(--db-transition);
-    }
-    .db-showcase__copy-cta:hover {
-      filter: brightness(1.1);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    .db-showcase__copy-cta:active {
-      transform: translateY(0);
-      filter: brightness(0.95);
-    }
     .db-showcase__preview {
       background: var(--db-cream);
       border: 1px solid var(--db-sand);
@@ -304,24 +277,17 @@
       padding: 16px;
       transition: all 0.3s ease;
     }
-    .db-showcase__code-toggle {
-      margin-top: 8px;
-    }
-    .db-showcase__code-toggle-btn {
-      display: inline-flex;
+    .db-showcase__snippet-label {
+      display: flex;
       align-items: center;
       gap: 4px;
-      background: none;
-      border: none;
-      color: var(--db-warm-gray);
       font-family: var(--db-font-ui);
-      font-size: 0.75rem;
-      cursor: pointer;
-      padding: 4px 0;
-      transition: color var(--db-transition);
-    }
-    .db-showcase__code-toggle-btn:hover {
-      color: var(--db-ink);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--db-warm-gray);
+      font-weight: 600;
+      margin-top: 12px;
     }
     .db-showcase__panel {
       background: var(--db-cream);
@@ -356,62 +322,50 @@
       font-weight: 600;
       font-family: var(--db-font-ui);
     }
-    /* Theme selector — horizontal list of named circles */
-    .db-showcase__theme-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+    /* Inline theme switcher — reuses db-theme-switcher__popover as embedded panel */
+    .db-theme-switcher__popover--inline {
+      position: static !important;
+      display: flex !important;
+      width: auto !important;
+      padding: 0 !important;
+      background: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      animation: none !important;
     }
-    .db-showcase__theme-swatch {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      padding: 6px 2px;
-      background: none;
-      border: 1px solid transparent;
-      border-radius: var(--db-radius-2);
-      transition: all var(--db-transition);
+    .db-theme-switcher__popover--inline .db-theme-switcher__tabs {
+      background: var(--db-cream-dark);
     }
-    .db-showcase__theme-swatch .db-swatch-dot {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 2px solid var(--db-sand);
-      overflow: hidden;
-      display: flex;
-      transition: all var(--db-transition);
-    }
-    .db-showcase__theme-swatch .db-swatch-dot span {
-      flex: 1;
-    }
-    .db-showcase__theme-swatch .db-swatch-name {
-      font-size: 0.5625rem;
-      font-family: var(--db-font-ui);
+    .db-theme-switcher__popover--inline .db-theme-switcher__tab {
       color: var(--db-warm-gray);
-      text-transform: capitalize;
-      letter-spacing: 0.02em;
-      line-height: 1;
-      transition: color var(--db-transition);
     }
-    .db-showcase__theme-swatch:hover {
+    .db-theme-switcher__popover--inline .db-theme-switcher__tab:hover {
+      color: var(--db-charcoal);
+    }
+    .db-theme-switcher__popover--inline .db-theme-switcher__tab[aria-pressed="true"] {
+      color: var(--db-charcoal);
+      background: var(--db-white);
+    }
+    .db-theme-switcher__popover--inline .db-theme-switcher__item:hover {
       background: var(--db-cream-dark);
     }
-    .db-showcase__theme-swatch:hover .db-swatch-dot {
-      border-color: var(--db-warm-gray);
-    }
-    .db-showcase__theme-swatch[aria-pressed="true"] {
+    .db-theme-switcher__popover--inline .db-theme-switcher__item[aria-pressed="true"] {
       background: var(--db-cream-dark);
       border-color: var(--db-terracotta);
-      box-shadow: 0 0 0 1px var(--db-terracotta);
     }
-    .db-showcase__theme-swatch[aria-pressed="true"] .db-swatch-dot {
+    .db-theme-switcher__popover--inline .db-theme-switcher__item[aria-pressed="true"] .db-theme-switcher__dot {
       border-color: var(--db-terracotta);
     }
-    .db-showcase__theme-swatch[aria-pressed="true"] .db-swatch-name {
+    .db-theme-switcher__popover--inline .db-theme-switcher__item[aria-pressed="true"] .db-theme-switcher__name {
       color: var(--db-terracotta);
-      font-weight: 700;
+    }
+    .db-theme-switcher__popover--inline .db-theme-switcher__name {
+      color: var(--db-warm-gray);
+    }
+    .db-theme-switcher__popover--inline .db-theme-switcher__item:hover .db-theme-switcher__name {
+      color: var(--db-charcoal);
     }
     /* Segmented texture control — shadcn-style */
     .db-showcase__segments {
@@ -493,8 +447,6 @@
     }
     @media (max-width: 720px) {
       .db-showcase__frame { grid-template-columns: 1fr; padding: 24px; }
-      .db-showcase__copy-cta { font-size: 0.875rem; padding: 10px 16px; }
-      .db-showcase__theme-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     /* AI Section */
@@ -691,98 +643,7 @@
           <p class="db-showcase__desc">Dial in your look. When it feels right, copy the snippet.</p>
           <div style="display:flex;flex-direction:column;gap:6px;">
             <span class="db-showcase__section-label">Theme</span>
-            <div class="db-showcase__segments" role="group" aria-label="Theme category" id="db-theme-category-tabs">
-              <button data-db-theme-cat="originals" aria-pressed="true">Originals</button>
-              <button data-db-theme-cat="classics" aria-pressed="false">Classics</button>
-              <button data-db-theme-cat="modern" aria-pressed="false">Modern</button>
-              <button data-db-theme-cat="trending" aria-pressed="false">Trending</button>
-            </div>
-            <div class="db-showcase__theme-grid" role="group" aria-label="Theme family" id="db-theme-family-grid">
-              <!-- Originals (shown by default) -->
-              <button class="db-showcase__theme-swatch" data-family="default" data-cat="originals" aria-label="Default" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#FAF8F0"></span><span style="background:#2C2824"></span></span>
-                <span class="db-swatch-name">Default</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="grunge" data-cat="originals" aria-label="Grunge" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#EDE8DF"></span><span style="background:#1E1B17"></span></span>
-                <span class="db-swatch-name">Grunge</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="solarized" data-cat="originals" aria-label="Solarized" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#fdf6e3"></span><span style="background:#002b36"></span></span>
-                <span class="db-swatch-name">Solar</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="ink" data-cat="originals" aria-label="Ink" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#EEF0F5"></span><span style="background:#1C2030"></span></span>
-                <span class="db-swatch-name">Ink</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="ember" data-cat="originals" aria-label="Ember" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#F8F0E8"></span><span style="background:#201810"></span></span>
-                <span class="db-swatch-name">Ember</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="bone" data-cat="originals" aria-label="Bone" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#FAFAFA"></span><span style="background:#1A1A1A"></span></span>
-                <span class="db-swatch-name">Bone</span>
-              </button>
-              <!-- Classics -->
-              <button class="db-showcase__theme-swatch" data-family="dracula" data-cat="classics" aria-label="Dracula" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#FFFBEB"></span><span style="background:#282A36"></span></span>
-                <span class="db-swatch-name">Dracula</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="nord" data-cat="classics" aria-label="Nord" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#ECEFF4"></span><span style="background:#2E3440"></span></span>
-                <span class="db-swatch-name">Nord</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="one-dark" data-cat="classics" aria-label="One Dark" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#FAFAFA"></span><span style="background:#282C34"></span></span>
-                <span class="db-swatch-name">One Dark</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="monokai" data-cat="classics" aria-label="Monokai" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#FAFAF8"></span><span style="background:#272822"></span></span>
-                <span class="db-swatch-name">Monokai</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="gruvbox" data-cat="classics" aria-label="Gruvbox" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#FBF1C7"></span><span style="background:#282828"></span></span>
-                <span class="db-swatch-name">Gruvbox</span>
-              </button>
-              <!-- Modern -->
-              <button class="db-showcase__theme-swatch" data-family="night-owl" data-cat="modern" aria-label="Night Owl" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#FBFBFB"></span><span style="background:#011627"></span></span>
-                <span class="db-swatch-name">Night Owl</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="github" data-cat="modern" aria-label="GitHub" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#FFFFFF"></span><span style="background:#0D1117"></span></span>
-                <span class="db-swatch-name">GitHub</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="catppuccin" data-cat="modern" aria-label="Catppuccin" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#EFF1F5"></span><span style="background:#1E1E2E"></span></span>
-                <span class="db-swatch-name">Catppuccin</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="tokyo-night" data-cat="modern" aria-label="Tokyo Night" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#D5D6DB"></span><span style="background:#1A1B26"></span></span>
-                <span class="db-swatch-name">Tokyo</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="material" data-cat="modern" aria-label="Material" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#FAFAFA"></span><span style="background:#263238"></span></span>
-                <span class="db-swatch-name">Material</span>
-              </button>
-              <!-- Trending -->
-              <button class="db-showcase__theme-swatch" data-family="synthwave" data-cat="trending" aria-label="Synthwave" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#F5E6FF"></span><span style="background:#2B213A"></span></span>
-                <span class="db-swatch-name">Synthwave</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="shades-of-purple" data-cat="trending" aria-label="Shades of Purple" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#F3EFFF"></span><span style="background:#2D2B55"></span></span>
-                <span class="db-swatch-name">Purple</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="ayu" data-cat="trending" aria-label="Ayu" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#FAFAFA"></span><span style="background:#0B0E14"></span></span>
-                <span class="db-swatch-name">Ayu</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-family="horizon" data-cat="trending" aria-label="Horizon" aria-pressed="false" style="display:none">
-                <span class="db-swatch-dot"><span style="background:#FDF0ED"></span><span style="background:#1C1E26"></span></span>
-                <span class="db-swatch-name">Horizon</span>
-              </button>
-            </div>
+            <div class="db-theme-switcher__popover db-theme-switcher__popover--inline" id="db-config-theme-popover"></div>
           </div>
           <div class="db-slider" data-db-warmth>
             <div class="db-slider__label">
@@ -846,7 +707,7 @@
             Preview
           </div>
           <div class="db-showcase__preview">
-            <div class="db-card" style="margin:0;">
+            <div class="db-card" style="margin:0;border-radius:var(--db-radius-2);">
               <div class="db-card__header">
                 <div style="display:flex;align-items:center;gap:8px;">
                   <div class="db-avatar db-avatar--sm"><span>A</span></div>
@@ -877,22 +738,16 @@
               <div class="db-progress__bar" style="--db-progress:65%;"></div>
             </div>
           </div>
-          <div class="db-showcase__code-toggle">
-            <button class="db-showcase__code-toggle-btn" id="db-toggle-snippet" aria-expanded="false">
-              <i data-lucide="code" style="width:12px;height:12px;"></i>
-              Show snippet
-            </button>
+          <div class="db-showcase__snippet-label">
+            <i data-lucide="code" style="width:12px;height:12px;"></i>
+            Your snippet
           </div>
-          <div class="db-showcase__code-wrap" id="db-snippet-wrap" style="display:none;">
+          <div class="db-showcase__code-wrap" id="db-snippet-wrap">
             <pre class="db-showcase__code" id="db-config-code"><code></code></pre>
-            <button class="db-showcase__code-copy" aria-label="Copy code" id="db-config-copy">
+            <button class="db-showcase__code-copy" aria-label="Copy snippet" id="db-config-copy-cta" title="Copy to clipboard">
               <i data-lucide="copy" style="width:14px;height:14px;"></i>
             </button>
           </div>
-          <button class="db-showcase__copy-cta" id="db-config-copy-cta">
-            <i data-lucide="clipboard-copy" style="width:16px;height:16px;"></i>
-            Copy to Clipboard
-          </button>
         </div>
       </div>
     </div>
@@ -2258,7 +2113,7 @@
   <!-- Theme Switcher (popover) -->
   <div class="db-theme-switcher" role="group" aria-label="Theme switcher">
     <button class="db-theme-switcher__toggle" aria-label="Open theme picker" aria-expanded="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 13.12 7.05-7.05a2 2 0 0 1 1.41-.59H14l2-2 4 4-2 2v3.54a2 2 0 0 1-.59 1.41L10.88 22"/><path d="m14.5 9.5-5 5"/><path d="m2.05 13.07 5.88 5.88"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/></svg>
     </button>
     <div class="db-theme-switcher__popover" id="db-theme-popover"></div>
   </div>
@@ -2354,52 +2209,15 @@
         if (e.target.closest('[data-db-warmth], [data-db-noise]')) updateCode();
       });
 
-      // Copy buttons (inline icon + CTA)
+      // Copy button
       function doCopy() {
         navigator.clipboard.writeText(buildSnippet()).then(function() {
           DAUB.toast({ type: 'success', title: 'Copied!', message: 'Snippet copied to clipboard.', duration: 2000 });
         });
       }
-      if (copyBtn) copyBtn.addEventListener('click', doCopy);
       var copyCta = document.getElementById('db-config-copy-cta');
       if (copyCta) copyCta.addEventListener('click', doCopy);
-
-      // Snippet toggle
-      var snippetToggle = document.getElementById('db-toggle-snippet');
-      var snippetWrap = document.getElementById('db-snippet-wrap');
-      if (snippetToggle && snippetWrap) {
-        snippetToggle.addEventListener('click', function() {
-          var open = snippetWrap.style.display !== 'none';
-          snippetWrap.style.display = open ? 'none' : '';
-          snippetToggle.setAttribute('aria-expanded', String(!open));
-          snippetToggle.querySelector('i').setAttribute('data-lucide', open ? 'code' : 'code');
-          var label = open ? 'Show snippet' : 'Hide snippet';
-          snippetToggle.childNodes[snippetToggle.childNodes.length - 1].textContent = ' ' + label;
-          if (!open) updateCode();
-          if (typeof lucide !== 'undefined') lucide.createIcons();
-        });
-      }
-
-      // Theme category tab filtering
-      (function() {
-        var tabs = document.querySelectorAll('[data-db-theme-cat]');
-        var swatches = document.querySelectorAll('#db-theme-family-grid .db-showcase__theme-swatch');
-        function showCategory(cat) {
-          tabs.forEach(function(t) { t.setAttribute('aria-pressed', t.getAttribute('data-db-theme-cat') === cat ? 'true' : 'false'); });
-          swatches.forEach(function(s) { s.style.display = s.getAttribute('data-cat') === cat ? '' : 'none'; });
-        }
-        tabs.forEach(function(t) {
-          t.addEventListener('click', function() { showCategory(t.getAttribute('data-db-theme-cat')); });
-        });
-        // Auto-select category of active theme
-        var activeCat = DAUB.getCategory(DAUB.getFamily());
-        if (activeCat) showCategory(activeCat);
-        // Sync configurator tab when theme changes via popover
-        document.addEventListener('daub:familychange', function(e) {
-          var cat = DAUB.getCategory(e.detail.family);
-          if (cat) showCategory(cat);
-        });
-      })();
+      if (copyBtn) copyBtn.addEventListener('click', doCopy);
 
       // Initial render
       setTimeout(updateCode, 200);
