@@ -479,6 +479,33 @@
   }
 
   /* ----------------------------------------------------------
+     Nested Border Radius
+     innerRadius = outerRadius - padding
+     Auto-applies to elements with [data-db-radius] or known containers.
+     ---------------------------------------------------------- */
+  function fixNestedRadius(root) {
+    root = root || document;
+    var containers = root.querySelectorAll('.db-card, .db-modal, .db-sheet, .db-drawer, .db-alert-dialog, .db-showcase__frame, [data-db-radius]');
+    containers.forEach(function(el) {
+      var style = getComputedStyle(el);
+      var outerRadius = parseFloat(style.borderTopLeftRadius) || 0;
+      if (outerRadius < 2) return;
+      var padTop = parseFloat(style.paddingTop) || 0;
+      var padLeft = parseFloat(style.paddingLeft) || 0;
+      var padding = Math.max(padTop, padLeft);
+      if (padding < 1) return;
+      var innerRadius = Math.max(0, outerRadius - padding);
+      Array.from(el.children).forEach(function(child) {
+        var childStyle = getComputedStyle(child);
+        var childRadius = parseFloat(childStyle.borderTopLeftRadius) || 0;
+        if (childRadius > 0 && childRadius !== innerRadius) {
+          child.style.borderRadius = innerRadius + 'px';
+        }
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
      Checkbox (CSS handles visual sync via :checked)
      ---------------------------------------------------------- */
   function initCheckboxes(root) {
@@ -1083,6 +1110,7 @@
     initOTP(root);
     initResizables(root);
     initThemeSwitcher();
+    fixNestedRadius(root);
   }
 
   if (document.readyState === 'loading') {
@@ -1110,7 +1138,8 @@
     getTheme: getTheme,
     setTheme: setTheme,
     cycleTheme: cycleTheme,
-    THEMES: THEMES
+    THEMES: THEMES,
+    fixNestedRadius: fixNestedRadius
   };
 
 })();

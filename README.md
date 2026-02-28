@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.0.1-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.0.2-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-64-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
@@ -234,6 +234,15 @@ Point your AI at `https://daub.dev/llms.txt` for complete component docs with HT
 No polyfills needed.
 
 ## Changelog
+
+### v2.0.2
+
+**Nested border-radius & card refinement.**
+
+- Nested border-radius JS utility: auto-calculates `innerRadius = outerRadius - padding` for cards, modals, sheets, drawers
+- Showcase frame: generous 36px radius with auto-computed inner radii
+- Card border-radius: increased from 12px to 20px for softer, more premium feel
+- `DAUB.fixNestedRadius()` exposed in public API for dynamic content
 
 ### v2.0.1
 

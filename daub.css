@@ -1283,7 +1283,7 @@ textarea.db-field__input {
 .db-card {
   background: linear-gradient(180deg, var(--db-white) 0%, var(--db-cream) 100%);
   border: 1px solid var(--db-sand);
-  border-radius: var(--db-radius-3);
+  border-radius: 20px;
   box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
   padding: var(--db-space-5);
   transition: box-shadow var(--db-transition);
