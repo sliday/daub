@@ -1,13 +1,13 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 2.1
+> Version: 2.2
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
 > Repo: https://github.com/sliday/daub
 > License: MIT
 > Components: 67
-> Themes: 8
+> Theme Families: 6 (12 variants total)
 
 ## Quick Start
 
@@ -36,21 +36,22 @@ All classes: `db-`. All CSS custom properties: `--db-`.
 
 ## Themes
 
-8 themes: `light`, `dark`, `grunge-light`, `grunge-dark`, `parchment`, `ink`, `ember`, `bone`
+6 theme families, each with light & dark modes (12 variants):
+
+| Family | Light | Dark | Character |
+|--------|-------|------|-----------|
+| Default | `light` | `dark` | Warm cream / deep charcoal |
+| Grunge | `grunge-light` | `grunge-dark` | Typewriter / ink-stained |
+| Parchment | `parchment` | `parchment-dark` | Aged paper / antiqued leather |
+| Ink | `ink-light` | `ink` | Cool editorial / navy silver |
+| Ember | `ember-light` | `ember` | Sunlit pottery / copper glow |
+| Bone | `bone` | `bone-dark` | Stark white / grayscale brutalism |
 
 Set via attribute: `<html data-theme="dark">`
-JS API: `DAUB.setTheme('ink')`, `DAUB.cycleTheme()`, `DAUB.getTheme()`
-Persisted in `localStorage` key `db-theme`.
-
-Theme characteristics:
-- light: Warm cream, terracotta accents
-- dark: Deep charcoal, amber glow
-- grunge-light: Typewriter, rough textures
-- grunge-dark: Ink-stained, distressed
-- parchment: Aged paper, gold accents
-- ink: Navy/silver, editorial
-- ember: Copper glow, warm dark
-- bone: Stark white, monochrome
+Family API: `DAUB.setFamily('ink')`, `DAUB.setScheme('dark')`, `DAUB.getFamily()`
+Direct API: `DAUB.setTheme('ink')`, `DAUB.cycleTheme()`, `DAUB.getTheme()`
+Accent API: `DAUB.setAccent('#6B7C3E')`, `DAUB.resetAccent()`, `DAUB.getAccent()`
+Persisted in `localStorage` keys: `db-theme`, `db-scheme`, `db-accent`.
 
 ## Components (67)
 
@@ -714,11 +715,18 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 ```
 
 ### 62. Theme Switcher — `.db-theme-switcher`
-4x2 grid for 8 themes.
+3x2 family grid + 3-button scheme row.
 ```html
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher">
-  <button class="db-theme-switcher__btn" data-theme="light" aria-label="Light"><!-- icon --></button>
-  <!-- ...8 buttons total... -->
+  <div class="db-theme-switcher__families">
+    <button class="db-theme-switcher__btn" data-family="default" aria-label="Default"><!-- icon --></button>
+    <!-- ...6 family buttons... -->
+  </div>
+  <div class="db-theme-switcher__scheme">
+    <button class="db-theme-switcher__btn" data-scheme="auto" aria-label="Auto"><!-- icon --></button>
+    <button class="db-theme-switcher__btn" data-scheme="light" aria-label="Light"><!-- icon --></button>
+    <button class="db-theme-switcher__btn" data-scheme="dark" aria-label="Dark"><!-- icon --></button>
+  </div>
 </div>
 ```
 
@@ -802,10 +810,19 @@ DAUB.closeDrawer(id)           // Close drawer
 DAUB.openCommand(id)           // Open command palette
 DAUB.closeCommand(id)          // Close command palette
 DAUB.toggleSidebar(el)         // Toggle sidebar collapse
-DAUB.setTheme(name)            // Set theme
+DAUB.setTheme(name)            // Set theme (direct)
 DAUB.getTheme()                // Get current theme
-DAUB.cycleTheme()              // Cycle to next theme
-DAUB.THEMES                    // Array of theme names
+DAUB.cycleTheme()              // Cycle through 6 families
+DAUB.THEMES                    // Array of all theme names
+DAUB.setFamily(name)           // Set theme family (default/grunge/parchment/ink/ember/bone)
+DAUB.getFamily()               // Get current family
+DAUB.setScheme(mode)           // Set color scheme (auto/light/dark)
+DAUB.getScheme()               // Get current scheme
+DAUB.THEME_FAMILIES            // Family → {light, dark} map
+DAUB.FAMILY_NAMES              // Array of family names
+DAUB.setAccent(hex)            // Override accent color
+DAUB.resetAccent()             // Restore theme default accent
+DAUB.getAccent()               // Get current accent color
 ```
 
 ## CSS Custom Properties

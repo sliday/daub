@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.1.1-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.2.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-67-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
@@ -12,7 +12,7 @@
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 67 components, 8 themes, zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 67 components, 6 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
 ## Quick Start
 
@@ -141,22 +141,20 @@ DAUB uses system font stacks by default. For richer typography:
 | Collapsible | `db-collapsible` | Progressive disclosure |
 | Resizable | `db-resizable` | `__handle--right`, `--bottom`, `--corner` |
 | Date Picker | `db-date-picker` | Wraps Calendar in popover |
-| Theme Switcher | `db-theme-switcher` | 4x2 grid for 8 themes |
+| Theme Switcher | `db-theme-switcher` | 6 families + scheme switcher |
 
 ## Themes
 
-8 built-in themes:
+6 theme families, each with light and dark modes (12 variants total):
 
-| Theme | `data-theme` | Character |
-|-------|-------------|-----------|
-| Light | `light` | Warm cream, terracotta accents |
-| Dark | `dark` | Deep charcoal, amber glow |
-| Grunge Light | `grunge-light` | Rough textures, typewriter feel |
-| Grunge Dark | `grunge-dark` | Dark + distressed, ink-stained |
-| Parchment | `parchment` | Aged paper, gold accents |
-| Ink | `ink` | Navy/silver, editorial |
-| Ember | `ember` | Copper glow, warm dark |
-| Bone | `bone` | Stark white, monochrome |
+| Family | Light | Dark | Character |
+|--------|-------|------|-----------|
+| Default | `light` | `dark` | Warm cream / deep charcoal |
+| Grunge | `grunge-light` | `grunge-dark` | Typewriter / ink-stained |
+| Parchment | `parchment` | `parchment-dark` | Aged paper / antiqued leather |
+| Ink | `ink-light` | `ink` | Cool editorial / navy silver |
+| Ember | `ember-light` | `ember` | Sunlit pottery / copper glow |
+| Bone | `bone` | `bone-dark` | Stark white / grayscale brutalism |
 
 ### Switching themes
 
@@ -165,18 +163,27 @@ DAUB uses system font stacks by default. For richer typography:
 ```
 
 ```js
-DAUB.setTheme('ink');
-DAUB.cycleTheme();    // cycles through all 8
-DAUB.getTheme();      // returns current theme name
+// Family-based (recommended)
+DAUB.setFamily('ink');       // sets ink-light or ink depending on scheme
+DAUB.setScheme('dark');      // switches current family to dark mode
+DAUB.cycleTheme();           // cycles through 6 families, preserving mode
+
+// Direct theme (backward compatible)
+DAUB.setTheme('ink');        // sets exact theme variant
+DAUB.getTheme();             // returns current theme name
+
+// Accent color
+DAUB.setAccent('#6B7C3E');   // olive accent, overrides terracotta
+DAUB.resetAccent();          // restore theme default
 ```
 
-Theme persists across page loads via `localStorage`.
+Theme, scheme, and accent persist across page loads via `localStorage`.
 
 ### FOUC Prevention
 
 ```html
 <script>
-  (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();
+  (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t);var s=localStorage.getItem('db-scheme');if(s)document.documentElement.setAttribute('data-scheme',s);var a=localStorage.getItem('db-accent');if(a)document.documentElement.style.setProperty('--db-terracotta',a)}catch(e){}})();
 </script>
 ```
 
@@ -211,7 +218,7 @@ Semantic tokens (theme-aware aliases): `--db-color-bg`, `--db-color-surface`, `-
 
 ## Accessibility
 
-- WCAG AA colour contrast across all 8 themes
+- WCAG AA colour contrast across all 12 theme variants
 - `aria-*` attributes on all interactive components
 - Focus-visible outlines (keyboard navigation)
 - Modal/Dialog: focus trapping, Escape to close
@@ -239,6 +246,20 @@ Point your AI at `https://daub.dev/llms.txt` for complete component docs with HT
 No polyfills needed.
 
 ## Changelog
+
+### v2.2.0
+
+**Theme families + accent color picker.**
+
+- Theme families: 6 families (Default, Grunge, Parchment, Ink, Ember, Bone) × light/dark = 12 variants
+- New palettes: `parchment-dark`, `ink-light`, `ember-light`, `bone-dark`
+- Scheme control: `DAUB.setScheme('auto'|'light'|'dark')` — separate from family selection
+- Family API: `DAUB.setFamily('ink')`, `DAUB.getFamily()`, `DAUB.cycleTheme()` cycles 6 families
+- Accent color picker: 12 curated natural colors + reset, persisted to localStorage
+- `DAUB.setAccent(hex)` / `DAUB.resetAccent()` / `DAUB.getAccent()` API
+- FOUC prevention: now restores scheme and accent color before paint
+- Theme switcher: 3×2 family grid + 3-button scheme row (replaces 4×2 theme grid)
+- Backward compatible: `DAUB.setTheme('dark')` still works directly
 
 ### v2.1.1
 

@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Interactive Behaviors
-   Version 2.0
+   Version 2.2
    IIFE module exposing window.DAUB = { init, toast, theme API }
    ============================================================ */
 ;(function() {
@@ -9,9 +9,28 @@
   /* ----------------------------------------------------------
      Theme Manager
      ---------------------------------------------------------- */
-  var THEMES = ['light', 'dark', 'grunge-light', 'grunge-dark', 'parchment', 'ink', 'ember', 'bone'];
+  var THEMES = ['light','dark','grunge-light','grunge-dark','parchment','parchment-dark','ink-light','ink','ember-light','ember','bone','bone-dark'];
+
+  var THEME_FAMILIES = {
+    'default':   { light: 'light',       dark: 'dark' },
+    'grunge':    { light: 'grunge-light', dark: 'grunge-dark' },
+    'parchment': { light: 'parchment',   dark: 'parchment-dark' },
+    'ink':       { light: 'ink-light',    dark: 'ink' },
+    'ember':     { light: 'ember-light',  dark: 'ember' },
+    'bone':      { light: 'bone',        dark: 'bone-dark' }
+  };
+  var FAMILY_NAMES = ['default','grunge','parchment','ink','ember','bone'];
+
+  // Reverse lookup: theme name → { family, mode }
+  var THEME_TO_FAMILY = {};
+  Object.keys(THEME_FAMILIES).forEach(function(f) {
+    THEME_TO_FAMILY[THEME_FAMILIES[f].light] = { family: f, mode: 'light' };
+    THEME_TO_FAMILY[THEME_FAMILIES[f].dark]  = { family: f, mode: 'dark' };
+  });
+
   var _grungeFontLoaded = false;
   var _userExplicitTheme = false;
+  var _scheme = 'auto';
 
   function getTheme() {
     return document.documentElement.getAttribute('data-theme') || 'light';
@@ -28,16 +47,24 @@
   }
 
   function cycleTheme() {
-    var current = getTheme();
-    var idx = THEMES.indexOf(current);
-    var next = THEMES[(idx + 1) % THEMES.length];
-    setTheme(next);
-    return next;
+    var fam = getFamily();
+    var idx = FAMILY_NAMES.indexOf(fam);
+    var next = FAMILY_NAMES[(idx + 1) % FAMILY_NAMES.length];
+    setFamily(next);
+    return getTheme();
   }
 
   function initTheme() {
     var stored = null;
     try { stored = localStorage.getItem('db-theme'); } catch(e) {}
+
+    // Restore scheme
+    var storedScheme = null;
+    try { storedScheme = localStorage.getItem('db-scheme'); } catch(e) {}
+    if (storedScheme && ['auto','light','dark'].indexOf(storedScheme) !== -1) {
+      _scheme = storedScheme;
+      document.documentElement.setAttribute('data-scheme', storedScheme);
+    }
 
     if (stored && THEMES.indexOf(stored) !== -1) {
       document.documentElement.setAttribute('data-theme', stored);
@@ -48,13 +75,19 @@
       document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
     }
 
-    // Listen for OS theme changes
+    // Restore accent
+    var storedAccent = null;
+    try { storedAccent = localStorage.getItem('db-accent'); } catch(e) {}
+    if (storedAccent) setAccent(storedAccent);
+
+    // Listen for OS theme changes — only applies in auto scheme
     if (window.matchMedia) {
       var mq = window.matchMedia('(prefers-color-scheme: dark)');
       var handler = function(e) {
-        if (!_userExplicitTheme) {
-          document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
-          updateSwitcherUI();
+        if (_scheme === 'auto') {
+          var family = getFamily();
+          var target = THEME_FAMILIES[family][e.matches ? 'dark' : 'light'];
+          setTheme(target);
         }
       };
       if (mq.addEventListener) mq.addEventListener('change', handler);
@@ -72,10 +105,121 @@
   }
 
   /* ----------------------------------------------------------
+     Scheme & Family API
+     ---------------------------------------------------------- */
+  function getScheme() { return _scheme; }
+
+  function getFamily() {
+    var info = THEME_TO_FAMILY[getTheme()];
+    return info ? info.family : 'default';
+  }
+
+  function getEffectiveMode() {
+    if (_scheme === 'auto')
+      return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    return _scheme;
+  }
+
+  function setScheme(scheme) {
+    if (['auto','light','dark'].indexOf(scheme) === -1) return;
+    _scheme = scheme;
+    try { localStorage.setItem('db-scheme', scheme); } catch(e) {}
+    document.documentElement.setAttribute('data-scheme', scheme);
+    var family = getFamily();
+    var target = THEME_FAMILIES[family][getEffectiveMode()];
+    if (target !== getTheme()) setTheme(target);
+    updateSwitcherUI();
+  }
+
+  function setFamily(family) {
+    if (!THEME_FAMILIES[family]) return;
+    setTheme(THEME_FAMILIES[family][getEffectiveMode()]);
+  }
+
+  /* ----------------------------------------------------------
+     Accent Color
+     ---------------------------------------------------------- */
+  function clamp(v) { return Math.max(0, Math.min(255, v)); }
+  function hexToHSL(hex) {
+    var r = parseInt(hex.slice(1,3),16)/255;
+    var g = parseInt(hex.slice(3,5),16)/255;
+    var b = parseInt(hex.slice(5,7),16)/255;
+    var max = Math.max(r,g,b), min = Math.min(r,g,b);
+    var h, s, l = (max+min)/2;
+    if (max===min) { h=s=0; }
+    else {
+      var d=max-min;
+      s=l>0.5?d/(2-max-min):d/(max+min);
+      if(max===r) h=((g-b)/d+(g<b?6:0))/6;
+      else if(max===g) h=((b-r)/d+2)/6;
+      else h=((r-g)/d+4)/6;
+    }
+    return [h*360,s*100,l*100];
+  }
+  function hslToHex(h,s,l) {
+    h/=360; s/=100; l/=100;
+    var r,g,b;
+    if(s===0){r=g=b=l;}
+    else {
+      var hue2rgb=function(p,q,t){if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;};
+      var q=l<0.5?l*(1+s):l+s-l*s;var p=2*l-q;
+      r=hue2rgb(p,q,h+1/3);g=hue2rgb(p,q,h);b=hue2rgb(p,q,h-1/3);
+    }
+    return '#'+[r,g,b].map(function(x){var hex=Math.round(x*255).toString(16);return hex.length===1?'0'+hex:hex;}).join('');
+  }
+  function darken(hex, pct) {
+    var hsl=hexToHSL(hex);
+    return hslToHex(hsl[0],hsl[1],Math.max(0,hsl[2]-pct));
+  }
+  function lighten(hex, pct) {
+    var hsl=hexToHSL(hex);
+    return hslToHex(hsl[0],hsl[1],Math.min(100,hsl[2]+pct));
+  }
+
+  function setAccent(hex) {
+    var r=parseInt(hex.slice(1,3),16);
+    var g=parseInt(hex.slice(3,5),16);
+    var b=parseInt(hex.slice(5,7),16);
+    var root=document.documentElement;
+    root.style.setProperty('--db-terracotta', hex);
+    root.style.setProperty('--db-accent-rgb', r+','+g+','+b);
+    root.style.setProperty('--db-accent-hover', darken(hex, 10));
+    root.style.setProperty('--db-accent-pressed', darken(hex, 20));
+    root.style.setProperty('--db-accent-dark', darken(hex, 15));
+    root.style.setProperty('--db-accent-light', lighten(hex, 10));
+    root.style.setProperty('--db-terracotta-text', darken(hex, 20));
+    try { localStorage.setItem('db-accent', hex); } catch(e) {}
+    updateAccentPickerUI();
+  }
+
+  function resetAccent() {
+    var props=['--db-terracotta','--db-accent-rgb','--db-accent-hover',
+      '--db-accent-pressed','--db-accent-dark','--db-accent-light','--db-terracotta-text'];
+    props.forEach(function(p){document.documentElement.style.removeProperty(p);});
+    try { localStorage.removeItem('db-accent'); } catch(e) {}
+    updateAccentPickerUI();
+  }
+
+  function getAccent() {
+    return getComputedStyle(document.documentElement).getPropertyValue('--db-terracotta').trim();
+  }
+
+  function updateAccentPickerUI() {
+    var stored = null;
+    try { stored = localStorage.getItem('db-accent'); } catch(e) {}
+    document.querySelectorAll('.db-accent-picker__dot').forEach(function(btn) {
+      var accent = btn.getAttribute('data-accent');
+      var isActive = stored ? (accent === stored) : (accent === 'reset');
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+  }
+
+  /* ----------------------------------------------------------
      Theme Switcher UI
      ---------------------------------------------------------- */
   function initThemeSwitcher() {
-    document.querySelectorAll('.db-theme-switcher__btn, .db-showcase__theme-swatch').forEach(function(btn) {
+    // Legacy data-theme buttons
+    document.querySelectorAll('.db-theme-switcher__btn[data-theme], .db-showcase__theme-swatch[data-theme]').forEach(function(btn) {
       if (btn._dbInit) return;
       btn._dbInit = true;
       btn.addEventListener('click', function() {
@@ -84,15 +228,63 @@
       });
     });
 
+    // Family buttons
+    document.querySelectorAll('[data-family]').forEach(function(btn) {
+      if (btn._dbInit) return;
+      btn._dbInit = true;
+      btn.addEventListener('click', function() {
+        var family = btn.getAttribute('data-family');
+        if (family) setFamily(family);
+      });
+    });
+
+    // Scheme buttons
+    document.querySelectorAll('.db-theme-switcher__btn[data-scheme]').forEach(function(btn) {
+      if (btn._dbInit) return;
+      btn._dbInit = true;
+      btn.addEventListener('click', function() {
+        var scheme = btn.getAttribute('data-scheme');
+        if (scheme) setScheme(scheme);
+      });
+    });
+
+    // Accent picker
+    document.querySelectorAll('.db-accent-picker__dot').forEach(function(btn) {
+      if (btn._dbInit) return;
+      btn._dbInit = true;
+      btn.addEventListener('click', function() {
+        var accent = btn.getAttribute('data-accent');
+        if (accent === 'reset') resetAccent();
+        else if (accent) setAccent(accent);
+      });
+    });
+
     updateSwitcherUI();
   }
 
   function updateSwitcherUI() {
     var current = getTheme();
-    document.querySelectorAll('.db-theme-switcher__btn, .db-showcase__theme-swatch').forEach(function(btn) {
+    var currentFamily = getFamily();
+
+    // Legacy theme buttons
+    document.querySelectorAll('.db-theme-switcher__btn[data-theme], .db-showcase__theme-swatch[data-theme]').forEach(function(btn) {
       var isActive = btn.getAttribute('data-theme') === current;
       btn.setAttribute('aria-pressed', String(isActive));
     });
+
+    // Family buttons
+    document.querySelectorAll('[data-family]').forEach(function(btn) {
+      var isActive = btn.getAttribute('data-family') === currentFamily;
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+
+    // Scheme buttons
+    document.querySelectorAll('.db-theme-switcher__btn[data-scheme]').forEach(function(btn) {
+      var isActive = btn.getAttribute('data-scheme') === _scheme;
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+
+    updateAccentPickerUI();
   }
 
   /* ----------------------------------------------------------
@@ -1247,6 +1439,15 @@
     setTheme: setTheme,
     cycleTheme: cycleTheme,
     THEMES: THEMES,
+    THEME_FAMILIES: THEME_FAMILIES,
+    FAMILY_NAMES: FAMILY_NAMES,
+    getScheme: getScheme,
+    setScheme: setScheme,
+    getFamily: getFamily,
+    setFamily: setFamily,
+    setAccent: setAccent,
+    resetAccent: resetAccent,
+    getAccent: getAccent,
     fixNestedRadius: fixNestedRadius,
     setTexture: function(type) {
       document.documentElement.setAttribute('data-db-texture', type);

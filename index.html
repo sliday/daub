@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB — Considered Interface Components</title>
-  <meta name="description" content="DAUB is a CSS component library with 67 considered UI elements and 8 themes. Thoughtful, tactile, and accessible. No build step required.">
+  <meta name="description" content="DAUB is a CSS component library with 67 considered UI elements and 6 theme families. Thoughtful, tactile, and accessible. No build step required.">
   <meta name="keywords" content="CSS components, neo-skeuomorphic, UI kit, design system, considered UI, tactile, accessible, themes, AI components, llms.txt, drop-in CSS">
   <meta name="theme-color" content="#C67B5C">
   <link rel="canonical" href="https://daub.dev">
@@ -12,7 +12,7 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="DAUB — Considered Interface Components">
-  <meta property="og:description" content="67 considered UI elements with 8 themes. Drop-in CSS + JS. No build step.">
+  <meta property="og:description" content="67 considered UI elements with 6 theme families. Drop-in CSS + JS. No build step.">
   <meta property="og:url" content="https://daub.dev">
   <meta property="og:site_name" content="DAUB UI">
   <meta property="og:image" content="https://daub.dev/og-image.png">
@@ -23,7 +23,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="DAUB — Considered Interface Components">
-  <meta name="twitter:description" content="67 considered UI elements with 8 themes. Drop-in CSS + JS. No build step.">
+  <meta name="twitter:description" content="67 considered UI elements with 6 theme families. Drop-in CSS + JS. No build step.">
   <meta name="twitter:image" content="https://daub.dev/og-image.png">
   <meta name="twitter:site" content="@staskulesh">
   <meta name="twitter:creator" content="@staskulesh">
@@ -37,21 +37,21 @@
     "@context": "https://schema.org",
     "@type": "SoftwareSourceCode",
     "name": "DAUB UI",
-    "description": "Considered CSS components for discerning interfaces. 67 elements, 8 themes.",
+    "description": "Considered CSS components for discerning interfaces. 67 elements, 6 theme families.",
     "url": "https://daub.dev",
     "codeRepository": "https://github.com/sliday/daub",
     "programmingLanguage": ["CSS", "JavaScript"],
     "license": "https://opensource.org/licenses/MIT",
-    "version": "2.1.1",
+    "version": "2.2.0",
     "dateModified": "2026-02-27",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
   </script>
 
-  <!-- FOUC prevention: apply saved theme before paint -->
+  <!-- FOUC prevention: apply saved theme, scheme & accent before paint -->
   <script>
-    (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();
+    (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t);var s=localStorage.getItem('db-scheme');if(s)document.documentElement.setAttribute('data-scheme',s);var a=localStorage.getItem('db-accent');if(a)document.documentElement.style.setProperty('--db-terracotta',a)}catch(e){}})();
   </script>
 
   <!-- Lucide Icons -->
@@ -328,7 +328,7 @@
     /* Theme selector — horizontal list of named circles */
     .db-showcase__theme-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
     .db-showcase__theme-swatch {
@@ -635,7 +635,7 @@
     <p class="db-hero__definition"><strong>daub</strong> <span class="db-hero__pos">verb</span> to coat or smear a surface with a thick substance; to apply with rough, expressive strokes.</p>
     <p class="db-hero__sub">A humanistic component library that honours materiality — warm surfaces, honest shadows, textures that feel real. Two files, zero build step, and your interface has substance.</p>
     <div class="db-hero__actions">
-      <a href="#foundations" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
+      <a href="#configurator" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
       <a href="#controls" class="db-btn db-btn--secondary db-btn--lg">View Components</a>
     </div>
     <div class="db-hero__install">
@@ -648,7 +648,7 @@
   </section>
 
   <!-- Showcase / Configurator -->
-  <section class="db-showcase">
+  <section class="db-showcase" id="configurator">
     <div class="db-showcase__frame">
       <div class="db-showcase__col">
         <div class="db-showcase__panel">
@@ -659,36 +659,28 @@
           <p class="db-showcase__desc">Adjust the controls — the code updates live.</p>
           <div style="display:flex;flex-direction:column;gap:6px;">
             <span class="db-showcase__section-label">Theme</span>
-            <div class="db-showcase__theme-grid" role="group" aria-label="Theme">
-              <button class="db-showcase__theme-swatch" data-theme="light" aria-label="Light" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#FAF8F0"></span><span style="background:#C67B5C"></span></span>
-                <span class="db-swatch-name">Light</span>
+            <div class="db-showcase__theme-grid" role="group" aria-label="Theme family">
+              <button class="db-showcase__theme-swatch" data-family="default" aria-label="Default" aria-pressed="false">
+                <span class="db-swatch-dot"><span style="background:#FAF8F0"></span><span style="background:#2C2824"></span></span>
+                <span class="db-swatch-name">Default</span>
               </button>
-              <button class="db-showcase__theme-swatch" data-theme="dark" aria-label="Dark" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#2C2824"></span><span style="background:#D48B6A"></span></span>
-                <span class="db-swatch-name">Dark</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-theme="grunge-light" aria-label="Grunge Light" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#EDE8DF"></span><span style="background:#5C4A3A"></span></span>
+              <button class="db-showcase__theme-swatch" data-family="grunge" aria-label="Grunge" aria-pressed="false">
+                <span class="db-swatch-dot"><span style="background:#EDE8DF"></span><span style="background:#1E1B17"></span></span>
                 <span class="db-swatch-name">Grunge</span>
               </button>
-              <button class="db-showcase__theme-swatch" data-theme="grunge-dark" aria-label="Grunge Dark" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#1E1B17"></span><span style="background:#B8A080"></span></span>
-                <span class="db-swatch-name">Grunge+</span>
-              </button>
-              <button class="db-showcase__theme-swatch" data-theme="parchment" aria-label="Parchment" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#F5ECD7"></span><span style="background:#B8860B"></span></span>
+              <button class="db-showcase__theme-swatch" data-family="parchment" aria-label="Parchment" aria-pressed="false">
+                <span class="db-swatch-dot"><span style="background:#F5ECD7"></span><span style="background:#2A2418"></span></span>
                 <span class="db-swatch-name">Parch</span>
               </button>
-              <button class="db-showcase__theme-swatch" data-theme="ink" aria-label="Ink" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#1B2438"></span><span style="background:#A8B4C8"></span></span>
+              <button class="db-showcase__theme-swatch" data-family="ink" aria-label="Ink" aria-pressed="false">
+                <span class="db-swatch-dot"><span style="background:#EEF0F5"></span><span style="background:#1C2030"></span></span>
                 <span class="db-swatch-name">Ink</span>
               </button>
-              <button class="db-showcase__theme-swatch" data-theme="ember" aria-label="Ember" aria-pressed="false">
-                <span class="db-swatch-dot"><span style="background:#1F1410"></span><span style="background:#E8845C"></span></span>
+              <button class="db-showcase__theme-swatch" data-family="ember" aria-label="Ember" aria-pressed="false">
+                <span class="db-swatch-dot"><span style="background:#F8F0E8"></span><span style="background:#201810"></span></span>
                 <span class="db-swatch-name">Ember</span>
               </button>
-              <button class="db-showcase__theme-swatch" data-theme="bone" aria-label="Bone" aria-pressed="false">
+              <button class="db-showcase__theme-swatch" data-family="bone" aria-label="Bone" aria-pressed="false">
                 <span class="db-swatch-dot"><span style="background:#FAFAFA"></span><span style="background:#1A1A1A"></span></span>
                 <span class="db-swatch-name">Bone</span>
               </button>
@@ -725,6 +717,26 @@
               <button data-db-scheme="auto" aria-pressed="true">Auto</button>
               <button data-db-scheme="light" aria-pressed="false">Light</button>
               <button data-db-scheme="dark" aria-pressed="false">Dark</button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <span class="db-showcase__section-label">Accent</span>
+            <div class="db-accent-picker" role="group" aria-label="Accent color">
+              <button class="db-accent-picker__dot" data-accent="#C67B5C" style="background:#C67B5C" aria-label="Terracotta" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#A0522D" style="background:#A0522D" aria-label="Sienna" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#B7410E" style="background:#B7410E" aria-label="Rust" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#CC7722" style="background:#CC7722" aria-label="Ochre" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#B8860B" style="background:#B8860B" aria-label="Goldenrod" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#6B7C3E" style="background:#6B7C3E" aria-label="Olive" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#6B8E6B" style="background:#6B8E6B" aria-label="Sage" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#5A6D8E" style="background:#5A6D8E" aria-label="Slate" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#4B5D78" style="background:#4B5D78" aria-label="Indigo" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#7B506F" style="background:#7B506F" aria-label="Plum" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#6B4423" style="background:#6B4423" aria-label="Umber" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot" data-accent="#505050" style="background:#505050" aria-label="Charcoal" aria-pressed="false"></button>
+              <button class="db-accent-picker__dot db-accent-picker__dot--reset" data-accent="reset" aria-label="Reset accent" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              </button>
             </div>
           </div>
         </div>
@@ -1968,7 +1980,7 @@
     <h2 style="font-family:var(--db-font-heading); font-size:clamp(1.5rem, 3vw, 2.25rem); font-weight:700; color:var(--db-ink); margin:0 0 16px; line-height:1.2;">Two files. Full surface.</h2>
     <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px;">67 components that respond to light, texture, and theme. Drop them in, ship something that feels considered — without the ceremony.</p>
     <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-      <a href="#foundations" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
+      <a href="#configurator" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
       <a href="https://github.com/sliday/daub" target="_blank" rel="noopener" class="db-btn db-btn--secondary db-btn--lg">
         <i data-lucide="github" style="width:16px;height:16px;"></i>
         GitHub
@@ -1981,32 +1993,39 @@
     Made by <a href="https://x.com/staskulesh" target="_blank" rel="noopener" style="color:var(--db-terracotta); text-decoration:none;">@staskulesh</a> <a href="https://aichess.co/static/easter-egg/index.html" title="&#127875;" style="text-decoration:none; display:inline-block; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">&#128007;</a>
   </footer>
 
-  <!-- Theme Switcher (8 themes, 2-row grid) -->
+  <!-- Theme Switcher (6 families + scheme) -->
   <div class="db-theme-switcher" role="group" aria-label="Theme switcher">
-    <button class="db-theme-switcher__btn" data-theme="light" aria-label="Light theme" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-    </button>
-    <button class="db-theme-switcher__btn" data-theme="dark" aria-label="Dark theme" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
-    <button class="db-theme-switcher__btn" data-theme="grunge-light" aria-label="Grunge light theme" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/></svg>
-    </button>
-    <button class="db-theme-switcher__btn" data-theme="grunge-dark" aria-label="Grunge dark theme" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/></svg>
-    </button>
-    <button class="db-theme-switcher__btn" data-theme="parchment" aria-label="Parchment theme" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-    </button>
-    <button class="db-theme-switcher__btn" data-theme="ink" aria-label="Ink theme" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-    </button>
-    <button class="db-theme-switcher__btn" data-theme="ember" aria-label="Ember theme" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
-    </button>
-    <button class="db-theme-switcher__btn" data-theme="bone" aria-label="Bone theme" aria-pressed="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-    </button>
+    <div class="db-theme-switcher__families">
+      <button class="db-theme-switcher__btn" data-family="default" aria-label="Default family" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="db-theme-switcher__btn" data-family="grunge" aria-label="Grunge family" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/></svg>
+      </button>
+      <button class="db-theme-switcher__btn" data-family="parchment" aria-label="Parchment family" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+      </button>
+      <button class="db-theme-switcher__btn" data-family="ink" aria-label="Ink family" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+      </button>
+      <button class="db-theme-switcher__btn" data-family="ember" aria-label="Ember family" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      </button>
+      <button class="db-theme-switcher__btn" data-family="bone" aria-label="Bone family" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+      </button>
+    </div>
+    <div class="db-theme-switcher__scheme">
+      <button class="db-theme-switcher__btn" data-scheme="auto" aria-label="Auto scheme" aria-pressed="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/><path d="M12 12a5 5 0 0 1 5 5"/></svg>
+      </button>
+      <button class="db-theme-switcher__btn" data-scheme="light" aria-label="Light mode" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+      </button>
+      <button class="db-theme-switcher__btn" data-scheme="dark" aria-label="Dark mode" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
   </div>
 
   <!-- JS -->
@@ -2021,26 +2040,17 @@
       var copyBtn = document.getElementById('db-config-copy');
       if (!codeEl) return;
 
-      var DEFAULTS = { theme: 'light', warmth: 0.75, noise: 0.18, texture: 'grain', scheme: 'auto' };
-
-      // Light↔Dark theme pairs for auto scheme
-      var THEME_PAIRS = {
-        'light': 'dark', 'dark': 'light',
-        'grunge-light': 'grunge-dark', 'grunge-dark': 'grunge-light',
-        'parchment': 'ink', 'ink': 'parchment',
-        'bone': 'ember', 'ember': 'bone'
-      };
-      var LIGHT_THEMES = ['light', 'grunge-light', 'parchment', 'bone'];
-
-      var _scheme = 'auto';
+      var DEFAULTS = { theme: 'light', family: 'default', warmth: 0.75, noise: 0.18, texture: 'grain', scheme: 'auto' };
 
       function getState() {
         return {
           theme: DAUB.getTheme() || 'light',
+          family: DAUB.getFamily() || 'default',
+          scheme: DAUB.getScheme() || 'auto',
           warmth: parseFloat(document.documentElement.style.getPropertyValue('--db-warmth')) || DEFAULTS.warmth,
           noise: parseFloat(document.documentElement.style.getPropertyValue('--db-noise')) || DEFAULTS.noise,
           texture: document.documentElement.getAttribute('data-db-texture') || 'grain',
-          scheme: _scheme
+          accent: localStorage.getItem('db-accent') || null
         };
       }
 
@@ -2065,17 +2075,12 @@
 
         var jsLines = [];
         if (s.texture !== DEFAULTS.texture) jsLines.push("DAUB.setTexture('" + s.texture + "');");
+        if (s.family !== DEFAULTS.family) jsLines.push("DAUB.setFamily('" + s.family + "');");
+        if (s.scheme !== DEFAULTS.scheme) jsLines.push("DAUB.setScheme('" + s.scheme + "');");
+        if (s.accent) jsLines.push("DAUB.setAccent('" + s.accent + "');");
 
-        if (s.scheme === 'auto') {
-          var lightTheme = LIGHT_THEMES.indexOf(s.theme) !== -1 ? s.theme : THEME_PAIRS[s.theme];
-          var darkTheme = THEME_PAIRS[lightTheme];
-          jsLines.push("// Auto: follows OS preference");
-          jsLines.push("var mq = matchMedia('(prefers-color-scheme: dark)');");
-          jsLines.push("function applyScheme() { DAUB.setTheme(mq.matches ? '" + darkTheme + "' : '" + lightTheme + "'); }");
-          jsLines.push("applyScheme();");
-          jsLines.push("mq.addEventListener('change', applyScheme);");
-        } else {
-          if (s.theme !== DEFAULTS.theme) jsLines.push("DAUB.setTheme('" + s.theme + "');");
+        if (s.scheme === 'auto' && s.family === DEFAULTS.family && !s.accent && s.texture === DEFAULTS.texture) {
+          // Nothing extra needed — default behavior
         }
 
         if (jsLines.length) {
@@ -2092,44 +2097,22 @@
         if (code) code.textContent = buildSnippet();
       }
 
-      // Color scheme buttons
+      // Color scheme buttons (showcase panel)
       document.querySelectorAll('[data-db-scheme]').forEach(function(btn) {
         btn.addEventListener('click', function() {
-          _scheme = btn.getAttribute('data-db-scheme');
+          DAUB.setScheme(btn.getAttribute('data-db-scheme'));
           document.querySelectorAll('[data-db-scheme]').forEach(function(b) {
             b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
           });
-
-          // Preview: switch theme to show light/dark variant
-          var current = DAUB.getTheme();
-          if (_scheme === 'dark' && LIGHT_THEMES.indexOf(current) !== -1) {
-            DAUB.setTheme(THEME_PAIRS[current]);
-          } else if (_scheme === 'light' && LIGHT_THEMES.indexOf(current) === -1) {
-            DAUB.setTheme(THEME_PAIRS[current]);
-          }
-          // Auto stays on whichever is currently selected
           setTimeout(updateCode, 50);
         });
       });
 
-      // Listen for changes from controls
+      // Listen for changes from controls (family swatches, texture, accent)
       document.addEventListener('click', function(e) {
-        var btn = e.target.closest('[data-theme], [data-db-texture-btn]');
+        var btn = e.target.closest('[data-family], [data-db-texture-btn], [data-accent]');
         if (btn) {
-          // After theme swatch click, enforce scheme constraint
-          if (btn.hasAttribute('data-theme') && _scheme !== 'auto') {
-            setTimeout(function() {
-              var t = DAUB.getTheme();
-              if (_scheme === 'dark' && LIGHT_THEMES.indexOf(t) !== -1) {
-                DAUB.setTheme(THEME_PAIRS[t]);
-              } else if (_scheme === 'light' && LIGHT_THEMES.indexOf(t) === -1) {
-                DAUB.setTheme(THEME_PAIRS[t]);
-              }
-              updateCode();
-            }, 60);
-          } else {
-            setTimeout(updateCode, 50);
-          }
+          setTimeout(updateCode, 60);
         }
       });
       document.addEventListener('input', function(e) {

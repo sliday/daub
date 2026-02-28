@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Considered Component Library
-   Version 2.0 — 8 themes: light, dark, grunge-light, grunge-dark, parchment, ink, ember, bone
+   Version 2.2 — 6 theme families × light/dark: default, grunge, parchment, ink, ember, bone
    ============================================================ */
 
 /* ------------------------------------------------------------
@@ -114,8 +114,16 @@
   --db-color-border-rgb: var(--db-sand-rgb);
 }
 
-body {
-  filter: saturate(calc(0.7 + 0.3 * var(--db-warmth))) sepia(calc(0.04 * var(--db-warmth)));
+/* Warmth overlay — uses backdrop-filter on html::after instead of filter on body
+   to avoid creating a containing block that breaks position:fixed (modal, toast, sheet, drawer) */
+html::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  backdrop-filter: saturate(calc(0.7 + 0.3 * var(--db-warmth))) sepia(calc(0.04 * var(--db-warmth)));
+  -webkit-backdrop-filter: saturate(calc(0.7 + 0.3 * var(--db-warmth))) sepia(calc(0.04 * var(--db-warmth)));
 }
 
 /* Texture overlay — type set via [data-db-texture] on <html> */
@@ -398,6 +406,42 @@ body::before {
   --db-overlay-bg: rgba(44,38,24,0.5);
 }
 
+/* Parchment Dark Theme — Antiqued leather, gold accents */
+[data-theme="parchment-dark"] {
+  --db-cream: #2A2418;
+  --db-cream-dark: #221E14;
+  --db-sand: #4A4030;
+  --db-terracotta: #D4A030;
+  --db-clay: #B8920E;
+  --db-warm-gray: #9A9080;
+  --db-charcoal: #D8D0B8;
+  --db-ink: #EAE2CC;
+  --db-white: #322A1E;
+  --db-error: #D85040;
+  --db-success: #88AE78;
+  --db-warning: #D8B050;
+
+  --db-shadow-rgb: 10,8,4;
+  --db-glow-rgb: 50,42,30;
+  --db-accent-rgb: 212,160,48;
+  --db-clay-rgb: 184,146,14;
+  --db-success-rgb: 136,174,120;
+  --db-warning-rgb: 216,176,80;
+  --db-error-rgb: 216,80,64;
+  --db-sand-rgb: 74,64,48;
+  --db-white-rgb: 50,42,30;
+
+  --db-terracotta-text: #D4A030;
+  --db-success-text: #78A068;
+
+  --db-accent-dark: #B89020;
+  --db-accent-light: #E4B840;
+  --db-accent-hover: #C09828;
+  --db-accent-pressed: #9A7A10;
+  --db-success-dark: #6A8E5A;
+  --db-overlay-bg: rgba(10,8,4,0.7);
+}
+
 /* Ink Theme — Navy/silver, editorial */
 [data-theme="ink"] {
   --db-cream: #1C2030;
@@ -431,6 +475,42 @@ body::before {
   --db-overlay-bg: rgba(10,12,20,0.7);
 }
 
+/* Ink Light Theme — Editorial magazine page, cool blue-white */
+[data-theme="ink-light"] {
+  --db-cream: #EEF0F5;
+  --db-cream-dark: #E2E5ED;
+  --db-sand: #C0C4D0;
+  --db-terracotta: #5A6D8E;
+  --db-clay: #4A5D7E;
+  --db-warm-gray: #7880A0;
+  --db-charcoal: #3A3E52;
+  --db-ink: #1C2030;
+  --db-white: #F5F7FC;
+  --db-error: #C05050;
+  --db-success: #508868;
+  --db-warning: #B89840;
+
+  --db-shadow-rgb: 28,32,48;
+  --db-glow-rgb: 245,247,252;
+  --db-accent-rgb: 90,109,142;
+  --db-clay-rgb: 74,93,126;
+  --db-success-rgb: 80,136,104;
+  --db-warning-rgb: 184,152,64;
+  --db-error-rgb: 192,80,80;
+  --db-sand-rgb: 192,196,208;
+  --db-white-rgb: 245,247,252;
+
+  --db-terracotta-text: #4A5D7E;
+  --db-success-text: #3A7050;
+
+  --db-accent-dark: #4A5D7E;
+  --db-accent-light: #7A8DB8;
+  --db-accent-hover: #506888;
+  --db-accent-pressed: #3A4D6E;
+  --db-success-dark: #3A7050;
+  --db-overlay-bg: rgba(28,32,48,0.4);
+}
+
 /* Ember Theme — Copper glow, warm dark */
 [data-theme="ember"] {
   --db-cream: #201810;
@@ -462,6 +542,42 @@ body::before {
   --db-accent-pressed: #A06038;
   --db-success-dark: #6A8A5A;
   --db-overlay-bg: rgba(10,6,2,0.8);
+}
+
+/* Ember Light Theme — Warm terracotta pottery in sunlight */
+[data-theme="ember-light"] {
+  --db-cream: #F8F0E8;
+  --db-cream-dark: #F0E6DA;
+  --db-sand: #D8C4B0;
+  --db-terracotta: #B06840;
+  --db-clay: #9A5830;
+  --db-warm-gray: #8A7868;
+  --db-charcoal: #3A2E24;
+  --db-ink: #201810;
+  --db-white: #FFF8F0;
+  --db-error: #C04830;
+  --db-success: #608A50;
+  --db-warning: #C89030;
+
+  --db-shadow-rgb: 32,24,16;
+  --db-glow-rgb: 255,248,240;
+  --db-accent-rgb: 176,104,64;
+  --db-clay-rgb: 154,88,48;
+  --db-success-rgb: 96,138,80;
+  --db-warning-rgb: 200,144,48;
+  --db-error-rgb: 192,72,48;
+  --db-sand-rgb: 216,196,176;
+  --db-white-rgb: 255,248,240;
+
+  --db-terracotta-text: #9A5830;
+  --db-success-text: #4A7A3A;
+
+  --db-accent-dark: #9A5830;
+  --db-accent-light: #C88060;
+  --db-accent-hover: #A06038;
+  --db-accent-pressed: #8A5028;
+  --db-success-dark: #4A7A3A;
+  --db-overlay-bg: rgba(32,24,16,0.4);
 }
 
 /* Bone Theme — Stark white, monochrome */
@@ -498,6 +614,42 @@ body::before {
   --db-accent-pressed: #404040;
   --db-success-dark: #3A6A3A;
   --db-overlay-bg: rgba(0,0,0,0.4);
+}
+
+/* Bone Dark Theme — Grayscale brutalism inverted */
+[data-theme="bone-dark"] {
+  --db-cream: #1A1A1A;
+  --db-cream-dark: #141414;
+  --db-sand: #383838;
+  --db-terracotta: #A0A0A0;
+  --db-clay: #8A8A8A;
+  --db-warm-gray: #787878;
+  --db-charcoal: #D0D0D0;
+  --db-ink: #E8E8E8;
+  --db-white: #222222;
+  --db-error: #D05050;
+  --db-success: #70A070;
+  --db-warning: #C0A040;
+
+  --db-shadow-rgb: 0,0,0;
+  --db-glow-rgb: 34,34,34;
+  --db-accent-rgb: 160,160,160;
+  --db-clay-rgb: 138,138,138;
+  --db-success-rgb: 112,160,112;
+  --db-warning-rgb: 192,160,64;
+  --db-error-rgb: 208,80,80;
+  --db-sand-rgb: 56,56,56;
+  --db-white-rgb: 34,34,34;
+
+  --db-terracotta-text: #A0A0A0;
+  --db-success-text: #60A060;
+
+  --db-accent-dark: #8A8A8A;
+  --db-accent-light: #B8B8B8;
+  --db-accent-hover: #909090;
+  --db-accent-pressed: #707070;
+  --db-success-dark: #508050;
+  --db-overlay-bg: rgba(0,0,0,0.6);
 }
 
 /* ------------------------------------------------------------
@@ -1776,6 +1928,10 @@ textarea.db-field__input {
   transform: translateX(-50%);
   border: 5px solid transparent;
   border-top-color: var(--db-ink);
+}
+
+.db-tooltip-wrap .db-tooltip {
+  position: absolute;
 }
 
 .db-tooltip-wrap:hover .db-tooltip,
@@ -4116,8 +4272,8 @@ textarea.db-field__input {
   position: fixed;
   bottom: var(--db-space-5);
   left: var(--db-space-5);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 2px;
   padding: 4px;
   background: rgba(30, 28, 25, 0.85);
@@ -4127,6 +4283,19 @@ textarea.db-field__input {
   border-radius: var(--db-radius-3);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
   z-index: 1050;
+}
+.db-theme-switcher__families {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+.db-theme-switcher__scheme {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 2px;
+  margin-top: 2px;
 }
 
 .db-theme-switcher__btn {
@@ -4168,12 +4337,14 @@ textarea.db-field__input {
 
 @media (max-width: 640px) {
   .db-theme-switcher {
-    grid-template-columns: repeat(8, 1fr);
     left: 50%;
     transform: translateX(-50%);
     bottom: var(--db-space-3);
     padding: 3px;
     gap: 1px;
+  }
+  .db-theme-switcher__families {
+    grid-template-columns: repeat(6, 1fr);
   }
   .db-theme-switcher__btn {
     width: 28px;
@@ -4183,4 +4354,44 @@ textarea.db-field__input {
     width: 15px;
     height: 15px;
   }
+}
+
+/* ------------------------------------------------------------
+   13. ACCENT PICKER
+   ------------------------------------------------------------ */
+.db-accent-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.db-accent-picker__dot {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--db-radius-full);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--db-transition);
+  padding: 0;
+  background: none;
+}
+.db-accent-picker__dot:hover {
+  transform: scale(1.2);
+}
+.db-accent-picker__dot[aria-pressed="true"] {
+  border-color: var(--db-ink);
+  box-shadow: 0 0 0 2px var(--db-cream);
+}
+.db-accent-picker__dot--reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--db-cream-dark) !important;
+  color: var(--db-warm-gray);
+}
+.db-accent-picker__dot--reset:hover {
+  color: var(--db-ink);
+}
+.db-accent-picker__dot--reset svg {
+  width: 12px;
+  height: 12px;
 }
