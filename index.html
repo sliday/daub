@@ -246,6 +246,7 @@
       flex-direction: column;
       gap: 16px;
       justify-content: center;
+      min-width: 0;
     }
     .db-showcase__eyebrow {
       font-size: 0.6875rem;
@@ -427,6 +428,7 @@
     }
     .db-showcase__code-wrap {
       position: relative;
+      overflow: hidden;
     }
     .db-showcase__code {
       background: var(--db-charcoal, #3D3832);
@@ -462,7 +464,7 @@
     @media (max-width: 720px) {
       .db-showcase__frame { grid-template-columns: 1fr; padding: 24px; }
       .db-showcase__stats { gap: 24px; }
-      .db-showcase__theme-grid { grid-template-columns: repeat(4, 1fr); }
+      .db-showcase__theme-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     /* AI Section */
@@ -760,8 +762,8 @@
               <span class="db-showcase__stat-label">Components</span>
             </div>
             <div class="db-showcase__stat">
-              <span class="db-showcase__stat-num">8</span>
-              <span class="db-showcase__stat-label">Themes</span>
+              <span class="db-showcase__stat-num">6</span>
+              <span class="db-showcase__stat-label">Families</span>
             </div>
             <div class="db-showcase__stat">
               <span class="db-showcase__stat-num">2</span>
