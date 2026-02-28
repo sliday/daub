@@ -15,6 +15,9 @@ allowed-tools:
 
 DAUB is a drop-in CSS + JS library with 74 considered components and 20 theme families (40 variants). Thoughtfully composed, no ceremony required.
 
+Machine-readable component reference: `https://daub.dev/components.json`
+TypeScript declarations: `https://daub.dev/daub.d.ts`
+
 ## Include
 
 ```html
@@ -103,7 +106,7 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Scroll Area**: `db-scroll-area` / `--horizontal` / `--vertical`
 
 ### Feedback
-- **Toast**: `DAUB.toast({ type: 'success', title: 'Done', message: '...' })`
+- **Toast**: `DAUB.toast('Quick message')` or `DAUB.toast({ type: 'success', title: 'Done', message: '...' })`
 - **Alert**: `db-alert db-alert--warning` > `db-alert__icon` + `db-alert__content`
 - **Progress**: `db-progress` > `db-progress__bar` style="--db-progress: 65%"
 - **Skeleton**: `db-skeleton--text` / `--heading` / `--avatar` / `--btn`

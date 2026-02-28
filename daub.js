@@ -258,16 +258,26 @@
      Theme Switcher UI
      ---------------------------------------------------------- */
   var FAMILY_SWATCHES = {
-    'default':{light:'#FAF8F0',dark:'#2C2824'},'grunge':{light:'#EDE8DF',dark:'#1E1B17'},
-    'solarized':{light:'#fdf6e3',dark:'#002b36'},'ink':{light:'#EEF0F5',dark:'#1C2030'},
-    'ember':{light:'#F8F0E8',dark:'#201810'},'bone':{light:'#FAFAFA',dark:'#1A1A1A'},
-    'dracula':{light:'#FFFBEB',dark:'#282A36'},'nord':{light:'#ECEFF4',dark:'#2E3440'},
-    'one-dark':{light:'#FAFAFA',dark:'#282C34'},'monokai':{light:'#FAFAF8',dark:'#272822'},
-    'gruvbox':{light:'#FBF1C7',dark:'#282828'},'night-owl':{light:'#FBFBFB',dark:'#011627'},
-    'github':{light:'#FFFFFF',dark:'#0D1117'},'catppuccin':{light:'#EFF1F5',dark:'#1E1E2E'},
-    'tokyo-night':{light:'#D5D6DB',dark:'#1A1B26'},'material':{light:'#FAFAFA',dark:'#263238'},
-    'synthwave':{light:'#F5E6FF',dark:'#2B213A'},'shades-of-purple':{light:'#F3EFFF',dark:'#2D2B55'},
-    'ayu':{light:'#FAFAFA',dark:'#0B0E14'},'horizon':{light:'#FDF0ED',dark:'#1C1E26'}
+    'default':{light:'#FAF8F0',dark:'#2C2824',accent:'#D48B6A'},
+    'grunge':{light:'#EDE8DF',dark:'#1E1B17',accent:'#CC7F55'},
+    'solarized':{light:'#fdf6e3',dark:'#073642',accent:'#2aa198'},
+    'ink':{light:'#EEF0F5',dark:'#1C2030',accent:'#8B9DC3'},
+    'ember':{light:'#F8F0E8',dark:'#201810',accent:'#D48B6A'},
+    'bone':{light:'#FAFAFA',dark:'#1A1A1A',accent:'#A0A0A0'},
+    'dracula':{light:'#FFFBEB',dark:'#282A36',accent:'#BD93F9'},
+    'nord':{light:'#ECEFF4',dark:'#2E3440',accent:'#88C0D0'},
+    'one-dark':{light:'#FAFAFA',dark:'#282C34',accent:'#61AFEF'},
+    'monokai':{light:'#FAFAF8',dark:'#272822',accent:'#66D9EF'},
+    'gruvbox':{light:'#FBF1C7',dark:'#282828',accent:'#FE8019'},
+    'night-owl':{light:'#FBFBFB',dark:'#011627',accent:'#82AAFF'},
+    'github':{light:'#FFFFFF',dark:'#0D1117',accent:'#58A6FF'},
+    'catppuccin':{light:'#EFF1F5',dark:'#1E1E2E',accent:'#CBA6F7'},
+    'tokyo-night':{light:'#D5D6DB',dark:'#1A1B26',accent:'#7AA2F7'},
+    'material':{light:'#FAFAFA',dark:'#263238',accent:'#82AAFF'},
+    'synthwave':{light:'#F5E6FF',dark:'#2B213A',accent:'#F92AAD'},
+    'shades-of-purple':{light:'#F3EFFF',dark:'#2D2B55',accent:'#FAD000'},
+    'ayu':{light:'#FAFAFA',dark:'#0B0E14',accent:'#FF8F40'},
+    'horizon':{light:'#FDF0ED',dark:'#1C1E26',accent:'#E95678'}
   };
   var CATEGORY_LABELS = {originals:'Originals',classics:'Classics',modern:'Modern',trending:'Trending'};
   var FAMILY_LABELS = {
@@ -296,13 +306,20 @@
         item.setAttribute('data-family', fam);
         item.setAttribute('aria-label', fam.replace(/-/g,' '));
         item.setAttribute('aria-pressed', 'false');
+        item.title = (FAMILY_LABELS[fam] || fam);
         var dot = document.createElement('span');
         dot.className = 'db-theme-switcher__dot';
         var halfL = document.createElement('span');
+        halfL.className = 'db-theme-switcher__dot-light';
         halfL.style.background = sw.light;
+        var accentBar = document.createElement('span');
+        accentBar.className = 'db-theme-switcher__dot-accent';
+        accentBar.style.background = sw.accent;
         var halfD = document.createElement('span');
+        halfD.className = 'db-theme-switcher__dot-dark';
         halfD.style.background = sw.dark;
         dot.appendChild(halfL);
+        dot.appendChild(accentBar);
         dot.appendChild(halfD);
         item.appendChild(dot);
         var name = document.createElement('span');

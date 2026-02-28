@@ -8,6 +8,8 @@
 > License: MIT
 > Components: 74
 > Theme Families: 20 (40 variants total)
+> Components JSON: https://daub.dev/components.json
+> TypeScript: https://daub.dev/daub.d.ts
 
 ## Quick Start
 
@@ -884,6 +886,7 @@ Toggle group: wrap chips in a container with `data-db-chip-toggle` — clicks to
 
 ```js
 DAUB.init()                    // Re-initialize all components
+DAUB.toast('Quick message')   // String shorthand → info toast
 DAUB.toast({ type, title, message, duration })
 DAUB.openModal(idOrEl)         // Open modal by id string or element
 DAUB.closeModal(idOrEl)        // Close modal by id string or element

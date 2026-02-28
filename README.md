@@ -262,10 +262,12 @@ Semantic tokens (theme-aware aliases): `--db-color-bg`, `--db-color-surface`, `-
 DAUB speaks both human and machine:
 
 - **`/llms.txt`** — Plain-text component reference for LLMs ([spec](https://llmstxt.org))
+- **`/components.json`** — Machine-readable structured component reference (74 components with HTML examples)
+- **`/daub.d.ts`** — TypeScript declarations for `window.DAUB` API
 - **`/.well-known/ai-plugin.json`** — AI plugin manifest
 - **`SKILL.md`** — Claude Code skill for DAUB development
 
-Point your AI at `https://daub.dev/llms.txt` for complete component docs with HTML snippets.
+Point your AI at `https://daub.dev/llms.txt` for complete component docs with HTML snippets, or fetch `https://daub.dev/components.json` for structured data.
 
 ## Browser Support
 

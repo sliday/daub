@@ -5433,8 +5433,8 @@ textarea.db-field__input {
   box-shadow: var(--db-focus-ring);
 }
 .db-theme-switcher__dot {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.15);
   overflow: hidden;
@@ -5442,8 +5442,13 @@ textarea.db-field__input {
   flex-shrink: 0;
   transition: all var(--db-transition);
 }
-.db-theme-switcher__dot span {
+.db-theme-switcher__dot-light,
+.db-theme-switcher__dot-dark {
   flex: 1;
+}
+.db-theme-switcher__dot-accent {
+  width: 6px;
+  flex-shrink: 0;
 }
 .db-theme-switcher__item:hover .db-theme-switcher__dot {
   border-color: rgba(255, 255, 255, 0.4);

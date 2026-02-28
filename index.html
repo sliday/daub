@@ -270,28 +270,58 @@
       line-height: 1.6;
       margin: 0;
     }
-    .db-showcase__stats {
+    .db-showcase__copy-cta {
       display: flex;
-      gap: 32px;
-      padding: 16px 0;
-    }
-    .db-showcase__stat {
-      display: flex;
-      flex-direction: column;
-    }
-    .db-showcase__stat-num {
-      font-family: var(--db-font-heading);
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--db-ink);
-      line-height: 1;
-    }
-    .db-showcase__stat-label {
-      font-size: 0.6875rem;
-      color: var(--db-warm-gray);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px 20px;
       margin-top: 4px;
+      font-family: var(--db-font-ui);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--db-terracotta);
+      border: none;
+      border-radius: var(--db-radius-2);
+      cursor: pointer;
+      transition: all var(--db-transition);
+    }
+    .db-showcase__copy-cta:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .db-showcase__copy-cta:active {
+      transform: translateY(0);
+      filter: brightness(0.95);
+    }
+    .db-showcase__preview {
+      background: var(--db-cream);
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-3);
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+    .db-showcase__code-toggle {
+      margin-top: 8px;
+    }
+    .db-showcase__code-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: var(--db-warm-gray);
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 4px 0;
+      transition: color var(--db-transition);
+    }
+    .db-showcase__code-toggle-btn:hover {
+      color: var(--db-ink);
     }
     .db-showcase__panel {
       background: var(--db-cream);
@@ -463,7 +493,7 @@
     }
     @media (max-width: 720px) {
       .db-showcase__frame { grid-template-columns: 1fr; padding: 24px; }
-      .db-showcase__stats { gap: 24px; }
+      .db-showcase__copy-cta { font-size: 0.875rem; padding: 10px 16px; }
       .db-showcase__theme-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
@@ -658,7 +688,7 @@
             <i data-lucide="sliders-horizontal" style="width:14px;height:14px;"></i>
             Configure
           </div>
-          <p class="db-showcase__desc">Adjust the controls — the code updates live.</p>
+          <p class="db-showcase__desc">Dial in your look. When it feels right, copy the snippet.</p>
           <div style="display:flex;flex-direction:column;gap:6px;">
             <span class="db-showcase__section-label">Theme</span>
             <div class="db-showcase__segments" role="group" aria-label="Theme category" id="db-theme-category-tabs">
@@ -812,30 +842,57 @@
       <div class="db-showcase__col">
         <div class="db-showcase__output">
           <div class="db-showcase__panel-header">
-            <i data-lucide="code" style="width:14px;height:14px;"></i>
-            Your snippet
+            <i data-lucide="eye" style="width:14px;height:14px;"></i>
+            Preview
           </div>
-          <p class="db-showcase__desc">Copy and paste into your project.</p>
-          <div class="db-showcase__code-wrap">
+          <div class="db-showcase__preview">
+            <div class="db-card" style="margin:0;">
+              <div class="db-card__header">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="db-avatar db-avatar--sm"><span>A</span></div>
+                  <div>
+                    <div class="db-card__title" style="margin:0;font-size:0.875rem;">Alex Morgan</div>
+                    <div class="db-caption" style="margin:0;">Product Designer</div>
+                  </div>
+                </div>
+              </div>
+              <p class="db-body" style="margin:0;padding:0 var(--db-space-4);font-size:0.8125rem;">This is how your theme looks on real components. Every change on the left updates here instantly.</p>
+              <div style="padding:var(--db-space-3) var(--db-space-4);display:flex;gap:6px;flex-wrap:wrap;">
+                <span class="db-chip db-chip--green" style="font-size:0.6875rem;">Design</span>
+                <span class="db-chip db-chip--blue" style="font-size:0.6875rem;">Systems</span>
+                <span class="db-chip db-chip--purple" style="font-size:0.6875rem;">Theme</span>
+              </div>
+              <div class="db-card__footer" style="display:flex;gap:8px;">
+                <button class="db-btn db-btn--primary db-btn--sm" style="flex:1;">Save</button>
+                <button class="db-btn db-btn--secondary db-btn--sm" style="flex:1;">Cancel</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px;">
+              <div class="db-field" style="flex:1;margin:0;">
+                <label class="db-field__label" style="font-size:0.75rem;">Email</label>
+                <input class="db-field__input db-input db-input--sm" type="email" placeholder="you@example.com" readonly>
+              </div>
+            </div>
+            <div class="db-progress" style="margin-top:12px;">
+              <div class="db-progress__bar" style="--db-progress:65%;"></div>
+            </div>
+          </div>
+          <div class="db-showcase__code-toggle">
+            <button class="db-showcase__code-toggle-btn" id="db-toggle-snippet" aria-expanded="false">
+              <i data-lucide="code" style="width:12px;height:12px;"></i>
+              Show snippet
+            </button>
+          </div>
+          <div class="db-showcase__code-wrap" id="db-snippet-wrap" style="display:none;">
             <pre class="db-showcase__code" id="db-config-code"><code></code></pre>
             <button class="db-showcase__code-copy" aria-label="Copy code" id="db-config-copy">
               <i data-lucide="copy" style="width:14px;height:14px;"></i>
             </button>
           </div>
-          <div class="db-showcase__stats">
-            <div class="db-showcase__stat">
-              <span class="db-showcase__stat-num">74</span>
-              <span class="db-showcase__stat-label">Components</span>
-            </div>
-            <div class="db-showcase__stat">
-              <span class="db-showcase__stat-num">20</span>
-              <span class="db-showcase__stat-label">Families</span>
-            </div>
-            <div class="db-showcase__stat">
-              <span class="db-showcase__stat-num">2</span>
-              <span class="db-showcase__stat-label">Files</span>
-            </div>
-          </div>
+          <button class="db-showcase__copy-cta" id="db-config-copy-cta">
+            <i data-lucide="clipboard-copy" style="width:16px;height:16px;"></i>
+            Copy to Clipboard
+          </button>
         </div>
       </div>
     </div>
@@ -2297,12 +2354,29 @@
         if (e.target.closest('[data-db-warmth], [data-db-noise]')) updateCode();
       });
 
-      // Copy button
-      if (copyBtn) {
-        copyBtn.addEventListener('click', function() {
-          navigator.clipboard.writeText(buildSnippet()).then(function() {
-            DAUB.toast({ type: 'success', title: 'Copied!', message: 'Snippet copied to clipboard.', duration: 2000 });
-          });
+      // Copy buttons (inline icon + CTA)
+      function doCopy() {
+        navigator.clipboard.writeText(buildSnippet()).then(function() {
+          DAUB.toast({ type: 'success', title: 'Copied!', message: 'Snippet copied to clipboard.', duration: 2000 });
+        });
+      }
+      if (copyBtn) copyBtn.addEventListener('click', doCopy);
+      var copyCta = document.getElementById('db-config-copy-cta');
+      if (copyCta) copyCta.addEventListener('click', doCopy);
+
+      // Snippet toggle
+      var snippetToggle = document.getElementById('db-toggle-snippet');
+      var snippetWrap = document.getElementById('db-snippet-wrap');
+      if (snippetToggle && snippetWrap) {
+        snippetToggle.addEventListener('click', function() {
+          var open = snippetWrap.style.display !== 'none';
+          snippetWrap.style.display = open ? 'none' : '';
+          snippetToggle.setAttribute('aria-expanded', String(!open));
+          snippetToggle.querySelector('i').setAttribute('data-lucide', open ? 'code' : 'code');
+          var label = open ? 'Show snippet' : 'Hide snippet';
+          snippetToggle.childNodes[snippetToggle.childNodes.length - 1].textContent = ' ' + label;
+          if (!open) updateCode();
+          if (typeof lucide !== 'undefined') lucide.createIcons();
         });
       }
 
