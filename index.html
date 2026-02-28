@@ -168,10 +168,8 @@
       flex-wrap: wrap;
     }
     .db-hero__install {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 16px;
+      display: block;
+      padding: 12px 40px 12px 16px;
       border-radius: var(--db-radius-2);
       background: var(--db-cream-dark);
       border: 1px solid var(--db-sand);
@@ -180,19 +178,22 @@
       color: var(--db-charcoal);
       max-width: calc(100vw - 32px);
       overflow-x: auto;
+      position: relative;
     }
     .db-hero__install code {
-      white-space: nowrap;
+      white-space: pre;
     }
     .db-hero__copy {
-      background: none;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--db-cream-dark);
       border: none;
       cursor: pointer;
       color: var(--db-warm-gray);
       padding: 4px;
       border-radius: var(--db-radius-1);
       transition: color var(--db-transition);
-      flex-shrink: 0;
     }
     .db-hero__copy:hover {
       color: var(--db-terracotta);
@@ -332,9 +333,11 @@
       background: var(--db-cream-dark);
       border-bottom: 1px solid var(--db-sand);
       padding: 8px 24px;
+      margin-bottom: 32px;
       overflow-x: auto;
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
+      text-align: center;
     }
     .db-comp-index a {
       display: inline-block;
@@ -439,21 +442,7 @@
         </div>
       </div>
       <div class="db-showcase__col">
-        <div class="db-field">
-          <label class="db-field__label" for="showcase-email">Email</label>
-          <input class="db-field__input" id="showcase-email" type="email" placeholder="you@example.com">
-        </div>
-        <label class="db-checkbox">
-          <input class="db-checkbox__input" type="checkbox" checked>
-          <span class="db-checkbox__box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </span>
-          Subscribe to updates
-        </label>
-        <div class="db-switch" aria-checked="true" aria-label="Dark mode">
-          <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
-          Dark mode
-        </div>
+        <div class="db-label" style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--db-warm-gray);margin-bottom:4px;">Try it live</div>
         <div class="db-slider" data-db-warmth>
           <div class="db-slider__label">
             <span>Warmth</span>
@@ -461,7 +450,15 @@
           </div>
           <input class="db-slider__input" type="range" min="0" max="100" value="75">
         </div>
-        <button class="db-btn db-btn--secondary" onclick="DAUB.toast({type:'success',title:'It works!',message:'This toast was triggered from a real DAUB component.'})">
+        <div class="db-switch" aria-checked="true" aria-label="Dark mode">
+          <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+          Dark mode
+        </div>
+        <button class="db-btn db-btn--primary" style="width:100%;" onclick="DAUB.cycleTheme()">
+          <i data-lucide="palette" style="width:16px;height:16px;"></i>
+          Cycle Theme
+        </button>
+        <button class="db-btn db-btn--secondary" style="width:100%;" onclick="DAUB.toast({type:'success',title:'It works!',message:'This toast was triggered from a real DAUB component.'})">
           <i data-lucide="sparkles" style="width:16px;height:16px;"></i>
           Show Toast
         </button>

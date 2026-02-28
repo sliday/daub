@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.0.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.0.1-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-64-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
@@ -234,6 +234,20 @@ Point your AI at `https://daub.dev/llms.txt` for complete component docs with HT
 No polyfills needed.
 
 ## Changelog
+
+### v2.0.1
+
+**Polish pass — 10 quality fixes.**
+
+- Install snippet: 2-line layout showing both CSS and JS files
+- Button active state: instant press feedback, no light-color blink
+- Calendar hover: selected day keeps terracotta gradient on hover
+- Theme switcher: nested border-radius (12px outer - 4px padding = 8px inner)
+- Theme switcher: mobile-friendly 8x1 horizontal toolbar on small screens
+- Warmth slider: 3x stronger visual effect (saturate + sepia range increased)
+- Showcase: replaced fake Email/Subscribe with "Try it live" demo controls
+- Component index: centered tabs with gap below sticky nav
+- Copy button: absolute positioning for consistent visibility on all screens
 
 ### v2.0.0
 

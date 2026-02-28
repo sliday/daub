@@ -91,7 +91,7 @@
 }
 
 body {
-  filter: saturate(calc(0.7 + 0.3 * var(--db-warmth))) sepia(calc(0.04 * var(--db-warmth)));
+  filter: saturate(calc(0.5 + 0.5 * var(--db-warmth))) sepia(calc(0.12 * var(--db-warmth)));
 }
 
 /* ------------------------------------------------------------
@@ -661,6 +661,7 @@ a:hover { color: var(--db-clay); }
   background: var(--db-accent-pressed);
   box-shadow: inset 0 2px 4px rgba(var(--db-shadow-rgb),0.25), inset 0 1px 2px rgba(var(--db-shadow-rgb),0.15);
   transform: translateY(1px);
+  transition: none;
 }
 
 /* Secondary */
@@ -680,6 +681,7 @@ a:hover { color: var(--db-clay); }
   background: var(--db-cream-dark);
   box-shadow: var(--db-shadow-inset);
   transform: translateY(1px);
+  transition: none;
 }
 
 /* Disabled */
@@ -3225,6 +3227,10 @@ textarea.db-field__input {
 }
 
 .db-calendar__day:hover { background: var(--db-cream-dark); }
+.db-calendar__day--selected:hover {
+  background: linear-gradient(180deg, var(--db-accent-hover) 0%, var(--db-terracotta) 100%);
+  color: var(--db-white);
+}
 
 .db-calendar__day--today {
   background: var(--db-cream-dark);
@@ -3780,7 +3786,7 @@ textarea.db-field__input {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--db-radius-1);
+  border-radius: var(--db-radius-2);
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: transparent;
   color: rgba(255, 255, 255, 0.7);
@@ -3809,4 +3815,23 @@ textarea.db-field__input {
 .db-theme-switcher__btn svg {
   width: 18px;
   height: 18px;
+}
+
+@media (max-width: 640px) {
+  .db-theme-switcher {
+    grid-template-columns: repeat(8, 1fr);
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: var(--db-space-3);
+    padding: 3px;
+    gap: 1px;
+  }
+  .db-theme-switcher__btn {
+    width: 28px;
+    height: 28px;
+  }
+  .db-theme-switcher__btn svg {
+    width: 15px;
+    height: 15px;
+  }
 }
