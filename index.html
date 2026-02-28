@@ -211,7 +211,7 @@
       padding: 0 24px;
     }
     .db-showcase__frame {
-      border-radius: 36px;
+      border-radius: calc(var(--db-radius-4) * 1.8);
       background: var(--db-white);
       border: 1px solid var(--db-sand);
       box-shadow: var(--db-shadow-3);
@@ -223,10 +223,83 @@
     .db-showcase__col {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 16px;
+      justify-content: center;
+    }
+    .db-showcase__eyebrow {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--db-terracotta);
+      font-weight: 600;
+      font-family: var(--db-font-ui);
+    }
+    .db-showcase__title {
+      font-family: var(--db-font-heading);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      line-height: 1.2;
+      margin: 0;
+    }
+    .db-showcase__desc {
+      font-size: 0.9375rem;
+      color: var(--db-warm-gray);
+      line-height: 1.6;
+      margin: 0;
+    }
+    .db-showcase__stats {
+      display: flex;
+      gap: 32px;
+      padding: 16px 0;
+    }
+    .db-showcase__stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .db-showcase__stat-num {
+      font-family: var(--db-font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      line-height: 1;
+    }
+    .db-showcase__stat-label {
+      font-size: 0.6875rem;
+      color: var(--db-warm-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 4px;
+    }
+    .db-showcase__panel {
+      background: var(--db-cream);
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-3);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+      justify-content: center;
+    }
+    .db-showcase__panel-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--db-warm-gray);
+      font-weight: 600;
+      font-family: var(--db-font-ui);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--db-sand);
+      margin-bottom: 4px;
     }
     @media (max-width: 720px) {
       .db-showcase__frame { grid-template-columns: 1fr; padding: 24px; }
+      .db-showcase__stats { gap: 24px; }
+      .db-showcase__title { font-size: 1.5rem; }
     }
 
     /* AI Section */
@@ -414,17 +487,22 @@
   <section class="db-showcase">
     <div class="db-showcase__frame">
       <div class="db-showcase__col">
-        <div class="db-card">
-          <div class="db-card__header">
-            <div class="db-avatar db-avatar--md">
-              <i data-lucide="palette" style="width:20px;height:20px;"></i>
-            </div>
-            <div>
-              <div class="db-card__title">Design System</div>
-              <div class="db-caption">v2.0 — 64 components</div>
-            </div>
+        <div class="db-showcase__eyebrow">Design System</div>
+        <h2 class="db-showcase__title">64 components. 8 themes. Zero ceremony.</h2>
+        <p class="db-showcase__desc">Every component is theme-aware. Switch themes and watch this entire page transform — surfaces, shadows, typography, everything.</p>
+        <div class="db-showcase__stats">
+          <div class="db-showcase__stat">
+            <span class="db-showcase__stat-num">64</span>
+            <span class="db-showcase__stat-label">Components</span>
           </div>
-          <p class="db-card__desc">Every component is theme-aware. Switch themes with the buttons in the corner and watch this entire page transform.</p>
+          <div class="db-showcase__stat">
+            <span class="db-showcase__stat-num">8</span>
+            <span class="db-showcase__stat-label">Themes</span>
+          </div>
+          <div class="db-showcase__stat">
+            <span class="db-showcase__stat-num">2</span>
+            <span class="db-showcase__stat-label">Files</span>
+          </div>
         </div>
         <div class="demo-row" style="margin-bottom:0;">
           <button class="db-btn db-btn--primary">
@@ -433,35 +511,41 @@
           </button>
           <button class="db-btn db-btn--secondary">Learn More</button>
         </div>
-        <div class="db-alert db-alert--info">
-          <span class="db-alert__icon"><i data-lucide="info" style="width:18px;height:18px;"></i></span>
-          <div class="db-alert__content">
-            <div class="db-alert__title">Zero build step</div>
-            <div>Just two files: daub.css + daub.js</div>
-          </div>
-        </div>
       </div>
       <div class="db-showcase__col">
-        <div class="db-label" style="font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--db-warm-gray);margin-bottom:4px;">Try it live</div>
-        <div class="db-slider" data-db-warmth>
-          <div class="db-slider__label">
-            <span>Warmth</span>
-            <span class="db-slider__value">75</span>
+        <div class="db-showcase__panel">
+          <div class="db-showcase__panel-header">
+            <i data-lucide="sliders-horizontal" style="width:14px;height:14px;"></i>
+            Try it live
           </div>
-          <input class="db-slider__input" type="range" min="0" max="100" value="75">
+          <div class="db-slider" data-db-warmth>
+            <div class="db-slider__label">
+              <span>Warmth</span>
+              <span class="db-slider__value">75</span>
+            </div>
+            <input class="db-slider__input" type="range" min="0" max="100" value="75">
+          </div>
+          <div class="db-slider" data-db-noise>
+            <div class="db-slider__label">
+              <span>Noise</span>
+              <span class="db-slider__value">30</span>
+            </div>
+            <input class="db-slider__input" type="range" min="0" max="100" value="30">
+          </div>
+          <div class="db-switch" aria-checked="true" aria-label="Dark mode">
+            <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+            Dark mode
+          </div>
+          <hr class="db-separator" style="margin:4px 0;">
+          <button class="db-btn db-btn--primary" style="width:100%;" onclick="DAUB.cycleTheme()">
+            <i data-lucide="palette" style="width:16px;height:16px;"></i>
+            Cycle Theme
+          </button>
+          <button class="db-btn db-btn--secondary" style="width:100%;" onclick="DAUB.toast({type:'success',title:'It works!',message:'This toast was triggered from a real DAUB component.'})">
+            <i data-lucide="sparkles" style="width:16px;height:16px;"></i>
+            Show Toast
+          </button>
         </div>
-        <div class="db-switch" aria-checked="true" aria-label="Dark mode">
-          <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
-          Dark mode
-        </div>
-        <button class="db-btn db-btn--primary" style="width:100%;" onclick="DAUB.cycleTheme()">
-          <i data-lucide="palette" style="width:16px;height:16px;"></i>
-          Cycle Theme
-        </button>
-        <button class="db-btn db-btn--secondary" style="width:100%;" onclick="DAUB.toast({type:'success',title:'It works!',message:'This toast was triggered from a real DAUB component.'})">
-          <i data-lucide="sparkles" style="width:16px;height:16px;"></i>
-          Show Toast
-        </button>
       </div>
     </div>
   </section>

@@ -479,6 +479,36 @@
   }
 
   /* ----------------------------------------------------------
+     Noise Control
+     CSS variable --db-noise (0-1) controls grain texture opacity.
+     Persists via localStorage.
+     ---------------------------------------------------------- */
+  function initNoise() {
+    var saved = localStorage.getItem('db-noise');
+    if (saved !== null) {
+      document.documentElement.style.setProperty('--db-noise', saved);
+    }
+
+    document.querySelectorAll('[data-db-noise]').forEach(function(slider) {
+      var input = slider.querySelector('.db-slider__input');
+      var valueEl = slider.querySelector('.db-slider__value');
+      if (!input) return;
+
+      if (saved !== null) {
+        input.value = Math.round(parseFloat(saved) * 100);
+        if (valueEl) valueEl.textContent = input.value;
+      }
+
+      input.addEventListener('input', function() {
+        var val = input.value / 100;
+        document.documentElement.style.setProperty('--db-noise', val);
+        localStorage.setItem('db-noise', val);
+        if (valueEl) valueEl.textContent = input.value;
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
      Nested Border Radius
      innerRadius = outerRadius - padding
      Auto-applies to elements with [data-db-radius] or known containers.
@@ -1091,6 +1121,7 @@
     initTooltips(root);
     initSliders(root);
     initWarmth();
+    initNoise();
     initCheckboxes(root);
     initRadios(root);
     initAccordions(root);

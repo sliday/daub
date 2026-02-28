@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.0.2-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.0.3-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-64-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
@@ -234,6 +234,19 @@ Point your AI at `https://daub.dev/llms.txt` for complete component docs with HT
 No polyfills needed.
 
 ## Changelog
+
+### v2.0.3
+
+**Noise texture, grunge corners & bug fixes.**
+
+- Noise texture slider: adjustable grain overlay via `--db-noise` CSS variable with persistence
+- Grunge themes: sharp corners (2-3px radius) for typewriter/rough aesthetic
+- Vertical stepper: new `db-stepper--vertical` modifier for timeline layouts
+- Primary button hover/active fix: `<a>` elements no longer lose white text on hover
+- Tooltip wrapping: long text wraps gracefully instead of clipping
+- Card overflow: `overflow: hidden` prevents child elements from bleeding
+- Card border-radius uses `--db-radius-4` variable (theme-aware)
+- Showcase panel radius uses CSS variables for theme adaptability
 
 ### v2.0.2
 
