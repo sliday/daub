@@ -2,6 +2,16 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.5.1
+
+**Configurator polish & cache-bust.**
+
+- Copy Config Code: full-width CTA button replaces small icon-only copy button for better visibility
+- Elegant configurator: compact snippet (smaller font, tighter padding, 140px max-height), simplified preview card (avatar + chips + buttons only)
+- CTA refinement: uppercase text, reduced spacing, 0.75rem font for cleaner look
+- Cache-bust: `?v=2.5.1` query strings on `daub.css` and `daub.js` to ensure browsers load latest per-element texture and family/scheme API
+- Cache-Control headers: CSS/JS now served with 5-minute `max-age` + `must-revalidate` to prevent stale assets
+
 ## v2.5.0
 
 **Skeuomorphism & configurator redesign. 74 components, 20 theme families.**
