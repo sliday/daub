@@ -13,7 +13,7 @@ allowed-tools:
 
 # DAUB UI — Component Library
 
-DAUB is a drop-in CSS + JS library with 64 considered components and 8 themes. Thoughtfully composed, no ceremony required.
+DAUB is a drop-in CSS + JS library with 67 considered components and 8 themes. Thoughtfully composed, no ceremony required.
 
 ## Include
 
@@ -49,11 +49,13 @@ Options: `light`, `dark`, `grunge-light`, `grunge-dark`, `parchment`, `ink`, `em
 - **Utilities**: `db-sr-only`, `db-text-muted`, `db-rounded-*`
 
 ### Controls
-- **Button**: `db-btn db-btn--primary` / `--secondary` / `--sm` / `--lg` / `--icon` / `--loading`
+- **Button**: `db-btn db-btn--primary` / `--secondary` / `--ghost` / `--sm` / `--lg` / `--icon` / `--loading`
+- **Icon Button Colors**: `db-btn--icon-danger` / `--icon-success` / `--icon-accent`
 - **Button Group**: `db-btn-group` — groups buttons with connected borders
 - **Field**: `db-field` > `db-field__label` + `db-field__input` + `db-field__helper`
 - **Input**: `db-input` / `--sm` / `--lg` / `--error` (standalone)
 - **Input Group**: `db-input-group` > `__addon` + `db-input` + `db-btn`
+- **Input Icon**: `db-input-icon` > `db-input-icon__icon` + `db-input` / `--right`
 - **Textarea**: `db-textarea` / `--error` (standalone)
 - **Checkbox**: `db-checkbox` > `db-checkbox__input` + `db-checkbox__box`
 - **Radio**: `db-radio-group` > `db-radio` > `db-radio__input` + `db-radio__circle`
@@ -75,7 +77,8 @@ Options: `light`, `dark`, `grunge-light`, `grunge-dark`, `parchment`, `ink`, `em
 - **Stepper**: `db-stepper` > `db-stepper__step--completed/--active/--pending`
 - **Nav Menu**: `db-nav-menu` > `db-nav-menu__item` / `--active`
 - **Menubar**: `db-menubar` > `db-menubar__item` + `db-menubar__dropdown`
-- **Sidebar**: `db-sidebar` > `db-sidebar__section` > `db-sidebar__item` / `--active`
+- **Sidebar**: `db-sidebar` > `db-sidebar__section` > `db-sidebar__item` / `--active` / `--collapsed` / `__toggle`
+- **Bottom Nav**: `db-bottom-nav` > `db-bottom-nav__item` / `--active` / `__badge` / `--always`
 
 ### Data Display
 - **Card**: `db-card` > `db-card__header` + `db-card__title` + `db-card__footer`
@@ -83,6 +86,7 @@ Options: `light`, `dark`, `grunge-light`, `grunge-dark`, `parchment`, `ink`, `em
 - **Data Table**: `db-data-table` — sortable, selectable rows
 - **List**: `db-list` > `db-list__item` > `db-list__title` + `db-list__secondary`
 - **Badge**: `db-badge` / `--new` / `--updated` / `--warning` / `--error`
+- **Chip**: `db-chip` / `--red` / `--green` / `--blue` / `--purple` / `--amber` / `--pink` / `__close`
 - **Avatar**: `db-avatar db-avatar--md` (sm=32px, md=40px, lg=56px)
 - **Calendar**: `db-calendar` — day selection, today highlight
 - **Chart**: `db-chart` — CSS-only bar chart

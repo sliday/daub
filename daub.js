@@ -24,6 +24,7 @@
     _userExplicitTheme = true;
     if (theme.indexOf('grunge') !== -1) loadGrungeFont();
     updateSwitcherUI();
+    requestAnimationFrame(function() { fixNestedRadius(); });
   }
 
   function cycleTheme() {
@@ -74,10 +75,9 @@
      Theme Switcher UI
      ---------------------------------------------------------- */
   function initThemeSwitcher() {
-    var switcher = document.querySelector('.db-theme-switcher');
-    if (!switcher) return;
-
-    switcher.querySelectorAll('.db-theme-switcher__btn').forEach(function(btn) {
+    document.querySelectorAll('.db-theme-switcher__btn, .db-showcase__theme-swatch').forEach(function(btn) {
+      if (btn._dbInit) return;
+      btn._dbInit = true;
       btn.addEventListener('click', function() {
         var theme = btn.getAttribute('data-theme');
         if (theme) setTheme(theme);
@@ -88,11 +88,8 @@
   }
 
   function updateSwitcherUI() {
-    var switcher = document.querySelector('.db-theme-switcher');
-    if (!switcher) return;
     var current = getTheme();
-
-    switcher.querySelectorAll('.db-theme-switcher__btn').forEach(function(btn) {
+    document.querySelectorAll('.db-theme-switcher__btn, .db-showcase__theme-swatch').forEach(function(btn) {
       var isActive = btn.getAttribute('data-theme') === current;
       btn.setAttribute('aria-pressed', String(isActive));
     });
@@ -483,6 +480,11 @@
      CSS variable --db-noise (0-1) controls grain texture opacity.
      Persists via localStorage.
      ---------------------------------------------------------- */
+  // Non-linear curve for noise slider: gives fine control in the low range
+  // slider 0→0, 25→0.09, 50→0.18, 75→0.49, 100→1.0
+  function noiseSliderToCSS(v) { return Math.pow(v / 100, 2.5); }
+  function noiseCSSToSlider(c) { return Math.round(Math.pow(c, 1 / 2.5) * 100); }
+
   function initNoise() {
     var saved = localStorage.getItem('db-noise');
     if (saved !== null) {
@@ -495,15 +497,40 @@
       if (!input) return;
 
       if (saved !== null) {
-        input.value = Math.round(parseFloat(saved) * 100);
-        if (valueEl) valueEl.textContent = input.value;
+        var sliderPos = noiseCSSToSlider(parseFloat(saved));
+        input.value = sliderPos;
+        if (valueEl) valueEl.textContent = sliderPos;
       }
 
       input.addEventListener('input', function() {
-        var val = input.value / 100;
-        document.documentElement.style.setProperty('--db-noise', val);
-        localStorage.setItem('db-noise', val);
+        var cssVal = noiseSliderToCSS(parseInt(input.value));
+        var rounded = Math.round(cssVal * 1000) / 1000;
+        document.documentElement.style.setProperty('--db-noise', rounded);
+        localStorage.setItem('db-noise', rounded);
         if (valueEl) valueEl.textContent = input.value;
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Texture Type Control
+     Sets data-db-texture on <html>: grain (default), paper, metal, wood, glass, none.
+     Persists via localStorage.
+     ---------------------------------------------------------- */
+  function initTexture() {
+    var saved = localStorage.getItem('db-texture') || 'grain';
+    document.documentElement.setAttribute('data-db-texture', saved);
+
+    document.querySelectorAll('[data-db-texture-btn]').forEach(function(btn) {
+      var type = btn.getAttribute('data-db-texture-btn');
+      if (type === saved) btn.setAttribute('aria-pressed', 'true');
+
+      btn.addEventListener('click', function() {
+        document.documentElement.setAttribute('data-db-texture', type);
+        localStorage.setItem('db-texture', type);
+        document.querySelectorAll('[data-db-texture-btn]').forEach(function(b) {
+          b.setAttribute('aria-pressed', b.getAttribute('data-db-texture-btn') === type ? 'true' : 'false');
+        });
       });
     });
   }
@@ -518,20 +545,29 @@
     var containers = root.querySelectorAll('.db-card, .db-modal, .db-sheet, .db-drawer, .db-alert-dialog, .db-showcase__frame, [data-db-radius]');
     containers.forEach(function(el) {
       var style = getComputedStyle(el);
-      var outerRadius = parseFloat(style.borderTopLeftRadius) || 0;
-      if (outerRadius < 2) return;
+      var outerR = parseFloat(style.borderTopLeftRadius) || 0;
+      if (outerR < 2) return;
       var padTop = parseFloat(style.paddingTop) || 0;
       var padLeft = parseFloat(style.paddingLeft) || 0;
-      var padding = Math.max(padTop, padLeft);
-      if (padding < 1) return;
-      var innerRadius = Math.max(0, outerRadius - padding);
-      Array.from(el.children).forEach(function(child) {
-        var childStyle = getComputedStyle(child);
-        var childRadius = parseFloat(childStyle.borderTopLeftRadius) || 0;
-        if (childRadius > 0 && childRadius !== innerRadius) {
-          child.style.borderRadius = innerRadius + 'px';
-        }
-      });
+      var gap = Math.max(padTop, padLeft);
+      if (gap < 1) return;
+      var innerR = Math.max(0, outerR - gap);
+      propagateRadius(el, innerR);
+    });
+  }
+
+  function propagateRadius(parent, innerR) {
+    Array.from(parent.children).forEach(function(child) {
+      if (child.nodeType !== 1) return;
+      var cs = getComputedStyle(child);
+      var hasBg = cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent';
+      var hasBorder = cs.borderTopWidth !== '0px' && cs.borderTopStyle !== 'none';
+      var hasRadius = (parseFloat(cs.borderTopLeftRadius) || 0) > 0;
+      if (hasBg || hasBorder || hasRadius) {
+        child.style.borderRadius = innerR + 'px';
+      } else {
+        propagateRadius(child, innerR);
+      }
     });
   }
 
@@ -1109,6 +1145,44 @@
   }
 
   /* ----------------------------------------------------------
+     Sidebar Toggle
+     ---------------------------------------------------------- */
+  function initSidebarToggle(root) {
+    root.querySelectorAll('.db-sidebar__toggle').forEach(function(btn) {
+      if (btn._dbSidebar) return;
+      btn._dbSidebar = true;
+      btn.addEventListener('click', function() {
+        var sidebar = btn.closest('.db-sidebar');
+        if (!sidebar) return;
+        sidebar.classList.toggle('db-sidebar--collapsed');
+      });
+    });
+  }
+
+  function toggleSidebar(el) {
+    if (typeof el === 'string') el = document.querySelector(el);
+    if (el) el.classList.toggle('db-sidebar--collapsed');
+  }
+
+  /* ----------------------------------------------------------
+     Chip Close
+     ---------------------------------------------------------- */
+  function initChipClose(root) {
+    root.querySelectorAll('.db-chip__close').forEach(function(btn) {
+      if (btn._dbChip) return;
+      btn._dbChip = true;
+      btn.addEventListener('click', function() {
+        var chip = btn.closest('.db-chip');
+        if (!chip) return;
+        chip.style.transition = 'opacity 150ms ease, transform 150ms ease';
+        chip.style.opacity = '0';
+        chip.style.transform = 'scale(0.8)';
+        setTimeout(function() { chip.remove(); }, 150);
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
      Init
      ---------------------------------------------------------- */
   function init(root) {
@@ -1122,6 +1196,7 @@
     initSliders(root);
     initWarmth();
     initNoise();
+    initTexture();
     initCheckboxes(root);
     initRadios(root);
     initAccordions(root);
@@ -1140,6 +1215,8 @@
     initCarousels(root);
     initOTP(root);
     initResizables(root);
+    initChipClose(root);
+    initSidebarToggle(root);
     initThemeSwitcher();
     fixNestedRadius(root);
   }
@@ -1170,7 +1247,16 @@
     setTheme: setTheme,
     cycleTheme: cycleTheme,
     THEMES: THEMES,
-    fixNestedRadius: fixNestedRadius
+    fixNestedRadius: fixNestedRadius,
+    setTexture: function(type) {
+      document.documentElement.setAttribute('data-db-texture', type);
+      localStorage.setItem('db-texture', type);
+    },
+    getTexture: function() {
+      return document.documentElement.getAttribute('data-db-texture') || 'grain';
+    },
+    TEXTURES: ['grain', 'paper', 'metal', 'wood', 'glass', 'none'],
+    toggleSidebar: toggleSidebar
   };
 
 })();

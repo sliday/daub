@@ -3,8 +3,8 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.0.3-3D3832.svg)](https://daub.dev)
-[![Components](https://img.shields.io/badge/components-64-D4C4A8.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.1.0-3D3832.svg)](https://daub.dev)
+[![Components](https://img.shields.io/badge/components-67-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
 
@@ -12,7 +12,7 @@
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 64 components, 8 themes, zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 67 components, 8 themes, zero build step. Thoughtfully composed, no ceremony required.
 
 ## Quick Start
 
@@ -47,7 +47,7 @@ DAUB uses system font stacks by default. For richer typography:
 <script src="https://unpkg.com/lucide@latest"></script>
 ```
 
-## Components (64)
+## Components (67)
 
 ### Foundations
 | Component | Class | Notes |
@@ -63,11 +63,12 @@ DAUB uses system font stacks by default. For richer typography:
 ### Controls
 | Component | Class | Notes |
 |-----------|-------|-------|
-| Button | `db-btn` | `--primary`, `--secondary`, `--sm`, `--lg`, `--icon`, `--loading` |
+| Button | `db-btn` | `--primary`, `--secondary`, `--ghost`, `--sm`, `--lg`, `--icon`, `--loading` |
 | Button Group | `db-btn-group` | Groups buttons with connected borders |
 | Text Field | `db-field` | `--error` |
 | Input | `db-input` | `--sm`, `--lg`, `--error`, standalone |
 | Input Group | `db-input-group` | Addons + inputs + buttons |
+| Input Icon | `db-input-icon` | `--right`, icon prefix/suffix |
 | Textarea | `db-textarea` | `--error`, standalone |
 | Checkbox | `db-checkbox` | |
 | Radio | `db-radio` | `db-radio-group` |
@@ -91,7 +92,8 @@ DAUB uses system font stacks by default. For richer typography:
 | Stepper | `db-stepper` | `--completed`, `--active`, `--pending` |
 | Nav Menu | `db-nav-menu` | `__item`, `--active` |
 | Menubar | `db-menubar` | `__item`, `__dropdown` |
-| Sidebar | `db-sidebar` | `__item`, `--active`, `__section` |
+| Sidebar | `db-sidebar` | `__item`, `--active`, `--collapsed`, `__toggle` |
+| Bottom Nav | `db-bottom-nav` | `__item`, `--active`, `__badge`, `--always` |
 
 ### Data Display
 | Component | Class | Notes |
@@ -106,6 +108,7 @@ DAUB uses system font stacks by default. For richer typography:
 | Chart | `db-chart` | CSS-only bar chart |
 | Carousel | `db-carousel` | `__track`, `__slide`, `__dots` |
 | Aspect Ratio | `db-aspect` | `--16-9`, `--4-3`, `--1-1`, `--21-9` |
+| Chip | `db-chip` | `--red`, `--green`, `--blue`, `--purple`, `--amber`, `--pink`, `__close` |
 | Scroll Area | `db-scroll-area` | `--horizontal`, `--vertical` |
 
 ### Feedback
@@ -204,6 +207,8 @@ Override CSS custom properties:
 
 Key variables: `--db-cream`, `--db-sand`, `--db-terracotta`, `--db-clay`, `--db-charcoal`, `--db-ink`, `--db-white`.
 
+Semantic tokens (theme-aware aliases): `--db-color-bg`, `--db-color-surface`, `--db-color-text`, `--db-color-text-secondary`, `--db-color-text-muted`, `--db-color-border`, `--db-color-accent`, `--db-color-success`, `--db-color-warning`, `--db-color-error`.
+
 ## Accessibility
 
 - WCAG AA colour contrast across all 8 themes
@@ -234,6 +239,19 @@ Point your AI at `https://daub.dev/llms.txt` for complete component docs with HT
 No polyfills needed.
 
 ## Changelog
+
+### v2.1.0
+
+**67 components. Semantic tokens, ghost buttons, input icons, chips, bottom nav, sidebar collapse.**
+
+- Semantic design tokens: theme-aware aliases (`--db-color-bg`, `--db-color-text`, `--db-color-accent`, etc.) that auto-resolve across all 8 themes
+- Ghost button: transparent `db-btn--ghost` variant for subtle actions
+- Icon button colors: `db-btn--icon-danger`, `--icon-success`, `--icon-accent` with tinted hover backgrounds
+- Input with icon: `db-input-icon` with prefix/suffix icon positions and `:focus-within` highlight
+- Chip/Tag: `db-chip` with 6 color presets and arbitrary HSL color support via `--db-chip-h/s/l`
+- Bottom navigation: `db-bottom-nav` for mobile apps with badge support and safe-area padding
+- Sidebar collapse: `db-sidebar--collapsed` mode with hover tooltips and `db-sidebar__toggle` button
+- `DAUB.toggleSidebar()` JS API for programmatic sidebar collapse
 
 ### v2.0.3
 

@@ -1,12 +1,12 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 2.0
+> Version: 2.1
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
 > Repo: https://github.com/sliday/daub
 > License: MIT
-> Components: 64
+> Components: 67
 > Themes: 8
 
 ## Quick Start
@@ -52,15 +52,18 @@ Theme characteristics:
 - ember: Copper glow, warm dark
 - bone: Stark white, monochrome
 
-## Components (64)
+## Components (67)
 
 ### 1. Button — `.db-btn`
-Variants: `db-btn--primary`, `db-btn--secondary`
+Variants: `db-btn--primary`, `db-btn--secondary`, `db-btn--ghost`
 States: `db-btn--loading`, `db-btn--disabled`, `db-btn--pressed`
 Sizes: `db-btn--sm`, `db-btn--lg`, `db-btn--icon`
+Icon colors: `db-btn--icon-danger`, `db-btn--icon-success`, `db-btn--icon-accent`
 ```html
 <button class="db-btn db-btn--primary">Save</button>
 <button class="db-btn db-btn--secondary db-btn--sm">Cancel</button>
+<button class="db-btn db-btn--ghost">Ghost</button>
+<button class="db-btn db-btn--icon db-btn--icon-danger" aria-label="Delete">×</button>
 <button class="db-btn db-btn--primary db-btn--loading" disabled>Saving</button>
 ```
 
@@ -428,13 +431,19 @@ Enhanced table with checkbox selection and sortable headers.
 ```
 
 ### 37. Sidebar — `.db-sidebar`
+Collapsible: add `db-sidebar--collapsed` class. Toggle: `db-sidebar__toggle` button.
+Items need `data-tooltip="Label"` for collapsed hover tooltips.
+JS: `DAUB.toggleSidebar(el)` or click `db-sidebar__toggle`.
 ```html
 <aside class="db-sidebar">
-  <div class="db-sidebar__header"><h3>App Name</h3></div>
+  <div class="db-sidebar__header">
+    <h3>App Name</h3>
+    <button class="db-sidebar__toggle" aria-label="Toggle sidebar">☰</button>
+  </div>
   <div class="db-sidebar__section">
     <div class="db-sidebar__label">Main</div>
-    <a class="db-sidebar__item db-sidebar__item--active" href="#">Dashboard</a>
-    <a class="db-sidebar__item" href="#">Settings</a>
+    <a class="db-sidebar__item db-sidebar__item--active" data-tooltip="Dashboard" href="#">Dashboard</a>
+    <a class="db-sidebar__item" data-tooltip="Settings" href="#">Settings</a>
   </div>
   <div class="db-sidebar__footer">Footer content</div>
 </aside>
@@ -729,6 +738,54 @@ Rounding: `db-rounded-0` through `db-rounded-full`.
 <hr class="db-divider">
 ```
 
+### 65. Input with Icon — `.db-input-icon`
+Positions: left (default), `db-input-icon--right`
+Icon highlights on `:focus-within`.
+```html
+<div class="db-input-icon">
+  <span class="db-input-icon__icon">🔍</span>
+  <input class="db-input" placeholder="Search...">
+</div>
+<div class="db-input-icon db-input-icon--right">
+  <input class="db-input" type="email" placeholder="Email">
+  <span class="db-input-icon__icon">✉</span>
+</div>
+```
+
+### 66. Bottom Navigation — `.db-bottom-nav`
+Fixed mobile bottom bar. Hidden on desktop unless `db-bottom-nav--always`.
+Badge: `db-bottom-nav__badge`. Safe-area aware via `env(safe-area-inset-bottom)`.
+```html
+<nav class="db-bottom-nav db-bottom-nav--always">
+  <a class="db-bottom-nav__item db-bottom-nav__item--active" href="#">
+    <svg>...</svg>
+    <span>Home</span>
+  </a>
+  <a class="db-bottom-nav__item" href="#">
+    <svg>...</svg>
+    <span>Search</span>
+    <span class="db-bottom-nav__badge">3</span>
+  </a>
+  <a class="db-bottom-nav__item" href="#">
+    <svg>...</svg>
+    <span>Profile</span>
+  </a>
+</nav>
+```
+
+### 67. Chip / Tag — `.db-chip`
+Presets: `db-chip--red`, `--green`, `--blue`, `--purple`, `--amber`, `--pink`.
+Arbitrary color: `style="--db-chip-h:195; --db-chip-s:70%; --db-chip-l:42%"`.
+Removable: add `db-chip__close` button (JS animated removal).
+```html
+<span class="db-chip db-chip--blue">Design</span>
+<span class="db-chip db-chip--green">
+  Active
+  <button class="db-chip__close">×</button>
+</span>
+<span class="db-chip" style="--db-chip-h:195; --db-chip-s:70%; --db-chip-l:42%">Custom</span>
+```
+
 ## JS API Reference
 
 ```js
@@ -744,6 +801,7 @@ DAUB.openDrawer(id)            // Open drawer
 DAUB.closeDrawer(id)           // Close drawer
 DAUB.openCommand(id)           // Open command palette
 DAUB.closeCommand(id)          // Close command palette
+DAUB.toggleSidebar(el)         // Toggle sidebar collapse
 DAUB.setTheme(name)            // Set theme
 DAUB.getTheme()                // Get current theme
 DAUB.cycleTheme()              // Cycle to next theme
@@ -755,6 +813,8 @@ DAUB.THEMES                    // Array of theme names
 Core: `--db-cream`, `--db-cream-dark`, `--db-sand`, `--db-terracotta`, `--db-clay`, `--db-warm-gray`, `--db-charcoal`, `--db-ink`, `--db-white`
 Accents: `--db-accent-dark`, `--db-accent-light`, `--db-accent-hover`, `--db-accent-pressed`
 Status: `--db-error`, `--db-success`, `--db-warning`
+Semantic (theme-aware aliases): `--db-color-bg`, `--db-color-bg-alt`, `--db-color-surface`, `--db-color-text`, `--db-color-text-secondary`, `--db-color-text-muted`, `--db-color-border`, `--db-color-accent`, `--db-color-accent-hover`, `--db-color-success`, `--db-color-warning`, `--db-color-error`, `--db-color-overlay`
+RGB channels: `--db-color-bg-rgb`, `--db-color-text-rgb`, `--db-color-surface-rgb`, `--db-color-accent-rgb`, `--db-color-border-rgb`
 Fonts: `--db-font-heading`, `--db-font-body`, `--db-font-ui`
 Spacing: `--db-space-0` through `--db-space-9`
 Radius: `--db-radius-0` through `--db-radius-4`, `--db-radius-full`
