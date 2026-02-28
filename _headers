@@ -1,2 +1,8 @@
 /daub.d.ts
   Content-Type: text/plain; charset=utf-8
+
+/daub.css
+  Cache-Control: public, max-age=300, must-revalidate
+
+/daub.js
+  Cache-Control: public, max-age=300, must-revalidate
