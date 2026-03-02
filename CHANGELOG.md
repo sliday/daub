@@ -2,6 +2,19 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.5.3
+
+**Letterpress fix, dark theme buttons, mobile layout audit.**
+
+- `--db-on-accent` variable: new CSS custom property ensures text/icons on accent backgrounds are always visible in dark themes (#fff) instead of invisible dark `--db-white`. Applied to: primary buttons, checkbox checkmarks, pagination, stepper, toggle, calendar, bottom-nav badges. Passes WCAG AA large text (3.08:1)
+- Letterpress text-shadow: reversed direction (`0 -1px 0`) for pushed-in emboss effect. Removed hardcoded dark theme emboss override — `--db-glow-rgb` now handles all themes dynamically. Boosted emboss opacity (0.4→0.5, 0.15→0.25)
+- Primary button emboss: uses `rgba(var(--db-shadow-rgb), 0.35)` — always dark shadow for always-light text, correct letterpress across all themes
+- Loading spinner fix: centered via `inset:0; margin:auto` instead of `transform:translate(-50%,-50%)` which conflicted with spin animation. Uses `--db-on-accent` for visibility. Text and text-shadow hidden during loading state
+- Hero "verb" label: uses `--db-terracotta` (theme-aware accent) instead of `--db-terracotta-text` for visibility in all dark themes
+- Mobile configurator (640px): theme picker tabs shrink, texture segment buttons wrap to 3×2 grid, reduced padding. Fixed popover `transform`/`left` offset leaking from mobile centering styles
+- Responsive demo containers: all hardcoded `max-width` >300px clamped with `min(XXXpx, 100%)` to prevent overflow at 375px
+- Cache-bust: `?v=2.5.3` query strings on CSS/JS assets
+
 ## v2.5.2
 
 **Temperature control, letterpress text & bug fixes.**

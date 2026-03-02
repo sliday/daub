@@ -114,8 +114,11 @@
   --db-color-border-rgb: var(--db-sand-rgb);
 
   /* Letterpress text shadows — light themes get a white highlight below, dark themes get a dark carve */
-  --db-text-emboss: 0 1px 0 rgba(var(--db-glow-rgb), 0.4);
-  --db-text-emboss-subtle: 0 1px 0 rgba(var(--db-glow-rgb), 0.15);
+  --db-text-emboss: 0 -1px 0 rgba(var(--db-glow-rgb), 0.5);
+  --db-text-emboss-subtle: 0 -1px 0 rgba(var(--db-glow-rgb), 0.25);
+
+  /* Text color for accent backgrounds — always light for readability on terracotta/accent */
+  --db-on-accent: var(--db-white);
 
   /* Per-element texture */
   --db-element-texture: none;
@@ -1656,7 +1659,7 @@ body::before {
   --db-overlay-bg: rgba(28,30,38,0.5);
 }
 
-/* Dark themes: letterpress inverts to carved shadow */
+/* Dark themes: --db-white inverts to dark, so accent-surface text must be bright for contrast */
 [data-theme="dark"],
 [data-theme="grunge-dark"],
 [data-theme="solarized-dark"],
@@ -1677,8 +1680,7 @@ body::before {
 [data-theme="shades-of-purple"],
 [data-theme="ayu-dark"],
 [data-theme="horizon"] {
-  --db-text-emboss: 0 1px 0 rgba(0,0,0,0.4);
-  --db-text-emboss-subtle: 0 1px 0 rgba(0,0,0,0.25);
+  --db-on-accent: #fff;
 }
 
 /* ------------------------------------------------------------
@@ -1988,16 +1990,16 @@ a:hover { color: var(--db-clay); }
 /* Primary */
 .db-btn--primary {
   background: linear-gradient(180deg, var(--db-terracotta) 0%, var(--db-accent-dark) 100%);
-  color: var(--db-white);
+  color: var(--db-on-accent);
   border: 1px solid rgba(var(--db-shadow-rgb),0.15);
   box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.15);
-  text-shadow: 0 1px 0 rgba(0,0,0,0.35);
+  text-shadow: 0 -1px 0 rgba(var(--db-shadow-rgb), 0.35);
 }
 
 .db-btn--primary:hover {
   background: linear-gradient(180deg, var(--db-accent-hover) 0%, var(--db-terracotta) 100%);
   box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.15);
-  color: var(--db-white);
+  color: var(--db-on-accent);
 }
 
 .db-btn--primary:active,
@@ -2006,7 +2008,7 @@ a:hover { color: var(--db-clay); }
   box-shadow: inset 0 2px 4px rgba(var(--db-shadow-rgb),0.25), inset 0 1px 2px rgba(var(--db-shadow-rgb),0.15);
   transform: translateY(1px);
   transition: none;
-  color: var(--db-white);
+  color: var(--db-on-accent);
 }
 
 /* Secondary */
@@ -2040,26 +2042,27 @@ a:hover { color: var(--db-clay); }
 
 /* Loading */
 .db-btn--loading {
-  color: transparent;
+  color: transparent !important;
+  text-shadow: none !important;
   pointer-events: none;
 }
 
 .db-btn--loading::after {
   content: '';
   position: absolute;
-  inset: auto;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(var(--db-glow-rgb),0.3);
-  border-top-color: var(--db-white);
+  margin: auto;
+  border: 2px solid color-mix(in srgb, var(--db-on-accent) 25%, transparent);
+  border-top-color: var(--db-on-accent);
   border-radius: 50%;
   animation: db-spin 600ms linear infinite;
   background-image: none;
   mix-blend-mode: normal;
   opacity: 1;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .db-btn--secondary.db-btn--loading::after {
@@ -2224,7 +2227,7 @@ textarea.db-field__input {
 .db-checkbox__box svg {
   width: 14px;
   height: 14px;
-  stroke: var(--db-white);
+  stroke: var(--db-on-accent);
   stroke-width: 2.5;
   opacity: 0;
   transform: scale(0.5);
@@ -2553,7 +2556,7 @@ textarea.db-field__input {
 
 .db-pagination__btn[aria-current="page"] {
   background: linear-gradient(180deg, var(--db-terracotta) 0%, var(--db-accent-dark) 100%);
-  color: var(--db-white);
+  color: var(--db-on-accent);
   border-color: var(--db-clay);
 }
 
@@ -2663,7 +2666,7 @@ textarea.db-field__input {
 .db-stepper__step--active .db-stepper__indicator {
   background: linear-gradient(180deg, var(--db-terracotta) 0%, var(--db-accent-dark) 100%);
   border: 2px solid var(--db-clay);
-  color: var(--db-white);
+  color: var(--db-on-accent);
   box-shadow: var(--db-shadow-2);
 }
 
@@ -2671,7 +2674,7 @@ textarea.db-field__input {
 .db-stepper__step--completed .db-stepper__indicator {
   background: var(--db-success);
   border: 2px solid var(--db-success-dark);
-  color: var(--db-white);
+  color: var(--db-on-accent);
   box-shadow: var(--db-shadow-1);
 }
 
@@ -3726,7 +3729,7 @@ textarea.db-field__input {
 
 .db-toggle[aria-pressed="true"],
 .db-toggle--active {
-  color: var(--db-white);
+  color: var(--db-on-accent);
   background: linear-gradient(180deg, var(--db-terracotta) 0%, var(--db-accent-dark) 100%);
   border-color: var(--db-clay);
   box-shadow: var(--db-shadow-1);
@@ -4842,7 +4845,7 @@ textarea.db-field__input {
   min-width: 16px; height: 16px;
   font-size: 0.5625rem; font-weight: 700;
   line-height: 16px; text-align: center;
-  color: var(--db-white);
+  color: var(--db-on-accent);
   background: var(--db-error);
   border-radius: var(--db-radius-full);
   padding: 0 4px;
@@ -4919,7 +4922,7 @@ textarea.db-field__input {
 .db-calendar__day:hover { background: var(--db-cream-dark); }
 .db-calendar__day--selected:hover {
   background: linear-gradient(180deg, var(--db-accent-hover) 0%, var(--db-terracotta) 100%);
-  color: var(--db-white);
+  color: var(--db-on-accent);
 }
 
 .db-calendar__day--today {
@@ -4931,7 +4934,7 @@ textarea.db-field__input {
 
 .db-calendar__day--selected {
   background: linear-gradient(180deg, var(--db-terracotta) 0%, var(--db-accent-dark) 100%);
-  color: var(--db-white);
+  color: var(--db-on-accent);
   font-weight: 600;
   box-shadow: var(--db-shadow-1);
 }

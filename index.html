@@ -42,7 +42,7 @@
     "codeRepository": "https://github.com/sliday/daub",
     "programmingLanguage": ["CSS", "JavaScript"],
     "license": "https://opensource.org/licenses/MIT",
-    "version": "2.5.2",
+    "version": "2.5.3",
     "dateModified": "2026-03-01",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
@@ -58,7 +58,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.5.2">
+  <link rel="stylesheet" href="daub.css?v=2.5.3">
 
   <style>
     /* Prevent horizontal overflow on mobile */
@@ -170,7 +170,7 @@
     .db-hero__definition .db-hero__pos {
       font-size: 0.75rem;
       font-style: italic;
-      color: var(--db-terracotta-text, var(--db-terracotta));
+      color: var(--db-terracotta);
       margin: 0 2px;
     }
     .db-hero__sub {
@@ -318,6 +318,7 @@
       position: static !important;
       display: flex !important;
       width: auto !important;
+      max-width: 100% !important;
       padding: 0 !important;
       background: none !important;
       backdrop-filter: none !important;
@@ -325,6 +326,11 @@
       border: none !important;
       box-shadow: none !important;
       animation: none !important;
+      min-width: 0 !important;
+      transform: none !important;
+      left: auto !important;
+      top: auto !important;
+      bottom: auto !important;
     }
     .db-theme-switcher__popover--inline .db-theme-switcher__tabs {
       background: var(--db-cream-dark);
@@ -425,6 +431,37 @@
     }
     @media (max-width: 720px) {
       .db-showcase__frame { grid-template-columns: 1fr; padding: 24px; }
+    }
+    @media (max-width: 640px) {
+      .db-showcase { padding: 0 12px; }
+      .db-showcase__frame { padding: 12px; gap: 12px; }
+      .db-showcase__panel { padding: 12px; gap: 10px; overflow: visible; }
+      .db-theme-switcher__popover--inline .db-theme-switcher__tabs {
+        font-size: 0.5rem;
+        gap: 1px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .db-theme-switcher__popover--inline .db-theme-switcher__tabs::-webkit-scrollbar { display: none; }
+      .db-theme-switcher__popover--inline .db-theme-switcher__tab {
+        padding: 3px 4px;
+        font-size: 0.5rem;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .db-theme-switcher__popover--inline .db-theme-switcher__category-items {
+        grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+      }
+      .db-showcase__segments {
+        flex-wrap: wrap;
+      }
+      .db-showcase__segments button {
+        flex: 0 0 calc(33.33% - 2px);
+        font-size: 0.625rem;
+        padding: 4px 6px;
+      }
     }
 
     /* AI Section */
@@ -881,7 +918,7 @@
         </div>
       </div>
 
-      <div class="db-mt-5" style="max-width:480px;">
+      <div class="db-mt-5" style="max-width:min(480px,100%);">
         <div class="db-field">
           <label class="db-field__label" for="demo-textarea">Message</label>
           <textarea class="db-field__input" id="demo-textarea" placeholder="Write your message here..."></textarea>
@@ -956,7 +993,7 @@
         </div>
       </div>
 
-      <div class="db-mt-5" style="max-width:400px;">
+      <div class="db-mt-5" style="max-width:min(400px,100%);">
         <div class="demo-label">Slider</div>
         <div class="db-slider">
           <div class="db-slider__label">
@@ -1172,7 +1209,7 @@
     <div class="demo-section">
       <h2 class="demo-section__title">4b. Data Display — List Items</h2>
 
-      <div class="db-surface--raised" style="max-width:480px;">
+      <div class="db-surface--raised" style="max-width:min(480px,100%);">
         <div class="db-list">
           <div class="db-list__item">
             <div class="db-avatar db-avatar--sm">
@@ -1382,7 +1419,7 @@
     <div class="demo-section">
       <h2 class="demo-section__title">5c. Feedback — Alert Banners</h2>
 
-      <div class="demo-col" style="max-width:560px;">
+      <div class="demo-col" style="max-width:min(560px,100%);">
         <div class="db-alert db-alert--warning">
           <span class="db-alert__icon"><i data-lucide="alert-triangle" style="width:20px;height:20px;"></i></span>
           <div class="db-alert__content">
@@ -1417,7 +1454,7 @@
     <div class="demo-section">
       <h2 class="demo-section__title">5d. Feedback — Empty State</h2>
 
-      <div class="db-surface--raised" style="max-width:480px;">
+      <div class="db-surface--raised" style="max-width:min(480px,100%);">
         <div class="db-empty">
           <div class="db-empty__icon">
             <i data-lucide="inbox" style="width:64px;height:64px;"></i>
@@ -1506,7 +1543,7 @@
       </div>
 
       <div class="demo-label db-mt-5">Input (standalone) + Input Group</div>
-      <div class="demo-grid" style="max-width:600px;">
+      <div class="demo-grid" style="max-width:min(600px,100%);">
         <input class="db-input" type="text" placeholder="Standalone input">
         <div class="db-input-group">
           <span class="db-input-group__addon">https://</span>
@@ -1519,7 +1556,7 @@
       </div>
 
       <div class="demo-label db-mt-5">Input with Icon</div>
-      <div class="demo-grid" style="max-width:600px;">
+      <div class="demo-grid" style="max-width:min(600px,100%);">
         <div class="db-input-icon">
           <span class="db-input-icon__icon"><i data-lucide="search" style="width:16px;height:16px;"></i></span>
           <input class="db-input" placeholder="Search...">
@@ -1580,7 +1617,7 @@
       <h2 class="demo-section__title">7. Overlays and Interactive</h2>
 
       <div class="demo-label">Accordion</div>
-      <div class="db-accordion" style="max-width:500px;">
+      <div class="db-accordion" style="max-width:min(500px,100%);">
         <div class="db-accordion__item db-accordion__item--open">
           <button class="db-accordion__trigger" aria-expanded="true">
             What makes DAUB different?
@@ -1611,7 +1648,7 @@
       </div>
 
       <div class="demo-label db-mt-5">Collapsible</div>
-      <div class="db-collapsible" style="max-width:500px;">
+      <div class="db-collapsible" style="max-width:min(500px,100%);">
         <button class="db-collapsible__trigger" aria-expanded="false">
           <svg class="db-collapsible__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
           Show advanced options
@@ -1808,7 +1845,7 @@
       </div>
 
       <div class="demo-label db-mt-5">CSS Bar Chart</div>
-      <div style="max-width:400px;">
+      <div style="max-width:min(400px,100%);">
         <div class="db-chart">
           <div class="db-chart__bar" style="height:40%;"></div>
           <div class="db-chart__bar" style="height:65%;"></div>
@@ -1824,7 +1861,7 @@
       </div>
 
       <div class="demo-label db-mt-5">Data Table</div>
-      <div class="db-scroll-area" style="max-width:600px;">
+      <div class="db-scroll-area" style="max-width:min(600px,100%);">
         <table class="db-data-table">
           <thead>
             <tr>
@@ -2041,7 +2078,7 @@
       <!-- Search Input -->
       <h3 class="db-h4 db-mb-4">Search Input</h3>
       <p class="db-body db-mb-4">Search box with auto-show clear button when input has text.</p>
-      <div style="max-width:400px;" class="db-mb-5">
+      <div style="max-width:min(400px,100%);" class="db-mb-5">
         <div class="db-search">
           <svg class="db-search__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <input class="db-input" type="search" placeholder="Search components...">
@@ -2062,7 +2099,7 @@
   </div><!-- /.db-container -->
 
   <!-- Closing CTA -->
-  <section style="max-width:640px; margin:0 auto; padding:64px 24px; text-align:center;">
+  <section style="max-width:min(640px,100%); margin:0 auto; padding:64px 24px; text-align:center;">
     <h2 style="font-family:var(--db-font-heading); font-size:clamp(1.5rem, 3vw, 2.25rem); font-weight:700; color:var(--db-ink); margin:0 0 16px; line-height:1.2;">Two files. Full surface.</h2>
     <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px;">74 components that respond to light, texture, and theme. Drop them in, ship something that feels considered — without the ceremony.</p>
     <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
@@ -2088,7 +2125,7 @@
   </div>
 
   <!-- JS -->
-  <script src="daub.js?v=2.5.2"></script>
+  <script src="daub.js?v=2.5.3"></script>
   <script>
     // Initialize Lucide icons
     lucide.createIcons();
