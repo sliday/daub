@@ -5660,6 +5660,11 @@ textarea.db-field__input {
     left: 50%;
     transform: translateX(-50%);
     bottom: calc(100% + 8px);
+    width: calc(100vw - 32px);
+    max-width: 320px;
+  }
+  .db-theme-switcher__popover[data-open] {
+    animation: db-popover-in-mobile 0.15s ease-out;
   }
   .db-theme-switcher__toggle {
     width: 36px;
@@ -5669,6 +5674,10 @@ textarea.db-field__input {
     width: 18px;
     height: 18px;
   }
+}
+@keyframes db-popover-in-mobile {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* ------------------------------------------------------------
