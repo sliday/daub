@@ -1,6 +1,6 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 2.6.0
+> Version: 2.7.0
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
@@ -80,7 +80,31 @@ Direct API: `DAUB.setTheme('ink')`, `DAUB.cycleTheme()`, `DAUB.getTheme()`
 Accent API: `DAUB.setAccent('#6B7C3E')`, `DAUB.resetAccent()`, `DAUB.getAccent()`
 Persisted in `localStorage` keys: `db-theme`, `db-scheme`, `db-accent`.
 
-## Components (67)
+## Quick Reference Skeletons
+
+Required HTML nesting for overlay and complex components. Use these as a starting template — each shows the minimum required structure.
+
+| Component | Skeleton | JS API |
+|-----------|----------|--------|
+| Modal | `db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer` | `DAUB.openModal('id')` / `closeModal('id')` |
+| Alert Dialog | `db-alert-dialog#id > __overlay + __panel > __title + __desc + __actions` | `DAUB.openAlertDialog('id')` |
+| Sheet | `db-sheet.--right#id > __overlay + __panel > __header + __body` | `DAUB.openSheet('id')` |
+| Drawer | `db-drawer#id > __overlay + __panel > __handle + __body` | `DAUB.openDrawer('id')` |
+| Command Palette | `db-command#id > __overlay + __panel > __input-wrap + __list` | `DAUB.openCommand('id')` |
+| Dropdown Menu | `db-dropdown > __trigger + __content > __item + __separator` | Auto-init on click |
+| Context Menu | `[data-context-menu='id'] + db-context-menu#id > __item + __separator` | Auto-init on right-click |
+| Tabs | `db-tabs > __list[role=tablist] > __tab + __panel` | Auto-init |
+| Accordion | `db-accordion > __item > __trigger + __content` | Auto-init |
+| Custom Select | `db-custom-select > __trigger + __dropdown > __option` | Auto-init |
+
+**Notes:**
+- `__` prefix means BEM child of the block (e.g., `__header` = `db-modal__header`)
+- Overlay wrappers (modal-overlay, alert-dialog, sheet, drawer, command) need an `id` for JS targeting
+- `db-modal-overlay` also needs `aria-hidden="true"` for accessibility
+- `db-field__input` goes on wrapper elements — not just `<input>` tags
+- Icons: DAUB pairs well with [Lucide](https://unpkg.com/lucide@latest) — all demos use Lucide icons
+
+## Components (76)
 
 ### 1. Button — `.db-btn`
 Variants: `db-btn--primary`, `db-btn--secondary`, `db-btn--ghost`

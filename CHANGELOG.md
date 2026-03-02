@@ -2,6 +2,25 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.7.0
+
+**Overlay skeletons, tooltip fix, dropdown alias, better warnings.**
+
+- SKILL.md: overlay section now shows required HTML nesting structure (skeletons) — AI agents no longer guess wrong on overlays
+- components.json: added `skeleton` field to all overlay/complex components for instant AI parsing
+- llms.txt: added Quick Reference Skeletons table after Quick Start for scannable overlay structures
+- CSS fix: `.db-tooltip` changed from `display: inline-block` to `inline-flex` — no longer breaks flex container sizing
+- CSS: `.db-dropdown__menu` added as alias for `.db-dropdown__content` (all rules, glass texture)
+- JS: `initDropdowns` now recognises `.db-dropdown__menu` as fallback for `.db-dropdown__content`
+- JS: new dev-mode warning for `.db-dropdown` missing `__content` child
+- JS: improved `.db-field` warning — now mentions input, textarea, select wrapper, or custom control
+- JS: new warning for `.db-tabs` tab/panel count mismatch
+- JS: new warnings for `.db-modal-overlay` missing `id` or `aria-hidden` attributes
+- JS: modal id check moved from `.db-modal` to `.db-modal-overlay` (JS API targets the overlay)
+- README: Lucide icons now "recommended" (was "not required"), version badge updated
+- SKILL.md: added Notes section covering `db-field__input` usage, Lucide pairing, overlay BEM naming
+- Cache-bust: `?v=2.7.0` query strings on CSS/JS assets
+
 ## v2.6.1
 
 **npm publish, CDN discoverability, metadata sync.**

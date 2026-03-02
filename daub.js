@@ -1210,6 +1210,8 @@
       drop._dbInit = true;
       var trigger = drop.querySelector('.db-dropdown__trigger');
       if (!trigger) return;
+      var content = drop.querySelector('.db-dropdown__content') || drop.querySelector('.db-dropdown__menu');
+      if (!content) return;
       trigger.addEventListener('click', function(e) {
         e.stopPropagation();
         var wasOpen = drop.classList.contains('db-dropdown--open');
@@ -1659,10 +1661,11 @@
     var isDev = host === 'localhost' || host === '127.0.0.1' || host === '[::1]' || document.documentElement.hasAttribute('data-db-debug');
     if (!isDev) return;
     var checks = [
-      ['.db-dropdown', '.db-dropdown__trigger', 'DAUB: .db-dropdown missing __trigger child'],
+      ['.db-dropdown', '.db-dropdown__trigger', 'DAUB: .db-dropdown missing __trigger child. Add a button.db-dropdown__trigger.'],
+      ['.db-dropdown', '.db-dropdown__content, .db-dropdown__menu', 'DAUB: .db-dropdown missing __content child. Add a div.db-dropdown__content with your menu items.'],
       ['.db-custom-select', '.db-custom-select__trigger', 'DAUB: .db-custom-select missing __trigger child'],
       ['.db-tabs', '.db-tabs__list', 'DAUB: .db-tabs missing __list child'],
-      ['.db-field', '.db-field__input', 'DAUB: .db-field missing __input child'],
+      ['.db-field', '.db-field__input', 'DAUB: .db-field missing child with class "db-field__input". Add db-field__input to your input, textarea, select wrapper, or custom control element.'],
       ['.db-slider', '.db-slider__input', 'DAUB: .db-slider missing __input child'],
       ['.db-accordion', '.db-accordion__item', 'DAUB: .db-accordion has no __item children'],
       ['.db-checkbox', '.db-checkbox__input', 'DAUB: .db-checkbox missing __input child'],
@@ -1673,8 +1676,15 @@
         if (!el.querySelector(c[1])) console.warn(c[2], el);
       });
     });
-    root.querySelectorAll('.db-modal').forEach(function(el) {
-      if (!el.id) console.warn('DAUB: .db-modal missing id attribute', el);
+    root.querySelectorAll('.db-modal-overlay').forEach(function(el) {
+      if (!el.id) console.warn('DAUB: .db-modal-overlay missing id attribute — JS API needs an id to target this modal.', el);
+      if (!el.hasAttribute('aria-hidden')) console.warn('DAUB: .db-modal-overlay should have aria-hidden="true" for accessibility.', el);
+    });
+    root.querySelectorAll('.db-tabs').forEach(function(tabs) {
+      var tabCount = tabs.querySelectorAll('.db-tabs__tab').length;
+      var panelCount = tabs.querySelectorAll('.db-tabs__panel').length;
+      if (panelCount > 0 && tabCount !== panelCount)
+        console.warn('DAUB: .db-tabs has ' + tabCount + ' tabs but ' + panelCount + ' panels — counts should match.', tabs);
     });
   }
 

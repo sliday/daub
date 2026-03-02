@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.6.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.7.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -51,7 +51,7 @@ DAUB uses system font stacks by default. For richer typography:
   }
 </style>
 
-<!-- Lucide Icons (used in demos, not required) -->
+<!-- Lucide Icons (recommended — used in all demos) -->
 <script src="https://unpkg.com/lucide@latest"></script>
 ```
 
@@ -369,7 +369,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v2.6.0** — Dashboard primitives, table utilities, getColor helper. 76 components, 20 theme families.
+**Latest: v2.7.0** — Overlay skeletons, tooltip fix, dropdown alias, better warnings. 76 components, 20 theme families.
 
 ## License
 

@@ -125,16 +125,22 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Empty State**: `db-empty` > `db-empty__icon` + `db-empty__title` + `db-empty__message`
 - **Tooltip**: `db-tooltip` / `--top` / `--bottom` / `--left` / `--right`
 
-### Overlays
-- **Modal**: `DAUB.openModal('id')` / `DAUB.closeModal('id')` / `data-db-modal-trigger="id"`
-- **Alert Dialog**: `DAUB.openAlertDialog('id')` / `DAUB.closeAlertDialog(el)`
-- **Sheet**: `db-sheet` / `--right` / `--left` / `--top` / `--bottom`
-- **Drawer**: `db-drawer` — mobile-friendly bottom panel
+### Overlays (always use JS API — handles backdrop, focus trap, scroll lock)
+- **Modal**: `db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer`
+  JS: `DAUB.openModal('id')` / `DAUB.closeModal('id')` / `data-db-modal-trigger="id"`
+- **Alert Dialog**: `db-alert-dialog#id > __overlay + __panel > __title + __desc + __actions`
+  JS: `DAUB.openAlertDialog('id')` / `data-action="cancel"` auto-closes
+- **Sheet**: `db-sheet.db-sheet--right#id > __overlay + __panel > __header + __body`
+  JS: `DAUB.openSheet('id')` — modifiers: `--right` / `--left` / `--top` / `--bottom`
+- **Drawer**: `db-drawer#id > __overlay + __panel > __handle + __body`
+  JS: `DAUB.openDrawer('id')` — mobile-friendly bottom panel
+- **Command Palette**: `db-command#id > __overlay + __panel > __input-wrap + __list`
+  JS: `DAUB.openCommand('id')` — Ctrl+K / Cmd+K shortcut
+- **Dropdown Menu**: `db-dropdown > __trigger + __content > __item + __separator + __label`
+  JS auto-initializes click toggle. `__content--right` for right-aligned. `__menu` is an alias for `__content`.
+- **Context Menu**: `db-context-menu` — right-click, `data-context-menu`
 - **Popover**: `db-popover` / `--top` / `--bottom` / `--left` / `--right`
 - **Hover Card**: `db-hover-card` — CSS hover trigger
-- **Dropdown Menu**: `db-dropdown` > `__item` + `__separator` + `__label`
-- **Context Menu**: `db-context-menu` — right-click, `data-context-menu`
-- **Command Palette**: `DAUB.openCommand('id')` — Ctrl+K shortcut
 
 ### Layout & Utility
 - **Accordion**: `db-accordion` — single/multi mode via `data-multi`
@@ -151,6 +157,12 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 ### JS Helpers
 - **getColor**: `DAUB.getColor('primary')` — returns current theme's CSS variable value as hex
 - **Theme Events**: `document.addEventListener('daub:theme-change', e => e.detail.theme)`
+
+## Notes
+
+- **Field inputs**: `db-field__input` goes on the wrapper element (not just `<input>`) — applies to input, textarea, select wrappers, or custom control elements.
+- **Icons**: DAUB pairs well with [Lucide](https://lucide.dev) icons (`<script src="https://unpkg.com/lucide@latest"></script>`). All demos use Lucide.
+- **Overlay BEM**: Overlay components use hyphenated block names (e.g. `db-modal-overlay`, `db-alert-dialog`) with `__` children (e.g. `__panel`, `__body`). The outer wrapper gets the `id` and `aria-hidden` attributes that JS targets.
 
 ## Full Docs
 

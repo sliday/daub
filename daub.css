@@ -230,6 +230,7 @@ body::before {
 /* Glass: floating — popovers, dropdowns, hover cards, toasts */
 [data-db-texture="glass"] .db-popover__content,
 [data-db-texture="glass"] .db-dropdown__content,
+[data-db-texture="glass"] .db-dropdown__menu,
 [data-db-texture="glass"] .db-hover-card__content,
 [data-db-texture="glass"] .db-context-menu,
 [data-db-texture="glass"] .db-toast {
@@ -4194,7 +4195,8 @@ textarea.db-field__input {
   display: inline-block;
 }
 
-.db-dropdown__content {
+.db-dropdown__content,
+.db-dropdown__menu {
   display: none;
   position: absolute;
   z-index: 1040;
@@ -4208,8 +4210,10 @@ textarea.db-field__input {
   box-shadow: var(--db-shadow-2);
 }
 
-.db-dropdown--open .db-dropdown__content { display: block; }
-.db-dropdown__content--right { left: auto; right: 0; }
+.db-dropdown--open .db-dropdown__content,
+.db-dropdown--open .db-dropdown__menu { display: block; }
+.db-dropdown__content--right,
+.db-dropdown__menu--right { left: auto; right: 0; }
 
 .db-dropdown__item {
   display: flex;
@@ -4294,7 +4298,7 @@ textarea.db-field__input {
    ------------------------------------------------------------ */
 .db-tooltip {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
 }
 
 .db-tooltip__content {
