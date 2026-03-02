@@ -972,9 +972,71 @@
     </div>
 
     <div class="db-use-ai__example">
-      <p class="db-use-ai__example-label">Minimal Example</p>
-      <p class="db-use-ai__example-title">Analytics Dashboard in ~40 Lines</p>
-      <div style="position:relative">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div>
+          <p class="db-use-ai__example-label">Minimal Example</p>
+          <p class="db-use-ai__example-title" style="margin-bottom:0">Analytics Dashboard in ~40 Lines</p>
+        </div>
+        <div class="db-tabs" style="margin:0;">
+          <div class="db-tabs__list" role="tablist" id="example-tabs">
+            <button class="db-tabs__tab" role="tab" aria-selected="true" onclick="dbExampleTab('preview',this)">Preview</button>
+            <button class="db-tabs__tab" role="tab" aria-selected="false" onclick="dbExampleTab('code',this)">Code</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview tab -->
+      <div id="example-preview" class="db-surface--raised" style="border-radius:var(--db-radius-2);overflow:hidden;">
+        <nav class="db-navbar">
+          <a class="db-navbar__brand" href="#">Acme</a>
+          <div class="db-navbar__spacer"></div>
+          <div class="db-navbar__actions">
+            <div class="db-avatar db-avatar--sm">JD</div>
+          </div>
+        </nav>
+        <main class="db-container" style="padding:var(--db-space-6) var(--db-space-4)">
+          <div class="db-grid db-grid--3 db-gap-4 db-mb-5">
+            <div class="db-card" style="padding:var(--db-space-4)">
+              <div class="db-stat">
+                <span class="db-stat__label">Revenue</span>
+                <span class="db-stat__value">$12,450</span>
+                <span class="db-stat__change db-stat__change--up">&uarr; 12.5%</span>
+              </div>
+            </div>
+            <div class="db-card" style="padding:var(--db-space-4)">
+              <div class="db-stat">
+                <span class="db-stat__label">Users</span>
+                <span class="db-stat__value">1,284</span>
+                <span class="db-stat__change db-stat__change--up">&uarr; 4.3%</span>
+              </div>
+            </div>
+            <div class="db-card" style="padding:var(--db-space-4)">
+              <div class="db-stat">
+                <span class="db-stat__label">Orders</span>
+                <span class="db-stat__value">342</span>
+                <span class="db-stat__change db-stat__change--down">&darr; 2.1%</span>
+              </div>
+            </div>
+          </div>
+          <div class="db-card">
+            <div class="db-card__header">
+              <h3 class="db-card__title">Recent Orders</h3>
+              <span class="db-badge">Today</span>
+            </div>
+            <table class="db-table">
+              <thead><tr><th>Customer</th><th class="db-numeric">Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Alice Park</td><td class="db-numeric">$120</td><td><span class="db-badge db-badge--new">Paid</span></td></tr>
+                <tr><td>Bob Chen</td><td class="db-numeric">$85</td><td><span class="db-badge db-badge--warning">Pending</span></td></tr>
+                <tr><td>Carol Davis</td><td class="db-numeric">$240</td><td><span class="db-badge db-badge--new">Paid</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+
+      <!-- Code tab -->
+      <div id="example-code" style="display:none;position:relative">
         <button class="db-btn db-btn--sm db-btn--ghost" style="position:absolute;top:8px;right:8px;color:var(--db-cream);z-index:1" onclick="var b=this;navigator.clipboard.writeText(b.closest('.db-use-ai__example').querySelector('.db-use-ai__code').textContent).then(function(){dbCopyFeedback(b,'Copy Code')})">
           <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Code
         </button>
@@ -2366,6 +2428,15 @@
   <script>
     // Initialize Lucide icons
     lucide.createIcons();
+
+    // Example tab switcher (Preview / Code)
+    function dbExampleTab(tab, btn) {
+      document.getElementById('example-preview').style.display = tab === 'preview' ? 'block' : 'none';
+      document.getElementById('example-code').style.display = tab === 'code' ? 'block' : 'none';
+      var tabs = btn.parentElement.querySelectorAll('[role="tab"]');
+      for (var i = 0; i < tabs.length; i++) tabs[i].setAttribute('aria-selected', 'false');
+      btn.setAttribute('aria-selected', 'true');
+    }
 
     // Copy button feedback: spinner → "Copied!" → restore
     function dbCopyFeedback(btn, original) {
