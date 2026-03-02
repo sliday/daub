@@ -25,8 +25,8 @@ A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 76 c
 
 Alternative CDNs (npm package: `daub-ui`):
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.css">
-<script src="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.css">
+<script src="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js"></script>
 ```
 
 ### Download
