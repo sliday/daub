@@ -3,6 +3,17 @@
 
 /daub.css
   Cache-Control: public, max-age=300, must-revalidate
+  Access-Control-Allow-Origin: *
 
 /daub.js
   Cache-Control: public, max-age=300, must-revalidate
+  Access-Control-Allow-Origin: *
+
+/components.json
+  Access-Control-Allow-Origin: *
+
+/llms.txt
+  Access-Control-Allow-Origin: *
+
+/.well-known/ai-plugin.json
+  Access-Control-Allow-Origin: *

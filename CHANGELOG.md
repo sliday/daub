@@ -2,6 +2,20 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.6.1
+
+**npm publish, CDN discoverability, metadata sync.**
+
+- npm: published `daub-ui@2.6.0` to npm — enables jsdelivr and unpkg CDN delivery
+- package.json: synced to v2.6.0 (was stuck at v2.0.3), added `types`, `jsdelivr`, `unpkg` fields, expanded `keywords` and `files`
+- CDN: added jsdelivr/unpkg install snippets to README.md and llms.txt Quick Start
+- CORS: `_headers` now serves `Access-Control-Allow-Origin: *` on CSS, JS, JSON, and llms.txt for cross-origin CDN consumers
+- Copy buttons: replaced custom CSS with DAUB's own `db-btn--ghost` and `db-btn--secondary` — readable on all themes
+- ai-plugin.json: fixed component count 74 → 76 in `description_for_model`
+- README: fixed component count 74 → 76
+- index.html: added `<link rel="alternate" type="text/plain" href="/llms.txt">` for LLM discovery
+- Cache-bust: `?v=2.6.1` query strings on CSS/JS assets
+
 ## v2.6.0
 
 **Dashboard primitives, table utilities, getColor helper.**

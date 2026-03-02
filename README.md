@@ -23,6 +23,12 @@ A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 76 c
 <script src="https://daub.dev/daub.js"></script>
 ```
 
+Alternative CDNs (npm package: `daub-ui`):
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.css">
+<script src="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.js"></script>
+```
+
 ### Download
 
 ```bash
@@ -47,7 +53,7 @@ DAUB uses system font stacks by default. For richer typography:
 <script src="https://unpkg.com/lucide@latest"></script>
 ```
 
-## Components (74)
+## Components (76)
 
 ### Foundations
 | Component | Class | Notes |

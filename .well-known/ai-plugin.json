@@ -3,7 +3,7 @@
   "name_for_human": "DAUB UI",
   "name_for_model": "daub",
   "description_for_human": "A considered CSS component library with 76 components and 20 theme families (40 variants). Thoughtfully composed, no ceremony required.",
-  "description_for_model": "DAUB is a CSS UI kit with 74 considered components and 20 theme families in 4 categories (originals, classics, modern, trending) with 40 light/dark variants. Families: default, grunge, solarized, ink, ember, bone, dracula, nord, one-dark, monokai, gruvbox, night-owl, github, catppuccin, tokyo-night, material, synthwave, shades-of-purple, ayu, horizon. Use db-* class prefix. Include daub.css and daub.js via CDN from https://daub.dev. Full component docs at https://daub.dev/llms.txt",
+  "description_for_model": "DAUB is a CSS UI kit with 76 considered components and 20 theme families in 4 categories (originals, classics, modern, trending) with 40 light/dark variants. Families: default, grunge, solarized, ink, ember, bone, dracula, nord, one-dark, monokai, gruvbox, night-owl, github, catppuccin, tokyo-night, material, synthwave, shades-of-purple, ayu, horizon. Use db-* class prefix. Include daub.css and daub.js via CDN from https://daub.dev. Full component docs at https://daub.dev/llms.txt",
   "auth": { "type": "none" },
   "api": { "type": "openapi", "url": "https://daub.dev/llms.txt" }
 }

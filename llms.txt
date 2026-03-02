@@ -18,6 +18,12 @@
 <script src="https://daub.dev/daub.js"></script>
 ```
 
+Alternative CDNs (npm package: daub-ui):
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.css">
+<script src="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.js"></script>
+```
+
 Fonts: System font stacks by default. Optional Google Fonts:
 ```html
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300..900&family=Source+Serif+4:wght@300..900&family=Cabin:wght@400;500;600;700&display=swap" rel="stylesheet">
