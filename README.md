@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.5.4-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.5.5-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-74-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
@@ -269,6 +269,54 @@ DAUB speaks both human and machine:
 
 Point your AI at `https://daub.dev/llms.txt` for complete component docs with HTML snippets, or fetch `https://daub.dev/components.json` for structured data.
 
+## Use with AI
+
+Drop these prompts into Claude, ChatGPT, Cursor, or any AI assistant. Each produces a complete, working HTML page. Add "Fetch docs from daub.dev/llms.txt first" for best results.
+
+| Prompt | What You Get |
+|--------|-------------|
+| "Build an analytics dashboard using DAUB with sidebar, stat cards, sortable data table, and bar chart. Dark theme." | Full dashboard with `db-sidebar`, `db-card`, `db-data-table`, `db-chart` |
+| "Create a user settings page with DAUB. Profile section with avatar, notification switches, danger zone with alert dialog. Nord theme." | Settings form with `db-field`, `db-switch`, `db-alert-dialog` |
+| "Build a responsive product catalog with DAUB. Media cards in a grid, chip filters, pagination, navbar with search. Catppuccin theme." | E-commerce layout with `db-card--media`, `db-chip`, `db-pagination`, `db-search` |
+| "Create a Kanban task board using DAUB. Three columns, priority badges, assignee avatars, command palette. Tokyo Night theme." | Project board with `db-grid--3`, `db-badge`, `db-avatar`, `db-command` |
+| "Build a blog reading page with DAUB. Prose typography, breadcrumbs, author card, table of contents sidebar. GitHub theme." | Article layout with `db-prose`, `db-breadcrumbs`, `db-nav-menu` |
+| "Create a multi-step onboarding form with DAUB's stepper. Account info, preferences, confirmation. Ember theme." | Wizard flow with `db-stepper`, `db-field`, `db-switch`, `db-card` |
+
+### Minimal Complete Page
+
+```html
+<!DOCTYPE html>
+<html data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://daub.dev/daub.css">
+</head>
+<body>
+  <main class="db-container db-container--narrow" style="padding-top:var(--db-space-6)">
+    <h1 class="db-h2">System Status</h1>
+    <div class="db-card db-mb-4">
+      <div class="db-card__header">
+        <h3 class="db-card__title">API</h3>
+        <span class="db-badge db-badge--new">Operational</span>
+      </div>
+      <div class="db-progress"><div class="db-progress__bar" style="--db-progress:99.9%"></div></div>
+    </div>
+    <div class="db-alert db-alert--warning">
+      <div class="db-alert__content">
+        <div class="db-alert__title">Scheduled Maintenance</div>
+        <p>Database migration Sunday 2am UTC.</p>
+      </div>
+    </div>
+  </main>
+  <div class="db-theme-switcher"></div>
+  <script src="https://daub.dev/daub.js"></script>
+</body>
+</html>
+```
+
+Save as `.html`, open in a browser. No build step.
+
 ## Browser Support
 
 - Chrome/Edge 90+
@@ -282,7 +330,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v2.5.4** — Unified demo page header, version sync, theme switcher auto-init. 74 components, 20 theme families.
+**Latest: v2.5.5** — Sample prompts section, AI use cases on website and README. 74 components, 20 theme families.
 
 ## License
 

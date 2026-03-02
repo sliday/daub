@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.5.5
+
+**Sample prompts & AI use cases.**
+
+- Website: new "Copy. Paste. Ship." section with 6 sample prompts (dashboard, settings, catalog, task board, blog, onboarding) — each with copy-to-clipboard button
+- Website: minimal 25-line code example showing a complete DAUB page
+- README: "Use with AI" section with prompt table and minimal code example
+- Cache-bust: `?v=2.5.5` query strings on CSS/JS assets
+
 ## v2.5.4
 
 **Unified demo page header & version sync.**
