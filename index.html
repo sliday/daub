@@ -56,7 +56,7 @@
   </script>
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
   <!-- DAUB -->
   <link rel="stylesheet" href="daub.css?v=2.6.1">
@@ -977,11 +977,9 @@
           <p class="db-use-ai__example-label">Minimal Example</p>
           <p class="db-use-ai__example-title" style="margin-bottom:0">Analytics Dashboard in ~40 Lines</p>
         </div>
-        <div class="db-tabs" style="margin:0;">
-          <div class="db-tabs__list" role="tablist" id="example-tabs" style="border-radius:var(--db-radius-2) var(--db-radius-2) 0 0;overflow:hidden;">
-            <button class="db-tabs__tab" role="tab" aria-selected="true" onclick="dbExampleTab('preview',this)">Preview</button>
-            <button class="db-tabs__tab" role="tab" aria-selected="false" onclick="dbExampleTab('code',this)">Code</button>
-          </div>
+        <div class="db-toggle-group" id="example-tabs">
+            <button class="db-toggle" aria-pressed="true" onclick="dbExampleTab('preview',this)">Preview</button>
+            <button class="db-toggle" aria-pressed="false" onclick="dbExampleTab('code',this)">Code</button>
         </div>
       </div>
 
@@ -2433,9 +2431,9 @@
     function dbExampleTab(tab, btn) {
       document.getElementById('example-preview').style.display = tab === 'preview' ? 'block' : 'none';
       document.getElementById('example-code').style.display = tab === 'code' ? 'block' : 'none';
-      var tabs = btn.parentElement.querySelectorAll('[role="tab"]');
-      for (var i = 0; i < tabs.length; i++) tabs[i].setAttribute('aria-selected', 'false');
-      btn.setAttribute('aria-selected', 'true');
+      var toggles = btn.parentElement.querySelectorAll('.db-toggle');
+      for (var i = 0; i < toggles.length; i++) toggles[i].setAttribute('aria-pressed', 'false');
+      btn.setAttribute('aria-pressed', 'true');
     }
 
     // Copy button feedback: spinner → "Copied!" → restore
@@ -2501,11 +2499,16 @@
           lines.push('</style>');
         }
 
+        var VALID_TEXTURES = ['grain','paper','metal','wood','glass','none'];
+        var VALID_FAMILIES = Object.keys(DAUB.THEME_FAMILIES || {});
+        var VALID_SCHEMES  = ['auto','light','dark'];
+        var VALID_HEX      = /^#[0-9a-fA-F]{6}$/;
+
         var jsLines = [];
-        if (s.texture !== DEFAULTS.texture) jsLines.push("DAUB.setTexture('" + s.texture + "');");
-        if (s.family !== DEFAULTS.family) jsLines.push("DAUB.setFamily('" + s.family + "');");
-        if (s.scheme !== DEFAULTS.scheme) jsLines.push("DAUB.setScheme('" + s.scheme + "');");
-        if (s.accent) jsLines.push("DAUB.setAccent('" + s.accent + "');");
+        if (s.texture !== DEFAULTS.texture && VALID_TEXTURES.indexOf(s.texture) !== -1) jsLines.push("DAUB.setTexture('" + s.texture + "');");
+        if (s.family !== DEFAULTS.family && VALID_FAMILIES.indexOf(s.family) !== -1) jsLines.push("DAUB.setFamily('" + s.family + "');");
+        if (s.scheme !== DEFAULTS.scheme && VALID_SCHEMES.indexOf(s.scheme) !== -1) jsLines.push("DAUB.setScheme('" + s.scheme + "');");
+        if (s.accent && VALID_HEX.test(s.accent)) jsLines.push("DAUB.setAccent('" + s.accent + "');");
 
         if (s.scheme === 'auto' && s.family === DEFAULTS.family && !s.accent && s.texture === DEFAULTS.texture) {
           // Nothing extra needed — default behavior

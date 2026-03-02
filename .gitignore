@@ -6,3 +6,4 @@ node_modules/
 *.jpg
 .playwright-mcp/
 .claude/
+.npmrc
