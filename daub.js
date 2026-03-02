@@ -959,9 +959,12 @@
     });
   }
 
+  var RADIUS_SKIP = /\bdb-(btn|input|field|textarea|switch|slider|checkbox|radio|toggle|badge|avatar|alert|chip|kbd|spinner|select|custom-select|search|otp|progress|pagination|stepper|tabs|separator|divider|nav-menu|bottom-nav|breadcrumbs|carousel|calendar|popover|tooltip|hover-card|dropdown|context-menu|command)/;
+
   function propagateRadius(parent, innerR) {
     Array.from(parent.children).forEach(function(child) {
       if (child.nodeType !== 1) return;
+      if (RADIUS_SKIP.test(child.className)) return;
       var cs = getComputedStyle(child);
       var hasBg = cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent';
       var hasBorder = cs.borderTopWidth !== '0px' && cs.borderTopStyle !== 'none';

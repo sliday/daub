@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.5.6
+
+**Fix nested border radius flattening inner components.**
+
+- `fixNestedRadius()`: added `RADIUS_SKIP` regex to skip DAUB form controls (buttons, inputs, selects, switches, avatars, badges, etc.) when propagating inner radius
+- Previously, containers with `padding > radius` would flatten all child components to `border-radius: 0px`
+- Structural sub-containers (card-in-card) still receive correct nested radius
+- Cache-bust: `?v=2.5.6` query strings on CSS/JS assets
+
 ## v2.5.5
 
 **Sample prompts & AI use cases.**
