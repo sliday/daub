@@ -15,14 +15,26 @@ allowed-tools:
 
 DAUB is a drop-in CSS + JS library with 76 considered components and 20 theme families (40 variants). Thoughtfully composed, no ceremony required.
 
+npm: `daub-ui` | CDN: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css`
 Machine-readable component reference: `https://daub.dev/components.json`
 TypeScript declarations: `https://daub.dev/daub.d.ts`
 
-## Include
+## Include (CDN)
 
 ```html
-<link rel="stylesheet" href="https://daub.dev/daub.css">
-<script src="https://daub.dev/daub.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.css">
+<script src="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js"></script>
+```
+
+Alternative CDN:
+```html
+<link rel="stylesheet" href="https://unpkg.com/daub-ui@latest/daub.css">
+<script src="https://unpkg.com/daub-ui@latest/daub.js"></script>
+```
+
+npm install:
+```bash
+npm install daub-ui
 ```
 
 Optional fonts (falls back gracefully):
@@ -130,6 +142,15 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Resizable**: `db-resizable` > `__handle--right` / `--bottom` / `--corner`
 - **Date Picker**: `db-date-picker` — wraps Calendar in popover
 - **Theme Switcher**: `db-theme-switcher` — toggle button + categorized popover with 20 families + scheme row
+
+### Dashboard Primitives
+- **Stat Card**: `db-stat` > `db-stat__label` + `db-stat__value` + `db-stat__trend` / `--up` / `--down`
+- **Chart Card**: `db-chart-card` > `db-chart-card__header` + `db-chart-card__body`
+- **Table Utilities**: `db-table--compact`, `db-table--hover`, `db-td--number`, `db-td--actions`
+
+### JS Helpers
+- **getColor**: `DAUB.getColor('primary')` — returns current theme's CSS variable value as hex
+- **Theme Events**: `document.addEventListener('daub:theme-change', e => e.detail.theme)`
 
 ## Full Docs
 
