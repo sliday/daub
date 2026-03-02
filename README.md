@@ -6,6 +6,8 @@
 [![Version](https://img.shields.io/badge/version-2.6.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
+![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
+
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
 
 ---
