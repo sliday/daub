@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.5.3-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.5.4-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-74-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
@@ -282,7 +282,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v2.5.3** — Letterpress fix, mobile layout audit, loading spinner. 74 components, 20 theme families.
+**Latest: v2.5.4** — Unified demo page header, version sync, theme switcher auto-init. 74 components, 20 theme families.
 
 ## License
 

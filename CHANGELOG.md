@@ -2,6 +2,18 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.5.4
+
+**Unified demo page header & version sync.**
+
+- Demo page (`demo.html`) navbar: replaced custom `.demo-page-nav` with unified `.db-nav` component matching index.html (DAUB brand, Components, Layouts, AI Docs, GitHub links)
+- Demo page FOUC prevention: now restores `db-scheme` and `db-accent` in addition to `db-theme`
+- Demo page theme switcher: replaced hardcoded paint-roller SVG with empty `.db-theme-switcher` wrapper — daub.js auto-creates the v2.5 palette toggle with 20 families and category tabs
+- Demo page footer: updated from "v1.1 — 28 Components, 4 Themes" to current version info
+- Demo page responsive: added `overflow-x: hidden` on body, 640px nav breakpoint
+- Cache-bust: `?v=2.5.4` query strings on CSS/JS assets across all pages
+- Version sync: llms.txt updated from v2.3 to v2.5.4
+
 ## v2.5.3
 
 **Letterpress fix, dark theme buttons, mobile layout audit.**
