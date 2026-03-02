@@ -42,7 +42,7 @@
     "codeRepository": "https://github.com/sliday/daub",
     "programmingLanguage": ["CSS", "JavaScript"],
     "license": "https://opensource.org/licenses/MIT",
-    "version": "2.5.1",
+    "version": "2.5.2",
     "dateModified": "2026-03-01",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
@@ -58,7 +58,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.5.1">
+  <link rel="stylesheet" href="daub.css?v=2.5.2">
 
   <style>
     /* Prevent horizontal overflow on mobile */
@@ -418,31 +418,10 @@
       font-family: 'SF Mono', 'Fira Code', monospace;
     }
     .db-showcase__code-copy {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
       width: 100%;
-      padding: 8px 12px;
-      margin-top: 6px;
-      background: var(--db-terracotta);
-      border: none;
-      border-radius: var(--db-radius-2);
-      color: #fff;
-      font-family: var(--db-font-ui);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      cursor: pointer;
-      transition: all var(--db-transition);
-      text-transform: uppercase;
-    }
-    .db-showcase__code-copy:hover {
-      filter: brightness(1.1);
-      transform: translateY(-1px);
-    }
-    .db-showcase__code-copy:active {
-      transform: translateY(0);
+      margin-top: 8px;
+      font-size: 0.9375rem;
+      letter-spacing: 0.02em;
     }
     @media (max-width: 720px) {
       .db-showcase__frame { grid-template-columns: 1fr; padding: 24px; }
@@ -644,12 +623,12 @@
             <span class="db-showcase__section-label">Theme</span>
             <div class="db-theme-switcher__popover db-theme-switcher__popover--inline" id="db-config-theme-popover"></div>
           </div>
-          <div class="db-slider" data-db-warmth>
+          <div class="db-slider" data-db-temperature>
             <div class="db-slider__label">
-              <span>Warmth</span>
-              <span class="db-slider__value">75</span>
+              <span>Temperature</span>
+              <span class="db-slider__value">0</span>
             </div>
-            <input class="db-slider__input" type="range" min="0" max="100" value="75">
+            <input class="db-slider__input" type="range" min="-100" max="100" value="0">
           </div>
           <div class="db-slider" data-db-noise>
             <div class="db-slider__label">
@@ -734,8 +713,8 @@
           <div class="db-showcase__code-wrap" id="db-snippet-wrap">
             <pre class="db-showcase__code" id="db-config-code"><code></code></pre>
           </div>
-          <button class="db-showcase__code-copy" id="db-config-copy-cta" title="Copy to clipboard">
-            <i data-lucide="clipboard-copy" style="width:13px;height:13px;"></i>
+          <button class="db-btn db-btn--primary db-showcase__code-copy" id="db-config-copy-cta" title="Copy to clipboard">
+            <i data-lucide="clipboard-copy" style="width:16px;height:16px;"></i>
             Copy Config Code
           </button>
         </div>
@@ -2109,7 +2088,7 @@
   </div>
 
   <!-- JS -->
-  <script src="daub.js?v=2.5.1"></script>
+  <script src="daub.js?v=2.5.2"></script>
   <script>
     // Initialize Lucide icons
     lucide.createIcons();
@@ -2120,14 +2099,14 @@
       var copyBtn = document.getElementById('db-config-copy');
       if (!codeEl) return;
 
-      var DEFAULTS = { theme: 'light', family: 'default', warmth: 0.75, noise: 0.18, texture: 'grain', scheme: 'auto' };
+      var DEFAULTS = { theme: 'light', family: 'default', temperature: 0, noise: 0.18, texture: 'grain', scheme: 'auto' };
 
       function getState() {
         return {
           theme: DAUB.getTheme() || 'light',
           family: DAUB.getFamily() || 'default',
           scheme: DAUB.getScheme() || 'auto',
-          warmth: parseFloat(document.documentElement.style.getPropertyValue('--db-warmth')) || DEFAULTS.warmth,
+          temperature: parseFloat(document.documentElement.style.getPropertyValue('--db-temperature')) || DEFAULTS.temperature,
           noise: parseFloat(document.documentElement.style.getPropertyValue('--db-noise')) || DEFAULTS.noise,
           texture: document.documentElement.getAttribute('data-db-texture') || 'grain',
           accent: localStorage.getItem('db-accent') || null
@@ -2142,7 +2121,7 @@
         ];
 
         var cssVars = [];
-        if (Math.abs(s.warmth - DEFAULTS.warmth) > 0.01) cssVars.push('    --db-warmth: ' + s.warmth + ';');
+        if (Math.abs(s.temperature - DEFAULTS.temperature) > 0.01) cssVars.push('    --db-temperature: ' + s.temperature + ';');
         if (Math.abs(s.noise - DEFAULTS.noise) > 0.01) cssVars.push('    --db-noise: ' + s.noise + ';');
 
         if (cssVars.length) {
@@ -2196,7 +2175,7 @@
         }
       });
       document.addEventListener('input', function(e) {
-        if (e.target.closest('[data-db-warmth], [data-db-noise]')) updateCode();
+        if (e.target.closest('[data-db-temperature], [data-db-noise]')) updateCode();
       });
 
       // Copy button

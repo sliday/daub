@@ -86,8 +86,8 @@
   --db-transition: 150ms ease;
   --db-transition-bounce: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* Warmth & Noise */
-  --db-warmth: 0.75;
+  /* Temperature & Noise */
+  --db-temperature: 0;
   --db-noise: 0.18;
 
   /* Semantic tokens — theme-aware aliases */
@@ -123,23 +123,24 @@
   --db-element-texture-blend: overlay;
 }
 
-/* Warmth overlay — uses backdrop-filter on html::after instead of filter on body
-   to avoid creating a containing block that breaks position:fixed (modal, toast, sheet, drawer) */
+/* Temperature overlay — uses backdrop-filter on html::after instead of filter on body
+   to avoid creating a containing block that breaks position:fixed (modal, toast, sheet, drawer)
+   --db-temperature: -1 (cold/desaturated) to 0 (neutral) to +1 (warm/sepia) */
 html::after {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 10000;
   pointer-events: none;
-  backdrop-filter: saturate(calc(0.7 + 0.3 * var(--db-warmth))) sepia(calc(0.04 * var(--db-warmth)));
-  -webkit-backdrop-filter: saturate(calc(0.7 + 0.3 * var(--db-warmth))) sepia(calc(0.04 * var(--db-warmth)));
+  backdrop-filter: saturate(calc(1 + 0.3 * var(--db-temperature))) sepia(calc(max(0, var(--db-temperature)) * 0.06)) hue-rotate(calc(min(0, var(--db-temperature)) * 8deg));
+  -webkit-backdrop-filter: saturate(calc(1 + 0.3 * var(--db-temperature))) sepia(calc(max(0, var(--db-temperature)) * 0.06)) hue-rotate(calc(min(0, var(--db-temperature)) * 8deg));
 }
 
 /* Texture overlay — type set via [data-db-texture] on <html> */
 :root {
   --db-texture-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   --db-texture-blend: overlay;
-  --db-texture-element-opacity: calc(var(--db-noise) * 0.5);
+  --db-texture-element-opacity: calc(var(--db-noise) * 1.5);
 }
 body::before {
   content: '';
@@ -157,7 +158,7 @@ body::before {
 [data-db-texture="paper"] {
   --db-texture-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='5' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='1'/%3E%3C/svg%3E");
   --db-texture-blend: soft-light;
-  --db-texture-element-opacity: calc(var(--db-noise) * 0.7);
+  --db-texture-element-opacity: calc(var(--db-noise) * 2.0);
 }
 [data-db-texture="paper"] body::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='5' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='1'/%3E%3C/svg%3E");
@@ -169,7 +170,7 @@ body::before {
 [data-db-texture="metal"] {
   --db-texture-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005 0.8' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)' opacity='1'/%3E%3C/svg%3E");
   --db-texture-blend: overlay;
-  --db-texture-element-opacity: calc(var(--db-noise) * 0.6);
+  --db-texture-element-opacity: calc(var(--db-noise) * 1.8);
 }
 [data-db-texture="metal"] body::before {
   background-image: var(--db-texture-img);
@@ -181,7 +182,7 @@ body::before {
 [data-db-texture="wood"] {
   --db-texture-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.015 0.12' numOctaves='4' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)' opacity='1'/%3E%3C/svg%3E");
   --db-texture-blend: soft-light;
-  --db-texture-element-opacity: calc(var(--db-noise) * 0.7);
+  --db-texture-element-opacity: calc(var(--db-noise) * 2.0);
 }
 [data-db-texture="wood"] body::before {
   background-image: var(--db-texture-img);
@@ -1990,7 +1991,7 @@ a:hover { color: var(--db-clay); }
   color: var(--db-white);
   border: 1px solid rgba(var(--db-shadow-rgb),0.15);
   box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.15);
-  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.35);
 }
 
 .db-btn--primary:hover {
@@ -2014,6 +2015,7 @@ a:hover { color: var(--db-clay); }
   color: var(--db-charcoal);
   border: 1px solid var(--db-sand);
   box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.06);
+  text-shadow: var(--db-text-emboss-subtle);
 }
 
 .db-btn--secondary:hover {
@@ -2045,12 +2047,19 @@ a:hover { color: var(--db-clay); }
 .db-btn--loading::after {
   content: '';
   position: absolute;
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 16px;
   height: 16px;
   border: 2px solid rgba(var(--db-glow-rgb),0.3);
   border-top-color: var(--db-white);
   border-radius: 50%;
   animation: db-spin 600ms linear infinite;
+  background-image: none;
+  mix-blend-mode: normal;
+  opacity: 1;
 }
 
 .db-btn--secondary.db-btn--loading::after {
@@ -2974,6 +2983,8 @@ textarea.db-field__input {
   font-size: 0.75rem;
   border-radius: var(--db-radius-2);
   white-space: normal;
+  width: max-content;
+  min-width: 60px;
   max-width: 240px;
   text-align: center;
   pointer-events: none;

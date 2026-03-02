@@ -2,6 +2,18 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.5.2
+
+**Temperature control, letterpress text & bug fixes.**
+
+- Temperature slider: replaces Warmth, range -100 (cold) to +100 (warm), default 0 (neutral). Negative desaturates + cool hue-rotate, positive adds saturation + sepia
+- Letterpress text-shadow: primary buttons get deeper dark shadow (0.35 alpha), secondary buttons get light emboss via `--db-text-emboss-subtle`
+- Loading spinner fix: texture `::after` no longer conflicts with spinner `::after` on `.db-btn--loading`
+- Tooltip width fix: `width: max-content` prevents text squashing in narrow parent contexts
+- Copy Config Code: upgraded to full-size primary CTA button using DAUB's own `db-btn` classes
+- Texture multipliers boosted: grain 1.5x, paper 2.0x, metal 1.8x, wood 2.0x (up from 0.5-0.7x) for visible texture at moderate noise levels
+- Cache-bust: `?v=2.5.2` query strings on CSS/JS assets
+
 ## v2.5.1
 
 **Configurator polish & cache-bust.**

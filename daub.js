@@ -851,15 +851,15 @@
   }
 
   /* ----------------------------------------------------------
-     Warmth — apply filter via CSS custom property
+     Temperature — cold (-1) to neutral (0) to warm (+1)
      ---------------------------------------------------------- */
-  function initWarmth() {
-    var saved = localStorage.getItem('db-warmth');
+  function initTemperature() {
+    var saved = localStorage.getItem('db-temperature');
     if (saved !== null) {
-      document.documentElement.style.setProperty('--db-warmth', saved);
+      document.documentElement.style.setProperty('--db-temperature', saved);
     }
 
-    document.querySelectorAll('[data-db-warmth]').forEach(function(slider) {
+    document.querySelectorAll('[data-db-temperature]').forEach(function(slider) {
       var input = slider.querySelector('.db-slider__input');
       var valueEl = slider.querySelector('.db-slider__value');
       if (!input) return;
@@ -871,8 +871,8 @@
 
       input.addEventListener('input', function() {
         var val = input.value / 100;
-        document.documentElement.style.setProperty('--db-warmth', val);
-        localStorage.setItem('db-warmth', val);
+        document.documentElement.style.setProperty('--db-temperature', val);
+        localStorage.setItem('db-temperature', val);
         if (valueEl) valueEl.textContent = input.value;
       });
     });
@@ -1687,7 +1687,7 @@
     initSteppers(root);
     initTooltips(root);
     initSliders(root);
-    initWarmth();
+    initTemperature();
     initNoise();
     initTexture();
     initCheckboxes(root);
