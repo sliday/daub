@@ -5070,6 +5070,10 @@ textarea.db-field__input {
   color: var(--db-warm-gray);
 }
 
+.db-table--numeric, .db-data-table--numeric { font-variant-numeric:tabular-nums; }
+.db-table .db-numeric, .db-data-table .db-numeric { text-align:right; font-variant-numeric:tabular-nums; }
+.db-table .db-truncate, .db-data-table .db-truncate { max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
 /* ------------------------------------------------------------
    CSS-only Bar Chart
    ------------------------------------------------------------ */
@@ -5110,6 +5114,29 @@ textarea.db-field__input {
   font-size: 0.625rem;
   color: var(--db-warm-gray);
 }
+
+/* ------------------------------------------------------------
+   Stat Card (KPI)
+   ------------------------------------------------------------ */
+.db-stat { display:flex; flex-direction:column; gap:var(--db-space-1); }
+.db-stat__label { font-family:var(--db-font-ui); font-size:0.75rem; color:var(--db-warm-gray); text-transform:uppercase; letter-spacing:0.05em; }
+.db-stat__value { font-family:var(--db-font-display, var(--db-font-heading)); font-size:1.75rem; font-weight:700; color:var(--db-charcoal); font-variant-numeric:tabular-nums; line-height:1.2; }
+.db-stat__change { font-family:var(--db-font-ui); font-size:0.75rem; font-variant-numeric:tabular-nums; }
+.db-stat__change--up { color:var(--db-success, #2e7d32); }
+.db-stat__change--down { color:var(--db-error, #c62828); }
+.db-stat__icon { width:40px; height:40px; border-radius:var(--db-radius-2); background:var(--db-cream); display:flex; align-items:center; justify-content:center; color:var(--db-terracotta); }
+.db-stat--horizontal { flex-direction:row; align-items:center; gap:var(--db-space-4); }
+.db-stat--horizontal .db-stat__icon { flex-shrink:0; }
+
+/* ------------------------------------------------------------
+   Chart Card
+   ------------------------------------------------------------ */
+.db-chart-card { background:var(--db-color-surface, var(--db-white)); border:1px solid var(--db-sand); border-radius:var(--db-radius-3); overflow:hidden; }
+.db-chart-card__header { display:flex; align-items:center; justify-content:space-between; padding:var(--db-space-4); border-bottom:1px solid var(--db-sand); }
+.db-chart-card__title { font-family:var(--db-font-ui); font-size:0.875rem; font-weight:600; color:var(--db-charcoal); }
+.db-chart-card__actions { display:flex; gap:var(--db-space-2); }
+.db-chart-card__body { padding:var(--db-space-4); }
+.db-chart-card__body canvas { width:100%!important; display:block; }
 
 /* ------------------------------------------------------------
    Input OTP

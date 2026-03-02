@@ -3,8 +3,8 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.5.6-3D3832.svg)](https://daub.dev)
-[![Components](https://img.shields.io/badge/components-74-D4C4A8.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.6.0-3D3832.svg)](https://daub.dev)
+[![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 [Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
 
@@ -12,7 +12,7 @@
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 74 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 76 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
 ## Quick Start
 
@@ -262,7 +262,7 @@ Semantic tokens (theme-aware aliases): `--db-color-bg`, `--db-color-surface`, `-
 DAUB speaks both human and machine:
 
 - **`/llms.txt`** — Plain-text component reference for LLMs ([spec](https://llmstxt.org))
-- **`/components.json`** — Machine-readable structured component reference (74 components with HTML examples)
+- **`/components.json`** — Machine-readable structured component reference (76 components with HTML examples)
 - **`/daub.d.ts`** — TypeScript declarations for `window.DAUB` API
 - **`/.well-known/ai-plugin.json`** — AI plugin manifest
 - **`SKILL.md`** — Claude Code skill for DAUB development
@@ -282,31 +282,62 @@ Drop these prompts into Claude, ChatGPT, Cursor, or any AI assistant. Each produ
 | "Build a blog reading page with DAUB. Prose typography, breadcrumbs, author card, table of contents sidebar. GitHub theme." | Article layout with `db-prose`, `db-breadcrumbs`, `db-nav-menu` |
 | "Create a multi-step onboarding form with DAUB's stepper. Account info, preferences, confirmation. Ember theme." | Wizard flow with `db-stepper`, `db-field`, `db-switch`, `db-card` |
 
-### Minimal Complete Page
+### Minimal Dashboard
 
 ```html
 <!DOCTYPE html>
-<html data-theme="dark">
+<html data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard</title>
   <link rel="stylesheet" href="https://daub.dev/daub.css">
 </head>
 <body>
-  <main class="db-container db-container--narrow" style="padding-top:var(--db-space-6)">
-    <h1 class="db-h2">System Status</h1>
-    <div class="db-card db-mb-4">
-      <div class="db-card__header">
-        <h3 class="db-card__title">API</h3>
-        <span class="db-badge db-badge--new">Operational</span>
-      </div>
-      <div class="db-progress"><div class="db-progress__bar" style="--db-progress:99.9%"></div></div>
+  <nav class="db-navbar">
+    <a class="db-navbar__brand" href="/">Acme</a>
+    <div class="db-navbar__spacer"></div>
+    <div class="db-navbar__actions">
+      <div class="db-avatar db-avatar--sm">JD</div>
     </div>
-    <div class="db-alert db-alert--warning">
-      <div class="db-alert__content">
-        <div class="db-alert__title">Scheduled Maintenance</div>
-        <p>Database migration Sunday 2am UTC.</p>
+  </nav>
+  <main class="db-container" style="padding:var(--db-space-6) var(--db-space-4)">
+    <div class="db-grid db-grid--3 db-gap-4 db-mb-5">
+      <div class="db-card" style="padding:var(--db-space-4)">
+        <div class="db-stat">
+          <span class="db-stat__label">Revenue</span>
+          <span class="db-stat__value">$12,450</span>
+          <span class="db-stat__change db-stat__change--up">↑ 12.5%</span>
+        </div>
       </div>
+      <div class="db-card" style="padding:var(--db-space-4)">
+        <div class="db-stat">
+          <span class="db-stat__label">Users</span>
+          <span class="db-stat__value">1,284</span>
+          <span class="db-stat__change db-stat__change--up">↑ 4.3%</span>
+        </div>
+      </div>
+      <div class="db-card" style="padding:var(--db-space-4)">
+        <div class="db-stat">
+          <span class="db-stat__label">Orders</span>
+          <span class="db-stat__value">342</span>
+          <span class="db-stat__change db-stat__change--down">↓ 2.1%</span>
+        </div>
+      </div>
+    </div>
+    <div class="db-card">
+      <div class="db-card__header">
+        <h3 class="db-card__title">Recent Orders</h3>
+        <span class="db-badge">Today</span>
+      </div>
+      <table class="db-table">
+        <thead><tr><th>Customer</th><th class="db-numeric">Amount</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Alice Park</td><td class="db-numeric">$120</td><td><span class="db-badge db-badge--new">Paid</span></td></tr>
+          <tr><td>Bob Chen</td><td class="db-numeric">$85</td><td><span class="db-badge db-badge--warning">Pending</span></td></tr>
+          <tr><td>Carol Davis</td><td class="db-numeric">$240</td><td><span class="db-badge db-badge--new">Paid</span></td></tr>
+        </tbody>
+      </table>
     </div>
   </main>
   <div class="db-theme-switcher"></div>
@@ -330,7 +361,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v2.5.6** — Fix nested border radius flattening form controls. 74 components, 20 theme families.
+**Latest: v2.6.0** — Dashboard primitives, table utilities, getColor helper. 76 components, 20 theme families.
 
 ## License
 

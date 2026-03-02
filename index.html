@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB — Considered Interface Components</title>
-  <meta name="description" content="DAUB is a CSS component library with 74 considered UI elements and 20 theme families. Thoughtful, tactile, and accessible. No build step required.">
+  <meta name="description" content="DAUB is a CSS component library with 76 considered UI elements and 20 theme families. Thoughtful, tactile, and accessible. No build step required.">
   <meta name="keywords" content="CSS components, neo-skeuomorphic, UI kit, design system, considered UI, tactile, accessible, themes, AI components, llms.txt, drop-in CSS">
   <meta name="theme-color" content="#C67B5C">
   <link rel="canonical" href="https://daub.dev">
@@ -12,7 +12,7 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="DAUB — Considered Interface Components">
-  <meta property="og:description" content="74 considered UI elements with 20 theme families. Drop-in CSS + JS. No build step.">
+  <meta property="og:description" content="76 considered UI elements with 20 theme families. Drop-in CSS + JS. No build step.">
   <meta property="og:url" content="https://daub.dev">
   <meta property="og:site_name" content="DAUB UI">
   <meta property="og:image" content="https://daub.dev/og-image.png">
@@ -23,7 +23,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="DAUB — Considered Interface Components">
-  <meta name="twitter:description" content="74 considered UI elements with 20 theme families. Drop-in CSS + JS. No build step.">
+  <meta name="twitter:description" content="76 considered UI elements with 20 theme families. Drop-in CSS + JS. No build step.">
   <meta name="twitter:image" content="https://daub.dev/og-image.png">
   <meta name="twitter:site" content="@staskulesh">
   <meta name="twitter:creator" content="@staskulesh">
@@ -37,12 +37,12 @@
     "@context": "https://schema.org",
     "@type": "SoftwareSourceCode",
     "name": "DAUB UI",
-    "description": "Considered CSS components for discerning interfaces. 74 elements, 20 theme families.",
+    "description": "Considered CSS components for discerning interfaces. 76 elements, 20 theme families.",
     "url": "https://daub.dev",
     "codeRepository": "https://github.com/sliday/daub",
     "programmingLanguage": ["CSS", "JavaScript"],
     "license": "https://opensource.org/licenses/MIT",
-    "version": "2.5.6",
+    "version": "2.6.0",
     "dateModified": "2026-03-01",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
@@ -58,7 +58,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.5.6">
+  <link rel="stylesheet" href="daub.css?v=2.6.0">
 
   <style>
     /* Prevent horizontal overflow on mobile */
@@ -600,6 +600,7 @@
       color: var(--db-ink);
       margin: 0 0 16px;
     }
+    .db-use-ai__example { position: relative; }
     .db-use-ai__code {
       background: var(--db-ink);
       color: var(--db-cream);
@@ -613,6 +614,24 @@
       margin: 0;
       -webkit-overflow-scrolling: touch;
     }
+    .db-use-ai__copy-code {
+      position: absolute;
+      top: 60px;
+      right: 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--db-cream);
+      border-radius: var(--db-radius-1);
+      padding: 6px 12px;
+      font-family: var(--db-font-ui);
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+    .db-use-ai__copy-code:hover { background: rgba(255,255,255,0.2); }
 
     /* Nav bar */
     .db-nav {
@@ -933,7 +952,7 @@
         <p class="db-prompt-card__title">Analytics Dashboard</p>
         <p class="db-prompt-card__text">Build an analytics dashboard using DAUB (daub.dev/daub.css + daub.dev/daub.js). Include a sidebar with navigation, three stat cards, a sortable data table, and a bar chart. Use the dark theme. Fetch docs from daub.dev/llms.txt first.</p>
         <button class="db-prompt-card__copy" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
-          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy prompt
+          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
 
@@ -942,7 +961,7 @@
         <p class="db-prompt-card__title">User Settings Page</p>
         <p class="db-prompt-card__text">Create a user settings page with DAUB components. Profile section with avatar and text fields, notifications section with switches, danger zone with delete button that opens an alert dialog. Use the nord theme. Fetch docs from daub.dev/llms.txt first.</p>
         <button class="db-prompt-card__copy" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
-          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy prompt
+          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
 
@@ -951,7 +970,7 @@
         <p class="db-prompt-card__title">Product Catalog</p>
         <p class="db-prompt-card__text">Build a responsive product catalog with DAUB. Use db-card--media in a db-grid--3 layout, chip filters with data-db-chip-toggle, pagination at the bottom, and a navbar with search. Theme: catppuccin. Fetch docs from daub.dev/llms.txt first.</p>
         <button class="db-prompt-card__copy" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
-          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy prompt
+          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
 
@@ -960,7 +979,7 @@
         <p class="db-prompt-card__title">Task Board</p>
         <p class="db-prompt-card__text">Create a Kanban task board using DAUB. Three columns (To Do, In Progress, Done) with db-card components in a db-grid--3. Each card has title, badge for priority, avatar for assignee. Add command palette (Ctrl+K). Theme: tokyo-night. Fetch docs from daub.dev/llms.txt first.</p>
         <button class="db-prompt-card__copy" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
-          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy prompt
+          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
 
@@ -969,7 +988,7 @@
         <p class="db-prompt-card__title">Blog Reading Page</p>
         <p class="db-prompt-card__text">Build a blog reading page with DAUB. Use db-prose for the article, db-breadcrumbs for navigation, author card with db-avatar, table of contents sidebar using db-nav-menu. Theme: github. Include theme switcher. Fetch docs from daub.dev/llms.txt first.</p>
         <button class="db-prompt-card__copy" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
-          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy prompt
+          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
 
@@ -978,7 +997,7 @@
         <p class="db-prompt-card__title">Multi-Step Form</p>
         <p class="db-prompt-card__text">Create a multi-step onboarding form with DAUB's stepper component. Step 1: account info (fields). Step 2: preferences (checkboxes, switches). Step 3: confirmation (summary card). Use db-stepper for progress, buttons to navigate. Theme: ember-light. Fetch docs from daub.dev/llms.txt first.</p>
         <button class="db-prompt-card__copy" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
-          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy prompt
+          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
 
@@ -986,30 +1005,63 @@
 
     <div class="db-use-ai__example">
       <p class="db-use-ai__example-label">Minimal Example</p>
-      <p class="db-use-ai__example-title">A complete page in 25 lines</p>
+      <p class="db-use-ai__example-title">Analytics Dashboard in ~40 Lines</p>
+      <button class="db-use-ai__copy-code" onclick="navigator.clipboard.writeText(this.parentElement.querySelector('.db-use-ai__code').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
+        <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Code
+      </button>
       <pre class="db-use-ai__code">&lt;!DOCTYPE html&gt;
-&lt;html data-theme="dark"&gt;
+&lt;html data-theme="light"&gt;
 &lt;head&gt;
   &lt;meta charset="utf-8"&gt;
   &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
-  &lt;title&gt;Status&lt;/title&gt;
+  &lt;title&gt;Dashboard&lt;/title&gt;
   &lt;link rel="stylesheet" href="https://daub.dev/daub.css"&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;main class="db-container db-container--narrow" style="padding-top:var(--db-space-6)"&gt;
-    &lt;h1 class="db-h2"&gt;System Status&lt;/h1&gt;
-    &lt;div class="db-card db-mb-4"&gt;
-      &lt;div class="db-card__header"&gt;
-        &lt;h3 class="db-card__title"&gt;API&lt;/h3&gt;
-        &lt;span class="db-badge db-badge--new"&gt;Operational&lt;/span&gt;
-      &lt;/div&gt;
-      &lt;div class="db-progress"&gt;&lt;div class="db-progress__bar" style="--db-progress:99.9%"&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;nav class="db-navbar"&gt;
+    &lt;a class="db-navbar__brand" href="/"&gt;Acme&lt;/a&gt;
+    &lt;div class="db-navbar__spacer"&gt;&lt;/div&gt;
+    &lt;div class="db-navbar__actions"&gt;
+      &lt;div class="db-avatar db-avatar--sm"&gt;JD&lt;/div&gt;
     &lt;/div&gt;
-    &lt;div class="db-alert db-alert--warning"&gt;
-      &lt;div class="db-alert__content"&gt;
-        &lt;div class="db-alert__title"&gt;Scheduled Maintenance&lt;/div&gt;
-        &lt;p&gt;Database migration planned for Sunday 2am UTC.&lt;/p&gt;
+  &lt;/nav&gt;
+  &lt;main class="db-container" style="padding:var(--db-space-6) var(--db-space-4)"&gt;
+    &lt;div class="db-grid db-grid--3 db-gap-4 db-mb-5"&gt;
+      &lt;div class="db-card" style="padding:var(--db-space-4)"&gt;
+        &lt;div class="db-stat"&gt;
+          &lt;span class="db-stat__label"&gt;Revenue&lt;/span&gt;
+          &lt;span class="db-stat__value"&gt;$12,450&lt;/span&gt;
+          &lt;span class="db-stat__change db-stat__change--up"&gt;&amp;uarr; 12.5%&lt;/span&gt;
+        &lt;/div&gt;
       &lt;/div&gt;
+      &lt;div class="db-card" style="padding:var(--db-space-4)"&gt;
+        &lt;div class="db-stat"&gt;
+          &lt;span class="db-stat__label"&gt;Users&lt;/span&gt;
+          &lt;span class="db-stat__value"&gt;1,284&lt;/span&gt;
+          &lt;span class="db-stat__change db-stat__change--up"&gt;&amp;uarr; 4.3%&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="db-card" style="padding:var(--db-space-4)"&gt;
+        &lt;div class="db-stat"&gt;
+          &lt;span class="db-stat__label"&gt;Orders&lt;/span&gt;
+          &lt;span class="db-stat__value"&gt;342&lt;/span&gt;
+          &lt;span class="db-stat__change db-stat__change--down"&gt;&amp;darr; 2.1%&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="db-card"&gt;
+      &lt;div class="db-card__header"&gt;
+        &lt;h3 class="db-card__title"&gt;Recent Orders&lt;/h3&gt;
+        &lt;span class="db-badge"&gt;Today&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;table class="db-table"&gt;
+        &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Customer&lt;/th&gt;&lt;th class="db-numeric"&gt;Amount&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;&lt;td&gt;Alice Park&lt;/td&gt;&lt;td class="db-numeric"&gt;$120&lt;/td&gt;&lt;td&gt;&lt;span class="db-badge db-badge--new"&gt;Paid&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;Bob Chen&lt;/td&gt;&lt;td class="db-numeric"&gt;$85&lt;/td&gt;&lt;td&gt;&lt;span class="db-badge db-badge--warning"&gt;Pending&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+          &lt;tr&gt;&lt;td&gt;Carol Davis&lt;/td&gt;&lt;td class="db-numeric"&gt;$240&lt;/td&gt;&lt;td&gt;&lt;span class="db-badge db-badge--new"&gt;Paid&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
     &lt;/div&gt;
   &lt;/main&gt;
   &lt;div class="db-theme-switcher"&gt;&lt;/div&gt;
@@ -2316,7 +2368,7 @@
   <!-- Closing CTA -->
   <section style="max-width:min(640px,100%); margin:0 auto; padding:64px 24px; text-align:center;">
     <h2 style="font-family:var(--db-font-heading); font-size:clamp(1.5rem, 3vw, 2.25rem); font-weight:700; color:var(--db-ink); margin:0 0 16px; line-height:1.2;">Two files. Full surface.</h2>
-    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px;">74 components that respond to light, texture, and theme. Drop them in, ship something that feels considered — without the ceremony.</p>
+    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px;">76 components that respond to light, texture, and theme. Drop them in, ship something that feels considered — without the ceremony.</p>
     <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
       <a href="#configurator" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
       <a href="https://github.com/sliday/daub" target="_blank" rel="noopener" class="db-btn db-btn--secondary db-btn--lg">
@@ -2340,7 +2392,7 @@
   </div>
 
   <!-- JS -->
-  <script src="daub.js?v=2.5.6"></script>
+  <script src="daub.js?v=2.6.0"></script>
   <script>
     // Initialize Lucide icons
     lucide.createIcons();

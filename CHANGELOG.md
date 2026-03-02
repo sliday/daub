@@ -2,6 +2,19 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.6.0
+
+**Dashboard primitives, table utilities, getColor helper.**
+
+- New component: `db-stat` — KPI/stat card with label, value, change indicator, icon slot; horizontal variant
+- New component: `db-chart-card` — card wrapper for Chart.js canvas or db-chart with title/actions header
+- Table utilities: `db-data-table--numeric`, `.db-numeric` (right-aligned), `.db-truncate` (ellipsis overflow)
+- JS API: `DAUB.getColor(token)` — returns computed value of any `--db-*` CSS variable for chart lib integration
+- `RADIUS_SKIP`: added `stat`, `chart-card` to prevent nested radius flattening
+- llms.txt: synced new components, table utilities, getColor API, Chart.js integration recipe
+- Updated component count: 74 → 76
+- Cache-bust: `?v=2.6.0` query strings on CSS/JS assets
+
 ## v2.5.6
 
 **Fix nested border radius flattening inner components.**

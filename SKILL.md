@@ -13,7 +13,7 @@ allowed-tools:
 
 # DAUB UI — Component Library
 
-DAUB is a drop-in CSS + JS library with 74 considered components and 20 theme families (40 variants). Thoughtfully composed, no ceremony required.
+DAUB is a drop-in CSS + JS library with 76 considered components and 20 theme families (40 variants). Thoughtfully composed, no ceremony required.
 
 Machine-readable component reference: `https://daub.dev/components.json`
 TypeScript declarations: `https://daub.dev/daub.d.ts`

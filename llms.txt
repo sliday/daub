@@ -1,12 +1,12 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 2.5.6
+> Version: 2.6.0
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
 > Repo: https://github.com/sliday/daub
 > License: MIT
-> Components: 74
+> Components: 76
 > Theme Families: 20 (40 variants total)
 > Components JSON: https://daub.dev/components.json
 > TypeScript: https://daub.dev/daub.d.ts
@@ -409,6 +409,7 @@ Enhanced table with checkbox selection and sortable headers.
   </tr></tbody>
 </table>
 ```
+Table utilities: `db-data-table--numeric` for tabular-nums on whole table. `db-numeric` class on `<td>`/`<th>` for right-aligned numbers. `db-truncate` for ellipsis overflow (max-width 200px).
 
 ### 31. List — `.db-list`
 ```html
@@ -706,7 +707,34 @@ Wraps Calendar in a trigger/dropdown.
 <div class="db-chart__labels"><span>Mon</span><span>Tue</span><span>Wed</span></div>
 ```
 
-### 53. Resizable — `.db-resizable`
+### 53. Stat Card — `.db-stat`
+KPI/metric card with label, value, and change indicator.
+```html
+<div class="db-stat">
+  <span class="db-stat__label">Total Users</span>
+  <span class="db-stat__value">12,847</span>
+  <span class="db-stat__change db-stat__change--up">↑ 12.5%</span>
+</div>
+```
+Horizontal layout: add `db-stat--horizontal`. Optional icon slot: `.db-stat__icon`.
+
+### 54. Chart Card — `.db-chart-card`
+Card wrapper for any chart (Chart.js canvas, db-chart, etc.) with title/actions header.
+```html
+<div class="db-chart-card">
+  <div class="db-chart-card__header">
+    <span class="db-chart-card__title">Revenue</span>
+    <div class="db-chart-card__actions">
+      <button class="db-btn db-btn--sm db-btn--secondary">Export</button>
+    </div>
+  </div>
+  <div class="db-chart-card__body">
+    <canvas id="myChart"></canvas>
+  </div>
+</div>
+```
+
+### 55. Resizable — `.db-resizable`
 ```html
 <div class="db-resizable" style="width:300px;height:200px;border:1px solid var(--db-sand);">
   Content
@@ -715,7 +743,7 @@ Wraps Calendar in a trigger/dropdown.
 </div>
 ```
 
-### 54. Separator — `.db-separator`
+### 56. Separator — `.db-separator`
 ```html
 <hr class="db-separator">
 <hr class="db-separator db-separator--dashed">
@@ -723,7 +751,7 @@ Wraps Calendar in a trigger/dropdown.
 <div class="db-separator__label">Or continue with</div>
 ```
 
-### 55. Scroll Area — `.db-scroll-area`
+### 57. Scroll Area — `.db-scroll-area`
 ```html
 <div class="db-scroll-area" style="max-height:200px;">
   <!-- long content -->
@@ -731,13 +759,13 @@ Wraps Calendar in a trigger/dropdown.
 ```
 Variants: `db-scroll-area--horizontal`, `db-scroll-area--vertical`.
 
-### 56. Aspect Ratio — `.db-aspect`
+### 58. Aspect Ratio — `.db-aspect`
 ```html
 <div class="db-aspect db-aspect--16-9"><img src="photo.jpg" alt=""></div>
 ```
 Ratios: `--16-9`, `--4-3`, `--1-1`, `--21-9`.
 
-### 57. Prose — `.db-prose`
+### 59. Prose — `.db-prose`
 Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2xl`.
 ```html
 <div class="db-prose">
@@ -748,7 +776,7 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 </div>
 ```
 
-### 58. Surface — `.db-surface`
+### 60. Surface — `.db-surface`
 ```html
 <div class="db-surface">Base</div>
 <div class="db-surface--raised">Raised</div>
@@ -756,7 +784,7 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 <div class="db-surface--pressed">Pressed</div>
 ```
 
-### 59. Typography — Heading/Body classes
+### 61. Typography — Heading/Body classes
 ```html
 <h1 class="db-h1">Heading 1</h1>
 <h2 class="db-h2">Heading 2</h2>
@@ -765,14 +793,14 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 <span class="db-caption">Caption</span>
 ```
 
-### 60. Elevation — `.db-elevation-*`
+### 62. Elevation — `.db-elevation-*`
 ```html
 <div class="db-elevation-1">Level 1</div>
 <div class="db-elevation-2">Level 2</div>
 <div class="db-elevation-3">Level 3</div>
 ```
 
-### 61. Layout — `.db-container`, `.db-flex`, `.db-grid`
+### 63. Layout — `.db-container`, `.db-flex`, `.db-grid`
 Container: `db-container` (960px), `db-container--wide` (1200px), `db-container--narrow` (640px).
 Grid: `db-grid--2` through `db-grid--6`. Auto-responsive: 4-6 cols → 2 cols at tablet, all → 1 col at mobile.
 Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`.
@@ -786,7 +814,7 @@ Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-table
 </div>
 ```
 
-### 62. Theme Switcher — `.db-theme-switcher`
+### 64. Theme Switcher — `.db-theme-switcher`
 Toggle button + categorized popover with 20 families + scheme row.
 ```html
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher">
@@ -799,7 +827,7 @@ Toggle button + categorized popover with 20 families + scheme row.
 </div>
 ```
 
-### 63. Utilities
+### 65. Utilities
 ```html
 <span class="db-sr-only">Screen reader only</span>
 <span class="db-text-muted">Muted</span>
@@ -810,12 +838,12 @@ Toggle button + categorized popover with 20 families + scheme row.
 Spacing: `db-mt-1` through `db-mt-6`, `db-mb-4`, `db-mb-5`.
 Rounding: `db-rounded-0` through `db-rounded-full`.
 
-### 64. Divider — `.db-divider`
+### 66. Divider — `.db-divider`
 ```html
 <hr class="db-divider">
 ```
 
-### 65. Input with Icon — `.db-input-icon`
+### 67. Input with Icon — `.db-input-icon`
 Positions: left (default), `db-input-icon--right`
 Icon highlights on `:focus-within`.
 ```html
@@ -829,7 +857,7 @@ Icon highlights on `:focus-within`.
 </div>
 ```
 
-### 66. Search Input — `.db-search`
+### 68. Search Input — `.db-search`
 Search box with icon, clear button (auto-shows when input has text).
 ```html
 <div class="db-search">
@@ -839,7 +867,7 @@ Search box with icon, clear button (auto-shows when input has text).
 </div>
 ```
 
-### 67. Bottom Navigation — `.db-bottom-nav`
+### 69. Bottom Navigation — `.db-bottom-nav`
 Fixed mobile bottom bar. Hidden on desktop unless `db-bottom-nav--always`.
 Badge: `db-bottom-nav__badge`. Safe-area aware via `env(safe-area-inset-bottom)`.
 ```html
@@ -860,7 +888,7 @@ Badge: `db-bottom-nav__badge`. Safe-area aware via `env(safe-area-inset-bottom)`
 </nav>
 ```
 
-### 67. Chip / Tag — `.db-chip`
+### 70. Chip / Tag — `.db-chip`
 Presets: `db-chip--red`, `--green`, `--blue`, `--purple`, `--amber`, `--pink`.
 Arbitrary color: `style="--db-chip-h:195; --db-chip-s:70%; --db-chip-l:42%"`.
 Active/selected: `db-chip--active` (deeper fill, stronger border, bold).
@@ -917,6 +945,7 @@ DAUB.getCategory(family)       // Get category for a family name
 DAUB.setAccent(hex)            // Override accent color
 DAUB.resetAccent()             // Restore theme default accent
 DAUB.getAccent()               // Get current accent color
+DAUB.getColor(token)           // Get computed CSS variable value (e.g. 'terracotta' → --db-terracotta)
 ```
 
 ## CSS Custom Properties
@@ -1165,4 +1194,43 @@ Shadows: `--db-shadow-1`, `--db-shadow-2`, `--db-shadow-3`, `--db-shadow-inset`
   <script src="https://daub.dev/daub.js"></script>
 </body>
 </html>
+```
+
+## Chart.js Integration Recipe
+
+Use `DAUB.getColor()` to read theme tokens for chart libraries:
+
+```js
+const chart = new Chart(document.getElementById('revenue'), {
+  type: 'bar',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+    datasets: [{
+      label: 'Revenue',
+      data: [12, 19, 3, 5, 2, 3],
+      backgroundColor: DAUB.getColor('terracotta'),
+      borderColor: DAUB.getColor('clay'),
+      borderWidth: 1
+    }]
+  },
+  options: {
+    plugins: { legend: { labels: { color: DAUB.getColor('charcoal') } } },
+    scales: {
+      x: { ticks: { color: DAUB.getColor('warm-gray') }, grid: { color: DAUB.getColor('sand') } },
+      y: { ticks: { color: DAUB.getColor('warm-gray') }, grid: { color: DAUB.getColor('sand') } }
+    }
+  }
+});
+```
+
+Wrap the canvas inside `db-chart-card` for consistent card framing:
+```html
+<div class="db-chart-card">
+  <div class="db-chart-card__header">
+    <span class="db-chart-card__title">Monthly Revenue</span>
+  </div>
+  <div class="db-chart-card__body">
+    <canvas id="revenue"></canvas>
+  </div>
+</div>
 ```

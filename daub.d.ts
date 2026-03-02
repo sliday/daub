@@ -40,6 +40,8 @@ interface DAUBStatic {
   resetAccent(): void;
   /** Get current accent color hex */
   getAccent(): string;
+  /** Get computed value of any --db-* CSS variable (e.g. 'terracotta' → value of --db-terracotta) */
+  getColor(token: string): string;
   /** Get category name for a theme family */
   getCategory(family: string): string | undefined;
 

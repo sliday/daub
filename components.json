@@ -857,6 +857,38 @@
       "notes": "Pure CSS bar chart. Set bar height via inline style. --secondary modifier for alt color."
     },
     {
+      "name": "Stat Card",
+      "class": "db-stat",
+      "category": "data-display",
+      "element": "div",
+      "modifiers": ["--horizontal"],
+      "children": [
+        { "class": "db-stat__label", "element": "span", "required": true },
+        { "class": "db-stat__value", "element": "span", "required": true },
+        { "class": "db-stat__change", "element": "span", "required": false },
+        { "class": "db-stat__icon", "element": "div", "required": false }
+      ],
+      "js": false,
+      "html": "<div class=\"db-stat\">\n  <span class=\"db-stat__label\">Total Users</span>\n  <span class=\"db-stat__value\">12,847</span>\n  <span class=\"db-stat__change db-stat__change--up\">\u2191 12.5%</span>\n</div>",
+      "notes": "KPI/metric card. --horizontal for row layout. __change--up (green) / --down (red). Optional __icon slot."
+    },
+    {
+      "name": "Chart Card",
+      "class": "db-chart-card",
+      "category": "data-display",
+      "element": "div",
+      "modifiers": [],
+      "children": [
+        { "class": "db-chart-card__header", "element": "div", "required": false },
+        { "class": "db-chart-card__title", "element": "span", "required": false },
+        { "class": "db-chart-card__actions", "element": "div", "required": false },
+        { "class": "db-chart-card__body", "element": "div", "required": true }
+      ],
+      "js": false,
+      "html": "<div class=\"db-chart-card\">\n  <div class=\"db-chart-card__header\">\n    <span class=\"db-chart-card__title\">Revenue</span>\n    <div class=\"db-chart-card__actions\"><button class=\"db-btn db-btn--sm db-btn--secondary\">Export</button></div>\n  </div>\n  <div class=\"db-chart-card__body\">\n    <canvas id=\"myChart\"></canvas>\n  </div>\n</div>",
+      "notes": "Card wrapper for any chart. Header with title/actions. Body auto-sizes canvas to 100% width."
+    },
+    {
       "name": "Resizable",
       "class": "db-resizable",
       "category": "layout-utility",

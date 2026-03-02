@@ -959,7 +959,7 @@
     });
   }
 
-  var RADIUS_SKIP = /\bdb-(btn|input|field|textarea|switch|slider|checkbox|radio|toggle|badge|avatar|alert|chip|kbd|spinner|select|custom-select|search|otp|progress|pagination|stepper|tabs|separator|divider|nav-menu|bottom-nav|breadcrumbs|carousel|calendar|popover|tooltip|hover-card|dropdown|context-menu|command)/;
+  var RADIUS_SKIP = /\bdb-(btn|input|field|textarea|switch|slider|checkbox|radio|toggle|badge|avatar|alert|chip|kbd|spinner|select|custom-select|search|otp|progress|pagination|stepper|tabs|separator|divider|nav-menu|bottom-nav|breadcrumbs|carousel|calendar|popover|tooltip|hover-card|dropdown|context-menu|command|stat|chart-card)/;
 
   function propagateRadius(parent, innerR) {
     Array.from(parent.children).forEach(function(child) {
@@ -1727,10 +1727,16 @@
     init();
   }
 
+  function getColor(token) {
+    var prop = token.indexOf('--') === 0 ? token : '--db-' + token;
+    return getComputedStyle(document.documentElement).getPropertyValue(prop).trim();
+  }
+
   /* ----------------------------------------------------------
      Public API
      ---------------------------------------------------------- */
   window.DAUB = {
+    getColor: getColor,
     init: init,
     toast: toast,
     openModal: openModal,
