@@ -2,6 +2,7 @@
 node_modules/
 *.zip
 *.png
+!og-image.png
 *.jpeg
 *.jpg
 .playwright-mcp/

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1200">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@300;400;500;600;700&family=Source+Serif+4:wght@300;400;500;600&family=Cabin:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@300;400;500;600;700;800&family=Source+Serif+4:wght@300;400;500;600&family=Cabin:wght@400;500;600;700&display=swap');
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -14,265 +14,442 @@
       overflow: hidden;
       background: #FAF8F0;
       font-family: 'Cabin', system-ui, sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
       position: relative;
     }
 
-    /* Subtle texture */
+    /* Subtle paper texture */
     body::before {
       content: '';
       position: absolute;
       inset: 0;
       background: repeating-conic-gradient(#E8E0D0 0% 25%, transparent 0% 50%) 0 0 / 4px 4px;
-      opacity: 0.15;
+      opacity: 0.12;
       pointer-events: none;
     }
 
-    .container {
-      display: flex;
-      align-items: center;
-      gap: 80px;
-      padding: 0 80px;
+    /* ---- Layout ---- */
+    .layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      height: 100%;
       position: relative;
       z-index: 1;
     }
 
-    .left {
-      flex: 1;
+    /* ---- Left panel ---- */
+    .brand {
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      padding: 56px 48px;
       gap: 20px;
     }
 
     .wordmark {
       font-family: 'Fraunces', Georgia, serif;
-      font-size: 72px;
-      font-weight: 600;
+      font-size: 80px;
+      font-weight: 800;
       color: #3D3832;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       line-height: 1;
     }
 
     .tagline {
       font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 24px;
+      font-size: 21px;
       color: #6B6560;
-      line-height: 1.4;
-      max-width: 420px;
+      line-height: 1.45;
     }
 
-    .meta {
+    .stats {
       display: flex;
-      gap: 16px;
-      margin-top: 8px;
+      gap: 12px;
+      margin-top: 4px;
+      flex-wrap: wrap;
     }
 
-    .pill {
+    .stat {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
+      gap: 5px;
+      padding: 5px 12px;
       background: #F0EBE1;
       border: 1px solid #DDD6C8;
-      border-radius: 20px;
-      font-size: 14px;
+      border-radius: 16px;
+      font-size: 13px;
       color: #6B6560;
       font-weight: 500;
     }
 
-    .pill strong {
+    .stat strong {
       color: #C67B5C;
       font-weight: 700;
     }
 
-    .right {
+    .url {
+      font-family: 'Cabin', system-ui, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #C67B5C;
+      letter-spacing: 0.01em;
+      margin-top: 4px;
+    }
+
+    /* ---- Right panel: Mini dashboard ---- */
+    .dashboard {
+      background: #F5F0E6;
+      border-left: 1px solid #E5DFD2;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      width: 440px;
+      grid-template-columns: 140px 1fr;
+      overflow: hidden;
     }
 
-    /* Mini component previews */
-    .preview {
-      background: #FFFFFF;
-      border: 1px solid #DDD6C8;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(61,56,50,0.06), 0 1px 3px rgba(61,56,50,0.08);
-    }
-
-    /* Button preview */
-    .preview-btn {
+    /* Mini sidebar */
+    .mini-sidebar {
+      background: #EDE8DC;
+      border-right: 1px solid #DDD6C8;
+      padding: 24px 12px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 3px;
     }
 
-    .mini-btn {
+    .mini-sidebar__brand {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #3D3832;
+      padding: 4px 10px 14px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #DDD6C8;
+    }
+
+    .mini-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #8E8880;
+    }
+
+    .mini-nav--active {
+      background: rgba(198, 123, 92, 0.12);
+      color: #C67B5C;
+      font-weight: 600;
+    }
+
+    .mini-nav svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    /* Main area */
+    .mini-main {
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .mini-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mini-topbar h3 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #3D3832;
+    }
+
+    .mini-btn-primary {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-family: 'Cabin', system-ui, sans-serif;
-      font-size: 13px;
+      gap: 4px;
+      padding: 6px 14px;
+      background: linear-gradient(180deg, #D4845C 0%, #C67B5C 100%);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 11px;
       font-weight: 600;
       border: none;
-      cursor: default;
+      box-shadow: 0 1px 3px rgba(198,123,92,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
     }
 
-    .mini-btn--primary {
-      background: linear-gradient(180deg, #D4845C 0%, #C67B5C 100%);
-      color: #FFFFFF;
-      box-shadow: 0 2px 4px rgba(198,123,92,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+    /* Stat cards row */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
     }
 
-    .mini-btn--secondary {
-      background: linear-gradient(180deg, #FAF8F0 0%, #F0EBE1 100%);
-      color: #3D3832;
+    .stat-card {
+      background: #FFFFFF;
       border: 1px solid #DDD6C8;
-      box-shadow: 0 1px 3px rgba(61,56,50,0.06);
+      border-radius: 10px;
+      padding: 14px;
+      box-shadow: 0 1px 4px rgba(61,56,50,0.05), inset 0 1px 0 rgba(255,255,255,0.6);
     }
 
-    /* Input preview */
-    .preview-input {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .mini-label {
-      font-size: 12px;
+    .stat-card__label {
+      font-size: 9px;
       font-weight: 600;
-      color: #6B6560;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #8E8880;
+      margin-bottom: 4px;
+    }
+
+    .stat-card__value {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #3D3832;
+    }
+
+    .stat-card__change {
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .stat-card__change--up { color: #5A7A5A; }
+    .stat-card__change--down { color: #B85C5C; }
+
+    /* Mini table */
+    .mini-table {
+      background: #FFFFFF;
+      border: 1px solid #DDD6C8;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(61,56,50,0.05);
+      flex: 1;
+    }
+
+    .mini-table__header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      padding: 8px 14px;
+      background: #F8F5ED;
+      border-bottom: 1px solid #E5DFD2;
+      font-size: 9px;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-    }
-
-    .mini-input {
-      padding: 10px 14px;
-      border: 1px solid #DDD6C8;
-      border-radius: 8px;
-      background: #FAF8F0;
-      font-size: 13px;
       color: #8E8880;
-      font-family: 'Cabin', system-ui, sans-serif;
-      box-shadow: inset 0 1px 3px rgba(61,56,50,0.06);
     }
 
-    /* Badge preview */
-    .preview-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .mini-table__row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      padding: 7px 14px;
+      font-size: 11px;
+      color: #3D3832;
+      border-bottom: 1px solid #F0EBE1;
       align-items: center;
     }
+
+    .mini-table__row:last-child { border-bottom: none; }
 
     .mini-badge {
       display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 9px;
       font-weight: 600;
-    }
-
-    .mini-badge--new {
-      background: #C67B5C;
-      color: #FFFFFF;
-    }
-
-    .mini-badge--updated {
-      background: #F0EBE1;
-      color: #6B6560;
-      border: 1px solid #DDD6C8;
     }
 
     .mini-badge--success {
       background: #E8F0E8;
       color: #5A7A5A;
-      border: 1px solid #C8D8C8;
     }
 
-    /* Card preview */
-    .preview-card {
+    .mini-badge--warning {
+      background: #FFF3E0;
+      color: #B88A3E;
+    }
+
+    .mini-badge--error {
+      background: #FDEDEF;
+      color: #B85C5C;
+    }
+
+    /* Theme swatches row */
+    .theme-row {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      gap: 6px;
+      align-items: center;
     }
 
-    .mini-card-title {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 15px;
-      font-weight: 600;
-      color: #3D3832;
-    }
-
-    .mini-card-text {
-      font-size: 12px;
-      color: #8E8880;
-      line-height: 1.5;
-    }
-
-    .mini-card-bar {
-      height: 4px;
-      border-radius: 2px;
-      background: #F0EBE1;
+    .theme-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1.5px solid rgba(0,0,0,0.08);
+      position: relative;
       overflow: hidden;
     }
 
-    .mini-card-bar-fill {
+    .theme-swatch::before,
+    .theme-swatch::after {
+      content: '';
+      position: absolute;
+      width: 50%;
       height: 100%;
-      width: 65%;
-      background: linear-gradient(90deg, #C67B5C, #D4845C);
-      border-radius: 2px;
+      top: 0;
     }
 
-    /* Bottom accent line */
+    .theme-swatch::before { left: 0; }
+    .theme-swatch::after { right: 0; }
+
+    .theme-label {
+      font-size: 10px;
+      color: #8E8880;
+      font-weight: 500;
+      margin-left: 4px;
+    }
+
+    /* Bottom accent */
     .accent-line {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #C67B5C, #D4845C, #B8860B, #8B9DC3);
+      height: 5px;
+      background: linear-gradient(90deg, #C67B5C 0%, #D4845C 20%, #B8860B 40%, #5A7A5A 55%, #6B7C9E 70%, #8B6B9E 85%, #C67B5C 100%);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="left">
+  <div class="layout">
+    <!-- Left: Branding -->
+    <div class="brand">
       <div class="wordmark">DAUB</div>
-      <div class="tagline">Considered CSS components for discerning interfaces.</div>
-      <div class="meta">
-        <span class="pill"><strong>64</strong> components</span>
-        <span class="pill"><strong>8</strong> themes</span>
-        <span class="pill"><strong>0</strong> build steps</span>
+      <div class="tagline">Considered CSS components<br>for discerning interfaces.</div>
+      <div class="stats">
+        <span class="stat"><strong>76</strong> components</span>
+        <span class="stat"><strong>20</strong> themes</span>
+        <span class="stat"><strong>0</strong> build steps</span>
       </div>
+      <div class="stats">
+        <span class="stat">Drop-in CSS + JS</span>
+        <span class="stat">AI-ready</span>
+      </div>
+      <div class="url">daub.dev</div>
     </div>
-    <div class="right">
-      <div class="preview preview-btn">
-        <div class="mini-btn mini-btn--primary">Get Started</div>
-        <div class="mini-btn mini-btn--secondary">Documentation</div>
+
+    <!-- Right: Mini dashboard preview -->
+    <div class="dashboard">
+      <!-- Mini sidebar -->
+      <div class="mini-sidebar">
+        <div class="mini-sidebar__brand">Workspace</div>
+        <div class="mini-nav mini-nav--active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </div>
+        <div class="mini-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          Inbox
+        </div>
+        <div class="mini-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Projects
+        </div>
+        <div class="mini-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Team
+        </div>
+        <div class="mini-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Analytics
+        </div>
+        <div class="mini-nav" style="margin-top:auto;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68 1.65 1.65 0 0 0 10 3.17V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </div>
       </div>
-      <div class="preview preview-input">
-        <div class="mini-label">Email</div>
-        <div class="mini-input">name@example.com</div>
-        <div class="mini-label" style="margin-top: 6px">Password</div>
-        <div class="mini-input">••••••••</div>
-      </div>
-      <div class="preview preview-badges">
-        <span class="mini-badge mini-badge--new">New</span>
-        <span class="mini-badge mini-badge--updated">v2.0</span>
-        <span class="mini-badge mini-badge--success">Accessible</span>
-      </div>
-      <div class="preview preview-card">
-        <div class="mini-card-title">Analytics</div>
-        <div class="mini-card-text">Monthly active users across all themes.</div>
-        <div class="mini-card-bar"><div class="mini-card-bar-fill"></div></div>
+
+      <!-- Main content -->
+      <div class="mini-main">
+        <div class="mini-topbar">
+          <h3>Dashboard</h3>
+          <div class="mini-btn-primary">+ New Project</div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-card__label">Revenue</div>
+            <div class="stat-card__value">$24.8k</div>
+            <div class="stat-card__change stat-card__change--up">+12.5%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__label">Users</div>
+            <div class="stat-card__value">1,429</div>
+            <div class="stat-card__change stat-card__change--up">+8.2%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__label">Orders</div>
+            <div class="stat-card__value">312</div>
+            <div class="stat-card__change stat-card__change--down">-3.1%</div>
+          </div>
+        </div>
+
+        <!-- Mini table -->
+        <div class="mini-table">
+          <div class="mini-table__header">
+            <span>Customer</span>
+            <span>Amount</span>
+            <span>Status</span>
+          </div>
+          <div class="mini-table__row">
+            <span>Elena Rodriguez</span>
+            <span>$249.00</span>
+            <span><span class="mini-badge mini-badge--success">Paid</span></span>
+          </div>
+          <div class="mini-table__row">
+            <span>Marcus Chen</span>
+            <span>$89.50</span>
+            <span><span class="mini-badge mini-badge--warning">Pending</span></span>
+          </div>
+          <div class="mini-table__row">
+            <span>Sofia Andersson</span>
+            <span>$432.00</span>
+            <span><span class="mini-badge mini-badge--success">Paid</span></span>
+          </div>
+          <div class="mini-table__row">
+            <span>James O'Brien</span>
+            <span>$167.25</span>
+            <span><span class="mini-badge mini-badge--error">Cancelled</span></span>
+          </div>
+        </div>
+
+        <!-- Theme swatches -->
+        <div class="theme-row">
+          <!-- Default -->
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #FAF8F0 50%, #3D3832 50%);"></div>
+          <!-- Dracula -->
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #F8F8F2 50%, #282A36 50%);"></div>
+          <!-- Nord -->
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #ECEFF4 50%, #2E3440 50%);"></div>
+          <!-- Catppuccin -->
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #EFF1F5 50%, #1E1E2E 50%);"></div>
+          <!-- Tokyo Night -->
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #D5D6DB 50%, #1A1B26 50%);"></div>
+          <!-- Synthwave -->
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #F5E6F0 50%, #2b213a 50%);"></div>
+          <!-- Ember -->
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #FFF5EE 50%, #2D1F1A 50%);"></div>
+          <!-- Solarized -->
+          <div class="theme-swatch" style="background: linear-gradient(135deg, #FDF6E3 50%, #002B36 50%);"></div>
+          <span class="theme-label">20 themes &times; light/dark</span>
+        </div>
       </div>
     </div>
   </div>

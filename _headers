@@ -5,6 +5,7 @@
 
 /daub.d.ts
   Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
 
 /daub.css
   Cache-Control: public, max-age=300, must-revalidate
@@ -22,3 +23,12 @@
 
 /.well-known/ai-plugin.json
   Access-Control-Allow-Origin: *
+
+/og-image.png
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/robots.txt
+  Cache-Control: public, max-age=3600, must-revalidate

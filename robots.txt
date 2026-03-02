@@ -2,3 +2,9 @@ User-agent: *
 Allow: /
 
 Sitemap: https://daub.dev/sitemap.xml
+
+# AI agent resources
+# LLM documentation: https://daub.dev/llms.txt
+# Component data: https://daub.dev/components.json
+# AI plugin: https://daub.dev/.well-known/ai-plugin.json
+# TypeScript: https://daub.dev/daub.d.ts
