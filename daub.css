@@ -286,11 +286,11 @@ body::before {
 
 /* Per-element texture — applies grain/paper/metal/wood to physical surfaces
    Note: <input>, <textarea>, <select> are void/replaced elements — cannot have ::after.
-   Texture on form fields comes through their wrapper (.db-field, .db-input-group, etc.) */
+   Texture on form fields comes through their wrappers (.db-input-group, .db-input-icon, etc.)
+   NOT .db-field — that wrapper includes labels and helper text which shouldn't have texture. */
 .db-card::after,
 .db-btn--primary::after,
 .db-btn--secondary::after,
-.db-field::after,
 .db-input-group::after,
 .db-input-icon::after,
 .db-search::after,

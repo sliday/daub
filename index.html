@@ -741,9 +741,9 @@
       <a href="#controls" class="db-btn db-btn--secondary db-btn--lg">View Components</a>
     </div>
     <div class="db-hero__install">
-      <code>&lt;link rel="stylesheet" href="https://daub.dev/daub.css"&gt;
-&lt;script src="https://daub.dev/daub.js"&gt;&lt;/script&gt;</code>
-      <button class="db-hero__copy" aria-label="Copy to clipboard" onclick="navigator.clipboard.writeText('<link rel=&quot;stylesheet&quot; href=&quot;https://daub.dev/daub.css&quot;>\n<script src=&quot;https://daub.dev/daub.js&quot;><\/script>').then(function(){DAUB.toast({type:'success',title:'Copied!',message:'Both files copied to clipboard.',duration:2000})})">
+      <code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.js"&gt;&lt;/script&gt;</code>
+      <button class="db-hero__copy" aria-label="Copy to clipboard" onclick="navigator.clipboard.writeText('<link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.css&quot;>\n<script src=&quot;https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.js&quot;><\/script>').then(function(){DAUB.toast({type:'success',title:'Copied!',message:'Both files copied to clipboard.',duration:2000})})">
         <i data-lucide="copy" style="width:16px;height:16px;"></i>
       </button>
     </div>
@@ -919,7 +919,7 @@
         <p class="db-prompt-card__label">Dashboard</p>
         <p class="db-prompt-card__title">Analytics Dashboard</p>
         <p class="db-prompt-card__text">Build an analytics dashboard using DAUB (daub.dev/daub.css + daub.dev/daub.js). Include a sidebar with navigation, three stat cards, a sortable data table, and a bar chart. Use the dark theme. Fetch docs from daub.dev/llms.txt first.</p>
-        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
+        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="var b=this;navigator.clipboard.writeText(b.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){dbCopyFeedback(b,'Copy Prompt')})">
           <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
@@ -928,7 +928,7 @@
         <p class="db-prompt-card__label">Settings</p>
         <p class="db-prompt-card__title">User Settings Page</p>
         <p class="db-prompt-card__text">Create a user settings page with DAUB components. Profile section with avatar and text fields, notifications section with switches, danger zone with delete button that opens an alert dialog. Use the nord theme. Fetch docs from daub.dev/llms.txt first.</p>
-        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
+        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="var b=this;navigator.clipboard.writeText(b.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){dbCopyFeedback(b,'Copy Prompt')})">
           <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
@@ -937,7 +937,7 @@
         <p class="db-prompt-card__label">E-Commerce</p>
         <p class="db-prompt-card__title">Product Catalog</p>
         <p class="db-prompt-card__text">Build a responsive product catalog with DAUB. Use db-card--media in a db-grid--3 layout, chip filters with data-db-chip-toggle, pagination at the bottom, and a navbar with search. Theme: catppuccin. Fetch docs from daub.dev/llms.txt first.</p>
-        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
+        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="var b=this;navigator.clipboard.writeText(b.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){dbCopyFeedback(b,'Copy Prompt')})">
           <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
@@ -946,7 +946,7 @@
         <p class="db-prompt-card__label">Productivity</p>
         <p class="db-prompt-card__title">Task Board</p>
         <p class="db-prompt-card__text">Create a Kanban task board using DAUB. Three columns (To Do, In Progress, Done) with db-card components in a db-grid--3. Each card has title, badge for priority, avatar for assignee. Add command palette (Ctrl+K). Theme: tokyo-night. Fetch docs from daub.dev/llms.txt first.</p>
-        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
+        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="var b=this;navigator.clipboard.writeText(b.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){dbCopyFeedback(b,'Copy Prompt')})">
           <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
@@ -955,7 +955,7 @@
         <p class="db-prompt-card__label">Content</p>
         <p class="db-prompt-card__title">Blog Reading Page</p>
         <p class="db-prompt-card__text">Build a blog reading page with DAUB. Use db-prose for the article, db-breadcrumbs for navigation, author card with db-avatar, table of contents sidebar using db-nav-menu. Theme: github. Include theme switcher. Fetch docs from daub.dev/llms.txt first.</p>
-        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
+        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="var b=this;navigator.clipboard.writeText(b.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){dbCopyFeedback(b,'Copy Prompt')})">
           <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
@@ -964,7 +964,7 @@
         <p class="db-prompt-card__label">Onboarding</p>
         <p class="db-prompt-card__title">Multi-Step Form</p>
         <p class="db-prompt-card__text">Create a multi-step onboarding form with DAUB's stepper component. Step 1: account info (fields). Step 2: preferences (checkboxes, switches). Step 3: confirmation (summary card). Use db-stepper for progress, buttons to navigate. Theme: ember-light. Fetch docs from daub.dev/llms.txt first.</p>
-        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="navigator.clipboard.writeText(this.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
+        <button class="db-btn db-btn--sm db-btn--ghost" style="margin-top:12px" onclick="var b=this;navigator.clipboard.writeText(b.closest('.db-prompt-card').querySelector('.db-prompt-card__text').textContent).then(function(){dbCopyFeedback(b,'Copy Prompt')})">
           <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Prompt
         </button>
       </div>
@@ -974,16 +974,17 @@
     <div class="db-use-ai__example">
       <p class="db-use-ai__example-label">Minimal Example</p>
       <p class="db-use-ai__example-title">Analytics Dashboard in ~40 Lines</p>
-      <button class="db-btn db-btn--sm db-btn--secondary" style="position:absolute;top:60px;right:8px" onclick="navigator.clipboard.writeText(this.parentElement.querySelector('.db-use-ai__code').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
-        <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Code
-      </button>
-      <pre class="db-use-ai__code">&lt;!DOCTYPE html&gt;
+      <div style="position:relative">
+        <button class="db-btn db-btn--sm db-btn--ghost" style="position:absolute;top:8px;right:8px;color:var(--db-cream);z-index:1" onclick="var b=this;navigator.clipboard.writeText(b.closest('.db-use-ai__example').querySelector('.db-use-ai__code').textContent).then(function(){dbCopyFeedback(b,'Copy Code')})">
+          <i data-lucide="copy" style="width:12px;height:12px;"></i> Copy Code
+        </button>
+        <pre class="db-use-ai__code">&lt;!DOCTYPE html&gt;
 &lt;html data-theme="light"&gt;
 &lt;head&gt;
   &lt;meta charset="utf-8"&gt;
   &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
   &lt;title&gt;Dashboard&lt;/title&gt;
-  &lt;link rel="stylesheet" href="https://daub.dev/daub.css"&gt;
+  &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.css"&gt;
 &lt;/head&gt;
 &lt;body&gt;
   &lt;nav class="db-navbar"&gt;
@@ -1033,9 +1034,10 @@
     &lt;/div&gt;
   &lt;/main&gt;
   &lt;div class="db-theme-switcher"&gt;&lt;/div&gt;
-  &lt;script src="https://daub.dev/daub.js"&gt;&lt;/script&gt;
+  &lt;script src="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.js"&gt;&lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</pre>
+      </div>
     </div>
   </section>
 
@@ -2190,8 +2192,8 @@
           <li>Minimize ceremony — components should require no configuration</li>
         </ul>
         <p>Inline code looks like <code>var theme = 'light'</code> and links look like <a href="#">this considered anchor</a>.</p>
-        <pre><code>&lt;link rel="stylesheet" href="https://daub.dev/daub.css"&gt;
-&lt;script src="https://daub.dev/daub.js"&gt;&lt;/script&gt;</code></pre>
+        <pre><code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.js"&gt;&lt;/script&gt;</code></pre>
       </div>
     </div>
 
@@ -2365,6 +2367,30 @@
     // Initialize Lucide icons
     lucide.createIcons();
 
+    // Copy button feedback: spinner → "Copied!" → restore
+    function dbCopyFeedback(btn, original) {
+      btn.classList.add('db-btn--loading');
+      setTimeout(function() {
+        btn.classList.remove('db-btn--loading');
+        btn.textContent = '';
+        var icon = document.createElement('i');
+        icon.setAttribute('data-lucide', 'check');
+        icon.style.cssText = 'width:12px;height:12px;';
+        btn.appendChild(icon);
+        btn.appendChild(document.createTextNode(' Copied!'));
+        lucide.createIcons({ nodes: [btn] });
+        setTimeout(function() {
+          btn.textContent = '';
+          var restoreIcon = document.createElement('i');
+          restoreIcon.setAttribute('data-lucide', 'copy');
+          restoreIcon.style.cssText = 'width:12px;height:12px;';
+          btn.appendChild(restoreIcon);
+          btn.appendChild(document.createTextNode(' ' + original));
+          lucide.createIcons({ nodes: [btn] });
+        }, 1500);
+      }, 400);
+    }
+
     // Dynamic code generation for showcase configurator
     (function() {
       var codeEl = document.getElementById('db-config-code');
@@ -2388,8 +2414,8 @@
       function buildSnippet() {
         var s = getState();
         var lines = [
-          '<link rel="stylesheet" href="https://daub.dev/daub.css">',
-          '<script src="https://daub.dev/daub.js"><\/script>'
+          '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.css">',
+          '<script src="https://cdn.jsdelivr.net/npm/daub-ui@2.6.0/daub.js"><\/script>'
         ];
 
         var cssVars = [];
