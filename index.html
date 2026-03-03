@@ -668,12 +668,12 @@
     }
     .db-nav__links a:hover {
       color: var(--db-terracotta);
-      background: var(--db-sand);
+      background: color-mix(in srgb, var(--db-ink) 7%, transparent);
     }
     .db-nav__link--active {
       color: var(--db-terracotta) !important;
       font-weight: 600 !important;
-      background: color-mix(in srgb, var(--db-terracotta) 10%, transparent) !important;
+      background: color-mix(in srgb, var(--db-terracotta) 15%, transparent) !important;
     }
     .db-nav__github {
       display: inline-flex;
@@ -1019,7 +1019,7 @@
       </div>
 
       <!-- Preview tab -->
-      <div id="example-preview" class="db-surface--raised" style="border-radius:var(--db-radius-2);overflow:hidden;">
+      <div id="example-preview" class="db-surface--raised" style="border-radius:var(--db-radius-3);overflow:hidden;max-width:720px;margin:0 auto;">
         <nav class="db-navbar">
           <a class="db-navbar__brand" href="#">Acme</a>
           <div class="db-navbar__spacer"></div>
@@ -1027,7 +1027,7 @@
             <div class="db-avatar db-avatar--sm">JD</div>
           </div>
         </nav>
-        <main class="db-container" style="padding:var(--db-space-6) var(--db-space-4)">
+        <main style="padding:24px 24px 28px">
           <div class="db-grid db-grid--3 db-gap-4 db-mb-5">
             <div class="db-card" style="padding:var(--db-space-4)">
               <div class="db-stat">
