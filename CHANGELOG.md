@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.8.5
+
+**Progressive streaming render + Card body spacing.**
+
+- Feature: Progressive render now force-closes incomplete JSON during streaming — preview updates live as the AI generates, instead of waiting for completion
+- Fix: Card body (`db-card__body`) now uses `flex-column` with `gap: var(--db-space-3)` for consistent vertical spacing between children
+- Fix: Surface renderer now applies `border-radius: var(--db-radius-2, 8px)` inline to ensure rounded corners
+- Cache-bust: `?v=2.8.5` query strings on CSS/JS assets
+
 ## v2.8.4
 
 **Dynamic AI system prompt generation.**

@@ -39,7 +39,7 @@
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.8.4">
+  <link rel="stylesheet" href="daub.css?v=2.8.5">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -432,7 +432,7 @@
 
   <!-- Footer -->
   <div class="pg-footer">
-    DAUB v2.8.4 — Playground powered by <a href="https://github.com/nichochar/json-render" target="_blank" rel="noopener" style="color:var(--db-terracotta);text-decoration:none;">json-render</a> flat spec format
+    DAUB v2.8.5 — Playground powered by <a href="https://github.com/nichochar/json-render" target="_blank" rel="noopener" style="color:var(--db-terracotta);text-decoration:none;">json-render</a> flat spec format
   </div>
 
   <!-- Bottom tab bar (mobile + tablet) — uses DAUB db-bottom-nav -->
@@ -455,7 +455,7 @@
 <!-- Theme Switcher -->
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher"></div>
 
-<script src="daub.js?v=2.8.4"></script>
+<script src="daub.js?v=2.8.5"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -759,25 +759,53 @@ function cleanJSON(text) {
   return s;
 }
 
-// ---- Progressive rendering ----
+// ---- Progressive rendering (force-close incomplete JSON) ----
 function tryProgressiveRender(text) {
   var s = cleanJSON(text);
-  // Brace-depth scan — only attempt parse when depth hits 0
-  var depth = 0, inStr = false, esc = false;
+  if (!s || s.length < 20) return;
+
+  var stack = [];
+  var inStr = false, esc = false;
+
   for (var i = 0; i < s.length; i++) {
     var ch = s[i];
     if (esc) { esc = false; continue; }
     if (ch === '\\') { esc = true; continue; }
     if (ch === '"') { inStr = !inStr; continue; }
     if (inStr) continue;
-    if (ch === '{' || ch === '[') depth++;
-    if (ch === '}' || ch === ']') depth--;
+    if (ch === '{') { stack.push('}'); continue; }
+    if (ch === '[') { stack.push(']'); continue; }
+    if (ch === '}' || ch === ']') { stack.pop(); continue; }
   }
-  if (depth !== 0) return;
+
+  // If still inside a string, truncate to before the opening quote
+  if (inStr) {
+    var qi = s.lastIndexOf('"', s.length - 1);
+    while (qi > 0 && s[qi - 1] === '\\') qi = s.lastIndexOf('"', qi - 1);
+    if (qi > 0) s = s.substring(0, qi + 1);
+    stack = []; inStr = false; esc = false;
+    for (var j = 0; j < s.length; j++) {
+      var c2 = s[j];
+      if (esc) { esc = false; continue; }
+      if (c2 === '\\') { esc = true; continue; }
+      if (c2 === '"') { inStr = !inStr; continue; }
+      if (inStr) continue;
+      if (c2 === '{') stack.push('}');
+      else if (c2 === '[') stack.push(']');
+      else if (c2 === '}' || c2 === ']') stack.pop();
+    }
+  }
+
+  var trimmed = s.replace(/,\s*$/, '');
+  var closers = '';
+  for (var k = stack.length - 1; k >= 0; k--) closers += stack[k];
+
   try {
-    var spec = JSON.parse(s);
-    renderSpec(spec);
-    $status.textContent = 'Rendering...';
+    var spec = JSON.parse(trimmed + closers);
+    if (spec && spec.root && spec.elements) {
+      renderSpec(spec);
+      $status.textContent = 'Rendering\u2026';
+    }
   } catch (e) {}
 }
 
@@ -1062,6 +1090,7 @@ RENDERERS.Surface = function(p, ch, els, d) {
   var el = document.createElement('div');
   el.className = p.variant ? 'db-surface--' + p.variant : 'db-surface';
   el.style.padding = 'var(--db-space-4, 16px)';
+  el.style.borderRadius = 'var(--db-radius-2, 8px)';
   el.appendChild(renderChildren(els, ch, d));
   return el;
 };
@@ -1616,6 +1645,9 @@ RENDERERS.Card = function(p, ch, els, d) {
   var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
   if (bodyIds.length) {
     var body = mkEl('div', 'db-card__body');
+    body.style.display = 'flex';
+    body.style.flexDirection = 'column';
+    body.style.gap = 'var(--db-space-3)';
     body.appendChild(renderChildren(els, bodyIds, d));
     el.appendChild(body);
   }
