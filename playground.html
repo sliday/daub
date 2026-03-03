@@ -880,9 +880,10 @@ function cleanJSON(text) {
   var start = s.indexOf('{');
   var end = s.lastIndexOf('}');
   if (start !== -1 && end > start) s = s.substring(start, end + 1);
-  // Remove JS-style comments
-  s = s.replace(/\/\/[^\n]*/g, '');
-  s = s.replace(/\/\*[\s\S]*?\*\//g, '');
+  // Remove JS-style comments (preserve strings containing // or /*)
+  s = s.replace(/"(?:[^"\\]|\\.)*"|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, function(m) {
+    return m[0] === '"' ? m : '';
+  });
   // Fix trailing commas before } or ]
   s = s.replace(/,\s*([}\]])/g, '$1');
   return s;
