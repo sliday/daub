@@ -2,6 +2,16 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.8.8
+
+**Renderer spacing & data fixes.**
+
+- Fix: Layout gap default changed from `space-4` (16px) to `space-2` (8px) — proper 8px rhythm for vertical/horizontal flows
+- Fix: Layout gap clamped to 0-6 range (max 32px) to prevent oversized gaps from AI output
+- Fix: DataTable cell values that are objects (e.g. Badge specs) now extract `label`/`text`/`content` instead of rendering as `[object Object]`
+- Improvement: SYSTEM_PROMPT now documents spacing token scale (0-6) and recommends gap:2-3 for tight rhythm
+- Cache-bust: `?v=2.8.8` query strings on CSS/JS assets
+
 ## v2.8.7
 
 **Playground UI refinement.**
