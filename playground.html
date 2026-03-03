@@ -289,15 +289,15 @@
     }
     .pg-send-btn {
       position: absolute;
-      right: -1px;
-      bottom: -1px;
-      width: 32px;
-      height: 32px;
+      right: 4px;
+      bottom: 4px;
+      width: 28px;
+      height: 28px;
       padding: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: 0 0 var(--db-radius-2) 0;
+      border-radius: var(--db-radius-2);
     }
     .pg-chat__examples a:hover { color: var(--db-terracotta); }
     /* Theme picker — move to right bottom on playground */
@@ -305,28 +305,11 @@
     .db-theme-switcher__popover { left: auto; right: 0; }
 
     /* JSON panel */
-    .pg-json-body {
-      position: relative;
-    }
     .pg-json-area {
       flex: 1;
       display: flex;
       flex-direction: column;
       min-height: 0;
-    }
-    .pg-json-area__controls {
-      position: absolute;
-      bottom: 18px;
-      right: 18px;
-      z-index: 5;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      opacity: 0.7;
-    }
-    .pg-json-body:hover .pg-json-area__controls,
-    .pg-json-body:focus-within .pg-json-area__controls {
-      opacity: 1;
     }
     .pg-json-area textarea {
       flex: 1;
@@ -495,15 +478,14 @@
     <div class="pg-panel" id="panel-json">
       <div class="pg-panel__toolbar">
         <span class="pg-panel__toolbar-title"><strong>Structure</strong></span>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON"><i data-lucide="copy" style="width:12px;height:12px;"></i> Copy JSON</button>
-      </div>
-      <div class="pg-panel__body pg-json-body" style="display:flex;flex-direction:column;">
-        <div class="pg-json-area__controls">
-          <div class="db-toggle-group">
-            <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="true" data-mode="code">Code</button>
-            <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="false" data-mode="tree">Tree</button>
-          </div>
+        <div class="db-toggle-group">
+          <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="true" data-mode="code">Code</button>
+          <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="false" data-mode="tree">Tree</button>
         </div>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-render" title="Render" style="display:none;"><i data-lucide="play" style="width:12px;height:12px;"></i></button>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON"><i data-lucide="copy" style="width:12px;height:12px;"></i></button>
+      </div>
+      <div class="pg-panel__body" style="display:flex;flex-direction:column;">
         <div class="pg-json-error">
           <div class="db-alert db-alert--error">
             <div class="db-alert__content">
@@ -516,11 +498,6 @@
           <textarea id="pg-json" spellcheck="false"></textarea>
         </div>
         <div class="pg-json-tree" style="display:none;"></div>
-        <div style="margin-top:8px;display:none;justify-content:flex-end;" id="pg-render-row">
-          <button class="db-btn db-btn--secondary db-btn--sm" id="pg-render">
-            <i data-lucide="play" style="width:12px;height:12px;"></i> Render
-          </button>
-        </div>
       </div>
     </div>
 
@@ -1244,9 +1221,8 @@ function hideJsonError() {
 }
 
 // Show/hide Render button based on JSON content
-var $renderRow = document.getElementById('pg-render-row');
 function updateRenderVisibility() {
-  $renderRow.style.display = $json.value.trim() ? 'flex' : 'none';
+  $render.style.display = $json.value.trim() ? '' : 'none';
 }
 $json.addEventListener('input', updateRenderVisibility);
 
@@ -1447,7 +1423,8 @@ function renderElement(elements, id, depth) {
     return el;
   }
 
-  return render(def.props || {}, def.children || [], elements, depth);
+  var children = def.children || (def.props && def.props.children) || [];
+  return render(def.props || {}, children, elements, depth);
 }
 
 function renderChildren(elements, childIds, depth) {
