@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.8.3-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.8.4-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -371,7 +371,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v2.8.3** — Structured output enforcement for AI Playground: `response_format` / `output_config` on all API calls, robust `cleanJSON()` fallback. 76 components, 20 theme families.
+**Latest: v2.8.4** — Dynamic AI system prompt: `SYSTEM_PROMPT` now built from `RENDERERS` + `COMP_PROPS` at page load — adding a new renderer auto-updates the AI prompt. 76 components, 20 theme families.
 
 ## License
 

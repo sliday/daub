@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.8.4
+
+**Dynamic AI system prompt generation.**
+
+- Feature: `SYSTEM_PROMPT` is now built dynamically from `RENDERERS` + `COMP_PROPS` + `COMP_CATEGORIES` at page load
+- Feature: `COMP_PROPS` lookup — single source of truth mapping 67 component types to their props documentation
+- Feature: `COMP_CATEGORIES` — 8-category grouping for organized AI prompt output
+- Feature: `if (RENDERERS[t])` guard ensures only registered renderers appear in the prompt
+- Refactor: Removed static ~3KB `SYSTEM_PROMPT` string — adding a new renderer now auto-updates the AI prompt
+- Cache-bust: `?v=2.8.4` query strings on CSS/JS assets
+
 ## v2.8.3
 
 **Structured output enforcement for AI Playground.**
