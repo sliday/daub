@@ -14,6 +14,14 @@ All notable changes to DAUB are documented here.
 - Improvement: Removed panel collapse buttons from Chat and JSON toolbars
 - Improvement: Removed Playground footer (attribution moved to landing page CTA)
 - Improvement: `max_tokens` increased from 4096 to 16384 across all 7 API call sites (Playground + proxy worker)
+- Feature: Auto-continuation for large layouts — detects `finish_reason: "length"` and chains up to 2 follow-up prompts to complete truncated JSON
+- Feature: `repairJSON()` — force-closes open brackets/strings on truncated responses as final fallback
+- Improvement: `cleanJSON()` now strips JS-style comments (`//`, `/* */`) and trailing commas
+- Improvement: Stronger system prompt — explicit JSON validity rules (no trailing commas, no comments, escaped strings)
+- Improvement: Consistent bold toolbar headers (Chat, Preview) — same size, no icons
+- Improvement: Square send button with send icon, larger chat input area (80px min-height)
+- Improvement: Theme picker popover opens to the left when switcher is in bottom-right corner
+- Feature: Chat result bubbles are clickable — expand to show DAUB component type chips with counts
 - Cache-bust: `?v=2.8.6` query strings on CSS/JS assets
 
 ## v2.8.5

@@ -371,7 +371,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v2.8.6** — Playground & landing page polish: cleaner toolbars, "Code This" buttons on prompt cards, Playground CTA on landing page, 4x max_tokens increase. 76 components, 20 theme families.
+**Latest: v2.8.6** — Playground polish: auto-continuation for large layouts, JSON repair, "Code This" buttons on prompt cards, clickable component chips, cleaner toolbars. 76 components, 20 theme families.
 
 ## License
 
