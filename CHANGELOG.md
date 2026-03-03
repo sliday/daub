@@ -2,6 +2,21 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.8.1
+
+**Playground renderer fixes and improvements.**
+
+- Fix: Prose renderer now renders rich HTML content via DOMParser-based sanitizer instead of escaping tags as text
+- Fix: Search renderer uses correct `db-search` class with `__icon` and `__clear` button
+- Fix: Card renderer supports `footer` prop — children listed in footer render in `db-card__footer`
+- Fix: StatCard renderer supports `icon` prop — Lucide icon in `db-stat__icon`
+- Fix: Accordion items accept `children` array for rich nested content
+- Fix: Layout gap snaps to valid DAUB gap scale (1-8) instead of producing non-existent classes
+- Fix: Surface padding uses `var(--db-space-4)` instead of hardcoded `16px`
+- Improved: DataTable badge regex expanded with 14 additional status words (draft, scheduled, live, archived, etc.)
+- Improved: System prompt documents new Card footer, StatCard icon, Accordion children props
+- Cache-bust: `?v=2.8.1` query strings on CSS/JS assets
+
 ## v2.8.0
 
 **AI Playground page, json-render Generative UI, nav UX improvements.**
