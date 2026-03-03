@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.8.2
+
+**Layout renderer gap spacing fix.**
+
+- Fix: Layout renderer maps `gap` prop to DAUB spacing scale (`--db-space-N`) instead of raw pixels
+- Fix: Grid layout gap uses direct `db-gap-N` class mapping (clamped 1–6) instead of broken division formula
+- Fix: Flex layout gap defaults to `--db-space-4` (16px) when no gap specified
+- Cache-bust: `?v=2.8.2` query strings on CSS/JS assets
+
 ## v2.8.1
 
 **Playground renderer fixes and improvements.**

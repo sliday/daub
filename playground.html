@@ -39,7 +39,7 @@
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.8.1">
+  <link rel="stylesheet" href="daub.css?v=2.8.2">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -432,7 +432,7 @@
 
   <!-- Footer -->
   <div class="pg-footer">
-    DAUB v2.8.1 — Playground powered by <a href="https://github.com/nichochar/json-render" target="_blank" rel="noopener" style="color:var(--db-terracotta);text-decoration:none;">json-render</a> flat spec format
+    DAUB v2.8.2 — Playground powered by <a href="https://github.com/nichochar/json-render" target="_blank" rel="noopener" style="color:var(--db-terracotta);text-decoration:none;">json-render</a> flat spec format
   </div>
 
   <!-- Bottom tab bar (mobile + tablet) — uses DAUB db-bottom-nav -->
@@ -455,7 +455,7 @@
 <!-- Theme Switcher -->
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher"></div>
 
-<script src="daub.js?v=2.8.1"></script>
+<script src="daub.js?v=2.8.2"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -666,26 +666,118 @@ function callOpenRouter(prompt) {
   });
 }
 
-function generate() {
-  var prompt = $prompt.value.trim();
-  if (!prompt) return;
+// ---- Streaming SSE helper ----
+function streamFetch(url, headers, body, onChunk, onDone, onError) {
+  if (typeof ReadableStream === 'undefined') { onError('no-stream'); return; }
+  fetch(url, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(body)
+  }).then(function(res) {
+    if (!res.ok) {
+      return res.json().catch(function() { return {}; }).then(function(err) {
+        throw new Error((err.error && err.error.message) || 'HTTP ' + res.status);
+      });
+    }
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var buf = '';
+    var doneOnce = false;
+    function pump() {
+      reader.read().then(function(result) {
+        if (doneOnce) return;
+        if (result.done) { doneOnce = true; onDone(); return; }
+        buf += decoder.decode(result.value, { stream: true });
+        var lines = buf.split('\n');
+        buf = lines.pop();
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          if (!line || line.startsWith(':')) continue;
+          if (line === 'data: [DONE]') { doneOnce = true; onDone(); return; }
+          if (line.startsWith('data: ')) {
+            try { onChunk(JSON.parse(line.slice(6))); } catch (e) {}
+          } else if (line.startsWith('event: ')) {
+            // store event type for next data line (Anthropic)
+            buf = 'event:' + line.slice(7) + '\n' + buf;
+          }
+        }
+        pump();
+      }).catch(function(err) { if (!doneOnce) { doneOnce = true; onError(err); } });
+    }
+    pump();
+  }).catch(function(err) { onError(err); });
+}
 
-  var key = $apikey.value.trim();
-  if (!key) {
-    showJsonError('Please add your API key in Settings above.');
-    return;
+// ---- Streaming wrappers ----
+function streamOpenAI(prompt, onText, onDone, onError) {
+  streamFetch(
+    'https://api.openai.com/v1/chat/completions',
+    { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
+    { model: $model.value, messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4096, stream: true },
+    function(chunk) {
+      var c = chunk.choices && chunk.choices[0];
+      if (c && c.delta && c.delta.content) onText(c.delta.content);
+    },
+    onDone, onError
+  );
+}
+
+function streamAnthropic(prompt, onText, onDone, onError) {
+  streamFetch(
+    'https://api.anthropic.com/v1/messages',
+    { 'Content-Type': 'application/json', 'x-api-key': $apikey.value.trim(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    { model: $model.value, max_tokens: 4096, system: SYSTEM_PROMPT, messages: [{ role: 'user', content: prompt }], stream: true },
+    function(chunk) {
+      if (chunk.type === 'content_block_delta' && chunk.delta && chunk.delta.text) onText(chunk.delta.text);
+    },
+    onDone, onError
+  );
+}
+
+function streamOpenRouter(prompt, onText, onDone, onError) {
+  streamFetch(
+    'https://openrouter.ai/api/v1/chat/completions',
+    { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim(), 'HTTP-Referer': 'https://daub.dev', 'X-Title': 'DAUB Playground' },
+    { model: $model.value, messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4096, stream: true },
+    function(chunk) {
+      var c = chunk.choices && chunk.choices[0];
+      if (c && c.delta && c.delta.content) onText(c.delta.content);
+    },
+    onDone, onError
+  );
+}
+
+// ---- Progressive rendering ----
+function tryProgressiveRender(text) {
+  // Strip leading markdown fence if present
+  var s = text.replace(/^```(?:json)?\s*\n?/i, '');
+  // Brace-depth scan — only attempt parse when depth hits 0
+  var depth = 0, inStr = false, esc = false;
+  for (var i = 0; i < s.length; i++) {
+    var ch = s[i];
+    if (esc) { esc = false; continue; }
+    if (ch === '\\') { esc = true; continue; }
+    if (ch === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (ch === '{' || ch === '[') depth++;
+    if (ch === '}' || ch === ']') depth--;
   }
+  if (depth !== 0) return;
+  try {
+    var spec = JSON.parse(s);
+    renderSpec(spec);
+    $status.textContent = 'Rendering...';
+  } catch (e) {}
+}
 
-  saveSettings();
+// ---- Blocking fallback ----
+function runBlockingGenerate(prompt) {
   setLoading(true);
   $status.textContent = 'Generating...';
   hideJsonError();
-
   var provider = $provider.value;
   var apiCall = provider === 'anthropic' ? callAnthropic(prompt) : provider === 'openrouter' ? callOpenRouter(prompt) : callOpenAI(prompt);
-
   apiCall.then(function(raw) {
-    // Strip markdown fences if present
     raw = raw.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
     var spec = JSON.parse(raw);
     $json.value = JSON.stringify(spec, null, 2);
@@ -699,13 +791,73 @@ function generate() {
   });
 }
 
+function generate() {
+  var prompt = $prompt.value.trim();
+  if (!prompt) return;
+
+  var key = $apikey.value.trim();
+  if (!key) {
+    showJsonError('Please add your API key in Settings above.');
+    return;
+  }
+
+  saveSettings();
+  setLoading(true);
+  $status.textContent = 'Streaming...';
+  hideJsonError();
+  $json.value = '';
+  while ($preview.firstChild) $preview.removeChild($preview.firstChild);
+
+  var accumulated = '';
+  var renderTimer = setInterval(function() { tryProgressiveRender(accumulated); }, 300);
+
+  var provider = $provider.value;
+  var streamFn = provider === 'anthropic' ? streamAnthropic : provider === 'openrouter' ? streamOpenRouter : streamOpenAI;
+
+  streamFn(prompt,
+    function onText(chunk) {
+      accumulated += chunk;
+      $json.value = accumulated;
+      $json.scrollTop = $json.scrollHeight;
+    },
+    function onDone() {
+      clearInterval(renderTimer);
+      var clean = accumulated.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+      try {
+        var spec = JSON.parse(clean);
+        $json.value = JSON.stringify(spec, null, 2);
+        $status.textContent = 'Generated successfully';
+        renderSpec(spec);
+      } catch (e) {
+        $status.textContent = 'Parse error \u2014 check JSON';
+        showJsonError(e.message);
+      }
+      setLoading(false);
+    },
+    function onError(err) {
+      clearInterval(renderTimer);
+      if (err === 'no-stream') {
+        runBlockingGenerate(prompt);
+        return;
+      }
+      $status.textContent = 'Error';
+      showJsonError(err.message || String(err));
+      setLoading(false);
+    }
+  );
+}
+
 function setLoading(on) {
   if (on) {
     $generate.classList.add('db-btn--loading');
     $generate.disabled = true;
+    $provider.disabled = true;
+    $model.disabled = true;
   } else {
     $generate.classList.remove('db-btn--loading');
     $generate.disabled = false;
+    $provider.disabled = false;
+    $model.disabled = false;
   }
 }
 
@@ -878,17 +1030,17 @@ RENDERERS.Layout = function(p, ch, els, d) {
   }
   if (p.columns) {
     el.classList.add('db-grid', 'db-grid--' + p.columns);
-    if (p.gap) { var _gv = [1,2,3,4,5,6,8], _gr = Math.round(p.gap / 4) || 1; el.classList.add('db-gap-' + _gv.reduce(function(a,b){ return Math.abs(b-_gr)<Math.abs(a-_gr)?b:a; })); }
+    if (p.gap) el.classList.add('db-gap-' + Math.max(1, Math.min(6, p.gap)));
   } else if (p.direction === 'horizontal') {
     el.style.display = 'flex';
     el.style.flexDirection = 'row';
-    el.style.gap = (p.gap || 16) + 'px';
+    el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(9, p.gap || 4)) + ')';
     el.style.flexWrap = 'wrap';
     el.style.alignItems = 'flex-start';
   } else {
     el.style.display = 'flex';
     el.style.flexDirection = 'column';
-    el.style.gap = (p.gap || 16) + 'px';
+    el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(9, p.gap || 4)) + ')';
   }
   el.appendChild(renderChildren(els, ch, d));
   return el;
