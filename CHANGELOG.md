@@ -2,6 +2,20 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.8.7
+
+**Playground UI refinement.**
+
+- Improvement: JSON panel renamed to "Structure" — consistent bold headers across all three panels (Chat, Structure, Preview)
+- Improvement: Code/Tree toggle moved inside editor area at bottom right — floating overlay, visible in both modes
+- Improvement: "Use Your Own Key" link moved next to Examples trigger for cleaner layout
+- Improvement: Example chip prompts expanded to 10x longer, detailed UI descriptions (short pill labels preserved)
+- Improvement: Removed Format JSON button — reduced toolbar clutter
+- Improvement: Preview empty state shows inspiring Eames quote instead of dashed placeholder border
+- Improvement: Send button snapped to bottom-right edge of textarea
+- Improvement: System prompt now instructs AI to use dummyimage.com for placeholder images instead of via.placeholder.com
+- Cache-bust: `?v=2.8.7` query strings on CSS/JS assets
+
 ## v2.8.6
 
 **Playground & landing page polish.**

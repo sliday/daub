@@ -42,7 +42,7 @@
   <script src="https://cdn.jsdelivr.net/gh/caldwell/renderjson@master/renderjson.js"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.8.6">
+  <link rel="stylesheet" href="daub.css?v=2.8.7">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -289,39 +289,44 @@
     }
     .pg-send-btn {
       position: absolute;
-      right: 6px;
-      bottom: 6px;
+      right: -1px;
+      bottom: -1px;
       width: 32px;
       height: 32px;
       padding: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: var(--db-radius-2);
+      border-radius: 0 0 var(--db-radius-2) 0;
     }
-    .pg-chat__byok-toggle {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 6px;
-      font-family: var(--db-font-ui);
-    }
-    .pg-chat__byok-toggle a {
-      color: var(--db-warm-gray);
-      text-decoration: none;
-      font-size: 0.6875rem;
-    }
-    .pg-chat__byok-toggle a:hover { color: var(--db-terracotta); }
+    .pg-chat__examples a:hover { color: var(--db-terracotta); }
     /* Theme picker — move to right bottom on playground */
     .db-theme-switcher { left: auto; right: var(--db-space-5); }
     .db-theme-switcher__popover { left: auto; right: 0; }
 
     /* JSON panel */
+    .pg-json-body {
+      position: relative;
+    }
     .pg-json-area {
       flex: 1;
       display: flex;
       flex-direction: column;
       min-height: 0;
+    }
+    .pg-json-area__controls {
+      position: absolute;
+      bottom: 18px;
+      right: 18px;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0.7;
+    }
+    .pg-json-body:hover .pg-json-area__controls,
+    .pg-json-body:focus-within .pg-json-area__controls {
+      opacity: 1;
     }
     .pg-json-area textarea {
       flex: 1;
@@ -371,17 +376,23 @@
       padding: 16px;
       min-height: 100%;
     }
-    .pg-preview:empty::after {
-      content: 'Preview will appear here';
+    .pg-preview:empty {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 200px;
-      font-family: var(--db-font-ui);
-      font-size: 0.8125rem;
+      min-height: 100%;
+    }
+    .pg-preview:empty::after {
+      content: '\201CThe details are not the details. They make the design.\201D\A\2014 Charles Eames';
+      white-space: pre-wrap;
+      text-align: center;
+      font-family: var(--db-font-heading);
+      font-size: 0.9375rem;
+      font-style: italic;
+      line-height: 1.6;
       color: var(--db-warm-gray);
-      border: 2px dashed var(--db-sand);
-      border-radius: var(--db-radius-3);
+      opacity: 0.6;
+      max-width: 260px;
     }
 
     /* Bottom tab bar — uses DAUB db-bottom-nav, hidden on desktop */
@@ -447,18 +458,21 @@
         <div class="pg-chat__footer">
           <div class="pg-chat__examples" id="pg-chat-examples">
             <div class="db-collapsible">
-              <button class="db-collapsible__trigger" aria-expanded="false" style="font-size:0.6875rem;padding:4px 0;color:var(--db-warm-gray);">
-                <svg class="db-collapsible__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><path d="m9 18 6-6-6-6"/></svg>
-                Examples
-              </button>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <button class="db-collapsible__trigger" aria-expanded="false" style="font-size:0.6875rem;padding:4px 0;color:var(--db-warm-gray);">
+                  <svg class="db-collapsible__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><path d="m9 18 6-6-6-6"/></svg>
+                  Examples
+                </button>
+                <small><a href="#" id="pg-byok-link" style="color:var(--db-warm-gray);text-decoration:none;font-size:0.6875rem;font-family:var(--db-font-ui);">Use Your Own Key</a></small>
+              </div>
               <div class="db-collapsible__content">
                 <div style="display:flex;flex-wrap:wrap;gap:4px;padding-top:4px;">
-                  <button class="db-chip db-chip--sm" data-example="Dashboard with revenue, users, and orders">Dashboard</button>
-                  <button class="db-chip db-chip--sm" data-example="Login page with social sign-in">Login</button>
-                  <button class="db-chip db-chip--sm" data-example="App settings with tabs">Settings</button>
-                  <button class="db-chip db-chip--sm" data-example="User profile card">Profile</button>
-                  <button class="db-chip db-chip--sm" data-example="Team members table with search">Table</button>
-                  <button class="db-chip db-chip--sm" data-example="Pricing cards with 3 tiers">Pricing</button>
+                  <button class="db-chip db-chip--sm" data-example="Analytics dashboard with a top stats row showing 4 StatCards for revenue, active users, orders, and conversion rate. Below that a two-column layout: left side has a large ChartCard with a line chart of monthly revenue over 12 months, right side has a Card with a sortable DataTable of recent orders showing order ID, customer name, amount, status badge, and date. Add a Breadcrumb at the top and a Pagination bar at the bottom.">Dashboard</button>
+                  <button class="db-chip db-chip--sm" data-example="Login page with a centered Card on a subtle background. Inside the card: app logo at top, heading 'Welcome Back', email and password TextInput fields with proper labels and placeholders, a 'Remember me' Checkbox, a primary 'Sign In' Button full-width, a Divider with 'or continue with' text, then a row of 3 ghost Buttons for Google, GitHub, and Apple sign-in. Below the card a small caption: 'Don't have an account? Sign up'.">Login</button>
+                  <button class="db-chip db-chip--sm" data-example="Settings page with a vertical Layout. At the top a heading 'App Settings' with a caption subtitle. Below that a Tabs component with 4 tabs: General, Notifications, Appearance, Security. The General tab content shows a Card with form fields: TextInput for display name, TextInput for email, Textarea for bio, a Select dropdown for language, and a Toggle for 'Public profile'. Footer row with secondary 'Cancel' and primary 'Save Changes' Buttons.">Settings</button>
+                  <button class="db-chip db-chip--sm" data-example="User profile page with a horizontal two-column layout. Left column (narrow): a Card containing a large Avatar, the user's name as a heading, their role as a caption, a list of stats (posts, followers, following) as Badges, and an 'Edit Profile' Button. Right column (wide): a Card with Tabs for 'Posts', 'Activity', and 'About'. The Posts tab shows a List of 5 items each with a title, date caption, and a short excerpt paragraph.">Profile</button>
+                  <button class="db-chip db-chip--sm" data-example="Team members directory with a heading 'Team Directory', a SearchInput with placeholder 'Search by name or role', and a Card containing a DataTable with columns: avatar + name, email, role (shown as a Chip), department, join date, and a status Badge (active/away/offline). Show 8 rows of realistic team member data. Below the table a Pagination with page numbers. Add a primary 'Invite Member' Button in the top right corner.">Table</button>
+                  <button class="db-chip db-chip--sm" data-example="Pricing page with a centered heading 'Choose Your Plan' and a subtitle caption. Below that a Toggle group to switch between Monthly and Annual billing. Then a 3-column horizontal layout of Cards: Starter ($9/mo), Professional ($29/mo, highlighted with a 'Popular' Badge), and Enterprise ($99/mo). Each card has the plan name, price, a list of 5-6 features with checkmark icons, and a full-width Button (ghost for Starter, primary for Professional, secondary for Enterprise). Professional card should have a subtle raised surface style.">Pricing</button>
                 </div>
               </div>
             </div>
@@ -469,10 +483,7 @@
               <i data-lucide="send" style="width:14px;height:14px;"></i>
             </button>
           </div>
-          <div class="pg-chat__byok-toggle">
-            <small><a href="#" id="pg-byok-link">Use Your Own Key</a></small>
-            <span class="db-caption db-text-muted" id="pg-status"></span>
-          </div>
+          <span class="db-caption db-text-muted" id="pg-status" style="display:block;margin-top:4px;font-family:var(--db-font-ui);"></span>
         </div>
       </div>
     </div>
@@ -483,16 +494,16 @@
     <!-- MIDDLE: JSON Panel -->
     <div class="pg-panel" id="panel-json">
       <div class="pg-panel__toolbar">
-        <div class="db-toggle-group">
-          <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="true" data-mode="code">Code</button>
-          <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="false" data-mode="tree">Tree</button>
-        </div>
-        <div class="db-btn-group">
-          <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON"><i data-lucide="copy" style="width:12px;height:12px;"></i> Copy JSON</button>
-          <button class="db-btn db-btn--ghost db-btn--sm" id="pg-format-json" title="Format JSON"><i data-lucide="indent-increase" style="width:12px;height:12px;"></i></button>
-        </div>
+        <span class="pg-panel__toolbar-title"><strong>Structure</strong></span>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON"><i data-lucide="copy" style="width:12px;height:12px;"></i> Copy JSON</button>
       </div>
-      <div class="pg-panel__body" style="display:flex;flex-direction:column;">
+      <div class="pg-panel__body pg-json-body" style="display:flex;flex-direction:column;">
+        <div class="pg-json-area__controls">
+          <div class="db-toggle-group">
+            <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="true" data-mode="code">Code</button>
+            <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="false" data-mode="tree">Tree</button>
+          </div>
+        </div>
         <div class="pg-json-error">
           <div class="db-alert db-alert--error">
             <div class="db-alert__content">
@@ -590,7 +601,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=2.8.6"></script>
+<script src="daub.js?v=2.8.7"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -613,7 +624,6 @@ var $preview    = document.getElementById('pg-preview');
 var $generate   = document.getElementById('pg-generate');
 var $render     = document.getElementById('pg-render');
 var $copyJson   = document.getElementById('pg-copy-json');
-var $formatJson = document.getElementById('pg-format-json');
 var $copyHtml   = document.getElementById('pg-copy-html');
 var $status     = document.getElementById('pg-status');
 var $jsonError  = document.querySelector('.pg-json-error');
@@ -1257,14 +1267,6 @@ $copyJson.addEventListener('click', function() {
   navigator.clipboard.writeText($json.value).then(function() {
     DAUB.toast({ type: 'success', message: 'JSON copied!' });
   });
-});
-$formatJson.addEventListener('click', function() {
-  try {
-    var obj = JSON.parse($json.value);
-    $json.value = JSON.stringify(obj, null, 2);
-  } catch(e) {
-    showJsonError(e.message);
-  }
 });
 $copyHtml.addEventListener('click', function() {
   navigator.clipboard.writeText($preview.innerHTML).then(function() {
@@ -2926,7 +2928,8 @@ var SYSTEM_PROMPT = (function() {
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'
     + '- Use real-looking sample data (names, numbers, dates)\n'
-    + '- Keep element IDs descriptive and unique';
+    + '- Keep element IDs descriptive and unique\n'
+    + '- For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)';
 
   return preamble + sections + guidelines;
 })();
