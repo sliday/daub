@@ -284,20 +284,19 @@
       font-family: var(--db-font-ui);
       font-size: 0.875rem;
       line-height: 1.5;
-      padding: 10px 40px 10px 12px;
+      padding: 10px 12px 24px 12px;
       box-sizing: border-box;
     }
-    .pg-send-btn {
+    .pg-chat__input-row::after {
+      content: '\23CE';
       position: absolute;
-      right: 4px;
-      bottom: 4px;
-      width: 28px;
-      height: 28px;
-      padding: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--db-radius-2);
+      right: 10px;
+      bottom: 8px;
+      font-size: 0.75rem;
+      color: var(--db-warm-gray);
+      opacity: 0.45;
+      pointer-events: none;
+      font-family: var(--db-font-ui);
     }
     .pg-chat__examples a:hover { color: var(--db-terracotta); }
     /* Theme picker — move to right bottom on playground */
@@ -462,9 +461,6 @@
           </div>
           <div class="pg-chat__input-row">
             <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..."></textarea>
-            <button class="db-btn db-btn--primary db-btn--sm pg-send-btn" id="pg-generate" title="Send">
-              <i data-lucide="send" style="width:14px;height:14px;"></i>
-            </button>
           </div>
           <span class="db-caption db-text-muted" id="pg-status" style="display:block;margin-top:4px;font-family:var(--db-font-ui);"></span>
         </div>
@@ -598,7 +594,7 @@ var $apikey     = document.getElementById('pg-apikey');
 var $prompt     = document.getElementById('pg-prompt');
 var $json       = document.getElementById('pg-json');
 var $preview    = document.getElementById('pg-preview');
-var $generate   = document.getElementById('pg-generate');
+var _isLoading = false;
 var $render     = document.getElementById('pg-render');
 var $copyJson   = document.getElementById('pg-copy-json');
 var $copyHtml   = document.getElementById('pg-copy-html');
@@ -798,12 +794,16 @@ function streamFetch(url, headers, body, onChunk, onDone, onError) {
 // ---- Streaming wrappers (accept messages array) ----
 var _lastFinishReason = '';
 
-function streamDefault(messages, onText, onDone, onError) {
+var FALLBACK_MODEL = 'xiaomi/mimo-vl-7b-flash:free';
+
+function streamDefault(messages, onText, onDone, onError, model) {
   _lastFinishReason = '';
+  var body = { messages: messages };
+  if (model) body.model = model;
   streamFetch(
     '/api/generate',
     { 'Content-Type': 'application/json' },
-    { messages: messages },
+    body,
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
@@ -1123,18 +1123,49 @@ function generate() {
   var accumulated = '';
   var continuations = 0;
   var MAX_CONTINUATIONS = 2;
+  var retries = 0;
+  var MAX_RETRIES = 3;
+  var usingFallback = false;
   var renderTimer = setInterval(function() { tryProgressiveRender(accumulated); }, 300);
 
   var streamFn;
+  var provider;
   if (isDefaultMode) {
     streamFn = streamDefault;
   } else {
-    var provider = $provider ? $provider.value : 'openai';
+    provider = $provider ? $provider.value : 'openai';
     streamFn = provider === 'anthropic' ? streamAnthropic : provider === 'openrouter' ? streamOpenRouter : streamOpenAI;
   }
 
-  function startStream(msgs) {
-    streamFn(msgs,
+  function doRetryOrFallback(reason) {
+    retries++;
+    accumulated = '';
+    $json.value = '';
+    if (retries <= MAX_RETRIES) {
+      $status.textContent = 'Retry ' + retries + '/' + MAX_RETRIES + ' \u2014 ' + reason;
+      setTimeout(function() { startStream(messages); }, 500);
+    } else if (isDefaultMode && !usingFallback) {
+      usingFallback = true;
+      retries = 0;
+      $status.textContent = 'Switching to fallback model\u2026';
+      setTimeout(function() { startStream(messages, FALLBACK_MODEL); }, 500);
+    } else {
+      clearInterval(renderTimer);
+      $status.textContent = '';
+      showJsonError(reason);
+      streamBubble.classList.remove('pg-chat__msg--streaming');
+      streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
+      streamBubble.textContent = 'Parse error \u2014 ' + reason;
+      setLoading(false);
+    }
+  }
+
+  function startStream(msgs, model) {
+    var callStreamFn = function(m, onT, onD, onE) {
+      if (isDefaultMode) streamDefault(m, onT, onD, onE, model);
+      else streamFn(m, onT, onD, onE);
+    };
+    callStreamFn(msgs,
       function onText(chunk) {
         accumulated += chunk;
         $json.value = accumulated;
@@ -1149,7 +1180,7 @@ function generate() {
             { role: 'assistant', content: accumulated },
             { role: 'user', content: 'Continue the JSON exactly from where you stopped. Output ONLY the remaining JSON, no repetition, no explanation.' }
           ]);
-          startStream(contMsgs);
+          startStream(contMsgs, model);
           return;
         }
         clearInterval(renderTimer);
@@ -1162,7 +1193,7 @@ function generate() {
         }
         if (spec && spec.root && spec.elements) {
           $json.value = JSON.stringify(spec, null, 2);
-          $status.textContent = '';
+          $status.textContent = usingFallback ? 'Rendered via fallback model' : '';
           currentSpec = spec;
           renderSpec(spec);
           switchJsonMode('tree');
@@ -1170,15 +1201,10 @@ function generate() {
           buildResultBubble(streamBubble, spec);
           chatHistory.push({ role: 'assistant', content: 'Generated UI \u00B7 ' + countComponents(spec) + ' components' });
           saveChatState();
+          setLoading(false);
         } else {
-          $status.textContent = '';
-          var errMsg = 'Invalid or incomplete JSON response';
-          showJsonError(errMsg);
-          streamBubble.classList.remove('pg-chat__msg--streaming');
-          streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
-          streamBubble.textContent = 'Parse error \u2014 ' + errMsg;
+          doRetryOrFallback('Invalid or incomplete JSON response');
         }
-        setLoading(false);
       },
       function onError(err) {
         clearInterval(renderTimer);
@@ -1186,12 +1212,7 @@ function generate() {
           runBlockingGenerate(messages, streamBubble);
           return;
         }
-        $status.textContent = '';
-        showJsonError(err.message || String(err));
-        streamBubble.classList.remove('pg-chat__msg--streaming');
-        streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
-        streamBubble.textContent = err.message || String(err);
-        setLoading(false);
+        doRetryOrFallback(err.message || String(err));
       }
     );
   }
@@ -1199,16 +1220,16 @@ function generate() {
 }
 
 function setLoading(on) {
+  _isLoading = on;
   if (on) {
-    $generate.classList.add('db-btn--loading');
-    $generate.disabled = true;
+    $prompt.disabled = true;
     if ($provider) $provider.disabled = true;
     if ($model) $model.disabled = true;
   } else {
-    $generate.classList.remove('db-btn--loading');
-    $generate.disabled = false;
+    $prompt.disabled = false;
     if ($provider) $provider.disabled = false;
     if ($model) $model.disabled = false;
+    $prompt.focus();
   }
 }
 
@@ -1290,7 +1311,7 @@ $jsonModes.forEach(function(btn) {
   });
 });
 
-$generate.addEventListener('click', generate);
+// Generate is triggered by Enter key only (no send button)
 $render.addEventListener('click', function() {
   renderFromEditor();
   switchJsonMode('tree');
@@ -1298,7 +1319,7 @@ $render.addEventListener('click', function() {
 
 // Enter to send (Shift+Enter for newline)
 $prompt.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
+  if (e.key === 'Enter' && !e.shiftKey && !_isLoading) {
     e.preventDefault();
     generate();
   }

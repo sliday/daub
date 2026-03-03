@@ -11,9 +11,11 @@ All notable changes to DAUB are documented here.
 - Improvement: "Use Your Own Key" link moved next to Examples trigger for cleaner layout
 - Improvement: Example chip prompts expanded to 10x longer, detailed UI descriptions (short pill labels preserved)
 - Improvement: Preview empty state shows inspiring Eames quote instead of dashed placeholder border
-- Improvement: Send button inside textarea at bottom-right corner
+- Improvement: Removed send button — Enter glyph (⏎) hint in textarea corner, Enter key to send
 - Improvement: System prompt now instructs AI to use dummyimage.com for placeholder images instead of via.placeholder.com
+- Feature: Retry + fallback — retries default model up to 3 times on JSON errors, then falls back to `xiaomi/mimo-vl-7b-flash:free`
 - Fix: Renderer now handles `children` inside `props` — AI sometimes nests children in props instead of element level
+- Fix: Proxy accepts optional `model` parameter for fallback routing
 - Cache-bust: `?v=2.8.7` query strings on CSS/JS assets
 
 ## v2.8.6

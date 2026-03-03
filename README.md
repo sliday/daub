@@ -371,7 +371,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v2.8.7** — Playground UI refinement: "Structure" panel, floating Code/Tree toggle, detailed example prompts, Eames quote empty state, dummyimage.com placeholders. 76 components, 20 theme families.
+**Latest: v2.8.7** — Playground UI refinement: "Structure" panel, retry + fallback model, children-in-props fix, Enter-to-send, detailed example prompts. 76 components, 20 theme families.
 
 ## License
 
