@@ -575,8 +575,6 @@ document.querySelectorAll('[data-template]').forEach(function(chip) {
   });
 });
 
-// ---- System prompt ----
-var SYSTEM_PROMPT = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\nOUTPUT FORMAT \u2014 Return ONLY valid JSON, no markdown fences, no explanation:\n{\n  "root": "<element-id>",\n  "elements": {\n    "<element-id>": {\n      "type": "<ComponentType>",\n      "props": { ... },\n      "children": ["<child-id>", ...]\n    }\n  }\n}\n\nRULES:\n- Every element has a unique string ID (e.g. "layout-1", "card-1", "btn-1")\n- "children" is an array of element ID strings (flat, NOT nested objects)\n- Only leaf elements omit "children"\n- The "root" must reference an existing element ID\n\nAVAILABLE COMPONENT TYPES AND PROPS:\n\nLayout & Structure:\n- Layout: { direction: "vertical"|"horizontal", columns: 2-6, gap: number, container: "wide"|"narrow"|true }\n- Surface: { variant: "raised"|"inset"|"pressed" }\n- Text: { tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string }\n- Prose: { content: string (HTML), size: "sm"|"lg"|"xl"|"2xl" }\n- Separator: { vertical: bool, dashed: bool, label: string }\n\nControls:\n- Button: { label: string, variant: "primary"|"secondary"|"ghost", size: "sm"|"lg"|"icon", loading: bool, icon: string }\n- ButtonGroup: {} (children are Buttons)\n- Field: { label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string }\n- Input: { placeholder: string, size: "sm"|"lg", error: bool }\n- InputGroup: { addonBefore: string, addonAfter: string } (child is Input)\n- InputIcon: { icon: string, right: bool } (child is Input)\n- Search: { placeholder: string }\n- Textarea: { placeholder: string, rows: number, error: bool }\n- Checkbox: { label: string, checked: bool }\n- RadioGroup: { options: [{label, value}], selected: string }\n- Switch: { label: string, checked: bool }\n- Slider: { min: number, max: number, value: number, step: number, label: string }\n- Toggle: { label: string, pressed: bool, size: "sm" }\n- ToggleGroup: { options: [{label, value}], selected: string }\n- Select: { label: string, options: [{label, value}], selected: string }\n- CustomSelect: { placeholder: string, options: [{label, value}], searchable: bool }\n- Kbd: { keys: [string] }\n- Label: { text: string, required: bool, optional: bool }\n- Spinner: { size: "sm"|"lg"|"xl" }\n- InputOTP: { length: number, separator: bool }\n\nNavigation:\n- Tabs: { tabs: [{label, id}], active: string }\n- Breadcrumbs: { items: [{label, href}] }\n- Pagination: { current: number, total: number, perPage: number }\n- Stepper: { steps: [{label, status: "completed"|"active"|"pending"}] }\n- NavMenu: { items: [{label, href, active: bool}] }\n- Navbar: { brand: string, brandHref: string }\n- Menubar: { items: [{label, dropdown: [{label, href}]}] }\n- Sidebar: { sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool }\n- BottomNav: { items: [{label, icon, active, badge}] }\n\nData Display:\n- Card: { title: string, description: string, media: string, footer: [childIds] }\n- Table: { columns: [{key, label, numeric}], rows: [{}], sortable: bool }\n- DataTable: { columns: [{key, label}], rows: [{}], selectable: bool }\n- List: { items: [{title, secondary, icon}] }\n- Badge: { text: string, variant: "new"|"updated"|"warning"|"error" }\n- Avatar: { initials: string, src: string, size: "sm"|"md"|"lg" }\n- AvatarGroup: { avatars: [{initials, src}], max: number }\n- Calendar: { selected: string, today: string }\n- Chart: { bars: [{label, value, max}] }\n- Carousel: { slides: [{content}] }\n- AspectRatio: { ratio: "16-9"|"4-3"|"1-1"|"21-9" }\n- Chip: { label: string, color: "red"|"green"|"blue"|"purple"|"amber"|"pink", active: bool, closable: bool }\n- ScrollArea: { direction: "horizontal"|"vertical" }\n\nFeedback:\n- Alert: { type: "info"|"warning"|"error"|"success", title: string, message: string }\n- Progress: { value: number, indeterminate: bool }\n- Skeleton: { variant: "text"|"heading"|"avatar"|"btn", lines: number }\n- EmptyState: { icon: string, title: string, message: string }\n- Tooltip: { text: string, position: "top"|"bottom"|"left"|"right" }\n\nOverlays:\n- Modal: { id: string, title: string }\n- AlertDialog: { id: string, title: string, description: string }\n- Sheet: { id: string, position: "right"|"left"|"top"|"bottom" }\n- Drawer: { id: string }\n- Popover: { position: "top"|"bottom"|"left"|"right" }\n- HoverCard: {}\n- DropdownMenu: { items: [{label, icon, separator, groupLabel}] }\n- ContextMenu: { items: [{label, icon, separator}] }\n- CommandPalette: { id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] }\n\nLayout Utilities:\n- Accordion: { items: [{title, content, children: [childIds]}], multi: bool }\n- Collapsible: { label: string }\n- Resizable: { direction: "horizontal"|"vertical" }\n- DatePicker: { label: string, placeholder: string, selected: string }\n\nDashboard:\n- StatCard: { label: string, value: string, trend: "up"|"down", trendValue: string, icon: string }\n- ChartCard: { title: string }\n\nGUIDELINES:\n- Use Layout as the root with direction:"vertical" for page-level layouts\n- Use Layout with direction:"horizontal" and columns for grid arrangements\n- Wrap related content in Card components\n- Use StatCard for KPI metrics\n- Use real-looking sample data (names, numbers, dates)\n- Keep element IDs descriptive and unique';
 
 // ---- AI API calls ----
 function callOpenAI(prompt) {
@@ -2315,6 +2313,135 @@ RENDERERS.ChartCard = function(p, ch, els, d) {
   el.appendChild(body);
   return el;
 };
+
+// ---- Component props documentation (single source of truth for AI prompt) ----
+var COMP_PROPS = {
+  // Layout & Structure
+  Layout: 'direction: "vertical"|"horizontal", columns: 2-6, gap: number, container: "wide"|"narrow"|true',
+  Surface: 'variant: "raised"|"inset"|"pressed"',
+  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
+  Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
+  Separator: 'vertical: bool, dashed: bool, label: string',
+  // Controls
+  Button: 'label: string, variant: "primary"|"secondary"|"ghost", size: "sm"|"lg"|"icon", loading: bool, icon: string',
+  ButtonGroup: '(children are Buttons)',
+  Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string',
+  Input: 'placeholder: string, size: "sm"|"lg", error: bool',
+  InputGroup: 'addonBefore: string, addonAfter: string (child is Input)',
+  InputIcon: 'icon: string, right: bool (child is Input)',
+  Search: 'placeholder: string',
+  Textarea: 'placeholder: string, rows: number, error: bool',
+  Checkbox: 'label: string, checked: bool',
+  RadioGroup: 'options: [{label, value}], selected: string',
+  Switch: 'label: string, checked: bool',
+  Slider: 'min: number, max: number, value: number, step: number, label: string',
+  Toggle: 'label: string, pressed: bool, size: "sm"',
+  ToggleGroup: 'options: [{label, value}], selected: string',
+  Select: 'label: string, options: [{label, value}], selected: string',
+  CustomSelect: 'placeholder: string, options: [{label, value}], searchable: bool',
+  Kbd: 'keys: [string]',
+  Label: 'text: string, required: bool, optional: bool',
+  Spinner: 'size: "sm"|"lg"|"xl"',
+  InputOTP: 'length: number, separator: bool',
+  // Navigation
+  Tabs: 'tabs: [{label, id}], active: string',
+  Breadcrumbs: 'items: [{label, href}]',
+  Pagination: 'current: number, total: number, perPage: number',
+  Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}]',
+  NavMenu: 'items: [{label, href, active: bool}]',
+  Navbar: 'brand: string, brandHref: string',
+  Menubar: 'items: [{label, dropdown: [{label, href}]}]',
+  Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool',
+  BottomNav: 'items: [{label, icon, active, badge}]',
+  // Data Display
+  Card: 'title: string, description: string, media: string, footer: [childIds]',
+  Table: 'columns: [{key, label, numeric}], rows: [{}], sortable: bool',
+  DataTable: 'columns: [{key, label}], rows: [{}], selectable: bool',
+  List: 'items: [{title, secondary, icon}]',
+  Badge: 'text: string, variant: "new"|"updated"|"warning"|"error"',
+  Avatar: 'initials: string, src: string, size: "sm"|"md"|"lg"',
+  AvatarGroup: 'avatars: [{initials, src}], max: number',
+  Calendar: 'selected: string, today: string',
+  Chart: 'bars: [{label, value, max}]',
+  Carousel: 'slides: [{content}]',
+  AspectRatio: 'ratio: "16-9"|"4-3"|"1-1"|"21-9"',
+  Chip: 'label: string, color: "red"|"green"|"blue"|"purple"|"amber"|"pink", active: bool, closable: bool',
+  ScrollArea: 'direction: "horizontal"|"vertical"',
+  // Feedback
+  Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
+  Progress: 'value: number, indeterminate: bool',
+  Skeleton: 'variant: "text"|"heading"|"avatar"|"btn", lines: number',
+  EmptyState: 'icon: string, title: string, message: string',
+  Tooltip: 'text: string, position: "top"|"bottom"|"left"|"right"',
+  // Overlays
+  Modal: 'id: string, title: string',
+  AlertDialog: 'id: string, title: string, description: string',
+  Sheet: 'id: string, position: "right"|"left"|"top"|"bottom"',
+  Drawer: 'id: string',
+  Popover: 'position: "top"|"bottom"|"left"|"right"',
+  HoverCard: '',
+  DropdownMenu: 'items: [{label, icon, separator, groupLabel}]',
+  ContextMenu: 'items: [{label, icon, separator}]',
+  CommandPalette: 'id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}]',
+  // Layout Utilities
+  Accordion: 'items: [{title, content, children: [childIds]}], multi: bool',
+  Collapsible: 'label: string',
+  Resizable: 'direction: "horizontal"|"vertical"',
+  DatePicker: 'label: string, placeholder: string, selected: string',
+  // Dashboard
+  StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string',
+  ChartCard: 'title: string'
+};
+
+var COMP_CATEGORIES = [
+  ['Layout & Structure', ['Layout', 'Surface', 'Text', 'Prose', 'Separator']],
+  ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
+  ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
+  ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea']],
+  ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip']],
+  ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette']],
+  ['Layout Utilities', ['Accordion', 'Collapsible', 'Resizable', 'DatePicker']],
+  ['Dashboard', ['StatCard', 'ChartCard']]
+];
+
+// ---- Dynamic system prompt (built from RENDERERS + COMP_PROPS) ----
+var SYSTEM_PROMPT = (function() {
+  var preamble = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\n'
+    + 'OUTPUT FORMAT \u2014 Return ONLY valid JSON, no markdown fences, no explanation:\n'
+    + '{\n  "root": "<element-id>",\n  "elements": {\n    "<element-id>": {\n'
+    + '      "type": "<ComponentType>",\n      "props": { ... },\n'
+    + '      "children": ["<child-id>", ...]\n    }\n  }\n}\n\n'
+    + 'RULES:\n'
+    + '- Every element has a unique string ID (e.g. "layout-1", "card-1", "btn-1")\n'
+    + '- "children" is an array of element ID strings (flat, NOT nested objects)\n'
+    + '- Only leaf elements omit "children"\n'
+    + '- The "root" must reference an existing element ID\n\n'
+    + 'AVAILABLE COMPONENT TYPES AND PROPS:\n\n';
+
+  var sections = '';
+  for (var i = 0; i < COMP_CATEGORIES.length; i++) {
+    var cat = COMP_CATEGORIES[i][0];
+    var types = COMP_CATEGORIES[i][1];
+    sections += cat + ':\n';
+    for (var j = 0; j < types.length; j++) {
+      var t = types[j];
+      if (RENDERERS[t]) {
+        sections += '- ' + t + ': { ' + (COMP_PROPS[t] || '') + ' }\n';
+      }
+    }
+    sections += '\n';
+  }
+
+  var guidelines = 'GUIDELINES:\n'
+    + '- Use Layout as the root with direction:"vertical" for page-level layouts\n'
+    + '- Use Layout with direction:"horizontal" and columns for grid arrangements\n'
+    + '- Wrap related content in Card components\n'
+    + '- Use StatCard for KPI metrics\n'
+    + '- Use real-looking sample data (names, numbers, dates)\n'
+    + '- Keep element IDs descriptive and unique';
+
+  return preamble + sections + guidelines;
+})();
 
 // ---- Panel resize (drag dividers) ----
 (function initResizers() {
