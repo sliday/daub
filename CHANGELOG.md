@@ -2,6 +2,20 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.8.0
+
+**AI Playground page, json-render Generative UI, nav UX improvements.**
+
+- New: `playground.html` — three-panel AI playground for json-render Generative UI with DAUB components
+- Playground: 67 DAUB component renderers mapped to json-render flat spec format
+- Playground: BYOK AI integration — OpenAI, Anthropic, OpenRouter with current model lists
+- Playground: 5 pre-built templates (Dashboard, Login Form, Settings, Profile Card, Data Table)
+- Playground: resizable panels with drag dividers, mobile/tablet bottom nav via `db-bottom-nav`
+- Nav: larger clickable zones (`padding: 6px 12px`), active color indication with terracotta tint background
+- Nav: added Playground link to index.html, demo.html, playground.html
+- llms.txt: added json-render integration recipe with full component catalog mapping
+- Cache-bust: `?v=2.8.0` query strings on CSS/JS assets
+
 ## v2.7.0
 
 **Overlay skeletons, tooltip fix, dropdown alias, better warnings.**

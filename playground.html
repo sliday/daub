@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAUB — Playground</title>
+  <meta name="description" content="Interactive Playground for DAUB UI Kit: prompt an AI, get a json-render spec, and see live DAUB component previews with all 76 components.">
+  <meta name="keywords" content="DAUB playground, json-render, generative UI, AI components, CSS components, live preview, BYOK">
+  <meta name="theme-color" content="#C67B5C">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://daub.dev/playground.html">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM documentation">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DAUB — Playground">
+  <meta property="og:description" content="Interactive Generative UI playground with 76 DAUB components. Prompt AI, get JSON specs, see live previews.">
+  <meta property="og:url" content="https://daub.dev/playground.html">
+  <meta property="og:site_name" content="DAUB UI">
+  <meta property="og:image" content="https://daub.dev/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DAUB — Playground">
+  <meta name="twitter:description" content="Interactive Generative UI playground with 76 DAUB components. Prompt AI, get JSON specs, see live previews.">
+  <meta name="twitter:image" content="https://daub.dev/og-image.png">
+  <meta name="twitter:site" content="@staskulesh">
+
+  <!-- FOUC prevention -->
+  <script>
+    (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t);var s=localStorage.getItem('db-scheme');if(s)document.documentElement.setAttribute('data-scheme',s);var a=localStorage.getItem('db-accent');if(a)document.documentElement.style.setProperty('--db-terracotta',a)}catch(e){}})();
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
+
+  <!-- DAUB -->
+  <link rel="stylesheet" href="daub.css?v=2.8.0">
+
+  <style>
+    html, body { margin: 0; overflow-x: hidden; height: 100%; }
+
+    /* Nav bar */
+    .db-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--db-cream);
+      border-bottom: 1px solid var(--db-sand);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+      font-family: var(--db-font-ui);
+      backdrop-filter: blur(8px);
+    }
+    .db-nav__brand {
+      font-family: var(--db-font-heading);
+      font-weight: 800;
+      font-size: 1.125rem;
+      color: var(--db-ink);
+      text-decoration: none;
+    }
+    .db-nav__links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .db-nav__links a {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-charcoal);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: var(--db-radius-2);
+      transition: color var(--db-transition), background var(--db-transition);
+    }
+    .db-nav__links a:hover {
+      color: var(--db-terracotta);
+      background: var(--db-sand);
+    }
+    .db-nav__link--active {
+      color: var(--db-terracotta) !important;
+      font-weight: 600 !important;
+      background: color-mix(in srgb, var(--db-terracotta) 10%, transparent) !important;
+    }
+    .db-nav__github {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-charcoal);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: var(--db-radius-2);
+      border: 1px solid var(--db-sand);
+      transition: border-color var(--db-transition);
+    }
+    .db-nav__github:hover { border-color: var(--db-charcoal); }
+    @media (max-width: 600px) {
+      .db-nav { padding: 0 12px; }
+      .db-nav__links { gap: 2px; }
+      .db-nav__links a { font-size: 0.75rem; padding: 4px 8px; }
+      .db-nav__github span { display: none; }
+    }
+
+    /* Playground layout */
+    .pg-wrapper {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 48px);
+    }
+    .pg-grid {
+      display: grid;
+      grid-template-columns: 1fr 6px 1fr 6px 1fr;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .pg-panel {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .pg-panel__toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--db-sand);
+      background: var(--db-cream);
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--db-charcoal);
+      flex-shrink: 0;
+    }
+    .pg-panel__toolbar-title {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pg-panel__body {
+      flex: 1;
+      overflow: auto;
+      padding: 12px;
+    }
+
+    /* Dividers */
+    .pg-divider {
+      background: var(--db-sand);
+      cursor: col-resize;
+      position: relative;
+      z-index: 10;
+      transition: background 0.15s;
+    }
+    .pg-divider:hover,
+    .pg-divider--dragging {
+      background: var(--db-terracotta);
+    }
+    .pg-divider::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: -4px; right: -4px;
+    }
+
+    /* Prompt panel */
+    .pg-settings { margin-bottom: 12px; }
+    .pg-templates {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .pg-prompt-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .pg-prompt-area .db-textarea {
+      flex: 1;
+      min-height: 120px;
+      resize: none;
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+    }
+    /* Override serif body font to UI font for tool interface */
+    .pg-panel__body .db-field__input,
+    .pg-panel__body .db-field__label,
+    .pg-panel__body .db-field__helper,
+    .pg-panel__body .db-select__input,
+    .pg-panel__body .db-label {
+      font-family: var(--db-font-ui);
+    }
+    .pg-generate-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .pg-generate-row .db-caption { flex: 1; }
+
+    /* JSON panel */
+    .pg-json-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .pg-json-area textarea {
+      flex: 1;
+      resize: none;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-2);
+      background: var(--db-cream-dark, var(--db-cream));
+      color: var(--db-ink);
+      padding: 12px;
+      tab-size: 2;
+    }
+    .pg-json-area textarea:focus {
+      outline: 2px solid var(--db-terracotta);
+      outline-offset: -1px;
+    }
+    .pg-json-error {
+      display: none;
+      margin-bottom: 8px;
+    }
+
+    /* Preview panel */
+    .pg-preview {
+      padding: 16px;
+      min-height: 100%;
+    }
+    .pg-preview:empty::after {
+      content: 'Preview will appear here';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+      color: var(--db-warm-gray);
+      border: 2px dashed var(--db-sand);
+      border-radius: var(--db-radius-3);
+    }
+
+    /* Footer */
+    .pg-footer {
+      text-align: center;
+      padding: 12px;
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      color: var(--db-warm-gray);
+      border-top: 1px solid var(--db-sand);
+      flex-shrink: 0;
+    }
+
+    /* Bottom tab bar — uses DAUB db-bottom-nav, hidden on desktop */
+    @media (min-width: 1025px) {
+      .pg-bottom-tabs { display: none !important; }
+    }
+    @media (max-width: 1024px) {
+      .pg-grid {
+        display: flex;
+        flex-direction: column;
+      }
+      .pg-divider { display: none; }
+      .pg-panel { display: none; }
+      .pg-panel--active { display: flex; flex: 1; }
+      .pg-footer { display: none; }
+      .pg-wrapper { padding-bottom: 56px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="db-nav">
+  <a class="db-nav__brand" href="index.html">DAUB</a>
+  <ul class="db-nav__links">
+    <li><a href="index.html">Components</a></li>
+    <li><a href="demo.html">Layouts</a></li>
+    <li><a href="playground.html" class="db-nav__link--active">Playground</a></li>
+    <li><a href="llms.txt">AI Docs</a></li>
+    <li>
+      <a href="https://github.com/sliday/daub" class="db-nav__github" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span>GitHub</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Main playground -->
+<div class="pg-wrapper">
+
+  <div class="pg-grid">
+
+    <!-- LEFT: Prompt Panel -->
+    <div class="pg-panel pg-panel--active" id="panel-prompt">
+      <div class="pg-panel__toolbar">
+        <span class="pg-panel__toolbar-title"><i data-lucide="sparkles" style="width:14px;height:14px;"></i> Prompt</span>
+      </div>
+      <div class="pg-panel__body" style="display:flex;flex-direction:column;">
+
+        <!-- Settings -->
+        <div class="pg-settings">
+          <div class="db-collapsible">
+            <button class="db-collapsible__trigger" aria-expanded="false">
+              <svg class="db-collapsible__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="m9 18 6-6-6-6"/></svg>
+              AI Settings
+            </button>
+            <div class="db-collapsible__content">
+              <div style="display:flex;flex-direction:column;gap:12px;padding-top:8px;">
+                <div class="db-field">
+                  <label class="db-field__label">Provider</label>
+                  <div class="db-select">
+                    <select class="db-select__input" id="pg-provider">
+                      <option value="openai">OpenAI</option>
+                      <option value="anthropic">Anthropic</option>
+                      <option value="openrouter">OpenRouter</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="db-field">
+                  <label class="db-field__label">Model</label>
+                  <div class="db-select">
+                    <select class="db-select__input" id="pg-model">
+                      <option value="gpt-4o-mini">gpt-4o-mini</option>
+                      <option value="gpt-4o">gpt-4o</option>
+                      <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+                      <option value="gpt-4.1-nano">gpt-4.1-nano</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="db-field">
+                  <label class="db-field__label">API Key</label>
+                  <input class="db-field__input" type="password" id="pg-apikey" placeholder="sk-... or sk-ant-...">
+                  <span class="db-field__helper">Stored in localStorage. Never sent anywhere except the provider API.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Template chips -->
+        <div class="pg-templates">
+          <button class="db-chip db-chip--blue" data-template="dashboard">Dashboard</button>
+          <button class="db-chip db-chip--purple" data-template="login">Login Form</button>
+          <button class="db-chip db-chip--green" data-template="settings">Settings</button>
+          <button class="db-chip db-chip--amber" data-template="profile">Profile Card</button>
+          <button class="db-chip db-chip--pink" data-template="datatable">Data Table</button>
+        </div>
+
+        <!-- Prompt textarea -->
+        <div class="pg-prompt-area">
+          <textarea class="db-textarea" id="pg-prompt" placeholder="Describe the UI you want to build...&#10;&#10;e.g. &quot;A dashboard with 3 stat cards showing revenue, users, and orders, followed by a data table with 5 rows of recent transactions&quot;"></textarea>
+          <div class="pg-generate-row">
+            <span class="db-caption db-text-muted" id="pg-status"></span>
+            <button class="db-btn db-btn--primary db-btn--sm" id="pg-generate">
+              <i data-lucide="sparkles" style="width:14px;height:14px;"></i> Generate
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider 1 -->
+    <div class="pg-divider" data-divider="1"></div>
+
+    <!-- MIDDLE: JSON Panel -->
+    <div class="pg-panel" id="panel-json">
+      <div class="pg-panel__toolbar">
+        <span class="pg-panel__toolbar-title"><i data-lucide="braces" style="width:14px;height:14px;"></i> JSON Spec</span>
+        <div class="db-btn-group">
+          <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON"><i data-lucide="copy" style="width:12px;height:12px;"></i> Copy JSON</button>
+          <button class="db-btn db-btn--ghost db-btn--sm" id="pg-format-json" title="Format JSON"><i data-lucide="indent-increase" style="width:12px;height:12px;"></i></button>
+        </div>
+      </div>
+      <div class="pg-panel__body" style="display:flex;flex-direction:column;">
+        <div class="pg-json-error">
+          <div class="db-alert db-alert--error">
+            <div class="db-alert__content">
+              <div class="db-alert__title">Invalid JSON</div>
+              <p id="pg-json-error-msg">Parse error</p>
+            </div>
+          </div>
+        </div>
+        <div class="pg-json-area">
+          <textarea id="pg-json" spellcheck="false"></textarea>
+        </div>
+        <div style="margin-top:8px;display:flex;justify-content:flex-end;">
+          <button class="db-btn db-btn--secondary db-btn--sm" id="pg-render">
+            <i data-lucide="play" style="width:12px;height:12px;"></i> Render
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider 2 -->
+    <div class="pg-divider" data-divider="2"></div>
+
+    <!-- RIGHT: Preview Panel -->
+    <div class="pg-panel" id="panel-preview">
+      <div class="pg-panel__toolbar">
+        <span class="pg-panel__toolbar-title"><i data-lucide="eye" style="width:14px;height:14px;"></i> Preview</span>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-html" title="Copy HTML"><i data-lucide="code" style="width:12px;height:12px;"></i> Copy HTML</button>
+      </div>
+      <div class="pg-panel__body">
+        <div class="pg-preview db-surface--raised" id="pg-preview"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="pg-footer">
+    DAUB v2.8.0 — Playground powered by <a href="https://github.com/nichochar/json-render" target="_blank" rel="noopener" style="color:var(--db-terracotta);text-decoration:none;">json-render</a> flat spec format
+  </div>
+
+  <!-- Bottom tab bar (mobile + tablet) — uses DAUB db-bottom-nav -->
+  <nav class="db-bottom-nav db-bottom-nav--always pg-bottom-tabs">
+    <button class="db-bottom-nav__item db-bottom-nav__item--active" data-panel="prompt">
+      <i data-lucide="sparkles"></i>
+      <span>Prompt</span>
+    </button>
+    <button class="db-bottom-nav__item" data-panel="json">
+      <i data-lucide="braces"></i>
+      <span>JSON</span>
+    </button>
+    <button class="db-bottom-nav__item" data-panel="preview">
+      <i data-lucide="eye"></i>
+      <span>Preview</span>
+    </button>
+  </nav>
+</div>
+
+<!-- Theme Switcher -->
+<div class="db-theme-switcher" role="group" aria-label="Theme switcher"></div>
+
+<script src="daub.js?v=2.8.0"></script>
+<script>
+// ============================================================
+//  DAUB Playground — json-render Generative UI
+// ============================================================
+//
+//  Security note: All dynamic content from AI/user input is
+//  sanitized via the esc() function which uses textContent-based
+//  escaping before insertion into component templates.
+//
+(function() {
+'use strict';
+
+// ---- DOM refs ----
+var $provider   = document.getElementById('pg-provider');
+var $model      = document.getElementById('pg-model');
+var $apikey     = document.getElementById('pg-apikey');
+var $prompt     = document.getElementById('pg-prompt');
+var $json       = document.getElementById('pg-json');
+var $preview    = document.getElementById('pg-preview');
+var $generate   = document.getElementById('pg-generate');
+var $render     = document.getElementById('pg-render');
+var $copyJson   = document.getElementById('pg-copy-json');
+var $formatJson = document.getElementById('pg-format-json');
+var $copyHtml   = document.getElementById('pg-copy-html');
+var $status     = document.getElementById('pg-status');
+var $jsonError  = document.querySelector('.pg-json-error');
+var $jsonErrMsg = document.getElementById('pg-json-error-msg');
+
+// ---- Model options per provider ----
+var MODELS = {
+  openai: [
+    { value: 'gpt-4o-mini', label: 'GPT-4o Mini' },
+    { value: 'gpt-4.1', label: 'GPT-4.1' },
+    { value: 'o4-mini', label: 'o4-mini' },
+    { value: 'gpt-5-nano', label: 'GPT-5 Nano' },
+    { value: 'gpt-5-mini', label: 'GPT-5 Mini' }
+  ],
+  anthropic: [
+    { value: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5' },
+    { value: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6' },
+    { value: 'claude-opus-4-6', label: 'Claude Opus 4.6' }
+  ],
+  openrouter: [
+    { value: 'openai/gpt-4o-mini', label: 'GPT-4o Mini' },
+    { value: 'openai/gpt-4.1', label: 'GPT-4.1' },
+    { value: 'openai/o4-mini', label: 'o4-mini' },
+    { value: 'anthropic/claude-sonnet-4.6', label: 'Claude Sonnet 4.6' },
+    { value: 'anthropic/claude-haiku-4.5', label: 'Claude Haiku 4.5' },
+    { value: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+    { value: 'deepseek/deepseek-r1', label: 'DeepSeek R1' }
+  ]
+};
+
+// ---- Persist settings ----
+function loadSettings() {
+  try {
+    var p = localStorage.getItem('pg-provider') || 'openai';
+    $provider.value = p;
+    updateModelOptions(p);
+    var m = localStorage.getItem('pg-model');
+    if (m) $model.value = m;
+    var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
+    if (keys[p]) $apikey.value = keys[p];
+  } catch(e) {}
+}
+
+function saveSettings() {
+  try {
+    localStorage.setItem('pg-provider', $provider.value);
+    localStorage.setItem('pg-model', $model.value);
+    var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
+    keys[$provider.value] = $apikey.value;
+    localStorage.setItem('pg-apikeys', JSON.stringify(keys));
+  } catch(e) {}
+}
+
+function updateModelOptions(provider) {
+  var models = MODELS[provider] || MODELS.openai;
+  $model.textContent = '';
+  models.forEach(function(m) {
+    var opt = document.createElement('option');
+    opt.value = m.value;
+    opt.textContent = m.label;
+    $model.appendChild(opt);
+  });
+}
+
+$provider.addEventListener('change', function() {
+  updateModelOptions(this.value);
+  try {
+    var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
+    $apikey.value = keys[this.value] || '';
+  } catch(e) {}
+  saveSettings();
+});
+$model.addEventListener('change', saveSettings);
+$apikey.addEventListener('change', saveSettings);
+
+// ---- Templates ----
+var TEMPLATES = {
+  dashboard: 'Create a dashboard with:\n- A layout with 3 stat cards in a row: "Total Revenue" ($45,231, +20.1% up), "Active Users" (2,350, +180 up), "Pending Orders" (12, -2 down)\n- Below that, a chart card titled "Monthly Revenue" containing a bar chart with 6 bars (Mon-Sat)\n- Below that, a data table titled "Recent Transactions" with columns: Customer, Amount, Status, Date \u2014 with 5 rows of sample data',
+
+  login: 'Create a login form with:\n- A card centered on the page\n- Card title "Sign In" with description "Enter your credentials to continue"\n- Email field with label and placeholder\n- Password field with label and placeholder\n- A checkbox "Remember me"\n- A primary button "Sign In" full width\n- A separator with label "Or continue with"\n- A button group with "Google" and "GitHub" secondary buttons\n- Below the card, a text "Don\'t have an account? Sign up"',
+
+  settings: 'Create a settings page with:\n- A layout with heading "Settings" (h2)\n- A tabs component with 3 tabs: "General", "Notifications", "Security"\n- Under General tab: a field for "Display Name", a field for "Email", a textarea for "Bio", and a switch for "Dark Mode"\n- A separator\n- A button group with "Cancel" (secondary) and "Save Changes" (primary) buttons',
+
+  profile: 'Create a profile card with:\n- A card with a large avatar (initials "JD"), heading "Jane Doe", and description "Senior Product Designer"\n- A list with 3 items: "Location: San Francisco", "Joined: March 2024", "Projects: 24"\n- A badge "Pro" (new variant)\n- Card footer with "Message" primary button and "Follow" secondary button',
+
+  datatable: 'Create a data management view with:\n- A layout with heading "Team Members" (h2)\n- A search input with placeholder "Search members..."\n- A data table with columns: Name, Role, Department, Status, Actions\n- 6 rows of data with varied names, roles (Engineer, Designer, PM, etc.), departments, and status badges (Active, On Leave, Remote)\n- Pagination showing "Page 1 of 3" with 6 items per page'
+};
+
+document.querySelectorAll('[data-template]').forEach(function(chip) {
+  chip.addEventListener('click', function() {
+    $prompt.value = TEMPLATES[this.dataset.template] || '';
+    document.querySelectorAll('[data-template]').forEach(function(c) { c.classList.remove('db-chip--active'); });
+    this.classList.add('db-chip--active');
+  });
+});
+
+// ---- System prompt ----
+var SYSTEM_PROMPT = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\nOUTPUT FORMAT \u2014 Return ONLY valid JSON, no markdown fences, no explanation:\n{\n  "root": "<element-id>",\n  "elements": {\n    "<element-id>": {\n      "type": "<ComponentType>",\n      "props": { ... },\n      "children": ["<child-id>", ...]\n    }\n  }\n}\n\nRULES:\n- Every element has a unique string ID (e.g. "layout-1", "card-1", "btn-1")\n- "children" is an array of element ID strings (flat, NOT nested objects)\n- Only leaf elements omit "children"\n- The "root" must reference an existing element ID\n\nAVAILABLE COMPONENT TYPES AND PROPS:\n\nLayout & Structure:\n- Layout: { direction: "vertical"|"horizontal", columns: 2-6, gap: number, container: "wide"|"narrow"|true }\n- Surface: { variant: "raised"|"inset"|"pressed" }\n- Text: { tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string }\n- Prose: { content: string (HTML), size: "sm"|"lg"|"xl"|"2xl" }\n- Separator: { vertical: bool, dashed: bool, label: string }\n\nControls:\n- Button: { label: string, variant: "primary"|"secondary"|"ghost", size: "sm"|"lg"|"icon", loading: bool, icon: string }\n- ButtonGroup: {} (children are Buttons)\n- Field: { label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string }\n- Input: { placeholder: string, size: "sm"|"lg", error: bool }\n- InputGroup: { addonBefore: string, addonAfter: string } (child is Input)\n- InputIcon: { icon: string, right: bool } (child is Input)\n- Search: { placeholder: string }\n- Textarea: { placeholder: string, rows: number, error: bool }\n- Checkbox: { label: string, checked: bool }\n- RadioGroup: { options: [{label, value}], selected: string }\n- Switch: { label: string, checked: bool }\n- Slider: { min: number, max: number, value: number, step: number, label: string }\n- Toggle: { label: string, pressed: bool, size: "sm" }\n- ToggleGroup: { options: [{label, value}], selected: string }\n- Select: { label: string, options: [{label, value}], selected: string }\n- CustomSelect: { placeholder: string, options: [{label, value}], searchable: bool }\n- Kbd: { keys: [string] }\n- Label: { text: string, required: bool, optional: bool }\n- Spinner: { size: "sm"|"lg"|"xl" }\n- InputOTP: { length: number, separator: bool }\n\nNavigation:\n- Tabs: { tabs: [{label, id}], active: string }\n- Breadcrumbs: { items: [{label, href}] }\n- Pagination: { current: number, total: number, perPage: number }\n- Stepper: { steps: [{label, status: "completed"|"active"|"pending"}] }\n- NavMenu: { items: [{label, href, active: bool}] }\n- Navbar: { brand: string, brandHref: string }\n- Menubar: { items: [{label, dropdown: [{label, href}]}] }\n- Sidebar: { sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool }\n- BottomNav: { items: [{label, icon, active, badge}] }\n\nData Display:\n- Card: { title: string, description: string, media: string }\n- Table: { columns: [{key, label, numeric}], rows: [{}], sortable: bool }\n- DataTable: { columns: [{key, label}], rows: [{}], selectable: bool }\n- List: { items: [{title, secondary, icon}] }\n- Badge: { text: string, variant: "new"|"updated"|"warning"|"error" }\n- Avatar: { initials: string, src: string, size: "sm"|"md"|"lg" }\n- AvatarGroup: { avatars: [{initials, src}], max: number }\n- Calendar: { selected: string, today: string }\n- Chart: { bars: [{label, value, max}] }\n- Carousel: { slides: [{content}] }\n- AspectRatio: { ratio: "16-9"|"4-3"|"1-1"|"21-9" }\n- Chip: { label: string, color: "red"|"green"|"blue"|"purple"|"amber"|"pink", active: bool, closable: bool }\n- ScrollArea: { direction: "horizontal"|"vertical" }\n\nFeedback:\n- Alert: { type: "info"|"warning"|"error"|"success", title: string, message: string }\n- Progress: { value: number, indeterminate: bool }\n- Skeleton: { variant: "text"|"heading"|"avatar"|"btn", lines: number }\n- EmptyState: { icon: string, title: string, message: string }\n- Tooltip: { text: string, position: "top"|"bottom"|"left"|"right" }\n\nOverlays:\n- Modal: { id: string, title: string }\n- AlertDialog: { id: string, title: string, description: string }\n- Sheet: { id: string, position: "right"|"left"|"top"|"bottom" }\n- Drawer: { id: string }\n- Popover: { position: "top"|"bottom"|"left"|"right" }\n- HoverCard: {}\n- DropdownMenu: { items: [{label, icon, separator, groupLabel}] }\n- ContextMenu: { items: [{label, icon, separator}] }\n- CommandPalette: { id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] }\n\nLayout Utilities:\n- Accordion: { items: [{title, content}], multi: bool }\n- Collapsible: { label: string }\n- Resizable: { direction: "horizontal"|"vertical" }\n- DatePicker: { label: string, placeholder: string, selected: string }\n\nDashboard:\n- StatCard: { label: string, value: string, trend: "up"|"down", trendValue: string }\n- ChartCard: { title: string }\n\nGUIDELINES:\n- Use Layout as the root with direction:"vertical" for page-level layouts\n- Use Layout with direction:"horizontal" and columns for grid arrangements\n- Wrap related content in Card components\n- Use StatCard for KPI metrics\n- Use real-looking sample data (names, numbers, dates)\n- Keep element IDs descriptive and unique';
+
+// ---- AI API calls ----
+function callOpenAI(prompt) {
+  return fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + $apikey.value.trim()
+    },
+    body: JSON.stringify({
+      model: $model.value,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 4096
+    })
+  }).then(function(res) {
+    if (!res.ok) {
+      return res.json().catch(function() { return {}; }).then(function(err) {
+        throw new Error((err.error && err.error.message) || 'HTTP ' + res.status);
+      });
+    }
+    return res.json();
+  }).then(function(data) {
+    return data.choices[0].message.content;
+  });
+}
+
+function callAnthropic(prompt) {
+  return fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': $apikey.value.trim(),
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: $model.value,
+      max_tokens: 4096,
+      system: SYSTEM_PROMPT,
+      messages: [
+        { role: 'user', content: prompt }
+      ]
+    })
+  }).then(function(res) {
+    if (!res.ok) {
+      return res.json().catch(function() { return {}; }).then(function(err) {
+        throw new Error((err.error && err.error.message) || 'HTTP ' + res.status);
+      });
+    }
+    return res.json();
+  }).then(function(data) {
+    return data.content[0].text;
+  });
+}
+
+function callOpenRouter(prompt) {
+  return fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + $apikey.value.trim(),
+      'HTTP-Referer': 'https://daub.dev',
+      'X-Title': 'DAUB Playground'
+    },
+    body: JSON.stringify({
+      model: $model.value,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 4096
+    })
+  }).then(function(res) {
+    if (!res.ok) {
+      return res.json().catch(function() { return {}; }).then(function(err) {
+        throw new Error((err.error && err.error.message) || 'HTTP ' + res.status);
+      });
+    }
+    return res.json();
+  }).then(function(data) {
+    return data.choices[0].message.content;
+  });
+}
+
+function generate() {
+  var prompt = $prompt.value.trim();
+  if (!prompt) return;
+
+  var key = $apikey.value.trim();
+  if (!key) {
+    showJsonError('Please add your API key in Settings above.');
+    return;
+  }
+
+  saveSettings();
+  setLoading(true);
+  $status.textContent = 'Generating...';
+  hideJsonError();
+
+  var provider = $provider.value;
+  var apiCall = provider === 'anthropic' ? callAnthropic(prompt) : provider === 'openrouter' ? callOpenRouter(prompt) : callOpenAI(prompt);
+
+  apiCall.then(function(raw) {
+    // Strip markdown fences if present
+    raw = raw.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+    var spec = JSON.parse(raw);
+    $json.value = JSON.stringify(spec, null, 2);
+    $status.textContent = 'Generated successfully';
+    renderSpec(spec);
+  }).catch(function(err) {
+    $status.textContent = 'Error';
+    showJsonError(err.message);
+  }).finally(function() {
+    setLoading(false);
+  });
+}
+
+function setLoading(on) {
+  if (on) {
+    $generate.classList.add('db-btn--loading');
+    $generate.disabled = true;
+  } else {
+    $generate.classList.remove('db-btn--loading');
+    $generate.disabled = false;
+  }
+}
+
+function showJsonError(msg) {
+  $jsonErrMsg.textContent = msg;
+  $jsonError.style.display = 'block';
+}
+function hideJsonError() {
+  $jsonError.style.display = 'none';
+}
+
+// ---- Render from JSON editor ----
+function renderFromEditor() {
+  hideJsonError();
+  try {
+    var spec = JSON.parse($json.value);
+    renderSpec(spec);
+    $status.textContent = 'Rendered';
+  } catch (err) {
+    showJsonError(err.message);
+  }
+}
+
+// ---- Copy / Format ----
+$copyJson.addEventListener('click', function() {
+  navigator.clipboard.writeText($json.value).then(function() {
+    DAUB.toast({ type: 'success', message: 'JSON copied!' });
+  });
+});
+$formatJson.addEventListener('click', function() {
+  try {
+    var obj = JSON.parse($json.value);
+    $json.value = JSON.stringify(obj, null, 2);
+  } catch(e) {
+    showJsonError(e.message);
+  }
+});
+$copyHtml.addEventListener('click', function() {
+  navigator.clipboard.writeText($preview.innerHTML).then(function() {
+    DAUB.toast({ type: 'success', message: 'HTML copied!' });
+  });
+});
+
+$generate.addEventListener('click', generate);
+$render.addEventListener('click', renderFromEditor);
+
+// Allow Ctrl+Enter to generate
+$prompt.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    generate();
+  }
+});
+
+// ============================================================
+//  RENDERER — json-render spec to DAUB HTML
+// ============================================================
+var MAX_DEPTH = 20;
+
+function renderSpec(spec) {
+  if (!spec || !spec.root || !spec.elements) {
+    showJsonError('Spec must have "root" and "elements"');
+    return;
+  }
+  $preview.textContent = '';
+  var el = renderElement(spec.elements, spec.root, 0);
+  if (el) $preview.appendChild(el);
+
+  // Re-init DAUB behaviors on new content
+  if (window.DAUB) {
+    DAUB.init($preview);
+    if (DAUB.fixNestedRadius) DAUB.fixNestedRadius($preview);
+  }
+  if (window.lucide) lucide.createIcons({ nodes: $preview.querySelectorAll('[data-lucide]') });
+}
+
+function renderElement(elements, id, depth) {
+  if (depth > MAX_DEPTH) return document.createTextNode('[max depth]');
+  var def = elements[id];
+  if (!def) return document.createTextNode('[missing: ' + id + ']');
+
+  var render = RENDERERS[def.type];
+  if (!render) {
+    var el = document.createElement('div');
+    el.className = 'db-alert db-alert--warning';
+    var content = document.createElement('div');
+    content.className = 'db-alert__content';
+    var title = document.createElement('div');
+    title.className = 'db-alert__title';
+    title.textContent = 'Unknown: ' + def.type;
+    content.appendChild(title);
+    el.appendChild(content);
+    return el;
+  }
+
+  return render(def.props || {}, def.children || [], elements, depth);
+}
+
+function renderChildren(elements, childIds, depth) {
+  var frag = document.createDocumentFragment();
+  (childIds || []).forEach(function(id) {
+    var el = renderElement(elements, id, depth + 1);
+    if (el) frag.appendChild(el);
+  });
+  return frag;
+}
+
+// Safe HTML-entity escaping via textContent
+function esc(s) {
+  if (s == null) return '';
+  var d = document.createElement('span');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+function iconHtml(name, size) {
+  if (!name) return '';
+  return '<i data-lucide="' + esc(name) + '" style="width:' + (size||16) + 'px;height:' + (size||16) + 'px;"></i>';
+}
+
+// Helper: create element and set safe text/attributes
+function mkEl(tag, cls, text) {
+  var el = document.createElement(tag);
+  if (cls) el.className = cls;
+  if (text != null) el.textContent = text;
+  return el;
+}
+
+// ---- Component Renderers (67 types) ----
+var RENDERERS = {};
+
+// -- Layout --
+RENDERERS.Layout = function(p, ch, els, d) {
+  var el = document.createElement('div');
+  if (p.container) {
+    el.className = 'db-container' + (p.container === 'wide' ? ' db-container--wide' : p.container === 'narrow' ? ' db-container--narrow' : '');
+  }
+  if (p.columns) {
+    el.classList.add('db-grid', 'db-grid--' + p.columns);
+    if (p.gap) el.classList.add('db-gap-' + Math.round(p.gap / 4));
+  } else if (p.direction === 'horizontal') {
+    el.style.display = 'flex';
+    el.style.flexDirection = 'row';
+    el.style.gap = (p.gap || 16) + 'px';
+    el.style.flexWrap = 'wrap';
+    el.style.alignItems = 'flex-start';
+  } else {
+    el.style.display = 'flex';
+    el.style.flexDirection = 'column';
+    el.style.gap = (p.gap || 16) + 'px';
+  }
+  el.appendChild(renderChildren(els, ch, d));
+  return el;
+};
+
+// -- Surface --
+RENDERERS.Surface = function(p, ch, els, d) {
+  var el = document.createElement('div');
+  el.className = p.variant ? 'db-surface--' + p.variant : 'db-surface';
+  el.style.padding = '16px';
+  el.appendChild(renderChildren(els, ch, d));
+  return el;
+};
+
+// -- Text --
+RENDERERS.Text = function(p) {
+  var tag = ['h1','h2','h3','h4','p','span'].indexOf(p.tag) >= 0 ? p.tag : 'p';
+  var el = document.createElement(tag);
+  var classMap = { h1:'db-h1', h2:'db-h2', h3:'db-h3', h4:'db-h4', p:'db-body', span:'' };
+  el.className = (classMap[tag] || '') + (p.class ? ' ' + p.class : '');
+  el.textContent = p.content || '';
+  return el;
+};
+
+// -- Prose --
+RENDERERS.Prose = function(p) {
+  var el = document.createElement('div');
+  el.className = 'db-prose' + (p.size ? ' db-prose--' + p.size : '');
+  el.textContent = p.content || '';
+  return el;
+};
+
+// -- Separator --
+RENDERERS.Separator = function(p) {
+  if (p.label) {
+    var el = document.createElement('div');
+    el.className = 'db-separator__label';
+    el.textContent = p.label;
+    return el;
+  }
+  var hr = document.createElement('hr');
+  hr.className = 'db-separator' + (p.dashed ? ' db-separator--dashed' : '') + (p.vertical ? ' db-separator--vertical' : '');
+  return hr;
+};
+
+// -- Button --
+RENDERERS.Button = function(p) {
+  var el = document.createElement('button');
+  var cls = 'db-btn';
+  if (p.variant) cls += ' db-btn--' + p.variant;
+  if (p.size) cls += ' db-btn--' + p.size;
+  if (p.loading) { cls += ' db-btn--loading'; el.disabled = true; }
+  el.className = cls;
+  if (p.icon) {
+    var ico = document.createElement('i');
+    ico.setAttribute('data-lucide', p.icon);
+    ico.style.width = '16px';
+    ico.style.height = '16px';
+    el.appendChild(ico);
+    el.appendChild(document.createTextNode(' '));
+  }
+  el.appendChild(document.createTextNode(p.label || ''));
+  return el;
+};
+
+// -- ButtonGroup --
+RENDERERS.ButtonGroup = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-btn-group');
+  el.appendChild(renderChildren(els, ch, d));
+  return el;
+};
+
+// -- Field --
+RENDERERS.Field = function(p) {
+  var el = mkEl('div', 'db-field' + (p.error ? ' db-field--error' : ''));
+  if (p.label) {
+    var lbl = mkEl('label', 'db-field__label', p.label);
+    el.appendChild(lbl);
+  }
+  var inp = document.createElement('input');
+  inp.className = 'db-field__input';
+  inp.type = p.type || 'text';
+  inp.placeholder = p.placeholder || '';
+  el.appendChild(inp);
+  if (p.helper) {
+    var help = mkEl('span', 'db-field__helper', p.helper);
+    el.appendChild(help);
+  }
+  return el;
+};
+
+// -- Input --
+RENDERERS.Input = function(p) {
+  var el = document.createElement('input');
+  el.className = 'db-input' + (p.size ? ' db-input--' + p.size : '') + (p.error ? ' db-input--error' : '');
+  el.type = p.type || 'text';
+  el.placeholder = p.placeholder || '';
+  return el;
+};
+
+// -- InputGroup --
+RENDERERS.InputGroup = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-input-group');
+  if (p.addonBefore) {
+    el.appendChild(mkEl('span', 'db-input-group__addon', p.addonBefore));
+  }
+  el.appendChild(renderChildren(els, ch, d));
+  if (p.addonAfter) {
+    el.appendChild(mkEl('span', 'db-input-group__addon', p.addonAfter));
+  }
+  return el;
+};
+
+// -- InputIcon --
+RENDERERS.InputIcon = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-input-icon' + (p.right ? ' db-input-icon--right' : ''));
+  if (p.icon) {
+    var ico = document.createElement('i');
+    ico.setAttribute('data-lucide', p.icon);
+    ico.style.width = '16px';
+    ico.style.height = '16px';
+    el.appendChild(ico);
+  }
+  el.appendChild(renderChildren(els, ch, d));
+  return el;
+};
+
+// -- Search --
+RENDERERS.Search = function(p) {
+  var el = mkEl('div', 'db-input-icon');
+  var ico = document.createElement('i');
+  ico.setAttribute('data-lucide', 'search');
+  ico.style.width = '16px';
+  ico.style.height = '16px';
+  el.appendChild(ico);
+  var inp = document.createElement('input');
+  inp.className = 'db-input';
+  inp.type = 'search';
+  inp.placeholder = p.placeholder || 'Search...';
+  el.appendChild(inp);
+  return el;
+};
+
+// -- Textarea --
+RENDERERS.Textarea = function(p) {
+  var el = document.createElement('textarea');
+  el.className = 'db-textarea' + (p.error ? ' db-textarea--error' : '');
+  el.placeholder = p.placeholder || '';
+  if (p.rows) el.rows = p.rows;
+  return el;
+};
+
+// -- Checkbox --
+RENDERERS.Checkbox = function(p) {
+  var el = mkEl('label', 'db-checkbox');
+  var inp = document.createElement('input');
+  inp.className = 'db-checkbox__input';
+  inp.type = 'checkbox';
+  if (p.checked) inp.checked = true;
+  el.appendChild(inp);
+  var box = document.createElement('span');
+  box.className = 'db-checkbox__box';
+  var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+  poly.setAttribute('points', '20 6 9 17 4 12');
+  svg.appendChild(poly);
+  box.appendChild(svg);
+  el.appendChild(box);
+  el.appendChild(document.createTextNode(' ' + (p.label || '')));
+  return el;
+};
+
+// -- RadioGroup --
+RENDERERS.RadioGroup = function(p) {
+  var el = mkEl('div', 'db-radio-group');
+  var name = 'rg-' + Math.random().toString(36).slice(2,8);
+  (p.options || []).forEach(function(opt) {
+    var lbl = mkEl('label', 'db-radio');
+    var inp = document.createElement('input');
+    inp.className = 'db-radio__input';
+    inp.type = 'radio';
+    inp.name = name;
+    inp.value = opt.value || '';
+    if (opt.value === p.selected) inp.checked = true;
+    lbl.appendChild(inp);
+    lbl.appendChild(mkEl('span', 'db-radio__circle'));
+    lbl.appendChild(document.createTextNode(' ' + (opt.label || '')));
+    el.appendChild(lbl);
+  });
+  return el;
+};
+
+// -- Switch --
+RENDERERS.Switch = function(p) {
+  var el = mkEl('div', 'db-switch');
+  el.setAttribute('role', 'switch');
+  el.tabIndex = 0;
+  el.setAttribute('aria-checked', p.checked ? 'true' : 'false');
+  var track = mkEl('span', 'db-switch__track');
+  track.appendChild(mkEl('span', 'db-switch__thumb'));
+  el.appendChild(track);
+  el.appendChild(document.createTextNode(' ' + (p.label || '')));
+  return el;
+};
+
+// -- Slider --
+RENDERERS.Slider = function(p) {
+  var el = mkEl('div', 'db-slider');
+  var lbl = mkEl('div', 'db-slider__label');
+  lbl.appendChild(mkEl('span', null, p.label || ''));
+  lbl.appendChild(mkEl('span', 'db-slider__value', String(p.value != null ? p.value : 50)));
+  el.appendChild(lbl);
+  var inp = document.createElement('input');
+  inp.className = 'db-slider__input';
+  inp.type = 'range';
+  inp.min = p.min != null ? p.min : 0;
+  inp.max = p.max != null ? p.max : 100;
+  inp.value = p.value != null ? p.value : 50;
+  if (p.step) inp.step = p.step;
+  el.appendChild(inp);
+  return el;
+};
+
+// -- Toggle --
+RENDERERS.Toggle = function(p) {
+  var el = document.createElement('button');
+  el.className = 'db-toggle' + (p.size === 'sm' ? ' db-toggle--sm' : '');
+  el.setAttribute('aria-pressed', p.pressed ? 'true' : 'false');
+  el.textContent = p.label || '';
+  return el;
+};
+
+// -- ToggleGroup --
+RENDERERS.ToggleGroup = function(p) {
+  var el = mkEl('div', 'db-toggle-group');
+  (p.options || []).forEach(function(opt) {
+    var btn = document.createElement('button');
+    btn.className = 'db-toggle';
+    btn.setAttribute('aria-pressed', opt.value === p.selected ? 'true' : 'false');
+    btn.textContent = opt.label || '';
+    el.appendChild(btn);
+  });
+  return el;
+};
+
+// -- Select --
+RENDERERS.Select = function(p) {
+  var el = mkEl('div', 'db-select');
+  if (p.label) el.appendChild(mkEl('label', 'db-label', p.label));
+  var sel = document.createElement('select');
+  sel.className = 'db-select__input';
+  (p.options || []).forEach(function(o) {
+    var opt = document.createElement('option');
+    opt.value = o.value || '';
+    opt.textContent = o.label || '';
+    if (o.value === p.selected) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  el.appendChild(sel);
+  return el;
+};
+
+// -- CustomSelect --
+RENDERERS.CustomSelect = function(p) {
+  var el = mkEl('div', 'db-custom-select');
+  var trigger = document.createElement('button');
+  trigger.className = 'db-custom-select__trigger';
+  trigger.type = 'button';
+  trigger.appendChild(mkEl('span', 'db-custom-select__placeholder', p.placeholder || 'Select...'));
+  var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'db-custom-select__icon');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', 'm6 9 6 6 6-6');
+  svg.appendChild(path);
+  trigger.appendChild(svg);
+  el.appendChild(trigger);
+  var dd = mkEl('div', 'db-custom-select__dropdown');
+  if (p.searchable) {
+    var searchDiv = mkEl('div', 'db-custom-select__search');
+    var searchInp = document.createElement('input');
+    searchInp.type = 'text';
+    searchInp.placeholder = 'Search...';
+    searchDiv.appendChild(searchInp);
+    dd.appendChild(searchDiv);
+  }
+  (p.options || []).forEach(function(o) {
+    dd.appendChild(mkEl('div', 'db-custom-select__option', o.label || ''));
+  });
+  el.appendChild(dd);
+  return el;
+};
+
+// -- Kbd --
+RENDERERS.Kbd = function(p) {
+  var el = document.createElement('span');
+  (p.keys || []).forEach(function(k, i) {
+    if (i > 0) el.appendChild(document.createTextNode(' + '));
+    el.appendChild(mkEl('kbd', 'db-kbd', k));
+  });
+  return el;
+};
+
+// -- Label --
+RENDERERS.Label = function(p) {
+  var el = mkEl('label', 'db-label' + (p.required ? ' db-label--required' : '') + (p.optional ? ' db-label--optional' : ''), p.text || '');
+  return el;
+};
+
+// -- Spinner --
+RENDERERS.Spinner = function(p) {
+  return mkEl('span', 'db-spinner' + (p.size ? ' db-spinner--' + p.size : ''));
+};
+
+// -- InputOTP --
+RENDERERS.InputOTP = function(p) {
+  var el = mkEl('div', 'db-otp');
+  var len = p.length || 6;
+  var half = Math.ceil(len / 2);
+  for (var i = 0; i < len; i++) {
+    if (p.separator && i === half) {
+      el.appendChild(mkEl('span', 'db-otp__separator', '-'));
+    }
+    var inp = document.createElement('input');
+    inp.className = 'db-otp__input';
+    inp.type = 'text';
+    inp.inputMode = 'numeric';
+    inp.maxLength = 1;
+    el.appendChild(inp);
+  }
+  return el;
+};
+
+// -- Tabs --
+RENDERERS.Tabs = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-tabs');
+  var list = mkEl('div', 'db-tabs__list');
+  list.setAttribute('role', 'tablist');
+  var tabs = p.tabs || [];
+  tabs.forEach(function(t) {
+    var btn = document.createElement('button');
+    btn.className = 'db-tabs__tab';
+    if (t.id === p.active) btn.setAttribute('aria-selected', 'true');
+    btn.textContent = t.label || '';
+    list.appendChild(btn);
+  });
+  el.appendChild(list);
+  if (ch.length) {
+    ch.forEach(function(cid, i) {
+      var panel = mkEl('div', 'db-tabs__panel');
+      if (i > 0) panel.hidden = true;
+      panel.appendChild(renderElement(els, cid, d + 1));
+      el.appendChild(panel);
+    });
+  } else {
+    tabs.forEach(function(t, i) {
+      var panel = mkEl('div', 'db-tabs__panel');
+      if (i > 0) panel.hidden = true;
+      panel.appendChild(mkEl('p', 'db-body', (t.label || '') + ' content'));
+      el.appendChild(panel);
+    });
+  }
+  return el;
+};
+
+// -- Breadcrumbs --
+RENDERERS.Breadcrumbs = function(p) {
+  var el = document.createElement('nav');
+  el.className = 'db-breadcrumbs';
+  el.setAttribute('aria-label', 'Breadcrumb');
+  var ol = document.createElement('ol');
+  var items = p.items || [];
+  items.forEach(function(item, i) {
+    var li = document.createElement('li');
+    if (i === items.length - 1) {
+      li.setAttribute('aria-current', 'page');
+      li.textContent = item.label || '';
+    } else {
+      var a = document.createElement('a');
+      a.href = item.href || '#';
+      a.textContent = item.label || '';
+      li.appendChild(a);
+    }
+    ol.appendChild(li);
+  });
+  el.appendChild(ol);
+  return el;
+};
+
+// -- Pagination --
+RENDERERS.Pagination = function(p) {
+  var el = document.createElement('nav');
+  el.className = 'db-pagination';
+  el.setAttribute('aria-label', 'Pagination');
+  var total = Math.ceil((p.total || 1) / (p.perPage || 10));
+  var cur = p.current || 1;
+  var prev = document.createElement('button');
+  prev.className = 'db-pagination__btn';
+  prev.textContent = '\u00AB';
+  if (cur <= 1) prev.disabled = true;
+  el.appendChild(prev);
+  for (var i = 1; i <= Math.min(total, 5); i++) {
+    var btn = document.createElement('button');
+    btn.className = 'db-pagination__btn';
+    btn.textContent = String(i);
+    if (i === cur) btn.setAttribute('aria-current', 'page');
+    el.appendChild(btn);
+  }
+  if (total > 5) {
+    el.appendChild(mkEl('span', 'db-pagination__ellipsis', '...'));
+    var last = document.createElement('button');
+    last.className = 'db-pagination__btn';
+    last.textContent = String(total);
+    el.appendChild(last);
+  }
+  var next = document.createElement('button');
+  next.className = 'db-pagination__btn';
+  next.textContent = '\u00BB';
+  if (cur >= total) next.disabled = true;
+  el.appendChild(next);
+  return el;
+};
+
+// -- Stepper --
+RENDERERS.Stepper = function(p) {
+  var el = mkEl('div', 'db-stepper');
+  (p.steps || []).forEach(function(s, i) {
+    var step = mkEl('div', 'db-stepper__step db-stepper__step--' + (s.status || 'pending'));
+    step.appendChild(mkEl('div', 'db-stepper__indicator', String(i + 1)));
+    step.appendChild(mkEl('div', 'db-stepper__label', s.label || ''));
+    el.appendChild(step);
+  });
+  return el;
+};
+
+// -- NavMenu --
+RENDERERS.NavMenu = function(p) {
+  var el = document.createElement('nav');
+  el.className = 'db-nav-menu';
+  (p.items || []).forEach(function(item) {
+    var a = document.createElement('a');
+    a.className = 'db-nav-menu__item' + (item.active ? ' db-nav-menu__item--active' : '');
+    a.href = item.href || '#';
+    a.textContent = item.label || '';
+    el.appendChild(a);
+  });
+  return el;
+};
+
+// -- Navbar --
+RENDERERS.Navbar = function(p, ch, els, d) {
+  var el = document.createElement('nav');
+  el.className = 'db-navbar';
+  var brand = document.createElement('a');
+  brand.className = 'db-navbar__brand';
+  brand.href = p.brandHref || '#';
+  brand.textContent = p.brand || 'App';
+  el.appendChild(brand);
+  if (ch.length) {
+    var nav = mkEl('div', 'db-navbar__nav');
+    nav.appendChild(renderChildren(els, ch, d));
+    el.appendChild(nav);
+  }
+  return el;
+};
+
+// -- Menubar --
+RENDERERS.Menubar = function(p) {
+  var el = mkEl('div', 'db-menubar');
+  (p.items || []).forEach(function(item) {
+    var btn = document.createElement('button');
+    btn.className = 'db-menubar__item';
+    btn.textContent = item.label || '';
+    if (item.dropdown) {
+      var dd = mkEl('div', 'db-menubar__dropdown');
+      item.dropdown.forEach(function(dItem) {
+        dd.appendChild(mkEl('button', 'db-dropdown__item', dItem.label || ''));
+      });
+      btn.appendChild(dd);
+    }
+    el.appendChild(btn);
+  });
+  return el;
+};
+
+// -- Sidebar --
+RENDERERS.Sidebar = function(p) {
+  var el = document.createElement('aside');
+  el.className = 'db-sidebar' + (p.collapsed ? ' db-sidebar--collapsed' : '');
+  el.style.position = 'relative';
+  el.style.height = 'auto';
+  (p.sections || []).forEach(function(sec) {
+    var section = mkEl('div', 'db-sidebar__section');
+    if (sec.title) section.appendChild(mkEl('div', 'db-sidebar__label', sec.title));
+    (sec.items || []).forEach(function(item) {
+      var a = document.createElement('a');
+      a.className = 'db-sidebar__item' + (item.active ? ' db-sidebar__item--active' : '');
+      a.setAttribute('data-tooltip', item.label || '');
+      a.href = item.href || '#';
+      if (item.icon) {
+        var ico = document.createElement('i');
+        ico.setAttribute('data-lucide', item.icon);
+        ico.style.width = '16px';
+        ico.style.height = '16px';
+        a.appendChild(ico);
+      }
+      a.appendChild(document.createTextNode(' ' + (item.label || '')));
+      section.appendChild(a);
+    });
+    el.appendChild(section);
+  });
+  return el;
+};
+
+// -- BottomNav --
+RENDERERS.BottomNav = function(p) {
+  var el = document.createElement('nav');
+  el.className = 'db-bottom-nav';
+  (p.items || []).forEach(function(item) {
+    var a = document.createElement('a');
+    a.className = 'db-bottom-nav__item' + (item.active ? ' db-bottom-nav__item--active' : '');
+    a.href = '#';
+    if (item.icon) {
+      var ico = document.createElement('i');
+      ico.setAttribute('data-lucide', item.icon);
+      ico.style.width = '20px';
+      ico.style.height = '20px';
+      a.appendChild(ico);
+    }
+    a.appendChild(mkEl('span', null, item.label || ''));
+    if (item.badge) a.appendChild(mkEl('span', 'db-bottom-nav__badge', item.badge));
+    el.appendChild(a);
+  });
+  return el;
+};
+
+// -- Card --
+RENDERERS.Card = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-card' + (p.media ? ' db-card--media' : ''));
+  if (p.media) {
+    var media = mkEl('div', 'db-card__media');
+    var img = document.createElement('img');
+    img.src = p.media;
+    img.alt = '';
+    media.appendChild(img);
+    el.appendChild(media);
+  }
+  if (p.title || p.description) {
+    var hdr = mkEl('div', 'db-card__header');
+    if (p.title) hdr.appendChild(mkEl('h3', 'db-card__title', p.title));
+    if (p.description) hdr.appendChild(mkEl('p', 'db-card__desc', p.description));
+    el.appendChild(hdr);
+  }
+  if (ch.length) {
+    var body = mkEl('div', 'db-card__body');
+    body.appendChild(renderChildren(els, ch, d));
+    el.appendChild(body);
+  }
+  return el;
+};
+
+// -- Table --
+RENDERERS.Table = function(p) {
+  var el = document.createElement('table');
+  el.className = 'db-table';
+  var cols = p.columns || [];
+  var rows = p.rows || [];
+  var thead = document.createElement('thead');
+  var headRow = document.createElement('tr');
+  cols.forEach(function(c) {
+    var th = document.createElement('th');
+    if (p.sortable) th.setAttribute('data-db-sort', '');
+    if (c.numeric) th.className = 'db-numeric';
+    th.textContent = c.label || '';
+    headRow.appendChild(th);
+  });
+  thead.appendChild(headRow);
+  el.appendChild(thead);
+  var tbody = document.createElement('tbody');
+  rows.forEach(function(r) {
+    var tr = document.createElement('tr');
+    cols.forEach(function(c) {
+      var td = document.createElement('td');
+      if (c.numeric) td.className = 'db-numeric';
+      td.textContent = r[c.key] || '';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  el.appendChild(tbody);
+  return el;
+};
+
+// -- DataTable --
+RENDERERS.DataTable = function(p) {
+  var el = document.createElement('table');
+  el.className = 'db-data-table';
+  var cols = p.columns || [];
+  var rows = p.rows || [];
+  var thead = document.createElement('thead');
+  var headRow = document.createElement('tr');
+  if (p.selectable) {
+    var thChk = document.createElement('th');
+    var chk = document.createElement('input');
+    chk.className = 'db-data-table__check';
+    chk.type = 'checkbox';
+    thChk.appendChild(chk);
+    headRow.appendChild(thChk);
+  }
+  cols.forEach(function(c) {
+    var th = document.createElement('th');
+    th.setAttribute('data-sortable', '');
+    th.textContent = c.label || '';
+    headRow.appendChild(th);
+  });
+  thead.appendChild(headRow);
+  el.appendChild(thead);
+  var tbody = document.createElement('tbody');
+  rows.forEach(function(r) {
+    var tr = document.createElement('tr');
+    if (p.selectable) {
+      var tdChk = document.createElement('td');
+      var chk2 = document.createElement('input');
+      chk2.className = 'db-data-table__check';
+      chk2.type = 'checkbox';
+      tdChk.appendChild(chk2);
+      tr.appendChild(tdChk);
+    }
+    cols.forEach(function(c) {
+      var td = document.createElement('td');
+      var val = r[c.key] || '';
+      // Auto-detect status badges
+      if (/^(active|completed|shipped|approved|paid)$/i.test(val)) {
+        td.appendChild(mkEl('span', 'db-badge db-badge--new', val));
+      } else if (/^(pending|review|processing|in progress)$/i.test(val)) {
+        td.appendChild(mkEl('span', 'db-badge db-badge--updated', val));
+      } else if (/^(error|failed|rejected|cancelled|canceled)$/i.test(val)) {
+        td.appendChild(mkEl('span', 'db-badge db-badge--error', val));
+      } else if (/^(on leave|away|inactive|paused|remote)$/i.test(val)) {
+        td.appendChild(mkEl('span', 'db-badge db-badge--warning', val));
+      } else {
+        td.textContent = val;
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  el.appendChild(tbody);
+  return el;
+};
+
+// -- List --
+RENDERERS.List = function(p) {
+  var el = mkEl('div', 'db-list');
+  (p.items || []).forEach(function(item) {
+    var li = mkEl('div', 'db-list__item');
+    if (item.icon) {
+      var iconWrap = mkEl('div', 'db-list__icon');
+      var ico = document.createElement('i');
+      ico.setAttribute('data-lucide', item.icon);
+      ico.style.width = '16px';
+      ico.style.height = '16px';
+      iconWrap.appendChild(ico);
+      li.appendChild(iconWrap);
+    }
+    var content = mkEl('div', 'db-list__content');
+    content.appendChild(mkEl('div', 'db-list__title', item.title || ''));
+    if (item.secondary) content.appendChild(mkEl('div', 'db-list__secondary', item.secondary));
+    li.appendChild(content);
+    el.appendChild(li);
+  });
+  return el;
+};
+
+// -- Badge --
+RENDERERS.Badge = function(p) {
+  return mkEl('span', 'db-badge' + (p.variant ? ' db-badge--' + p.variant : ''), p.text || '');
+};
+
+// -- Avatar --
+RENDERERS.Avatar = function(p) {
+  var el = mkEl('div', 'db-avatar' + (p.size ? ' db-avatar--' + p.size : ' db-avatar--md'));
+  if (p.src) {
+    var img = document.createElement('img');
+    img.src = p.src;
+    img.alt = '';
+    el.appendChild(img);
+  } else {
+    el.textContent = p.initials || '?';
+  }
+  return el;
+};
+
+// -- AvatarGroup --
+RENDERERS.AvatarGroup = function(p) {
+  var el = mkEl('div', 'db-avatar-group');
+  var avatars = p.avatars || [];
+  var max = p.max || avatars.length;
+  avatars.slice(0, max).forEach(function(a) {
+    var av = mkEl('div', 'db-avatar db-avatar--md');
+    if (a.src) {
+      var img = document.createElement('img');
+      img.src = a.src;
+      img.alt = '';
+      av.appendChild(img);
+    } else {
+      av.textContent = a.initials || '?';
+    }
+    el.appendChild(av);
+  });
+  if (avatars.length > max) {
+    el.appendChild(mkEl('span', 'db-avatar-group__overflow', '+' + (avatars.length - max)));
+  }
+  return el;
+};
+
+// -- Calendar --
+RENDERERS.Calendar = function(p) {
+  var el = mkEl('div', 'db-calendar');
+  var today = parseInt(p.today) || new Date().getDate();
+  var sel = parseInt(p.selected) || 15;
+  var hdr = mkEl('div', 'db-calendar__header');
+  var prevBtn = document.createElement('button');
+  prevBtn.className = 'db-calendar__nav';
+  prevBtn.textContent = '\u2039';
+  hdr.appendChild(prevBtn);
+  hdr.appendChild(mkEl('span', 'db-calendar__title', 'March 2026'));
+  var nextBtn = document.createElement('button');
+  nextBtn.className = 'db-calendar__nav';
+  nextBtn.textContent = '\u203A';
+  hdr.appendChild(nextBtn);
+  el.appendChild(hdr);
+  var grid = mkEl('div', 'db-calendar__grid');
+  ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(function(d) {
+    grid.appendChild(mkEl('span', 'db-calendar__day-label', d));
+  });
+  for (var i = 1; i <= 31; i++) {
+    var day = document.createElement('button');
+    day.className = 'db-calendar__day';
+    if (i === today) day.classList.add('db-calendar__day--today');
+    if (i === sel) day.classList.add('db-calendar__day--selected');
+    day.textContent = String(i);
+    grid.appendChild(day);
+  }
+  el.appendChild(grid);
+  return el;
+};
+
+// -- Chart --
+RENDERERS.Chart = function(p) {
+  var wrap = document.createElement('div');
+  var bars = p.bars || [];
+  var maxVal = Math.max.apply(null, bars.map(function(b) { return b.max || b.value || 100; }));
+  if (maxVal <= 0) maxVal = 100;
+  var chart = mkEl('div', 'db-chart');
+  bars.forEach(function(b) {
+    var bar = mkEl('div', 'db-chart__bar');
+    bar.style.height = Math.round(((b.value || 0) / maxVal) * 100) + '%';
+    bar.title = (b.label || '') + ': ' + (b.value || 0);
+    chart.appendChild(bar);
+  });
+  wrap.appendChild(chart);
+  var labels = mkEl('div', 'db-chart__labels');
+  bars.forEach(function(b) {
+    labels.appendChild(mkEl('span', null, b.label || ''));
+  });
+  wrap.appendChild(labels);
+  return wrap;
+};
+
+// -- Carousel --
+RENDERERS.Carousel = function(p) {
+  var el = mkEl('div', 'db-carousel');
+  var track = mkEl('div', 'db-carousel__track');
+  var slides = p.slides || [];
+  slides.forEach(function(s) {
+    track.appendChild(mkEl('div', 'db-carousel__slide', s.content || ''));
+  });
+  el.appendChild(track);
+  var prevBtn = document.createElement('button');
+  prevBtn.className = 'db-carousel__btn db-carousel__btn--prev';
+  prevBtn.textContent = '\u2039';
+  el.appendChild(prevBtn);
+  var nextBtn = document.createElement('button');
+  nextBtn.className = 'db-carousel__btn db-carousel__btn--next';
+  nextBtn.textContent = '\u203A';
+  el.appendChild(nextBtn);
+  var dots = mkEl('div', 'db-carousel__dots');
+  slides.forEach(function(_, i) {
+    var dot = document.createElement('button');
+    dot.className = 'db-carousel__dot' + (i === 0 ? ' db-carousel__dot--active' : '');
+    dots.appendChild(dot);
+  });
+  el.appendChild(dots);
+  return el;
+};
+
+// -- AspectRatio --
+RENDERERS.AspectRatio = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-aspect' + (p.ratio ? ' db-aspect--' + p.ratio : ' db-aspect--16-9'));
+  el.appendChild(renderChildren(els, ch, d));
+  return el;
+};
+
+// -- Chip --
+RENDERERS.Chip = function(p) {
+  var el = mkEl('span', 'db-chip' + (p.color ? ' db-chip--' + p.color : '') + (p.active ? ' db-chip--active' : ''), p.label || '');
+  if (p.closable) {
+    var close = document.createElement('button');
+    close.className = 'db-chip__close';
+    close.textContent = '\u00D7';
+    el.appendChild(close);
+  }
+  return el;
+};
+
+// -- ScrollArea --
+RENDERERS.ScrollArea = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-scroll-area' + (p.direction ? ' db-scroll-area--' + p.direction : ''));
+  el.style.maxHeight = '300px';
+  el.appendChild(renderChildren(els, ch, d));
+  return el;
+};
+
+// -- Alert --
+RENDERERS.Alert = function(p) {
+  var el = mkEl('div', 'db-alert' + (p.type ? ' db-alert--' + p.type : ''));
+  var content = mkEl('div', 'db-alert__content');
+  if (p.title) content.appendChild(mkEl('div', 'db-alert__title', p.title));
+  if (p.message) content.appendChild(mkEl('p', null, p.message));
+  el.appendChild(content);
+  return el;
+};
+
+// -- Progress --
+RENDERERS.Progress = function(p) {
+  var el = mkEl('div', 'db-progress' + (p.indeterminate ? ' db-progress--indeterminate' : ''));
+  var bar = mkEl('div', 'db-progress__bar');
+  bar.style.setProperty('--db-progress', (p.value || 0) + '%');
+  el.appendChild(bar);
+  return el;
+};
+
+// -- Skeleton --
+RENDERERS.Skeleton = function(p) {
+  var lines = p.lines || 1;
+  if (lines === 1) {
+    return mkEl('div', 'db-skeleton' + (p.variant ? ' db-skeleton--' + p.variant : ' db-skeleton--text'));
+  }
+  var wrapper = mkEl('div');
+  wrapper.style.display = 'flex';
+  wrapper.style.flexDirection = 'column';
+  wrapper.style.gap = '8px';
+  for (var i = 0; i < lines; i++) {
+    wrapper.appendChild(mkEl('div', 'db-skeleton' + (p.variant ? ' db-skeleton--' + p.variant : ' db-skeleton--text')));
+  }
+  return wrapper;
+};
+
+// -- EmptyState --
+RENDERERS.EmptyState = function(p) {
+  var el = mkEl('div', 'db-empty');
+  if (p.icon) {
+    var iconWrap = mkEl('div', 'db-empty__icon');
+    var ico = document.createElement('i');
+    ico.setAttribute('data-lucide', p.icon);
+    ico.style.width = '48px';
+    ico.style.height = '48px';
+    iconWrap.appendChild(ico);
+    el.appendChild(iconWrap);
+  }
+  el.appendChild(mkEl('h3', 'db-empty__title', p.title || 'No items'));
+  el.appendChild(mkEl('p', 'db-empty__desc', p.message || ''));
+  return el;
+};
+
+// -- Tooltip --
+RENDERERS.Tooltip = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-tooltip');
+  el.appendChild(renderChildren(els, ch, d));
+  el.appendChild(mkEl('span', 'db-tooltip__content db-tooltip__content--' + (p.position || 'top'), p.text || ''));
+  return el;
+};
+
+// -- Modal --
+RENDERERS.Modal = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-modal-overlay');
+  el.id = p.id || 'modal-' + Math.random().toString(36).slice(2,8);
+  el.setAttribute('aria-hidden', 'true');
+  var modal = mkEl('div', 'db-modal');
+  var hdr = mkEl('div', 'db-modal__header');
+  hdr.appendChild(mkEl('h2', 'db-modal__title', p.title || 'Modal'));
+  var closeBtn = document.createElement('button');
+  closeBtn.className = 'db-modal__close';
+  closeBtn.setAttribute('aria-label', 'Close');
+  closeBtn.textContent = '\u00D7';
+  hdr.appendChild(closeBtn);
+  modal.appendChild(hdr);
+  var body = mkEl('div', 'db-modal__body');
+  body.appendChild(renderChildren(els, ch, d));
+  modal.appendChild(body);
+  var footer = mkEl('div', 'db-modal__footer');
+  var cancelBtn = document.createElement('button');
+  cancelBtn.className = 'db-btn db-btn--secondary';
+  cancelBtn.setAttribute('data-action', 'cancel');
+  cancelBtn.textContent = 'Cancel';
+  footer.appendChild(cancelBtn);
+  var confirmBtn = mkEl('button', 'db-btn db-btn--primary', 'Confirm');
+  footer.appendChild(confirmBtn);
+  modal.appendChild(footer);
+  el.appendChild(modal);
+  return el;
+};
+
+// -- AlertDialog --
+RENDERERS.AlertDialog = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-alert-dialog');
+  el.id = p.id || 'alert-' + Math.random().toString(36).slice(2,8);
+  el.appendChild(mkEl('div', 'db-alert-dialog__overlay'));
+  var panel = mkEl('div', 'db-alert-dialog__panel');
+  panel.appendChild(mkEl('h3', 'db-alert-dialog__title', p.title || 'Confirm'));
+  panel.appendChild(mkEl('p', 'db-alert-dialog__desc', p.description || ''));
+  var actions = mkEl('div', 'db-alert-dialog__actions');
+  if (ch.length) {
+    actions.appendChild(renderChildren(els, ch, d));
+  } else {
+    var cancelBtn = document.createElement('button');
+    cancelBtn.className = 'db-btn db-btn--secondary';
+    cancelBtn.setAttribute('data-action', 'cancel');
+    cancelBtn.textContent = 'Cancel';
+    actions.appendChild(cancelBtn);
+    actions.appendChild(mkEl('button', 'db-btn db-btn--primary', 'Continue'));
+  }
+  panel.appendChild(actions);
+  el.appendChild(panel);
+  return el;
+};
+
+// -- Sheet --
+RENDERERS.Sheet = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-sheet db-sheet--' + (p.position || 'right'));
+  el.id = p.id || 'sheet-' + Math.random().toString(36).slice(2,8);
+  el.appendChild(mkEl('div', 'db-sheet__overlay'));
+  var panel = mkEl('div', 'db-sheet__panel');
+  var hdr = mkEl('div', 'db-sheet__header');
+  hdr.appendChild(mkEl('span', 'db-sheet__title', p.title || 'Sheet'));
+  var closeBtn = document.createElement('button');
+  closeBtn.className = 'db-sheet__close';
+  closeBtn.setAttribute('aria-label', 'Close');
+  closeBtn.textContent = '\u00D7';
+  hdr.appendChild(closeBtn);
+  panel.appendChild(hdr);
+  var body = mkEl('div', 'db-sheet__body');
+  body.appendChild(renderChildren(els, ch, d));
+  panel.appendChild(body);
+  el.appendChild(panel);
+  return el;
+};
+
+// -- Drawer --
+RENDERERS.Drawer = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-drawer');
+  el.id = p.id || 'drawer-' + Math.random().toString(36).slice(2,8);
+  el.appendChild(mkEl('div', 'db-drawer__overlay'));
+  var panel = mkEl('div', 'db-drawer__panel');
+  panel.appendChild(mkEl('div', 'db-drawer__handle'));
+  var body = mkEl('div', 'db-drawer__body');
+  body.appendChild(renderChildren(els, ch, d));
+  panel.appendChild(body);
+  el.appendChild(panel);
+  return el;
+};
+
+// -- Popover --
+RENDERERS.Popover = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-popover');
+  var content = mkEl('div', 'db-popover__content db-popover__content--' + (p.position || 'bottom'));
+  content.appendChild(renderChildren(els, ch, d));
+  el.appendChild(content);
+  return el;
+};
+
+// -- HoverCard --
+RENDERERS.HoverCard = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-hover-card');
+  var content = mkEl('div', 'db-hover-card__content');
+  content.appendChild(renderChildren(els, ch, d));
+  el.appendChild(content);
+  return el;
+};
+
+// -- DropdownMenu --
+RENDERERS.DropdownMenu = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-dropdown');
+  if (ch.length) {
+    el.appendChild(renderElement(els, ch[0], d + 1));
+  } else {
+    var trigger = document.createElement('button');
+    trigger.className = 'db-btn db-dropdown__trigger';
+    trigger.textContent = 'Options';
+    el.appendChild(trigger);
+  }
+  var content = mkEl('div', 'db-dropdown__content');
+  (p.items || []).forEach(function(item) {
+    if (item.separator) {
+      content.appendChild(mkEl('hr', 'db-dropdown__separator'));
+    } else if (item.groupLabel) {
+      content.appendChild(mkEl('div', 'db-dropdown__label', item.groupLabel));
+    } else {
+      var btn = document.createElement('button');
+      btn.className = 'db-dropdown__item';
+      if (item.icon) {
+        var ico = document.createElement('i');
+        ico.setAttribute('data-lucide', item.icon);
+        ico.style.width = '16px';
+        ico.style.height = '16px';
+        btn.appendChild(ico);
+        btn.appendChild(document.createTextNode(' '));
+      }
+      btn.appendChild(document.createTextNode(item.label || ''));
+      content.appendChild(btn);
+    }
+  });
+  el.appendChild(content);
+  return el;
+};
+
+// -- ContextMenu --
+RENDERERS.ContextMenu = function(p, ch, els, d) {
+  var id = 'ctx-' + Math.random().toString(36).slice(2,8);
+  var wrapper = document.createElement('div');
+  var target = document.createElement('div');
+  target.setAttribute('data-context-menu', id);
+  target.style.padding = '16px';
+  target.style.border = '1px dashed var(--db-sand)';
+  target.style.borderRadius = 'var(--db-radius-2)';
+  target.style.textAlign = 'center';
+  target.style.color = 'var(--db-warm-gray)';
+  target.style.fontFamily = 'var(--db-font-ui)';
+  target.style.fontSize = '0.8125rem';
+  if (ch.length) {
+    target.appendChild(renderChildren(els, ch, d));
+  } else {
+    target.textContent = 'Right-click here';
+  }
+  wrapper.appendChild(target);
+  var menu = mkEl('div', 'db-context-menu');
+  menu.id = id;
+  (p.items || []).forEach(function(item) {
+    if (item.separator) {
+      menu.appendChild(mkEl('hr', 'db-context-menu__separator'));
+    } else {
+      var btn = document.createElement('button');
+      btn.className = 'db-context-menu__item';
+      if (item.icon) {
+        var ico = document.createElement('i');
+        ico.setAttribute('data-lucide', item.icon);
+        ico.style.width = '16px';
+        ico.style.height = '16px';
+        btn.appendChild(ico);
+        btn.appendChild(document.createTextNode(' '));
+      }
+      btn.appendChild(document.createTextNode(item.label || ''));
+      menu.appendChild(btn);
+    }
+  });
+  wrapper.appendChild(menu);
+  return wrapper;
+};
+
+// -- CommandPalette --
+RENDERERS.CommandPalette = function(p) {
+  var el = mkEl('div', 'db-command');
+  el.id = p.id || 'cmd-' + Math.random().toString(36).slice(2,8);
+  el.appendChild(mkEl('div', 'db-command__overlay'));
+  var panel = mkEl('div', 'db-command__panel');
+  var inputWrap = mkEl('div', 'db-command__input-wrap');
+  var searchIco = document.createElement('i');
+  searchIco.setAttribute('data-lucide', 'search');
+  searchIco.style.width = '16px';
+  searchIco.style.height = '16px';
+  inputWrap.appendChild(searchIco);
+  var inp = document.createElement('input');
+  inp.className = 'db-command__input';
+  inp.placeholder = p.placeholder || 'Search...';
+  inputWrap.appendChild(inp);
+  panel.appendChild(inputWrap);
+  var list = mkEl('div', 'db-command__list');
+  (p.groups || []).forEach(function(g) {
+    list.appendChild(mkEl('div', 'db-command__group-label', g.label || ''));
+    (g.items || []).forEach(function(item) {
+      var cmdItem = mkEl('div', 'db-command__item');
+      if (item.icon) {
+        var ico = document.createElement('i');
+        ico.setAttribute('data-lucide', item.icon);
+        ico.style.width = '16px';
+        ico.style.height = '16px';
+        cmdItem.appendChild(ico);
+        cmdItem.appendChild(document.createTextNode(' '));
+      }
+      cmdItem.appendChild(document.createTextNode(item.label || ''));
+      if (item.shortcut) {
+        var shortcut = mkEl('span', 'db-command__shortcut');
+        shortcut.appendChild(mkEl('kbd', 'db-kbd db-kbd--sm', item.shortcut));
+        cmdItem.appendChild(shortcut);
+      }
+      list.appendChild(cmdItem);
+    });
+  });
+  var empty = mkEl('div', 'db-command__empty', 'No results.');
+  empty.style.display = 'none';
+  list.appendChild(empty);
+  panel.appendChild(list);
+  el.appendChild(panel);
+  return el;
+};
+
+// -- Accordion --
+RENDERERS.Accordion = function(p) {
+  var el = mkEl('div', 'db-accordion');
+  if (p.multi) el.setAttribute('data-multi', '');
+  (p.items || []).forEach(function(item, i) {
+    var open = i === 0;
+    var accItem = mkEl('div', 'db-accordion__item' + (open ? ' db-accordion__item--open' : ''));
+    var trigger = document.createElement('button');
+    trigger.className = 'db-accordion__trigger';
+    trigger.setAttribute('aria-expanded', String(open));
+    trigger.textContent = item.title || '';
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'db-accordion__icon');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'm6 9 6 6 6-6');
+    svg.appendChild(path);
+    trigger.appendChild(svg);
+    accItem.appendChild(trigger);
+    accItem.appendChild(mkEl('div', 'db-accordion__content', item.content || ''));
+    el.appendChild(accItem);
+  });
+  return el;
+};
+
+// -- Collapsible --
+RENDERERS.Collapsible = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-collapsible');
+  var trigger = document.createElement('button');
+  trigger.className = 'db-collapsible__trigger';
+  trigger.setAttribute('aria-expanded', 'false');
+  var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'db-collapsible__icon');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', 'm9 18 6-6-6-6');
+  svg.appendChild(path);
+  trigger.appendChild(svg);
+  trigger.appendChild(document.createTextNode(' ' + (p.label || 'Show more')));
+  el.appendChild(trigger);
+  var content = mkEl('div', 'db-collapsible__content');
+  content.appendChild(renderChildren(els, ch, d));
+  el.appendChild(content);
+  return el;
+};
+
+// -- Resizable --
+RENDERERS.Resizable = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-resizable');
+  el.style.width = '100%';
+  el.style.minHeight = '100px';
+  el.style.border = '1px solid var(--db-sand)';
+  el.appendChild(renderChildren(els, ch, d));
+  el.appendChild(mkEl('div', 'db-resizable__handle db-resizable__handle--' + (p.direction === 'horizontal' ? 'right' : 'bottom')));
+  return el;
+};
+
+// -- DatePicker --
+RENDERERS.DatePicker = function(p) {
+  var el = mkEl('div', 'db-date-picker');
+  if (p.label) el.appendChild(mkEl('label', 'db-label', p.label));
+  var trigger = document.createElement('button');
+  trigger.className = 'db-date-picker__trigger db-input';
+  trigger.type = 'button';
+  trigger.textContent = p.selected || p.placeholder || 'Select date...';
+  el.appendChild(trigger);
+  var dd = mkEl('div', 'db-date-picker__dropdown');
+  var cal = mkEl('div', 'db-calendar');
+  var hdr = mkEl('div', 'db-calendar__header');
+  var prevNav = document.createElement('button');
+  prevNav.className = 'db-calendar__nav';
+  prevNav.textContent = '\u2039';
+  hdr.appendChild(prevNav);
+  hdr.appendChild(mkEl('span', 'db-calendar__title', 'March 2026'));
+  var nextNav = document.createElement('button');
+  nextNav.className = 'db-calendar__nav';
+  nextNav.textContent = '\u203A';
+  hdr.appendChild(nextNav);
+  cal.appendChild(hdr);
+  var grid = mkEl('div', 'db-calendar__grid');
+  ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(function(d) {
+    grid.appendChild(mkEl('span', 'db-calendar__day-label', d));
+  });
+  for (var i = 1; i <= 31; i++) {
+    var day = document.createElement('button');
+    day.className = 'db-calendar__day';
+    day.textContent = String(i);
+    grid.appendChild(day);
+  }
+  cal.appendChild(grid);
+  dd.appendChild(cal);
+  el.appendChild(dd);
+  return el;
+};
+
+// -- StatCard --
+RENDERERS.StatCard = function(p) {
+  var el = mkEl('div', 'db-stat');
+  el.appendChild(mkEl('span', 'db-stat__label', p.label || ''));
+  el.appendChild(mkEl('span', 'db-stat__value', p.value || ''));
+  if (p.trend) {
+    var change = mkEl('span', 'db-stat__change db-stat__change--' + p.trend);
+    change.textContent = (p.trend === 'up' ? '\u2191' : '\u2193') + ' ' + (p.trendValue || '');
+    el.appendChild(change);
+  }
+  return el;
+};
+
+// -- ChartCard --
+RENDERERS.ChartCard = function(p, ch, els, d) {
+  var el = mkEl('div', 'db-chart-card');
+  var hdr = mkEl('div', 'db-chart-card__header');
+  hdr.appendChild(mkEl('span', 'db-chart-card__title', p.title || ''));
+  el.appendChild(hdr);
+  var body = mkEl('div', 'db-chart-card__body');
+  body.appendChild(renderChildren(els, ch, d));
+  el.appendChild(body);
+  return el;
+};
+
+// ---- Panel resize (drag dividers) ----
+(function initResizers() {
+  var grid = document.querySelector('.pg-grid');
+  var dividers = document.querySelectorAll('.pg-divider');
+  var startX, startWidths, dividerIdx;
+
+  dividers.forEach(function(div) {
+    div.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      startDrag(e.clientX, this);
+    });
+    div.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      startDrag(e.touches[0].clientX, this);
+    }, { passive: false });
+  });
+
+  function startDrag(clientX, divider) {
+    startX = clientX;
+    dividerIdx = divider.dataset.divider === '1' ? 0 : 1;
+    divider.classList.add('pg-divider--dragging');
+    var panels = grid.querySelectorAll('.pg-panel');
+    startWidths = Array.from(panels).map(function(p) { return p.getBoundingClientRect().width; });
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchmove', onDrag, { passive: false });
+    document.addEventListener('touchend', onEnd);
+  }
+
+  function onDrag(e) {
+    var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    var dx = clientX - startX;
+    var totalW = grid.clientWidth - 12;
+    var leftIdx = dividerIdx === 0 ? 0 : 1;
+    var rightIdx = dividerIdx === 0 ? 1 : 2;
+    var leftW = startWidths[leftIdx] + dx;
+    var rightW = startWidths[rightIdx] - dx;
+    var minW = 180;
+    if (leftW < minW) { rightW -= (minW - leftW); leftW = minW; }
+    if (rightW < minW) { leftW -= (minW - rightW); rightW = minW; }
+    var pcts = startWidths.map(function(w) { return w / totalW; });
+    pcts[leftIdx] = leftW / totalW;
+    pcts[rightIdx] = rightW / totalW;
+    grid.style.gridTemplateColumns = pcts.map(function(p) { return (p * 100).toFixed(1) + 'fr'; }).join(' 6px ');
+  }
+
+  function onEnd() {
+    document.querySelectorAll('.pg-divider--dragging').forEach(function(d) { d.classList.remove('pg-divider--dragging'); });
+    document.removeEventListener('mousemove', onDrag);
+    document.removeEventListener('mouseup', onEnd);
+    document.removeEventListener('touchmove', onDrag);
+    document.removeEventListener('touchend', onEnd);
+    try { localStorage.setItem('pg-grid-cols', grid.style.gridTemplateColumns); } catch(e) {}
+  }
+
+  // Restore saved proportions
+  try {
+    var saved = localStorage.getItem('pg-grid-cols');
+    if (saved) grid.style.gridTemplateColumns = saved;
+  } catch(e) {}
+})();
+
+// ---- Mobile tab switching ----
+document.querySelectorAll('.pg-bottom-tabs .db-bottom-nav__item').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.pg-bottom-tabs .db-bottom-nav__item').forEach(function(b) { b.classList.remove('db-bottom-nav__item--active'); });
+    this.classList.add('db-bottom-nav__item--active');
+    var panel = this.dataset.panel;
+    document.querySelectorAll('.pg-panel').forEach(function(p) { p.classList.remove('pg-panel--active'); });
+    document.getElementById('panel-' + panel).classList.add('pg-panel--active');
+  });
+});
+
+// ---- Init ----
+loadSettings();
+lucide.createIcons();
+
+})();
+</script>
+</body>
+</html>

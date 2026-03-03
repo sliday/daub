@@ -51,7 +51,7 @@
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "license": "https://opensource.org/licenses/MIT",
-    "version": "2.7.0",
+    "version": "2.8.0",
     "dateCreated": "2026-02-01",
     "dateModified": "2026-03-02",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
@@ -85,7 +85,7 @@
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.7.0">
+  <link rel="stylesheet" href="daub.css?v=2.8.0">
 
   <style>
     /* Prevent horizontal overflow on mobile */
@@ -652,7 +652,7 @@
     .db-nav__links {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 4px;
       list-style: none;
       margin: 0;
       padding: 0;
@@ -662,10 +662,18 @@
       font-weight: 500;
       color: var(--db-charcoal);
       text-decoration: none;
-      transition: color var(--db-transition);
+      padding: 6px 12px;
+      border-radius: var(--db-radius-2);
+      transition: color var(--db-transition), background var(--db-transition);
     }
     .db-nav__links a:hover {
       color: var(--db-terracotta);
+      background: var(--db-sand);
+    }
+    .db-nav__link--active {
+      color: var(--db-terracotta) !important;
+      font-weight: 600 !important;
+      background: color-mix(in srgb, var(--db-terracotta) 10%, transparent) !important;
     }
     .db-nav__github {
       display: inline-flex;
@@ -684,8 +692,8 @@
       border-color: var(--db-terracotta);
     }
     @media (max-width: 640px) {
-      .db-nav__links { gap: 12px; }
-      .db-nav__links a { font-size: 0.75rem; }
+      .db-nav__links { gap: 2px; }
+      .db-nav__links a { font-size: 0.75rem; padding: 4px 8px; }
       .db-nav__github span { display: none; }
     }
 
@@ -740,8 +748,9 @@
   <nav class="db-nav" role="navigation" aria-label="Main">
     <a href="/" class="db-nav__brand">DAUB</a>
     <ul class="db-nav__links">
-      <li><a href="#components-index">Components</a></li>
+      <li><a href="#components-index" class="db-nav__link--active">Components</a></li>
       <li><a href="demo.html">Layouts</a></li>
+      <li><a href="playground.html">Playground</a></li>
       <li><a href="llms.txt">AI Docs</a></li>
       <li>
         <a href="https://github.com/sliday/daub" class="db-nav__github" target="_blank" rel="noopener">
@@ -755,7 +764,7 @@
   <!-- Hero -->
   <section class="db-hero">
     <a class="db-hero__announce" href="https://github.com/sliday/daub" target="_blank" rel="noopener">
-      <span class="db-badge db-badge--new">v2.7.0</span>
+      <span class="db-badge db-badge--new">v2.8.0</span>
       Updated March 2026 — Star on GitHub
       <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
     </a>
@@ -2448,7 +2457,7 @@
   </div>
 
   <!-- JS -->
-  <script src="daub.js?v=2.7.0"></script>
+  <script src="daub.js?v=2.8.0"></script>
   <script>
     // Initialize Lucide icons
     lucide.createIcons();

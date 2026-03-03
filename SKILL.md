@@ -167,3 +167,4 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 ## Full Docs
 
 For complete HTML examples: `https://daub.dev/llms.txt`
+For json-render (Vercel Generative UI) integration: see the catalog+registry recipe in `llms.txt`.

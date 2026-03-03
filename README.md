@@ -3,12 +3,12 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.7.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-2.8.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
 
-[Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [AI Docs](https://daub.dev/llms.txt)
+[Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [Playground](https://daub.dev/playground.html) | [AI Docs](https://daub.dev/llms.txt)
 
 ---
 
@@ -277,6 +277,8 @@ DAUB speaks both human and machine:
 
 Point your AI at `https://daub.dev/llms.txt` for complete component docs with HTML snippets, or fetch `https://daub.dev/components.json` for structured data.
 
+For **json-render** (Vercel Generative UI): see the [integration recipe in llms.txt](https://daub.dev/llms.txt#json-render-integration-vercel-generative-ui).
+
 ## Use with AI
 
 Drop these prompts into Claude, ChatGPT, Cursor, or any AI assistant. Each produces a complete, working HTML page. Add "Fetch docs from daub.dev/llms.txt first" for best results.
@@ -369,7 +371,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v2.7.0** — Overlay skeletons, tooltip fix, dropdown alias, better warnings. 76 components, 20 theme families.
+**Latest: v2.8.0** — AI Playground page, json-render Generative UI, nav UX improvements. 76 components, 20 theme families.
 
 ## License
 
