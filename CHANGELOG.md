@@ -2,6 +2,16 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.8.3
+
+**Structured output enforcement for AI Playground.**
+
+- Feature: OpenAI/OpenRouter API calls now include `response_format: { type: 'json_object' }` to guarantee valid JSON output
+- Feature: Anthropic API calls now include `output_config: { format: { type: 'json' } }` for JSON mode
+- Feature: New `cleanJSON()` helper — robust client-side fallback that strips markdown fences and extracts JSON between first `{` and last `}`
+- Refactor: All three parse locations (progressive render, blocking fallback, streaming onDone) use `cleanJSON()` instead of inline regex
+- Cache-bust: `?v=2.8.3` query strings on CSS/JS assets
+
 ## v2.8.2
 
 **Layout renderer gap spacing fix.**

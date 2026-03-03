@@ -39,7 +39,7 @@
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.8.2">
+  <link rel="stylesheet" href="daub.css?v=2.8.3">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -432,7 +432,7 @@
 
   <!-- Footer -->
   <div class="pg-footer">
-    DAUB v2.8.2 — Playground powered by <a href="https://github.com/nichochar/json-render" target="_blank" rel="noopener" style="color:var(--db-terracotta);text-decoration:none;">json-render</a> flat spec format
+    DAUB v2.8.3 — Playground powered by <a href="https://github.com/nichochar/json-render" target="_blank" rel="noopener" style="color:var(--db-terracotta);text-decoration:none;">json-render</a> flat spec format
   </div>
 
   <!-- Bottom tab bar (mobile + tablet) — uses DAUB db-bottom-nav -->
@@ -455,7 +455,7 @@
 <!-- Theme Switcher -->
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher"></div>
 
-<script src="daub.js?v=2.8.2"></script>
+<script src="daub.js?v=2.8.3"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -593,7 +593,8 @@ function callOpenAI(prompt) {
         { role: 'user', content: prompt }
       ],
       temperature: 0.7,
-      max_tokens: 4096
+      max_tokens: 4096,
+      response_format: { type: 'json_object' }
     })
   }).then(function(res) {
     if (!res.ok) {
@@ -622,7 +623,8 @@ function callAnthropic(prompt) {
       system: SYSTEM_PROMPT,
       messages: [
         { role: 'user', content: prompt }
-      ]
+      ],
+      output_config: { format: { type: 'json' } }
     })
   }).then(function(res) {
     if (!res.ok) {
@@ -652,7 +654,8 @@ function callOpenRouter(prompt) {
         { role: 'user', content: prompt }
       ],
       temperature: 0.7,
-      max_tokens: 4096
+      max_tokens: 4096,
+      response_format: { type: 'json_object' }
     })
   }).then(function(res) {
     if (!res.ok) {
@@ -713,7 +716,7 @@ function streamOpenAI(prompt, onText, onDone, onError) {
   streamFetch(
     'https://api.openai.com/v1/chat/completions',
     { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
-    { model: $model.value, messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4096, stream: true },
+    { model: $model.value, messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4096, stream: true, response_format: { type: 'json_object' } },
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
@@ -726,7 +729,7 @@ function streamAnthropic(prompt, onText, onDone, onError) {
   streamFetch(
     'https://api.anthropic.com/v1/messages',
     { 'Content-Type': 'application/json', 'x-api-key': $apikey.value.trim(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    { model: $model.value, max_tokens: 4096, system: SYSTEM_PROMPT, messages: [{ role: 'user', content: prompt }], stream: true },
+    { model: $model.value, max_tokens: 4096, system: SYSTEM_PROMPT, messages: [{ role: 'user', content: prompt }], stream: true, output_config: { format: { type: 'json' } } },
     function(chunk) {
       if (chunk.type === 'content_block_delta' && chunk.delta && chunk.delta.text) onText(chunk.delta.text);
     },
@@ -738,7 +741,7 @@ function streamOpenRouter(prompt, onText, onDone, onError) {
   streamFetch(
     'https://openrouter.ai/api/v1/chat/completions',
     { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim(), 'HTTP-Referer': 'https://daub.dev', 'X-Title': 'DAUB Playground' },
-    { model: $model.value, messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4096, stream: true },
+    { model: $model.value, messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4096, stream: true, response_format: { type: 'json_object' } },
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
@@ -747,10 +750,20 @@ function streamOpenRouter(prompt, onText, onDone, onError) {
   );
 }
 
+// ---- JSON cleanup helper ----
+function cleanJSON(text) {
+  var s = text.trim();
+  s = s.replace(/^```(?:json|JSON)?\s*\n?/, '').replace(/\n?```\s*$/, '');
+  s = s.trim();
+  var start = s.indexOf('{');
+  var end = s.lastIndexOf('}');
+  if (start !== -1 && end > start) s = s.substring(start, end + 1);
+  return s;
+}
+
 // ---- Progressive rendering ----
 function tryProgressiveRender(text) {
-  // Strip leading markdown fence if present
-  var s = text.replace(/^```(?:json)?\s*\n?/i, '');
+  var s = cleanJSON(text);
   // Brace-depth scan — only attempt parse when depth hits 0
   var depth = 0, inStr = false, esc = false;
   for (var i = 0; i < s.length; i++) {
@@ -778,7 +791,7 @@ function runBlockingGenerate(prompt) {
   var provider = $provider.value;
   var apiCall = provider === 'anthropic' ? callAnthropic(prompt) : provider === 'openrouter' ? callOpenRouter(prompt) : callOpenAI(prompt);
   apiCall.then(function(raw) {
-    raw = raw.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+    raw = cleanJSON(raw);
     var spec = JSON.parse(raw);
     $json.value = JSON.stringify(spec, null, 2);
     $status.textContent = 'Generated successfully';
@@ -822,7 +835,7 @@ function generate() {
     },
     function onDone() {
       clearInterval(renderTimer);
-      var clean = accumulated.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+      var clean = cleanJSON(accumulated);
       try {
         var spec = JSON.parse(clean);
         $json.value = JSON.stringify(spec, null, 2);
