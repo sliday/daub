@@ -38,8 +38,11 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
+  <!-- renderjson — collapsible JSON tree viewer -->
+  <script src="https://cdn.jsdelivr.net/gh/caldwell/renderjson@master/renderjson.js"></script>
+
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.8.5">
+  <link rel="stylesheet" href="daub.css?v=2.8.6">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -121,7 +124,7 @@
     }
     .pg-grid {
       display: grid;
-      grid-template-columns: 1fr 6px 1fr 6px 1fr;
+      grid-template-columns: 1fr 6px 1fr 6px 2fr;
       flex: 1;
       min-height: 0;
       overflow: hidden;
@@ -177,27 +180,6 @@
       left: -4px; right: -4px;
     }
 
-    /* Prompt panel */
-    .pg-settings { margin-bottom: 12px; }
-    .pg-templates {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-    .pg-prompt-area {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
-    .pg-prompt-area .db-textarea {
-      flex: 1;
-      min-height: 120px;
-      resize: none;
-      font-family: var(--db-font-ui);
-      font-size: 0.8125rem;
-    }
     /* Override serif body font to UI font for tool interface */
     .pg-panel__body .db-field__input,
     .pg-panel__body .db-field__label,
@@ -206,13 +188,125 @@
     .pg-panel__body .db-label {
       font-family: var(--db-font-ui);
     }
-    .pg-generate-row {
+
+    /* Collapsible panels */
+    .pg-panel--collapsed {
+      overflow: hidden;
+    }
+    .pg-panel--collapsed .pg-panel__body,
+    .pg-panel--collapsed .pg-panel__toolbar-title,
+    .pg-panel--collapsed .pg-panel__toolbar > * {
+      display: none !important;
+    }
+    .pg-panel--collapsed .pg-panel__toolbar {
+      justify-content: center;
+      padding: 8px 4px;
+    }
+
+    /* Chat panel */
+    .pg-chat {
+      display: flex;
+      flex-direction: column;
+      padding: 0 !important;
+      overflow: hidden;
+    }
+    .pg-chat__messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .pg-chat__empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex: 1;
+      padding: 24px;
+      color: var(--db-warm-gray);
+    }
+    .pg-chat__msg {
+      max-width: 88%;
+      padding: 8px 12px;
+      border-radius: var(--db-radius-2);
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .pg-chat__msg--user {
+      align-self: flex-end;
+      background: var(--db-terracotta);
+      color: #fff;
+    }
+    .pg-chat__msg--ai {
+      align-self: flex-start;
+      background: var(--db-cream);
+      border: 1px solid var(--db-sand);
+      color: var(--db-ink);
+    }
+    .pg-chat__msg--streaming::after {
+      content: '\25CF';
+      animation: pg-blink 1s infinite;
+      margin-left: 4px;
+      font-size: 0.625rem;
+      vertical-align: middle;
+    }
+    @keyframes pg-blink { 0%,100%{opacity:.2} 50%{opacity:1} }
+    .pg-chat__msg--error {
+      align-self: flex-start;
+      background: color-mix(in srgb, var(--db-error, #d32f2f) 10%, transparent);
+      border: 1px solid var(--db-error, #d32f2f);
+      color: var(--db-error, #d32f2f);
+    }
+    .pg-chat__footer {
+      flex-shrink: 0;
+      border-top: 1px solid var(--db-sand);
+      padding: 8px 12px;
+      background: var(--db-cream);
+    }
+    .pg-chat__examples {
+      margin-bottom: 6px;
+    }
+    .pg-chat--has-messages .pg-chat__examples,
+    .pg-chat--has-messages .pg-chat__empty { display: none; }
+    .pg-chat__input-row {
+      position: relative;
+    }
+    .pg-chat__input-row .db-textarea {
+      width: 100%;
+      min-height: 60px;
+      max-height: 160px;
+      resize: none;
+      font-family: var(--db-font-ui);
+      font-size: 0.875rem;
+      line-height: 1.5;
+      padding: 10px 40px 10px 12px;
+      box-sizing: border-box;
+    }
+    .pg-chat__input-row .db-btn {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+    }
+    .pg-chat__byok-toggle {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 8px;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-family: var(--db-font-ui);
     }
-    .pg-generate-row .db-caption { flex: 1; }
+    .pg-chat__byok-toggle a {
+      color: var(--db-warm-gray);
+      text-decoration: none;
+      font-size: 0.6875rem;
+    }
+    .pg-chat__byok-toggle a:hover { color: var(--db-terracotta); }
+    /* Theme picker — move to right bottom on playground */
+    .db-theme-switcher { left: auto; right: var(--db-space-5); }
 
     /* JSON panel */
     .pg-json-area {
@@ -238,6 +332,27 @@
       outline: 2px solid var(--db-terracotta);
       outline-offset: -1px;
     }
+    .pg-json-tree {
+      flex: 1;
+      overflow: auto;
+      min-height: 0;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.75rem;
+      line-height: 1.6;
+      padding: 12px;
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-2);
+      background: var(--db-cream-dark, var(--db-cream));
+      color: var(--db-ink);
+    }
+    .pg-json-tree .renderjson a { text-decoration: none; cursor: pointer; }
+    .pg-json-tree .renderjson .disclosure { color: var(--db-terracotta); font-weight: 600; font-size: 0.8rem; padding: 0 2px; }
+    .pg-json-tree .renderjson .string { color: #b5503c; }
+    .pg-json-tree .renderjson .number { color: #3a7d6e; }
+    .pg-json-tree .renderjson .boolean { color: #7c5cbf; }
+    .pg-json-tree .renderjson .key { color: var(--db-ink); font-weight: 500; }
+    .pg-json-tree .renderjson .keyword { color: var(--db-warm-gray); }
+    .pg-json-tree .renderjson .syntax { color: var(--db-warm-gray); }
     .pg-json-error {
       display: none;
       margin-bottom: 8px;
@@ -259,17 +374,6 @@
       color: var(--db-warm-gray);
       border: 2px dashed var(--db-sand);
       border-radius: var(--db-radius-3);
-    }
-
-    /* Footer */
-    .pg-footer {
-      text-align: center;
-      padding: 12px;
-      font-family: var(--db-font-ui);
-      font-size: 0.75rem;
-      color: var(--db-warm-gray);
-      border-top: 1px solid var(--db-sand);
-      flex-shrink: 0;
     }
 
     /* Bottom tab bar — uses DAUB db-bottom-nav, hidden on desktop */
@@ -313,70 +417,52 @@
 
   <div class="pg-grid">
 
-    <!-- LEFT: Prompt Panel -->
+    <!-- LEFT: Chat Panel -->
     <div class="pg-panel pg-panel--active" id="panel-prompt">
       <div class="pg-panel__toolbar">
-        <span class="pg-panel__toolbar-title"><i data-lucide="sparkles" style="width:14px;height:14px;"></i> Prompt</span>
+        <span class="pg-panel__toolbar-title" id="pg-chat-title"><strong>Chat</strong></span>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-new-chat" title="New Chat"><i data-lucide="plus" style="width:12px;height:12px;"></i> New Chat</button>
       </div>
-      <div class="pg-panel__body" style="display:flex;flex-direction:column;">
+      <div class="pg-panel__body pg-chat">
 
-        <!-- Settings -->
-        <div class="pg-settings">
-          <div class="db-collapsible">
-            <button class="db-collapsible__trigger" aria-expanded="false">
-              <svg class="db-collapsible__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="m9 18 6-6-6-6"/></svg>
-              AI Settings
-            </button>
-            <div class="db-collapsible__content">
-              <div style="display:flex;flex-direction:column;gap:12px;padding-top:8px;">
-                <div class="db-field">
-                  <label class="db-field__label">Provider</label>
-                  <div class="db-select">
-                    <select class="db-select__input" id="pg-provider">
-                      <option value="openai">OpenAI</option>
-                      <option value="anthropic">Anthropic</option>
-                      <option value="openrouter">OpenRouter</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="db-field">
-                  <label class="db-field__label">Model</label>
-                  <div class="db-select">
-                    <select class="db-select__input" id="pg-model">
-                      <option value="gpt-4o-mini">gpt-4o-mini</option>
-                      <option value="gpt-4o">gpt-4o</option>
-                      <option value="gpt-4.1-mini">gpt-4.1-mini</option>
-                      <option value="gpt-4.1-nano">gpt-4.1-nano</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="db-field">
-                  <label class="db-field__label">API Key</label>
-                  <input class="db-field__input" type="password" id="pg-apikey" placeholder="sk-... or sk-ant-...">
-                  <span class="db-field__helper">Stored in localStorage. Never sent anywhere except the provider API.</span>
+        <!-- Messages area -->
+        <div class="pg-chat__messages" id="pg-chat-messages">
+          <div class="pg-chat__empty" id="pg-chat-empty">
+            <i data-lucide="sparkles" style="width:32px;height:32px;color:var(--db-terracotta);"></i>
+            <h3 class="db-h4" style="margin:12px 0 4px;">What Would You Like to Build?</h3>
+            <p class="db-caption db-text-muted">Describe a UI and watch it come to life with DAUB components.</p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="pg-chat__footer">
+          <div class="pg-chat__examples" id="pg-chat-examples">
+            <div class="db-collapsible">
+              <button class="db-collapsible__trigger" aria-expanded="false" style="font-size:0.6875rem;padding:4px 0;color:var(--db-warm-gray);">
+                <svg class="db-collapsible__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><path d="m9 18 6-6-6-6"/></svg>
+                Examples
+              </button>
+              <div class="db-collapsible__content">
+                <div style="display:flex;flex-wrap:wrap;gap:4px;padding-top:4px;">
+                  <button class="db-chip db-chip--sm" data-example="Dashboard with revenue, users, and orders">Dashboard</button>
+                  <button class="db-chip db-chip--sm" data-example="Login page with social sign-in">Login</button>
+                  <button class="db-chip db-chip--sm" data-example="App settings with tabs">Settings</button>
+                  <button class="db-chip db-chip--sm" data-example="User profile card">Profile</button>
+                  <button class="db-chip db-chip--sm" data-example="Team members table with search">Table</button>
+                  <button class="db-chip db-chip--sm" data-example="Pricing cards with 3 tiers">Pricing</button>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- Template chips -->
-        <div class="pg-templates">
-          <button class="db-chip db-chip--blue" data-template="dashboard">Dashboard</button>
-          <button class="db-chip db-chip--purple" data-template="login">Login Form</button>
-          <button class="db-chip db-chip--green" data-template="settings">Settings</button>
-          <button class="db-chip db-chip--amber" data-template="profile">Profile Card</button>
-          <button class="db-chip db-chip--pink" data-template="datatable">Data Table</button>
-        </div>
-
-        <!-- Prompt textarea -->
-        <div class="pg-prompt-area">
-          <textarea class="db-textarea" id="pg-prompt" placeholder="Describe the UI you want to build...&#10;&#10;e.g. &quot;A dashboard with 3 stat cards showing revenue, users, and orders, followed by a data table with 5 rows of recent transactions&quot;"></textarea>
-          <div class="pg-generate-row">
-            <span class="db-caption db-text-muted" id="pg-status"></span>
-            <button class="db-btn db-btn--primary db-btn--sm" id="pg-generate">
-              <i data-lucide="sparkles" style="width:14px;height:14px;"></i> Generate
+          <div class="pg-chat__input-row">
+            <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..."></textarea>
+            <button class="db-btn db-btn--primary db-btn--sm" id="pg-generate" title="Send">
+              <i data-lucide="arrow-up" style="width:16px;height:16px;"></i>
             </button>
+          </div>
+          <div class="pg-chat__byok-toggle">
+            <small><a href="#" id="pg-byok-link">Use Your Own Key</a></small>
+            <span class="db-caption db-text-muted" id="pg-status"></span>
           </div>
         </div>
       </div>
@@ -388,7 +474,10 @@
     <!-- MIDDLE: JSON Panel -->
     <div class="pg-panel" id="panel-json">
       <div class="pg-panel__toolbar">
-        <span class="pg-panel__toolbar-title"><i data-lucide="braces" style="width:14px;height:14px;"></i> JSON Spec</span>
+        <div class="db-toggle-group">
+          <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="true" data-mode="code">Code</button>
+          <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="false" data-mode="tree">Tree</button>
+        </div>
         <div class="db-btn-group">
           <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON"><i data-lucide="copy" style="width:12px;height:12px;"></i> Copy JSON</button>
           <button class="db-btn db-btn--ghost db-btn--sm" id="pg-format-json" title="Format JSON"><i data-lucide="indent-increase" style="width:12px;height:12px;"></i></button>
@@ -406,7 +495,8 @@
         <div class="pg-json-area">
           <textarea id="pg-json" spellcheck="false"></textarea>
         </div>
-        <div style="margin-top:8px;display:flex;justify-content:flex-end;">
+        <div class="pg-json-tree" style="display:none;"></div>
+        <div style="margin-top:8px;display:none;justify-content:flex-end;" id="pg-render-row">
           <button class="db-btn db-btn--secondary db-btn--sm" id="pg-render">
             <i data-lucide="play" style="width:12px;height:12px;"></i> Render
           </button>
@@ -430,16 +520,11 @@
 
   </div>
 
-  <!-- Footer -->
-  <div class="pg-footer">
-    DAUB v2.8.5 — Playground powered by <a href="https://github.com/nichochar/json-render" target="_blank" rel="noopener" style="color:var(--db-terracotta);text-decoration:none;">json-render</a> flat spec format
-  </div>
-
   <!-- Bottom tab bar (mobile + tablet) — uses DAUB db-bottom-nav -->
   <nav class="db-bottom-nav db-bottom-nav--always pg-bottom-tabs">
     <button class="db-bottom-nav__item db-bottom-nav__item--active" data-panel="prompt">
       <i data-lucide="sparkles"></i>
-      <span>Prompt</span>
+      <span>Chat</span>
     </button>
     <button class="db-bottom-nav__item" data-panel="json">
       <i data-lucide="braces"></i>
@@ -455,7 +540,48 @@
 <!-- Theme Switcher -->
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher"></div>
 
-<script src="daub.js?v=2.8.5"></script>
+<!-- BYOK Settings Modal -->
+<div class="db-modal-overlay" id="pg-byok-modal">
+  <div class="db-modal" data-db-texture="glass" style="max-width:380px;">
+    <div class="db-modal__header">
+      <div class="db-modal__title">Use Your Own Key</div>
+      <button class="db-modal__close" id="pg-byok-modal-close">&times;</button>
+    </div>
+    <div class="db-modal__body">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="db-field">
+          <label class="db-field__label">Provider</label>
+          <div class="db-select">
+            <select class="db-select__input" id="pg-provider">
+              <option value="openai">OpenAI</option>
+              <option value="anthropic">Anthropic</option>
+              <option value="openrouter">OpenRouter</option>
+            </select>
+          </div>
+        </div>
+        <div class="db-field">
+          <label class="db-field__label">Model</label>
+          <div class="db-select">
+            <select class="db-select__input" id="pg-model">
+              <option value="gpt-4o-mini">gpt-4o-mini</option>
+            </select>
+          </div>
+        </div>
+        <div class="db-field">
+          <label class="db-field__label">API Key</label>
+          <input class="db-field__input" type="password" id="pg-apikey" placeholder="sk-... or sk-ant-...">
+          <span class="db-field__helper">Stored in localStorage only.</span>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;">
+          <small><a href="#" id="pg-default-link">Use Free DAUB AI</a></small>
+          <button class="db-btn db-btn--primary db-btn--sm" id="pg-byok-save">Save &amp; Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="daub.js?v=2.8.6"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -483,6 +609,27 @@ var $copyHtml   = document.getElementById('pg-copy-html');
 var $status     = document.getElementById('pg-status');
 var $jsonError  = document.querySelector('.pg-json-error');
 var $jsonErrMsg = document.getElementById('pg-json-error-msg');
+var $jsonArea   = document.querySelector('.pg-json-area');
+var $jsonTree   = document.querySelector('.pg-json-tree');
+var $jsonModes  = document.querySelectorAll('.pg-json-mode');
+
+// Chat DOM refs
+var $chatMessages = document.getElementById('pg-chat-messages');
+var $chatEmpty    = document.getElementById('pg-chat-empty');
+var $chatExamples = document.getElementById('pg-chat-examples');
+var $chatPanel    = document.querySelector('.pg-chat');
+var $chatTitle    = document.getElementById('pg-chat-title');
+var $newChat      = document.getElementById('pg-new-chat');
+var $byokLink     = document.getElementById('pg-byok-link');
+var $defaultLink  = document.getElementById('pg-default-link');
+var $byokModal    = document.getElementById('pg-byok-modal');
+var $byokModalClose = document.getElementById('pg-byok-modal-close');
+var $byokSave     = document.getElementById('pg-byok-save');
+
+// ---- Chat state ----
+var chatHistory = [];
+var currentSpec = null;
+var isDefaultMode = true;
 
 // ---- Model options per provider ----
 var MODELS = {
@@ -513,22 +660,33 @@ var MODELS = {
 function loadSettings() {
   try {
     var p = localStorage.getItem('pg-provider') || 'openai';
-    $provider.value = p;
-    updateModelOptions(p);
+    if ($provider) { $provider.value = p; updateModelOptions(p); }
     var m = localStorage.getItem('pg-model');
-    if (m) $model.value = m;
+    if (m && $model) $model.value = m;
     var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
-    if (keys[p]) $apikey.value = keys[p];
+    if (keys[p] && $apikey) $apikey.value = keys[p];
+    // Chat state
+    isDefaultMode = localStorage.getItem('pg-use-default') !== 'false';
+    try { chatHistory = JSON.parse(localStorage.getItem('pg-chat-history') || '[]'); } catch(e2) { chatHistory = []; }
+    try { currentSpec = JSON.parse(localStorage.getItem('pg-current-spec') || 'null'); } catch(e3) { currentSpec = null; }
   } catch(e) {}
 }
 
 function saveSettings() {
   try {
-    localStorage.setItem('pg-provider', $provider.value);
-    localStorage.setItem('pg-model', $model.value);
+    if ($provider) localStorage.setItem('pg-provider', $provider.value);
+    if ($model) localStorage.setItem('pg-model', $model.value);
     var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
-    keys[$provider.value] = $apikey.value;
+    if ($provider && $apikey) { keys[$provider.value] = $apikey.value; }
     localStorage.setItem('pg-apikeys', JSON.stringify(keys));
+    localStorage.setItem('pg-use-default', isDefaultMode ? 'true' : 'false');
+  } catch(e) {}
+}
+
+function saveChatState() {
+  try {
+    localStorage.setItem('pg-chat-history', JSON.stringify(chatHistory));
+    localStorage.setItem('pg-current-spec', currentSpec ? JSON.stringify(currentSpec) : 'null');
   } catch(e) {}
 }
 
@@ -554,117 +712,49 @@ $provider.addEventListener('change', function() {
 $model.addEventListener('change', saveSettings);
 $apikey.addEventListener('change', saveSettings);
 
-// ---- Templates ----
-var TEMPLATES = {
-  dashboard: 'Create a dashboard with:\n- A layout with 3 stat cards in a row: "Total Revenue" ($45,231, +20.1% up), "Active Users" (2,350, +180 up), "Pending Orders" (12, -2 down)\n- Below that, a chart card titled "Monthly Revenue" containing a bar chart with 6 bars (Mon-Sat)\n- Below that, a data table titled "Recent Transactions" with columns: Customer, Amount, Status, Date \u2014 with 5 rows of sample data',
-
-  login: 'Create a login form with:\n- A card centered on the page\n- Card title "Sign In" with description "Enter your credentials to continue"\n- Email field with label and placeholder\n- Password field with label and placeholder\n- A checkbox "Remember me"\n- A primary button "Sign In" full width\n- A separator with label "Or continue with"\n- A button group with "Google" and "GitHub" secondary buttons\n- Below the card, a text "Don\'t have an account? Sign up"',
-
-  settings: 'Create a settings page with:\n- A layout with heading "Settings" (h2)\n- A tabs component with 3 tabs: "General", "Notifications", "Security"\n- Under General tab: a field for "Display Name", a field for "Email", a textarea for "Bio", and a switch for "Dark Mode"\n- A separator\n- A button group with "Cancel" (secondary) and "Save Changes" (primary) buttons',
-
-  profile: 'Create a profile card with:\n- A card with a large avatar (initials "JD"), heading "Jane Doe", and description "Senior Product Designer"\n- A list with 3 items: "Location: San Francisco", "Joined: March 2024", "Projects: 24"\n- A badge "Pro" (new variant)\n- Card footer with "Message" primary button and "Follow" secondary button',
-
-  datatable: 'Create a data management view with:\n- A layout with heading "Team Members" (h2)\n- A search input with placeholder "Search members..."\n- A data table with columns: Name, Role, Department, Status, Actions\n- 6 rows of data with varied names, roles (Engineer, Designer, PM, etc.), departments, and status badges (Active, On Leave, Remote)\n- Pagination showing "Page 1 of 3" with 6 items per page'
-};
-
-document.querySelectorAll('[data-template]').forEach(function(chip) {
+// ---- Example chips ----
+document.querySelectorAll('[data-example]').forEach(function(chip) {
   chip.addEventListener('click', function() {
-    $prompt.value = TEMPLATES[this.dataset.template] || '';
-    document.querySelectorAll('[data-template]').forEach(function(c) { c.classList.remove('db-chip--active'); });
-    this.classList.add('db-chip--active');
+    $prompt.value = this.dataset.example;
+    $prompt.focus();
   });
 });
 
 
-// ---- AI API calls ----
-function callOpenAI(prompt) {
+// ---- AI API calls (blocking, accept messages array) ----
+function callOpenAI(messages) {
   return fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + $apikey.value.trim()
-    },
-    body: JSON.stringify({
-      model: $model.value,
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: prompt }
-      ],
-      temperature: 0.7,
-      max_tokens: 4096,
-      response_format: { type: 'json_object' }
-    })
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
+    body: JSON.stringify({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, response_format: { type: 'json_object' } })
   }).then(function(res) {
-    if (!res.ok) {
-      return res.json().catch(function() { return {}; }).then(function(err) {
-        throw new Error((err.error && err.error.message) || 'HTTP ' + res.status);
-      });
-    }
+    if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
     return res.json();
-  }).then(function(data) {
-    return data.choices[0].message.content;
-  });
+  }).then(function(data) { return data.choices[0].message.content; });
 }
 
-function callAnthropic(prompt) {
+function callAnthropic(messages) {
+  var sys = '', userMsgs = [];
+  messages.forEach(function(m) { if (m.role === 'system') sys += m.content + '\n'; else userMsgs.push(m); });
   return fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': $apikey.value.trim(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: $model.value,
-      max_tokens: 4096,
-      system: SYSTEM_PROMPT,
-      messages: [
-        { role: 'user', content: prompt }
-      ],
-      output_config: { format: { type: 'json' } }
-    })
+    headers: { 'Content-Type': 'application/json', 'x-api-key': $apikey.value.trim(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({ model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs, output_config: { format: { type: 'json' } } })
   }).then(function(res) {
-    if (!res.ok) {
-      return res.json().catch(function() { return {}; }).then(function(err) {
-        throw new Error((err.error && err.error.message) || 'HTTP ' + res.status);
-      });
-    }
+    if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
     return res.json();
-  }).then(function(data) {
-    return data.content[0].text;
-  });
+  }).then(function(data) { return data.content[0].text; });
 }
 
-function callOpenRouter(prompt) {
+function callOpenRouter(messages) {
   return fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + $apikey.value.trim(),
-      'HTTP-Referer': 'https://daub.dev',
-      'X-Title': 'DAUB Playground'
-    },
-    body: JSON.stringify({
-      model: $model.value,
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: prompt }
-      ],
-      temperature: 0.7,
-      max_tokens: 4096,
-      response_format: { type: 'json_object' }
-    })
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim(), 'HTTP-Referer': 'https://daub.dev', 'X-Title': 'DAUB Playground' },
+    body: JSON.stringify({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, response_format: { type: 'json_object' } })
   }).then(function(res) {
-    if (!res.ok) {
-      return res.json().catch(function() { return {}; }).then(function(err) {
-        throw new Error((err.error && err.error.message) || 'HTTP ' + res.status);
-      });
-    }
+    if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
     return res.json();
-  }).then(function(data) {
-    return data.choices[0].message.content;
-  });
+  }).then(function(data) { return data.choices[0].message.content; });
 }
 
 // ---- Streaming SSE helper ----
@@ -709,12 +799,12 @@ function streamFetch(url, headers, body, onChunk, onDone, onError) {
   }).catch(function(err) { onError(err); });
 }
 
-// ---- Streaming wrappers ----
-function streamOpenAI(prompt, onText, onDone, onError) {
+// ---- Streaming wrappers (accept messages array) ----
+function streamDefault(messages, onText, onDone, onError) {
   streamFetch(
-    'https://api.openai.com/v1/chat/completions',
-    { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
-    { model: $model.value, messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4096, stream: true, response_format: { type: 'json_object' } },
+    '/api/generate',
+    { 'Content-Type': 'application/json' },
+    { messages: messages },
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
@@ -723,11 +813,26 @@ function streamOpenAI(prompt, onText, onDone, onError) {
   );
 }
 
-function streamAnthropic(prompt, onText, onDone, onError) {
+function streamOpenAI(messages, onText, onDone, onError) {
+  streamFetch(
+    'https://api.openai.com/v1/chat/completions',
+    { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
+    { model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, stream: true, response_format: { type: 'json_object' } },
+    function(chunk) {
+      var c = chunk.choices && chunk.choices[0];
+      if (c && c.delta && c.delta.content) onText(c.delta.content);
+    },
+    onDone, onError
+  );
+}
+
+function streamAnthropic(messages, onText, onDone, onError) {
+  var sys = '', userMsgs = [];
+  messages.forEach(function(m) { if (m.role === 'system') sys += m.content + '\n'; else userMsgs.push(m); });
   streamFetch(
     'https://api.anthropic.com/v1/messages',
     { 'Content-Type': 'application/json', 'x-api-key': $apikey.value.trim(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    { model: $model.value, max_tokens: 4096, system: SYSTEM_PROMPT, messages: [{ role: 'user', content: prompt }], stream: true, output_config: { format: { type: 'json' } } },
+    { model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs, stream: true, output_config: { format: { type: 'json' } } },
     function(chunk) {
       if (chunk.type === 'content_block_delta' && chunk.delta && chunk.delta.text) onText(chunk.delta.text);
     },
@@ -735,11 +840,11 @@ function streamAnthropic(prompt, onText, onDone, onError) {
   );
 }
 
-function streamOpenRouter(prompt, onText, onDone, onError) {
+function streamOpenRouter(messages, onText, onDone, onError) {
   streamFetch(
     'https://openrouter.ai/api/v1/chat/completions',
     { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim(), 'HTTP-Referer': 'https://daub.dev', 'X-Title': 'DAUB Playground' },
-    { model: $model.value, messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4096, stream: true, response_format: { type: 'json_object' } },
+    { model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, stream: true, response_format: { type: 'json_object' } },
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
@@ -809,22 +914,89 @@ function tryProgressiveRender(text) {
   } catch (e) {}
 }
 
+// ---- Chat message helpers ----
+function buildMessages(userPrompt) {
+  var msgs = [{ role: 'system', content: SYSTEM_PROMPT }];
+  if (currentSpec) {
+    msgs.push({ role: 'user', content: '(previous request)' });
+    msgs.push({ role: 'assistant', content: JSON.stringify(currentSpec) });
+    userPrompt = userPrompt + '\n\nModify the existing spec above. Return the COMPLETE updated spec.';
+  }
+  msgs.push({ role: 'user', content: userPrompt });
+  return msgs;
+}
+
+function addChatBubble(role, text) {
+  var div = document.createElement('div');
+  div.className = 'pg-chat__msg pg-chat__msg--' + role;
+  div.textContent = text;
+  $chatMessages.appendChild(div);
+  $chatMessages.scrollTop = $chatMessages.scrollHeight;
+  return div;
+}
+
+function renderChatHistory() {
+  // Remove all bubbles but keep the empty state
+  var bubbles = $chatMessages.querySelectorAll('.pg-chat__msg');
+  bubbles.forEach(function(b) { b.remove(); });
+  chatHistory.forEach(function(msg) {
+    addChatBubble(msg.role === 'user' ? 'user' : 'ai', msg.content);
+  });
+  updateChatState();
+}
+
+function updateChatState() {
+  var hasMessages = chatHistory.length > 0;
+  if (hasMessages) {
+    $chatPanel.classList.add('pg-chat--has-messages');
+  } else {
+    $chatPanel.classList.remove('pg-chat--has-messages');
+  }
+}
+
+function countComponents(spec) {
+  if (!spec || !spec.elements) return 0;
+  return Object.keys(spec.elements).length;
+}
+
 // ---- Blocking fallback ----
-function runBlockingGenerate(prompt) {
-  setLoading(true);
-  $status.textContent = 'Generating...';
-  hideJsonError();
-  var provider = $provider.value;
-  var apiCall = provider === 'anthropic' ? callAnthropic(prompt) : provider === 'openrouter' ? callOpenRouter(prompt) : callOpenAI(prompt);
+function runBlockingGenerate(messages, streamBubble) {
+  var provider = isDefaultMode ? 'default' : ($provider ? $provider.value : 'openai');
+  var apiCall;
+  if (isDefaultMode) {
+    apiCall = fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: messages })
+    }).then(function(res) {
+      if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
+      return res.json();
+    }).then(function(data) { return data.choices[0].message.content; });
+  } else {
+    apiCall = provider === 'anthropic' ? callAnthropic(messages) : provider === 'openrouter' ? callOpenRouter(messages) : callOpenAI(messages);
+  }
   apiCall.then(function(raw) {
     raw = cleanJSON(raw);
     var spec = JSON.parse(raw);
     $json.value = JSON.stringify(spec, null, 2);
-    $status.textContent = 'Generated successfully';
+    $status.textContent = '';
+    currentSpec = spec;
     renderSpec(spec);
+    switchJsonMode('tree');
+    if (streamBubble) {
+      streamBubble.classList.remove('pg-chat__msg--streaming');
+      streamBubble.textContent = 'Generated UI \u00B7 ' + countComponents(spec) + ' components';
+    }
+    chatHistory.push({ role: 'assistant', content: 'Generated UI \u00B7 ' + countComponents(spec) + ' components' });
+    saveChatState();
   }).catch(function(err) {
-    $status.textContent = 'Error';
+    $status.textContent = '';
     showJsonError(err.message);
+    if (streamBubble) {
+      streamBubble.classList.remove('pg-chat__msg--streaming');
+      streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
+      streamBubble.textContent = err.message;
+    }
   }).finally(function() {
     setLoading(false);
   });
@@ -834,26 +1006,46 @@ function generate() {
   var prompt = $prompt.value.trim();
   if (!prompt) return;
 
-  var key = $apikey.value.trim();
-  if (!key) {
-    showJsonError('Please add your API key in Settings above.');
-    return;
+  if (!isDefaultMode) {
+    var key = $apikey ? $apikey.value.trim() : '';
+    if (!key) {
+      showJsonError('Please add your API key in the settings below.');
+      return;
+    }
   }
+
+  // Add user bubble
+  chatHistory.push({ role: 'user', content: prompt });
+  addChatBubble('user', prompt);
+  updateChatState();
+  $prompt.value = '';
+  $prompt.style.height = '';
+
+  // Add streaming indicator bubble
+  var streamBubble = addChatBubble('ai', '');
+  streamBubble.classList.add('pg-chat__msg--streaming');
 
   saveSettings();
   setLoading(true);
-  $status.textContent = 'Streaming...';
+  $status.textContent = 'Streaming\u2026';
   hideJsonError();
   $json.value = '';
+  updateRenderVisibility();
   while ($preview.firstChild) $preview.removeChild($preview.firstChild);
 
+  var messages = buildMessages(prompt);
   var accumulated = '';
   var renderTimer = setInterval(function() { tryProgressiveRender(accumulated); }, 300);
 
-  var provider = $provider.value;
-  var streamFn = provider === 'anthropic' ? streamAnthropic : provider === 'openrouter' ? streamOpenRouter : streamOpenAI;
+  var streamFn;
+  if (isDefaultMode) {
+    streamFn = streamDefault;
+  } else {
+    var provider = $provider ? $provider.value : 'openai';
+    streamFn = provider === 'anthropic' ? streamAnthropic : provider === 'openrouter' ? streamOpenRouter : streamOpenAI;
+  }
 
-  streamFn(prompt,
+  streamFn(messages,
     function onText(chunk) {
       accumulated += chunk;
       $json.value = accumulated;
@@ -865,22 +1057,34 @@ function generate() {
       try {
         var spec = JSON.parse(clean);
         $json.value = JSON.stringify(spec, null, 2);
-        $status.textContent = 'Generated successfully';
+        $status.textContent = '';
+        currentSpec = spec;
         renderSpec(spec);
+        switchJsonMode('tree');
+        streamBubble.classList.remove('pg-chat__msg--streaming');
+        streamBubble.textContent = 'Generated UI \u00B7 ' + countComponents(spec) + ' components';
+        chatHistory.push({ role: 'assistant', content: 'Generated UI \u00B7 ' + countComponents(spec) + ' components' });
+        saveChatState();
       } catch (e) {
-        $status.textContent = 'Parse error \u2014 check JSON';
+        $status.textContent = '';
         showJsonError(e.message);
+        streamBubble.classList.remove('pg-chat__msg--streaming');
+        streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
+        streamBubble.textContent = 'Parse error \u2014 ' + e.message;
       }
       setLoading(false);
     },
     function onError(err) {
       clearInterval(renderTimer);
       if (err === 'no-stream') {
-        runBlockingGenerate(prompt);
+        runBlockingGenerate(messages, streamBubble);
         return;
       }
-      $status.textContent = 'Error';
+      $status.textContent = '';
       showJsonError(err.message || String(err));
+      streamBubble.classList.remove('pg-chat__msg--streaming');
+      streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
+      streamBubble.textContent = err.message || String(err);
       setLoading(false);
     }
   );
@@ -890,13 +1094,13 @@ function setLoading(on) {
   if (on) {
     $generate.classList.add('db-btn--loading');
     $generate.disabled = true;
-    $provider.disabled = true;
-    $model.disabled = true;
+    if ($provider) $provider.disabled = true;
+    if ($model) $model.disabled = true;
   } else {
     $generate.classList.remove('db-btn--loading');
     $generate.disabled = false;
-    $provider.disabled = false;
-    $model.disabled = false;
+    if ($provider) $provider.disabled = false;
+    if ($model) $model.disabled = false;
   }
 }
 
@@ -907,6 +1111,13 @@ function showJsonError(msg) {
 function hideJsonError() {
   $jsonError.style.display = 'none';
 }
+
+// Show/hide Render button based on JSON content
+var $renderRow = document.getElementById('pg-render-row');
+function updateRenderVisibility() {
+  $renderRow.style.display = $json.value.trim() ? 'flex' : 'none';
+}
+$json.addEventListener('input', updateRenderVisibility);
 
 // ---- Render from JSON editor ----
 function renderFromEditor() {
@@ -940,16 +1151,137 @@ $copyHtml.addEventListener('click', function() {
   });
 });
 
-$generate.addEventListener('click', generate);
-$render.addEventListener('click', renderFromEditor);
+// ---- renderjson config ----
+if (window.renderjson) {
+  renderjson.set_show_to_level(2);
+  renderjson.set_icons('+', '\u2212');
+  renderjson.set_sort_objects(false);
+  renderjson.set_max_string_length(80);
+}
 
-// Allow Ctrl+Enter to generate
+// ---- JSON Code / Tree toggle ----
+function switchJsonMode(mode) {
+  $jsonModes.forEach(function(btn) {
+    btn.setAttribute('aria-pressed', btn.getAttribute('data-mode') === mode ? 'true' : 'false');
+  });
+  if (mode === 'tree') {
+    $jsonArea.style.display = 'none';
+    $jsonTree.style.display = '';
+    refreshJsonTree();
+  } else {
+    $jsonTree.style.display = 'none';
+    $jsonArea.style.display = '';
+  }
+  updateRenderVisibility();
+}
+
+function refreshJsonTree() {
+  try {
+    var parsed = JSON.parse($json.value);
+    while ($jsonTree.firstChild) $jsonTree.removeChild($jsonTree.firstChild);
+    $jsonTree.appendChild(renderjson(parsed));
+  } catch (e) {
+    $jsonTree.textContent = 'Waiting for valid JSON\u2026';
+  }
+}
+
+$jsonModes.forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    switchJsonMode(btn.getAttribute('data-mode'));
+  });
+});
+
+$generate.addEventListener('click', generate);
+$render.addEventListener('click', function() {
+  renderFromEditor();
+  switchJsonMode('tree');
+});
+
+// Enter to send (Shift+Enter for newline)
 $prompt.addEventListener('keydown', function(e) {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+  if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
     generate();
   }
 });
+
+// Auto-resize textarea
+$prompt.addEventListener('input', function() {
+  this.style.height = '';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+
+// ---- New Chat ----
+$newChat.addEventListener('click', function() {
+  chatHistory = [];
+  currentSpec = null;
+  saveChatState();
+  renderChatHistory();
+  $json.value = '';
+  updateRenderVisibility();
+  while ($preview.firstChild) $preview.removeChild($preview.firstChild);
+  $prompt.value = '';
+  $status.textContent = '';
+  hideJsonError();
+});
+
+// ---- BYOK modal ----
+function openByokModal() { $byokModal.classList.add('db-modal--open'); }
+function closeByokModal() { $byokModal.classList.remove('db-modal--open'); }
+
+$byokLink.addEventListener('click', function(e) {
+  e.preventDefault();
+  openByokModal();
+});
+$byokModalClose.addEventListener('click', closeByokModal);
+$byokSave.addEventListener('click', function() {
+  isDefaultMode = false;
+  $byokLink.textContent = '';
+  updateChatTitle();
+  saveSettings();
+  closeByokModal();
+});
+$defaultLink.addEventListener('click', function(e) {
+  e.preventDefault();
+  isDefaultMode = true;
+  $byokLink.textContent = 'Use Your Own Key';
+  updateChatTitle();
+  saveSettings();
+  closeByokModal();
+});
+$byokModal.addEventListener('click', function(e) {
+  if (e.target === $byokModal) closeByokModal();
+});
+
+function updateChatTitle() {
+  var label = '';
+  if (!isDefaultMode && $provider) {
+    var names = { openai: 'OpenAI', anthropic: 'Anthropic', openrouter: 'OpenRouter' };
+    label = names[$provider.value] || $provider.value;
+  }
+  while ($chatTitle.childNodes.length > 0) $chatTitle.removeChild($chatTitle.firstChild);
+  var b = document.createElement('strong');
+  b.textContent = 'Chat';
+  $chatTitle.appendChild(b);
+  if (label) $chatTitle.appendChild(document.createTextNode(' \u00b7 ' + label));
+}
+
+// ---- Collapsible panels ----
+// Grid columns: panel-prompt | divider | panel-json | divider | panel-preview
+// Default: 1fr 6px 1fr 6px 2fr  (25%/25%/50%)
+// Collapsed panel gets 40px, others expand proportionally
+function updateGridForCollapse() {
+  var grid = document.querySelector('.pg-grid');
+  var p1 = document.getElementById('panel-prompt').classList.contains('pg-panel--collapsed');
+  var p2 = document.getElementById('panel-json').classList.contains('pg-panel--collapsed');
+  var d1 = p1 ? '0px' : '6px';
+  var d2 = p2 ? '0px' : '6px';
+  var c1 = p1 ? '40px' : '1fr';
+  var c2 = p2 ? '40px' : '1fr';
+  var c3 = (p1 || p2) ? '3fr' : '2fr';
+  grid.style.gridTemplateColumns = c1 + ' ' + d1 + ' ' + c2 + ' ' + d2 + ' ' + c3;
+}
+
 
 // ============================================================
 //  RENDERER — json-render spec to DAUB HTML
@@ -976,7 +1308,7 @@ function renderSpec(spec) {
 function renderElement(elements, id, depth) {
   if (depth > MAX_DEPTH) return document.createTextNode('[max depth]');
   var def = elements[id];
-  if (!def) return document.createTextNode('[missing: ' + id + ']');
+  if (!def) return null;
 
   var render = RENDERERS[def.type];
   if (!render) {
@@ -2552,7 +2884,32 @@ document.querySelectorAll('.pg-bottom-tabs .db-bottom-nav__item').forEach(functi
 loadSettings();
 lucide.createIcons();
 
+// Restore chat state
+renderChatHistory();
+if (currentSpec) {
+  try {
+    $json.value = JSON.stringify(currentSpec, null, 2);
+    renderSpec(currentSpec);
+    switchJsonMode('tree');
+  } catch(e) {}
+}
+// Apply BYOK mode
+if (!isDefaultMode) {
+  $byokLink.textContent = '';
+}
+updateChatTitle();
+
+// Auto-fill from URL param (e.g. ?prompt=...)
+var urlParams = new URLSearchParams(window.location.search);
+var presetPrompt = urlParams.get('prompt');
+if (presetPrompt) {
+  $prompt.value = presetPrompt;
+  window.history.replaceState({}, '', window.location.pathname);
+  setTimeout(function(){ generate(); }, 500);
+}
+
 })();
 </script>
+
 </body>
 </html>

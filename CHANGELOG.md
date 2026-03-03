@@ -2,6 +2,20 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.8.6
+
+**Playground & landing page polish.**
+
+- Feature: "Code This" buttons on all 6 landing page prompt cards — opens Playground with prompt pre-filled and auto-generates
+- Feature: `?prompt=` URL parameter support in Playground — enables deep-linking to pre-filled prompts
+- Feature: "Try the Playground — It's Free" CTA below Minimal Example section with json-render attribution
+- Improvement: Playground toolbar cleanup — removed sparkles icon, bold "Chat" label, BYOK mode shows "Chat · ProviderName"
+- Improvement: JSON panel uses native `db-toggle--sm` for Code/Tree instead of custom styled buttons, removed "JSON Spec" label
+- Improvement: Removed panel collapse buttons from Chat and JSON toolbars
+- Improvement: Removed Playground footer (attribution moved to landing page CTA)
+- Improvement: `max_tokens` increased from 4096 to 16384 across all 7 API call sites (Playground + proxy worker)
+- Cache-bust: `?v=2.8.6` query strings on CSS/JS assets
+
 ## v2.8.5
 
 **Progressive streaming render + Card body spacing.**
