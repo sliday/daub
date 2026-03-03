@@ -1526,13 +1526,13 @@ RENDERERS.Layout = function(p, ch, els, d) {
   } else if (p.direction === 'horizontal') {
     el.style.display = 'flex';
     el.style.flexDirection = 'row';
-    el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(9, p.gap || 4)) + ')';
+    el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap || 2)) + ')';
     el.style.flexWrap = 'wrap';
     el.style.alignItems = 'flex-start';
   } else {
     el.style.display = 'flex';
     el.style.flexDirection = 'column';
-    el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(9, p.gap || 4)) + ')';
+    el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap || 2)) + ')';
   }
   el.appendChild(renderChildren(els, ch, d));
   return el;
@@ -2181,7 +2181,9 @@ RENDERERS.DataTable = function(p) {
     }
     cols.forEach(function(c) {
       var td = document.createElement('td');
-      var val = r[c.key] || '';
+      var raw = r[c.key];
+      // Flatten object cell values (e.g. Badge specs) to string
+      var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw || '');
       // Auto-detect status badges
       if (/^(active|completed|shipped|approved|paid|live|verified|published|resolved)$/i.test(val)) {
         td.appendChild(mkEl('span', 'db-badge db-badge--new', val));
@@ -2802,7 +2804,7 @@ RENDERERS.ChartCard = function(p, ch, els, d) {
 // ---- Component props documentation (single source of truth for AI prompt) ----
 var COMP_PROPS = {
   // Layout & Structure
-  Layout: 'direction: "vertical"|"horizontal", columns: 2-6, gap: number, container: "wide"|"narrow"|true',
+  Layout: 'direction: "vertical"|"horizontal", columns: 2-6, gap: 0-6 (default 2=8px), container: "wide"|"narrow"|true',
   Surface: 'variant: "raised"|"inset"|"pressed"',
   Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
@@ -2923,6 +2925,7 @@ var SYSTEM_PROMPT = (function() {
   var guidelines = 'GUIDELINES:\n'
     + '- Use Layout as the root with direction:"vertical" for page-level layouts\n'
     + '- Use Layout with direction:"horizontal" and columns for grid arrangements\n'
+    + '- Layout gap uses spacing tokens 0-6 (0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px). Default is 2 (8px). Use gap:2-3 for tight rhythm, gap:4-5 for sections\n'
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'
     + '- Use real-looking sample data (names, numbers, dates)\n'
