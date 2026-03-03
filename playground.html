@@ -576,7 +576,7 @@ document.querySelectorAll('[data-template]').forEach(function(chip) {
 });
 
 // ---- System prompt ----
-var SYSTEM_PROMPT = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\nOUTPUT FORMAT \u2014 Return ONLY valid JSON, no markdown fences, no explanation:\n{\n  "root": "<element-id>",\n  "elements": {\n    "<element-id>": {\n      "type": "<ComponentType>",\n      "props": { ... },\n      "children": ["<child-id>", ...]\n    }\n  }\n}\n\nRULES:\n- Every element has a unique string ID (e.g. "layout-1", "card-1", "btn-1")\n- "children" is an array of element ID strings (flat, NOT nested objects)\n- Only leaf elements omit "children"\n- The "root" must reference an existing element ID\n\nAVAILABLE COMPONENT TYPES AND PROPS:\n\nLayout & Structure:\n- Layout: { direction: "vertical"|"horizontal", columns: 2-6, gap: number, container: "wide"|"narrow"|true }\n- Surface: { variant: "raised"|"inset"|"pressed" }\n- Text: { tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string }\n- Prose: { content: string (HTML), size: "sm"|"lg"|"xl"|"2xl" }\n- Separator: { vertical: bool, dashed: bool, label: string }\n\nControls:\n- Button: { label: string, variant: "primary"|"secondary"|"ghost", size: "sm"|"lg"|"icon", loading: bool, icon: string }\n- ButtonGroup: {} (children are Buttons)\n- Field: { label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string }\n- Input: { placeholder: string, size: "sm"|"lg", error: bool }\n- InputGroup: { addonBefore: string, addonAfter: string } (child is Input)\n- InputIcon: { icon: string, right: bool } (child is Input)\n- Search: { placeholder: string }\n- Textarea: { placeholder: string, rows: number, error: bool }\n- Checkbox: { label: string, checked: bool }\n- RadioGroup: { options: [{label, value}], selected: string }\n- Switch: { label: string, checked: bool }\n- Slider: { min: number, max: number, value: number, step: number, label: string }\n- Toggle: { label: string, pressed: bool, size: "sm" }\n- ToggleGroup: { options: [{label, value}], selected: string }\n- Select: { label: string, options: [{label, value}], selected: string }\n- CustomSelect: { placeholder: string, options: [{label, value}], searchable: bool }\n- Kbd: { keys: [string] }\n- Label: { text: string, required: bool, optional: bool }\n- Spinner: { size: "sm"|"lg"|"xl" }\n- InputOTP: { length: number, separator: bool }\n\nNavigation:\n- Tabs: { tabs: [{label, id}], active: string }\n- Breadcrumbs: { items: [{label, href}] }\n- Pagination: { current: number, total: number, perPage: number }\n- Stepper: { steps: [{label, status: "completed"|"active"|"pending"}] }\n- NavMenu: { items: [{label, href, active: bool}] }\n- Navbar: { brand: string, brandHref: string }\n- Menubar: { items: [{label, dropdown: [{label, href}]}] }\n- Sidebar: { sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool }\n- BottomNav: { items: [{label, icon, active, badge}] }\n\nData Display:\n- Card: { title: string, description: string, media: string }\n- Table: { columns: [{key, label, numeric}], rows: [{}], sortable: bool }\n- DataTable: { columns: [{key, label}], rows: [{}], selectable: bool }\n- List: { items: [{title, secondary, icon}] }\n- Badge: { text: string, variant: "new"|"updated"|"warning"|"error" }\n- Avatar: { initials: string, src: string, size: "sm"|"md"|"lg" }\n- AvatarGroup: { avatars: [{initials, src}], max: number }\n- Calendar: { selected: string, today: string }\n- Chart: { bars: [{label, value, max}] }\n- Carousel: { slides: [{content}] }\n- AspectRatio: { ratio: "16-9"|"4-3"|"1-1"|"21-9" }\n- Chip: { label: string, color: "red"|"green"|"blue"|"purple"|"amber"|"pink", active: bool, closable: bool }\n- ScrollArea: { direction: "horizontal"|"vertical" }\n\nFeedback:\n- Alert: { type: "info"|"warning"|"error"|"success", title: string, message: string }\n- Progress: { value: number, indeterminate: bool }\n- Skeleton: { variant: "text"|"heading"|"avatar"|"btn", lines: number }\n- EmptyState: { icon: string, title: string, message: string }\n- Tooltip: { text: string, position: "top"|"bottom"|"left"|"right" }\n\nOverlays:\n- Modal: { id: string, title: string }\n- AlertDialog: { id: string, title: string, description: string }\n- Sheet: { id: string, position: "right"|"left"|"top"|"bottom" }\n- Drawer: { id: string }\n- Popover: { position: "top"|"bottom"|"left"|"right" }\n- HoverCard: {}\n- DropdownMenu: { items: [{label, icon, separator, groupLabel}] }\n- ContextMenu: { items: [{label, icon, separator}] }\n- CommandPalette: { id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] }\n\nLayout Utilities:\n- Accordion: { items: [{title, content}], multi: bool }\n- Collapsible: { label: string }\n- Resizable: { direction: "horizontal"|"vertical" }\n- DatePicker: { label: string, placeholder: string, selected: string }\n\nDashboard:\n- StatCard: { label: string, value: string, trend: "up"|"down", trendValue: string }\n- ChartCard: { title: string }\n\nGUIDELINES:\n- Use Layout as the root with direction:"vertical" for page-level layouts\n- Use Layout with direction:"horizontal" and columns for grid arrangements\n- Wrap related content in Card components\n- Use StatCard for KPI metrics\n- Use real-looking sample data (names, numbers, dates)\n- Keep element IDs descriptive and unique';
+var SYSTEM_PROMPT = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\nOUTPUT FORMAT \u2014 Return ONLY valid JSON, no markdown fences, no explanation:\n{\n  "root": "<element-id>",\n  "elements": {\n    "<element-id>": {\n      "type": "<ComponentType>",\n      "props": { ... },\n      "children": ["<child-id>", ...]\n    }\n  }\n}\n\nRULES:\n- Every element has a unique string ID (e.g. "layout-1", "card-1", "btn-1")\n- "children" is an array of element ID strings (flat, NOT nested objects)\n- Only leaf elements omit "children"\n- The "root" must reference an existing element ID\n\nAVAILABLE COMPONENT TYPES AND PROPS:\n\nLayout & Structure:\n- Layout: { direction: "vertical"|"horizontal", columns: 2-6, gap: number, container: "wide"|"narrow"|true }\n- Surface: { variant: "raised"|"inset"|"pressed" }\n- Text: { tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string }\n- Prose: { content: string (HTML), size: "sm"|"lg"|"xl"|"2xl" }\n- Separator: { vertical: bool, dashed: bool, label: string }\n\nControls:\n- Button: { label: string, variant: "primary"|"secondary"|"ghost", size: "sm"|"lg"|"icon", loading: bool, icon: string }\n- ButtonGroup: {} (children are Buttons)\n- Field: { label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string }\n- Input: { placeholder: string, size: "sm"|"lg", error: bool }\n- InputGroup: { addonBefore: string, addonAfter: string } (child is Input)\n- InputIcon: { icon: string, right: bool } (child is Input)\n- Search: { placeholder: string }\n- Textarea: { placeholder: string, rows: number, error: bool }\n- Checkbox: { label: string, checked: bool }\n- RadioGroup: { options: [{label, value}], selected: string }\n- Switch: { label: string, checked: bool }\n- Slider: { min: number, max: number, value: number, step: number, label: string }\n- Toggle: { label: string, pressed: bool, size: "sm" }\n- ToggleGroup: { options: [{label, value}], selected: string }\n- Select: { label: string, options: [{label, value}], selected: string }\n- CustomSelect: { placeholder: string, options: [{label, value}], searchable: bool }\n- Kbd: { keys: [string] }\n- Label: { text: string, required: bool, optional: bool }\n- Spinner: { size: "sm"|"lg"|"xl" }\n- InputOTP: { length: number, separator: bool }\n\nNavigation:\n- Tabs: { tabs: [{label, id}], active: string }\n- Breadcrumbs: { items: [{label, href}] }\n- Pagination: { current: number, total: number, perPage: number }\n- Stepper: { steps: [{label, status: "completed"|"active"|"pending"}] }\n- NavMenu: { items: [{label, href, active: bool}] }\n- Navbar: { brand: string, brandHref: string }\n- Menubar: { items: [{label, dropdown: [{label, href}]}] }\n- Sidebar: { sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool }\n- BottomNav: { items: [{label, icon, active, badge}] }\n\nData Display:\n- Card: { title: string, description: string, media: string, footer: [childIds] }\n- Table: { columns: [{key, label, numeric}], rows: [{}], sortable: bool }\n- DataTable: { columns: [{key, label}], rows: [{}], selectable: bool }\n- List: { items: [{title, secondary, icon}] }\n- Badge: { text: string, variant: "new"|"updated"|"warning"|"error" }\n- Avatar: { initials: string, src: string, size: "sm"|"md"|"lg" }\n- AvatarGroup: { avatars: [{initials, src}], max: number }\n- Calendar: { selected: string, today: string }\n- Chart: { bars: [{label, value, max}] }\n- Carousel: { slides: [{content}] }\n- AspectRatio: { ratio: "16-9"|"4-3"|"1-1"|"21-9" }\n- Chip: { label: string, color: "red"|"green"|"blue"|"purple"|"amber"|"pink", active: bool, closable: bool }\n- ScrollArea: { direction: "horizontal"|"vertical" }\n\nFeedback:\n- Alert: { type: "info"|"warning"|"error"|"success", title: string, message: string }\n- Progress: { value: number, indeterminate: bool }\n- Skeleton: { variant: "text"|"heading"|"avatar"|"btn", lines: number }\n- EmptyState: { icon: string, title: string, message: string }\n- Tooltip: { text: string, position: "top"|"bottom"|"left"|"right" }\n\nOverlays:\n- Modal: { id: string, title: string }\n- AlertDialog: { id: string, title: string, description: string }\n- Sheet: { id: string, position: "right"|"left"|"top"|"bottom" }\n- Drawer: { id: string }\n- Popover: { position: "top"|"bottom"|"left"|"right" }\n- HoverCard: {}\n- DropdownMenu: { items: [{label, icon, separator, groupLabel}] }\n- ContextMenu: { items: [{label, icon, separator}] }\n- CommandPalette: { id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] }\n\nLayout Utilities:\n- Accordion: { items: [{title, content, children: [childIds]}], multi: bool }\n- Collapsible: { label: string }\n- Resizable: { direction: "horizontal"|"vertical" }\n- DatePicker: { label: string, placeholder: string, selected: string }\n\nDashboard:\n- StatCard: { label: string, value: string, trend: "up"|"down", trendValue: string, icon: string }\n- ChartCard: { title: string }\n\nGUIDELINES:\n- Use Layout as the root with direction:"vertical" for page-level layouts\n- Use Layout with direction:"horizontal" and columns for grid arrangements\n- Wrap related content in Card components\n- Use StatCard for KPI metrics\n- Use real-looking sample data (names, numbers, dates)\n- Keep element IDs descriptive and unique';
 
 // ---- AI API calls ----
 function callOpenAI(prompt) {
@@ -821,6 +821,39 @@ function esc(s) {
   return d.innerHTML;
 }
 
+// Sanitize HTML: allowlisted tags/attrs, strip event handlers & javascript: URIs
+var _sanitizeTags = 'p,strong,em,b,i,u,br,a,ul,ol,li,h1,h2,h3,h4,h5,h6,blockquote,pre,code,span,div,hr,mark,small,del,table,thead,tbody,tr,th,td,img'.split(',');
+var _sanitizeAttrs = { a: ['href','title'], img: ['src','alt','width','height'], td: ['colspan','rowspan'], th: ['colspan','rowspan'], ol: ['start','type'], '*': ['class'] };
+function sanitizeHtml(html) {
+  if (!html) return '';
+  var doc = new DOMParser().parseFromString(html, 'text/html');
+  function walk(node) {
+    var out = '';
+    for (var i = 0; i < node.childNodes.length; i++) {
+      var n = node.childNodes[i];
+      if (n.nodeType === 3) { out += esc(n.textContent); continue; }
+      if (n.nodeType !== 1) continue;
+      var tag = n.tagName.toLowerCase();
+      if (_sanitizeTags.indexOf(tag) < 0) { out += walk(n); continue; }
+      var allowed = (_sanitizeAttrs[tag] || []).concat(_sanitizeAttrs['*'] || []);
+      var attrs = '';
+      for (var j = 0; j < n.attributes.length; j++) {
+        var a = n.attributes[j], aname = a.name.toLowerCase();
+        if (aname.indexOf('on') === 0) continue;
+        if (allowed.indexOf(aname) < 0) continue;
+        var v = a.value;
+        if ((aname === 'href' || aname === 'src') && /^\s*javascript:/i.test(v)) continue;
+        attrs += ' ' + aname + '="' + esc(v) + '"';
+      }
+      if (tag === 'a') attrs += ' rel="noopener" target="_blank"';
+      if (tag === 'br' || tag === 'hr' || tag === 'img') { out += '<' + tag + attrs + '>'; }
+      else { out += '<' + tag + attrs + '>' + walk(n) + '</' + tag + '>'; }
+    }
+    return out;
+  }
+  return walk(doc.body);
+}
+
 function iconHtml(name, size) {
   if (!name) return '';
   return '<i data-lucide="' + esc(name) + '" style="width:' + (size||16) + 'px;height:' + (size||16) + 'px;"></i>';
@@ -845,7 +878,7 @@ RENDERERS.Layout = function(p, ch, els, d) {
   }
   if (p.columns) {
     el.classList.add('db-grid', 'db-grid--' + p.columns);
-    if (p.gap) el.classList.add('db-gap-' + Math.round(p.gap / 4));
+    if (p.gap) { var _gv = [1,2,3,4,5,6,8], _gr = Math.round(p.gap / 4) || 1; el.classList.add('db-gap-' + _gv.reduce(function(a,b){ return Math.abs(b-_gr)<Math.abs(a-_gr)?b:a; })); }
   } else if (p.direction === 'horizontal') {
     el.style.display = 'flex';
     el.style.flexDirection = 'row';
@@ -865,7 +898,7 @@ RENDERERS.Layout = function(p, ch, els, d) {
 RENDERERS.Surface = function(p, ch, els, d) {
   var el = document.createElement('div');
   el.className = p.variant ? 'db-surface--' + p.variant : 'db-surface';
-  el.style.padding = '16px';
+  el.style.padding = 'var(--db-space-4, 16px)';
   el.appendChild(renderChildren(els, ch, d));
   return el;
 };
@@ -884,7 +917,7 @@ RENDERERS.Text = function(p) {
 RENDERERS.Prose = function(p) {
   var el = document.createElement('div');
   el.className = 'db-prose' + (p.size ? ' db-prose--' + p.size : '');
-  el.textContent = p.content || '';
+  el.innerHTML = sanitizeHtml(p.content || '');
   return el;
 };
 
@@ -985,9 +1018,10 @@ RENDERERS.InputIcon = function(p, ch, els, d) {
 
 // -- Search --
 RENDERERS.Search = function(p) {
-  var el = mkEl('div', 'db-input-icon');
+  var el = mkEl('div', 'db-search');
   var ico = document.createElement('i');
   ico.setAttribute('data-lucide', 'search');
+  ico.className = 'db-search__icon';
   ico.style.width = '16px';
   ico.style.height = '16px';
   el.appendChild(ico);
@@ -996,6 +1030,11 @@ RENDERERS.Search = function(p) {
   inp.type = 'search';
   inp.placeholder = p.placeholder || 'Search...';
   el.appendChild(inp);
+  var clr = document.createElement('button');
+  clr.className = 'db-search__clear';
+  clr.type = 'button';
+  clr.setAttribute('aria-label', 'Clear search');
+  el.appendChild(clr);
   return el;
 };
 
@@ -1410,10 +1449,17 @@ RENDERERS.Card = function(p, ch, els, d) {
     if (p.description) hdr.appendChild(mkEl('p', 'db-card__desc', p.description));
     el.appendChild(hdr);
   }
-  if (ch.length) {
+  var footerIds = p.footer || [];
+  var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
+  if (bodyIds.length) {
     var body = mkEl('div', 'db-card__body');
-    body.appendChild(renderChildren(els, ch, d));
+    body.appendChild(renderChildren(els, bodyIds, d));
     el.appendChild(body);
+  }
+  if (footerIds.length) {
+    var foot = mkEl('div', 'db-card__footer');
+    foot.appendChild(renderChildren(els, footerIds, d));
+    el.appendChild(foot);
   }
   return el;
 };
@@ -1489,13 +1535,13 @@ RENDERERS.DataTable = function(p) {
       var td = document.createElement('td');
       var val = r[c.key] || '';
       // Auto-detect status badges
-      if (/^(active|completed|shipped|approved|paid)$/i.test(val)) {
+      if (/^(active|completed|shipped|approved|paid|live|verified|published|resolved)$/i.test(val)) {
         td.appendChild(mkEl('span', 'db-badge db-badge--new', val));
-      } else if (/^(pending|review|processing|in progress)$/i.test(val)) {
+      } else if (/^(pending|review|processing|in progress|draft|scheduled|new|open)$/i.test(val)) {
         td.appendChild(mkEl('span', 'db-badge db-badge--updated', val));
-      } else if (/^(error|failed|rejected|cancelled|canceled)$/i.test(val)) {
+      } else if (/^(error|failed|rejected|cancelled|canceled|blocked|expired)$/i.test(val)) {
         td.appendChild(mkEl('span', 'db-badge db-badge--error', val));
-      } else if (/^(on leave|away|inactive|paused|remote)$/i.test(val)) {
+      } else if (/^(on leave|away|inactive|paused|remote|archived|suspended|overdue|closed)$/i.test(val)) {
         td.appendChild(mkEl('span', 'db-badge db-badge--warning', val));
       } else {
         td.textContent = val;
@@ -1975,7 +2021,7 @@ RENDERERS.CommandPalette = function(p) {
 };
 
 // -- Accordion --
-RENDERERS.Accordion = function(p) {
+RENDERERS.Accordion = function(p, ch, els, d) {
   var el = mkEl('div', 'db-accordion');
   if (p.multi) el.setAttribute('data-multi', '');
   (p.items || []).forEach(function(item, i) {
@@ -1993,7 +2039,13 @@ RENDERERS.Accordion = function(p) {
     svg.appendChild(path);
     trigger.appendChild(svg);
     accItem.appendChild(trigger);
-    accItem.appendChild(mkEl('div', 'db-accordion__content', item.content || ''));
+    var content = mkEl('div', 'db-accordion__content');
+    if (item.children && item.children.length) {
+      content.appendChild(renderChildren(els, item.children, d));
+    } else {
+      content.textContent = item.content || '';
+    }
+    accItem.appendChild(content);
     el.appendChild(accItem);
   });
   return el;
@@ -2072,6 +2124,11 @@ RENDERERS.DatePicker = function(p) {
 // -- StatCard --
 RENDERERS.StatCard = function(p) {
   var el = mkEl('div', 'db-stat');
+  if (p.icon) {
+    var ico = mkEl('div', 'db-stat__icon');
+    ico.innerHTML = iconHtml(p.icon, 20);
+    el.appendChild(ico);
+  }
   el.appendChild(mkEl('span', 'db-stat__label', p.label || ''));
   el.appendChild(mkEl('span', 'db-stat__value', p.value || ''));
   if (p.trend) {
