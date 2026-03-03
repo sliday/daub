@@ -278,8 +278,8 @@
     }
     .pg-chat__input-row .db-textarea {
       width: 100%;
-      min-height: 60px;
-      max-height: 160px;
+      min-height: 80px;
+      max-height: 200px;
       resize: none;
       font-family: var(--db-font-ui);
       font-size: 0.875rem;
@@ -287,10 +287,17 @@
       padding: 10px 40px 10px 12px;
       box-sizing: border-box;
     }
-    .pg-chat__input-row .db-btn {
+    .pg-send-btn {
       position: absolute;
       right: 6px;
       bottom: 6px;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--db-radius-2);
     }
     .pg-chat__byok-toggle {
       display: flex;
@@ -307,6 +314,7 @@
     .pg-chat__byok-toggle a:hover { color: var(--db-terracotta); }
     /* Theme picker — move to right bottom on playground */
     .db-theme-switcher { left: auto; right: var(--db-space-5); }
+    .db-theme-switcher__popover { left: auto; right: 0; }
 
     /* JSON panel */
     .pg-json-area {
@@ -421,6 +429,7 @@
     <div class="pg-panel pg-panel--active" id="panel-prompt">
       <div class="pg-panel__toolbar">
         <span class="pg-panel__toolbar-title" id="pg-chat-title"><strong>Chat</strong></span>
+        <span style="flex:1"></span>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-new-chat" title="New Chat"><i data-lucide="plus" style="width:12px;height:12px;"></i> New Chat</button>
       </div>
       <div class="pg-panel__body pg-chat">
@@ -456,8 +465,8 @@
           </div>
           <div class="pg-chat__input-row">
             <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..."></textarea>
-            <button class="db-btn db-btn--primary db-btn--sm" id="pg-generate" title="Send">
-              <i data-lucide="arrow-up" style="width:16px;height:16px;"></i>
+            <button class="db-btn db-btn--primary db-btn--sm pg-send-btn" id="pg-generate" title="Send">
+              <i data-lucide="send" style="width:14px;height:14px;"></i>
             </button>
           </div>
           <div class="pg-chat__byok-toggle">
@@ -510,7 +519,7 @@
     <!-- RIGHT: Preview Panel -->
     <div class="pg-panel" id="panel-preview">
       <div class="pg-panel__toolbar">
-        <span class="pg-panel__toolbar-title"><i data-lucide="eye" style="width:14px;height:14px;"></i> Preview</span>
+        <span class="pg-panel__toolbar-title"><strong>Preview</strong></span>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-html" title="Copy HTML"><i data-lucide="code" style="width:12px;height:12px;"></i> Copy HTML</button>
       </div>
       <div class="pg-panel__body">
@@ -800,7 +809,10 @@ function streamFetch(url, headers, body, onChunk, onDone, onError) {
 }
 
 // ---- Streaming wrappers (accept messages array) ----
+var _lastFinishReason = '';
+
 function streamDefault(messages, onText, onDone, onError) {
+  _lastFinishReason = '';
   streamFetch(
     '/api/generate',
     { 'Content-Type': 'application/json' },
@@ -808,12 +820,14 @@ function streamDefault(messages, onText, onDone, onError) {
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
+      if (c && c.finish_reason) _lastFinishReason = c.finish_reason;
     },
     onDone, onError
   );
 }
 
 function streamOpenAI(messages, onText, onDone, onError) {
+  _lastFinishReason = '';
   streamFetch(
     'https://api.openai.com/v1/chat/completions',
     { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
@@ -821,6 +835,7 @@ function streamOpenAI(messages, onText, onDone, onError) {
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
+      if (c && c.finish_reason) _lastFinishReason = c.finish_reason;
     },
     onDone, onError
   );
@@ -841,6 +856,7 @@ function streamAnthropic(messages, onText, onDone, onError) {
 }
 
 function streamOpenRouter(messages, onText, onDone, onError) {
+  _lastFinishReason = '';
   streamFetch(
     'https://openrouter.ai/api/v1/chat/completions',
     { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim(), 'HTTP-Referer': 'https://daub.dev', 'X-Title': 'DAUB Playground' },
@@ -848,6 +864,7 @@ function streamOpenRouter(messages, onText, onDone, onError) {
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
+      if (c && c.finish_reason) _lastFinishReason = c.finish_reason;
     },
     onDone, onError
   );
@@ -856,12 +873,59 @@ function streamOpenRouter(messages, onText, onDone, onError) {
 // ---- JSON cleanup helper ----
 function cleanJSON(text) {
   var s = text.trim();
+  // Strip markdown fences
   s = s.replace(/^```(?:json|JSON)?\s*\n?/, '').replace(/\n?```\s*$/, '');
   s = s.trim();
+  // Extract outermost {...}
   var start = s.indexOf('{');
   var end = s.lastIndexOf('}');
   if (start !== -1 && end > start) s = s.substring(start, end + 1);
+  // Remove JS-style comments
+  s = s.replace(/\/\/[^\n]*/g, '');
+  s = s.replace(/\/\*[\s\S]*?\*\//g, '');
+  // Fix trailing commas before } or ]
+  s = s.replace(/,\s*([}\]])/g, '$1');
   return s;
+}
+
+// ---- Repair truncated JSON (force-close open brackets) ----
+function repairJSON(s) {
+  // Strip trailing commas
+  s = s.replace(/,\s*$/, '');
+  // Walk string tracking open brackets
+  var stack = [], inStr = false, esc = false;
+  for (var i = 0; i < s.length; i++) {
+    var ch = s[i];
+    if (esc) { esc = false; continue; }
+    if (ch === '\\') { esc = true; continue; }
+    if (ch === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (ch === '{') stack.push('}');
+    else if (ch === '[') stack.push(']');
+    else if (ch === '}' || ch === ']') stack.pop();
+  }
+  // If inside a string, truncate back to before last open quote
+  if (inStr) {
+    var qi = s.lastIndexOf('"');
+    while (qi > 0 && s[qi - 1] === '\\') qi = s.lastIndexOf('"', qi - 1);
+    if (qi > 0) s = s.substring(0, qi + 1);
+    stack = []; inStr = false; esc = false;
+    for (var j = 0; j < s.length; j++) {
+      var c2 = s[j];
+      if (esc) { esc = false; continue; }
+      if (c2 === '\\') { esc = true; continue; }
+      if (c2 === '"') { inStr = !inStr; continue; }
+      if (inStr) continue;
+      if (c2 === '{') stack.push('}');
+      else if (c2 === '[') stack.push(']');
+      else if (c2 === '}' || c2 === ']') stack.pop();
+    }
+  }
+  // Remove trailing comma and close all brackets
+  s = s.replace(/,\s*$/, '');
+  var closers = '';
+  for (var k = stack.length - 1; k >= 0; k--) closers += stack[k];
+  try { return JSON.parse(s + closers); } catch (e) { return null; }
 }
 
 // ---- Progressive rendering (force-close incomplete JSON) ----
@@ -958,6 +1022,38 @@ function countComponents(spec) {
   if (!spec || !spec.elements) return 0;
   return Object.keys(spec.elements).length;
 }
+function listComponentTypes(spec) {
+  if (!spec || !spec.elements) return [];
+  var counts = {};
+  Object.keys(spec.elements).forEach(function(id) {
+    var t = spec.elements[id].type || 'unknown';
+    counts[t] = (counts[t] || 0) + 1;
+  });
+  return Object.keys(counts).sort().map(function(t) { return t + ' \u00d7' + counts[t]; });
+}
+function buildResultBubble(bubble, spec) {
+  var n = countComponents(spec);
+  var types = listComponentTypes(spec);
+  while (bubble.firstChild) bubble.removeChild(bubble.firstChild);
+  bubble.style.cursor = 'pointer';
+  var summary = document.createElement('span');
+  summary.textContent = 'Generated UI \u00B7 ' + n + ' components';
+  bubble.appendChild(summary);
+  var detail = document.createElement('div');
+  detail.style.cssText = 'margin-top:6px;font-size:0.75rem;color:var(--db-warm-gray);display:none;';
+  types.forEach(function(t) {
+    var chip = document.createElement('span');
+    chip.className = 'db-chip db-chip--sm';
+    chip.style.marginRight = '4px';
+    chip.style.marginBottom = '4px';
+    chip.textContent = t;
+    detail.appendChild(chip);
+  });
+  bubble.appendChild(detail);
+  bubble.onclick = function() {
+    detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+  };
+}
 
 // ---- Blocking fallback ----
 function runBlockingGenerate(messages, streamBubble) {
@@ -977,7 +1073,9 @@ function runBlockingGenerate(messages, streamBubble) {
   }
   apiCall.then(function(raw) {
     raw = cleanJSON(raw);
-    var spec = JSON.parse(raw);
+    var spec;
+    try { spec = JSON.parse(raw); } catch(e) { spec = repairJSON(raw); }
+    if (!spec || !spec.root || !spec.elements) throw new Error('Invalid or incomplete JSON response');
     $json.value = JSON.stringify(spec, null, 2);
     $status.textContent = '';
     currentSpec = spec;
@@ -985,7 +1083,7 @@ function runBlockingGenerate(messages, streamBubble) {
     switchJsonMode('tree');
     if (streamBubble) {
       streamBubble.classList.remove('pg-chat__msg--streaming');
-      streamBubble.textContent = 'Generated UI \u00B7 ' + countComponents(spec) + ' components';
+      buildResultBubble(streamBubble, spec);
     }
     chatHistory.push({ role: 'assistant', content: 'Generated UI \u00B7 ' + countComponents(spec) + ' components' });
     saveChatState();
@@ -1035,6 +1133,8 @@ function generate() {
 
   var messages = buildMessages(prompt);
   var accumulated = '';
+  var continuations = 0;
+  var MAX_CONTINUATIONS = 2;
   var renderTimer = setInterval(function() { tryProgressiveRender(accumulated); }, 300);
 
   var streamFn;
@@ -1045,49 +1145,69 @@ function generate() {
     streamFn = provider === 'anthropic' ? streamAnthropic : provider === 'openrouter' ? streamOpenRouter : streamOpenAI;
   }
 
-  streamFn(messages,
-    function onText(chunk) {
-      accumulated += chunk;
-      $json.value = accumulated;
-      $json.scrollTop = $json.scrollHeight;
-    },
-    function onDone() {
-      clearInterval(renderTimer);
-      var clean = cleanJSON(accumulated);
-      try {
-        var spec = JSON.parse(clean);
-        $json.value = JSON.stringify(spec, null, 2);
+  function startStream(msgs) {
+    streamFn(msgs,
+      function onText(chunk) {
+        accumulated += chunk;
+        $json.value = accumulated;
+        $json.scrollTop = $json.scrollHeight;
+      },
+      function onDone() {
+        // Auto-continue if response was truncated (finish_reason: "length")
+        if (_lastFinishReason === 'length' && continuations < MAX_CONTINUATIONS) {
+          continuations++;
+          $status.textContent = 'Continuing (' + continuations + '/' + MAX_CONTINUATIONS + ')\u2026';
+          var contMsgs = msgs.concat([
+            { role: 'assistant', content: accumulated },
+            { role: 'user', content: 'Continue the JSON exactly from where you stopped. Output ONLY the remaining JSON, no repetition, no explanation.' }
+          ]);
+          startStream(contMsgs);
+          return;
+        }
+        clearInterval(renderTimer);
+        var clean = cleanJSON(accumulated);
+        var spec;
+        try {
+          spec = JSON.parse(clean);
+        } catch (e1) {
+          spec = repairJSON(clean);
+        }
+        if (spec && spec.root && spec.elements) {
+          $json.value = JSON.stringify(spec, null, 2);
+          $status.textContent = '';
+          currentSpec = spec;
+          renderSpec(spec);
+          switchJsonMode('tree');
+          streamBubble.classList.remove('pg-chat__msg--streaming');
+          buildResultBubble(streamBubble, spec);
+          chatHistory.push({ role: 'assistant', content: 'Generated UI \u00B7 ' + countComponents(spec) + ' components' });
+          saveChatState();
+        } else {
+          $status.textContent = '';
+          var errMsg = 'Invalid or incomplete JSON response';
+          showJsonError(errMsg);
+          streamBubble.classList.remove('pg-chat__msg--streaming');
+          streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
+          streamBubble.textContent = 'Parse error \u2014 ' + errMsg;
+        }
+        setLoading(false);
+      },
+      function onError(err) {
+        clearInterval(renderTimer);
+        if (err === 'no-stream') {
+          runBlockingGenerate(messages, streamBubble);
+          return;
+        }
         $status.textContent = '';
-        currentSpec = spec;
-        renderSpec(spec);
-        switchJsonMode('tree');
-        streamBubble.classList.remove('pg-chat__msg--streaming');
-        streamBubble.textContent = 'Generated UI \u00B7 ' + countComponents(spec) + ' components';
-        chatHistory.push({ role: 'assistant', content: 'Generated UI \u00B7 ' + countComponents(spec) + ' components' });
-        saveChatState();
-      } catch (e) {
-        $status.textContent = '';
-        showJsonError(e.message);
+        showJsonError(err.message || String(err));
         streamBubble.classList.remove('pg-chat__msg--streaming');
         streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
-        streamBubble.textContent = 'Parse error \u2014 ' + e.message;
+        streamBubble.textContent = err.message || String(err);
+        setLoading(false);
       }
-      setLoading(false);
-    },
-    function onError(err) {
-      clearInterval(renderTimer);
-      if (err === 'no-stream') {
-        runBlockingGenerate(messages, streamBubble);
-        return;
-      }
-      $status.textContent = '';
-      showJsonError(err.message || String(err));
-      streamBubble.classList.remove('pg-chat__msg--streaming');
-      streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
-      streamBubble.textContent = err.message || String(err);
-      setLoading(false);
-    }
-  );
+    );
+  }
+  startStream(messages);
 }
 
 function setLoading(on) {
@@ -2771,7 +2891,9 @@ var COMP_CATEGORIES = [
 // ---- Dynamic system prompt (built from RENDERERS + COMP_PROPS) ----
 var SYSTEM_PROMPT = (function() {
   var preamble = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\n'
-    + 'OUTPUT FORMAT \u2014 Return ONLY valid JSON, no markdown fences, no explanation:\n'
+    + 'CRITICAL: You MUST return ONLY a single valid JSON object. No markdown fences, no explanation, no text before or after the JSON.\n'
+    + 'Do NOT use trailing commas. Do NOT use comments. Ensure every string is properly quoted and escaped.\n\n'
+    + 'OUTPUT FORMAT:\n'
     + '{\n  "root": "<element-id>",\n  "elements": {\n    "<element-id>": {\n'
     + '      "type": "<ComponentType>",\n      "props": { ... },\n'
     + '      "children": ["<child-id>", ...]\n    }\n  }\n}\n\n'
@@ -2779,7 +2901,8 @@ var SYSTEM_PROMPT = (function() {
     + '- Every element has a unique string ID (e.g. "layout-1", "card-1", "btn-1")\n'
     + '- "children" is an array of element ID strings (flat, NOT nested objects)\n'
     + '- Only leaf elements omit "children"\n'
-    + '- The "root" must reference an existing element ID\n\n'
+    + '- The "root" must reference an existing element ID\n'
+    + '- Output MUST be valid JSON. Double-check: no trailing commas, no single quotes, no unescaped special characters\n\n'
     + 'AVAILABLE COMPONENT TYPES AND PROPS:\n\n';
 
   var sections = '';
