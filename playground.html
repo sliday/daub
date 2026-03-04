@@ -424,6 +424,13 @@
       color: var(--db-terracotta);
       pointer-events: none;
     }
+    @keyframes pg-diff-flash {
+      0%   { outline: 2px solid var(--db-terracotta); outline-offset: 2px; }
+      100% { outline: 2px solid transparent; outline-offset: 2px; }
+    }
+    .pg-diff-changed {
+      animation: pg-diff-flash 1.2s ease-out;
+    }
     .pg-chat__examples a:hover { color: var(--db-terracotta); }
     /* Theme picker — move to right bottom on playground */
     .db-theme-switcher { left: auto; right: var(--db-space-5); }
@@ -1352,9 +1359,10 @@ function runBlockingGenerate(messages, streamBubble) {
     if (!spec || !spec.root || !spec.elements) throw new Error('Invalid or incomplete JSON response');
     $json.value = JSON.stringify(spec, null, 2);
     $status.textContent = '';
+    var prevSpec = currentSpec;
     currentSpec = spec;
     pushVersion(spec, '(blocking)');
-    renderSpec(spec);
+    renderSpec(spec, prevSpec);
     refreshJsonTree();
     updatePreviewToolbar();
     if (streamBubble) {
@@ -1488,9 +1496,10 @@ function generate() {
         if (spec && spec.root && spec.elements) {
           $json.value = JSON.stringify(spec, null, 2);
           $status.textContent = usingFallback ? 'Rendered via fallback model' : '';
+          var prevSpec2 = currentSpec;
           currentSpec = spec;
           pushVersion(spec, prompt);
-          renderSpec(spec);
+          renderSpec(spec, prevSpec2);
           refreshJsonTree();
           updatePreviewToolbar();
           streamBubble.classList.remove('pg-chat__msg--streaming');
@@ -1831,14 +1840,19 @@ function updateGridForCollapse() {
 // ============================================================
 var MAX_DEPTH = 20;
 
-function renderSpec(spec) {
+function renderSpec(spec, prevSpec) {
   if (!spec || !spec.root || !spec.elements) {
     showJsonError('Spec must have "root" and "elements"');
     return;
   }
-  $preview.textContent = '';
-  var el = renderElement(spec.elements, spec.root, 0);
-  if (el) $preview.appendChild(el);
+  // If we have a previous spec with same root structure, do incremental diff
+  if (prevSpec && prevSpec.root && prevSpec.elements && prevSpec.root === spec.root && $preview.firstChild) {
+    diffUpdate(prevSpec, spec, $preview.firstChild, spec.root, 0);
+  } else {
+    $preview.textContent = '';
+    var el = renderElement(spec.elements, spec.root, 0);
+    if (el) $preview.appendChild(el);
+  }
 
   // Re-init DAUB behaviors on new content
   if (window.DAUB) {
@@ -1846,6 +1860,74 @@ function renderSpec(spec) {
     if (DAUB.fixNestedRadius) DAUB.fixNestedRadius($preview);
   }
   if (window.lucide) lucide.createIcons({ nodes: $preview.querySelectorAll('[data-lucide]') });
+}
+
+// Incremental diff: compare old/new spec elements, re-render only changed ones
+function diffUpdate(oldSpec, newSpec, domNode, elId, depth) {
+  if (depth > MAX_DEPTH || !domNode) return;
+  var oldDef = oldSpec.elements[elId];
+  var newDef = newSpec.elements[elId];
+  if (!oldDef || !newDef) {
+    // Element removed or added — full replace
+    var parent = domNode.parentNode;
+    if (parent) {
+      var fresh = renderElement(newSpec.elements, elId, depth);
+      if (fresh) {
+        parent.replaceChild(fresh, domNode);
+        flashChanged(fresh);
+      }
+    }
+    return;
+  }
+
+  // Check if this element's definition changed (type or props)
+  var oldType = oldDef.type;
+  var newType = newDef.type;
+  var oldProps = JSON.stringify(oldDef.props || {});
+  var newProps = JSON.stringify(newDef.props || {});
+  var oldChildren = JSON.stringify(oldDef.children || []);
+  var newChildren = JSON.stringify(newDef.children || []);
+
+  if (oldType !== newType || oldProps !== newProps) {
+    // Props or type changed — re-render this element
+    var parent2 = domNode.parentNode;
+    if (parent2) {
+      var replacement = renderElement(newSpec.elements, elId, depth);
+      if (replacement) {
+        parent2.replaceChild(replacement, domNode);
+        flashChanged(replacement);
+      }
+    }
+    return;
+  }
+
+  // Same props — recurse into children if they differ
+  if (oldChildren !== newChildren) {
+    // Children list changed — full re-render of this element
+    var parent3 = domNode.parentNode;
+    if (parent3) {
+      var rebuilt = renderElement(newSpec.elements, elId, depth);
+      if (rebuilt) {
+        parent3.replaceChild(rebuilt, domNode);
+        flashChanged(rebuilt);
+      }
+    }
+    return;
+  }
+
+  // Children are the same IDs — recurse into each child
+  var childIds = newDef.children || (newDef.props && newDef.props.children) || [];
+  var childNodes = domNode.children;
+  for (var i = 0; i < childIds.length && i < childNodes.length; i++) {
+    diffUpdate(oldSpec, newSpec, childNodes[i], childIds[i], depth + 1);
+  }
+}
+
+function flashChanged(el) {
+  el.classList.add('pg-diff-changed');
+  el.addEventListener('animationend', function() {
+    el.classList.remove('pg-diff-changed');
+  }, { once: true });
 }
 
 function renderElement(elements, id, depth) {
