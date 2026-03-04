@@ -2,6 +2,30 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.9.1
+
+**Code review fixes — bugs, security, robustness.**
+
+- Fix: Removed duplicate `.db-tooltip` class collision — old v1 tooltip system removed, v2 tooltip is canonical
+- Fix: Six `init*` functions no longer stack duplicate `document` event listeners on repeated `DAUB.init()` calls
+- Fix: Context menu positioning now uses `pageX/pageY` — correct when viewport is scrolled
+- Fix: `initTexture`, `initTemperature`, `initNoise` now guard against duplicate click handlers on re-init
+- Fix: `setAccent()` validates hex input — rejects invalid values that would produce NaN CSS vars
+- Fix: Modal focus trap re-queries focusable elements dynamically and excludes `[disabled]` elements
+- Fix: `propagateRadius` separated read/write passes to avoid layout thrashing
+- Fix: Data table `border-collapse: separate` preserves `border-radius` rendering
+- Fix: Vertical stepper connector uses `transform: translateY(-100%)` for reliable positioning
+- Fix: Added `-webkit-text-size-adjust: 100%` for iOS Safari
+- Fix: Dark themes now use deboss shadow direction (`0 1px 0`) for `--db-text-emboss`
+- Fix: Documented `::after` pseudo-element override chain between texture overlay and loading spinner
+- Fix: Removed invalid JSON-LD `SearchAction` from index.html
+- Fix: Added `og:image:alt` to demo.html and playground.html
+- Security: Pinned renderjson CDN to v0.6.0 with SRI integrity hash
+- Security: Added `isSafeUrl()` guard for AI-generated image URLs in Card and Avatar renderers
+- Security: API key input now has `autocomplete="off"`
+- Security: Grid column layout from localStorage validated before CSS injection
+- Improvement: StatCard icon rendering uses `createElement` instead of `innerHTML` for consistency
+
 ## v2.9.0
 
 **Playground streaming & UX.**

@@ -21,6 +21,7 @@
   <meta property="og:image" content="https://daub.dev/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="DAUB UI — Considered interface components">
   <meta property="og:locale" content="en_US">
 
   <!-- Twitter Card -->
@@ -39,10 +40,12 @@
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
   <!-- renderjson — collapsible JSON tree viewer -->
-  <script src="https://cdn.jsdelivr.net/gh/caldwell/renderjson@master/renderjson.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/caldwell/renderjson@v0.6.0/renderjson.js"
+          integrity="sha384-LYTPZSh744KQMbOfE0/QtejoGEkJKHjQzaTVPLtq4TVmRAv0jx1kBKOVuE0chOXp"
+          crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.9.0">
+  <link rel="stylesheet" href="daub.css?v=2.9.1">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -557,7 +560,7 @@
         </div>
         <div class="db-field">
           <label class="db-field__label">API Key</label>
-          <input class="db-field__input" type="password" id="pg-apikey" placeholder="sk-... or sk-ant-...">
+          <input class="db-field__input" type="password" id="pg-apikey" placeholder="sk-... or sk-ant-..." autocomplete="off">
           <span class="db-field__helper">Stored in localStorage only.</span>
         </div>
         <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;">
@@ -569,7 +572,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=2.9.0"></script>
+<script src="daub.js?v=2.9.1"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -1534,6 +1537,14 @@ function mkEl(tag, cls, text) {
   return el;
 }
 
+// Guard against javascript: and data: URLs from AI-generated content
+function isSafeUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  var trimmed = url.trim().toLowerCase();
+  if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) return false;
+  return true;
+}
+
 // ---- Component Renderers (67 types) ----
 var RENDERERS = {};
 
@@ -2103,7 +2114,7 @@ RENDERERS.BottomNav = function(p) {
 // -- Card --
 RENDERERS.Card = function(p, ch, els, d) {
   var el = mkEl('div', 'db-card' + (p.media ? ' db-card--media' : ''));
-  if (p.media) {
+  if (p.media && isSafeUrl(p.media)) {
     var media = mkEl('div', 'db-card__media');
     var img = document.createElement('img');
     img.src = p.media;
@@ -2258,12 +2269,12 @@ RENDERERS.Badge = function(p) {
 // -- Avatar --
 RENDERERS.Avatar = function(p) {
   var el = mkEl('div', 'db-avatar' + (p.size ? ' db-avatar--' + p.size : ' db-avatar--md'));
-  if (p.src) {
+  if (p.src && isSafeUrl(p.src)) {
     var img = document.createElement('img');
     img.src = p.src;
     img.alt = '';
     el.appendChild(img);
-  } else {
+  } else if (!p.src) {
     el.textContent = p.initials || '?';
   }
   return el;
@@ -2799,7 +2810,11 @@ RENDERERS.StatCard = function(p) {
   var el = mkEl('div', 'db-stat');
   if (p.icon) {
     var ico = mkEl('div', 'db-stat__icon');
-    ico.innerHTML = iconHtml(p.icon, 20);
+    var icoI = document.createElement('i');
+    icoI.setAttribute('data-lucide', p.icon);
+    icoI.style.width = '20px';
+    icoI.style.height = '20px';
+    ico.appendChild(icoI);
     el.appendChild(ico);
   }
   el.appendChild(mkEl('span', 'db-stat__label', p.label || ''));
@@ -3016,7 +3031,9 @@ var SYSTEM_PROMPT = (function() {
   // Restore saved proportions
   try {
     var saved = localStorage.getItem('pg-grid-cols');
-    if (saved) grid.style.gridTemplateColumns = saved;
+    if (saved && /^[\d.]+(?:fr|px|%)\s*(?:[\d.]+(?:fr|px|%)\s*)*$/.test(saved.trim())) {
+      grid.style.gridTemplateColumns = saved;
+    }
   } catch(e) {}
 })();
 

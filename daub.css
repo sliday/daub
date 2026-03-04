@@ -1682,6 +1682,8 @@ body::before {
 [data-theme="ayu-dark"],
 [data-theme="horizon"] {
   --db-on-accent: #fff;
+  --db-text-emboss: 0 1px 0 rgba(var(--db-glow-rgb), 0.5);
+  --db-text-emboss-subtle: 0 1px 0 rgba(var(--db-glow-rgb), 0.25);
 }
 
 /* ------------------------------------------------------------
@@ -1698,6 +1700,7 @@ body::before {
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
@@ -2048,6 +2051,8 @@ a:hover { color: var(--db-clay); }
   pointer-events: none;
 }
 
+/* Overrides texture ::after on .db-btn--primary/--secondary (see texture overlay section).
+   Must reset background-image, mix-blend-mode, opacity, and use z-index: 2 to sit above texture z-index: 1. */
 .db-btn--loading::after {
   content: '';
   position: absolute;
@@ -2630,11 +2635,12 @@ textarea.db-field__input {
 }
 
 .db-stepper--vertical .db-stepper__step + .db-stepper__step::before {
-  top: -100%;
+  top: 0;
   right: auto;
   left: 15px;
   width: 2px;
   height: 100%;
+  transform: translateY(-100%);
 }
 
 .db-stepper--vertical .db-stepper__label {
@@ -2709,8 +2715,8 @@ textarea.db-field__input {
 
 .db-card__header {
   display: flex;
-  align-items: center;
-  gap: var(--db-space-4);
+  flex-direction: column;
+  gap: var(--db-space-1);
   margin-bottom: var(--db-space-4);
 }
 
@@ -2968,56 +2974,8 @@ textarea.db-field__input {
 }
 
 /* ------------------------------------------------------------
-   7f. DATA DISPLAY — Tooltip
+   7f. DATA DISPLAY — Tooltip  (v2 system at "Tooltip (enhanced)" section)
    ------------------------------------------------------------ */
-.db-tooltip-wrap {
-  position: relative;
-  display: inline-flex;
-}
-
-.db-tooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  padding: var(--db-space-2) var(--db-space-3);
-  background: var(--db-ink);
-  color: var(--db-cream);
-  font-family: var(--db-font-ui);
-  font-size: 0.75rem;
-  border-radius: var(--db-radius-2);
-  white-space: normal;
-  width: max-content;
-  min-width: 60px;
-  max-width: 240px;
-  text-align: center;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--db-transition), transform var(--db-transition);
-  z-index: 100;
-  box-shadow: var(--db-shadow-2);
-}
-
-.db-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: var(--db-ink);
-}
-
-.db-tooltip-wrap .db-tooltip {
-  position: absolute;
-}
-
-.db-tooltip-wrap:hover .db-tooltip,
-.db-tooltip-wrap:focus-within .db-tooltip,
-.db-tooltip--visible {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
 
 /* ------------------------------------------------------------
    8. FEEDBACK — Modal
@@ -5022,7 +4980,8 @@ textarea.db-field__input {
    ------------------------------------------------------------ */
 .db-data-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-family: var(--db-font-ui);
   font-size: 0.8125rem;
   border: 1px solid var(--db-sand);

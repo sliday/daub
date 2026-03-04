@@ -217,6 +217,7 @@
   }
 
   function setAccent(hex) {
+    if (!hex || !/^#[0-9a-fA-F]{6}$/.test(hex)) return;
     var r=parseInt(hex.slice(1,3),16);
     var g=parseInt(hex.slice(3,5),16);
     var b=parseInt(hex.slice(5,7),16);
@@ -593,6 +594,7 @@
   /* ----------------------------------------------------------
      Modal
      ---------------------------------------------------------- */
+  var _dbModalKeyInit = false;
   function initModals(root) {
     root.querySelectorAll('[data-db-modal-trigger]').forEach(function(trigger) {
       if (trigger._dbInit) return;
@@ -620,12 +622,15 @@
       }
     });
 
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        var open = document.querySelector('.db-modal--open');
-        if (open) closeModal(open);
-      }
-    });
+    if (!_dbModalKeyInit) {
+      _dbModalKeyInit = true;
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          var open = document.querySelector('.db-modal--open');
+          if (open) closeModal(open);
+        }
+      });
+    }
   }
 
   var _lastModalTrigger = null;
@@ -639,13 +644,18 @@
 
     var modal = overlay.querySelector('.db-modal');
     if (modal) {
-      var focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      var FOCUSABLE_SEL = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])';
+      var focusable = modal.querySelectorAll(FOCUSABLE_SEL);
       if (focusable.length) focusable[0].focus();
 
       overlay._dbTrap = function(e) {
         if (e.key !== 'Tab') return;
-        var first = focusable[0];
-        var last = focusable[focusable.length - 1];
+        var els = Array.from(modal.querySelectorAll(FOCUSABLE_SEL)).filter(function(el) {
+          return el.offsetParent !== null;
+        });
+        if (!els.length) return;
+        var first = els[0];
+        var last = els[els.length - 1];
         if (e.shiftKey) {
           if (document.activeElement === first) { e.preventDefault(); last.focus(); }
         } else {
@@ -860,6 +870,8 @@
     }
 
     document.querySelectorAll('[data-db-temperature]').forEach(function(slider) {
+      if (slider._dbInit) return;
+      slider._dbInit = true;
       var input = slider.querySelector('.db-slider__input');
       var valueEl = slider.querySelector('.db-slider__value');
       if (!input) return;
@@ -895,6 +907,8 @@
     }
 
     document.querySelectorAll('[data-db-noise]').forEach(function(slider) {
+      if (slider._dbInit) return;
+      slider._dbInit = true;
       var input = slider.querySelector('.db-slider__input');
       var valueEl = slider.querySelector('.db-slider__value');
       if (!input) return;
@@ -925,6 +939,8 @@
     document.documentElement.setAttribute('data-db-texture', saved);
 
     document.querySelectorAll('[data-db-texture-btn]').forEach(function(btn) {
+      if (btn._dbInit) return;
+      btn._dbInit = true;
       var type = btn.getAttribute('data-db-texture-btn');
       btn.setAttribute('aria-pressed', type === saved ? 'true' : 'false');
 
@@ -962,7 +978,10 @@
   var RADIUS_SKIP = /\bdb-(btn|input|field|textarea|switch|slider|checkbox|radio|toggle|badge|avatar|alert|chip|kbd|spinner|select|custom-select|search|otp|progress|pagination|stepper|tabs|separator|divider|nav-menu|bottom-nav|breadcrumbs|carousel|calendar|popover|tooltip|hover-card|dropdown|context-menu|command|stat|chart-card)/;
 
   function propagateRadius(parent, innerR) {
-    Array.from(parent.children).forEach(function(child) {
+    var children = Array.from(parent.children);
+    var targets = [];
+    var recurse = [];
+    children.forEach(function(child) {
       if (child.nodeType !== 1) return;
       if (RADIUS_SKIP.test(child.className)) return;
       var cs = getComputedStyle(child);
@@ -970,11 +989,13 @@
       var hasBorder = cs.borderTopWidth !== '0px' && cs.borderTopStyle !== 'none';
       var hasRadius = (parseFloat(cs.borderTopLeftRadius) || 0) > 0;
       if (hasBg || hasBorder || hasRadius) {
-        child.style.borderRadius = innerR + 'px';
+        targets.push(child);
       } else {
-        propagateRadius(child, innerR);
+        recurse.push(child);
       }
     });
+    targets.forEach(function(child) { child.style.borderRadius = innerR + 'px'; });
+    recurse.forEach(function(child) { propagateRadius(child, innerR); });
   }
 
   /* ----------------------------------------------------------
@@ -1148,6 +1169,7 @@
      Popover
      ---------------------------------------------------------- */
   var _dbPopoverInit = false;
+  var _dbPopoverClickInit = false;
   function initPopovers(root) {
     if (_dbPopoverInit && root === document) return;
     root.querySelectorAll('.db-popover').forEach(function(pop) {
@@ -1160,11 +1182,14 @@
         pop.classList.toggle('db-popover--open');
       });
     });
-    document.addEventListener('click', function() {
-      document.querySelectorAll('.db-popover--open').forEach(function(p) {
-        p.classList.remove('db-popover--open');
+    if (!_dbPopoverClickInit) {
+      _dbPopoverClickInit = true;
+      document.addEventListener('click', function() {
+        document.querySelectorAll('.db-popover--open').forEach(function(p) {
+          p.classList.remove('db-popover--open');
+        });
       });
-    });
+    }
     if (root === document) _dbPopoverInit = true;
   }
 
@@ -1172,6 +1197,7 @@
      Context Menu
      ---------------------------------------------------------- */
   var _dbCtxInit = false;
+  var _dbCtxClickInit = false;
   function initContextMenus(root) {
     if (_dbCtxInit && root === document) return;
     root.querySelectorAll('[data-context-menu]').forEach(function(el) {
@@ -1185,16 +1211,19 @@
         });
         var menu = document.getElementById(menuId);
         if (!menu) return;
-        menu.style.left = e.clientX + 'px';
-        menu.style.top = e.clientY + 'px';
+        menu.style.left = e.pageX + 'px';
+        menu.style.top = e.pageY + 'px';
         menu.classList.add('db-context-menu--open');
       });
     });
-    document.addEventListener('click', function() {
-      document.querySelectorAll('.db-context-menu--open').forEach(function(m) {
-        m.classList.remove('db-context-menu--open');
+    if (!_dbCtxClickInit) {
+      _dbCtxClickInit = true;
+      document.addEventListener('click', function() {
+        document.querySelectorAll('.db-context-menu--open').forEach(function(m) {
+          m.classList.remove('db-context-menu--open');
+        });
       });
-    });
+    }
     if (root === document) _dbCtxInit = true;
   }
 
@@ -1341,6 +1370,7 @@
     cmd.classList.remove('db-command--open');
   }
 
+  var _dbCommandKeyInit = false;
   function initCommands(root) {
     root.querySelectorAll('.db-command').forEach(function(cmd) {
       if (cmd._dbInit) return;
@@ -1371,27 +1401,31 @@
     });
 
     // Ctrl+K / Cmd+K global shortcut
-    document.addEventListener('keydown', function(e) {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        var cmd = document.querySelector('.db-command');
-        if (cmd) {
-          if (cmd.classList.contains('db-command--open')) {
-            cmd.classList.remove('db-command--open');
-          } else {
-            cmd.classList.add('db-command--open');
-            var input = cmd.querySelector('.db-command__input');
-            if (input) { input.value = ''; input.focus(); }
+    if (!_dbCommandKeyInit) {
+      _dbCommandKeyInit = true;
+      document.addEventListener('keydown', function(e) {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          var cmd = document.querySelector('.db-command');
+          if (cmd) {
+            if (cmd.classList.contains('db-command--open')) {
+              cmd.classList.remove('db-command--open');
+            } else {
+              cmd.classList.add('db-command--open');
+              var input = cmd.querySelector('.db-command__input');
+              if (input) { input.value = ''; input.focus(); }
+            }
           }
         }
-      }
-    });
+      });
+    }
   }
 
   /* ----------------------------------------------------------
      Menubar
      ---------------------------------------------------------- */
   var _dbMenubarInit = false;
+  var _dbMenubarClickInit = false;
   function initMenubars(root) {
     if (_dbMenubarInit && root === document) return;
     root.querySelectorAll('.db-menubar').forEach(function(bar) {
@@ -1416,17 +1450,21 @@
         });
       });
     });
-    document.addEventListener('click', function() {
-      document.querySelectorAll('.db-menubar__item--open').forEach(function(i) {
-        i.classList.remove('db-menubar__item--open');
+    if (!_dbMenubarClickInit) {
+      _dbMenubarClickInit = true;
+      document.addEventListener('click', function() {
+        document.querySelectorAll('.db-menubar__item--open').forEach(function(i) {
+          i.classList.remove('db-menubar__item--open');
+        });
       });
-    });
+    }
     if (root === document) _dbMenubarInit = true;
   }
 
   /* ----------------------------------------------------------
      Calendar / Date Picker
      ---------------------------------------------------------- */
+  var _dbCalendarClickInit = false;
   function initCalendars(root) {
     root.querySelectorAll('.db-calendar').forEach(function(cal) {
       if (cal._dbInit) return;
@@ -1454,11 +1492,14 @@
       }
     });
 
-    document.addEventListener('click', function(e) {
-      document.querySelectorAll('.db-date-picker--open').forEach(function(dp) {
-        if (!dp.contains(e.target)) dp.classList.remove('db-date-picker--open');
+    if (!_dbCalendarClickInit) {
+      _dbCalendarClickInit = true;
+      document.addEventListener('click', function(e) {
+        document.querySelectorAll('.db-date-picker--open').forEach(function(dp) {
+          if (!dp.contains(e.target)) dp.classList.remove('db-date-picker--open');
+        });
       });
-    });
+    }
   }
 
   /* ----------------------------------------------------------
