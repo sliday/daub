@@ -2,6 +2,13 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.9.2
+
+**Playground streaming & rendering fixes.**
+
+- Fix: Structure tree now updates progressively during streaming — `refreshJsonTree()` called alongside `tryProgressiveRender()` on the 300ms render timer
+- Fix: Checkbox icon in Playground renderer now renders correctly — added missing `fill="none"`, `stroke`, `stroke-linecap`, `stroke-linejoin` SVG attributes matching the demo markup
+
 ## v2.9.1
 
 **Code review fixes — bugs, security, robustness.**

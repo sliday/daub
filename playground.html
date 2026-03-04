@@ -45,7 +45,7 @@
           crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.9.1">
+  <link rel="stylesheet" href="daub.css?v=2.9.2">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -572,7 +572,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=2.9.1"></script>
+<script src="daub.js?v=2.9.2"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -1123,7 +1123,7 @@ function generate() {
   var retries = 0;
   var MAX_RETRIES = 3;
   var usingFallback = false;
-  var renderTimer = setInterval(function() { tryProgressiveRender(accumulated); }, 300);
+  var renderTimer = setInterval(function() { tryProgressiveRender(accumulated); refreshJsonTree(); }, 300);
 
   var streamFn;
   var provider;
@@ -1738,6 +1738,10 @@ RENDERERS.Checkbox = function(p) {
   box.className = 'db-checkbox__box';
   var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
   var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
   poly.setAttribute('points', '20 6 9 17 4 12');
   svg.appendChild(poly);
