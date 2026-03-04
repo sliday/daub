@@ -454,7 +454,8 @@
     .pg-result-actions button:hover {
       background: var(--db-sand);
     }
-    .pg-result-actions button svg { width: 10px; height: 10px; vertical-align: -1px; margin-right: 2px; }
+    .pg-result-actions button { display: inline-flex; align-items: center; gap: 3px; }
+    .pg-result-actions button svg { width: 10px; height: 10px; flex-shrink: 0; }
     .pg-result-actions button.pg-result-active {
       background: color-mix(in srgb, var(--db-terracotta) 12%, transparent);
       border-color: color-mix(in srgb, var(--db-terracotta) 30%, transparent);
