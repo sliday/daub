@@ -49,7 +49,7 @@
           crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.0.4">
+  <link rel="stylesheet" href="daub.css?v=3.0.5">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -345,48 +345,65 @@
     }
     .pg-chat__attach-btn {
       position: absolute;
-      left: 8px;
+      left: 6px;
       bottom: 6px;
       background: none;
       border: none;
       cursor: pointer;
       color: var(--db-warm-gray);
-      opacity: 0.6;
+      opacity: 0.5;
       padding: 2px;
       z-index: 1;
       transition: opacity 0.15s;
     }
     .pg-chat__attach-btn:hover { opacity: 1; }
-    .pg-chat__img-preview {
+    .pg-chat__img-strip {
       display: none;
-      padding: 4px 12px 0;
+      padding: 6px 12px 2px;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .pg-chat__img-strip.has-images { display: flex; }
+    .pg-chat__img-item {
       position: relative;
-    }
-    .pg-chat__img-preview img {
-      max-height: 64px;
+      width: 48px; height: 48px;
       border-radius: 6px;
+      overflow: hidden;
       border: 1px solid var(--db-sand);
+      flex-shrink: 0;
     }
-    .pg-chat__img-preview .pg-img-remove {
+    .pg-chat__img-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .pg-chat__img-item .pg-img-x {
       position: absolute;
-      top: 0; left: 68px;
-      width: 18px; height: 18px;
+      top: 2px; right: 2px;
+      width: 16px; height: 16px;
       border-radius: 50%;
-      background: var(--db-ink);
+      background: rgba(0,0,0,0.6);
       color: #fff;
       border: none;
       cursor: pointer;
-      font-size: 11px;
-      line-height: 18px;
+      font-size: 10px;
+      line-height: 16px;
       text-align: center;
       padding: 0;
+      opacity: 0;
+      transition: opacity 0.15s;
     }
-    .pg-chat__msg-img {
-      max-width: 100%;
-      max-height: 120px;
-      border-radius: 6px;
+    .pg-chat__img-item:hover .pg-img-x { opacity: 1; }
+    .pg-chat__msg-images {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
       margin-bottom: 4px;
-      display: block;
+    }
+    .pg-chat__msg-images img {
+      width: 48px; height: 48px;
+      object-fit: cover;
+      border-radius: 4px;
     }
     .pg-result-header {
       display: flex;
@@ -596,16 +613,13 @@
             </div>
           </div>
           <span class="db-caption db-text-muted" id="pg-status" style="display:block;margin-bottom:4px;font-family:var(--db-font-ui);"></span>
-          <div class="pg-chat__img-preview" id="pg-img-preview">
-            <img id="pg-img-thumb" src="" alt="attached image">
-            <button class="pg-img-remove" id="pg-img-remove" title="Remove image">&times;</button>
-          </div>
+          <div class="pg-chat__img-strip" id="pg-img-strip"></div>
           <div class="pg-chat__input-row">
-            <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..." style="padding-left:30px;"></textarea>
-            <button class="pg-chat__attach-btn" id="pg-attach" title="Attach image">
+            <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..." style="padding-left:28px;"></textarea>
+            <button class="pg-chat__attach-btn" id="pg-attach" title="Attach images">
               <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
             </button>
-            <input type="file" id="pg-file-input" accept="image/*" style="display:none;">
+            <input type="file" id="pg-file-input" accept="image/*" multiple style="display:none;">
           </div>
         </div>
       </div>
@@ -731,7 +745,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.0.4"></script>
+<script src="daub.js?v=3.0.5"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -762,10 +776,8 @@ var $panelPreviewBody = document.querySelector('#panel-preview .pg-panel__body')
 var $status     = document.getElementById('pg-status');
 var $attach     = document.getElementById('pg-attach');
 var $fileInput  = document.getElementById('pg-file-input');
-var $imgPreview = document.getElementById('pg-img-preview');
-var $imgThumb   = document.getElementById('pg-img-thumb');
-var $imgRemove  = document.getElementById('pg-img-remove');
-var pendingImageData = null; // { base64: '...', mimeType: 'image/png' }
+var $imgStrip   = document.getElementById('pg-img-strip');
+var pendingImages = []; // [{ base64, mimeType, dataUrl }]
 var $jsonError  = document.querySelector('.pg-json-error');
 var $jsonErrMsg = document.getElementById('pg-json-error-msg');
 var $jsonArea   = document.querySelector('.pg-json-area');
@@ -846,7 +858,7 @@ function saveChatState() {
   try {
     // Strip image data before persisting to avoid localStorage quota issues
     var stripped = chatHistory.map(function(m) {
-      if (m.image) { var c = {}; for (var k in m) c[k] = m[k]; c.image = undefined; return c; }
+      if (m.images) { var c = {}; for (var k in m) c[k] = m[k]; c.images = undefined; return c; }
       return m;
     });
     localStorage.setItem('pg-chat-history', JSON.stringify(stripped));
@@ -887,30 +899,55 @@ document.querySelectorAll('[data-example]').forEach(function(chip) {
 // ---- Image attach ----
 $attach.addEventListener('click', function() { $fileInput.click(); });
 $fileInput.addEventListener('change', function() {
-  var file = this.files && this.files[0];
-  if (!file) return;
-  if (file.size > 10 * 1024 * 1024) {
-    DAUB.toast({ type: 'error', message: 'Image too large (max 10 MB)' });
-    this.value = '';
-    return;
+  var files = this.files;
+  if (!files || !files.length) return;
+  var remaining = 10 - pendingImages.length;
+  if (remaining <= 0) { DAUB.toast({ type: 'warning', message: 'Max 10 images' }); this.value = ''; return; }
+  var toProcess = Math.min(files.length, remaining);
+  for (var i = 0; i < toProcess; i++) {
+    (function(file) {
+      if (file.size > 10 * 1024 * 1024) { DAUB.toast({ type: 'error', message: file.name + ' too large (max 10 MB)' }); return; }
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var dataUrl = e.target.result;
+        var mimeMatch = dataUrl.match(/^data:(image\/[^;]+);base64,/);
+        if (!mimeMatch) { DAUB.toast({ type: 'error', message: 'Invalid image file' }); return; }
+        var imgData = { base64: dataUrl.split(',')[1], mimeType: mimeMatch[1], dataUrl: dataUrl };
+        pendingImages.push(imgData);
+        addImageToStrip(imgData);
+      };
+      reader.readAsDataURL(file);
+    })(files[i]);
   }
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var dataUrl = e.target.result;
-    var mimeMatch = dataUrl.match(/^data:(image\/[^;]+);base64,/);
-    if (!mimeMatch) { DAUB.toast({ type: 'error', message: 'Invalid image file' }); return; }
-    pendingImageData = { base64: dataUrl.split(',')[1], mimeType: mimeMatch[1], dataUrl: dataUrl };
-    $imgThumb.src = dataUrl;
-    $imgPreview.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
   this.value = '';
 });
-$imgRemove.addEventListener('click', function() {
-  pendingImageData = null;
-  $imgPreview.style.display = 'none';
-  $imgThumb.src = '';
-});
+
+function addImageToStrip(imgData) {
+  var item = document.createElement('div');
+  item.className = 'pg-chat__img-item';
+  var img = document.createElement('img');
+  img.src = imgData.dataUrl;
+  img.alt = 'attached';
+  var x = document.createElement('button');
+  x.className = 'pg-img-x';
+  x.textContent = '\u00d7';
+  x.addEventListener('click', function() {
+    var idx = pendingImages.indexOf(imgData);
+    if (idx > -1) pendingImages.splice(idx, 1);
+    item.remove();
+    if (!pendingImages.length) $imgStrip.classList.remove('has-images');
+  });
+  item.appendChild(img);
+  item.appendChild(x);
+  $imgStrip.appendChild(item);
+  $imgStrip.classList.add('has-images');
+}
+
+function clearImageStrip() {
+  pendingImages = [];
+  while ($imgStrip.firstChild) $imgStrip.removeChild($imgStrip.firstChild);
+  $imgStrip.classList.remove('has-images');
+}
 
 // ---- AI API calls (blocking, accept messages array) ----
 function callOpenAI(messages) {
@@ -1166,41 +1203,44 @@ function tryProgressiveRender(text) {
 }
 
 // ---- Chat message helpers ----
-function buildMessages(userPrompt, imageData) {
+function buildMessages(userPrompt, images) {
   var msgs = [{ role: 'system', content: SYSTEM_PROMPT }];
   if (currentSpec) {
     msgs.push({ role: 'user', content: '(previous request)' });
     msgs.push({ role: 'assistant', content: JSON.stringify(currentSpec) });
     userPrompt = userPrompt + '\n\nModify the existing spec above. Return the COMPLETE updated spec.';
   }
-  if (imageData) {
+  if (images && images.length) {
     var provider = isDefaultMode ? 'default' : ($provider ? $provider.value : 'openai');
-    if (provider === 'anthropic') {
-      msgs.push({ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: imageData.mimeType, data: imageData.base64 } },
-        { type: 'text', text: userPrompt }
-      ]});
-    } else {
-      msgs.push({ role: 'user', content: [
-        { type: 'image_url', image_url: { url: imageData.dataUrl } },
-        { type: 'text', text: userPrompt }
-      ]});
-    }
+    var parts = [];
+    images.forEach(function(img) {
+      if (provider === 'anthropic') {
+        parts.push({ type: 'image', source: { type: 'base64', media_type: img.mimeType, data: img.base64 } });
+      } else {
+        parts.push({ type: 'image_url', image_url: { url: img.dataUrl } });
+      }
+    });
+    parts.push({ type: 'text', text: userPrompt });
+    msgs.push({ role: 'user', content: parts });
   } else {
     msgs.push({ role: 'user', content: userPrompt });
   }
   return msgs;
 }
 
-function addChatBubble(role, text, imageUrl) {
+function addChatBubble(role, text, images) {
   var div = document.createElement('div');
   div.className = 'pg-chat__msg pg-chat__msg--' + role;
-  if (imageUrl) {
-    var img = document.createElement('img');
-    img.className = 'pg-chat__msg-img';
-    img.src = imageUrl;
-    img.alt = 'attached';
-    div.appendChild(img);
+  if (images && images.length) {
+    var strip = document.createElement('div');
+    strip.className = 'pg-chat__msg-images';
+    images.forEach(function(url) {
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = 'attached';
+      strip.appendChild(img);
+    });
+    div.appendChild(strip);
   }
   var span = document.createElement('span');
   span.textContent = text;
@@ -1215,7 +1255,7 @@ function renderChatHistory() {
   var bubbles = $chatMessages.querySelectorAll('.pg-chat__msg');
   bubbles.forEach(function(b) { b.remove(); });
   chatHistory.forEach(function(msg) {
-    var bubble = addChatBubble(msg.role === 'user' ? 'user' : 'ai', msg.content, msg.image || null);
+    var bubble = addChatBubble(msg.role === 'user' ? 'user' : 'ai', msg.content, msg.images || null);
     // Rebuild result bubble UI for assistant messages with version data
     if (msg.role === 'assistant' && msg.versionIdx != null && specVersions[msg.versionIdx]) {
       buildResultBubble(bubble, specVersions[msg.versionIdx].spec, msg.versionIdx);
@@ -1366,15 +1406,14 @@ function generate() {
     }
   }
 
-  // Capture attached image before clearing
-  var imageForThisMsg = pendingImageData;
-  pendingImageData = null;
-  $imgPreview.style.display = 'none';
-  $imgThumb.src = '';
+  // Capture attached images before clearing
+  var imagesForThisMsg = pendingImages.slice();
+  clearImageStrip();
 
   // Add user bubble
-  chatHistory.push({ role: 'user', content: prompt, image: imageForThisMsg ? imageForThisMsg.dataUrl : undefined });
-  addChatBubble('user', prompt, imageForThisMsg ? imageForThisMsg.dataUrl : null);
+  var imageUrls = imagesForThisMsg.map(function(d) { return d.dataUrl; });
+  chatHistory.push({ role: 'user', content: prompt, images: imageUrls.length ? imageUrls : undefined });
+  addChatBubble('user', prompt, imageUrls.length ? imageUrls : null);
   updateChatState();
   $prompt.value = '';
   $prompt.style.height = '';
@@ -1391,7 +1430,7 @@ function generate() {
   updateRenderVisibility();
   while ($preview.firstChild) $preview.removeChild($preview.firstChild);
 
-  var messages = buildMessages(prompt, imageForThisMsg);
+  var messages = buildMessages(prompt, imagesForThisMsg);
   var accumulated = '';
   var continuations = 0;
   var MAX_CONTINUATIONS = 2;
@@ -1742,9 +1781,7 @@ $newChat.addEventListener('click', function() {
   $prompt.value = '';
   $status.textContent = '';
   hideJsonError();
-  pendingImageData = null;
-  $imgPreview.style.display = 'none';
-  $imgThumb.src = '';
+  clearImageStrip();
 });
 
 // ---- BYOK modal ----

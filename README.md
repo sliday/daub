@@ -378,7 +378,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.0.4** — Playground: share links, versioning, viewport toggle, image upload, custom HTML. 76 components, 20 theme families.
+**Latest: v3.0.5** — Playground: multi-image upload, incremental diff rendering, UI polish. 76 components, 20 theme families.
 
 ## License
 

@@ -2,6 +2,16 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.5
+
+**Playground: multi-image upload, incremental diff rendering, UI polish.**
+
+- Feature: Multi-image upload — attach up to 10 images per chat message with thumbnail strip
+- Enhancement: Incremental diff rendering — follow-up prompts only re-render changed elements with flash animation
+- Enhancement: Cleaner preview toolbar — icon-only buttons with proper grouping
+- Enhancement: Historical chat bubbles show Revert button instead of Download
+- Fix: Collapsed panel layout — added max-width constraint, blocked drag while collapsed
+
 ## v3.0.4
 
 **Playground: share links, versioning, viewport toggle, image upload, custom HTML, download.**
