@@ -327,7 +327,9 @@
     .pg-chat__input-wrap:focus-within {
       border-color: var(--db-terracotta);
     }
-    .pg-chat__input-wrap .db-textarea {
+    .pg-chat__input-wrap .db-textarea,
+    .pg-chat__input-wrap .db-textarea:focus,
+    .pg-chat__input-wrap .db-textarea:focus-visible {
       width: 100%;
       min-height: 42px;
       max-height: 200px;
@@ -337,9 +339,11 @@
       line-height: 1.5;
       padding: 10px 12px;
       box-sizing: border-box;
-      border: none;
-      background: transparent;
-      outline: none;
+      border: none !important;
+      background: transparent !important;
+      outline: none !important;
+      box-shadow: none !important;
+      overflow-y: auto;
     }
     .pg-chat__input-actions {
       display: flex;
@@ -1785,7 +1789,7 @@ $prompt.addEventListener('keydown', function(e) {
 
 // Auto-resize textarea
 $prompt.addEventListener('input', function() {
-  this.style.height = '';
+  this.style.height = 'auto';
   this.style.height = Math.min(this.scrollHeight, 200) + 'px';
 });
 
