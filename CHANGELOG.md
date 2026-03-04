@@ -2,6 +2,16 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.6
+
+**Playground: AI-driven theme selection from prompt content.**
+
+- Feature: AI picks an appropriate DAUB theme based on prompt (dashboards → github, dark UIs → dracula, etc.)
+- Feature: Users can request themes explicitly ("make it dark", "use nord theme")
+- Enhancement: Theme applied to preview via `data-theme` on container — page UI unaffected
+- Enhancement: Downloaded HTML includes `data-theme` on `<html>` element
+- Enhancement: New Chat clears theme state
+
 ## v3.0.5
 
 **Playground: multi-image upload, incremental diff rendering, UI polish.**
