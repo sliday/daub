@@ -1275,20 +1275,62 @@ if (window.renderjson) {
 
 // ---- JSON Code / Tree toggle ----
 // ---- Tree view (always on) ----
+// Repair partial JSON by closing open structures
+function repairJson(s) {
+  if (!s || !s.trim()) return null;
+  // Trim trailing incomplete key or value (after last comma/colon/bracket)
+  s = s.replace(/,\s*$/, '');
+  // Remove trailing partial string: an unclosed quote
+  var inStr = false, esc = false;
+  for (var i = 0; i < s.length; i++) {
+    if (esc) { esc = false; continue; }
+    if (s[i] === '\\') { esc = true; continue; }
+    if (s[i] === '"') inStr = !inStr;
+  }
+  if (inStr) {
+    // Find last unescaped quote and truncate there
+    var last = s.lastIndexOf('"');
+    if (last > 0) s = s.substring(0, last);
+    s = s.replace(/[,:\s]*$/, '');
+  }
+  // Close open brackets/braces
+  var stack = [];
+  inStr = false; esc = false;
+  for (var j = 0; j < s.length; j++) {
+    if (esc) { esc = false; continue; }
+    if (s[j] === '\\') { esc = true; continue; }
+    if (s[j] === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (s[j] === '{') stack.push('}');
+    else if (s[j] === '[') stack.push(']');
+    else if (s[j] === '}' || s[j] === ']') stack.pop();
+  }
+  while (stack.length) s += stack.pop();
+  try { JSON.parse(s); return s; } catch(e) { return null; }
+}
+
 var _treeRefreshTimer = null;
 function refreshJsonTree() {
+  var raw = $json.value;
+  if (!raw || !raw.trim()) {
+    $jsonTree.textContent = '';
+    return;
+  }
+  var repaired = repairJson(raw);
+  if (!repaired) {
+    if (!$jsonTree.firstChild) $jsonTree.textContent = 'Streaming\u2026';
+    return;
+  }
   try {
-    var parsed = JSON.parse($json.value);
+    var parsed = JSON.parse(repaired);
     while ($jsonTree.firstChild) $jsonTree.removeChild($jsonTree.firstChild);
     $jsonTree.appendChild(renderjson(parsed));
-  } catch (e) {
-    $jsonTree.textContent = $json.value.trim() ? 'Waiting for valid JSON\u2026' : '';
-  }
+  } catch (e) {}
 }
 // Debounced refresh on every JSON change
 $json.addEventListener('input', function() {
   clearTimeout(_treeRefreshTimer);
-  _treeRefreshTimer = setTimeout(refreshJsonTree, 300);
+  _treeRefreshTimer = setTimeout(refreshJsonTree, 150);
 });
 
 $render.addEventListener('click', function() {
