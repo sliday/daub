@@ -1383,7 +1383,7 @@ $byokLink.addEventListener('click', function(e) {
 $byokModalClose.addEventListener('click', closeByokModal);
 $byokSave.addEventListener('click', function() {
   isDefaultMode = false;
-  $byokLink.textContent = '';
+  $byokLink.textContent = 'Change / Remove Key';
   updateChatTitle();
   saveSettings();
   closeByokModal();
@@ -3070,7 +3070,7 @@ if (currentSpec) {
 }
 // Apply BYOK mode
 if (!isDefaultMode) {
-  $byokLink.textContent = '';
+  $byokLink.textContent = 'Change / Remove Key';
 }
 updateChatTitle();
 
