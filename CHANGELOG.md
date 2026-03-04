@@ -2,6 +2,19 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.4
+
+**Playground: share links, versioning, viewport toggle, image upload, custom HTML, download.**
+
+- Feature: Share link — compress spec to URL via lz-string, paste to restore UI
+- Feature: Version history — each generation tracked with timestamp, revert to any version
+- Feature: Mobile/Desktop viewport toggle in preview panel (375px mobile view)
+- Feature: Collapsible panel dividers with chevron indicators
+- Feature: Image upload in chat — attach screenshots as base64 for multimodal prompts
+- Feature: Download HTML — export current preview as standalone HTML file
+- Feature: CustomHTML component — AI can generate raw HTML + vanilla JS using DAUB CSS classes
+- Enhancement: Result bubbles show version number, timestamp, component count, revert/download actions
+
 ## v3.0.3
 
 **Nav consistency & BYOK reset.**

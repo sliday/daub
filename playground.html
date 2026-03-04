@@ -44,8 +44,12 @@
           integrity="sha384-hl9XDoSE5GkFfgDwdDe7GiHvBTDwxDu2Cx2vQ+JkZVfFSNkfTVnTsKiASLv22pEZ"
           crossorigin="anonymous"></script>
 
+  <!-- lz-string — URL-safe compression for share links -->
+  <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"
+          crossorigin="anonymous"></script>
+
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.0.3">
+  <link rel="stylesheet" href="daub.css?v=3.0.4">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -181,6 +185,24 @@
       top: 0; bottom: 0;
       left: -4px; right: -4px;
     }
+    .pg-divider__chevron {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: bold;
+      color: var(--db-warm-gray);
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 11;
+      pointer-events: none;
+    }
+    .pg-divider:hover .pg-divider__chevron {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     /* Override serif body font to UI font for tool interface */
     .pg-panel__body .db-field__input,
@@ -203,6 +225,25 @@
     .pg-panel--collapsed .pg-panel__toolbar {
       justify-content: center;
       padding: 8px 4px;
+    }
+
+    /* Mobile viewport toggle */
+    .pg-panel__body--mobile {
+      display: flex;
+      justify-content: center;
+      padding: 16px 8px;
+      background: repeating-conic-gradient(
+        color-mix(in srgb, var(--db-ink) 6%, transparent) 0% 25%,
+        transparent 0% 50%) 50% / 16px 16px;
+    }
+    .pg-panel__body--mobile .pg-preview {
+      width: 375px; min-width: 375px; max-width: 375px;
+      border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    }
+    .pg-viewport-btn--active {
+      background: color-mix(in srgb, var(--db-terracotta) 15%, transparent) !important;
+      color: var(--db-terracotta) !important;
     }
 
     /* Chat panel */
@@ -299,6 +340,89 @@
       opacity: 0.45;
       pointer-events: none;
       font-family: var(--db-font-ui);
+    }
+    .pg-chat__attach-btn {
+      position: absolute;
+      left: 8px;
+      bottom: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--db-warm-gray);
+      opacity: 0.6;
+      padding: 2px;
+      z-index: 1;
+      transition: opacity 0.15s;
+    }
+    .pg-chat__attach-btn:hover { opacity: 1; }
+    .pg-chat__img-preview {
+      display: none;
+      padding: 4px 12px 0;
+      position: relative;
+    }
+    .pg-chat__img-preview img {
+      max-height: 64px;
+      border-radius: 6px;
+      border: 1px solid var(--db-sand);
+    }
+    .pg-chat__img-preview .pg-img-remove {
+      position: absolute;
+      top: 0; left: 68px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--db-ink);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 11px;
+      line-height: 18px;
+      text-align: center;
+      padding: 0;
+    }
+    .pg-chat__msg-img {
+      max-width: 100%;
+      max-height: 120px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .pg-result-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8125rem;
+    }
+    .pg-result-ver {
+      font-weight: 600;
+    }
+    .pg-result-meta {
+      font-size: 0.6875rem;
+      color: var(--db-warm-gray);
+      margin-top: 2px;
+    }
+    .pg-result-actions {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .pg-result-actions button {
+      font-size: 0.6875rem;
+      padding: 2px 8px;
+      border-radius: var(--db-radius-1);
+      border: 1px solid var(--db-sand);
+      background: var(--db-cream);
+      color: var(--db-ink);
+      cursor: pointer;
+      font-family: var(--db-font-ui);
+    }
+    .pg-result-actions button:hover {
+      background: var(--db-sand);
+    }
+    .pg-result-actions button.pg-result-active {
+      background: color-mix(in srgb, var(--db-terracotta) 12%, transparent);
+      border-color: var(--db-terracotta);
+      color: var(--db-terracotta);
+      pointer-events: none;
     }
     .pg-chat__examples a:hover { color: var(--db-terracotta); }
     /* Theme picker — move to right bottom on playground */
@@ -463,15 +587,25 @@
             </div>
           </div>
           <span class="db-caption db-text-muted" id="pg-status" style="display:block;margin-bottom:4px;font-family:var(--db-font-ui);"></span>
+          <div class="pg-chat__img-preview" id="pg-img-preview">
+            <img id="pg-img-thumb" src="" alt="attached image">
+            <button class="pg-img-remove" id="pg-img-remove" title="Remove image">&times;</button>
+          </div>
           <div class="pg-chat__input-row">
-            <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..."></textarea>
+            <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..." style="padding-left:30px;"></textarea>
+            <button class="pg-chat__attach-btn" id="pg-attach" title="Attach image">
+              <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
+            </button>
+            <input type="file" id="pg-file-input" accept="image/*" style="display:none;">
           </div>
         </div>
       </div>
     </div>
 
     <!-- Divider 1 -->
-    <div class="pg-divider" data-divider="1"></div>
+    <div class="pg-divider" data-divider="1">
+      <span class="pg-divider__chevron" data-collapse="1">&lsaquo;</span>
+    </div>
 
     <!-- MIDDLE: JSON Panel -->
     <div class="pg-panel" id="panel-json">
@@ -497,12 +631,26 @@
     </div>
 
     <!-- Divider 2 -->
-    <div class="pg-divider" data-divider="2"></div>
+    <div class="pg-divider" data-divider="2">
+      <span class="pg-divider__chevron" data-collapse="2">&lsaquo;</span>
+    </div>
 
     <!-- RIGHT: Preview Panel -->
     <div class="pg-panel" id="panel-preview">
       <div class="pg-panel__toolbar">
         <span class="pg-panel__toolbar-title"><strong>Preview</strong></span>
+        <div class="db-btn-group" id="pg-viewport-toggle" style="display:none;">
+          <button class="db-btn db-btn--ghost db-btn--sm pg-viewport-btn pg-viewport-btn--active"
+                  data-viewport="desktop" title="Desktop"><i data-lucide="monitor" style="width:12px;height:12px;"></i></button>
+          <button class="db-btn db-btn--ghost db-btn--sm pg-viewport-btn"
+                  data-viewport="mobile" title="Mobile"><i data-lucide="smartphone" style="width:12px;height:12px;"></i></button>
+        </div>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-share" title="Share" style="display:none;">
+          <i data-lucide="share-2" style="width:12px;height:12px;"></i> Share
+        </button>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-download" title="Download HTML" style="display:none;">
+          <i data-lucide="download" style="width:12px;height:12px;"></i>
+        </button>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-html" title="Copy HTML"><i data-lucide="code" style="width:12px;height:12px;"></i> Copy HTML</button>
       </div>
       <div class="pg-panel__body">
@@ -573,7 +721,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.0.3"></script>
+<script src="daub.js?v=3.0.4"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -597,7 +745,17 @@ var _isLoading = false;
 var $render     = document.getElementById('pg-render');
 var $copyJson   = document.getElementById('pg-copy-json');
 var $copyHtml   = document.getElementById('pg-copy-html');
+var $share      = document.getElementById('pg-share');
+var $download   = document.getElementById('pg-download');
+var $viewportToggle = document.getElementById('pg-viewport-toggle');
+var $panelPreviewBody = document.querySelector('#panel-preview .pg-panel__body');
 var $status     = document.getElementById('pg-status');
+var $attach     = document.getElementById('pg-attach');
+var $fileInput  = document.getElementById('pg-file-input');
+var $imgPreview = document.getElementById('pg-img-preview');
+var $imgThumb   = document.getElementById('pg-img-thumb');
+var $imgRemove  = document.getElementById('pg-img-remove');
+var pendingImageData = null; // { base64: '...', mimeType: 'image/png' }
 var $jsonError  = document.querySelector('.pg-json-error');
 var $jsonErrMsg = document.getElementById('pg-json-error-msg');
 var $jsonArea   = document.querySelector('.pg-json-area');
@@ -619,6 +777,7 @@ var $byokSave     = document.getElementById('pg-byok-save');
 // ---- Chat state ----
 var chatHistory = [];
 var currentSpec = null;
+var specVersions = []; // { spec, timestamp, prompt, componentCount }
 var isDefaultMode = true;
 
 // ---- Model options per provider ----
@@ -675,7 +834,12 @@ function saveSettings() {
 
 function saveChatState() {
   try {
-    localStorage.setItem('pg-chat-history', JSON.stringify(chatHistory));
+    // Strip image data before persisting to avoid localStorage quota issues
+    var stripped = chatHistory.map(function(m) {
+      if (m.image) { var c = {}; for (var k in m) c[k] = m[k]; c.image = undefined; return c; }
+      return m;
+    });
+    localStorage.setItem('pg-chat-history', JSON.stringify(stripped));
     localStorage.setItem('pg-current-spec', currentSpec ? JSON.stringify(currentSpec) : 'null');
   } catch(e) {}
 }
@@ -710,6 +874,33 @@ document.querySelectorAll('[data-example]').forEach(function(chip) {
   });
 });
 
+// ---- Image attach ----
+$attach.addEventListener('click', function() { $fileInput.click(); });
+$fileInput.addEventListener('change', function() {
+  var file = this.files && this.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    DAUB.toast({ type: 'error', message: 'Image too large (max 10 MB)' });
+    this.value = '';
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var dataUrl = e.target.result;
+    var mimeMatch = dataUrl.match(/^data:(image\/[^;]+);base64,/);
+    if (!mimeMatch) { DAUB.toast({ type: 'error', message: 'Invalid image file' }); return; }
+    pendingImageData = { base64: dataUrl.split(',')[1], mimeType: mimeMatch[1], dataUrl: dataUrl };
+    $imgThumb.src = dataUrl;
+    $imgPreview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  this.value = '';
+});
+$imgRemove.addEventListener('click', function() {
+  pendingImageData = null;
+  $imgPreview.style.display = 'none';
+  $imgThumb.src = '';
+});
 
 // ---- AI API calls (blocking, accept messages array) ----
 function callOpenAI(messages) {
@@ -965,21 +1156,45 @@ function tryProgressiveRender(text) {
 }
 
 // ---- Chat message helpers ----
-function buildMessages(userPrompt) {
+function buildMessages(userPrompt, imageData) {
   var msgs = [{ role: 'system', content: SYSTEM_PROMPT }];
   if (currentSpec) {
     msgs.push({ role: 'user', content: '(previous request)' });
     msgs.push({ role: 'assistant', content: JSON.stringify(currentSpec) });
     userPrompt = userPrompt + '\n\nModify the existing spec above. Return the COMPLETE updated spec.';
   }
-  msgs.push({ role: 'user', content: userPrompt });
+  if (imageData) {
+    var provider = isDefaultMode ? 'default' : ($provider ? $provider.value : 'openai');
+    if (provider === 'anthropic') {
+      msgs.push({ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: imageData.mimeType, data: imageData.base64 } },
+        { type: 'text', text: userPrompt }
+      ]});
+    } else {
+      msgs.push({ role: 'user', content: [
+        { type: 'image_url', image_url: { url: imageData.dataUrl } },
+        { type: 'text', text: userPrompt }
+      ]});
+    }
+  } else {
+    msgs.push({ role: 'user', content: userPrompt });
+  }
   return msgs;
 }
 
-function addChatBubble(role, text) {
+function addChatBubble(role, text, imageUrl) {
   var div = document.createElement('div');
   div.className = 'pg-chat__msg pg-chat__msg--' + role;
-  div.textContent = text;
+  if (imageUrl) {
+    var img = document.createElement('img');
+    img.className = 'pg-chat__msg-img';
+    img.src = imageUrl;
+    img.alt = 'attached';
+    div.appendChild(img);
+  }
+  var span = document.createElement('span');
+  span.textContent = text;
+  div.appendChild(span);
   $chatMessages.appendChild(div);
   $chatMessages.scrollTop = $chatMessages.scrollHeight;
   return div;
@@ -990,7 +1205,11 @@ function renderChatHistory() {
   var bubbles = $chatMessages.querySelectorAll('.pg-chat__msg');
   bubbles.forEach(function(b) { b.remove(); });
   chatHistory.forEach(function(msg) {
-    addChatBubble(msg.role === 'user' ? 'user' : 'ai', msg.content);
+    var bubble = addChatBubble(msg.role === 'user' ? 'user' : 'ai', msg.content, msg.image || null);
+    // Rebuild result bubble UI for assistant messages with version data
+    if (msg.role === 'assistant' && msg.versionIdx != null && specVersions[msg.versionIdx]) {
+      buildResultBubble(bubble, specVersions[msg.versionIdx].spec);
+    }
   });
   updateChatState();
 }
@@ -1018,13 +1237,29 @@ function listComponentTypes(spec) {
   return Object.keys(counts).sort().map(function(t) { return t + ' \u00d7' + counts[t]; });
 }
 function buildResultBubble(bubble, spec) {
+  var verIdx = specVersions.length - 1;
+  var ver = specVersions[verIdx];
   var n = countComponents(spec);
   var types = listComponentTypes(spec);
   while (bubble.firstChild) bubble.removeChild(bubble.firstChild);
-  bubble.style.cursor = 'pointer';
-  var summary = document.createElement('span');
-  summary.textContent = 'Generated UI \u00B7 ' + n + ' components';
-  bubble.appendChild(summary);
+
+  // Header: v# · N components
+  var header = document.createElement('div');
+  header.className = 'pg-result-header';
+  var verSpan = document.createElement('span');
+  verSpan.className = 'pg-result-ver';
+  verSpan.textContent = 'v' + (verIdx + 1);
+  header.appendChild(verSpan);
+  header.appendChild(document.createTextNode(' \u00B7 ' + n + ' components'));
+  bubble.appendChild(header);
+
+  // Meta: timestamp
+  var meta = document.createElement('div');
+  meta.className = 'pg-result-meta';
+  meta.textContent = fmtTime(ver ? ver.timestamp : Date.now());
+  bubble.appendChild(meta);
+
+  // Component type chips (collapsible)
   var detail = document.createElement('div');
   detail.style.cssText = 'margin-top:6px;font-size:0.75rem;color:var(--db-warm-gray);display:none;';
   types.forEach(function(t) {
@@ -1036,7 +1271,60 @@ function buildResultBubble(bubble, spec) {
     detail.appendChild(chip);
   });
   bubble.appendChild(detail);
-  bubble.onclick = function() {
+
+  // Action buttons
+  var actions = document.createElement('div');
+  actions.className = 'pg-result-actions';
+
+  var revertBtn = document.createElement('button');
+  revertBtn.className = 'pg-revert-btn pg-result-active';
+  revertBtn.dataset.verIdx = verIdx;
+  revertBtn.textContent = 'Active';
+  revertBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    revertToVersion(parseInt(this.dataset.verIdx));
+  });
+  actions.appendChild(revertBtn);
+
+  var dlBtn = document.createElement('button');
+  dlBtn.textContent = 'Download';
+  dlBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var s = specVersions[verIdx];
+    if (!s) return;
+    var tmpPreview = document.createElement('div');
+    tmpPreview.style.display = 'none';
+    document.body.appendChild(tmpPreview);
+    var tmpSpec = s.spec;
+    // Render to get HTML
+    var root = tmpSpec.elements[tmpSpec.root];
+    if (root) {
+      tmpPreview.appendChild(renderElement(tmpSpec.elements, tmpSpec.root, 0));
+      if (window.lucide) lucide.createIcons({ nodes: [tmpPreview] });
+    }
+    var html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n'
+      + '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+      + '<title>DAUB UI Export</title>\n'
+      + '<link rel="stylesheet" href="https://daub.dev/daub.css">\n'
+      + '</head>\n<body>\n<div class="db-container" style="padding:24px;">\n'
+      + tmpPreview.innerHTML
+      + '\n</div>\n<script src="https://daub.dev/daub.js"><\/script>\n'
+      + '</body>\n</html>';
+    document.body.removeChild(tmpPreview);
+    var blob = new Blob([html], { type: 'text/html' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'daub-v' + (verIdx + 1) + '.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  actions.appendChild(dlBtn);
+
+  bubble.appendChild(actions);
+
+  bubble.style.cursor = 'pointer';
+  bubble.onclick = function(e) {
+    if (e.target.tagName === 'BUTTON') return;
     detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
   };
 }
@@ -1065,13 +1353,15 @@ function runBlockingGenerate(messages, streamBubble) {
     $json.value = JSON.stringify(spec, null, 2);
     $status.textContent = '';
     currentSpec = spec;
+    pushVersion(spec, '(blocking)');
     renderSpec(spec);
     refreshJsonTree();
+    updatePreviewToolbar();
     if (streamBubble) {
       streamBubble.classList.remove('pg-chat__msg--streaming');
       buildResultBubble(streamBubble, spec);
     }
-    chatHistory.push({ role: 'assistant', content: 'Generated UI \u00B7 ' + countComponents(spec) + ' components' });
+    chatHistory.push({ role: 'assistant', content: 'v' + specVersions.length + ' \u00B7 ' + countComponents(spec) + ' components', versionIdx: specVersions.length - 1 });
     saveChatState();
   }).catch(function(err) {
     $status.textContent = '';
@@ -1098,9 +1388,15 @@ function generate() {
     }
   }
 
+  // Capture attached image before clearing
+  var imageForThisMsg = pendingImageData;
+  pendingImageData = null;
+  $imgPreview.style.display = 'none';
+  $imgThumb.src = '';
+
   // Add user bubble
-  chatHistory.push({ role: 'user', content: prompt });
-  addChatBubble('user', prompt);
+  chatHistory.push({ role: 'user', content: prompt, image: imageForThisMsg ? imageForThisMsg.dataUrl : undefined });
+  addChatBubble('user', prompt, imageForThisMsg ? imageForThisMsg.dataUrl : null);
   updateChatState();
   $prompt.value = '';
   $prompt.style.height = '';
@@ -1117,7 +1413,7 @@ function generate() {
   updateRenderVisibility();
   while ($preview.firstChild) $preview.removeChild($preview.firstChild);
 
-  var messages = buildMessages(prompt);
+  var messages = buildMessages(prompt, imageForThisMsg);
   var accumulated = '';
   var continuations = 0;
   var MAX_CONTINUATIONS = 2;
@@ -1193,11 +1489,13 @@ function generate() {
           $json.value = JSON.stringify(spec, null, 2);
           $status.textContent = usingFallback ? 'Rendered via fallback model' : '';
           currentSpec = spec;
+          pushVersion(spec, prompt);
           renderSpec(spec);
           refreshJsonTree();
+          updatePreviewToolbar();
           streamBubble.classList.remove('pg-chat__msg--streaming');
           buildResultBubble(streamBubble, spec);
-          chatHistory.push({ role: 'assistant', content: 'Generated UI \u00B7 ' + countComponents(spec) + ' components' });
+          chatHistory.push({ role: 'assistant', content: 'v' + specVersions.length + ' \u00B7 ' + countComponents(spec) + ' components', versionIdx: specVersions.length - 1 });
           saveChatState();
           setLoading(false);
         } else {
@@ -1268,6 +1566,97 @@ $copyHtml.addEventListener('click', function() {
     DAUB.toast({ type: 'success', message: 'HTML copied!' });
   });
 });
+
+// ---- Share / Viewport / Download visibility ----
+function updatePreviewToolbar() {
+  var vis = currentSpec ? '' : 'none';
+  if ($share) $share.style.display = vis;
+  if ($download) $download.style.display = vis;
+  if ($viewportToggle) $viewportToggle.style.display = vis;
+}
+
+// ---- Share click handler ----
+$share.addEventListener('click', function() {
+  if (!currentSpec) return;
+  try {
+    var compressed = LZString.compressToEncodedURIComponent(JSON.stringify(currentSpec));
+    var url = window.location.origin + window.location.pathname + '?s=' + compressed;
+    navigator.clipboard.writeText(url).then(function() {
+      DAUB.toast({ type: 'success', message: 'Share link copied!' });
+    }).catch(function() {
+      window.prompt('Copy this share link:', url);
+    });
+  } catch(e) {
+    DAUB.toast({ type: 'error', message: 'Could not generate share link' });
+  }
+});
+
+// ---- Viewport toggle handler ----
+document.querySelectorAll('.pg-viewport-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.pg-viewport-btn').forEach(function(b) { b.classList.remove('pg-viewport-btn--active'); });
+    this.classList.add('pg-viewport-btn--active');
+    if (this.dataset.viewport === 'mobile') {
+      $panelPreviewBody.classList.add('pg-panel__body--mobile');
+    } else {
+      $panelPreviewBody.classList.remove('pg-panel__body--mobile');
+    }
+  });
+});
+
+// ---- Download HTML handler ----
+$download.addEventListener('click', function() {
+  if (!currentSpec) return;
+  var html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n'
+    + '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+    + '<title>DAUB UI Export</title>\n'
+    + '<link rel="stylesheet" href="https://daub.dev/daub.css">\n'
+    + '</head>\n<body>\n<div class="db-container" style="padding:24px;">\n'
+    + $preview.innerHTML
+    + '\n</div>\n<script src="https://daub.dev/daub.js"><\/script>\n'
+    + '</body>\n</html>';
+  var blob = new Blob([html], { type: 'text/html' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'daub-ui-export.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+// ---- Version management ----
+function pushVersion(spec, prompt) {
+  specVersions.push({
+    spec: JSON.parse(JSON.stringify(spec)),
+    timestamp: Date.now(),
+    prompt: prompt || '',
+    componentCount: countComponents(spec)
+  });
+}
+function revertToVersion(idx) {
+  if (idx < 0 || idx >= specVersions.length) return;
+  var v = specVersions[idx];
+  currentSpec = JSON.parse(JSON.stringify(v.spec));
+  $json.value = JSON.stringify(currentSpec, null, 2);
+  renderSpec(currentSpec);
+  refreshJsonTree();
+  updatePreviewToolbar();
+  saveChatState();
+  // Update active state on all revert buttons
+  document.querySelectorAll('.pg-result-actions .pg-revert-btn').forEach(function(b) {
+    b.classList.remove('pg-result-active');
+    b.textContent = 'Revert';
+  });
+  var activeBtn = document.querySelector('.pg-revert-btn[data-ver-idx="' + idx + '"]');
+  if (activeBtn) {
+    activeBtn.classList.add('pg-result-active');
+    activeBtn.textContent = 'Active';
+  }
+  DAUB.toast({ type: 'success', message: 'Reverted to v' + (idx + 1) });
+}
+function fmtTime(ts) {
+  var d = new Date(ts);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
 
 // ---- renderjson config ----
 if (window.renderjson) {
@@ -1361,15 +1750,20 @@ $prompt.addEventListener('input', function() {
 $newChat.addEventListener('click', function() {
   chatHistory = [];
   currentSpec = null;
+  specVersions = [];
   saveChatState();
   renderChatHistory();
   $json.value = '';
   refreshJsonTree();
   updateRenderVisibility();
+  updatePreviewToolbar();
   while ($preview.firstChild) $preview.removeChild($preview.firstChild);
   $prompt.value = '';
   $status.textContent = '';
   hideJsonError();
+  pendingImageData = null;
+  $imgPreview.style.display = 'none';
+  $imgThumb.src = '';
 });
 
 // ---- BYOK modal ----
@@ -2846,6 +3240,29 @@ RENDERERS.ChartCard = function(p, ch, els, d) {
   return el;
 };
 
+// -- CustomHTML: raw HTML+JS rendered in a container --
+RENDERERS.CustomHTML = function(p) {
+  var el = document.createElement('div');
+  el.className = 'pg-custom-html';
+  if (p.html) {
+    var safe = p.html.replace(/<script[\s\S]*?<\/script>/gi, '');
+    el.innerHTML = safe; // eslint-disable-line -- intentional: user-authored HTML via AI chat
+  }
+  if (p.js) {
+    setTimeout(function() {
+      try {
+        new Function('container', p.js)(el); // eslint-disable-line -- intentional: user-authored JS via AI chat
+      } catch(e) {
+        var err = document.createElement('pre');
+        err.style.cssText = 'color:var(--db-error);font-size:0.75rem;margin-top:8px;';
+        err.textContent = 'JS Error: ' + e.message;
+        el.appendChild(err);
+      }
+    }, 0);
+  }
+  return el;
+};
+
 // ---- Component props documentation (single source of truth for AI prompt) ----
 var COMP_PROPS = {
   // Layout & Structure
@@ -2922,7 +3339,9 @@ var COMP_PROPS = {
   DatePicker: 'label: string, placeholder: string, selected: string',
   // Dashboard
   StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string',
-  ChartCard: 'title: string'
+  ChartCard: 'title: string',
+  // Custom
+  CustomHTML: 'html: string (raw HTML using DAUB classless CSS), js: string (vanilla JS, receives "container" arg pointing to the wrapper div)'
 };
 
 var COMP_CATEGORIES = [
@@ -2933,7 +3352,8 @@ var COMP_CATEGORIES = [
   ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip']],
   ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette']],
   ['Layout Utilities', ['Accordion', 'Collapsible', 'Resizable', 'DatePicker']],
-  ['Dashboard', ['StatCard', 'ChartCard']]
+  ['Dashboard', ['StatCard', 'ChartCard']],
+  ['Custom', ['CustomHTML']]
 ];
 
 // ---- Dynamic system prompt (built from RENDERERS + COMP_PROPS) ----
@@ -2975,7 +3395,8 @@ var SYSTEM_PROMPT = (function() {
     + '- Use StatCard for KPI metrics\n'
     + '- Use real-looking sample data (names, numbers, dates)\n'
     + '- Keep element IDs descriptive and unique\n'
-    + '- For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)';
+    + '- For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)\n'
+    + '- Use CustomHTML when the user needs custom interactive behavior, animations, or widgets not covered by standard components. The html prop is raw HTML (use DAUB CSS classes like db-btn, db-card, etc.). The js prop is vanilla JS that receives a "container" argument referencing the wrapper div. Escape quotes in JSON strings properly.';
 
   return preamble + sections + guidelines;
 })();
@@ -2988,13 +3409,29 @@ var SYSTEM_PROMPT = (function() {
 
   dividers.forEach(function(div) {
     div.addEventListener('mousedown', function(e) {
+      if (e.target.classList.contains('pg-divider__chevron')) return;
       e.preventDefault();
       startDrag(e.clientX, this);
     });
     div.addEventListener('touchstart', function(e) {
+      if (e.target.classList.contains('pg-divider__chevron')) return;
       e.preventDefault();
       startDrag(e.touches[0].clientX, this);
     }, { passive: false });
+
+    var chevron = div.querySelector('.pg-divider__chevron');
+    if (chevron) {
+      chevron.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var idx = this.dataset.collapse;
+        var panelId = idx === '1' ? 'panel-prompt' : 'panel-json';
+        var panel = document.getElementById(panelId);
+        panel.classList.toggle('pg-panel--collapsed');
+        var collapsed = panel.classList.contains('pg-panel--collapsed');
+        this.textContent = collapsed ? '\u203A' : '\u2039';
+        updateGridForCollapse();
+      });
+    }
   });
 
   function startDrag(clientX, divider) {
@@ -3066,6 +3503,7 @@ if (currentSpec) {
     $json.value = JSON.stringify(currentSpec, null, 2);
     renderSpec(currentSpec);
     refreshJsonTree();
+    updatePreviewToolbar();
   } catch(e) {}
 }
 // Apply BYOK mode
@@ -3081,6 +3519,23 @@ if (presetPrompt) {
   $prompt.value = presetPrompt;
   window.history.replaceState({}, '', window.location.pathname);
   setTimeout(function(){ generate(); }, 500);
+}
+
+// Load shared spec from ?s= param
+var sharedSpec = urlParams.get('s');
+if (sharedSpec) {
+  try {
+    var json = LZString.decompressFromEncodedURIComponent(sharedSpec);
+    var spec = JSON.parse(json);
+    if (spec && spec.root && spec.elements) {
+      currentSpec = spec;
+      $json.value = JSON.stringify(spec, null, 2);
+      renderSpec(spec);
+      refreshJsonTree();
+      updatePreviewToolbar();
+    }
+  } catch(e) {}
+  window.history.replaceState({}, '', window.location.pathname);
 }
 
 })();
