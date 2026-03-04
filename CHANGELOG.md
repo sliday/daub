@@ -10,6 +10,8 @@ All notable changes to DAUB are documented here.
 - Fix: Normalized playground.html nav — added `role`/`aria-label` attrs, matched GitHub SVG to canonical
 - Fix: "Use Free DAUB AI" now fully clears stored API keys from localStorage
 - Fix: BYOK mode shows visible "Change / Remove Key" link instead of hiding it
+- Fix: Updated stale `?v=3.0.0` cache busters to `?v=3.0.3` across all HTML pages
+- Fix: Updated hero announcement badge and tagline on landing page to reflect v3.0.3
 
 ## v3.0.2
 
