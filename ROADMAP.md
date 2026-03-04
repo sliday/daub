@@ -2,7 +2,7 @@
 
 ## The Thesis
 
-Software is an obstacle. Every app you open, every menu you navigate, every settings page you hunt through — that's friction between what you want and what you get. The future isn't better apps. It's no apps.
+Software gets in the way. Every app you open, every menu you navigate, every settings page you hunt through — that's friction between what you want and what you get. The answer isn't better apps. It's fewer of them.
 
 You describe what you need. The computer builds it. Purpose-built UI, generated on the fly, contextual to your moment. Not links. Not menus. Clean interfaces that respect UX laws, then dissolve when you're done.
 
@@ -77,7 +77,7 @@ Components that do things. Buttons that POST. Forms that submit. Cards that link
 - "Plan a trip to Tokyo" → itinerary builder with maps, hotels, flights, day-by-day
 - "Help me write a cover letter" → editor with AI suggestions, tone controls, export to PDF
 
-The interface is disposable. It exists to serve the moment, then it's gone. Next request, next interface.
+The interface serves the moment, then it's gone. Next thought, next surface.
 
 ---
 

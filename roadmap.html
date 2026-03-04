@@ -112,6 +112,19 @@
     .rm-place__label { font-family: var(--db-font-heading); font-weight: 600; font-size: 0.95rem; margin: 0 0 6px; color: var(--db-color-text); }
     .rm-place__desc { font-size: 0.8rem; color: var(--db-color-text-muted); margin: 0; line-height: 1.5; }
 
+    /* Closing visual */
+    .rm-closing { position: relative; padding: 80px 24px 96px; overflow: hidden; text-align: center; }
+    .rm-closing__canvas { position: absolute; inset: 0; z-index: 0; }
+    .rm-closing__content { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
+    .rm-closing__content h2 { font-family: var(--db-font-heading); font-size: clamp(1.4rem, 3.5vw, 2rem); margin: 0 0 16px; color: var(--db-color-text); font-weight: 600; line-height: 1.3; }
+    .rm-closing__content p { font-size: 0.95rem; color: var(--db-color-text-secondary); line-height: 1.65; margin: 0 0 28px; }
+    .rm-closing__actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .rm-closing__actions a { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: all 0.15s; font-family: var(--db-font-ui); }
+    .rm-closing__actions .rm-cta-primary { background: var(--db-terracotta); color: var(--db-white, #fff); }
+    .rm-closing__actions .rm-cta-primary:hover { filter: brightness(1.1); }
+    .rm-closing__actions .rm-cta-secondary { background: var(--db-color-surface); color: var(--db-color-text); border: 1px solid var(--db-color-border); }
+    .rm-closing__actions .rm-cta-secondary:hover { border-color: var(--db-terracotta); color: var(--db-terracotta); }
+
     /* Footer */
     .rm-footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--db-color-border); color: var(--db-color-text-muted); font-size: 0.85rem; }
     .rm-footer a { color: var(--db-terracotta); text-decoration: none; }
@@ -145,8 +158,8 @@
 
   <!-- Hero -->
   <section class="rm-hero">
-    <h1>Software is the obstacle.<br>Let's <em>dissolve</em> it.</h1>
-    <p>The future isn't better apps. It's no apps. You describe what you need, the computer builds it. DAUB is the rendering layer for that future.</p>
+    <h1>Software gets in the way.<br>We'd rather it <em>dissolved</em>.</h1>
+    <p>Every menu, every settings page, every app you have to learn — that's friction between what you want and what you get. DAUB is a rendering layer built for a world where interfaces are generated, not installed.</p>
   </section>
 
   <!-- Architecture Stack -->
@@ -155,43 +168,43 @@
 
     <div class="rm-layer" data-num="1" data-status="done">
       <span class="rm-layer__name">daub-classless.css</span>
-      <span class="rm-layer__desc">Plain HTML looks good. Zero classes. Drop in one stylesheet and semantic markup gets considered aesthetics.</span>
+      <span class="rm-layer__desc">Semantic HTML gets warm surfaces and honest typography. One stylesheet, zero classes. The foundation everything else builds on.</span>
       <span class="rm-layer__status rm-layer__status--done">Shipped</span>
     </div>
 
     <div class="rm-layer" data-num="2" data-status="done">
       <span class="rm-layer__name">daub.css + daub.js</span>
-      <span class="rm-layer__desc">76 class-based components, 20 theme families with 40 variants. Tactile surfaces, letterpress type, real textures.</span>
+      <span class="rm-layer__desc">76 components with tactile surfaces, letterpress type, and real textures. 20 theme families, 40 variants. Two files, zero build step.</span>
       <span class="rm-layer__status rm-layer__status--done">Shipped</span>
     </div>
 
     <div class="rm-layer" data-num="3" data-status="done">
       <span class="rm-layer__name">JSON-Render Spec</span>
-      <span class="rm-layer__desc">AI outputs JSON, DAUB renders live UI. Working in the Playground — prompt to interface in seconds.</span>
+      <span class="rm-layer__desc">AI outputs structured JSON, DAUB renders it as a live interface. Already working in the Playground — describe what you want, see it appear.</span>
       <span class="rm-layer__status rm-layer__status--done">Shipped</span>
     </div>
 
     <div class="rm-layer" data-num="4" data-status="wip">
       <span class="rm-layer__name">React / JSX Wrappers</span>
-      <span class="rm-layer__desc">Typed components wrapping DAUB classes. &lt;DaubCard&gt;, &lt;DaubButton&gt; — full TypeScript, IDE autocomplete.</span>
+      <span class="rm-layer__desc">Typed JSX components that wrap DAUB's CSS classes. Full TypeScript, IDE autocomplete. Framework-native without losing the zero-build soul.</span>
       <span class="rm-layer__status rm-layer__status--planned">Planned</span>
     </div>
 
     <div class="rm-layer" data-num="5" data-status="">
       <span class="rm-layer__name">Intent Engine</span>
-      <span class="rm-layer__desc">Natural language in, UI spec out, live render. "Track my expenses" becomes a dashboard with charts and input forms.</span>
+      <span class="rm-layer__desc">Natural language in, UI specification out, live render. Say what you need and a considered interface materializes — with correct layout, proper hierarchy, and real data.</span>
       <span class="rm-layer__status rm-layer__status--future">Future</span>
     </div>
 
     <div class="rm-layer" data-num="6" data-status="">
       <span class="rm-layer__name">Agent Runtime</span>
-      <span class="rm-layer__desc">Multi-agent system orchestrates APIs + UI. Agents fetch data, decide layout, handle actions. UI is the surface.</span>
+      <span class="rm-layer__desc">Coordinated agents fetch data, choose layout, and handle actions. The interface is a byproduct of understanding — not a thing you build, but a thing that emerges.</span>
       <span class="rm-layer__status rm-layer__status--future">Future</span>
     </div>
 
     <div class="rm-layer" data-num="7" data-status="">
       <span class="rm-layer__name">Daub Place</span>
-      <span class="rm-layer__desc">The endgame. You think it, it happens. Minimal interaction on device — ambient intelligence that anticipates and builds what you need before you finish asking.</span>
+      <span class="rm-layer__desc">Where thought and interface converge. Your device becomes a surface for intent — quiet, anticipatory, always ready. No chrome, no navigation. Just the thing you needed.</span>
       <span class="rm-layer__status rm-layer__status--future">Vision</span>
     </div>
   </section>
@@ -199,7 +212,7 @@
   <!-- Version Timeline -->
   <section class="rm-timeline">
     <h2>Release Timeline</h2>
-    <p>Where we've been and where we're going.</p>
+    <p>Each release builds on the last. The bottom is infrastructure; the top is where it gets interesting.</p>
 
     <div class="rm-version">
       <div class="rm-version__tag">v3.0</div>
@@ -261,7 +274,7 @@
   <!-- Vision Examples -->
   <section class="rm-vision">
     <h2>Intent to Interface</h2>
-    <p>You say it. The system builds it. No apps, no navigation, no learning curve.</p>
+    <p>Describe what you need. The right interface appears — considered, contextual, ready to use.</p>
 
     <div class="rm-examples">
       <div class="rm-example">
@@ -294,36 +307,46 @@
   <!-- Daub Place -->
   <section class="rm-place">
     <h2>Daub Place</h2>
-    <p>The endgame isn't an app. It's a place where thinking and doing are the same thing. Your device becomes an extension of intent — ambient, anticipatory, considered.</p>
+    <p>Not an app. A surface where thinking and making converge. Your device becomes quiet infrastructure for intent — always ready, never in the way.</p>
 
     <div class="rm-place__grid">
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="brain" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
         <div class="rm-place__label">Think It</div>
-        <p class="rm-place__desc">Express intent naturally — voice, text, gesture. No app switching, no menus, no friction.</p>
+        <p class="rm-place__desc">Voice, text, gesture — whatever's natural. No app to find, no menu to learn.</p>
       </div>
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="sparkles" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
         <div class="rm-place__label">Shape It</div>
-        <p class="rm-place__desc">AI parses intent, fetches data, chooses layout. UX laws baked in — Fitts, Hick, Miller. No broken UI.</p>
+        <p class="rm-place__desc">Intent becomes structure. Data arrives, layout resolves. Fitts's law, Hick's law, Miller's law — baked in, not bolted on.</p>
       </div>
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="layout" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
         <div class="rm-place__label">See It</div>
-        <p class="rm-place__desc">Purpose-built interface materializes. Clean, contextual, accessible. DAUB's tactile aesthetic throughout.</p>
+        <p class="rm-place__desc">A considered interface materializes. Warm surfaces, honest shadows, proper hierarchy. It looks like someone cared — because the system did.</p>
       </div>
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="zap" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
         <div class="rm-place__label">Do It</div>
-        <p class="rm-place__desc">Interact, decide, complete. The interface serves the moment, then dissolves. Next thought, next interface.</p>
+        <p class="rm-place__desc">Act on what you see. The interface served its purpose, then it's gone. Next thought, next surface.</p>
       </div>
     </div>
   </section>
 
-  <!-- North Star -->
-  <section class="rm-north">
-    <p class="rm-north__line">You describe what you need.<br>The computer builds it.<br>No apps. No navigation. No learning curve.</p>
-    <p class="rm-north__sub">This is where DAUB is going. The rendering layer for the post-app future.</p>
+  <!-- Closing Visual -->
+  <section class="rm-closing">
+    <canvas class="rm-closing__canvas" id="rm-canvas"></canvas>
+    <div class="rm-closing__content">
+      <h2>You describe what you need.<br>The computer builds it.</h2>
+      <p>No apps to install. No interfaces to learn. No friction between thought and outcome. This is where DAUB is headed — a rendering layer for software that honours the person using it.</p>
+      <div class="rm-closing__actions">
+        <a href="playground.html" class="rm-cta-primary">Try the Playground</a>
+        <a href="https://github.com/sliday/daub" target="_blank" rel="noopener" class="rm-cta-secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+    </div>
   </section>
 
   <!-- Footer -->
@@ -333,5 +356,110 @@
 
   <div class="db-theme-switcher"></div>
   <script src="daub.js?v=3.0.0"></script>
+  <script>
+    // Generative closing visual — particles that drift and connect,
+    // evoking intent coalescing into structure.
+    (function() {
+      var canvas = document.getElementById('rm-canvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var particles = [];
+      var count = 60;
+      var maxDist = 120;
+      var raf;
+
+      function resize() {
+        var rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width * (window.devicePixelRatio || 1);
+        canvas.height = rect.height * (window.devicePixelRatio || 1);
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+      }
+
+      function init() {
+        resize();
+        particles = [];
+        var w = canvas.width / (window.devicePixelRatio || 1);
+        var h = canvas.height / (window.devicePixelRatio || 1);
+        for (var i = 0; i < count; i++) {
+          particles.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            r: 1.5 + Math.random() * 1.5
+          });
+        }
+      }
+
+      function getColor() {
+        var style = getComputedStyle(document.documentElement);
+        return style.getPropertyValue('--db-terracotta').trim() || '#C67B5C';
+      }
+
+      function hexToRgb(hex) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        var n = parseInt(hex, 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+      }
+
+      function draw() {
+        var w = canvas.width / (window.devicePixelRatio || 1);
+        var h = canvas.height / (window.devicePixelRatio || 1);
+        ctx.clearRect(0, 0, w, h);
+
+        var color = getColor();
+        var rgb = hexToRgb(color);
+
+        for (var i = 0; i < particles.length; i++) {
+          var p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0) p.x = w;
+          if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h;
+          if (p.y > h) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0.35)';
+          ctx.fill();
+
+          for (var j = i + 1; j < particles.length; j++) {
+            var q = particles[j];
+            var dx = p.x - q.x;
+            var dy = p.y - q.y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < maxDist) {
+              var alpha = (1 - dist / maxDist) * 0.15;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(q.x, q.y);
+              ctx.strokeStyle = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')';
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      // Only animate when visible
+      var observer = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) {
+          if (!raf) draw();
+        } else {
+          if (raf) { cancelAnimationFrame(raf); raf = null; }
+        }
+      }, { threshold: 0.1 });
+
+      init();
+      observer.observe(canvas);
+      window.addEventListener('resize', function() { resize(); });
+    })();
+  </script>
 </body>
 </html>
