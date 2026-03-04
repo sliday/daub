@@ -2,6 +2,19 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.2
+
+**Card media variant visual fixes.**
+
+- Fix: Media card images no longer bleed past rounded corners — added `overflow: hidden` to `.db-card--media`
+- Fix: Media card header content now has proper horizontal padding — added `.db-card--media .db-card__header` rule
+
+## v3.0.1
+
+**Roadmap nav fix.**
+
+- Fix: Roadmap page nav updated to match index.html styling and links
+
 ## v3.0.0
 
 **Classless CSS layer, ROADMAP, documentation expansion.**

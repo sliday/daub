@@ -2744,9 +2744,10 @@ textarea.db-field__input {
 .db-card--clip { overflow: hidden; }
 
 /* Card — media variant (edge-to-edge images) */
-.db-card--media { padding: 0; }
+.db-card--media { padding: 0; overflow: hidden; }
 .db-card--media .db-card__media { width: 100%; overflow: hidden; }
 .db-card--media .db-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.db-card--media .db-card__header { padding: var(--db-space-4) var(--db-space-5) 0; }
 .db-card--media .db-card__body { padding: var(--db-space-4) var(--db-space-5); }
 .db-card--media .db-card__footer { padding: 0 var(--db-space-5) var(--db-space-5); margin-top: 0; border-top: none; }
 
