@@ -827,6 +827,7 @@ var $byokSave     = document.getElementById('pg-byok-save');
 // ---- Chat state ----
 var chatHistory = [];
 var currentSpec = null;
+var progressivePrevSpec = null;
 var specVersions = []; // { spec, timestamp, prompt, componentCount }
 var isDefaultMode = true;
 
@@ -1251,7 +1252,8 @@ function tryProgressiveRender(text) {
   try {
     var spec = JSON.parse(trimmed + closers);
     if (spec && spec.root && spec.elements) {
-      renderSpec(spec);
+      renderSpec(spec, progressivePrevSpec);
+      progressivePrevSpec = spec;
       $status.textContent = 'Rendering\u2026';
     }
   } catch (e) {}
@@ -1493,7 +1495,10 @@ function generate() {
   hideJsonError();
   $json.value = '';
   updateRenderVisibility();
-  while ($preview.firstChild) $preview.removeChild($preview.firstChild);
+  progressivePrevSpec = currentSpec;
+  if (!currentSpec) {
+    while ($preview.firstChild) $preview.removeChild($preview.firstChild);
+  }
 
   var messages = buildMessages(prompt, imagesForThisMsg);
   var accumulated = '';
@@ -1570,7 +1575,7 @@ function generate() {
         if (spec && spec.root && spec.elements) {
           $json.value = JSON.stringify(spec, null, 2);
           $status.textContent = usingFallback ? 'Rendered via fallback model' : '';
-          var prevSpec2 = currentSpec;
+          var prevSpec2 = progressivePrevSpec || currentSpec;
           currentSpec = spec;
           pushVersion(spec, prompt);
           renderSpec(spec, prevSpec2);

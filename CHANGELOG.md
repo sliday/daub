@@ -2,6 +2,16 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.7
+
+**Playground: flicker-free streaming, Gemini 3.1 Flash Lite default.**
+
+- Enhancement: Diff-only preview updates during streaming — no more full DOM redraws on follow-up prompts
+- Enhancement: Progressive renders now diff against previous render instead of rebuilding from scratch
+- Enhancement: Preview preserves scroll position and animations during streaming
+- Enhancement: Existing preview stays visible on follow-ups (DOM only cleared on first generation)
+- Change: Default built-in model switched from Gemini 2.5 Flash Lite to `google/gemini-3.1-flash-lite-preview`
+
 ## v3.0.6
 
 **Playground: AI-driven theme selection from prompt content.**
