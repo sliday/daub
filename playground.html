@@ -1253,7 +1253,7 @@ function tryProgressiveRender(text) {
     var spec = JSON.parse(trimmed + closers);
     if (spec && spec.root && spec.elements) {
       renderSpec(spec, progressivePrevSpec);
-      progressivePrevSpec = spec;
+      if (progressivePrevSpec) progressivePrevSpec = spec;
       $status.textContent = 'Rendering\u2026';
     }
   } catch (e) {}
