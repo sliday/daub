@@ -446,10 +446,13 @@
     .pg-result-actions button:hover {
       background: var(--db-sand);
     }
+    .pg-result-actions button svg { width: 10px; height: 10px; vertical-align: -1px; margin-right: 2px; }
     .pg-result-actions button.pg-result-active {
       background: color-mix(in srgb, var(--db-terracotta) 12%, transparent);
-      border-color: var(--db-terracotta);
+      border-color: color-mix(in srgb, var(--db-terracotta) 30%, transparent);
       color: var(--db-terracotta);
+      cursor: default;
+      opacity: 0.7;
       pointer-events: none;
     }
     @keyframes pg-diff-flash {
@@ -1342,11 +1345,17 @@ function buildResultBubble(bubble, spec, verIdx) {
   var revertBtn = document.createElement('button');
   revertBtn.className = 'pg-revert-btn' + (isActive ? ' pg-result-active' : '');
   revertBtn.dataset.verIdx = verIdx;
-  revertBtn.textContent = isActive ? 'Active' : 'Revert';
-  revertBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    revertToVersion(parseInt(this.dataset.verIdx));
-  });
+  if (isActive) {
+    revertBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Current';
+  } else {
+    revertBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Revert';
+  }
+  if (!isActive) {
+    revertBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      revertToVersion(parseInt(this.dataset.verIdx));
+    });
+  }
   actions.appendChild(revertBtn);
 
   bubble.appendChild(actions);
@@ -1674,14 +1683,18 @@ function revertToVersion(idx) {
   updatePreviewToolbar();
   saveChatState();
   // Update active state on all revert buttons
+  var revertSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> ';
+  var checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ';
   document.querySelectorAll('.pg-result-actions .pg-revert-btn').forEach(function(b) {
     b.classList.remove('pg-result-active');
-    b.textContent = 'Revert';
+    b.innerHTML = revertSvg + 'Revert';
+    b.style.cursor = 'pointer';
+    b.style.opacity = '';
   });
   var activeBtn = document.querySelector('.pg-revert-btn[data-ver-idx="' + idx + '"]');
   if (activeBtn) {
     activeBtn.classList.add('pg-result-active');
-    activeBtn.textContent = 'Active';
+    activeBtn.innerHTML = checkSvg + 'Current';
   }
   DAUB.toast({ type: 'success', message: 'Reverted to v' + (idx + 1) });
 }
