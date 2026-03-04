@@ -1391,6 +1391,8 @@ $byokSave.addEventListener('click', function() {
 $defaultLink.addEventListener('click', function(e) {
   e.preventDefault();
   isDefaultMode = true;
+  if ($apikey) $apikey.value = '';
+  localStorage.removeItem('pg-apikeys');
   $byokLink.textContent = 'Use Your Own Key';
   updateChatTitle();
   saveSettings();
