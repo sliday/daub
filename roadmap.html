@@ -45,13 +45,74 @@
   <style>
     body { margin: 0; overflow-x: hidden; }
 
-    /* Nav */
-    .db-nav { display: flex; align-items: center; gap: 16px; padding: 12px 24px; border-bottom: 1px solid var(--db-color-border); background: var(--db-color-surface); position: sticky; top: 0; z-index: 100; }
-    .db-nav__brand { font-family: var(--db-font-heading); font-weight: 700; font-size: 1.15rem; color: var(--db-color-text); text-decoration: none; }
-    .db-nav__links { display: flex; gap: 8px; margin-left: auto; list-style: none; padding: 0; margin-top: 0; margin-bottom: 0; flex-wrap: wrap; }
-    .db-nav__links a { color: var(--db-color-text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 8px; border-radius: 6px; transition: color 0.15s; }
-    .db-nav__links a:hover { color: var(--db-color-text); }
-    .db-nav__links a.active { color: var(--db-terracotta); font-weight: 600; }
+    /* Nav (matches index.html) */
+    .db-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--db-cream);
+      border-bottom: 1px solid var(--db-sand);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+      font-family: var(--db-font-ui);
+      backdrop-filter: blur(8px);
+    }
+    .db-nav__brand {
+      font-family: var(--db-font-heading);
+      font-weight: 800;
+      font-size: 1.125rem;
+      color: var(--db-ink);
+      text-decoration: none;
+    }
+    .db-nav__links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .db-nav__links a {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-charcoal);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: var(--db-radius-2);
+      transition: color var(--db-transition), background var(--db-transition);
+    }
+    .db-nav__links a:hover {
+      color: var(--db-terracotta);
+      background: color-mix(in srgb, var(--db-ink) 7%, transparent);
+    }
+    .db-nav__link--active {
+      color: var(--db-terracotta) !important;
+      background: color-mix(in srgb, var(--db-terracotta) 15%, transparent) !important;
+    }
+    .db-nav__github {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-charcoal);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: var(--db-radius-2);
+      border: 1px solid var(--db-sand);
+      transition: border-color var(--db-transition);
+    }
+    .db-nav__github:hover {
+      border-color: var(--db-terracotta);
+    }
+    @media (max-width: 640px) {
+      .db-nav__links { gap: 2px; }
+      .db-nav__links a { font-size: 0.75rem; padding: 4px 8px; }
+      .db-nav__github span { display: none; }
+    }
 
     /* Hero */
     .rm-hero { text-align: center; padding: 80px 24px 48px; max-width: 720px; margin: 0 auto; }
@@ -134,23 +195,24 @@
       .rm-layer::before { left: -48px; width: 30px; height: 30px; font-size: 0.7rem; }
       .rm-version { grid-template-columns: 1fr; }
       .rm-version__tag { text-align: left; }
-      .rm-nav__links { display: none; }
+
     }
   </style>
 </head>
 <body>
   <!-- Nav -->
-  <nav class="db-nav">
-    <a class="db-nav__brand" href="/">DAUB</a>
+  <nav class="db-nav" role="navigation" aria-label="Main">
+    <a href="/" class="db-nav__brand">DAUB</a>
     <ul class="db-nav__links">
       <li><a href="/">Components</a></li>
-      <li><a href="demo.html">Demos</a></li>
+      <li><a href="demo.html">Layouts</a></li>
       <li><a href="playground.html">Playground</a></li>
-      <li><a href="roadmap.html" class="active">Roadmap</a></li>
+      <li><a href="roadmap.html" class="db-nav__link--active">Roadmap</a></li>
       <li><a href="llms.txt">AI Docs</a></li>
       <li>
-        <a href="https://github.com/sliday/daub" target="_blank" rel="noopener">
+        <a href="https://github.com/sliday/daub" class="db-nav__github" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          <span>GitHub</span>
         </a>
       </li>
     </ul>
