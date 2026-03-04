@@ -654,13 +654,14 @@
           <button class="db-btn db-btn--ghost db-btn--sm pg-viewport-btn"
                   data-viewport="mobile" title="Mobile"><i data-lucide="smartphone" style="width:12px;height:12px;"></i></button>
         </div>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-share" title="Share" style="display:none;">
-          <i data-lucide="share-2" style="width:12px;height:12px;"></i> Share
+        <span id="pg-toolbar-sep" style="display:none;width:1px;height:16px;background:var(--db-sand);"></span>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-share" title="Share link" style="display:none;">
+          <i data-lucide="link" style="width:12px;height:12px;"></i>
         </button>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-download" title="Download HTML" style="display:none;">
           <i data-lucide="download" style="width:12px;height:12px;"></i>
         </button>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-html" title="Copy HTML"><i data-lucide="code" style="width:12px;height:12px;"></i> Copy HTML</button>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-html" title="Copy HTML"><i data-lucide="clipboard-copy" style="width:12px;height:12px;"></i></button>
       </div>
       <div class="pg-panel__body">
         <div class="pg-preview db-surface--raised" id="pg-preview"></div>
@@ -1217,7 +1218,7 @@ function renderChatHistory() {
     var bubble = addChatBubble(msg.role === 'user' ? 'user' : 'ai', msg.content, msg.image || null);
     // Rebuild result bubble UI for assistant messages with version data
     if (msg.role === 'assistant' && msg.versionIdx != null && specVersions[msg.versionIdx]) {
-      buildResultBubble(bubble, specVersions[msg.versionIdx].spec);
+      buildResultBubble(bubble, specVersions[msg.versionIdx].spec, msg.versionIdx);
     }
   });
   updateChatState();
@@ -1245,9 +1246,10 @@ function listComponentTypes(spec) {
   });
   return Object.keys(counts).sort().map(function(t) { return t + ' \u00d7' + counts[t]; });
 }
-function buildResultBubble(bubble, spec) {
-  var verIdx = specVersions.length - 1;
+function buildResultBubble(bubble, spec, verIdx) {
+  if (verIdx == null) verIdx = specVersions.length - 1;
   var ver = specVersions[verIdx];
+  var isActive = verIdx === specVersions.length - 1;
   var n = countComponents(spec);
   var types = listComponentTypes(spec);
   while (bubble.firstChild) bubble.removeChild(bubble.firstChild);
@@ -1281,53 +1283,19 @@ function buildResultBubble(bubble, spec) {
   });
   bubble.appendChild(detail);
 
-  // Action buttons
+  // Revert button
   var actions = document.createElement('div');
   actions.className = 'pg-result-actions';
 
   var revertBtn = document.createElement('button');
-  revertBtn.className = 'pg-revert-btn pg-result-active';
+  revertBtn.className = 'pg-revert-btn' + (isActive ? ' pg-result-active' : '');
   revertBtn.dataset.verIdx = verIdx;
-  revertBtn.textContent = 'Active';
+  revertBtn.textContent = isActive ? 'Active' : 'Revert';
   revertBtn.addEventListener('click', function(e) {
     e.stopPropagation();
     revertToVersion(parseInt(this.dataset.verIdx));
   });
   actions.appendChild(revertBtn);
-
-  var dlBtn = document.createElement('button');
-  dlBtn.textContent = 'Download';
-  dlBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    var s = specVersions[verIdx];
-    if (!s) return;
-    var tmpPreview = document.createElement('div');
-    tmpPreview.style.display = 'none';
-    document.body.appendChild(tmpPreview);
-    var tmpSpec = s.spec;
-    // Render to get HTML
-    var root = tmpSpec.elements[tmpSpec.root];
-    if (root) {
-      tmpPreview.appendChild(renderElement(tmpSpec.elements, tmpSpec.root, 0));
-      if (window.lucide) lucide.createIcons({ nodes: [tmpPreview] });
-    }
-    var html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n'
-      + '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
-      + '<title>DAUB UI Export</title>\n'
-      + '<link rel="stylesheet" href="https://daub.dev/daub.css">\n'
-      + '</head>\n<body>\n<div class="db-container" style="padding:24px;">\n'
-      + tmpPreview.innerHTML
-      + '\n</div>\n<script src="https://daub.dev/daub.js"><\/script>\n'
-      + '</body>\n</html>';
-    document.body.removeChild(tmpPreview);
-    var blob = new Blob([html], { type: 'text/html' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'daub-v' + (verIdx + 1) + '.html';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
-  actions.appendChild(dlBtn);
 
   bubble.appendChild(actions);
 
@@ -1579,11 +1547,13 @@ $copyHtml.addEventListener('click', function() {
 });
 
 // ---- Share / Viewport / Download visibility ----
+var $toolbarSep = document.getElementById('pg-toolbar-sep');
 function updatePreviewToolbar() {
   var vis = currentSpec ? '' : 'none';
   if ($share) $share.style.display = vis;
   if ($download) $download.style.display = vis;
   if ($viewportToggle) $viewportToggle.style.display = vis;
+  if ($toolbarSep) $toolbarSep.style.display = vis;
 }
 
 // ---- Share click handler ----
