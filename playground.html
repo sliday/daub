@@ -1342,24 +1342,28 @@ function buildResultBubble(bubble, spec, verIdx) {
   });
   bubble.appendChild(detail);
 
-  // Revert button
+  // Revert / Current button
   var actions = document.createElement('div');
   actions.className = 'pg-result-actions';
+  var revertSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> ';
+  var checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ';
+
+  // Demote all existing "Current" buttons to "Revert"
+  if (isActive) {
+    document.querySelectorAll('.pg-revert-btn.pg-result-active').forEach(function(b) {
+      b.classList.remove('pg-result-active');
+      b.innerHTML = revertSvg + 'Revert';
+    });
+  }
 
   var revertBtn = document.createElement('button');
   revertBtn.className = 'pg-revert-btn' + (isActive ? ' pg-result-active' : '');
   revertBtn.dataset.verIdx = verIdx;
-  if (isActive) {
-    revertBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Current';
-  } else {
-    revertBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> Revert';
-  }
-  if (!isActive) {
-    revertBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      revertToVersion(parseInt(this.dataset.verIdx));
-    });
-  }
+  revertBtn.innerHTML = isActive ? checkSvg + 'Current' : revertSvg + 'Revert';
+  revertBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    revertToVersion(parseInt(this.dataset.verIdx));
+  });
   actions.appendChild(revertBtn);
 
   bubble.appendChild(actions);
