@@ -216,6 +216,8 @@
     /* Collapsible panels */
     .pg-panel--collapsed {
       overflow: hidden;
+      min-width: 0;
+      max-width: 40px;
     }
     .pg-panel--collapsed .pg-panel__body,
     .pg-panel--collapsed .pg-panel__toolbar-title,
@@ -1826,12 +1828,21 @@ function updateGridForCollapse() {
   var grid = document.querySelector('.pg-grid');
   var p1 = document.getElementById('panel-prompt').classList.contains('pg-panel--collapsed');
   var p2 = document.getElementById('panel-json').classList.contains('pg-panel--collapsed');
-  var d1 = p1 ? '0px' : '6px';
-  var d2 = p2 ? '0px' : '6px';
-  var c1 = p1 ? '40px' : '1fr';
-  var c2 = p2 ? '40px' : '1fr';
-  var c3 = (p1 || p2) ? '3fr' : '2fr';
-  grid.style.gridTemplateColumns = c1 + ' ' + d1 + ' ' + c2 + ' ' + d2 + ' ' + c3;
+  if (p1 || p2) {
+    var d1 = p1 ? '0px' : '6px';
+    var d2 = p2 ? '0px' : '6px';
+    var c1 = p1 ? '40px' : '1fr';
+    var c2 = p2 ? '40px' : '1fr';
+    var c3 = '3fr';
+    grid.style.gridTemplateColumns = c1 + ' ' + d1 + ' ' + c2 + ' ' + d2 + ' ' + c3;
+  } else {
+    // Restore saved proportions or default
+    try {
+      var saved = localStorage.getItem('pg-grid-cols');
+      if (saved) { grid.style.gridTemplateColumns = saved; return; }
+    } catch(e) {}
+    grid.style.gridTemplateColumns = '1fr 6px 1fr 6px 2fr';
+  }
 }
 
 
@@ -3517,6 +3528,8 @@ var SYSTEM_PROMPT = (function() {
   });
 
   function startDrag(clientX, divider) {
+    // Don't allow resize while any panel is collapsed
+    if (document.querySelector('.pg-panel--collapsed')) return;
     startX = clientX;
     dividerIdx = divider.dataset.divider === '1' ? 0 : 1;
     divider.classList.add('pg-divider--dragging');
