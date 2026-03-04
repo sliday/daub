@@ -1360,6 +1360,7 @@ $newChat.addEventListener('click', function() {
   saveChatState();
   renderChatHistory();
   $json.value = '';
+  refreshJsonTree();
   updateRenderVisibility();
   while ($preview.firstChild) $preview.removeChild($preview.firstChild);
   $prompt.value = '';
