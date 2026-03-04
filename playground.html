@@ -233,13 +233,17 @@
     .pg-panel__body--mobile {
       display: flex;
       justify-content: center;
+      align-items: flex-start;
       padding: 16px 8px;
+      overflow: hidden;
       background: repeating-conic-gradient(
         color-mix(in srgb, var(--db-ink) 6%, transparent) 0% 25%,
         transparent 0% 50%) 50% / 16px 16px;
     }
     .pg-panel__body--mobile .pg-preview {
       width: 375px; min-width: 375px; max-width: 375px;
+      max-height: calc(100% - 32px);
+      overflow-y: auto;
       border-radius: 8px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.18);
     }
