@@ -2750,6 +2750,21 @@ textarea.db-field__input {
 .db-card--media .db-card__body { padding: var(--db-space-4) var(--db-space-5); }
 .db-card--media .db-card__footer { padding: 0 var(--db-space-5) var(--db-space-5); margin-top: 0; border-top: none; }
 
+/* Card — interactive variant (clickable) */
+.db-card--interactive {
+  cursor: pointer;
+  transition: box-shadow var(--db-transition), transform var(--db-transition);
+}
+.db-card--interactive:hover {
+  box-shadow: var(--db-shadow-3), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
+  transform: translateY(-2px);
+}
+.db-card--interactive:active {
+  transform: translateY(0);
+  box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
+  transition: none;
+}
+
 /* ------------------------------------------------------------
    7b. DATA DISPLAY — List Items
    ------------------------------------------------------------ */
@@ -2831,6 +2846,38 @@ textarea.db-field__input {
   background: rgba(var(--db-error-rgb),0.12);
   color: var(--db-error);
   border: 1px solid rgba(var(--db-error-rgb),0.2);
+}
+
+/* Badge colour variants */
+.db-badge--green {
+  background: rgba(var(--db-success-rgb),0.15);
+  color: var(--db-success);
+  border: 1px solid rgba(var(--db-success-rgb),0.25);
+}
+.db-badge--blue {
+  background: hsla(210, 60%, 50%, 0.15);
+  color: hsl(210, 60%, 40%);
+  border: 1px solid hsla(210, 60%, 50%, 0.25);
+}
+.db-badge--purple {
+  background: hsla(270, 50%, 55%, 0.15);
+  color: hsl(270, 50%, 45%);
+  border: 1px solid hsla(270, 50%, 55%, 0.25);
+}
+.db-badge--amber {
+  background: rgba(var(--db-warning-rgb),0.15);
+  color: var(--db-warning);
+  border: 1px solid rgba(var(--db-warning-rgb),0.25);
+}
+.db-badge--red {
+  background: rgba(var(--db-error-rgb),0.12);
+  color: var(--db-error);
+  border: 1px solid rgba(var(--db-error-rgb),0.2);
+}
+.db-badge--gray {
+  background: rgba(var(--db-shadow-rgb),0.08);
+  color: var(--db-warm-gray);
+  border: 1px solid rgba(var(--db-shadow-rgb),0.12);
 }
 
 /* Chip / Tag — arbitrary color via HSL custom props */
@@ -3344,6 +3391,9 @@ textarea.db-field__input {
   .db-grid--2, .db-grid--3, .db-grid--4,
   .db-grid--5, .db-grid--6 { grid-template-columns: 1fr; }
 }
+
+/* Empty state spans full grid */
+.db-grid > .db-empty { grid-column: 1 / -1; }
 
 /* Responsive visibility utilities */
 @media (max-width: 640px)  { .db-hide-mobile  { display: none !important; } }

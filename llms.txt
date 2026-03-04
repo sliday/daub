@@ -24,6 +24,18 @@ Alternative CDNs (npm package: daub-ui):
 <script src="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js"></script>
 ```
 
+Classless (zero-class drop-in styling for plain HTML):
+```html
+<link rel="stylesheet" href="https://daub.dev/daub-classless.css">
+```
+
+Progressive (classless defaults + class-based components):
+```html
+<link rel="stylesheet" href="https://daub.dev/daub-classless.css">
+<link rel="stylesheet" href="https://daub.dev/daub.css">
+<script src="https://daub.dev/daub.js"></script>
+```
+
 Fonts: System font stacks by default. Optional Google Fonts:
 ```html
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300..900&family=Source+Serif+4:wght@300..900&family=Cabin:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -86,7 +98,7 @@ Required HTML nesting for overlay and complex components. Use these as a startin
 
 | Component | Skeleton | JS API |
 |-----------|----------|--------|
-| Modal | `db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer` | `DAUB.openModal('id')` / `closeModal('id')` |
+| Modal | `db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer` | `DAUB.openModal('id')` / `closeModal('id')`. Dynamic content: `DAUB.openModal('id', { title: 'New Title', body: '<p>Content</p>', footer: '<button class="db-btn db-btn--primary">OK</button>' })` |
 | Alert Dialog | `db-alert-dialog#id > __overlay + __panel > __title + __desc + __actions` | `DAUB.openAlertDialog('id')` |
 | Sheet | `db-sheet.--right#id > __overlay + __panel > __header + __body` | `DAUB.openSheet('id')` |
 | Drawer | `db-drawer#id > __overlay + __panel > __handle + __body` | `DAUB.openDrawer('id')` |
@@ -310,6 +322,7 @@ Media variant: `db-card--media` removes padding for edge-to-edge images.
   </div>
 </div>
 ```
+Interactive: `db-card--interactive` adds cursor pointer + hover lift.
 
 ### 21. Modal — `.db-modal`
 ```html
@@ -397,6 +410,9 @@ Variants: `--info`, `--warning`, `--error`, `--success`.
 <span class="db-badge db-badge--new">New</span>
 ```
 Variants: `--new`, `--updated`, `--warning`, `--error`.
+Colour variants: `db-badge--green`, `db-badge--blue`, `db-badge--purple`, `db-badge--amber`, `db-badge--red`, `db-badge--gray`.
+
+> Badges = static status indicators. Chips = interactive/removable/filterable tags.
 
 ### 28. Avatar — `.db-avatar`
 ```html
@@ -833,6 +849,7 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 ### 63. Layout — `.db-container`, `.db-flex`, `.db-grid`
 Container: `db-container` (960px), `db-container--wide` (1200px), `db-container--narrow` (640px).
 Grid: `db-grid--2` through `db-grid--6`. Auto-responsive: 4-6 cols → 2 cols at tablet, all → 1 col at mobile.
+Empty state: `.db-empty` inside `.db-grid` auto-spans all columns.
 Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`.
 ```html
 <div class="db-container db-container--wide">
@@ -843,6 +860,17 @@ Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-table
   <p class="db-show-mobile">Only visible on mobile</p>
 </div>
 ```
+For grid layouts with 3+ columns, use `db-container--wide` (1200px) to prevent cramped cards.
+
+## Responsive Breakpoints
+
+| Breakpoint | Width | Grid behavior |
+|------------|-------|---------------|
+| Mobile | `< 640px` | All grids collapse to 1 column |
+| Tablet | `640px – 1023px` | 4+ column grids collapse to 2 columns |
+| Desktop | `≥ 1024px` | All grid columns as specified |
+
+Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`.
 
 ### 64. Theme Switcher — `.db-theme-switcher`
 Toggle button + categorized popover with 20 families + scheme row.
@@ -939,6 +967,8 @@ Toggle group: wrap chips in a container with `data-db-chip-toggle` — clicks to
   <span class="db-chip db-chip--amber db-chip--active">Marketing</span>
 </div>
 ```
+Toggle mode: wrap chips in `[data-db-chip-toggle]`. Add `data-db-chip-mode="single"` for radio-like behavior.
+Fires `db:chip:change` CustomEvent with `{ detail: { chip, value, active } }` — call `preventDefault()` to cancel.
 
 ## JS API Reference
 
@@ -977,6 +1007,16 @@ DAUB.resetAccent()             // Restore theme default accent
 DAUB.getAccent()               // Get current accent color
 DAUB.getColor(token)           // Get computed CSS variable value (e.g. 'terracotta' → --db-terracotta)
 ```
+
+## Component Init Requirements
+
+**Needs `DAUB.init()` (JS-powered):**
+Switch, Tabs, Modal, Stepper, Tooltip, Slider, Checkbox (custom), Radio (custom), Accordion, Collapsible, Alert Dialog, Sheet, Drawer, Popover, Context Menu, Dropdown, Toggle Group, Custom Select, Command Palette, Menubar, Calendar, Carousel, OTP, Resizable, Chip Close, Chip Toggle, Navbar, Sidebar Toggle, Theme Switcher.
+
+**Pure CSS (no JS needed):**
+Button, Badge, Card, Input, Textarea, Label, Kbd, Spinner, Separator, Progress, Avatar, Alert, Surface, Skeleton, Breadcrumb, Pagination, Grid, Container, Typography (h1–h6 classes), Prose.
+
+After dynamically adding HTML, call `DAUB.init()` or `DAUB.init(parentElement)` to bind new elements.
 
 ## CSS Custom Properties
 

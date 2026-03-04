@@ -51,9 +51,9 @@
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "license": "https://opensource.org/licenses/MIT",
-    "version": "2.9.1",
+    "version": "3.0.0",
     "dateCreated": "2026-02-01",
-    "dateModified": "2026-03-02",
+    "dateModified": "2026-03-04",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "keywords": ["CSS components", "UI kit", "design system", "neo-skeuomorphic", "themes", "dark mode", "accessible", "AI-friendly", "llms.txt", "drop-in CSS", "no build step"],
@@ -80,7 +80,7 @@
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=2.9.2">
+  <link rel="stylesheet" href="daub.css?v=3.0.0">
 
   <style>
     /* Prevent horizontal overflow on mobile */
@@ -745,6 +745,7 @@
       <li><a href="#components-index" class="db-nav__link--active">Components</a></li>
       <li><a href="demo.html">Layouts</a></li>
       <li><a href="playground.html">Playground</a></li>
+      <li><a href="roadmap.html">Roadmap</a></li>
       <li><a href="llms.txt">AI Docs</a></li>
       <li>
         <a href="https://github.com/sliday/daub" class="db-nav__github" target="_blank" rel="noopener">
@@ -758,8 +759,8 @@
   <!-- Hero -->
   <section class="db-hero">
     <a class="db-hero__announce" href="https://github.com/sliday/daub" target="_blank" rel="noopener">
-      <span class="db-badge db-badge--new">v2.9.1</span>
-      Updated March 2026 — Star on GitHub
+      <span class="db-badge db-badge--new">v3.0.0</span>
+      Classless CSS + Roadmap — Star on GitHub
       <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
     </a>
     <h1 class="db-hero__headline">Design you can almost touch.</h1>
@@ -932,6 +933,30 @@
           </div>
         </div>
         <p class="db-card__desc">Claude Code skill for instant DAUB development — components, themes, and patterns at your fingertips.</p>
+      </div>
+      <div class="db-card">
+        <div class="db-card__header">
+          <div class="db-avatar db-avatar--sm">
+            <i data-lucide="file-minus" style="width:16px;height:16px;"></i>
+          </div>
+          <div>
+            <div class="db-card__title">llms-compact.txt</div>
+            <div class="db-caption">Token-Efficient</div>
+          </div>
+        </div>
+        <p class="db-card__desc">Condensed <a href="https://daub.dev/llms-compact.txt" style="color:var(--db-terracotta);">llms-compact.txt</a> for token-constrained AI contexts.</p>
+      </div>
+      <div class="db-card">
+        <div class="db-card__header">
+          <div class="db-avatar db-avatar--sm">
+            <i data-lucide="paintbrush" style="width:16px;height:16px;"></i>
+          </div>
+          <div>
+            <div class="db-card__title">Classless CSS</div>
+            <div class="db-caption">Zero Classes</div>
+          </div>
+        </div>
+        <p class="db-card__desc">Drop in <a href="https://daub.dev/daub-classless.css" style="color:var(--db-terracotta);">daub-classless.css</a> — plain HTML looks good. No classes needed.</p>
       </div>
     </div>
   </section>
@@ -2489,7 +2514,7 @@
   </div>
 
   <!-- JS -->
-  <script src="daub.js?v=2.9.2"></script>
+  <script src="daub.js?v=3.0.0"></script>
   <script>
     // Initialize Lucide icons
     lucide.createIcons();

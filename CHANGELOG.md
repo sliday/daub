@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.0
+
+**Classless CSS layer, ROADMAP, documentation expansion.**
+
+- Feature: `daub-classless.css` — plain HTML looks good with zero classes. Drop-in classless layer for semantic markup.
+- Feature: `ROADMAP.md` — public roadmap documenting the intent-to-interface vision, architecture layers, and near/mid-term plans.
+- Feature: `llms-compact.txt` — condensed AI documentation for token-constrained contexts.
+- Updated: `llms.txt` — expanded with classless layer docs, chip toggle semantics, badge variants, grid breakpoints.
+- Updated: `daub.css` — classless CSS foundation styles, additional utility refinements.
+- Updated: `daub.js` — initialization improvements for classless compatibility.
+
 ## v2.9.2
 
 **Playground streaming & rendering fixes.**

@@ -635,10 +635,34 @@
 
   var _lastModalTrigger = null;
 
-  function openModal(id, trigger) {
+  function openModal(id, triggerOrOpts, opts) {
+    var trigger, options;
+    if (triggerOrOpts && typeof triggerOrOpts === 'object' && !(triggerOrOpts instanceof HTMLElement)) {
+      options = triggerOrOpts;
+      trigger = null;
+    } else {
+      trigger = triggerOrOpts || null;
+      options = opts || null;
+    }
     var overlay = typeof id === 'string' ? document.getElementById(id) : id;
     if (!overlay) return;
-    _lastModalTrigger = trigger || null;
+
+    if (options) {
+      if (options.title != null) {
+        var titleEl = overlay.querySelector('.db-modal__title');
+        if (titleEl) titleEl.textContent = options.title;
+      }
+      if (options.body != null) {
+        var bodyEl = overlay.querySelector('.db-modal__body');
+        if (bodyEl) bodyEl.innerHTML = options.body;
+      }
+      if (options.footer != null) {
+        var footerEl = overlay.querySelector('.db-modal__footer');
+        if (footerEl) footerEl.innerHTML = options.footer;
+      }
+    }
+
+    _lastModalTrigger = trigger;
     overlay.classList.add('db-modal--open');
     overlay.setAttribute('aria-hidden', 'false');
 
@@ -1680,6 +1704,23 @@
       container.addEventListener('click', function(e) {
         var chip = e.target.closest('.db-chip');
         if (!chip || e.target.closest('.db-chip__close')) return;
+        var mode = container.getAttribute('data-db-chip-mode');
+        var willBeActive = !chip.classList.contains('db-chip--active');
+        var evt = new CustomEvent('db:chip:change', {
+          bubbles: true,
+          cancelable: true,
+          detail: {
+            chip: chip,
+            value: chip.textContent.trim(),
+            active: willBeActive
+          }
+        });
+        if (!chip.dispatchEvent(evt)) return;
+        if (mode === 'single') {
+          container.querySelectorAll('.db-chip--active').forEach(function(c) {
+            if (c !== chip) c.classList.remove('db-chip--active');
+          });
+        }
         chip.classList.toggle('db-chip--active');
       });
     });

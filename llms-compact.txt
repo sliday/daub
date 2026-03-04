@@ -1,0 +1,153 @@
+# DAUB UI — Compact Reference
+
+> Full docs: https://daub.dev/llms.txt
+> CSS: https://daub.dev/daub.css | JS: https://daub.dev/daub.js
+> Classless: https://daub.dev/daub-classless.css
+> Prefix: `db-` (classes), `--db-` (CSS vars)
+
+## Quick Start
+```html
+<link rel="stylesheet" href="https://daub.dev/daub.css">
+<script src="https://daub.dev/daub.js"></script>
+```
+
+## Top 15 Components
+
+### Button — `.db-btn`
+`db-btn--primary`, `db-btn--secondary`, `db-btn--ghost`, `db-btn--sm`, `db-btn--lg`, `db-btn--icon`, `db-btn--loading`
+```html
+<button class="db-btn db-btn--primary">Save</button>
+<button class="db-btn db-btn--secondary">Cancel</button>
+```
+
+### Card — `.db-card`
+Modifiers: `db-card--media`, `db-card--clip`, `db-card--interactive`
+```html
+<div class="db-card">
+  <div class="db-card__header"><h3 class="db-card__title">Title</h3></div>
+  <div class="db-card__footer"><button class="db-btn db-btn--primary db-btn--sm">Action</button></div>
+</div>
+```
+
+### Input — `.db-input`
+Sizes: `db-input--sm`, `db-input--lg`. Error: `db-input--error`.
+```html
+<input class="db-input" type="text" placeholder="Type here">
+```
+
+### Field — `.db-field`
+```html
+<div class="db-field">
+  <label class="db-field__label">Email</label>
+  <input class="db-field__input" type="email">
+  <span class="db-field__helper">Helper text</span>
+</div>
+```
+
+### Tabs — `.db-tabs`
+```html
+<div class="db-tabs">
+  <div class="db-tabs__list" role="tablist">
+    <button class="db-tabs__tab" aria-selected="true">Tab 1</button>
+    <button class="db-tabs__tab">Tab 2</button>
+  </div>
+  <div class="db-tabs__panel">Content 1</div>
+  <div class="db-tabs__panel" hidden>Content 2</div>
+</div>
+```
+
+### Modal — `.db-modal-overlay`
+```html
+<div class="db-modal-overlay" id="my-modal" aria-hidden="true">
+  <div class="db-modal">
+    <div class="db-modal__header"><h3 class="db-modal__title">Title</h3><button class="db-modal__close">&times;</button></div>
+    <div class="db-modal__body">Content</div>
+    <div class="db-modal__footer"><button class="db-btn db-btn--primary">OK</button></div>
+  </div>
+</div>
+```
+JS: `DAUB.openModal('my-modal')`, `DAUB.closeModal('my-modal')`
+Dynamic: `DAUB.openModal('my-modal', { title: '...', body: '...', footer: '...' })`
+
+### Badge — `.db-badge`
+Semantic: `db-badge--new`, `db-badge--updated`, `db-badge--warning`, `db-badge--error`
+Colors: `db-badge--green`, `db-badge--blue`, `db-badge--purple`, `db-badge--amber`, `db-badge--red`, `db-badge--gray`
+```html
+<span class="db-badge db-badge--new">New</span>
+```
+
+### Chip — `.db-chip`
+Colors via `--db-chip-h`, `--db-chip-s`, `--db-chip-l`. Presets: `db-chip--green`, `db-chip--blue`, etc.
+Toggle: wrap in `[data-db-chip-toggle]`. Single-select: add `data-db-chip-mode="single"`.
+```html
+<span class="db-chip db-chip--blue">Tag</span>
+```
+
+### Grid — `.db-grid`
+`db-grid--2` to `db-grid--6`. Responsive: collapses at 640px (mobile) and 1024px (tablet).
+```html
+<div class="db-grid db-grid--3">
+  <div class="db-card">...</div>
+  <div class="db-card">...</div>
+  <div class="db-card">...</div>
+</div>
+```
+Empty state: `.db-empty` inside `.db-grid` auto-spans all columns.
+
+### Container — `.db-container`
+`db-container--wide` (1200px), `db-container--narrow` (640px). Default: 960px.
+For grids with 3+ columns, use `db-container--wide`.
+
+### Alert — `.db-alert`
+`db-alert--success`, `db-alert--warning`, `db-alert--error`
+```html
+<div class="db-alert db-alert--success"><strong>Done!</strong> Saved.</div>
+```
+
+### Toast — JS only
+```js
+DAUB.toast('Saved!', { type: 'success', duration: 3000 });
+```
+
+### Dropdown — `.db-dropdown`
+```html
+<div class="db-dropdown">
+  <button class="db-dropdown__trigger db-btn db-btn--secondary">Menu</button>
+  <div class="db-dropdown__content">
+    <button class="db-dropdown__item">Edit</button>
+    <button class="db-dropdown__item">Delete</button>
+  </div>
+</div>
+```
+
+### Accordion — `.db-accordion`
+```html
+<div class="db-accordion">
+  <div class="db-accordion__item">
+    <button class="db-accordion__trigger">Section 1</button>
+    <div class="db-accordion__content"><p>Content</p></div>
+  </div>
+</div>
+```
+
+### Switch — `.db-switch`
+```html
+<div class="db-switch" role="switch" tabindex="0" aria-checked="false">
+  <span class="db-switch__track"><span class="db-switch__thumb"></span></span>
+  Dark mode
+</div>
+```
+
+## Themes
+
+20 families × light/dark = 40 variants. Set: `<html data-theme="dark">`.
+JS: `DAUB.setFamily('dracula')`, `DAUB.setScheme('dark')`, `DAUB.cycleTheme()`
+
+## JS Init
+
+Call `DAUB.init()` on page load (auto). After dynamic HTML: `DAUB.init(parent)`.
+Pure CSS components (button, card, badge, input, grid) need no JS.
+
+## Breakpoints
+
+Mobile: `<640px` | Tablet: `640–1023px` | Desktop: `≥1024px`

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAUB — Roadmap</title>
+  <meta name="description" content="The DAUB roadmap: from considered CSS components to intent-to-interface — software that dissolves between thought and solution.">
+  <meta name="keywords" content="DAUB roadmap, intent-to-interface, AI UI, generative interface, CSS components, future of UI">
+  <meta name="theme-color" content="#C67B5C">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://daub.dev/roadmap.html">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM documentation">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DAUB — Roadmap">
+  <meta property="og:description" content="From CSS components to intent-to-interface. Software that dissolves between thought and solution.">
+  <meta property="og:url" content="https://daub.dev/roadmap.html">
+  <meta property="og:site_name" content="DAUB UI">
+  <meta property="og:image" content="https://daub.dev/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="DAUB Roadmap — Intent to Interface">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DAUB — Roadmap">
+  <meta name="twitter:description" content="From CSS components to intent-to-interface. Software that dissolves between thought and solution.">
+  <meta name="twitter:image" content="https://daub.dev/og-image.png">
+  <meta name="twitter:site" content="@staskulesh">
+
+  <!-- FOUC prevention -->
+  <script>
+    (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t);var s=localStorage.getItem('db-scheme');if(s)document.documentElement.setAttribute('data-scheme',s);var a=localStorage.getItem('db-accent');if(a)document.documentElement.style.setProperty('--db-terracotta',a)}catch(e){}})();
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
+
+  <!-- DAUB -->
+  <link rel="stylesheet" href="daub.css?v=3.0.0">
+
+  <style>
+    body { margin: 0; overflow-x: hidden; }
+
+    /* Nav */
+    .db-nav { display: flex; align-items: center; gap: 16px; padding: 12px 24px; border-bottom: 1px solid var(--db-color-border); background: var(--db-color-surface); position: sticky; top: 0; z-index: 100; }
+    .db-nav__brand { font-family: var(--db-font-heading); font-weight: 700; font-size: 1.15rem; color: var(--db-color-text); text-decoration: none; }
+    .db-nav__links { display: flex; gap: 8px; margin-left: auto; list-style: none; padding: 0; margin-top: 0; margin-bottom: 0; flex-wrap: wrap; }
+    .db-nav__links a { color: var(--db-color-text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 8px; border-radius: 6px; transition: color 0.15s; }
+    .db-nav__links a:hover { color: var(--db-color-text); }
+    .db-nav__links a.active { color: var(--db-terracotta); font-weight: 600; }
+
+    /* Hero */
+    .rm-hero { text-align: center; padding: 80px 24px 48px; max-width: 720px; margin: 0 auto; }
+    .rm-hero h1 { font-family: var(--db-font-heading); font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.15; margin: 0 0 16px; color: var(--db-color-text); }
+    .rm-hero h1 em { font-style: normal; color: var(--db-terracotta); }
+    .rm-hero p { font-size: 1.1rem; line-height: 1.65; color: var(--db-color-text-secondary); margin: 0 0 8px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+    /* Architecture stack */
+    .rm-stack { max-width: 800px; margin: 0 auto; padding: 0 24px 64px; }
+    .rm-stack h2 { font-family: var(--db-font-heading); text-align: center; margin: 0 0 32px; font-size: 1.6rem; }
+    .rm-layer { display: grid; grid-template-columns: 100px 1fr auto; align-items: center; gap: 16px; padding: 20px 24px; border-left: 3px solid var(--db-color-border); margin-left: 48px; position: relative; transition: border-color 0.2s; }
+    .rm-layer:hover { border-left-color: var(--db-terracotta); }
+    .rm-layer::before { content: attr(data-num); position: absolute; left: -60px; width: 36px; height: 36px; border-radius: 50%; background: var(--db-color-surface); border: 2px solid var(--db-color-border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--db-color-text-secondary); font-family: var(--db-font-ui); }
+    .rm-layer[data-status="done"]::before { background: var(--db-terracotta); color: var(--db-white, #fff); border-color: var(--db-terracotta); }
+    .rm-layer[data-status="wip"]::before { border-color: var(--db-terracotta); color: var(--db-terracotta); }
+    .rm-layer__name { font-family: var(--db-font-heading); font-weight: 600; font-size: 1rem; color: var(--db-color-text); }
+    .rm-layer__desc { font-size: 0.9rem; color: var(--db-color-text-secondary); line-height: 1.5; }
+    .rm-layer__status { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+    .rm-layer__status--done { background: color-mix(in srgb, var(--db-color-success) 15%, transparent); color: var(--db-color-success); }
+    .rm-layer__status--wip { background: color-mix(in srgb, var(--db-terracotta) 15%, transparent); color: var(--db-terracotta); }
+    .rm-layer__status--planned { background: color-mix(in srgb, var(--db-color-text-muted) 15%, transparent); color: var(--db-color-text-muted); }
+    .rm-layer__status--future { background: color-mix(in srgb, var(--db-color-text-muted) 10%, transparent); color: var(--db-color-text-muted); font-style: italic; }
+
+    /* Timeline */
+    .rm-timeline { max-width: 800px; margin: 0 auto; padding: 0 24px 64px; }
+    .rm-timeline h2 { font-family: var(--db-font-heading); text-align: center; margin: 0 0 12px; font-size: 1.6rem; }
+    .rm-timeline > p { text-align: center; color: var(--db-color-text-secondary); margin: 0 0 40px; font-size: 0.95rem; }
+    .rm-version { display: grid; grid-template-columns: 80px 1fr; gap: 20px; margin-bottom: 32px; }
+    .rm-version__tag { font-family: var(--db-font-heading); font-weight: 700; font-size: 1.1rem; color: var(--db-terracotta); padding-top: 4px; text-align: right; }
+    .rm-version__tag--future { color: var(--db-color-text-muted); }
+    .rm-version__body { padding-left: 20px; border-left: 2px solid var(--db-color-border); }
+    .rm-version__title { font-family: var(--db-font-heading); font-weight: 600; font-size: 1.05rem; margin: 0 0 6px; color: var(--db-color-text); }
+    .rm-version__desc { font-size: 0.9rem; color: var(--db-color-text-secondary); line-height: 1.6; margin: 0; }
+
+    /* Vision */
+    .rm-vision { max-width: 800px; margin: 0 auto; padding: 0 24px 64px; }
+    .rm-vision h2 { font-family: var(--db-font-heading); text-align: center; margin: 0 0 12px; font-size: 1.6rem; }
+    .rm-vision > p { text-align: center; color: var(--db-color-text-secondary); margin: 0 0 40px; font-size: 0.95rem; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .rm-examples { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .rm-example { padding: 20px; border-radius: 12px; background: var(--db-color-surface); border: 1px solid var(--db-color-border); }
+    .rm-example__prompt { font-family: var(--db-font-heading); font-weight: 600; font-size: 1rem; margin: 0 0 8px; color: var(--db-terracotta); }
+    .rm-example__prompt::before { content: '"'; }
+    .rm-example__prompt::after { content: '"'; }
+    .rm-example__result { font-size: 0.875rem; color: var(--db-color-text-secondary); line-height: 1.55; margin: 0; }
+
+    /* North star */
+    .rm-north { text-align: center; padding: 64px 24px; max-width: 640px; margin: 0 auto; }
+    .rm-north__line { font-family: var(--db-font-heading); font-size: clamp(1.3rem, 3vw, 1.8rem); line-height: 1.4; color: var(--db-color-text); margin: 0 0 12px; font-weight: 600; }
+    .rm-north__sub { font-size: 0.95rem; color: var(--db-color-text-muted); margin: 0; }
+
+    /* Daub Place */
+    .rm-place { max-width: 800px; margin: 0 auto; padding: 0 24px 80px; }
+    .rm-place h2 { font-family: var(--db-font-heading); text-align: center; margin: 0 0 12px; font-size: 1.6rem; }
+    .rm-place > p { text-align: center; color: var(--db-color-text-secondary); margin: 0 0 40px; font-size: 0.95rem; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .rm-place__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .rm-place__item { text-align: center; padding: 28px 20px; border-radius: 12px; background: var(--db-color-surface); border: 1px solid var(--db-color-border); }
+    .rm-place__icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+    .rm-place__label { font-family: var(--db-font-heading); font-weight: 600; font-size: 0.95rem; margin: 0 0 6px; color: var(--db-color-text); }
+    .rm-place__desc { font-size: 0.8rem; color: var(--db-color-text-muted); margin: 0; line-height: 1.5; }
+
+    /* Footer */
+    .rm-footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--db-color-border); color: var(--db-color-text-muted); font-size: 0.85rem; }
+    .rm-footer a { color: var(--db-terracotta); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .rm-layer { grid-template-columns: 1fr; margin-left: 36px; padding: 16px; }
+      .rm-layer::before { left: -48px; width: 30px; height: 30px; font-size: 0.7rem; }
+      .rm-version { grid-template-columns: 1fr; }
+      .rm-version__tag { text-align: left; }
+      .rm-nav__links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Nav -->
+  <nav class="db-nav">
+    <a class="db-nav__brand" href="/">DAUB</a>
+    <ul class="db-nav__links">
+      <li><a href="/">Components</a></li>
+      <li><a href="demo.html">Demos</a></li>
+      <li><a href="playground.html">Playground</a></li>
+      <li><a href="roadmap.html" class="active">Roadmap</a></li>
+      <li><a href="llms.txt">AI Docs</a></li>
+      <li>
+        <a href="https://github.com/sliday/daub" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="rm-hero">
+    <h1>Software is the obstacle.<br>Let's <em>dissolve</em> it.</h1>
+    <p>The future isn't better apps. It's no apps. You describe what you need, the computer builds it. DAUB is the rendering layer for that future.</p>
+  </section>
+
+  <!-- Architecture Stack -->
+  <section class="rm-stack">
+    <h2>Architecture Layers</h2>
+
+    <div class="rm-layer" data-num="1" data-status="done">
+      <span class="rm-layer__name">daub-classless.css</span>
+      <span class="rm-layer__desc">Plain HTML looks good. Zero classes. Drop in one stylesheet and semantic markup gets considered aesthetics.</span>
+      <span class="rm-layer__status rm-layer__status--done">Shipped</span>
+    </div>
+
+    <div class="rm-layer" data-num="2" data-status="done">
+      <span class="rm-layer__name">daub.css + daub.js</span>
+      <span class="rm-layer__desc">76 class-based components, 20 theme families with 40 variants. Tactile surfaces, letterpress type, real textures.</span>
+      <span class="rm-layer__status rm-layer__status--done">Shipped</span>
+    </div>
+
+    <div class="rm-layer" data-num="3" data-status="done">
+      <span class="rm-layer__name">JSON-Render Spec</span>
+      <span class="rm-layer__desc">AI outputs JSON, DAUB renders live UI. Working in the Playground — prompt to interface in seconds.</span>
+      <span class="rm-layer__status rm-layer__status--done">Shipped</span>
+    </div>
+
+    <div class="rm-layer" data-num="4" data-status="wip">
+      <span class="rm-layer__name">React / JSX Wrappers</span>
+      <span class="rm-layer__desc">Typed components wrapping DAUB classes. &lt;DaubCard&gt;, &lt;DaubButton&gt; — full TypeScript, IDE autocomplete.</span>
+      <span class="rm-layer__status rm-layer__status--planned">Planned</span>
+    </div>
+
+    <div class="rm-layer" data-num="5" data-status="">
+      <span class="rm-layer__name">Intent Engine</span>
+      <span class="rm-layer__desc">Natural language in, UI spec out, live render. "Track my expenses" becomes a dashboard with charts and input forms.</span>
+      <span class="rm-layer__status rm-layer__status--future">Future</span>
+    </div>
+
+    <div class="rm-layer" data-num="6" data-status="">
+      <span class="rm-layer__name">Agent Runtime</span>
+      <span class="rm-layer__desc">Multi-agent system orchestrates APIs + UI. Agents fetch data, decide layout, handle actions. UI is the surface.</span>
+      <span class="rm-layer__status rm-layer__status--future">Future</span>
+    </div>
+
+    <div class="rm-layer" data-num="7" data-status="">
+      <span class="rm-layer__name">Daub Place</span>
+      <span class="rm-layer__desc">The endgame. You think it, it happens. Minimal interaction on device — ambient intelligence that anticipates and builds what you need before you finish asking.</span>
+      <span class="rm-layer__status rm-layer__status--future">Vision</span>
+    </div>
+  </section>
+
+  <!-- Version Timeline -->
+  <section class="rm-timeline">
+    <h2>Release Timeline</h2>
+    <p>Where we've been and where we're going.</p>
+
+    <div class="rm-version">
+      <div class="rm-version__tag">v3.0</div>
+      <div class="rm-version__body">
+        <div class="rm-version__title">Classless Foundation</div>
+        <p class="rm-version__desc">Classless CSS layer — plain HTML looks good with zero classes. ROADMAP published. Expanded AI docs with llms-compact.txt for token-efficient contexts.</p>
+      </div>
+    </div>
+
+    <div class="rm-version">
+      <div class="rm-version__tag">v3.1</div>
+      <div class="rm-version__body">
+        <div class="rm-version__title">React Wrappers</div>
+        <p class="rm-version__desc">Typed JSX components wrapping DAUB's CSS classes. Full TypeScript support, proper prop validation, IDE autocomplete. Framework-native without losing the zero-build soul.</p>
+      </div>
+    </div>
+
+    <div class="rm-version">
+      <div class="rm-version__tag">v3.2</div>
+      <div class="rm-version__body">
+        <div class="rm-version__title">Streaming Render</div>
+        <p class="rm-version__desc">Progressive UI construction during LLM streaming. Partial JSON arrives, partial UI appears. Components materialize as the model thinks — no waiting for the full response.</p>
+      </div>
+    </div>
+
+    <div class="rm-version">
+      <div class="rm-version__tag">v3.3</div>
+      <div class="rm-version__body">
+        <div class="rm-version__title">Layout Intelligence</div>
+        <p class="rm-version__desc">AI picks the right layout based on data shape. List of restaurants? Grid of cards. Single article? Reader view. Comparison? Side-by-side. The data decides the form.</p>
+      </div>
+    </div>
+
+    <div class="rm-version">
+      <div class="rm-version__tag">v3.4</div>
+      <div class="rm-version__body">
+        <div class="rm-version__title">Action Bindings</div>
+        <p class="rm-version__desc">Components that do things. Buttons that POST. Forms that submit. Cards that link to real endpoints. Generated UI isn't decoration — it's functional.</p>
+      </div>
+    </div>
+
+    <div class="rm-version">
+      <div class="rm-version__tag rm-version__tag--future">v4.0</div>
+      <div class="rm-version__body">
+        <div class="rm-version__title">Intent Engine</div>
+        <p class="rm-version__desc">"I need to track my expenses" becomes a spending dashboard. Context-aware generation — location, time, history inform the UI. Adaptive complexity that reveals depth as you engage.</p>
+      </div>
+    </div>
+
+    <div class="rm-version">
+      <div class="rm-version__tag rm-version__tag--future">v5.0</div>
+      <div class="rm-version__body">
+        <div class="rm-version__title">Agent Runtime + Daub Place</div>
+        <p class="rm-version__desc">Multi-agent orchestration: one fetches data, another decides layout, a third handles actions. The device becomes the place where thought meets interface — ambient, anticipatory, always ready.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision Examples -->
+  <section class="rm-vision">
+    <h2>Intent to Interface</h2>
+    <p>You say it. The system builds it. No apps, no navigation, no learning curve.</p>
+
+    <div class="rm-examples">
+      <div class="rm-example">
+        <div class="rm-example__prompt">Pizza</div>
+        <p class="rm-example__result">Cards of nearby places with ratings, ETA, prices, and an order button. Location-aware, time-aware.</p>
+      </div>
+      <div class="rm-example">
+        <div class="rm-example__prompt">Track my spending</div>
+        <p class="rm-example__result">Categorized expense dashboard with charts, input form, and monthly trends. Connected to your bank.</p>
+      </div>
+      <div class="rm-example">
+        <div class="rm-example__prompt">Plan a trip to Tokyo</div>
+        <p class="rm-example__result">Itinerary builder with maps, hotels, flights, day-by-day schedule. Drag to reorder, tap to book.</p>
+      </div>
+      <div class="rm-example">
+        <div class="rm-example__prompt">Help me write a cover letter</div>
+        <p class="rm-example__result">Editor with AI suggestions, tone controls, company research sidebar, and export to PDF.</p>
+      </div>
+      <div class="rm-example">
+        <div class="rm-example__prompt">What should I cook tonight?</div>
+        <p class="rm-example__result">Recipes based on what's in your fridge, dietary preferences, and prep time. Tap to start step-by-step mode.</p>
+      </div>
+      <div class="rm-example">
+        <div class="rm-example__prompt">Show me how my garden grows</div>
+        <p class="rm-example__result">Plant timeline, watering schedule, sunlight tracker, photo journal. Seasonal advice and harvest predictions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Daub Place -->
+  <section class="rm-place">
+    <h2>Daub Place</h2>
+    <p>The endgame isn't an app. It's a place where thinking and doing are the same thing. Your device becomes an extension of intent — ambient, anticipatory, considered.</p>
+
+    <div class="rm-place__grid">
+      <div class="rm-place__item">
+        <span class="rm-place__icon"><i data-lucide="brain" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
+        <div class="rm-place__label">Think It</div>
+        <p class="rm-place__desc">Express intent naturally — voice, text, gesture. No app switching, no menus, no friction.</p>
+      </div>
+      <div class="rm-place__item">
+        <span class="rm-place__icon"><i data-lucide="sparkles" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
+        <div class="rm-place__label">Shape It</div>
+        <p class="rm-place__desc">AI parses intent, fetches data, chooses layout. UX laws baked in — Fitts, Hick, Miller. No broken UI.</p>
+      </div>
+      <div class="rm-place__item">
+        <span class="rm-place__icon"><i data-lucide="layout" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
+        <div class="rm-place__label">See It</div>
+        <p class="rm-place__desc">Purpose-built interface materializes. Clean, contextual, accessible. DAUB's tactile aesthetic throughout.</p>
+      </div>
+      <div class="rm-place__item">
+        <span class="rm-place__icon"><i data-lucide="zap" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
+        <div class="rm-place__label">Do It</div>
+        <p class="rm-place__desc">Interact, decide, complete. The interface serves the moment, then dissolves. Next thought, next interface.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- North Star -->
+  <section class="rm-north">
+    <p class="rm-north__line">You describe what you need.<br>The computer builds it.<br>No apps. No navigation. No learning curve.</p>
+    <p class="rm-north__sub">This is where DAUB is going. The rendering layer for the post-app future.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer class="rm-footer">
+    <p>Read the full <a href="https://github.com/sliday/daub/blob/main/ROADMAP.md">ROADMAP.md</a> on GitHub. Made with consideration by <a href="https://github.com/sliday">Sliday</a>.</p>
+  </footer>
+
+  <div class="db-theme-switcher"></div>
+  <script src="daub.js?v=3.0.0"></script>
+</body>
+</html>

@@ -3,12 +3,12 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.9.2-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.0.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
 
-[Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [Playground](https://daub.dev/playground.html) | [AI Docs](https://daub.dev/llms.txt)
+[Live Demo](https://daub.dev) | [Layout Demos](https://daub.dev/demo.html) | [Playground](https://daub.dev/playground.html) | [Roadmap](https://daub.dev/roadmap.html) | [AI Docs](https://daub.dev/llms.txt)
 
 ---
 
@@ -16,13 +16,19 @@
 
 A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 76 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
+New in v3.0: **Classless CSS** — plain HTML looks good with zero classes. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed.
+
 ## Quick Start
 
 ### CDN (recommended)
 
 ```html
+<!-- Full library: 76 components + themes -->
 <link rel="stylesheet" href="https://daub.dev/daub.css">
 <script src="https://daub.dev/daub.js"></script>
+
+<!-- Or classless only: plain HTML looks good, zero classes -->
+<link rel="stylesheet" href="https://daub.dev/daub-classless.css">
 ```
 
 Alternative CDNs (npm package: `daub-ui`):
@@ -270,6 +276,7 @@ Semantic tokens (theme-aware aliases): `--db-color-bg`, `--db-color-surface`, `-
 DAUB speaks both human and machine:
 
 - **`/llms.txt`** — Plain-text component reference for LLMs ([spec](https://llmstxt.org))
+- **`/llms-compact.txt`** — Condensed version for token-constrained contexts
 - **`/components.json`** — Machine-readable structured component reference (76 components with HTML examples)
 - **`/daub.d.ts`** — TypeScript declarations for `window.DAUB` API
 - **`/.well-known/ai-plugin.json`** — AI plugin manifest
@@ -371,7 +378,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v2.9.2** — Fix streaming Structure tree blank during generation, fix Playground checkbox icon rendering. 76 components, 20 theme families.
+**Latest: v3.0.0** — Classless CSS layer, ROADMAP, expanded AI documentation. 76 components, 20 theme families.
 
 ## License
 
