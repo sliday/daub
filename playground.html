@@ -1252,8 +1252,8 @@ function tryProgressiveRender(text) {
   try {
     var spec = JSON.parse(trimmed + closers);
     if (spec && spec.root && spec.elements) {
-      renderSpec(spec, progressivePrevSpec);
-      if (progressivePrevSpec) progressivePrevSpec = spec;
+      renderSpec(spec);
+      progressivePrevSpec = spec;
       $status.textContent = 'Rendering\u2026';
     }
   } catch (e) {}
@@ -1937,13 +1937,18 @@ function renderSpec(spec, prevSpec) {
     showJsonError('Spec must have "root" and "elements"');
     return;
   }
-  // If we have a previous spec with same root structure, do incremental diff
-  if (prevSpec && prevSpec.root && prevSpec.elements && prevSpec.root === spec.root && $preview.firstChild) {
-    diffUpdate(prevSpec, spec, $preview.firstChild, spec.root, 0);
+  // If we have a previous spec, do incremental diff via data-spec-id lookup
+  if (prevSpec && prevSpec.root && prevSpec.elements && $preview.firstChild) {
+    diffUpdate(prevSpec, spec, $preview);
   } else {
-    $preview.textContent = '';
     var el = renderElement(spec.elements, spec.root, 0);
-    if (el) $preview.appendChild(el);
+    if (el) {
+      if ($preview.firstChild) {
+        $preview.replaceChild(el, $preview.firstChild);
+      } else {
+        $preview.appendChild(el);
+      }
+    }
   }
 
   if (spec.theme) {
@@ -1960,64 +1965,44 @@ function renderSpec(spec, prevSpec) {
   if (window.lucide) lucide.createIcons({ nodes: $preview.querySelectorAll('[data-lucide]') });
 }
 
-// Incremental diff: compare old/new spec elements, re-render only changed ones
-function diffUpdate(oldSpec, newSpec, domNode, elId, depth) {
-  if (depth > MAX_DEPTH || !domNode) return;
+// Incremental diff: walk spec tree, find DOM nodes by data-spec-id, replace changed subtrees
+function diffUpdate(oldSpec, newSpec, container) {
+  // If root element changed, full re-render
+  if (oldSpec.root !== newSpec.root) {
+    var el = renderElement(newSpec.elements, newSpec.root, 0);
+    if (el) {
+      if (container.firstChild) container.replaceChild(el, container.firstChild);
+      else container.appendChild(el);
+      flashChanged(el);
+    }
+    return;
+  }
+  // Walk spec tree top-down; replace changed elements, recurse into unchanged ones
+  diffElement(oldSpec, newSpec, container, newSpec.root);
+}
+
+function diffElement(oldSpec, newSpec, container, elId) {
   var oldDef = oldSpec.elements[elId];
   var newDef = newSpec.elements[elId];
-  if (!oldDef || !newDef) {
-    // Element removed or added — full replace
-    var parent = domNode.parentNode;
-    if (parent) {
-      var fresh = renderElement(newSpec.elements, elId, depth);
+  if (!newDef) return;
+
+  // If definition changed (type, props, or children list), replace entire subtree
+  if (!oldDef || JSON.stringify(oldDef) !== JSON.stringify(newDef)) {
+    var domEl = container.querySelector('[data-spec-id="' + elId + '"]');
+    if (domEl && domEl.parentNode) {
+      var fresh = renderElement(newSpec.elements, elId, 0);
       if (fresh) {
-        parent.replaceChild(fresh, domNode);
+        domEl.parentNode.replaceChild(fresh, domEl);
         flashChanged(fresh);
       }
     }
-    return;
+    return; // subtree was fully re-rendered, no need to recurse
   }
 
-  // Check if this element's definition changed (type or props)
-  var oldType = oldDef.type;
-  var newType = newDef.type;
-  var oldProps = JSON.stringify(oldDef.props || {});
-  var newProps = JSON.stringify(newDef.props || {});
-  var oldChildren = JSON.stringify(oldDef.children || []);
-  var newChildren = JSON.stringify(newDef.children || []);
-
-  if (oldType !== newType || oldProps !== newProps) {
-    // Props or type changed — re-render this element
-    var parent2 = domNode.parentNode;
-    if (parent2) {
-      var replacement = renderElement(newSpec.elements, elId, depth);
-      if (replacement) {
-        parent2.replaceChild(replacement, domNode);
-        flashChanged(replacement);
-      }
-    }
-    return;
-  }
-
-  // Same props — recurse into children if they differ
-  if (oldChildren !== newChildren) {
-    // Children list changed — full re-render of this element
-    var parent3 = domNode.parentNode;
-    if (parent3) {
-      var rebuilt = renderElement(newSpec.elements, elId, depth);
-      if (rebuilt) {
-        parent3.replaceChild(rebuilt, domNode);
-        flashChanged(rebuilt);
-      }
-    }
-    return;
-  }
-
-  // Children are the same IDs — recurse into each child
+  // Definition identical — recurse into children
   var childIds = newDef.children || (newDef.props && newDef.props.children) || [];
-  var childNodes = domNode.children;
-  for (var i = 0; i < childIds.length && i < childNodes.length; i++) {
-    diffUpdate(oldSpec, newSpec, childNodes[i], childIds[i], depth + 1);
+  for (var i = 0; i < childIds.length; i++) {
+    diffElement(oldSpec, newSpec, container, childIds[i]);
   }
 }
 
@@ -2048,7 +2033,9 @@ function renderElement(elements, id, depth) {
   }
 
   var children = def.children || (def.props && def.props.children) || [];
-  return render(def.props || {}, children, elements, depth);
+  var el = render(def.props || {}, children, elements, depth);
+  if (el && el.setAttribute) el.setAttribute('data-spec-id', id);
+  return el;
 }
 
 function renderChildren(elements, childIds, depth) {
