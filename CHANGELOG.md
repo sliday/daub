@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.3
+
+**Nav consistency & BYOK reset.**
+
+- Fix: Synced navigation across all pages — added missing Roadmap link to demo.html and playground.html
+- Fix: Normalized playground.html nav — added `role`/`aria-label` attrs, matched GitHub SVG to canonical
+- Fix: "Use Free DAUB AI" now fully clears stored API keys from localStorage
+- Fix: BYOK mode shows visible "Change / Remove Key" link instead of hiding it
+
 ## v3.0.2
 
 **Card media variant visual fixes.**
