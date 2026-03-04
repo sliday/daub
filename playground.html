@@ -310,7 +310,7 @@
     .pg-chat__footer {
       flex-shrink: 0;
       border-top: 1px solid var(--db-sand);
-      padding: 8px 12px;
+      padding: 8px 10px;
       background: var(--db-cream);
     }
     .pg-chat__examples {
@@ -318,48 +318,57 @@
     }
     .pg-chat--has-messages .pg-chat__examples,
     .pg-chat--has-messages .pg-chat__empty { display: none; }
-    .pg-chat__input-row {
-      position: relative;
+    .pg-chat__input-wrap {
+      border: 1px solid var(--db-sand);
+      border-radius: 8px;
+      background: var(--db-linen);
+      transition: border-color 0.15s;
     }
-    .pg-chat__input-row .db-textarea {
+    .pg-chat__input-wrap:focus-within {
+      border-color: var(--db-terracotta);
+    }
+    .pg-chat__input-wrap .db-textarea {
       width: 100%;
-      min-height: 80px;
-      max-height: 85%;
+      min-height: 42px;
+      max-height: 200px;
       resize: none;
       font-family: var(--db-font-ui);
       font-size: 0.875rem;
       line-height: 1.5;
-      padding: 10px 12px 24px 12px;
+      padding: 10px 12px;
       box-sizing: border-box;
+      border: none;
+      background: transparent;
+      outline: none;
     }
-    .pg-chat__input-row::after {
-      content: '\23CE';
-      position: absolute;
-      right: 10px;
-      bottom: 8px;
-      font-size: 0.75rem;
-      color: var(--db-warm-gray);
-      opacity: 0.45;
-      pointer-events: none;
-      font-family: var(--db-font-ui);
+    .pg-chat__input-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px 6px;
     }
     .pg-chat__attach-btn {
-      position: absolute;
-      left: 6px;
-      bottom: 6px;
       background: none;
       border: none;
       cursor: pointer;
       color: var(--db-warm-gray);
       opacity: 0.5;
-      padding: 2px;
-      z-index: 1;
-      transition: opacity 0.15s;
+      padding: 4px;
+      border-radius: 4px;
+      transition: opacity 0.15s, background 0.15s;
+      display: flex; align-items: center;
     }
-    .pg-chat__attach-btn:hover { opacity: 1; }
+    .pg-chat__attach-btn:hover { opacity: 1; background: color-mix(in srgb, var(--db-ink) 5%, transparent); }
+    .pg-chat__send-hint {
+      font-size: 0.6875rem;
+      color: var(--db-warm-gray);
+      opacity: 0.5;
+      font-family: var(--db-font-ui);
+      user-select: none;
+    }
     .pg-chat__img-strip {
       display: none;
-      padding: 6px 12px 2px;
+      padding: 8px 10px 0;
       gap: 6px;
       flex-wrap: wrap;
     }
@@ -613,12 +622,15 @@
             </div>
           </div>
           <span class="db-caption db-text-muted" id="pg-status" style="display:block;margin-bottom:4px;font-family:var(--db-font-ui);"></span>
-          <div class="pg-chat__img-strip" id="pg-img-strip"></div>
-          <div class="pg-chat__input-row">
-            <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..." style="padding-left:28px;"></textarea>
-            <button class="pg-chat__attach-btn" id="pg-attach" title="Attach images">
-              <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
-            </button>
+          <div class="pg-chat__input-wrap">
+            <div class="pg-chat__img-strip" id="pg-img-strip"></div>
+            <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..."></textarea>
+            <div class="pg-chat__input-actions">
+              <button class="pg-chat__attach-btn" id="pg-attach" title="Attach images">
+                <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
+              </button>
+              <span class="pg-chat__send-hint">&#x23CE; Enter to send</span>
+            </div>
             <input type="file" id="pg-file-input" accept="image/*" multiple style="display:none;">
           </div>
         </div>
@@ -1758,12 +1770,10 @@ $prompt.addEventListener('keydown', function(e) {
   }
 });
 
-// Auto-resize textarea (max 85% of panel height)
+// Auto-resize textarea
 $prompt.addEventListener('input', function() {
-  var panel = this.closest('.pg-panel__body') || this.closest('.pg-panel');
-  var maxH = panel ? Math.floor(panel.clientHeight * 0.85) : 400;
   this.style.height = '';
-  this.style.height = Math.min(this.scrollHeight, maxH) + 'px';
+  this.style.height = Math.min(this.scrollHeight, 200) + 'px';
 });
 
 // ---- New Chat ----
