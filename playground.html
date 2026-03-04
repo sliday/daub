@@ -92,7 +92,6 @@
     }
     .db-nav__link--active {
       color: var(--db-terracotta) !important;
-      font-weight: 600 !important;
       background: color-mix(in srgb, var(--db-terracotta) 15%, transparent) !important;
     }
     .db-nav__github {
@@ -474,10 +473,6 @@
     <div class="pg-panel" id="panel-json">
       <div class="pg-panel__toolbar">
         <span class="pg-panel__toolbar-title"><strong>Structure</strong></span>
-        <div class="db-toggle-group">
-          <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="true" data-mode="code">Code</button>
-          <button class="db-toggle db-toggle--sm pg-json-mode" aria-pressed="false" data-mode="tree">Tree</button>
-        </div>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-render" title="Render" style="display:none;"><i data-lucide="play" style="width:12px;height:12px;"></i></button>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON"><i data-lucide="copy" style="width:12px;height:12px;"></i></button>
       </div>
@@ -490,10 +485,10 @@
             </div>
           </div>
         </div>
-        <div class="pg-json-area">
+        <div class="pg-json-area" style="display:none;">
           <textarea id="pg-json" spellcheck="false"></textarea>
         </div>
-        <div class="pg-json-tree" style="display:none;"></div>
+        <div class="pg-json-tree"></div>
       </div>
     </div>
 
@@ -603,7 +598,6 @@ var $jsonError  = document.querySelector('.pg-json-error');
 var $jsonErrMsg = document.getElementById('pg-json-error-msg');
 var $jsonArea   = document.querySelector('.pg-json-area');
 var $jsonTree   = document.querySelector('.pg-json-tree');
-var $jsonModes  = document.querySelectorAll('.pg-json-mode');
 
 // Chat DOM refs
 var $chatMessages = document.getElementById('pg-chat-messages');
@@ -1068,7 +1062,7 @@ function runBlockingGenerate(messages, streamBubble) {
     $status.textContent = '';
     currentSpec = spec;
     renderSpec(spec);
-    switchJsonMode('tree');
+    refreshJsonTree();
     if (streamBubble) {
       streamBubble.classList.remove('pg-chat__msg--streaming');
       buildResultBubble(streamBubble, spec);
@@ -1196,7 +1190,7 @@ function generate() {
           $status.textContent = usingFallback ? 'Rendered via fallback model' : '';
           currentSpec = spec;
           renderSpec(spec);
-          switchJsonMode('tree');
+          refreshJsonTree();
           streamBubble.classList.remove('pg-chat__msg--streaming');
           buildResultBubble(streamBubble, spec);
           chatHistory.push({ role: 'assistant', content: 'Generated UI \u00B7 ' + countComponents(spec) + ' components' });
@@ -1280,41 +1274,25 @@ if (window.renderjson) {
 }
 
 // ---- JSON Code / Tree toggle ----
-function switchJsonMode(mode) {
-  $jsonModes.forEach(function(btn) {
-    btn.setAttribute('aria-pressed', btn.getAttribute('data-mode') === mode ? 'true' : 'false');
-  });
-  if (mode === 'tree') {
-    $jsonArea.style.display = 'none';
-    $jsonTree.style.display = '';
-    refreshJsonTree();
-  } else {
-    $jsonTree.style.display = 'none';
-    $jsonArea.style.display = '';
-  }
-  updateRenderVisibility();
-}
-
+// ---- Tree view (always on) ----
+var _treeRefreshTimer = null;
 function refreshJsonTree() {
   try {
     var parsed = JSON.parse($json.value);
     while ($jsonTree.firstChild) $jsonTree.removeChild($jsonTree.firstChild);
     $jsonTree.appendChild(renderjson(parsed));
   } catch (e) {
-    $jsonTree.textContent = 'Waiting for valid JSON\u2026';
+    $jsonTree.textContent = $json.value.trim() ? 'Waiting for valid JSON\u2026' : '';
   }
 }
-
-$jsonModes.forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    switchJsonMode(btn.getAttribute('data-mode'));
-  });
+// Debounced refresh on every JSON change
+$json.addEventListener('input', function() {
+  clearTimeout(_treeRefreshTimer);
+  _treeRefreshTimer = setTimeout(refreshJsonTree, 300);
 });
 
-// Generate is triggered by Enter key only (no send button)
 $render.addEventListener('click', function() {
   renderFromEditor();
-  switchJsonMode('tree');
 });
 
 // Enter to send (Shift+Enter for newline)
@@ -3018,7 +2996,7 @@ if (currentSpec) {
   try {
     $json.value = JSON.stringify(currentSpec, null, 2);
     renderSpec(currentSpec);
-    switchJsonMode('tree');
+    refreshJsonTree();
   } catch(e) {}
 }
 // Apply BYOK mode
