@@ -2,14 +2,22 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.9.0
+
+**Playground streaming & UX.**
+
+- Feature: Tree view renders progressively during streaming via partial JSON repair — tree builds live as data arrives
+- Improvement: JSON panel now tree-only — removed Code/Tree toggle
+- Improvement: Chat prompt textarea auto-expands as you type, max-height 85% of panel
+- Improvement: Landing page prompt cards — "Code This" button now first, "Copy Prompt" second
+- Fix: "New Chat" now clears the Structure tree panel along with Preview
+- Fix: Status text ("Rendering…", "Streaming…") moved above chat input to prevent layout shift
+- Fix: Active nav links no longer change font-weight (was 500→600), preventing layout shift
+- Cache-bust: `?v=2.9.0` query strings on CSS/JS assets
+
 ## v2.8.9
 
-**Playground UX polish.**
-
-- Improvement: JSON panel now tree-only — removed Code/Tree toggle, tree auto-refreshes with debounced updates as JSON streams in
-- Improvement: Chat prompt textarea auto-expands as you type, max-height 85% of panel
-- Fix: Active nav links no longer change font-weight (was 500→600), preventing layout shift
-- Cache-bust: `?v=2.8.9` query strings on CSS/JS assets
+**Playground UX polish (superseded by v2.9.0).**
 
 ## v2.8.8
 
