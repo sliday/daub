@@ -968,6 +968,33 @@ function clearImageStrip() {
   $imgStrip.classList.remove('has-images');
 }
 
+// ---- Paste images from clipboard ----
+$prompt.addEventListener('paste', function(e) {
+  var items = e.clipboardData && e.clipboardData.items;
+  if (!items) return;
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].type.indexOf('image/') === 0) {
+      e.preventDefault();
+      var file = items[i].getAsFile();
+      if (!file) continue;
+      if (pendingImages.length >= 10) { DAUB.toast({ type: 'warning', message: 'Max 10 images' }); return; }
+      if (file.size > 10 * 1024 * 1024) { DAUB.toast({ type: 'error', message: 'Image too large (max 10 MB)' }); continue; }
+      (function(f) {
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+          var dataUrl = ev.target.result;
+          var mimeMatch = dataUrl.match(/^data:(image\/[^;]+);base64,/);
+          if (!mimeMatch) return;
+          var imgData = { base64: dataUrl.split(',')[1], mimeType: mimeMatch[1], dataUrl: dataUrl };
+          pendingImages.push(imgData);
+          addImageToStrip(imgData);
+        };
+        reader.readAsDataURL(f);
+      })(file);
+    }
+  }
+});
+
 // ---- AI API calls (blocking, accept messages array) ----
 function callOpenAI(messages) {
   return fetch('https://api.openai.com/v1/chat/completions', {
