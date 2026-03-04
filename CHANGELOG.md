@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v2.8.9
+
+**Playground UX polish.**
+
+- Improvement: JSON panel now tree-only — removed Code/Tree toggle, tree auto-refreshes with debounced updates as JSON streams in
+- Improvement: Chat prompt textarea auto-expands as you type, max-height 85% of panel
+- Fix: Active nav links no longer change font-weight (was 500→600), preventing layout shift
+- Cache-bust: `?v=2.8.9` query strings on CSS/JS assets
+
 ## v2.8.8
 
 **Renderer spacing & data fixes.**
