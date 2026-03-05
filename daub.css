@@ -3315,10 +3315,11 @@ textarea.db-field__input {
    8e. FEEDBACK — Skeleton Rows
    ------------------------------------------------------------ */
 .db-skeleton {
-  background: var(--db-skeleton-bg, var(--db-border));
-  border-radius: var(--db-radius-2);
+  background: var(--db-skeleton-bg, var(--db-color-border));
+  border-radius: inherit;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 0 12px 2px color-mix(in srgb, var(--db-ink) 4%, transparent);
 }
 
 .db-skeleton::after {
@@ -3326,9 +3327,9 @@ textarea.db-field__input {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    90deg,
+    180deg,
     transparent 0%,
-    rgba(var(--db-white-rgb),0.6) 50%,
+    rgba(var(--db-white-rgb),0.5) 50%,
     transparent 100%
   );
   animation: db-shimmer 1.5s ease-in-out infinite;
@@ -5280,8 +5281,8 @@ textarea.db-field__input {
 }
 
 @keyframes db-shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
 }
 
 @keyframes db-toast-in {
