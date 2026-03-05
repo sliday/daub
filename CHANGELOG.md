@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.1.1
+
+**Add PDF file attachment support to playground.**
+
+- Feature: Playground now accepts PDF files (up to 50MB) alongside images via the attach button
+- Feature: PDF attachments display as file icon + truncated filename in the attachment strip and chat history
+- Enhancement: Provider-specific PDF formatting — Anthropic `document` type, OpenAI/OpenRouter `image_url` passthrough
+- Enhancement: Mixed attachments supported (images + PDFs together, up to 10 total)
+
 ## v3.1.0
 
 **Replace Layout with Stack + Grid for unambiguous layout intent.**

@@ -415,6 +415,34 @@
       transition: opacity 0.15s;
     }
     .pg-chat__img-item:hover .pg-img-x { opacity: 1; }
+    .pg-chat__pdf-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: var(--db-sand, #f5f0eb);
+      width: 64px;
+    }
+    .pg-pdf-label {
+      font-size: 8px;
+      line-height: 1;
+      color: var(--db-ink-muted, #666);
+      max-width: 58px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .pg-chat__msg-pdf {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--db-sand, #f5f0eb);
+      font-size: 11px;
+      color: var(--db-ink-muted, #666);
+    }
     .pg-chat__msg-images {
       display: flex;
       gap: 4px;
@@ -655,12 +683,12 @@
             <div class="pg-chat__img-strip" id="pg-img-strip"></div>
             <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..."></textarea>
             <div class="pg-chat__input-actions">
-              <button class="pg-chat__attach-btn" id="pg-attach" title="Attach images">
+              <button class="pg-chat__attach-btn" id="pg-attach" title="Attach files">
                 <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
               </button>
               <span class="pg-chat__send-hint">&#x23CE; Enter to send</span>
             </div>
-            <input type="file" id="pg-file-input" accept="image/*" multiple style="display:none;">
+            <input type="file" id="pg-file-input" accept="image/*,application/pdf" multiple style="display:none;">
           </div>
         </div>
       </div>
@@ -941,17 +969,20 @@ $fileInput.addEventListener('change', function() {
   var files = this.files;
   if (!files || !files.length) return;
   var remaining = 10 - pendingImages.length;
-  if (remaining <= 0) { DAUB.toast({ type: 'warning', message: 'Max 10 images' }); this.value = ''; return; }
+  if (remaining <= 0) { DAUB.toast({ type: 'warning', message: 'Max 10 files' }); this.value = ''; return; }
   var toProcess = Math.min(files.length, remaining);
   for (var i = 0; i < toProcess; i++) {
     (function(file) {
-      if (file.size > 10 * 1024 * 1024) { DAUB.toast({ type: 'error', message: file.name + ' too large (max 10 MB)' }); return; }
+      var isPdf = file.type === 'application/pdf';
+      var maxSize = isPdf ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+      var maxLabel = isPdf ? '50 MB' : '10 MB';
+      if (file.size > maxSize) { DAUB.toast({ type: 'error', message: file.name + ' too large (max ' + maxLabel + ')' }); return; }
       var reader = new FileReader();
       reader.onload = function(e) {
         var dataUrl = e.target.result;
-        var mimeMatch = dataUrl.match(/^data:(image\/[^;]+);base64,/);
-        if (!mimeMatch) { DAUB.toast({ type: 'error', message: 'Invalid image file' }); return; }
-        var imgData = { base64: dataUrl.split(',')[1], mimeType: mimeMatch[1], dataUrl: dataUrl };
+        var mimeMatch = dataUrl.match(/^data:((?:image|application)\/[^;]+);base64,/);
+        if (!mimeMatch) { DAUB.toast({ type: 'error', message: 'Invalid file' }); return; }
+        var imgData = { base64: dataUrl.split(',')[1], mimeType: mimeMatch[1], dataUrl: dataUrl, isPdf: mimeMatch[1] === 'application/pdf', fileName: file.name };
         pendingImages.push(imgData);
         addImageToStrip(imgData);
       };
@@ -964,9 +995,23 @@ $fileInput.addEventListener('change', function() {
 function addImageToStrip(imgData) {
   var item = document.createElement('div');
   item.className = 'pg-chat__img-item';
-  var img = document.createElement('img');
-  img.src = imgData.dataUrl;
-  img.alt = 'attached';
+  if (imgData.isPdf) {
+    item.classList.add('pg-chat__pdf-item');
+    var icon = document.createElement('i');
+    icon.setAttribute('data-lucide', 'file-text');
+    icon.style.cssText = 'width:20px;height:20px;color:var(--db-ink-muted,#666)';
+    var label = document.createElement('span');
+    label.className = 'pg-pdf-label';
+    label.textContent = (imgData.fileName || 'file.pdf').replace(/^(.{12}).+$/, '$1…');
+    item.appendChild(icon);
+    item.appendChild(label);
+    requestAnimationFrame(function() { if (window.lucide) lucide.createIcons({ nodes: [item] }); });
+  } else {
+    var img = document.createElement('img');
+    img.src = imgData.dataUrl;
+    img.alt = 'attached';
+    item.appendChild(img);
+  }
   var x = document.createElement('button');
   x.className = 'pg-img-x';
   x.textContent = '\u00d7';
@@ -976,7 +1021,6 @@ function addImageToStrip(imgData) {
     item.remove();
     if (!pendingImages.length) $imgStrip.classList.remove('has-images');
   });
-  item.appendChild(img);
   item.appendChild(x);
   $imgStrip.appendChild(item);
   $imgStrip.classList.add('has-images');
@@ -1353,10 +1397,18 @@ function buildMessages(userPrompt, images) {
     var provider = isDefaultMode ? 'default' : ($provider ? $provider.value : 'openai');
     var parts = [];
     images.forEach(function(img) {
-      if (provider === 'anthropic') {
-        parts.push({ type: 'image', source: { type: 'base64', media_type: img.mimeType, data: img.base64 } });
+      if (img.isPdf) {
+        if (provider === 'anthropic') {
+          parts.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: img.base64 } });
+        } else {
+          parts.push({ type: 'image_url', image_url: { url: img.dataUrl } });
+        }
       } else {
-        parts.push({ type: 'image_url', image_url: { url: img.dataUrl } });
+        if (provider === 'anthropic') {
+          parts.push({ type: 'image', source: { type: 'base64', media_type: img.mimeType, data: img.base64 } });
+        } else {
+          parts.push({ type: 'image_url', image_url: { url: img.dataUrl } });
+        }
       }
     });
     parts.push({ type: 'text', text: userPrompt });
@@ -1373,11 +1425,26 @@ function addChatBubble(role, text, images) {
   if (images && images.length) {
     var strip = document.createElement('div');
     strip.className = 'pg-chat__msg-images';
-    images.forEach(function(url) {
-      var img = document.createElement('img');
-      img.src = url;
-      img.alt = 'attached';
-      strip.appendChild(img);
+    images.forEach(function(entry) {
+      var url = typeof entry === 'string' ? entry : entry.url;
+      var isPdf = typeof entry === 'string' ? url.indexOf('data:application/pdf') === 0 : entry.isPdf;
+      var name = typeof entry === 'string' ? 'PDF' : (entry.name || 'PDF');
+      if (isPdf) {
+        var badge = document.createElement('span');
+        badge.className = 'pg-chat__msg-pdf';
+        var bIcon = document.createElement('i');
+        bIcon.setAttribute('data-lucide', 'file-text');
+        bIcon.style.cssText = 'width:14px;height:14px';
+        badge.appendChild(bIcon);
+        badge.appendChild(document.createTextNode(' ' + name.replace(/^(.{20}).+$/, '$1\u2026')));
+        strip.appendChild(badge);
+        requestAnimationFrame(function() { if (window.lucide) lucide.createIcons({ nodes: [badge] }); });
+      } else {
+        var img = document.createElement('img');
+        img.src = url;
+        img.alt = 'attached';
+        strip.appendChild(img);
+      }
     });
     div.appendChild(strip);
   }
@@ -1560,9 +1627,9 @@ function generate() {
   clearImageStrip();
 
   // Add user bubble
-  var imageUrls = imagesForThisMsg.map(function(d) { return d.dataUrl; });
-  chatHistory.push({ role: 'user', content: prompt, images: imageUrls.length ? imageUrls : undefined });
-  addChatBubble('user', prompt, imageUrls.length ? imageUrls : null);
+  var imageEntries = imagesForThisMsg.map(function(d) { return { url: d.dataUrl, isPdf: !!d.isPdf, name: d.fileName || '' }; });
+  chatHistory.push({ role: 'user', content: prompt, images: imageEntries.length ? imageEntries : undefined });
+  addChatBubble('user', prompt, imageEntries.length ? imageEntries : null);
   updateChatState();
   $prompt.value = '';
   $prompt.style.height = '';
