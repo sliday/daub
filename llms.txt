@@ -703,7 +703,7 @@ Indeterminate: add `db-progress--indeterminate`.
 <div class="db-calendar">
   <div class="db-calendar__header">
     <button class="db-calendar__nav">&lsaquo;</button>
-    <span class="db-calendar__title">February 2026</span>
+    <span class="db-calendar__title">March 2026</span>
     <button class="db-calendar__nav">&rsaquo;</button>
   </div>
   <div class="db-calendar__grid">
