@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.13
+
+**Calendar: dynamic month navigation + date selection.**
+
+- Feature: Calendar month navigation — prev/next buttons re-render grid with correct days-in-month and weekday alignment
+- Feature: Outside days from adjacent months shown dimmed; clicking navigates to that month
+- Feature: Day selection dispatches `db-date-select` CustomEvent with `{year, month, day}` detail
+- Feature: DatePicker reuses Calendar renderer — updates trigger text on selection and closes dropdown
+- Enhancement: Calendar renderer parses `YYYY-MM-DD` format for `selected` and `today` props
+- Enhancement: `COMP_PROPS.Calendar` documents date format
+
 ## v3.0.12
 
 **Overlay trigger system + code review fixes.**
