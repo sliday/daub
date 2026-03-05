@@ -1139,6 +1139,7 @@ function streamAnthropic(messages, onText, onDone, onError) {
     { model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs, stream: true, output_config: { format: { type: 'json' } } },
     function(chunk) {
       if (chunk.type === 'content_block_delta' && chunk.delta && chunk.delta.text) onText(chunk.delta.text);
+      if (chunk.type === 'message_delta' && chunk.delta && chunk.delta.stop_reason === 'max_tokens') _lastFinishReason = 'length';
     },
     onDone, onError
   );
@@ -1179,7 +1180,8 @@ function cleanJSON(text) {
 }
 
 // ---- Repair truncated JSON (force-close open brackets) ----
-function repairJSON(s) {
+function repairJSON(s, asString) {
+  if (!s || !s.trim()) return null;
   // Strip trailing commas
   s = s.replace(/,\s*$/, '');
   // Walk string tracking open brackets
@@ -1199,6 +1201,7 @@ function repairJSON(s) {
     var qi = s.lastIndexOf('"');
     while (qi > 0 && s[qi - 1] === '\\') qi = s.lastIndexOf('"', qi - 1);
     if (qi > 0) s = s.substring(0, qi + 1);
+    s = s.replace(/[,:\s]*$/, '');
     stack = []; inStr = false; esc = false;
     for (var j = 0; j < s.length; j++) {
       var c2 = s[j];
@@ -1215,7 +1218,11 @@ function repairJSON(s) {
   s = s.replace(/,\s*$/, '');
   var closers = '';
   for (var k = stack.length - 1; k >= 0; k--) closers += stack[k];
-  try { return JSON.parse(s + closers); } catch (e) { return null; }
+  var repaired = s + closers;
+  try {
+    var parsed = JSON.parse(repaired);
+    return asString ? repaired : parsed;
+  } catch (e) { return null; }
 }
 
 // ---- Screenshot capture for self-check ----
@@ -1892,40 +1899,6 @@ if (window.renderjson) {
 
 // ---- JSON Code / Tree toggle ----
 // ---- Tree view (always on) ----
-// Repair partial JSON by closing open structures
-function repairJson(s) {
-  if (!s || !s.trim()) return null;
-  // Trim trailing incomplete key or value (after last comma/colon/bracket)
-  s = s.replace(/,\s*$/, '');
-  // Remove trailing partial string: an unclosed quote
-  var inStr = false, esc = false;
-  for (var i = 0; i < s.length; i++) {
-    if (esc) { esc = false; continue; }
-    if (s[i] === '\\') { esc = true; continue; }
-    if (s[i] === '"') inStr = !inStr;
-  }
-  if (inStr) {
-    // Find last unescaped quote and truncate there
-    var last = s.lastIndexOf('"');
-    if (last > 0) s = s.substring(0, last);
-    s = s.replace(/[,:\s]*$/, '');
-  }
-  // Close open brackets/braces
-  var stack = [];
-  inStr = false; esc = false;
-  for (var j = 0; j < s.length; j++) {
-    if (esc) { esc = false; continue; }
-    if (s[j] === '\\') { esc = true; continue; }
-    if (s[j] === '"') { inStr = !inStr; continue; }
-    if (inStr) continue;
-    if (s[j] === '{') stack.push('}');
-    else if (s[j] === '[') stack.push(']');
-    else if (s[j] === '}' || s[j] === ']') stack.pop();
-  }
-  while (stack.length) s += stack.pop();
-  try { JSON.parse(s); return s; } catch(e) { return null; }
-}
-
 var _treeRefreshTimer = null;
 function refreshJsonTree() {
   var raw = $json.value;
@@ -1933,16 +1906,13 @@ function refreshJsonTree() {
     $jsonTree.textContent = '';
     return;
   }
-  var repaired = repairJson(raw);
-  if (!repaired) {
+  var parsed = repairJSON(raw);
+  if (!parsed) {
     if (!$jsonTree.firstChild) $jsonTree.textContent = 'Streaming\u2026';
     return;
   }
-  try {
-    var parsed = JSON.parse(repaired);
-    while ($jsonTree.firstChild) $jsonTree.removeChild($jsonTree.firstChild);
-    $jsonTree.appendChild(renderjson(parsed));
-  } catch (e) {}
+  while ($jsonTree.firstChild) $jsonTree.removeChild($jsonTree.firstChild);
+  $jsonTree.appendChild(renderjson(parsed));
 }
 // Debounced refresh on every JSON change
 $json.addEventListener('input', function() {
@@ -1988,8 +1958,8 @@ $newChat.addEventListener('click', function() {
 });
 
 // ---- BYOK modal ----
-function openByokModal() { $byokModal.classList.add('db-modal--open'); }
-function closeByokModal() { $byokModal.classList.remove('db-modal--open'); }
+function openByokModal() { DAUB.openModal($byokModal); }
+function closeByokModal() { DAUB.closeModal($byokModal); }
 
 $byokLink.addEventListener('click', function(e) {
   e.preventDefault();
@@ -2315,6 +2285,7 @@ RENDERERS.Button = function(p) {
     el.appendChild(document.createTextNode(' '));
   }
   el.appendChild(document.createTextNode(p.label || ''));
+  if (p.trigger) el.setAttribute('data-db-trigger', p.trigger);
   return el;
 };
 
@@ -3579,7 +3550,7 @@ var COMP_PROPS = {
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
   // Controls
-  Button: 'label: string, variant: "primary"|"secondary"|"ghost", size: "sm"|"lg"|"icon", loading: bool, icon: string',
+  Button: 'label: string, variant: "primary"|"secondary"|"ghost", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id)',
   ButtonGroup: '(children are Buttons)',
   Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string',
   Input: 'placeholder: string, size: "sm"|"lg", error: bool',
@@ -3709,22 +3680,32 @@ var SYSTEM_PROMPT = (function() {
     + '- CustomHTML props: html (raw HTML, use DAUB CSS classes like db-btn, db-card), css (CSS rules injected as <style>), js (vanilla JS)\n'
     + '- CustomHTML JS receives two args: "container" (this element\'s wrapper div) and "preview" (the entire preview pane). Use preview.querySelector(\'[data-spec-id="someId"]\') to target other rendered elements by their spec ID. The js can manipulate both html content and rendered children via container\n'
     + '- Keep CustomHTML JS minimal: event listeners, class toggling, text updates. No frameworks, no fetch calls\n'
-    + '- Escape quotes properly in JSON strings: use \\" for double quotes inside string values\n\n';
+    + '- Escape quotes properly in JSON strings: use \\" for double quotes inside string values\n'
+    + '- Overlay components (Modal, AlertDialog, Sheet, Drawer) are hidden by default — do NOT add display:none style\n'
+    + '- Use trigger: "overlay-id" on Button to open overlays — no CustomHTML JS needed\n'
+    + '- Overlays get DAUB behaviors automatically: overlay click-to-close, ESC key, focus trap (Modal)\n\n';
 
-  var themes = 'THEMES:\n'
-    + 'Set "theme" in the root JSON to apply a DAUB theme. Available themes:\n'
-    + '- Light: "light", "bone", "paper", "nord-light", "github", "material-light", "solarized-light", "rose-pine-dawn", "catppuccin-latte", "gruvbox-light"\n'
-    + '- Dark: "dark", "midnight", "dracula", "tokyo-night", "synthwave", "nord-dark", "solarized-dark", "rose-pine", "catppuccin-mocha", "gruvbox-dark"\n'
-    + '- Unique: "grunge-dark", "grunge-light", "nes-dark", "nes-light", "win9x-dark", "win9x-light", "paper-dark", "material-dark", "github-dark", "catppuccin-frappe"\n\n'
-    + 'Theme selection heuristics:\n'
-    + '- Dashboards/analytics → "github" or "material-light"\n'
-    + '- Dark UIs, code tools, dev tools → "dracula" or "tokyo-night"\n'
-    + '- Retro/nostalgic → "grunge-dark", "synthwave", "nes-dark", or "win9x-light"\n'
-    + '- Minimal/clean → "bone", "nord-light", or "paper"\n'
-    + '- Warm/cozy → "gruvbox-light", "rose-pine-dawn", or "catppuccin-latte"\n'
-    + '- If user says "make it dark" → switch to the dark variant of the current theme family\n'
-    + '- If user explicitly names a theme (e.g. "use nord") → use that exact theme\n'
-    + '- Default: "light" when no preference is detected\n';
+  var themes = (function() {
+    var fams = DAUB.THEME_FAMILIES;
+    var lightThemes = [], darkThemes = [];
+    Object.keys(fams).forEach(function(f) {
+      lightThemes.push('"' + fams[f].light + '"');
+      darkThemes.push('"' + fams[f].dark + '"');
+    });
+    return 'THEMES:\n'
+      + 'Set "theme" in the root JSON to apply a DAUB theme. Available themes:\n'
+      + '- Light: ' + lightThemes.join(', ') + '\n'
+      + '- Dark: ' + darkThemes.join(', ') + '\n\n'
+      + 'Theme selection heuristics:\n'
+      + '- Dashboards/analytics → "github" or "material-light"\n'
+      + '- Dark UIs, code tools, dev tools → "dracula" or "tokyo-night"\n'
+      + '- Retro/nostalgic → "grunge-dark" or "synthwave"\n'
+      + '- Minimal/clean → "bone" or "nord-light"\n'
+      + '- Warm/cozy → "gruvbox-light" or "catppuccin"\n'
+      + '- If user says "make it dark" → switch to the dark variant of the current theme family\n'
+      + '- If user explicitly names a theme (e.g. "use nord") → use that exact theme\n'
+      + '- Default: "light" when no preference is detected\n';
+  })();
 
   return preamble + sections + guidelines + themes;
 })();

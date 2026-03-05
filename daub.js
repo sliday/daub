@@ -654,11 +654,11 @@
       }
       if (options.body != null) {
         var bodyEl = overlay.querySelector('.db-modal__body');
-        if (bodyEl) bodyEl.innerHTML = options.body;
+        if (bodyEl) bodyEl.textContent = options.body;
       }
       if (options.footer != null) {
         var footerEl = overlay.querySelector('.db-modal__footer');
-        if (footerEl) footerEl.innerHTML = options.footer;
+        if (footerEl) footerEl.textContent = options.footer;
       }
     }
 
@@ -1771,6 +1771,25 @@
   }
 
   /* ----------------------------------------------------------
+     Generic Trigger System
+     ---------------------------------------------------------- */
+  function initTriggers(root) {
+    root.querySelectorAll('[data-db-trigger]').forEach(function(el) {
+      if (el._dbTriggerInit) return;
+      el._dbTriggerInit = true;
+      el.addEventListener('click', function() {
+        var id = el.getAttribute('data-db-trigger');
+        var target = document.getElementById(id);
+        if (!target) return;
+        if (target.classList.contains('db-modal-overlay')) openModal(id, el);
+        else if (target.classList.contains('db-alert-dialog')) openAlertDialog(id);
+        else if (target.classList.contains('db-sheet')) openSheet(id);
+        else if (target.classList.contains('db-drawer')) openDrawer(id);
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
      Init
      ---------------------------------------------------------- */
   function init(root) {
@@ -1807,6 +1826,7 @@
     initChipToggle(root);
     initNavbars(root);
     initSidebarToggle(root);
+    initTriggers(root);
     initThemeSwitcher();
     fixNestedRadius(root);
     refreshIcons();

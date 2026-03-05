@@ -2,6 +2,19 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.12
+
+**Overlay trigger system + code review fixes.**
+
+- Feature: Generic `[data-db-trigger]` system — any element can open Modal/AlertDialog/Sheet/Drawer by target ID
+- Feature: Button `trigger` prop — declarative overlay opening without CustomHTML JS hacks
+- Enhancement: AI system prompt guides overlay usage: hidden by default, trigger prop, automatic DAUB behaviors
+- Enhancement: Theme list in system prompt dynamically generated from `DAUB.THEME_FAMILIES` instead of hardcoded
+- Fix: Anthropic streaming truncation — `message_delta` with `stop_reason: 'max_tokens'` now triggers auto-continuation
+- Fix: BYOK modal uses `DAUB.openModal`/`closeModal` for proper scroll lock + focus trap
+- Fix: `openModal` options use `textContent` instead of `innerHTML` for XSS safety
+- Refactor: Consolidated duplicate `repairJson`/`repairJSON` into single `repairJSON(s, asString)` function
+
 ## v3.0.11
 
 **Modal/AlertDialog footer children support + Tooltip fix.**
