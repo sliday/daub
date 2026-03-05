@@ -1668,15 +1668,17 @@ function analyzeInteractivity(spec) {
   })
   .then(parseSseResponse)
   .then(function(raw) {
+    console.log('[analyzeInteractivity] raw:', raw.slice(0, 200));
     var clean = cleanJSON(raw);
     if (!clean) return null;
     try {
       var result = JSON.parse(clean);
+      console.log('[analyzeInteractivity] result:', result);
       if (typeof result.needed === 'boolean') return result;
-    } catch(e) {}
+    } catch(e) { console.warn('[analyzeInteractivity] parse error:', e); }
     return null;
   })
-  .catch(function() { return null; });
+  .catch(function(e) { console.warn('[analyzeInteractivity] failed:', e); return null; });
 }
 
 function generateInteractiveCode(spec, analysis) {
@@ -1707,19 +1709,25 @@ function generateInteractiveCode(spec, analysis) {
         { role: 'user', content: JSON.stringify(spec) }
       ],
       reasoning: { effort: 'high' },
+      response_format: false,
       max_tokens: 32768
     })
   })
   .then(parseSseResponse)
   .then(function(raw) {
+    console.log('[generateInteractiveCode] raw length:', raw.length, 'preview:', raw.slice(0, 300));
     var clean = cleanJSON(raw);
-    if (!clean) return null;
+    if (!clean) { console.warn('[generateInteractiveCode] cleanJSON returned empty'); return null; }
     var updated;
     try { updated = JSON.parse(clean); } catch(e) { updated = repairJSON(clean); }
-    if (!updated || !updated.root || !updated.elements) return null;
+    if (!updated || !updated.root || !updated.elements) {
+      console.warn('[generateInteractiveCode] invalid spec structure:', updated ? Object.keys(updated) : 'null');
+      return null;
+    }
+    console.log('[generateInteractiveCode] success:', countComponents(updated), 'components');
     return updated;
   })
-  .catch(function() { return null; });
+  .catch(function(e) { console.warn('[generateInteractiveCode] failed:', e); return null; });
 }
 
 // ---- Progressive rendering (force-close incomplete JSON) ----
