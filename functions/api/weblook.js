@@ -136,18 +136,48 @@ async function runCDP(connectUrl, targetUrl) {
   }
 
   try {
-    await send('Page.enable');
+    // Browserbase connectUrl is a browser-level CDP endpoint.
+    // We need to discover the page target and attach to it.
+    const targets = await send('Target.getTargets');
+    let pageTarget = null;
+    if (targets && targets.targetInfos) {
+      pageTarget = targets.targetInfos.find(t => t.type === 'page');
+    }
+
+    let sessionId = null;
+    if (pageTarget) {
+      // Attach to existing page target — get a sessionId for scoped commands
+      const attached = await send('Target.attachToTarget', {
+        targetId: pageTarget.targetId,
+        flatten: true,
+      });
+      sessionId = attached.sessionId;
+    }
+
+    // Helper to send commands scoped to the page session
+    function pageSend(method, params = {}) {
+      if (sessionId) {
+        const id = msgId++;
+        return new Promise((res, rej) => {
+          pending.set(id, { res, rej });
+          ws.send(JSON.stringify({ id, method, params, sessionId }));
+        });
+      }
+      return send(method, params);
+    }
+
+    await pageSend('Page.enable');
     const loadPromise = waitForEvent('Page.loadEventFired', 15000);
-    await send('Page.navigate', { url: targetUrl });
+    await pageSend('Page.navigate', { url: targetUrl });
     await loadPromise;
 
     // Small delay for JS rendering
     await new Promise(r => setTimeout(r, 1500));
 
-    const titleResult = await send('Runtime.evaluate', { expression: 'document.title' });
+    const titleResult = await pageSend('Runtime.evaluate', { expression: 'document.title' });
     const title = (titleResult && titleResult.result && titleResult.result.value) || '';
 
-    const textResult = await send('Runtime.evaluate', {
+    const textResult = await pageSend('Runtime.evaluate', {
       expression: `(function() {
         var el = document.body;
         if (!el) return '';
@@ -157,7 +187,7 @@ async function runCDP(connectUrl, targetUrl) {
     });
     const content = (textResult && textResult.result && textResult.result.value) || '';
 
-    const ssResult = await send('Page.captureScreenshot', { format: 'jpeg', quality: 70 });
+    const ssResult = await pageSend('Page.captureScreenshot', { format: 'jpeg', quality: 70 });
     const screenshot = (ssResult && ssResult.data) || '';
 
     try { ws.close(); } catch {}
