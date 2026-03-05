@@ -1112,7 +1112,12 @@ $weblook.addEventListener('click', function() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url: url }),
   })
-  .then(function(r) { return r.json(); })
+  .then(function(r) {
+    if (!r.ok) return r.text().then(function(t) { throw new Error(t.substring(0, 200)); });
+    var ct = r.headers.get('content-type') || '';
+    if (ct.indexOf('application/json') === -1) return r.text().then(function(t) { throw new Error('Non-JSON response: ' + t.substring(0, 100)); });
+    return r.json();
+  })
   .then(function(data) {
     if (data.error) {
       DAUB.toast({ type: 'error', message: 'Web Look failed: ' + data.error });
