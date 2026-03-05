@@ -53,7 +53,7 @@
           crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.0.19">
+  <link rel="stylesheet" href="daub.css?v=3.0.20">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -784,7 +784,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.0.19"></script>
+<script src="daub.js?v=3.0.20"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -2256,16 +2256,23 @@ RENDERERS.Layout = function(p, ch, els, d) {
   if (p.columns) {
     el.classList.add('db-grid', 'db-grid--' + p.columns);
     if (p.gap) el.classList.add('db-gap-' + Math.max(1, Math.min(6, p.gap)));
+    if (p.align === 'center') el.style.justifyItems = 'center';
+    else if (p.align === 'right' || p.align === 'end') el.style.justifyItems = 'end';
   } else if (p.direction === 'horizontal') {
     el.style.display = 'flex';
     el.style.flexDirection = 'row';
     el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap || 2)) + ')';
     el.style.flexWrap = 'wrap';
-    el.style.alignItems = 'flex-start';
+    el.style.alignItems = p.valign === 'center' ? 'center' : p.valign === 'end' ? 'flex-end' : 'flex-start';
+    if (p.align === 'center') el.style.justifyContent = 'center';
+    else if (p.align === 'right' || p.align === 'end') el.style.justifyContent = 'flex-end';
+    else if (p.align === 'between') el.style.justifyContent = 'space-between';
   } else {
     el.style.display = 'flex';
     el.style.flexDirection = 'column';
     el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap || 2)) + ')';
+    if (p.align === 'center') el.style.alignItems = 'center';
+    else if (p.align === 'right' || p.align === 'end') el.style.alignItems = 'flex-end';
   }
   el.appendChild(renderChildren(els, ch, d));
   return el;
@@ -3609,7 +3616,7 @@ RENDERERS.CustomHTML = function(p, ch, els, d) {
 // ---- Component props documentation (single source of truth for AI prompt) ----
 var COMP_PROPS = {
   // Layout & Structure
-  Layout: 'direction: "vertical"|"horizontal", columns: 2-6, gap: 0-6 (default 2=8px), container: "wide"|"narrow"|true',
+  Layout: 'direction: "vertical"|"horizontal", columns: 2-6, gap: 0-6 (default 2=8px), container: "wide"|"narrow"|true, align: "center"|"right"|"end"|"between" (centers/aligns children — use instead of spacer hacks), valign: "center"|"end" (vertical align for horizontal layouts)',
   Surface: 'variant: "raised"|"inset"|"pressed"',
   Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
@@ -3733,6 +3740,7 @@ var SYSTEM_PROMPT = (function() {
   var guidelines = 'GUIDELINES:\n'
     + '- Use Layout as the root with direction:"vertical" for page-level layouts\n'
     + '- Use Layout with direction:"horizontal" and columns for grid arrangements\n'
+    + '- To center children use Layout align:"center" — NEVER use empty spacer elements for centering\n'
     + '- Layout gap uses spacing tokens 0-6 (0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px). Default is 2 (8px). Use gap:2-3 for tight rhythm, gap:4-5 for sections\n'
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'

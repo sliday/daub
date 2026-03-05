@@ -2,6 +2,14 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.20
+
+**Add Layout align/valign props to eliminate spacer hacks.**
+
+- Feature: Layout renderer now supports `align: "center"|"right"|"end"|"between"` for horizontal alignment and `valign: "center"|"end"` for vertical alignment in horizontal layouts
+- Enhancement: AI system prompt explicitly prohibits spacer elements for centering, directing use of `align:"center"` instead
+- Docs: Layout prop documentation updated with align/valign options
+
 ## v3.0.19
 
 **Fix playground orphan duplication and diffUpdate missing new elements.**
