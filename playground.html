@@ -2067,13 +2067,25 @@ function assembleChunkResults(spec, plan, chunkResults) {
   return { spec: assembled, conflicts: conflicts };
 }
 
-function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, onProgress) {
+function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedChunks, onProgress) {
+  var failedSection = '';
+  if (failedChunks && failedChunks.length) {
+    failedSection = 'FAILED CHUNKS (junior agents could not implement these — YOU must implement them now):\n';
+    for (var fc = 0; fc < failedChunks.length; fc++) {
+      failedSection += '- "' + failedChunks[fc].id + '": ' + failedChunks[fc].description
+        + ' (elements: ' + JSON.stringify(failedChunks[fc].elementIds) + ')\n';
+    }
+    failedSection += '\nIMPORTANT: The above chunks are MISSING from the assembled spec. You must implement their full logic.\n\n';
+  }
+
   var prompt = 'You are a senior developer reviewing code assembled from parallel chunks. Your job: make it work as one cohesive unit.\n\n'
     + 'ORIGINAL PLAN:\n' + JSON.stringify(plan, null, 2) + '\n\n'
     + 'WIRING NOTES: ' + (plan.wiring || 'none') + '\n\n'
+    + failedSection
     + (conflicts.length ? 'CONFLICTS (multiple chunks touched same element):\n' + JSON.stringify(conflicts) + '\nMerge the conflicting code logically.\n\n' : '')
     + 'RULES:\n'
     + '- The spec below has rough code from parallel agents — clean it up, fix bugs, wire interactions\n'
+    + '- Implement any FAILED CHUNKS that are missing from the assembly\n'
     + '- Verify shared state variables are used consistently\n'
     + '- Wire cross-chunk interactions (events, state updates)\n'
     + '- Fix broken element references (data-spec-id)\n'
@@ -2786,6 +2798,18 @@ function generate() {
                 }
                 _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
 
+                // Collect failed chunk definitions for Kimi to implement
+                var failedChunks = [];
+                chunkResults.forEach(function(cr) {
+                  if (!cr.success) {
+                    var chunkDef = plan.chunks.filter(function(ch) { return ch.id === cr.chunkId; })[0];
+                    if (chunkDef) failedChunks.push(chunkDef);
+                  }
+                });
+                if (failedChunks.length) {
+                  console.log('[pipeline] failed chunks passed to review:', failedChunks.map(function(c) { return c.id; }));
+                }
+
                 // ---- Client-side assembly ----
                 var assembled = assembleChunkResults(finalSpec, plan, chunkResults);
                 if (assembled.conflicts.length) {
@@ -2794,8 +2818,10 @@ function generate() {
 
                 // ---- Step: Review ----
                 stepReview.classList.add('pg-pipeline__step--active');
-                $status.textContent = 'Reviewing assembly\u2026';
-                return reviewAndAssemble(finalSpec, plan, assembled.spec, assembled.conflicts, function(bytes, lines, secs) {
+                $status.textContent = failedChunks.length
+                  ? 'Reviewing + implementing ' + failedChunks.length + ' failed chunk' + (failedChunks.length > 1 ? 's' : '') + '\u2026'
+                  : 'Reviewing assembly\u2026';
+                return reviewAndAssemble(finalSpec, plan, assembled.spec, assembled.conflicts, failedChunks, function(bytes, lines, secs) {
                   codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
                 }).then(function(reviewedSpec) {
                   if (reviewedSpec) {
