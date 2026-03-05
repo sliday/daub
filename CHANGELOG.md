@@ -2,11 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.2.7
+
+**Fix theme widget scoping via MutationObserver.**
+
+- Bugfix: v3.2.6 override didn't intercept widget clicks (closure-bound internal functions). Replaced with MutationObserver that watches `<html>` attribute changes — when the widget sets a theme, the observer redirects it to the preview pane and re-locks chrome to `bone`
+
 ## v3.2.6
 
 **Theme widget scoped to preview + Tabs children-as-panels.**
 
-- Bugfix: Theme switcher widget now only themes the preview pane — playground chrome stays locked to `bone` theme
+- Bugfix: Theme switcher widget targets preview pane only — playground chrome stays locked to `bone` theme
 - Bugfix: Scheme switcher (Auto/Light/Dark) also scoped to preview only
 - Bugfix: FOUC prevention script no longer applies user's saved theme to playground chrome
 - Bugfix: Tabs renderer shows active panel based on `active` prop, not just first panel

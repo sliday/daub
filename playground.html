@@ -909,41 +909,60 @@ var $byokModal    = document.getElementById('pg-byok-modal');
 var $byokModalClose = document.getElementById('pg-byok-modal-close');
 var $byokSave     = document.getElementById('pg-byok-save');
 
-// ---- Override DAUB theme switcher to target preview only ----
-// The widget calls DAUB.setTheme() which normally themes <html>.
-// On playground, we redirect it to the preview pane and lock the chrome.
+// ---- Scope theme switcher to preview only ----
+// The widget's click handlers call internal setTheme/setScheme via closure,
+// so we can't override them. Instead, observe <html> attribute changes and
+// redirect theme/scheme to the preview pane, then re-lock the chrome.
 var PG_CHROME_THEME = 'bone';
-if (window.DAUB) {
-  if (DAUB.setTheme) {
-    DAUB.setTheme = function(theme) {
-      $preview.setAttribute('data-theme', theme);
-      try { localStorage.setItem('db-preview-theme', theme); } catch(e) {}
-      // Keep chrome locked
-      document.documentElement.setAttribute('data-theme', PG_CHROME_THEME);
-    };
+var PG_CHROME_SCHEME = 'light';
+var _pgLocking = false;
+
+function pgLockChrome() {
+  _pgLocking = true;
+  document.documentElement.setAttribute('data-theme', PG_CHROME_THEME);
+  document.documentElement.setAttribute('data-scheme', PG_CHROME_SCHEME);
+  _pgLocking = false;
+}
+
+// Watch for theme/scheme changes on <html> and redirect to preview
+var _pgObserver = new MutationObserver(function(mutations) {
+  if (_pgLocking) return;
+  for (var i = 0; i < mutations.length; i++) {
+    var m = mutations[i];
+    if (m.attributeName === 'data-theme') {
+      var newTheme = document.documentElement.getAttribute('data-theme');
+      if (newTheme && newTheme !== PG_CHROME_THEME) {
+        $preview.setAttribute('data-theme', newTheme);
+        try { localStorage.setItem('db-preview-theme', newTheme); } catch(e) {}
+        pgLockChrome();
+      }
+    }
+    if (m.attributeName === 'data-scheme') {
+      var newScheme = document.documentElement.getAttribute('data-scheme');
+      if (newScheme && newScheme !== PG_CHROME_SCHEME) {
+        $preview.setAttribute('data-scheme', newScheme);
+        pgLockChrome();
+      }
+    }
   }
-  // Override setScheme to scope data-scheme to preview too
-  if (DAUB.setScheme) {
-    var _origSetScheme = DAUB.setScheme;
-    DAUB.setScheme = function(scheme) {
-      _origSetScheme(scheme);
-      document.documentElement.setAttribute('data-scheme', 'light');
-      document.documentElement.setAttribute('data-theme', PG_CHROME_THEME);
-    };
-  }
-  // Wrap init to re-lock chrome after initTheme() runs inside it
+});
+_pgObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-scheme'] });
+
+// Wrap DAUB.init to re-lock chrome after initTheme() runs
+if (window.DAUB && DAUB.init) {
   var _origInit = DAUB.init;
   DAUB.init = function(root) {
     _origInit(root);
-    document.documentElement.setAttribute('data-theme', PG_CHROME_THEME);
+    pgLockChrome();
   };
-  // Restore preview-only theme on load
-  try {
-    var savedPreviewTheme = localStorage.getItem('db-preview-theme');
-    if (savedPreviewTheme) $preview.setAttribute('data-theme', savedPreviewTheme);
-  } catch(e) {}
-  document.documentElement.setAttribute('data-theme', PG_CHROME_THEME);
 }
+
+// Restore preview theme from previous session
+try {
+  var savedPreviewTheme = localStorage.getItem('db-preview-theme');
+  if (savedPreviewTheme) $preview.setAttribute('data-theme', savedPreviewTheme);
+} catch(e) {}
+pgLockChrome();
 
 // ---- Chat state ----
 var chatHistory = [];
