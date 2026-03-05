@@ -135,8 +135,8 @@ html::after {
   inset: 0;
   z-index: 10000;
   pointer-events: none;
-  backdrop-filter: saturate(calc(1 + 0.3 * var(--db-temperature))) sepia(calc(max(0, var(--db-temperature)) * 0.06)) hue-rotate(calc(min(0, var(--db-temperature)) * 8deg));
-  -webkit-backdrop-filter: saturate(calc(1 + 0.3 * var(--db-temperature))) sepia(calc(max(0, var(--db-temperature)) * 0.06)) hue-rotate(calc(min(0, var(--db-temperature)) * 8deg));
+  backdrop-filter: saturate(calc(1 + 0.6 * var(--db-temperature))) sepia(calc(max(0, var(--db-temperature)) * 0.18)) hue-rotate(calc(min(0, var(--db-temperature)) * 15deg));
+  -webkit-backdrop-filter: saturate(calc(1 + 0.6 * var(--db-temperature))) sepia(calc(max(0, var(--db-temperature)) * 0.18)) hue-rotate(calc(min(0, var(--db-temperature)) * 15deg));
 }
 
 /* Texture overlay — type set via [data-db-texture] on <html> */
@@ -151,7 +151,7 @@ body::before {
   inset: 0;
   z-index: 9998;
   pointer-events: none;
-  opacity: calc(var(--db-noise) * 0.8);
+  opacity: calc(var(--db-noise) * 1.4);
   background-repeat: repeat;
   mix-blend-mode: var(--db-texture-blend);
   background-image: var(--db-texture-img);
