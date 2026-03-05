@@ -41,7 +41,7 @@ const COMP_PROPS = {
   Label: 'text: string, required: bool, optional: bool',
   Spinner: 'size: "sm"|"lg"|"xl"',
   InputOTP: 'length: number, separator: bool',
-  Tabs: 'tabs: [{label, id}], active: string',
+  Tabs: 'tabs: [{label, id}], active: string, children: [childIds] (one child per tab — each child becomes a tab panel; order matches tabs array)',
   Breadcrumbs: 'items: [{label, href}]',
   Pagination: 'current: number, total: number, perPage: number',
   Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool',

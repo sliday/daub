@@ -33,7 +33,7 @@
 
   <!-- FOUC prevention -->
   <script>
-    (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t);var s=localStorage.getItem('db-scheme');if(s)document.documentElement.setAttribute('data-scheme',s);var a=localStorage.getItem('db-accent');if(a)document.documentElement.style.setProperty('--db-terracotta',a)}catch(e){}})();
+    (function(){document.documentElement.setAttribute('data-theme','bone')})();
   </script>
 
   <!-- Lucide Icons -->
@@ -908,6 +908,42 @@ var $defaultLink  = document.getElementById('pg-default-link');
 var $byokModal    = document.getElementById('pg-byok-modal');
 var $byokModalClose = document.getElementById('pg-byok-modal-close');
 var $byokSave     = document.getElementById('pg-byok-save');
+
+// ---- Override DAUB theme switcher to target preview only ----
+// The widget calls DAUB.setTheme() which normally themes <html>.
+// On playground, we redirect it to the preview pane and lock the chrome.
+var PG_CHROME_THEME = 'bone';
+if (window.DAUB) {
+  if (DAUB.setTheme) {
+    DAUB.setTheme = function(theme) {
+      $preview.setAttribute('data-theme', theme);
+      try { localStorage.setItem('db-preview-theme', theme); } catch(e) {}
+      // Keep chrome locked
+      document.documentElement.setAttribute('data-theme', PG_CHROME_THEME);
+    };
+  }
+  // Override setScheme to scope data-scheme to preview too
+  if (DAUB.setScheme) {
+    var _origSetScheme = DAUB.setScheme;
+    DAUB.setScheme = function(scheme) {
+      _origSetScheme(scheme);
+      document.documentElement.setAttribute('data-scheme', 'light');
+      document.documentElement.setAttribute('data-theme', PG_CHROME_THEME);
+    };
+  }
+  // Wrap init to re-lock chrome after initTheme() runs inside it
+  var _origInit = DAUB.init;
+  DAUB.init = function(root) {
+    _origInit(root);
+    document.documentElement.setAttribute('data-theme', PG_CHROME_THEME);
+  };
+  // Restore preview-only theme on load
+  try {
+    var savedPreviewTheme = localStorage.getItem('db-preview-theme');
+    if (savedPreviewTheme) $preview.setAttribute('data-theme', savedPreviewTheme);
+  } catch(e) {}
+  document.documentElement.setAttribute('data-theme', PG_CHROME_THEME);
+}
 
 // ---- Chat state ----
 var chatHistory = [];
@@ -2896,7 +2932,9 @@ RENDERERS.Tabs = function(p, ch, els, d) {
   var list = mkEl('div', 'db-tabs__list');
   list.setAttribute('role', 'tablist');
   var tabs = p.tabs || [];
-  tabs.forEach(function(t) {
+  var activeIdx = 0;
+  tabs.forEach(function(t, i) {
+    if (t.id === p.active) activeIdx = i;
     var btn = document.createElement('button');
     btn.className = 'db-tabs__tab';
     if (t.id === p.active) btn.setAttribute('aria-selected', 'true');
@@ -2907,14 +2945,15 @@ RENDERERS.Tabs = function(p, ch, els, d) {
   if (ch.length) {
     ch.forEach(function(cid, i) {
       var panel = mkEl('div', 'db-tabs__panel');
-      if (i > 0) panel.hidden = true;
-      panel.appendChild(renderElement(els, cid, d + 1));
+      if (i !== activeIdx) panel.hidden = true;
+      var child = renderElement(els, cid, d + 1);
+      if (child) panel.appendChild(child);
       el.appendChild(panel);
     });
   } else {
     tabs.forEach(function(t, i) {
       var panel = mkEl('div', 'db-tabs__panel');
-      if (i > 0) panel.hidden = true;
+      if (i !== activeIdx) panel.hidden = true;
       panel.appendChild(mkEl('p', 'db-body', (t.label || '') + ' content'));
       el.appendChild(panel);
     });
@@ -3912,7 +3951,7 @@ var COMP_PROPS = {
   Spinner: 'size: "sm"|"lg"|"xl"',
   InputOTP: 'length: number, separator: bool',
   // Navigation
-  Tabs: 'tabs: [{label, id}], active: string',
+  Tabs: 'tabs: [{label, id}], active: string, children: [childIds] (one child per tab — each child becomes a tab panel; order matches tabs array)',
   Breadcrumbs: 'items: [{label, href}]',
   Pagination: 'current: number, total: number, perPage: number',
   Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool',

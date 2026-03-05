@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.2.6
+
+**Theme widget scoped to preview + Tabs children-as-panels.**
+
+- Bugfix: Theme switcher widget now only themes the preview pane — playground chrome stays locked to `bone` theme
+- Bugfix: Scheme switcher (Auto/Light/Dark) also scoped to preview only
+- Bugfix: FOUC prevention script no longer applies user's saved theme to playground chrome
+- Bugfix: Tabs renderer shows active panel based on `active` prop, not just first panel
+- Enhancement: Tabs component spec now documents `children` as tab panel content — one child per tab, matched by order
+- Enhancement: AI models now generate content inside Tabs children instead of as siblings
+
 ## v3.2.5
 
 **Exhaustive specs + structured JSON output for visual QA generator.**
