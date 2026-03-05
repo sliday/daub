@@ -1,40 +1,57 @@
 // Cloudflare Pages Function — Web Look (Browserbase proxy)
 // POST /api/weblook  { url: "https://..." }
 
-export async function onRequestPost(context) {
-  const { request, env } = context;
-
+function getCorsHeaders(request) {
   const origin = request.headers.get('Origin') || '';
   const allowedOrigins = ['https://daub.dev', 'https://daub.pages.dev'];
   const isAllowed = allowedOrigins.some(o => origin === o || origin.endsWith('.daub.pages.dev'));
   const corsOrigin = isAllowed ? origin : allowedOrigins[0];
-
-  const corsHeaders = {
+  return {
     'Access-Control-Allow-Origin': corsOrigin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
+}
 
-  const jsonHeaders = { ...corsHeaders, 'Content-Type': 'application/json' };
+function jsonResponse(data, status, corsHeaders) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
 
+export async function onRequestPost(context) {
+  const { request, env } = context;
+  const corsHeaders = getCorsHeaders(request);
+
+  // Top-level safety net — always return JSON, never let CF serve HTML error page
+  try {
+    return await handleRequest(request, env, corsHeaders);
+  } catch (e) {
+    return jsonResponse({ error: 'Internal error: ' + (e.message || String(e)) }, 500, corsHeaders);
+  }
+}
+
+async function handleRequest(request, env, corsHeaders) {
   let body;
   try {
     body = await request.json();
   } catch {
-    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), { status: 400, headers: jsonHeaders });
+    return jsonResponse({ error: 'Invalid JSON body' }, 400, corsHeaders);
   }
 
   const url = (body.url || '').trim();
   if (!url || !/^https?:\/\//i.test(url)) {
-    return new Response(JSON.stringify({ error: 'Valid URL required (must start with http:// or https://)' }), { status: 400, headers: jsonHeaders });
+    return jsonResponse({ error: 'Valid URL required (must start with http:// or https://)' }, 400, corsHeaders);
   }
 
   const apiKey = env.BROWSERBASE_API_KEY;
   const projectId = env.BROWSERBASE_PROJECT_ID;
   if (!apiKey || !projectId) {
-    return new Response(JSON.stringify({ error: 'Server misconfigured: missing Browserbase credentials' }), { status: 500, headers: jsonHeaders });
+    return jsonResponse({ error: 'Server misconfigured: missing Browserbase credentials' }, 500, corsHeaders);
   }
 
+  // 1. Create Browserbase session
   let connectUrl;
   try {
     const sessionRes = await fetch('https://api.browserbase.com/v1/sessions', {
@@ -44,29 +61,36 @@ export async function onRequestPost(context) {
     });
     if (!sessionRes.ok) {
       const errText = await sessionRes.text();
-      return new Response(JSON.stringify({ error: 'Browserbase session failed: ' + errText }), { status: 502, headers: jsonHeaders });
+      return jsonResponse({ error: 'Browserbase session failed: ' + errText.substring(0, 200) }, 502, corsHeaders);
     }
     const session = await sessionRes.json();
     connectUrl = session.connectUrl;
+    if (!connectUrl) {
+      return jsonResponse({ error: 'No connectUrl in session response' }, 502, corsHeaders);
+    }
   } catch (e) {
-    return new Response(JSON.stringify({ error: 'Failed to create browser session: ' + e.message }), { status: 502, headers: jsonHeaders });
+    return jsonResponse({ error: 'Session creation failed: ' + e.message }, 502, corsHeaders);
   }
 
+  // 2. Connect via CDP WebSocket and capture page
   try {
     const result = await runCDP(connectUrl, url);
-    return new Response(JSON.stringify(result), { status: 200, headers: jsonHeaders });
+    return jsonResponse(result, 200, corsHeaders);
   } catch (e) {
-    return new Response(JSON.stringify({ error: 'Page capture failed: ' + e.message }), { status: 502, headers: jsonHeaders });
+    return jsonResponse({ error: 'Page capture failed: ' + e.message }, 502, corsHeaders);
   }
 }
 
-// CF Workers WebSocket: use fetch() with Upgrade header, then resp.webSocket
+// CF Workers outbound WebSocket via fetch + Upgrade header
 async function runCDP(connectUrl, targetUrl) {
   const wsResp = await fetch(connectUrl, {
     headers: { Upgrade: 'websocket' },
   });
+
   const ws = wsResp.webSocket;
-  if (!ws) throw new Error('WebSocket upgrade failed');
+  if (!ws) {
+    throw new Error('WebSocket upgrade failed (status ' + wsResp.status + ')');
+  }
   ws.accept();
 
   let msgId = 1;
@@ -75,7 +99,7 @@ async function runCDP(connectUrl, targetUrl) {
 
   ws.addEventListener('message', (evt) => {
     let msg;
-    try { msg = JSON.parse(evt.data); } catch { return; }
+    try { msg = JSON.parse(typeof evt.data === 'string' ? evt.data : new TextDecoder().decode(evt.data)); } catch { return; }
     if (msg.id && pending.has(msg.id)) {
       const { res, rej } = pending.get(msg.id);
       pending.delete(msg.id);
@@ -142,13 +166,9 @@ async function runCDP(connectUrl, targetUrl) {
   }
 }
 
-export async function onRequestOptions() {
+export async function onRequestOptions(context) {
   return new Response(null, {
     status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': 'https://daub.dev',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
+    headers: getCorsHeaders(context.request),
   });
 }

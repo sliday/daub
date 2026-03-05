@@ -340,7 +340,7 @@
     .pg-chat__input-wrap .db-textarea:focus-visible {
       width: 100%;
       min-height: 42px;
-      max-height: 200px;
+      max-height: calc(75vh - 120px);
       resize: none;
       font-family: var(--db-font-ui);
       font-size: 0.875rem;
@@ -364,19 +364,22 @@
       border: none;
       cursor: pointer;
       color: var(--db-warm-gray);
-      opacity: 0.5;
-      padding: 4px;
+      opacity: 0.6;
+      padding: 3px 6px;
       border-radius: 4px;
       transition: opacity 0.15s, background 0.15s;
-      display: flex; align-items: center;
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 0.6875rem;
+      font-family: var(--db-font-ui);
     }
     .pg-chat__attach-btn:hover { opacity: 1; background: color-mix(in srgb, var(--db-ink) 5%, transparent); }
     .pg-chat__send-hint {
       font-size: 0.6875rem;
       color: var(--db-warm-gray);
-      opacity: 0.5;
+      opacity: 0.4;
       font-family: var(--db-font-ui);
       user-select: none;
+      white-space: nowrap;
     }
     .pg-chat__img-strip {
       display: none;
@@ -714,14 +717,20 @@
             <div class="pg-chat__img-strip" id="pg-img-strip"></div>
             <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..."></textarea>
             <div class="pg-chat__input-actions">
-              <button class="pg-chat__attach-btn" id="pg-attach" title="Attach files">
-                <i data-lucide="paperclip" style="width:14px;height:14px;"></i>
-              </button>
-              <button class="pg-chat__attach-btn" id="pg-weblook" title="Attach web page">
-                <i data-lucide="globe" style="width:14px;height:14px;"></i>
-              </button>
-              <span class="pg-chat__send-hint">&#x23CE; Enter to send</span>
+              <div style="display:flex;align-items:center;gap:2px;">
+                <button class="pg-chat__attach-btn" id="pg-attach-img" title="Attach image">
+                  <i data-lucide="image" style="width:13px;height:13px;"></i> Image
+                </button>
+                <button class="pg-chat__attach-btn" id="pg-attach" title="Attach file">
+                  <i data-lucide="paperclip" style="width:13px;height:13px;"></i> File
+                </button>
+                <button class="pg-chat__attach-btn" id="pg-weblook" title="Attach web page">
+                  <i data-lucide="globe" style="width:13px;height:13px;"></i> Link
+                </button>
+              </div>
+              <span class="pg-chat__send-hint">&#x23CE; Enter</span>
             </div>
+            <input type="file" id="pg-file-input-img" accept="image/*" multiple style="display:none;">
             <input type="file" id="pg-file-input" accept="image/*,application/pdf" multiple style="display:none;">
           </div>
         </div>
@@ -876,7 +885,9 @@ var $viewportToggle = document.getElementById('pg-viewport-toggle');
 var $panelPreviewBody = document.getElementById('pg-preview-body');
 var $status     = document.getElementById('pg-status');
 var $attach     = document.getElementById('pg-attach');
+var $attachImg  = document.getElementById('pg-attach-img');
 var $fileInput  = document.getElementById('pg-file-input');
+var $fileInputImg = document.getElementById('pg-file-input-img');
 var $imgStrip   = document.getElementById('pg-img-strip');
 var pendingImages = []; // [{ base64, mimeType, dataUrl }]
 var pendingWebContexts = []; // [{ title, url, content, screenshot }]
@@ -999,8 +1010,32 @@ document.querySelectorAll('[data-example]').forEach(function(chip) {
   });
 });
 
-// ---- Image attach ----
+// ---- Image / File attach ----
+$attachImg.addEventListener('click', function() { $fileInputImg.click(); });
 $attach.addEventListener('click', function() { $fileInput.click(); });
+$fileInputImg.addEventListener('change', function() {
+  var files = this.files;
+  if (!files || !files.length) return;
+  var remaining = 10 - pendingImages.length;
+  if (remaining <= 0) { DAUB.toast({ type: 'warning', message: 'Max 10 files' }); this.value = ''; return; }
+  var toProcess = Math.min(files.length, remaining);
+  for (var i = 0; i < toProcess; i++) {
+    (function(file) {
+      if (file.size > 10 * 1024 * 1024) { DAUB.toast({ type: 'error', message: file.name + ' too large (max 10 MB)' }); return; }
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var dataUrl = e.target.result;
+        var mimeMatch = dataUrl.match(/^data:(image\/[^;]+);base64,/);
+        if (!mimeMatch) { DAUB.toast({ type: 'error', message: 'Invalid image' }); return; }
+        var imgData = { base64: dataUrl.split(',')[1], mimeType: mimeMatch[1], dataUrl: dataUrl };
+        pendingImages.push(imgData);
+        addImageToStrip(imgData);
+      };
+      reader.readAsDataURL(file);
+    })(files[i]);
+  }
+  this.value = '';
+});
 $fileInput.addEventListener('change', function() {
   var files = this.files;
   if (!files || !files.length) return;
@@ -2150,10 +2185,11 @@ $prompt.addEventListener('keydown', function(e) {
   }
 });
 
-// Auto-resize textarea
+// Auto-resize textarea (grows upward, max 75% of chat panel)
 $prompt.addEventListener('input', function() {
   this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+  var maxH = Math.max(($chatPanel ? $chatPanel.offsetHeight : 400) * 0.75, 120);
+  this.style.height = Math.min(this.scrollHeight, maxH) + 'px';
 });
 
 // ---- New Chat ----
