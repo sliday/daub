@@ -2,6 +2,22 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.3.0
+
+**Iframe-isolated preview + prompt quality + auto-JS interactivity.**
+
+- Feature: Preview now renders inside a sandboxed `<iframe srcdoc>` — complete CSS/JS isolation from playground chrome. Theme widget, CustomHTML JS, and CSS styles can no longer leak into the host page
+- Feature: `buildIframeSrcdoc()` generates a self-contained HTML document with DAUB CSS/JS, lucide, html2canvas. Communicates via `postMessage` bridge (render, theme, scheme, screenshot, clear)
+- Feature: `collectCustomJS()` extracts JS from all CustomHTML elements and executes them inside the iframe context
+- Feature: `capturePreview()` now uses a postMessage round-trip — iframe runs html2canvas internally and posts back the data URL
+- Enhancement: System prompt adds DENSITY & COMPLETENESS rules — 12-25 elements minimum, realistic data, proper page structure (header/nav/footer)
+- Enhancement: System prompt adds INTERACTIVITY guidance — LLM now auto-generates hidden CustomHTML nodes with JS to wire interactive patterns (progress bars, tabs, counters, form validation)
+- Enhancement: System prompt includes compact few-shot JSON example (contact form with JS validation wiring)
+- Enhancement: `selfCheck` prompt now checks for missing interactivity and sparse UIs
+- Removed: `diffUpdate`/`diffElement` incremental DOM patching (no longer applicable with iframe serialization; chat-context diff tracking remains)
+- Removed: Complex MutationObserver theme scoping (`pgLockChrome`, widget UI fixups) — replaced with simple observe-and-forward to iframe
+- Removed: html2canvas from parent page (now only loaded inside iframe)
+
 ## v3.2.8
 
 **Add Image component + diff-tracking in chat context.**

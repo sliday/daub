@@ -48,10 +48,6 @@
   <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"
           crossorigin="anonymous"></script>
 
-  <!-- html2canvas — preview screenshot capture for self-check -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
-          crossorigin="anonymous"></script>
-
   <!-- DAUB -->
   <link rel="stylesheet" href="daub.css?v=3.0.20">
 
@@ -247,7 +243,6 @@
     .pg-panel__body--mobile .pg-preview {
       width: 375px; min-width: 375px; max-width: 375px;
       max-height: calc(100% - 32px);
-      overflow-y: auto;
       border-radius: 8px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.18);
     }
@@ -622,31 +617,11 @@
       background: var(--db-cream-dark, var(--db-cream)); color: var(--db-ink); border: none;
     }
 
-    /* Preview panel */
+    /* Preview panel (iframe) */
     .pg-preview {
-      padding: 16px;
-    }
-    .pg-preview[data-theme] {
-      background: var(--db-cream);
-      color: var(--db-ink);
-    }
-    .pg-preview:empty {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100%;
-    }
-    .pg-preview:empty::after {
-      content: '\201CThe details are not the details. They make the design.\201D\A\2014 Charles Eames';
-      white-space: pre-wrap;
-      text-align: center;
-      font-family: var(--db-font-heading);
-      font-size: 0.9375rem;
-      font-style: italic;
-      line-height: 1.6;
-      color: var(--db-warm-gray);
-      opacity: 0.6;
-      max-width: 260px;
+      border: none;
+      width: 100%;
+      height: 100%;
     }
 
     /* Bottom tab bar — uses DAUB db-bottom-nav, hidden on desktop */
@@ -791,7 +766,7 @@
       <div class="pg-panel__body" id="pg-preview-body" style="display:flex;flex-direction:column;padding:0;min-height:0;">
         <!-- Design mode (default) -->
         <div class="pg-preview-pane pg-preview-pane--active" data-pane="design">
-          <div class="pg-preview" id="pg-preview"></div>
+          <iframe class="pg-preview" id="pg-preview-frame" sandbox="allow-scripts allow-same-origin" style="border:none;width:100%;height:100%;"></iframe>
         </div>
         <!-- Structure mode -->
         <div class="pg-preview-pane" data-pane="structure">
@@ -893,7 +868,7 @@ var $model      = document.getElementById('pg-model');
 var $apikey     = document.getElementById('pg-apikey');
 var $prompt     = document.getElementById('pg-prompt');
 var $json       = document.getElementById('pg-json');
-var $preview    = document.getElementById('pg-preview');
+var $previewFrame = document.getElementById('pg-preview-frame');
 var _isLoading = false;
 var $render     = document.getElementById('pg-render');
 var $copyJson   = document.getElementById('pg-copy-json');
@@ -928,13 +903,103 @@ var $byokModal    = document.getElementById('pg-byok-modal');
 var $byokModalClose = document.getElementById('pg-byok-modal-close');
 var $byokSave     = document.getElementById('pg-byok-save');
 
-// ---- Scope theme switcher to preview only ----
-// The widget's click handlers call internal setTheme/setScheme via closure,
-// so we can't override them. Instead, observe <html> attribute changes and
-// redirect theme/scheme to the preview pane, then re-lock the chrome.
+// ---- Iframe preview bootstrap ----
+function buildIframeSrcdoc(theme) {
+  var themeAttr = theme ? ' data-theme="' + theme + '"' : '';
+  return '<!DOCTYPE html><html lang="en"' + themeAttr + '>'
+    + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
+    + '<link rel="stylesheet" href="daub.css?v=3.0.20">'
+    + '<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" crossorigin="anonymous"><\/script>'
+    + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
+    + '<style>html,body{margin:0;min-height:100%;}'
+    + '.pg-iframe-empty{display:flex;align-items:center;justify-content:center;min-height:100vh;}'
+    + '.pg-iframe-empty::after{content:"\\201CThe details are not the details. They make the design.\\201D\\A\\2014 Charles Eames";'
+    + 'white-space:pre-wrap;text-align:center;font-family:var(--db-font-heading);font-size:0.9375rem;'
+    + 'font-style:italic;line-height:1.6;color:var(--db-warm-gray);opacity:0.6;max-width:260px;}'
+    + '.pg-preview-body{padding:16px;}</style>'
+    + '</head><body>'
+    + '<div id="pg-iframe-root" class="pg-iframe-empty"></div>'
+    + '<script src="daub.js?v=3.0.20"><\/script>'
+    + '<script>'
+    + 'var root = document.getElementById("pg-iframe-root");'
+    + 'window.addEventListener("message", function(e) {'
+    + '  if (!e.data || !e.data.type) return;'
+    + '  if (e.data.type === "render") {'
+    + '    root.className = "pg-preview-body";'
+    + '    root.innerHTML = e.data.html;'
+    + '    if (window.DAUB) { DAUB.init(root); if (DAUB.fixNestedRadius) DAUB.fixNestedRadius(root); }'
+    + '    if (window.lucide) lucide.createIcons({ nodes: root.querySelectorAll("[data-lucide]") });'
+    + '    if (e.data.js && e.data.js.length) {'
+    + '      e.data.js.forEach(function(item) {'
+    + '        try {'
+    + '          var container = item.id ? root.querySelector("[data-spec-id=\\"" + item.id + "\\"]") : root;'
+    // eslint-disable-line -- intentional: user-authored JS via AI chat in playground context
+    + '          (new Function("container", "preview", item.code))(container || root, root);'
+    + '        } catch(err) { console.error("CustomHTML JS error:", err); }'
+    + '      });'
+    + '    }'
+    + '  }'
+    + '  if (e.data.type === "theme") {'
+    + '    document.documentElement.setAttribute("data-theme", e.data.value);'
+    + '  }'
+    + '  if (e.data.type === "scheme") {'
+    + '    document.documentElement.setAttribute("data-scheme", e.data.value);'
+    + '  }'
+    + '  if (e.data.type === "clear") {'
+    + '    root.className = "pg-iframe-empty";'
+    + '    root.innerHTML = "";'
+    + '    document.documentElement.removeAttribute("data-theme");'
+    + '  }'
+    + '  if (e.data.type === "screenshot") {'
+    + '    if (!window.html2canvas) { parent.postMessage({ type: "screenshot", data: null }, "*"); return; }'
+    + '    html2canvas(root, { scale: 1, useCORS: true, logging: false })'
+    + '      .then(function(c) { parent.postMessage({ type: "screenshot", data: c.toDataURL("image/jpeg", 0.7) }, "*"); })'
+    + '      .catch(function() { parent.postMessage({ type: "screenshot", data: null }, "*"); });'
+    + '  }'
+    + '  if (e.data.type === "getHtml") {'
+    + '    parent.postMessage({ type: "html", data: root.innerHTML }, "*");'
+    + '  }'
+    + '});'
+    + '<\/script></body></html>';
+}
+
+function collectCustomJS(spec) {
+  var jsItems = [];
+  if (!spec || !spec.elements) return jsItems;
+  Object.keys(spec.elements).forEach(function(id) {
+    var def = spec.elements[id];
+    if (def.type === 'CustomHTML' && def.props && def.props.js) {
+      jsItems.push({ id: id, code: def.props.js });
+    }
+  });
+  return jsItems;
+}
+
+// Initialize iframe with srcdoc
+$previewFrame.srcdoc = buildIframeSrcdoc();
+
+// Helper to post message to iframe
+function postToPreview(msg) {
+  if ($previewFrame.contentWindow) {
+    $previewFrame.contentWindow.postMessage(msg, '*');
+  }
+}
+
+// Cache for iframe HTML (used by copy/download)
+var _iframeHtmlCache = '';
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'html') {
+    _iframeHtmlCache = e.data.data || '';
+  }
+});
+
+// ---- Scope theme switcher to iframe preview ----
+// The widget changes <html> data-theme/data-scheme. We observe those changes,
+// forward them to the iframe via postMessage, then revert chrome to bone.
 var PG_CHROME_THEME = 'bone';
 var PG_CHROME_SCHEME = 'light';
 var _pgLocking = false;
+var _pgPreviewTheme = null;
 
 function pgLockChrome() {
   _pgLocking = true;
@@ -943,79 +1008,39 @@ function pgLockChrome() {
   _pgLocking = false;
 }
 
-// Watch for theme/scheme changes on <html> and redirect to preview
 var _pgObserver = new MutationObserver(function(mutations) {
   if (_pgLocking) return;
-  var needsWidgetFix = false;
   for (var i = 0; i < mutations.length; i++) {
     var m = mutations[i];
     if (m.attributeName === 'data-theme') {
       var newTheme = document.documentElement.getAttribute('data-theme');
       if (newTheme && newTheme !== PG_CHROME_THEME) {
-        $preview.setAttribute('data-theme', newTheme);
+        _pgPreviewTheme = newTheme;
+        postToPreview({ type: 'theme', value: newTheme });
         try { localStorage.setItem('db-preview-theme', newTheme); } catch(e) {}
         pgLockChrome();
-        needsWidgetFix = true;
       }
     }
     if (m.attributeName === 'data-scheme') {
       var newScheme = document.documentElement.getAttribute('data-scheme');
       if (newScheme && newScheme !== PG_CHROME_SCHEME) {
-        $preview.setAttribute('data-scheme', newScheme);
+        postToPreview({ type: 'scheme', value: newScheme });
         pgLockChrome();
-        needsWidgetFix = true;
       }
     }
   }
-  // After locking chrome back to bone, fix widget UI to reflect preview's theme
-  if (needsWidgetFix) {
-    requestAnimationFrame(function() {
-      var previewTheme = $preview.getAttribute('data-theme') || 'light';
-      var info = DAUB.THEME_FAMILIES ? (function() {
-        for (var f in DAUB.THEME_FAMILIES) {
-          for (var m in DAUB.THEME_FAMILIES[f]) {
-            if (DAUB.THEME_FAMILIES[f][m] === previewTheme) return f;
-          }
-        }
-        return null;
-      })() : null;
-      document.querySelectorAll('.db-theme-switcher__item[data-family]').forEach(function(btn) {
-        btn.setAttribute('aria-pressed', String(btn.getAttribute('data-family') === info));
-      });
-    });
-  }
 });
 _pgObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-scheme'] });
-
-// Wrap DAUB.init to re-lock chrome after initTheme() runs
-if (window.DAUB && DAUB.init) {
-  var _origInit = DAUB.init;
-  DAUB.init = function(root) {
-    _origInit(root);
-    pgLockChrome();
-  };
-}
 
 // Restore preview theme from previous session
 try {
   var savedPreviewTheme = localStorage.getItem('db-preview-theme');
   if (savedPreviewTheme) {
-    $preview.setAttribute('data-theme', savedPreviewTheme);
-    // Update widget UI to reflect saved preview theme
-    requestAnimationFrame(function() {
-      var info = DAUB.THEME_FAMILIES ? (function() {
-        for (var f in DAUB.THEME_FAMILIES) {
-          for (var m in DAUB.THEME_FAMILIES[f]) {
-            if (DAUB.THEME_FAMILIES[f][m] === savedPreviewTheme) return f;
-          }
-        }
-        return null;
-      })() : null;
-      if (info) {
-        document.querySelectorAll('.db-theme-switcher__item[data-family]').forEach(function(btn) {
-          btn.setAttribute('aria-pressed', String(btn.getAttribute('data-family') === info));
-        });
-      }
+    _pgPreviewTheme = savedPreviewTheme;
+    // Forward to iframe once it loads
+    $previewFrame.addEventListener('load', function onFirstLoad() {
+      postToPreview({ type: 'theme', value: savedPreviewTheme });
+      $previewFrame.removeEventListener('load', onFirstLoad);
     });
   }
 } catch(e) {}
@@ -1538,10 +1563,19 @@ function repairJSON(s, asString) {
 
 // ---- Screenshot capture for self-check ----
 function capturePreview() {
-  if (!window.html2canvas || !$preview.firstChild) return Promise.resolve(null);
-  return html2canvas($preview, { scale: 1, useCORS: true, logging: false })
-    .then(function(canvas) { return canvas.toDataURL('image/jpeg', 0.7); })
-    .catch(function() { return null; });
+  if (!currentSpec) return Promise.resolve(null);
+  return new Promise(function(resolve) {
+    var timeout = setTimeout(function() { resolve(null); }, 5000);
+    function onMessage(e) {
+      if (e.data && e.data.type === 'screenshot') {
+        clearTimeout(timeout);
+        window.removeEventListener('message', onMessage);
+        resolve(e.data.data);
+      }
+    }
+    window.addEventListener('message', onMessage);
+    postToPreview({ type: 'screenshot' });
+  });
 }
 
 // ---- Self-check: verify rendered output and fix issues ----
@@ -1551,7 +1585,10 @@ function selfCheck(spec, screenshotDataUrl) {
     + '1. Layout issues (overlapping, misaligned, or missing elements)\n'
     + '2. Components that failed to render or look broken\n'
     + '3. Missing content or placeholder text that should be real data\n'
-    + '4. Visual hierarchy problems\n\n'
+    + '4. Visual hierarchy problems\n'
+    + '5. Missing interactivity: progress bars not connected to actions, tabs that don\'t switch, counters without increment logic\n'
+    + '6. Sparse UI: fewer than 12 elements for a non-trivial page — add missing sections, nav, footer\n\n'
+    + 'If interactive elements lack JS wiring, add a hidden CustomHTML element with js to connect them.\n'
     + 'If the UI looks correct, return the spec JSON unchanged.\n'
     + 'If there are issues, return a FIXED version of the complete JSON spec.\n'
     + 'Return ONLY the JSON, no explanation.';
@@ -1951,7 +1988,7 @@ function generate() {
   updateRenderVisibility();
   progressivePrevSpec = currentSpec;
   if (!currentSpec) {
-    while ($preview.firstChild) $preview.removeChild($preview.firstChild);
+    postToPreview({ type: 'clear' });
   }
 
   var messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg);
@@ -2127,7 +2164,7 @@ $copyJson.addEventListener('click', function() {
   });
 });
 $copyHtml.addEventListener('click', function() {
-  navigator.clipboard.writeText($preview.innerHTML).then(function() {
+  navigator.clipboard.writeText(_iframeHtmlCache).then(function() {
     DAUB.toast({ type: 'success', message: 'HTML copied!' });
   });
 });
@@ -2150,7 +2187,7 @@ function updateToolbarForMode(mode) {
 
 function updateCodeView() {
   var el = document.getElementById('pg-code-view');
-  if (el && $preview.innerHTML) el.textContent = $preview.innerHTML;
+  if (el && _iframeHtmlCache) el.textContent = _iframeHtmlCache;
 }
 
 function updatePreviewToolbar() {
@@ -2212,7 +2249,7 @@ $download.addEventListener('click', function() {
     + '<title>DAUB UI Export</title>\n'
     + '<link rel="stylesheet" href="https://daub.dev/daub.css">\n'
     + '</head>\n<body>\n<div class="db-container" style="padding:24px;">\n'
-    + $preview.innerHTML
+    + _iframeHtmlCache
     + '\n</div>\n<script src="https://daub.dev/daub.js"><\/script>\n'
     + '</body>\n</html>';
   var blob = new Blob([html], { type: 'text/html' });
@@ -2323,8 +2360,8 @@ $newChat.addEventListener('click', function() {
   refreshJsonTree();
   updateRenderVisibility();
   updatePreviewToolbar();
-  while ($preview.firstChild) $preview.removeChild($preview.firstChild);
-  $preview.removeAttribute('data-theme');
+  postToPreview({ type: 'clear' });
+  _iframeHtmlCache = '';
   $prompt.value = '';
   $status.textContent = '';
   hideJsonError();
@@ -2431,38 +2468,22 @@ function renderSpec(spec, prevSpec) {
     showJsonError('Spec must have "root" and "elements"');
     return;
   }
-  // If we have a previous spec, do incremental diff via data-spec-id lookup
-  if (prevSpec && prevSpec.root && prevSpec.elements && $preview.firstChild) {
-    diffUpdate(prevSpec, spec, $preview);
-  } else {
-    var el = renderElement(spec.elements, spec.root, 0);
-    if (el) {
-      if ($preview.firstChild) {
-        $preview.replaceChild(el, $preview.firstChild);
-      } else {
-        $preview.appendChild(el);
-      }
-    }
-  }
+  // Render into a detached container
+  var tempDiv = document.createElement('div');
 
-  // Clean up stale orphans from previous renders
-  var rootEl = $preview.querySelector('[data-spec-id="' + spec.root + '"]');
-  Array.from($preview.children).forEach(function(child) {
-    if (child !== rootEl) $preview.removeChild(child);
-  });
+  var el = renderElement(spec.elements, spec.root, 0);
+  if (el) tempDiv.appendChild(el);
 
   // Render orphan elements (overlays not in any children array)
   var rendered = {};
-  $preview.querySelectorAll('[data-spec-id]').forEach(function(n) {
+  tempDiv.querySelectorAll('[data-spec-id]').forEach(function(n) {
     rendered[n.getAttribute('data-spec-id')] = true;
   });
   Object.keys(spec.elements).forEach(function(id) {
     if (id !== spec.root && !rendered[id]) {
       var orphan = renderElement(spec.elements, id, 0);
       if (orphan) {
-        $preview.appendChild(orphan);
-        // Mark this orphan and all its descendants as rendered
-        // so children of orphan containers aren't duplicated
+        tempDiv.appendChild(orphan);
         orphan.querySelectorAll('[data-spec-id]').forEach(function(n) {
           rendered[n.getAttribute('data-spec-id')] = true;
         });
@@ -2471,18 +2492,15 @@ function renderSpec(spec, prevSpec) {
     }
   });
 
+  // Set theme on iframe
   if (spec.theme) {
-    $preview.setAttribute('data-theme', spec.theme);
-  } else {
-    $preview.removeAttribute('data-theme');
+    postToPreview({ type: 'theme', value: spec.theme });
   }
 
-  // Re-init DAUB behaviors on new content
-  if (window.DAUB) {
-    DAUB.init($preview);
-    if (DAUB.fixNestedRadius) DAUB.fixNestedRadius($preview);
-  }
-  if (window.lucide) lucide.createIcons({ nodes: $preview.querySelectorAll('[data-lucide]') });
+  // Collect CustomHTML JS and serialize DOM to iframe
+  var jsItems = collectCustomJS(spec);
+  _iframeHtmlCache = tempDiv.innerHTML;
+  postToPreview({ type: 'render', html: tempDiv.innerHTML, js: jsItems });
 }
 
 // Incremental diff: walk spec tree, find DOM nodes by data-spec-id, replace changed subtrees
@@ -4017,19 +4035,7 @@ RENDERERS.CustomHTML = function(p, ch, els, d) {
   if (ch && ch.length) {
     el.appendChild(renderChildren(els, ch, d));
   }
-  if (p.js) {
-    setTimeout(function() {
-      try {
-        var preview = document.getElementById('pg-preview');
-        (new Function('container', 'preview', p.js))(el, preview); // eslint-disable-line -- intentional: user-authored JS via AI chat in playground context
-      } catch(e) {
-        var err = document.createElement('pre');
-        err.style.cssText = 'color:var(--db-error);font-size:0.75rem;margin-top:8px;';
-        err.textContent = 'JS Error: ' + e.message;
-        el.appendChild(err);
-      }
-    }, 0);
-  }
+  // JS is collected by collectCustomJS() and executed inside the iframe via postMessage
   return el;
 };
 
@@ -4191,15 +4197,8 @@ var SYSTEM_PROMPT = (function() {
     + '- Do NOT use Layout — it is deprecated. Use Stack (flexbox) or Grid (CSS grid) instead\n'
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'
-    + '- Use real-looking sample data (names, numbers, dates)\n'
     + '- Keep element IDs descriptive and unique\n'
     + '- For standalone images use the Image component with a src URL. For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)\n'
-    + '- CustomHTML is an ESCAPE HATCH — PREFER standard DAUB components for everything. Only use CustomHTML for: (a) inter-component interactions (e.g. a button controlling a modal elsewhere), (b) animations/transitions, (c) widgets not covered by DAUB components\n'
-    + '- CustomHTML supports children: use "children" array to nest DAUB components inside CustomHTML (modals, drawers, interactive panels). Children are real DAUB components — themed, diffable, with data-spec-id\n'
-    + '- Use "html" only for truly custom markup (decorative elements, SVG, canvas). Use "children" for content that should be standard DAUB components. Can combine both: html renders first, children append after\n'
-    + '- CustomHTML props: html (raw HTML, use DAUB CSS classes like db-btn, db-card), css (CSS rules injected as <style>), js (vanilla JS)\n'
-    + '- CustomHTML JS receives two args: "container" (this element\'s wrapper div) and "preview" (the entire preview pane). Use preview.querySelector(\'[data-spec-id="someId"]\') to target other rendered elements by their spec ID. The js can manipulate both html content and rendered children via container\n'
-    + '- Keep CustomHTML JS minimal: event listeners, class toggling, text updates. No frameworks, no fetch calls\n'
     + '- Escape quotes properly in JSON strings: use \\" for double quotes inside string values\n'
     + '- Overlay components (Modal, AlertDialog, Sheet, Drawer) are hidden by default — do NOT add display:none style\n'
     + '- Use trigger: "overlay-id" on Button to open overlays — no CustomHTML JS needed\n'
@@ -4210,7 +4209,35 @@ var SYSTEM_PROMPT = (function() {
     + '- StatCard horizontal:true for compact inline stat display (icon + label + value in a row)\n'
     + '- Stepper vertical:true for vertical process flows and timelines\n'
     + '- Use CustomSelect (not Select) when you need searchable dropdowns or custom-styled options; set selected:true on the default option and disabled:true on unavailable options\n'
-    + '- Use "Separator" for dividers/horizontal rules — there is no "Divider" component\n\n';
+    + '- Use "Separator" for dividers/horizontal rules — there is no "Divider" component\n\n'
+    + 'DENSITY & COMPLETENESS:\n'
+    + '- Generate 12-25 elements minimum for any non-trivial UI\n'
+    + '- Fill every section with realistic sample data — no "Lorem ipsum", no "..." placeholders\n'
+    + '- Dashboards: 4+ stat cards, 2+ charts/tables, sidebar navigation\n'
+    + '- Forms: field labels, helper text, validation states, submit buttons\n'
+    + '- Use nested Stacks/Cards for visual depth and hierarchy\n'
+    + '- Every page needs proper header/nav, main content, and footer/actions\n'
+    + '- Use real-looking sample data (names, numbers, dates) throughout\n\n'
+    + 'INTERACTIVITY — CustomHTML JS:\n'
+    + '- ALWAYS add a hidden CustomHTML element with js for interactive patterns\n'
+    + '- Progress bars: wire to forms/buttons so they visually update\n'
+    + '- Tabs: switch content panels when tab buttons are clicked\n'
+    + '- Counters: increment/decrement values on button clicks\n'
+    + '- Forms: validate fields, show success/error states on submit\n'
+    + '- Toggles/switches: visually reflect state changes\n'
+    + '- Use a single hidden CustomHTML node (type:"CustomHTML", props:{js:"..."}) at the end of the elements list to wire page-level interactivity\n'
+    + '- CustomHTML JS receives "container" (this element) and "preview" (root). Use preview.querySelector(\'[data-spec-id="someId"]\') to target elements\n'
+    + '- Keep JS focused: event listeners, class toggling, text/attribute updates. No frameworks, no fetch calls\n'
+    + '- CustomHTML also supports children array, html prop (raw markup with DAUB CSS classes), and css prop\n\n'
+    + 'EXAMPLE — Contact form with validation:\n'
+    + '{"theme":"bone","root":"page","elements":{"page":{"type":"Stack","props":{"direction":"vertical","gap":4},"children":["header","form-card","js-wire"]},'
+    + '"header":{"type":"Heading","props":{"level":2,"text":"Contact Us"}},'
+    + '"form-card":{"type":"Card","props":{},"children":["name-input","email-input","msg-input","submit-btn"]},'
+    + '"name-input":{"type":"Input","props":{"label":"Name","placeholder":"Jane Smith"}},'
+    + '"email-input":{"type":"Input","props":{"label":"Email","type":"email","placeholder":"jane@example.com"}},'
+    + '"msg-input":{"type":"Textarea","props":{"label":"Message","placeholder":"How can we help?"}},'
+    + '"submit-btn":{"type":"Button","props":{"label":"Send Message","variant":"primary"}},'
+    + '"js-wire":{"type":"CustomHTML","props":{"js":"var btn=preview.querySelector(\'[data-spec-id=\\\\\"submit-btn\\\\\"]\');if(btn)btn.addEventListener(\'click\',function(){btn.textContent=\'Sent!\';btn.disabled=true;setTimeout(function(){btn.textContent=\'Send Message\';btn.disabled=false;},2000);});"}}}}\n\n';
 
   var themes = (function() {
     var fams = DAUB.THEME_FAMILIES;
