@@ -2,6 +2,13 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.2.5
+
+**Exhaustive specs + structured JSON output for visual QA generator.**
+
+- Enhancement: System prompt now instructs exhaustive, production-realistic output — realistic data, 20-50 elements, complete page structures
+- Enhancement: Gemini API uses `responseMimeType: application/json` for guaranteed valid JSON — no more markdown fences or preamble text
+
 ## v3.2.4
 
 **Increase Gemini output budget for visual QA generator.**

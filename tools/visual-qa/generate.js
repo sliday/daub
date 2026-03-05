@@ -100,6 +100,14 @@ const COMP_CATEGORIES = [
 
 function buildSystemPrompt() {
   let preamble = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\n'
+    + 'BE EXHAUSTIVE AND DETAILED. Generate complete, production-realistic UIs:\n'
+    + '- Include ALL elements mentioned in the prompt — do not skip or summarize\n'
+    + '- Add realistic sample data: full names, plausible numbers, real-looking dates, complete sentences\n'
+    + '- Populate tables with 5-8 rows, lists with 4-6 items, sidebars with full navigation\n'
+    + '- Include secondary UI elements: badges, status indicators, tooltips, helper text, icons on buttons\n'
+    + '- Build complete page structures: header/navbar, main content, sidebar if relevant, footer elements\n'
+    + '- Use nested layouts to create visual hierarchy — cards inside grids, stats above tables, filters above content\n'
+    + '- Aim for 20-50 elements per spec. Simple forms: 15-25. Dashboards: 30-50. Complex layouts: 40-60\n\n'
     + 'CRITICAL: You MUST return ONLY a single valid JSON object. No markdown fences, no explanation, no text before or after the JSON.\n'
     + 'Do NOT use trailing commas. Do NOT use comments. Ensure every string is properly quoted and escaped.\n\n'
     + 'OUTPUT FORMAT:\n'
@@ -321,7 +329,7 @@ async function callGemini(userPrompt) {
       generationConfig: {
         maxOutputTokens: 32768,
         temperature: 0.7,
-        thinkingConfig: { thinkingLevel: 'NONE' },
+        responseMimeType: 'application/json',
       },
     }),
   });
