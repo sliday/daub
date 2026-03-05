@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.10
+
+**Playground: CustomHTML now accepts children for DAUB component nesting.**
+
+- Feature: CustomHTML supports `children` array — nest standard DAUB components (Button, Modal, Layout, etc.) inside CustomHTML containers
+- Enhancement: Children render as real DAUB components with theming, diffability, and `data-spec-id` attributes
+- Enhancement: `html` renders first, then children append after — both can be combined
+- Enhancement: System prompt guides AI to use `children` for content and `html` only for truly custom markup (SVG, canvas, decorative elements)
+
 ## v3.0.9
 
 **Playground: CustomHTML gains CSS support and preview-wide JS scope.**

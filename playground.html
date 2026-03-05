@@ -3529,7 +3529,7 @@ RENDERERS.ChartCard = function(p, ch, els, d) {
 };
 
 // -- CustomHTML: raw HTML+CSS+JS rendered in a container --
-RENDERERS.CustomHTML = function(p) {
+RENDERERS.CustomHTML = function(p, ch, els, d) {
   var el = document.createElement('div');
   el.className = 'pg-custom-html';
   if (p.css) {
@@ -3542,6 +3542,9 @@ RENDERERS.CustomHTML = function(p) {
       p.html.replace(/<script[\s\S]*?<\/script>/gi, '') // eslint-disable-line -- intentional: user-authored HTML via AI chat
     );
     el.appendChild(frag);
+  }
+  if (ch && ch.length) {
+    el.appendChild(renderChildren(els, ch, d));
   }
   if (p.js) {
     setTimeout(function() {
@@ -3637,7 +3640,7 @@ var COMP_PROPS = {
   StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string',
   ChartCard: 'title: string',
   // Custom
-  CustomHTML: 'html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector(\'[data-spec-id="someId"]\') to target other elements)'
+  CustomHTML: 'html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector(\'[data-spec-id="someId"]\') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after)'
 };
 
 var COMP_CATEGORIES = [
@@ -3693,8 +3696,10 @@ var SYSTEM_PROMPT = (function() {
     + '- Keep element IDs descriptive and unique\n'
     + '- For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)\n'
     + '- CustomHTML is an ESCAPE HATCH — PREFER standard DAUB components for everything. Only use CustomHTML for: (a) inter-component interactions (e.g. a button controlling a modal elsewhere), (b) animations/transitions, (c) widgets not covered by DAUB components\n'
+    + '- CustomHTML supports children: use "children" array to nest DAUB components inside CustomHTML (modals, drawers, interactive panels). Children are real DAUB components — themed, diffable, with data-spec-id\n'
+    + '- Use "html" only for truly custom markup (decorative elements, SVG, canvas). Use "children" for content that should be standard DAUB components. Can combine both: html renders first, children append after\n'
     + '- CustomHTML props: html (raw HTML, use DAUB CSS classes like db-btn, db-card), css (CSS rules injected as <style>), js (vanilla JS)\n'
-    + '- CustomHTML JS receives two args: "container" (this element\'s wrapper div) and "preview" (the entire preview pane). Use preview.querySelector(\'[data-spec-id="someId"]\') to target other rendered elements by their spec ID\n'
+    + '- CustomHTML JS receives two args: "container" (this element\'s wrapper div) and "preview" (the entire preview pane). Use preview.querySelector(\'[data-spec-id="someId"]\') to target other rendered elements by their spec ID. The js can manipulate both html content and rendered children via container\n'
     + '- Keep CustomHTML JS minimal: event listeners, class toggling, text updates. No frameworks, no fetch calls\n'
     + '- Escape quotes properly in JSON strings: use \\" for double quotes inside string values\n\n';
 

@@ -378,7 +378,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.0.9** — Playground: CustomHTML gains CSS support and preview-wide JS scope for cross-component interactivity. 76 components, 20 theme families.
+**Latest: v3.0.10** — Playground: CustomHTML now accepts children for DAUB component nesting — real themed components inside custom containers. 76 components, 20 theme families.
 
 ## License
 
