@@ -379,7 +379,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.2.0** — Web Look: attach live web pages as AI context in playground. 76 components, 20 theme families.
+**Latest: v3.2.0** — Web Look + redesigned chat input: attach live web pages as AI context in playground. 76 components, 20 theme families.
 
 ## License
 
