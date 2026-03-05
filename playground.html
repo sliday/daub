@@ -1551,7 +1551,7 @@ function buildMessages(userPrompt, images, webContexts) {
   if (webContexts && webContexts.length) {
     var webPreamble = '';
     webContexts.forEach(function(wc) {
-      webPreamble += '[Web page: ' + (wc.title || wc.url) + ']\nURL: ' + wc.url + '\nContent:\n' + wc.content + '\n---\n';
+      webPreamble += '[Web page: ' + (wc.title || wc.url) + ']\nURL: ' + wc.url + '\nSimplified HTML structure:\n' + wc.content + '\n---\n';
     });
     userPrompt = webPreamble + userPrompt;
     // Add screenshots as images

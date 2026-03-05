@@ -81,6 +81,96 @@ async function handleRequest(request, env, corsHeaders) {
   }
 }
 
+// Simplified HTML extraction script — runs inside the browser via Runtime.evaluate
+// Preserves structural tags (grid, flex, sections) but strips noise (scripts, styles, tracking)
+const DOM_TO_HTML_SCRIPT = `(function() {
+  var SKIP = {SCRIPT:1,STYLE:1,NOSCRIPT:1,IFRAME:1,OBJECT:1,EMBED:1,TEMPLATE:1,LINK:1,META:1};
+  var KEEP_ATTRS = ['class','id','href','src','alt','role','aria-label','type','placeholder',
+    'data-theme','style','width','height','colspan','rowspan','for','name','value','action','method'];
+  var VOID = {IMG:1,INPUT:1,BR:1,HR:1,META:1,LINK:1,AREA:1,COL:1};
+
+  function simplifyStyle(style) {
+    if (!style) return '';
+    // Keep only layout-relevant CSS properties
+    var keep = ['display','grid','flex','gap','justify','align','width','height','max-width',
+      'min-height','padding','margin','position','top','left','right','bottom','grid-template',
+      'grid-column','grid-row','flex-direction','flex-wrap','order','background-color','color',
+      'font-size','font-weight','border-radius','overflow','text-align'];
+    var parts = style.split(';').filter(function(p) {
+      var prop = p.split(':')[0].trim().toLowerCase();
+      return keep.some(function(k) { return prop.indexOf(k) === 0; });
+    });
+    return parts.length ? parts.join(';').trim() : '';
+  }
+
+  function walk(node) {
+    if (!node) return '';
+    if (node.nodeType === 3) {
+      var t = node.textContent;
+      if (!t || !t.trim()) return '';
+      return t.replace(/\\s+/g, ' ');
+    }
+    if (node.nodeType === 8) return '';
+    if (node.nodeType !== 1) return '';
+    var tag = node.tagName;
+    if (SKIP[tag]) return '';
+    if (node.getAttribute('aria-hidden') === 'true') return '';
+    if (node.hidden) return '';
+    try {
+      var cs = window.getComputedStyle(node);
+      if (cs.display === 'none' || cs.visibility === 'hidden') return '';
+    } catch(e) {}
+
+    // SVG: just note it exists
+    if (tag === 'SVG') {
+      var label = node.getAttribute('aria-label') || '';
+      return label ? '<svg aria-label="' + label + '"/>' : '';
+    }
+
+    var ltag = tag.toLowerCase();
+    var attrs = '';
+    for (var i = 0; i < KEEP_ATTRS.length; i++) {
+      var a = KEEP_ATTRS[i];
+      var v = node.getAttribute(a);
+      if (!v) continue;
+      if (a === 'style') { v = simplifyStyle(v); if (!v) continue; }
+      if (a === 'class') { v = v.replace(/\\s+/g, ' ').trim(); if (!v) continue; }
+      if (a === 'src' && v.startsWith('data:')) { v = '[data-uri]'; }
+      attrs += ' ' + a + '="' + v.replace(/"/g, '&quot;').substring(0, 200) + '"';
+    }
+
+    // Also capture computed layout hints for divs/sections without explicit style
+    if ((tag === 'DIV' || tag === 'SECTION' || tag === 'MAIN' || tag === 'NAV' || tag === 'HEADER' || tag === 'FOOTER' || tag === 'ASIDE') && !node.getAttribute('style')) {
+      try {
+        var cs2 = window.getComputedStyle(node);
+        var d = cs2.display;
+        if (d === 'flex' || d === 'grid' || d === 'inline-flex' || d === 'inline-grid') {
+          var hint = 'display:' + d;
+          if (d.indexOf('flex') >= 0) hint += ';flex-direction:' + cs2.flexDirection;
+          if (d.indexOf('grid') >= 0 && cs2.gridTemplateColumns !== 'none') hint += ';grid-template-columns:' + cs2.gridTemplateColumns;
+          if (cs2.gap && cs2.gap !== 'normal') hint += ';gap:' + cs2.gap;
+          attrs += ' data-layout="' + hint + '"';
+        }
+      } catch(e) {}
+    }
+
+    if (VOID[tag]) return '<' + ltag + attrs + '/>';
+
+    var children = node.childNodes;
+    var inner = '';
+    for (var j = 0; j < children.length; j++) {
+      inner += walk(children[j]);
+    }
+    if (!inner.trim() && !VOID[tag]) return '';
+    return '<' + ltag + attrs + '>' + inner + '</' + ltag + '>';
+  }
+
+  var root = document.querySelector('main, [role="main"], article') || document.body;
+  if (!root) return '';
+  var html = walk(root);
+  return html.substring(0, 16000);
+})()`;
+
 // CF Workers outbound WebSocket via fetch + Upgrade header
 async function runCDP(connectUrl, targetUrl) {
   // CF Workers fetch() requires https:// not wss:// for WebSocket upgrade
@@ -177,15 +267,9 @@ async function runCDP(connectUrl, targetUrl) {
     const titleResult = await pageSend('Runtime.evaluate', { expression: 'document.title' });
     const title = (titleResult && titleResult.result && titleResult.result.value) || '';
 
-    const textResult = await pageSend('Runtime.evaluate', {
-      expression: `(function() {
-        var el = document.body;
-        if (!el) return '';
-        var text = el.innerText || el.textContent || '';
-        return text.substring(0, 8000);
-      })()`
-    });
-    const content = (textResult && textResult.result && textResult.result.value) || '';
+    // Extract AI-friendly markdown from the page DOM
+    const mdResult = await pageSend('Runtime.evaluate', { expression: DOM_TO_HTML_SCRIPT });
+    const content = (mdResult && mdResult.result && mdResult.result.value) || '';
 
     const ssResult = await pageSend('Page.captureScreenshot', { format: 'jpeg', quality: 70 });
     const screenshot = (ssResult && ssResult.data) || '';
