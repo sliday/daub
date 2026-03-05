@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.3.2
+
+**Pipeline UX: chat-inline step tracker, skeleton shimmer, Kimi JSON fix.**
+
+- Feature: Pipeline steps displayed inside chat bubble as collapsible `<details>` — open while running, auto-collapses when done
+- Feature: Each step has an SVG icon: search (analyze), code brackets (code gen), eye (visual check), checkmark (done), dash (skipped)
+- Feature: Active step icon blinks; done steps show green checkmark with description; skipped steps are dimmed
+- Feature: Skeleton shimmer (`db-skeleton`) applied to target elements in iframe preview during code generation
+- Fix: Kimi K2.5 requests opt out of `response_format: { type: 'json_object' }` — backend now conditionally includes it (`response_format: false` to skip)
+- Enhancement: Console logging for `analyzeInteractivity` and `generateInteractiveCode` — raw response preview, parse errors, success/failure
+
 ## v3.3.1
 
 **Two-LLM interactivity pipeline for games, quizzes, and interactive apps.**
