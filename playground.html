@@ -544,7 +544,6 @@
     /* Preview panel */
     .pg-preview {
       padding: 16px;
-      min-height: 100%;
     }
     .pg-preview[data-theme] {
       background: var(--db-cream);
@@ -699,7 +698,7 @@
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON" style="display:none;"><i data-lucide="copy" style="width:12px;height:12px;"></i></button>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-html" title="Copy HTML" style="display:none;"><i data-lucide="clipboard-copy" style="width:12px;height:12px;"></i></button>
       </div>
-      <div class="pg-panel__body" id="pg-preview-body" style="display:flex;flex-direction:column;">
+      <div class="pg-panel__body" id="pg-preview-body" style="display:flex;flex-direction:column;padding:0;min-height:0;">
         <!-- Design mode (default) -->
         <div class="pg-preview-pane pg-preview-pane--active" data-pane="design">
           <div class="pg-preview db-surface--raised" id="pg-preview"></div>
