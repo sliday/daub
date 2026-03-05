@@ -443,6 +443,37 @@
       font-size: 11px;
       color: var(--db-ink-muted, #666);
     }
+    .pg-chat__web-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: var(--db-sand, #f5f0eb);
+      width: 64px;
+    }
+    .pg-chat__web-item.pg-chat__web-item--loading {
+      opacity: 0.5;
+    }
+    .pg-web-label {
+      font-size: 8px;
+      line-height: 1;
+      color: var(--db-ink-muted, #666);
+      max-width: 58px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .pg-chat__msg-web {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: #e8f0fe;
+      font-size: 11px;
+      color: var(--db-ink-muted, #666);
+    }
     .pg-chat__msg-images {
       display: flex;
       gap: 4px;
@@ -684,7 +715,10 @@
             <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..."></textarea>
             <div class="pg-chat__input-actions">
               <button class="pg-chat__attach-btn" id="pg-attach" title="Attach files">
-                <i data-lucide="image-plus" style="width:14px;height:14px;"></i>
+                <i data-lucide="paperclip" style="width:14px;height:14px;"></i>
+              </button>
+              <button class="pg-chat__attach-btn" id="pg-weblook" title="Attach web page">
+                <i data-lucide="globe" style="width:14px;height:14px;"></i>
               </button>
               <span class="pg-chat__send-hint">&#x23CE; Enter to send</span>
             </div>
@@ -845,6 +879,8 @@ var $attach     = document.getElementById('pg-attach');
 var $fileInput  = document.getElementById('pg-file-input');
 var $imgStrip   = document.getElementById('pg-img-strip');
 var pendingImages = []; // [{ base64, mimeType, dataUrl }]
+var pendingWebContexts = []; // [{ title, url, content, screenshot }]
+var $weblook   = document.getElementById('pg-weblook');
 var $jsonError  = document.querySelector('.pg-json-error');
 var $jsonErrMsg = document.getElementById('pg-json-error-msg');
 var $jsonTree   = document.querySelector('.pg-json-tree');
@@ -1028,9 +1064,88 @@ function addImageToStrip(imgData) {
 
 function clearImageStrip() {
   pendingImages = [];
+  pendingWebContexts = [];
   while ($imgStrip.firstChild) $imgStrip.removeChild($imgStrip.firstChild);
   $imgStrip.classList.remove('has-images');
 }
+
+function addWebContextToStrip(webCtx, loading) {
+  var item = document.createElement('div');
+  item.className = 'pg-chat__img-item pg-chat__web-item';
+  if (loading) item.classList.add('pg-chat__web-item--loading');
+  var icon = document.createElement('i');
+  icon.setAttribute('data-lucide', 'globe');
+  icon.style.cssText = 'width:20px;height:20px;color:var(--db-ink-muted,#666)';
+  var label = document.createElement('span');
+  label.className = 'pg-web-label';
+  try { label.textContent = new URL(webCtx.url).hostname.replace(/^www\./, ''); } catch { label.textContent = 'web'; }
+  if (loading) label.textContent = 'Loading…';
+  item.appendChild(icon);
+  item.appendChild(label);
+  requestAnimationFrame(function() { if (window.lucide) lucide.createIcons({ nodes: [item] }); });
+  var x = document.createElement('button');
+  x.className = 'pg-img-x';
+  x.textContent = '\u00d7';
+  x.addEventListener('click', function() {
+    var idx = pendingWebContexts.indexOf(webCtx);
+    if (idx > -1) pendingWebContexts.splice(idx, 1);
+    item.remove();
+    if (!pendingImages.length && !pendingWebContexts.length) $imgStrip.classList.remove('has-images');
+  });
+  item.appendChild(x);
+  $imgStrip.appendChild(item);
+  $imgStrip.classList.add('has-images');
+  return { item: item, label: label };
+}
+
+$weblook.addEventListener('click', function() {
+  var url = prompt('Enter a URL to capture:');
+  if (!url || !url.trim()) return;
+  url = url.trim();
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+  var placeholder = { url: url };
+  var els = addWebContextToStrip(placeholder, true);
+
+  fetch('/api/weblook', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: url }),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) {
+      DAUB.toast({ type: 'error', message: 'Web Look failed: ' + data.error });
+      els.item.remove();
+      if (!pendingImages.length && !pendingWebContexts.length) $imgStrip.classList.remove('has-images');
+      return;
+    }
+    var webCtx = { title: data.title || '', url: data.url || url, content: data.content || '', screenshot: data.screenshot || '' };
+    pendingWebContexts.push(webCtx);
+    // Update strip item
+    els.item.classList.remove('pg-chat__web-item--loading');
+    try { els.label.textContent = new URL(webCtx.url).hostname.replace(/^www\./, ''); } catch { els.label.textContent = 'web'; }
+    // Replace placeholder click handler
+    var oldX = els.item.querySelector('.pg-img-x');
+    if (oldX) oldX.addEventListener('click', function() {
+      var idx = pendingWebContexts.indexOf(webCtx);
+      if (idx > -1) pendingWebContexts.splice(idx, 1);
+    });
+    // Add screenshot as thumbnail
+    if (webCtx.screenshot) {
+      var img = document.createElement('img');
+      img.src = 'data:image/jpeg;base64,' + webCtx.screenshot;
+      img.alt = 'web preview';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;border-radius:inherit;';
+      els.item.insertBefore(img, els.item.firstChild);
+    }
+  })
+  .catch(function(e) {
+    DAUB.toast({ type: 'error', message: 'Web Look failed: ' + e.message });
+    els.item.remove();
+    if (!pendingImages.length && !pendingWebContexts.length) $imgStrip.classList.remove('has-images');
+  });
+});
 
 // ---- Paste images from clipboard ----
 $prompt.addEventListener('paste', function(e) {
@@ -1386,12 +1501,26 @@ function tryProgressiveRender(text) {
 }
 
 // ---- Chat message helpers ----
-function buildMessages(userPrompt, images) {
+function buildMessages(userPrompt, images, webContexts) {
   var msgs = [{ role: 'system', content: SYSTEM_PROMPT }];
   if (currentSpec) {
     msgs.push({ role: 'user', content: '(previous request)' });
     msgs.push({ role: 'assistant', content: JSON.stringify(currentSpec) });
     userPrompt = userPrompt + '\n\nModify the existing spec above. Return the COMPLETE updated spec.';
+  }
+  if (webContexts && webContexts.length) {
+    var webPreamble = '';
+    webContexts.forEach(function(wc) {
+      webPreamble += '[Web page: ' + (wc.title || wc.url) + ']\nURL: ' + wc.url + '\nContent:\n' + wc.content + '\n---\n';
+    });
+    userPrompt = webPreamble + userPrompt;
+    // Add screenshots as images
+    if (!images) images = [];
+    webContexts.forEach(function(wc) {
+      if (wc.screenshot) {
+        images.push({ base64: wc.screenshot, mimeType: 'image/jpeg', dataUrl: 'data:image/jpeg;base64,' + wc.screenshot });
+      }
+    });
   }
   if (images && images.length) {
     var provider = isDefaultMode ? 'default' : ($provider ? $provider.value : 'openai');
@@ -1428,8 +1557,21 @@ function addChatBubble(role, text, images) {
     images.forEach(function(entry) {
       var url = typeof entry === 'string' ? entry : entry.url;
       var isPdf = typeof entry === 'string' ? url.indexOf('data:application/pdf') === 0 : entry.isPdf;
+      var isWeb = typeof entry === 'object' && entry.isWeb;
       var name = typeof entry === 'string' ? 'PDF' : (entry.name || 'PDF');
-      if (isPdf) {
+      if (isWeb) {
+        var wBadge = document.createElement('span');
+        wBadge.className = 'pg-chat__msg-web';
+        var wIcon = document.createElement('i');
+        wIcon.setAttribute('data-lucide', 'globe');
+        wIcon.style.cssText = 'width:14px;height:14px';
+        wBadge.appendChild(wIcon);
+        var domain = entry.url;
+        try { domain = new URL(entry.url).hostname.replace(/^www\./, ''); } catch {}
+        wBadge.appendChild(document.createTextNode(' ' + domain));
+        strip.appendChild(wBadge);
+        requestAnimationFrame(function() { if (window.lucide) lucide.createIcons({ nodes: [wBadge] }); });
+      } else if (isPdf) {
         var badge = document.createElement('span');
         badge.className = 'pg-chat__msg-pdf';
         var bIcon = document.createElement('i');
@@ -1622,14 +1764,17 @@ function generate() {
     }
   }
 
-  // Capture attached images before clearing
+  // Capture attached images and web contexts before clearing
   var imagesForThisMsg = pendingImages.slice();
+  var webContextsForThisMsg = pendingWebContexts.slice();
   clearImageStrip();
 
   // Add user bubble
   var imageEntries = imagesForThisMsg.map(function(d) { return { url: d.dataUrl, isPdf: !!d.isPdf, name: d.fileName || '' }; });
-  chatHistory.push({ role: 'user', content: prompt, images: imageEntries.length ? imageEntries : undefined });
-  addChatBubble('user', prompt, imageEntries.length ? imageEntries : null);
+  var webEntries = webContextsForThisMsg.map(function(wc) { return { isWeb: true, url: wc.url, title: wc.title }; });
+  var allEntries = imageEntries.concat(webEntries);
+  chatHistory.push({ role: 'user', content: prompt, images: allEntries.length ? allEntries : undefined });
+  addChatBubble('user', prompt, allEntries.length ? allEntries : null);
   updateChatState();
   $prompt.value = '';
   $prompt.style.height = '';
@@ -1649,7 +1794,7 @@ function generate() {
     while ($preview.firstChild) $preview.removeChild($preview.firstChild);
   }
 
-  var messages = buildMessages(prompt, imagesForThisMsg);
+  var messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg);
   var accumulated = '';
   var continuations = 0;
   var MAX_CONTINUATIONS = 2;

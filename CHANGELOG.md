@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.2.0
+
+**Add Web Look — attach live web page context to AI conversations.**
+
+- Feature: New "Web Look" globe button in playground chat — paste any URL to capture a screenshot + text content as AI context
+- Feature: Backend proxy `functions/api/weblook.js` — creates Browserbase headless browser session, navigates via CDP, extracts title, text (8k chars), and JPEG screenshot
+- Feature: Web page screenshots appear as thumbnails in the attachment strip alongside images and PDFs
+- Feature: Web context (page text + screenshot) automatically included in AI messages for page-aware responses
+- Enhancement: Chat bubbles show web attachments as globe icon + domain name chips
+- Enhancement: Web contexts work alongside existing image and PDF attachments
+
 ## v3.1.1
 
 **Add PDF file attachment support to playground.**
