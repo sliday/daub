@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.1.0
+
+**Replace Layout with Stack + Grid for unambiguous layout intent.**
+
+- Breaking: `Layout` component is deprecated. Use `Stack` (flexbox) or `Grid` (CSS grid) instead
+- Feature: `Stack` component — flexbox layout with `direction`, `gap`, `justify`, `align`, `wrap`, `container` props
+- Feature: `Grid` component — CSS grid layout with `columns`, `gap`, `align`, `container` props
+- Enhancement: `justify` (main-axis) and `align` (cross-axis) now match CSS terminology — no more `valign` or overloaded `align`
+- Compat: Old `Layout` specs still render via automatic mapping to Stack/Grid
+- Docs: Updated llms.txt, SKILL.md, and AI system prompt guidelines
+
 ## v3.0.20
 
 **Add Layout align/valign props to eliminate spacer hacks.**

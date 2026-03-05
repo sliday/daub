@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.0.20-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.1.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -71,7 +71,8 @@ DAUB uses system font stacks by default. For richer typography:
 | Prose | `db-prose` | `--sm`, `--lg`, `--xl`, `--2xl` |
 | Elevation | `db-elevation-1` | `1`, `2`, `3` |
 | Separator | `db-separator` | `--vertical`, `--dashed`, `__label` |
-| Layout | `db-container` | `--wide`, `--narrow`, `db-flex`, `db-grid--2`–`--6`, `db-gap-*` |
+| Stack | flexbox layout | `direction`, `gap`, `justify`, `align`, `wrap`, `container` |
+| Grid | `db-grid--2`–`--6` | `columns`, `gap`, `align`, `container`, `db-gap-*` |
 | Responsive | `db-hide-mobile` | `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, etc. |
 | Utilities | `db-sr-only` | `db-text-muted`, `db-rounded-*`, etc. |
 
@@ -378,7 +379,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.0.20** — Fix orphan element duplication during streaming. 76 components, 20 theme families.
+**Latest: v3.1.0** — Replace Layout with Stack + Grid for unambiguous layout intent. 76 components, 20 theme families.
 
 ## License
 

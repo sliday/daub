@@ -846,21 +846,33 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 <div class="db-elevation-3">Level 3</div>
 ```
 
-### 63. Layout — `.db-container`, `.db-flex`, `.db-grid`
-Container: `db-container` (960px), `db-container--wide` (1200px), `db-container--narrow` (640px).
+### 63. Stack — flexbox layout
+Use Stack for all flex-based layouts (vertical stacking, horizontal rows, toolbars, headers).
+Props: `direction` ("vertical"|"horizontal"), `gap` (0-6), `justify` ("center"|"end"|"between"|"evenly"), `align` ("center"|"end"|"start"|"stretch"), `wrap` (bool, default true for horizontal), `container` ("wide"|"narrow"|true).
+```html
+<!-- Vertical stack -->
+<div style="display:flex;flex-direction:column;gap:var(--db-space-2)">...</div>
+<!-- Horizontal row with space-between -->
+<div style="display:flex;flex-direction:row;gap:var(--db-space-2);justify-content:space-between;flex-wrap:wrap">...</div>
+```
+
+### 64. Grid — CSS grid layout
+Use Grid for equal-width column arrangements.
+Props: `columns` (2-6), `gap` (0-6), `align` ("center"|"end"), `container` ("wide"|"narrow"|true).
 Grid: `db-grid--2` through `db-grid--6`. Auto-responsive: 4-6 cols → 2 cols at tablet, all → 1 col at mobile.
 Empty state: `.db-empty` inside `.db-grid` auto-spans all columns.
-Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`.
 ```html
 <div class="db-container db-container--wide">
   <div class="db-grid db-grid--4 db-gap-4">
     <div>Col 1</div><div>Col 2</div><div>Col 3</div><div>Col 4</div>
   </div>
-  <p class="db-hide-mobile">Only visible on tablet and desktop</p>
-  <p class="db-show-mobile">Only visible on mobile</p>
 </div>
 ```
 For grid layouts with 3+ columns, use `db-container--wide` (1200px) to prevent cramped cards.
+
+### 65. Container — `.db-container`
+Container: `db-container` (960px), `db-container--wide` (1200px), `db-container--narrow` (640px).
+Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`.
 
 ## Responsive Breakpoints
 

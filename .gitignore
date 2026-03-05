@@ -8,3 +8,5 @@ node_modules/
 .playwright-mcp/
 .claude/
 .npmrc
+tools/visual-qa/results/
+tools/visual-qa/node_modules/

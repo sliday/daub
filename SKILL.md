@@ -64,7 +64,8 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Prose**: `db-prose` / `--sm` / `--lg` / `--xl` / `--2xl`
 - **Elevation**: `db-elevation-1` / `-2` / `-3`
 - **Separator**: `db-separator` / `--vertical` / `--dashed` / `__label`
-- **Layout**: `db-container` / `--wide` / `--narrow`, `db-flex`, `db-grid--2` through `--6`, `db-gap-3`, `db-mt-4`
+- **Stack**: flexbox layout — `direction`, `gap`, `justify`, `align`, `wrap`, `container`
+- **Grid**: CSS grid layout — `columns` (2-6), `gap`, `align`, `container`; classes: `db-grid--2` through `--6`, `db-gap-3`
 - **Responsive**: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`
 - **Utilities**: `db-sr-only`, `db-text-muted`, `db-rounded-*`
 

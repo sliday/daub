@@ -2247,35 +2247,49 @@ function isSafeUrl(url) {
 // ---- Component Renderers (67 types) ----
 var RENDERERS = {};
 
-// -- Layout --
-RENDERERS.Layout = function(p, ch, els, d) {
+// -- Stack (flexbox) --
+RENDERERS.Stack = function(p, ch, els, d) {
   var el = document.createElement('div');
   if (p.container) {
     el.className = 'db-container' + (p.container === 'wide' ? ' db-container--wide' : p.container === 'narrow' ? ' db-container--narrow' : '');
   }
-  if (p.columns) {
-    el.classList.add('db-grid', 'db-grid--' + p.columns);
-    if (p.gap) el.classList.add('db-gap-' + Math.max(1, Math.min(6, p.gap)));
-    if (p.align === 'center') el.style.justifyItems = 'center';
-    else if (p.align === 'right' || p.align === 'end') el.style.justifyItems = 'end';
-  } else if (p.direction === 'horizontal') {
-    el.style.display = 'flex';
-    el.style.flexDirection = 'row';
-    el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap || 2)) + ')';
-    el.style.flexWrap = 'wrap';
-    el.style.alignItems = p.valign === 'center' ? 'center' : p.valign === 'end' ? 'flex-end' : 'flex-start';
-    if (p.align === 'center') el.style.justifyContent = 'center';
-    else if (p.align === 'right' || p.align === 'end') el.style.justifyContent = 'flex-end';
-    else if (p.align === 'between') el.style.justifyContent = 'space-between';
-  } else {
-    el.style.display = 'flex';
-    el.style.flexDirection = 'column';
-    el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap || 2)) + ')';
-    if (p.align === 'center') el.style.alignItems = 'center';
-    else if (p.align === 'right' || p.align === 'end') el.style.alignItems = 'flex-end';
-  }
+  var isH = p.direction === 'horizontal';
+  el.style.display = 'flex';
+  el.style.flexDirection = isH ? 'row' : 'column';
+  el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap || 2)) + ')';
+  if (isH && p.wrap !== false) el.style.flexWrap = 'wrap';
+  if (p.justify === 'center') el.style.justifyContent = 'center';
+  else if (p.justify === 'end') el.style.justifyContent = 'flex-end';
+  else if (p.justify === 'between') el.style.justifyContent = 'space-between';
+  else if (p.justify === 'evenly') el.style.justifyContent = 'space-evenly';
+  if (p.align === 'center') el.style.alignItems = 'center';
+  else if (p.align === 'end') el.style.alignItems = 'flex-end';
+  else if (p.align === 'start') el.style.alignItems = 'flex-start';
+  else if (p.align === 'stretch') el.style.alignItems = 'stretch';
   el.appendChild(renderChildren(els, ch, d));
   return el;
+};
+
+// -- Grid (CSS grid) --
+RENDERERS.Grid = function(p, ch, els, d) {
+  var el = document.createElement('div');
+  if (p.container) {
+    el.className = 'db-container' + (p.container === 'wide' ? ' db-container--wide' : p.container === 'narrow' ? ' db-container--narrow' : '');
+  }
+  el.classList.add('db-grid', 'db-grid--' + (p.columns || 2));
+  if (p.gap) el.classList.add('db-gap-' + Math.max(1, Math.min(6, p.gap)));
+  if (p.align === 'center') el.style.justifyItems = 'center';
+  else if (p.align === 'end') el.style.justifyItems = 'end';
+  el.appendChild(renderChildren(els, ch, d));
+  return el;
+};
+
+// -- Layout (deprecated, maps to Stack/Grid) --
+RENDERERS.Layout = function(p, ch, els, d) {
+  if (p.columns) return RENDERERS.Grid(p, ch, els, d);
+  var mapped = {justify: p.align, align: p.valign};
+  for (var k in p) { if (k !== 'align' && k !== 'valign') mapped[k] = p[k]; }
+  return RENDERERS.Stack(mapped, ch, els, d);
 };
 
 // -- Surface --
@@ -3616,7 +3630,8 @@ RENDERERS.CustomHTML = function(p, ch, els, d) {
 // ---- Component props documentation (single source of truth for AI prompt) ----
 var COMP_PROPS = {
   // Layout & Structure
-  Layout: 'direction: "vertical"|"horizontal", columns: 2-6, gap: 0-6 (default 2=8px), container: "wide"|"narrow"|true, align: "center"|"right"|"end"|"between" (centers/aligns children — use instead of spacer hacks), valign: "center"|"end" (vertical align for horizontal layouts)',
+  Stack: 'direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true',
+  Grid: 'columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true',
   Surface: 'variant: "raised"|"inset"|"pressed"',
   Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
@@ -3695,7 +3710,7 @@ var COMP_PROPS = {
 };
 
 var COMP_CATEGORIES = [
-  ['Layout & Structure', ['Layout', 'Surface', 'Text', 'Prose', 'Separator']],
+  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator']],
   ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
   ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
   ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea']],
@@ -3738,10 +3753,12 @@ var SYSTEM_PROMPT = (function() {
   }
 
   var guidelines = 'GUIDELINES:\n'
-    + '- Use Layout as the root with direction:"vertical" for page-level layouts\n'
-    + '- Use Layout with direction:"horizontal" and columns for grid arrangements\n'
-    + '- To center children use Layout align:"center" — NEVER use empty spacer elements for centering\n'
-    + '- Layout gap uses spacing tokens 0-6 (0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px). Default is 2 (8px). Use gap:2-3 for tight rhythm, gap:4-5 for sections\n'
+    + '- Use Stack as the root with direction:"vertical" for page-level layouts\n'
+    + '- Use Grid with columns for equal-width grid arrangements\n'
+    + '- Use Stack with direction:"horizontal" and justify:"between" for header rows, toolbars, and spaced-out content\n'
+    + '- To center children use Stack justify:"center" align:"center"\n'
+    + '- Stack/Grid gap uses spacing tokens 0-6 (0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px). Default is 2 (8px). Use gap:2-3 for tight rhythm, gap:4-5 for sections\n'
+    + '- Do NOT use Layout — it is deprecated. Use Stack (flexbox) or Grid (CSS grid) instead\n'
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'
     + '- Use real-looking sample data (names, numbers, dates)\n'
