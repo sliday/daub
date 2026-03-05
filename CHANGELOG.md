@@ -2,6 +2,21 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.3.3
+
+**Map-reduce code generation pipeline: plan → execute → review.**
+
+- Feature: `planCodeArchitecture()` — Kimi K2.5 decomposes interactive UI tasks into independent chunks with effort levels (trivial/low/medium) and shared state declarations
+- Feature: `executeChunk()` — Gemini 3.1 Flash Lite agents implement individual chunks in isolation; effort and max_tokens scale per chunk complexity
+- Feature: `executeChunksParallel()` — Promise.all orchestrator runs all chunks concurrently with per-chunk progress callbacks
+- Feature: `assembleChunkResults()` — client-side merge of chunk outputs into spec with conflict detection (multiple chunks touching same element)
+- Feature: `reviewAndAssemble()` — Kimi K2.5 streaming review wires cross-chunk interactions, resolves conflicts, fixes broken refs
+- Feature: Pipeline UI shows 6 steps: Analyze → Visual Check → Plan → Execute → Review → Verify
+- Feature: Chunk progress shows completion status per chunk (e.g. "✓ chunk-timer (3/5)")
+- Feature: Shared state injected as hidden `_shared_state` CustomHTML element; cross-chunk communication via `daub:stateChange` CustomEvent
+- Enhancement: Graceful fallback chain — plan failure → single-shot, all chunks fail → single-shot, review failure → raw assembly
+- Enhancement: Plan prompt sets chunk `effort` field so execution agents scale appropriately
+
 ## v3.3.2
 
 **Pipeline UX: chat-inline step tracker, skeleton shimmer, Kimi JSON fix.**

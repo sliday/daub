@@ -563,6 +563,10 @@
     .pg-pipeline__step--done { color: var(--db-warm-gray); }
     .pg-pipeline__step--done .pg-pipeline__icon { color: var(--db-success, #4caf50); }
     .pg-pipeline__step--skip { opacity: 0.4; }
+    .pg-pipeline__progress {
+      padding-left: 32px; font-size: 0.625rem;
+      color: var(--db-warm-gray); font-family: var(--db-font-mono, monospace);
+    }
     @keyframes pg-diff-shimmer {
       0%   { background-position: -200% 0; }
       100% { background-position: 200% 0; }
@@ -731,7 +735,10 @@
                   <svg class="db-collapsible__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><path d="m9 18 6-6-6-6"/></svg>
                   Examples
                 </button>
-                <small><a href="#" id="pg-byok-link" style="color:var(--db-warm-gray);text-decoration:none;font-size:0.6875rem;font-family:var(--db-font-ui);">Use Your Own Key</a></small>
+                <span style="display:flex;align-items:center;gap:8px;">
+                  <label style="display:flex;align-items:center;gap:3px;font-size:0.6875rem;color:var(--db-warm-gray);font-family:var(--db-font-ui);cursor:pointer;"><input type="checkbox" id="pg-verify-loop" checked style="margin:0;accent-color:var(--db-terracotta);"> Verify code</label>
+                  <small><a href="#" id="pg-byok-link" style="color:var(--db-warm-gray);text-decoration:none;font-size:0.6875rem;font-family:var(--db-font-ui);">Use Your Own Key</a></small>
+                </span>
               </div>
               <div class="db-collapsible__content">
                 <div style="display:flex;flex-wrap:wrap;gap:4px;padding-top:4px;">
@@ -1688,8 +1695,15 @@ function analyzeInteractivity(spec) {
     + '- Dashboards with live data need chart updates, filtering\n'
     + '- Forms with complex validation, multi-step wizards\n\n'
     + 'Simple UIs (landing pages, profiles, static dashboards) do NOT need custom code.\n\n'
-    + 'Return JSON: { "needed": true/false, "description": "what the code should do", "elements": ["spec-id-1", ...] }\n'
+    + 'Return JSON: { "needed": true/false, "description": "what the code should do", "elements": ["spec-id-1", ...], "scaffold": "// code..." }\n'
     + '"elements" lists the spec element IDs that should be interactive targets.\n'
+    + 'If needed is true, also include "scaffold": a rough JavaScript code skeleton showing:\n'
+    + '- Which DOM elements to query (using data-spec-id selectors)\n'
+    + '- Event listeners to attach\n'
+    + '- State variables needed\n'
+    + '- Function signatures (empty bodies are fine)\n'
+    + '- Game loop structure if applicable\n'
+    + 'The scaffold doesn\'t need to work \u2014 it\'s a structural guide.\n'
     + 'Return ONLY JSON, no explanation.';
 
   return fetch('/api/generate', {
@@ -1719,9 +1733,11 @@ function analyzeInteractivity(spec) {
   .catch(function(e) { console.warn('[analyzeInteractivity] failed:', e); return null; });
 }
 
-function generateInteractiveCode(spec, analysis) {
+function generateInteractiveCode(spec, analysis, onProgress) {
   var prompt = 'You are a JavaScript developer. You receive a DAUB UI component spec and must add interactive code.\n\n'
     + 'TASK: ' + analysis.description + '\n\n'
+    + 'CODE SCAFFOLD (structural guide, may have errors \u2014 use as starting point):\n'
+    + '```\n' + (analysis.scaffold || '// no scaffold') + '\n```\n\n'
     + 'RULES:\n'
     + '- Add or modify CustomHTML elements in the spec with "js", "html", and/or "css" props\n'
     + '- Target existing elements via: preview.querySelector(\'[data-spec-id="elementId"]\')\n'
@@ -1737,6 +1753,155 @@ function generateInteractiveCode(spec, analysis) {
     + 'Return the COMPLETE updated JSON spec with your CustomHTML additions.\n'
     + 'Return ONLY JSON, no explanation.';
 
+  return new Promise(function(resolve) {
+    var accumulated = '';
+    var startTime = Date.now();
+    streamFetch('/api/generate', { 'Content-Type': 'application/json' },
+      {
+        model: 'moonshotai/kimi-k2.5',
+        messages: [
+          { role: 'system', content: prompt },
+          { role: 'user', content: JSON.stringify(spec) }
+        ],
+        reasoning: { effort: 'high' },
+        response_format: false,
+        max_tokens: 32768
+      },
+      function onChunk(chunk) {
+        var c = chunk.choices && chunk.choices[0];
+        if (c && c.delta && c.delta.content) {
+          accumulated += c.delta.content;
+          if (onProgress) {
+            var elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+            onProgress(accumulated.length, accumulated.split('\n').length, elapsed);
+          }
+        }
+      },
+      function onDone() {
+        console.log('[generateInteractiveCode] raw length:', accumulated.length, 'preview:', accumulated.slice(0, 300));
+        var clean = cleanJSON(accumulated);
+        if (!clean) { console.warn('[generateInteractiveCode] cleanJSON returned empty'); resolve(null); return; }
+        var updated;
+        try { updated = JSON.parse(clean); } catch(e) { updated = repairJSON(clean); }
+        if (!updated || !updated.root || !updated.elements) {
+          console.warn('[generateInteractiveCode] invalid spec structure:', updated ? Object.keys(updated) : 'null');
+          resolve(null); return;
+        }
+        console.log('[generateInteractiveCode] success:', countComponents(updated), 'components');
+        resolve(updated);
+      },
+      function onError(err) {
+        console.warn('[generateInteractiveCode] stream error:', err);
+        resolve(null);
+      }
+    );
+  });
+}
+
+// ---- Verify generated code: syntax + element references ----
+function verifyGeneratedCode(spec) {
+  var errors = [];
+  if (!spec || !spec.elements) return errors;
+  var allIds = {};
+  (function collectIds(els) {
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].id) allIds[els[i].id] = true;
+      if (els[i].children) collectIds(els[i].children);
+    }
+  })(spec.elements);
+
+  (function check(els) {
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (el.type === 'CustomHTML' && el.js) {
+        // Syntax-only check: new Function parses but never executes the code
+        try { new Function(el.js); } catch(e) {
+          errors.push({ id: el.id || ('element-' + i), error: 'Syntax: ' + e.message });
+        }
+        var refs = el.js.match(/data-spec-id="([^"]+)"/g);
+        if (refs) {
+          for (var r = 0; r < refs.length; r++) {
+            var refId = refs[r].match(/data-spec-id="([^"]+)"/)[1];
+            if (!allIds[refId]) {
+              errors.push({ id: el.id || ('element-' + i), error: 'Missing ref: ' + refId });
+            }
+          }
+        }
+      }
+      if (el.children) check(el.children);
+    }
+  })(spec.elements);
+  return errors;
+}
+
+function retryCodeGeneration(spec, analysis, errors, onProgress) {
+  var prompt = 'You are fixing a broken DAUB UI spec. The code has these errors:\n\n'
+    + errors.map(function(e) { return '- Element "' + e.id + '": ' + e.error; }).join('\n') + '\n\n'
+    + 'Original task: ' + analysis.description + '\n'
+    + 'Fix the errors and return the COMPLETE updated JSON spec.\n'
+    + 'Return ONLY JSON, no explanation.';
+
+  return new Promise(function(resolve) {
+    var accumulated = '';
+    var startTime = Date.now();
+    streamFetch('/api/generate', { 'Content-Type': 'application/json' },
+      {
+        model: 'moonshotai/kimi-k2.5',
+        messages: [
+          { role: 'system', content: prompt },
+          { role: 'user', content: JSON.stringify(spec) }
+        ],
+        reasoning: { effort: 'medium' },
+        response_format: false,
+        max_tokens: 32768
+      },
+      function onChunk(chunk) {
+        var c = chunk.choices && chunk.choices[0];
+        if (c && c.delta && c.delta.content) {
+          accumulated += c.delta.content;
+          if (onProgress) {
+            var elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+            onProgress(accumulated.length, accumulated.split('\n').length, elapsed);
+          }
+        }
+      },
+      function onDone() {
+        var clean = cleanJSON(accumulated);
+        if (!clean) { resolve(null); return; }
+        var updated;
+        try { updated = JSON.parse(clean); } catch(e) { updated = repairJSON(clean); }
+        if (!updated || !updated.root || !updated.elements) { resolve(null); return; }
+        resolve(updated);
+      },
+      function onError() { resolve(null); }
+    );
+  });
+}
+
+// ---- Map-reduce pipeline: plan → execute chunks → review ----
+
+function planCodeArchitecture(spec, analysis) {
+  var prompt = 'You are a senior JavaScript architect. Decompose an interactive UI task into independent chunks for parallel implementation.\n\n'
+    + 'TASK: ' + analysis.description + '\n\n'
+    + 'SCAFFOLD (structural reference):\n```\n' + (analysis.scaffold || '// no scaffold') + '\n```\n\n'
+    + 'TARGET ELEMENTS: ' + JSON.stringify(analysis.elements) + '\n\n'
+    + 'RULES:\n'
+    + '- Each chunk = 1-3 elements, ONE clear responsibility\n'
+    + '- Chunks must be implementable independently by a junior developer\n'
+    + '- Set chunk "effort" to match complexity: "trivial" (wire a click handler), "low" (simple state + DOM updates), "medium" (game loop, multi-step logic)\n'
+    + '- "sharedStateInit" declares ALL shared variables as globals\n'
+    + '- "wiring" describes how chunks interact AFTER independent implementation\n'
+    + '- Cross-chunk communication: use preview.dispatchEvent(new CustomEvent("daub:stateChange", {detail:{...}}))\n'
+    + '- If the task is too simple for decomposition, return exactly 1 chunk\n'
+    + '- Each chunk description must be a COMPLETE implementation brief: what to build, which elements, what events, what state\n\n'
+    + 'Return JSON:\n'
+    + '{\n'
+    + '  "chunks": [{ "id": "chunk-name", "description": "Full implementation brief...", "elementIds": ["id1"], "sharedState": ["varName"], "effort": "low|medium|trivial", "type": "modify" }],\n'
+    + '  "sharedStateInit": "var score = 0; var running = false;",\n'
+    + '  "wiring": "How chunks connect after implementation"\n'
+    + '}\n\n'
+    + 'Return ONLY JSON, no explanation.';
+
   return fetch('/api/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1746,26 +1911,214 @@ function generateInteractiveCode(spec, analysis) {
         { role: 'system', content: prompt },
         { role: 'user', content: JSON.stringify(spec) }
       ],
-      reasoning: { effort: 'high' },
+      reasoning: { effort: 'medium' },
       response_format: false,
-      max_tokens: 32768
+      max_tokens: 8192
     })
   })
   .then(parseSseResponse)
   .then(function(raw) {
-    console.log('[generateInteractiveCode] raw length:', raw.length, 'preview:', raw.slice(0, 300));
+    console.log('[planCodeArchitecture] raw:', raw.slice(0, 300));
     var clean = cleanJSON(raw);
-    if (!clean) { console.warn('[generateInteractiveCode] cleanJSON returned empty'); return null; }
-    var updated;
-    try { updated = JSON.parse(clean); } catch(e) { updated = repairJSON(clean); }
-    if (!updated || !updated.root || !updated.elements) {
-      console.warn('[generateInteractiveCode] invalid spec structure:', updated ? Object.keys(updated) : 'null');
-      return null;
-    }
-    console.log('[generateInteractiveCode] success:', countComponents(updated), 'components');
-    return updated;
+    if (!clean) return null;
+    try {
+      var plan = JSON.parse(clean);
+      if (plan && plan.chunks && plan.chunks.length) {
+        console.log('[planCodeArchitecture] plan:', plan.chunks.length, 'chunks');
+        return plan;
+      }
+    } catch(e) { console.warn('[planCodeArchitecture] parse error:', e); }
+    return null;
   })
-  .catch(function(e) { console.warn('[generateInteractiveCode] failed:', e); return null; });
+  .catch(function(e) { console.warn('[planCodeArchitecture] failed:', e); return null; });
+}
+
+function executeChunk(spec, plan, chunk) {
+  var relevantEls = [];
+  if (spec.elements && chunk.elementIds) {
+    (function findEls(els) {
+      for (var i = 0; i < els.length; i++) {
+        if (chunk.elementIds.indexOf(els[i].id) !== -1) relevantEls.push(els[i]);
+        if (els[i].children) findEls(els[i].children);
+      }
+    })(spec.elements);
+  }
+
+  var effortMap = { trivial: 'low', low: 'low', medium: 'medium' };
+  var tokensMap = { trivial: 2048, low: 4096, medium: 8192 };
+  var effort = effortMap[chunk.effort] || 'low';
+  var maxTokens = tokensMap[chunk.effort] || 4096;
+
+  var prompt = 'You are implementing ONE piece of an interactive UI. Focus ONLY on your assigned task.\n\n'
+    + 'YOUR TASK: ' + chunk.description + '\n\n'
+    + 'SHARED STATE (already declared as globals, just use them):\n' + (plan.sharedStateInit || '// none') + '\n\n'
+    + 'ELEMENTS YOU OWN (by data-spec-id):\n' + JSON.stringify(relevantEls, null, 2) + '\n\n'
+    + 'RULES:\n'
+    + '- Access elements: preview.querySelector(\'[data-spec-id="id"]\')\n'
+    + '- "container" = this CustomHTML element, "preview" = entire preview root\n'
+    + '- Shared state vars are globals — read/write them directly\n'
+    + '- For cross-chunk events: preview.dispatchEvent(new CustomEvent("daub:stateChange", {detail:{key:val}}))\n'
+    + '- Listen for cross-chunk events: preview.addEventListener("daub:stateChange", function(e) {...})\n'
+    + '- Use vanilla JS only. No frameworks, no imports, no fetch\n'
+    + '- Make it fully functional, not a stub\n\n'
+    + 'Return JSON:\n'
+    + '{ "chunkId": "' + chunk.id + '", "elements": [{ "id": "element-spec-id", "js": "...", "html": "...", "css": "..." }] }\n'
+    + 'Only include properties (js/html/css) that you actually set. Return ONLY JSON.';
+
+  return fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'google/gemini-3.1-flash-lite-preview',
+      messages: [
+        { role: 'system', content: prompt },
+        { role: 'user', content: 'Implement chunk "' + chunk.id + '" now.' }
+      ],
+      reasoning: { effort: effort },
+      max_tokens: maxTokens
+    })
+  })
+  .then(parseSseResponse)
+  .then(function(raw) {
+    console.log('[executeChunk:' + chunk.id + '] raw:', raw.slice(0, 200));
+    var clean = cleanJSON(raw);
+    if (!clean) return { chunkId: chunk.id, elements: [], success: false, error: 'empty response' };
+    try {
+      var result = JSON.parse(clean);
+      if (result && result.elements) {
+        console.log('[executeChunk:' + chunk.id + '] success:', result.elements.length, 'elements');
+        return { chunkId: chunk.id, elements: result.elements, success: true, error: null };
+      }
+    } catch(e) { console.warn('[executeChunk:' + chunk.id + '] parse error:', e); }
+    return { chunkId: chunk.id, elements: [], success: false, error: 'parse failed' };
+  })
+  .catch(function(e) {
+    console.warn('[executeChunk:' + chunk.id + '] failed:', e);
+    return { chunkId: chunk.id, elements: [], success: false, error: String(e) };
+  });
+}
+
+function executeChunksParallel(spec, plan, onChunkDone) {
+  var completed = 0;
+  return Promise.all(plan.chunks.map(function(chunk) {
+    return executeChunk(spec, plan, chunk).then(function(result) {
+      completed++;
+      if (onChunkDone) onChunkDone(result, completed, plan.chunks.length);
+      return result;
+    });
+  }));
+}
+
+function assembleChunkResults(spec, plan, chunkResults) {
+  var assembled = JSON.parse(JSON.stringify(spec));
+  var conflicts = [];
+  var touchedIds = {};
+
+  // Build element lookup (flat)
+  var elMap = {};
+  (function buildMap(els, parent) {
+    for (var i = 0; i < els.length; i++) {
+      elMap[els[i].id] = { el: els[i], parent: parent, idx: i };
+      if (els[i].children) buildMap(els[i].children, els[i]);
+    }
+  })(assembled.elements, null);
+
+  // Merge chunk results
+  for (var c = 0; c < chunkResults.length; c++) {
+    var cr = chunkResults[c];
+    if (!cr.success || !cr.elements) continue;
+    for (var e = 0; e < cr.elements.length; e++) {
+      var cel = cr.elements[e];
+      if (!cel.id) continue;
+      if (touchedIds[cel.id]) {
+        conflicts.push({ elementId: cel.id, chunks: [touchedIds[cel.id], cr.chunkId] });
+      }
+      touchedIds[cel.id] = cr.chunkId;
+
+      if (elMap[cel.id]) {
+        // Merge onto existing element
+        var target = elMap[cel.id].el;
+        target.type = 'CustomHTML';
+        if (cel.js) target.js = (target.js ? target.js + '\n' : '') + cel.js;
+        if (cel.html) target.html = cel.html;
+        if (cel.css) target.css = (target.css ? target.css + '\n' : '') + cel.css;
+      } else {
+        // New element — append to root
+        var newEl = { id: cel.id, type: 'CustomHTML' };
+        if (cel.js) newEl.js = cel.js;
+        if (cel.html) newEl.html = cel.html;
+        if (cel.css) newEl.css = cel.css;
+        assembled.elements.push(newEl);
+      }
+    }
+  }
+
+  // Inject shared state init as hidden element at index 0
+  if (plan.sharedStateInit) {
+    assembled.elements.unshift({
+      id: '_shared_state',
+      type: 'CustomHTML',
+      js: plan.sharedStateInit,
+      html: '',
+      css: ''
+    });
+  }
+
+  return { spec: assembled, conflicts: conflicts };
+}
+
+function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, onProgress) {
+  var prompt = 'You are a senior developer reviewing code assembled from parallel chunks. Your job: make it work as one cohesive unit.\n\n'
+    + 'ORIGINAL PLAN:\n' + JSON.stringify(plan, null, 2) + '\n\n'
+    + 'WIRING NOTES: ' + (plan.wiring || 'none') + '\n\n'
+    + (conflicts.length ? 'CONFLICTS (multiple chunks touched same element):\n' + JSON.stringify(conflicts) + '\nMerge the conflicting code logically.\n\n' : '')
+    + 'RULES:\n'
+    + '- The spec below has rough code from parallel agents — clean it up, fix bugs, wire interactions\n'
+    + '- Verify shared state variables are used consistently\n'
+    + '- Wire cross-chunk interactions (events, state updates)\n'
+    + '- Fix broken element references (data-spec-id)\n'
+    + '- Make it fully functional — not stubs\n'
+    + '- Keep the overall spec structure, just fix/improve the code\n'
+    + '- Return the COMPLETE spec JSON\n\n'
+    + 'Return ONLY JSON, no explanation.';
+
+  return new Promise(function(resolve) {
+    var accumulated = '';
+    var startTime = Date.now();
+    streamFetch('/api/generate', { 'Content-Type': 'application/json' },
+      {
+        model: 'moonshotai/kimi-k2.5',
+        messages: [
+          { role: 'system', content: prompt },
+          { role: 'user', content: JSON.stringify(assembledSpec) }
+        ],
+        reasoning: { effort: 'high' },
+        response_format: false,
+        max_tokens: 32768
+      },
+      function onChunk(chunk) {
+        var c = chunk.choices && chunk.choices[0];
+        if (c && c.delta && c.delta.content) {
+          accumulated += c.delta.content;
+          if (onProgress) {
+            var elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+            onProgress(accumulated.length, accumulated.split('\n').length, elapsed);
+          }
+        }
+      },
+      function onDone() {
+        console.log('[reviewAndAssemble] raw length:', accumulated.length);
+        var clean = cleanJSON(accumulated);
+        if (!clean) { resolve(null); return; }
+        var reviewed;
+        try { reviewed = JSON.parse(clean); } catch(e) { reviewed = repairJSON(clean); }
+        if (!reviewed || !reviewed.root || !reviewed.elements) { resolve(null); return; }
+        console.log('[reviewAndAssemble] success:', countComponents(reviewed), 'components');
+        resolve(reviewed);
+      },
+      function onError() { resolve(null); }
+    );
+  });
 }
 
 // ---- Progressive rendering (force-close incomplete JSON) ----
@@ -2237,8 +2590,18 @@ function generate() {
             return s;
           }
           var stepAnalyze = _mkStep(_svgAnalyze, 'Analyzing interactivity\u2026');
-          var stepCode = _mkStep(_svgCode, 'Generating code\u2026');
           var stepCheck = _mkStep(_svgEye, 'Visual check\u2026');
+          var _svgLayout = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>';
+          var _svgPlay = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+          var _svgDoc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+          var stepPlan = _mkStep(_svgLayout, 'Planning architecture\u2026');
+          var stepExecute = _mkStep(_svgPlay, 'Executing chunks\u2026');
+          var codeProgress = document.createElement('div');
+          codeProgress.className = 'pg-pipeline__progress';
+          pipeDetails.appendChild(codeProgress);
+          var stepReview = _mkStep(_svgDoc, 'Reviewing assembly\u2026');
+          var _svgVerify = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>';
+          var stepVerify = _mkStep(_svgVerify, 'Verify code\u2026');
           stepAnalyze.classList.add('pg-pipeline__step--active');
           streamBubble.appendChild(pipeDetails);
           function _pipeDone(step, label) {
@@ -2276,70 +2639,181 @@ function generate() {
             pipeDetails.open = false;
           }
 
+          function _applySpec(s, suffix) {
+            finalSpec = s;
+            $json.value = JSON.stringify(s, null, 2);
+            var prev = currentSpec;
+            currentSpec = s;
+            pushVersion(s, prompt + ' (' + suffix + ')');
+            renderSpec(s, prev);
+            refreshJsonTree();
+            updatePreviewToolbar();
+            buildResultBubble(streamBubble, s);
+            streamBubble.appendChild(pipeDetails);
+            chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(s) + ' components (' + suffix + ')';
+            saveChatState();
+          }
+
+          var _analysis = null; // shared across pipeline steps
+
           $status.textContent = 'Analyzing interactivity\u2026';
           analyzeInteractivity(spec).then(function(analysis) {
+            _analysis = analysis;
             if (analysis && analysis.needed) {
               var desc = (analysis.description || 'yes');
-              _pipeDone(stepAnalyze, desc.length > 60 ? desc.slice(0, 57) + '\u2026' : desc);
-              stepCode.classList.add('pg-pipeline__step--active');
-              $status.textContent = 'Generating code\u2026';
-              _addSkeleton(analysis.elements);
-              return generateInteractiveCode(spec, analysis).then(function(updatedSpec) {
-                _removeSkeleton(analysis.elements);
-                if (updatedSpec) {
-                  _pipeDone(stepCode, 'Code added');
-                  finalSpec = updatedSpec;
-                  $json.value = JSON.stringify(updatedSpec, null, 2);
-                  var prevForCode = currentSpec;
-                  currentSpec = updatedSpec;
-                  pushVersion(updatedSpec, prompt + ' (code added)');
-                  renderSpec(updatedSpec, prevForCode);
-                  refreshJsonTree();
-                  updatePreviewToolbar();
-                  buildResultBubble(streamBubble, updatedSpec);
-                  streamBubble.appendChild(pipeDetails);
-                  chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(updatedSpec) + ' components (interactive)';
-                  saveChatState();
-                } else {
-                  _pipeSkip(stepCode, 'Code generation failed');
-                }
-              });
+              var analyzeLabel = analysis.scaffold ? 'Analyzed + scaffold' : (desc.length > 60 ? desc.slice(0, 57) + '\u2026' : desc);
+              _pipeDone(stepAnalyze, analyzeLabel);
             } else {
               _pipeSkip(stepAnalyze, 'No custom code needed');
-              _pipeSkip(stepCode, 'Skipped');
             }
           }).then(function() {
+            // ---- Visual check (runs on initial spec, before code gen) ----
             stepCheck.classList.add('pg-pipeline__step--active');
-            $status.textContent = 'Checking\u2026';
+            $status.textContent = 'Visual check\u2026';
             return capturePreview().then(function(screenshot) {
               if (!screenshot) {
                 _pipeSkip(stepCheck, 'No screenshot');
-                _pipeFinish();
-                $status.textContent = '';
-                setLoading(false);
                 return;
               }
               return selfCheck(finalSpec, screenshot).then(function(fixedSpec) {
                 if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(finalSpec)) {
                   _pipeDone(stepCheck, 'Applied fixes');
-                  $json.value = JSON.stringify(fixedSpec, null, 2);
-                  var prevForDiff = currentSpec;
-                  currentSpec = fixedSpec;
-                  pushVersion(fixedSpec, prompt + ' (auto-fixed)');
-                  renderSpec(fixedSpec, prevForDiff);
-                  refreshJsonTree();
-                  updatePreviewToolbar();
-                  buildResultBubble(streamBubble, fixedSpec);
-                  streamBubble.appendChild(pipeDetails);
-                  chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(fixedSpec) + ' components (checked)';
-                  saveChatState();
+                  _applySpec(fixedSpec, 'auto-fixed');
                 } else {
                   _pipeDone(stepCheck, 'Looks good');
                 }
-                $status.textContent = '';
-                _pipeFinish();
-                setLoading(false);
               });
+            });
+          }).then(function() {
+            // ---- Code generation pipeline (map-reduce or single-shot) ----
+            if (!_analysis || !_analysis.needed) {
+              _pipeSkip(stepPlan, 'Skipped');
+              _pipeSkip(stepExecute, 'Skipped');
+              _pipeSkip(stepReview, 'Skipped');
+              _pipeSkip(stepVerify, 'Skipped');
+              _pipeFinish();
+              $status.textContent = '';
+              setLoading(false);
+              return;
+            }
+
+            // -- Verify & retry helper (reused by both paths) --
+            function _runVerifyLoop(theSpec) {
+              var verifyEnabled = document.getElementById('pg-verify-loop').checked;
+              if (!verifyEnabled) {
+                _pipeSkip(stepVerify, 'Disabled');
+                return Promise.resolve();
+              }
+              stepVerify.classList.add('pg-pipeline__step--active');
+              $status.textContent = 'Verifying code\u2026';
+              var verifyErrors = verifyGeneratedCode(theSpec);
+              if (!verifyErrors.length) {
+                _pipeDone(stepVerify, 'Passed');
+                return Promise.resolve();
+              }
+              stepVerify.querySelector('.pg-pipeline__label').textContent = 'Fixing ' + verifyErrors.length + ' issue' + (verifyErrors.length > 1 ? 's' : '') + '\u2026';
+              $status.textContent = 'Fixing ' + verifyErrors.length + ' issue' + (verifyErrors.length > 1 ? 's' : '') + '\u2026';
+              var retryCount = 0;
+              var maxRetries = 2;
+              return (function retryLoop() {
+                return retryCodeGeneration(finalSpec, _analysis, verifyErrors, function(bytes, lines, secs) {
+                  codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's (retry)';
+                }).then(function(fixedSpec) {
+                  retryCount++;
+                  if (fixedSpec) {
+                    _applySpec(fixedSpec, 'code fixed');
+                    verifyErrors = verifyGeneratedCode(fixedSpec);
+                    if (!verifyErrors.length) {
+                      _pipeDone(stepVerify, 'Fixed (' + retryCount + ' retr' + (retryCount > 1 ? 'ies' : 'y') + ')');
+                      return;
+                    }
+                  }
+                  if (retryCount < maxRetries && verifyErrors.length) {
+                    return retryLoop();
+                  }
+                  _pipeDone(stepVerify, verifyErrors.length ? verifyErrors.length + ' issue' + (verifyErrors.length > 1 ? 's' : '') + ' remain' : 'Fixed');
+                });
+              })();
+            }
+
+            // -- Single-shot fallback (existing generateInteractiveCode) --
+            function _singleShotPath() {
+              stepExecute.classList.add('pg-pipeline__step--active');
+              $status.textContent = 'Generating code (single-shot)\u2026';
+              _addSkeleton(_analysis.elements);
+              return generateInteractiveCode(finalSpec, _analysis, function(bytes, lines, secs) {
+                codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
+              }).then(function(updatedSpec) {
+                _removeSkeleton(_analysis.elements);
+                if (updatedSpec) {
+                  _pipeDone(stepExecute, 'Code added (single-shot)');
+                  _pipeSkip(stepReview, 'Skipped');
+                  _applySpec(updatedSpec, 'interactive');
+                  return _runVerifyLoop(finalSpec);
+                } else {
+                  _pipeSkip(stepExecute, 'Code generation failed');
+                  _pipeSkip(stepReview, 'Skipped');
+                  _pipeSkip(stepVerify, 'Skipped');
+                }
+              });
+            }
+
+            // ---- Step: Plan ----
+            stepPlan.classList.add('pg-pipeline__step--active');
+            $status.textContent = 'Planning architecture\u2026';
+            return planCodeArchitecture(finalSpec, _analysis).then(function(plan) {
+              // Fallback: plan failed or ≤1 chunk
+              if (!plan || !plan.chunks || plan.chunks.length <= 1) {
+                _pipeSkip(stepPlan, plan ? 'Single-shot' : 'Plan failed');
+                return _singleShotPath();
+              }
+              _pipeDone(stepPlan, plan.chunks.length + ' chunks planned');
+
+              // ---- Step: Execute (map-reduce path) ----
+              stepExecute.classList.add('pg-pipeline__step--active');
+              $status.textContent = 'Executing ' + plan.chunks.length + ' chunks\u2026';
+              _addSkeleton(_analysis.elements);
+              return executeChunksParallel(finalSpec, plan, function(result, done, total) {
+                var sym = result.success ? '\u2713' : '\u2717';
+                codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
+              }).then(function(chunkResults) {
+                _removeSkeleton(_analysis.elements);
+                var succeeded = chunkResults.filter(function(r) { return r.success; });
+                if (!succeeded.length) {
+                  // All chunks failed — fall back to single-shot
+                  _pipeSkip(stepExecute, 'All chunks failed');
+                  return _singleShotPath();
+                }
+                _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
+
+                // ---- Client-side assembly ----
+                var assembled = assembleChunkResults(finalSpec, plan, chunkResults);
+                if (assembled.conflicts.length) {
+                  console.log('[pipeline] conflicts:', assembled.conflicts);
+                }
+
+                // ---- Step: Review ----
+                stepReview.classList.add('pg-pipeline__step--active');
+                $status.textContent = 'Reviewing assembly\u2026';
+                return reviewAndAssemble(finalSpec, plan, assembled.spec, assembled.conflicts, function(bytes, lines, secs) {
+                  codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
+                }).then(function(reviewedSpec) {
+                  if (reviewedSpec) {
+                    _pipeDone(stepReview, 'Review complete');
+                    _applySpec(reviewedSpec, 'interactive');
+                  } else {
+                    _pipeDone(stepReview, 'Review failed, using raw assembly');
+                    _applySpec(assembled.spec, 'interactive (raw)');
+                  }
+
+                  // ---- Step: Verify ----
+                  return _runVerifyLoop(finalSpec);
+                });
+              });
+            }).then(function() {
+              _pipeFinish();
+              $status.textContent = '';
+              setLoading(false);
             });
           }).catch(function() { _pipeFinish(); $status.textContent = ''; setLoading(false); });
         } else {
