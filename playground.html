@@ -53,7 +53,7 @@
           crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.0.15">
+  <link rel="stylesheet" href="daub.css?v=3.0.16">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -784,7 +784,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.0.15"></script>
+<script src="daub.js?v=3.0.16"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -2042,6 +2042,12 @@ function renderSpec(spec, prevSpec) {
     }
   }
 
+  // Clean up stale orphans from previous renders
+  var rootEl = $preview.querySelector('[data-spec-id="' + spec.root + '"]');
+  Array.from($preview.children).forEach(function(child) {
+    if (child !== rootEl) $preview.removeChild(child);
+  });
+
   // Render orphan elements (overlays not in any children array)
   var rendered = {};
   $preview.querySelectorAll('[data-spec-id]').forEach(function(n) {
@@ -2082,21 +2088,6 @@ function diffUpdate(oldSpec, newSpec, container) {
   }
   // Walk spec tree top-down; replace changed elements, recurse into unchanged ones
   diffElement(oldSpec, newSpec, container, newSpec.root);
-
-  // Render orphan elements (overlays not in any children array)
-  var rendered = {};
-  container.querySelectorAll('[data-spec-id]').forEach(function(n) {
-    rendered[n.getAttribute('data-spec-id')] = true;
-  });
-  Object.keys(newSpec.elements).forEach(function(id) {
-    if (id !== newSpec.root && !rendered[id]) {
-      var orphan = renderElement(newSpec.elements, id, 0);
-      if (orphan) {
-        container.appendChild(orphan);
-        flashChanged(orphan);
-      }
-    }
-  });
 }
 
 function diffElement(oldSpec, newSpec, container, elId) {

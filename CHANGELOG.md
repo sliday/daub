@@ -2,6 +2,13 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.16
+
+**Fix orphan element duplication during streaming.**
+
+- Bugfix: Stale orphan elements (overlays, pagination) no longer duplicate during streaming — previous-render orphans are cleaned up before re-scanning
+- Bugfix: Removed redundant orphan scan from `diffUpdate()` — `renderSpec()` already handles orphan rendering after both full-render and diff paths
+
 ## v3.0.15
 
 **Orphan overlay rendering + realistic playground prompts.**
