@@ -2,6 +2,12 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.18
+
+**Fix Temperature/Noise sliders not affecting page visuals.**
+
+- Bugfix: `initSliders()` set `_dbInit` on temperature/noise sliders before `initTemperature()`/`initNoise()` could attach their CSS-variable handlers — sliders moved visually but never updated `--db-temperature`/`--db-noise`. Changed to dedicated `_dbTempInit`/`_dbNoiseInit` flags to avoid collision.
+
 ## v3.0.17
 
 **Fix Temperature and Noise controls regression from v2.0.**

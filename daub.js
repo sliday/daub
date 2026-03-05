@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Interactive Behaviors
-   Version 3.0.17
+   Version 3.0.18
    IIFE module exposing window.DAUB = { init, toast, theme API }
    ============================================================ */
 ;(function() {
@@ -894,8 +894,8 @@
     }
 
     document.querySelectorAll('[data-db-temperature]').forEach(function(slider) {
-      if (slider._dbInit) return;
-      slider._dbInit = true;
+      if (slider._dbTempInit) return;
+      slider._dbTempInit = true;
       var input = slider.querySelector('.db-slider__input');
       var valueEl = slider.querySelector('.db-slider__value');
       if (!input) return;
@@ -931,8 +931,8 @@
     }
 
     document.querySelectorAll('[data-db-noise]').forEach(function(slider) {
-      if (slider._dbInit) return;
-      slider._dbInit = true;
+      if (slider._dbNoiseInit) return;
+      slider._dbNoiseInit = true;
       var input = slider.querySelector('.db-slider__input');
       var valueEl = slider.querySelector('.db-slider__value');
       if (!input) return;
