@@ -319,9 +319,9 @@ async function callGemini(userPrompt) {
       system_instruction: { parts: [{ text: SYSTEM }] },
       contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
       generationConfig: {
-        maxOutputTokens: 8192,
+        maxOutputTokens: 32768,
         temperature: 0.7,
-        thinkingConfig: { thinkingLevel: 'MEDIUM' },
+        thinkingConfig: { thinkingLevel: 'NONE' },
       },
     }),
   });

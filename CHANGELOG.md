@@ -2,6 +2,13 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.2.4
+
+**Increase Gemini output budget for visual QA generator.**
+
+- Enhancement: Bumped `maxOutputTokens` from 8192 to 32768 — complex layouts were being truncated
+- Enhancement: Disabled thinking (`thinkingLevel: NONE`) to maximize output budget for JSON spec generation
+
 ## v3.2.3
 
 **Handle "Divider" as alias for Separator.**
