@@ -2,6 +2,13 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.19
+
+**Fix playground orphan duplication and diffUpdate missing new elements.**
+
+- Bugfix: Orphan renderer now marks rendered orphan's descendants in the `rendered` set, preventing children of orphan containers (e.g. buttons inside a ButtonGroup) from being duplicated as standalone elements
+- Bugfix: `diffUpdate` now inserts new elements added in a spec revision into their parent DOM node, instead of silently skipping them when no prior DOM element exists to replace
+
 ## v3.0.18
 
 **Fix Temperature/Noise sliders not affecting page visuals.**

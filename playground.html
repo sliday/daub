@@ -53,7 +53,7 @@
           crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.0.18">
+  <link rel="stylesheet" href="daub.css?v=3.0.19">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -784,7 +784,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.0.18"></script>
+<script src="daub.js?v=3.0.19"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -2057,7 +2057,15 @@ function renderSpec(spec, prevSpec) {
   Object.keys(spec.elements).forEach(function(id) {
     if (id !== spec.root && !rendered[id]) {
       var orphan = renderElement(spec.elements, id, 0);
-      if (orphan) $preview.appendChild(orphan);
+      if (orphan) {
+        $preview.appendChild(orphan);
+        // Mark this orphan and all its descendants as rendered
+        // so children of orphan containers aren't duplicated
+        orphan.querySelectorAll('[data-spec-id]').forEach(function(n) {
+          rendered[n.getAttribute('data-spec-id')] = true;
+        });
+        rendered[id] = true;
+      }
     }
   });
 
@@ -2104,6 +2112,23 @@ function diffElement(oldSpec, newSpec, container, elId) {
       if (fresh) {
         domEl.parentNode.replaceChild(fresh, domEl);
         flashChanged(fresh);
+      }
+    } else if (!oldDef) {
+      // New element added in this version — find its parent in the spec and insert
+      var fresh = renderElement(newSpec.elements, elId, 0);
+      if (fresh) {
+        // Find parent element in spec that lists this id as a child
+        var parentId = null;
+        Object.keys(newSpec.elements).forEach(function(pid) {
+          var pdef = newSpec.elements[pid];
+          var pch = pdef.children || (pdef.props && pdef.props.children) || [];
+          if (pch.indexOf(elId) >= 0) parentId = pid;
+        });
+        var parentDom = parentId ? container.querySelector('[data-spec-id="' + parentId + '"]') : null;
+        if (parentDom) {
+          parentDom.appendChild(fresh);
+          flashChanged(fresh);
+        }
       }
     }
     return; // subtree was fully re-rendered, no need to recurse

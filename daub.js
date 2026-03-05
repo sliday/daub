@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Interactive Behaviors
-   Version 3.0.18
+   Version 3.0.19
    IIFE module exposing window.DAUB = { init, toast, theme API }
    ============================================================ */
 ;(function() {
