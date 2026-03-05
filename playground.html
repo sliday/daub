@@ -946,6 +946,7 @@ function pgLockChrome() {
 // Watch for theme/scheme changes on <html> and redirect to preview
 var _pgObserver = new MutationObserver(function(mutations) {
   if (_pgLocking) return;
+  var needsWidgetFix = false;
   for (var i = 0; i < mutations.length; i++) {
     var m = mutations[i];
     if (m.attributeName === 'data-theme') {
@@ -954,6 +955,7 @@ var _pgObserver = new MutationObserver(function(mutations) {
         $preview.setAttribute('data-theme', newTheme);
         try { localStorage.setItem('db-preview-theme', newTheme); } catch(e) {}
         pgLockChrome();
+        needsWidgetFix = true;
       }
     }
     if (m.attributeName === 'data-scheme') {
@@ -961,8 +963,26 @@ var _pgObserver = new MutationObserver(function(mutations) {
       if (newScheme && newScheme !== PG_CHROME_SCHEME) {
         $preview.setAttribute('data-scheme', newScheme);
         pgLockChrome();
+        needsWidgetFix = true;
       }
     }
+  }
+  // After locking chrome back to bone, fix widget UI to reflect preview's theme
+  if (needsWidgetFix) {
+    requestAnimationFrame(function() {
+      var previewTheme = $preview.getAttribute('data-theme') || 'light';
+      var info = DAUB.THEME_FAMILIES ? (function() {
+        for (var f in DAUB.THEME_FAMILIES) {
+          for (var m in DAUB.THEME_FAMILIES[f]) {
+            if (DAUB.THEME_FAMILIES[f][m] === previewTheme) return f;
+          }
+        }
+        return null;
+      })() : null;
+      document.querySelectorAll('.db-theme-switcher__item[data-family]').forEach(function(btn) {
+        btn.setAttribute('aria-pressed', String(btn.getAttribute('data-family') === info));
+      });
+    });
   }
 });
 _pgObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-scheme'] });
@@ -979,7 +999,25 @@ if (window.DAUB && DAUB.init) {
 // Restore preview theme from previous session
 try {
   var savedPreviewTheme = localStorage.getItem('db-preview-theme');
-  if (savedPreviewTheme) $preview.setAttribute('data-theme', savedPreviewTheme);
+  if (savedPreviewTheme) {
+    $preview.setAttribute('data-theme', savedPreviewTheme);
+    // Update widget UI to reflect saved preview theme
+    requestAnimationFrame(function() {
+      var info = DAUB.THEME_FAMILIES ? (function() {
+        for (var f in DAUB.THEME_FAMILIES) {
+          for (var m in DAUB.THEME_FAMILIES[f]) {
+            if (DAUB.THEME_FAMILIES[f][m] === savedPreviewTheme) return f;
+          }
+        }
+        return null;
+      })() : null;
+      if (info) {
+        document.querySelectorAll('.db-theme-switcher__item[data-family]').forEach(function(btn) {
+          btn.setAttribute('aria-pressed', String(btn.getAttribute('data-family') === info));
+        });
+      }
+    });
+  }
 } catch(e) {}
 pgLockChrome();
 
@@ -3972,7 +4010,7 @@ RENDERERS.CustomHTML = function(p, ch, els, d) {
   }
   if (p.html) {
     var frag = document.createRange().createContextualFragment(
-      p.html.replace(/<script[\s\S]*?<\/script>/gi, '') // eslint-disable-line -- intentional: user-authored HTML via AI chat
+      p.html.replace(new RegExp('<script[\\s\\S]*?<\\/script>', 'gi'), '') // strip script tags from user HTML
     );
     el.appendChild(frag);
   }
