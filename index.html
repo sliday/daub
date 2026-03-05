@@ -759,8 +759,8 @@
   <!-- Hero -->
   <section class="db-hero">
     <a class="db-hero__announce" href="https://github.com/sliday/daub" target="_blank" rel="noopener">
-      <span class="db-badge db-badge--new">v3.0.10</span>
-      CustomHTML: nest DAUB components as children — Star on GitHub
+      <span class="db-badge db-badge--new">v3.0.11</span>
+      Modal footer children + Tooltip fix — Star on GitHub
       <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
     </a>
     <h1 class="db-hero__headline">Design you can almost touch.</h1>
@@ -1731,19 +1731,19 @@
       <h2 class="demo-section__title">4e. Data Display — Tooltip</h2>
 
       <div class="demo-row">
-        <span class="db-tooltip-wrap">
+        <span class="db-tooltip">
           <button class="db-btn db-btn--secondary" data-db-tooltip>
             <i data-lucide="info" style="width:16px;height:16px;"></i>
             Hover me
           </button>
-          <span class="db-tooltip">This is a tooltip with helpful info</span>
+          <span class="db-tooltip__content db-tooltip__content--top">This is a tooltip with helpful info</span>
         </span>
 
-        <span class="db-tooltip-wrap">
+        <span class="db-tooltip">
           <button class="db-btn db-btn--secondary db-btn--icon" data-db-tooltip aria-label="Help">
-            <i data-lucide="help-circle" style="width:18px;height:18px;"></i>
+            <i data-lucide="help-circle" style="width:18px;height:16px;"></i>
           </button>
-          <span class="db-tooltip">Need help?</span>
+          <span class="db-tooltip__content db-tooltip__content--top">Need help?</span>
         </span>
       </div>
     </div>

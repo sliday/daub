@@ -3174,17 +3174,23 @@ RENDERERS.Modal = function(p, ch, els, d) {
   closeBtn.textContent = '\u00D7';
   hdr.appendChild(closeBtn);
   modal.appendChild(hdr);
+  var footerIds = p.footer || [];
+  var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
   var body = mkEl('div', 'db-modal__body');
-  body.appendChild(renderChildren(els, ch, d));
+  body.appendChild(renderChildren(els, bodyIds, d));
   modal.appendChild(body);
   var footer = mkEl('div', 'db-modal__footer');
-  var cancelBtn = document.createElement('button');
-  cancelBtn.className = 'db-btn db-btn--secondary';
-  cancelBtn.setAttribute('data-action', 'cancel');
-  cancelBtn.textContent = 'Cancel';
-  footer.appendChild(cancelBtn);
-  var confirmBtn = mkEl('button', 'db-btn db-btn--primary', 'Confirm');
-  footer.appendChild(confirmBtn);
+  if (footerIds.length) {
+    footer.appendChild(renderChildren(els, footerIds, d));
+  } else {
+    var cancelBtn = document.createElement('button');
+    cancelBtn.className = 'db-btn db-btn--secondary';
+    cancelBtn.setAttribute('data-action', 'cancel');
+    cancelBtn.textContent = 'Cancel';
+    footer.appendChild(cancelBtn);
+    var confirmBtn = mkEl('button', 'db-btn db-btn--primary', 'Confirm');
+    footer.appendChild(confirmBtn);
+  }
   modal.appendChild(footer);
   el.appendChild(modal);
   return el;
@@ -3198,9 +3204,11 @@ RENDERERS.AlertDialog = function(p, ch, els, d) {
   var panel = mkEl('div', 'db-alert-dialog__panel');
   panel.appendChild(mkEl('h3', 'db-alert-dialog__title', p.title || 'Confirm'));
   panel.appendChild(mkEl('p', 'db-alert-dialog__desc', p.description || ''));
+  var footerIds = p.footer || [];
+  var actionIds = footerIds.length ? footerIds : ch;
   var actions = mkEl('div', 'db-alert-dialog__actions');
-  if (ch.length) {
-    actions.appendChild(renderChildren(els, ch, d));
+  if (actionIds.length) {
+    actions.appendChild(renderChildren(els, actionIds, d));
   } else {
     var cancelBtn = document.createElement('button');
     cancelBtn.className = 'db-btn db-btn--secondary';
@@ -3622,8 +3630,8 @@ var COMP_PROPS = {
   EmptyState: 'icon: string, title: string, message: string',
   Tooltip: 'text: string, position: "top"|"bottom"|"left"|"right"',
   // Overlays
-  Modal: 'id: string, title: string',
-  AlertDialog: 'id: string, title: string, description: string',
+  Modal: 'id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm)',
+  AlertDialog: 'id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)',
   Sheet: 'id: string, position: "right"|"left"|"top"|"bottom"',
   Drawer: 'id: string',
   Popover: 'position: "top"|"bottom"|"left"|"right"',

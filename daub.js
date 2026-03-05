@@ -852,11 +852,11 @@
      Tooltip
      ---------------------------------------------------------- */
   function initTooltips(root) {
-    root.querySelectorAll('.db-tooltip-wrap').forEach(function(wrap) {
+    root.querySelectorAll('.db-tooltip').forEach(function(wrap) {
       if (wrap._dbInit) return;
       wrap._dbInit = true;
 
-      var tip = wrap.querySelector('.db-tooltip');
+      var tip = wrap.querySelector('.db-tooltip__content');
       if (!tip) return;
 
       if (!tip.id) tip.id = 'db-tip-' + uid();

@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.11
+
+**Modal/AlertDialog footer children support + Tooltip fix.**
+
+- Feature: Modal and AlertDialog now support `footer` prop — array of child IDs to render as footer buttons instead of hardcoded Cancel/Confirm
+- Enhancement: Body content automatically excludes footer children, preventing duplicate buttons
+- Enhancement: AI system prompt updated to guide `footer` usage for both components
+- Fix: Tooltip initialization selectors corrected (`.db-tooltip-wrap` → `.db-tooltip`, inner `.db-tooltip` → `.db-tooltip__content`)
+
 ## v3.0.10
 
 **Playground: CustomHTML now accepts children for DAUB component nesting.**
