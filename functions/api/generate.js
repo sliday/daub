@@ -59,7 +59,7 @@ export async function onRequestPost(context) {
       model: body.model || 'google/gemini-3.1-flash-lite-preview',
       messages: body.messages,
       temperature: 0.7,
-      max_tokens: 16384,
+      max_tokens: body.max_tokens || 16384,
       stream: true,
       response_format: { type: 'json_object' },
       reasoning: body.reasoning || { effort: 'medium' },

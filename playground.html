@@ -1578,6 +1578,25 @@ function capturePreview() {
   });
 }
 
+// ---- SSE response parser (shared by selfCheck, analyzeInteractivity, generateInteractiveCode) ----
+function parseSseResponse(res) {
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.text().then(function(text) {
+    var content = '';
+    text.split('\n').forEach(function(line) {
+      line = line.trim();
+      if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+        try {
+          var chunk = JSON.parse(line.slice(6));
+          var c = chunk.choices && chunk.choices[0];
+          if (c && c.delta && c.delta.content) content += c.delta.content;
+        } catch(e) {}
+      }
+    });
+    return content;
+  });
+}
+
 // ---- Self-check: verify rendered output and fix issues ----
 function selfCheck(spec, screenshotDataUrl) {
   var checkPrompt = 'You are reviewing a UI you just generated. Below is the JSON spec and a screenshot of how it rendered.\n\n'
@@ -1609,24 +1628,7 @@ function selfCheck(spec, screenshotDataUrl) {
       reasoning: { effort: 'low' }
     })
   })
-  .then(function(res) {
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    return res.text();
-  })
-  .then(function(text) {
-    var content = '';
-    text.split('\n').forEach(function(line) {
-      line = line.trim();
-      if (line.startsWith('data: ') && line !== 'data: [DONE]') {
-        try {
-          var chunk = JSON.parse(line.slice(6));
-          var c = chunk.choices && chunk.choices[0];
-          if (c && c.delta && c.delta.content) content += c.delta.content;
-        } catch(e) {}
-      }
-    });
-    return content;
-  })
+  .then(parseSseResponse)
   .then(function(raw) {
     var clean = cleanJSON(raw);
     if (!clean) return null;
@@ -1634,6 +1636,88 @@ function selfCheck(spec, screenshotDataUrl) {
     try { fixed = JSON.parse(clean); } catch(e) { fixed = repairJSON(clean); }
     if (!fixed || !fixed.root || !fixed.elements) return null;
     return fixed;
+  })
+  .catch(function() { return null; });
+}
+
+// ---- Interactivity pipeline: analyze spec → generate code ----
+function analyzeInteractivity(spec) {
+  var prompt = 'You are analyzing a UI spec to determine if it needs custom JavaScript code.\n\n'
+    + 'The spec uses DAUB components (buttons, cards, inputs, tabs, etc.) but some UIs need custom logic:\n'
+    + '- Games (Tetris, Snake, puzzles) need game loops, canvas, collision detection\n'
+    + '- Quizzes need scoring, question flow, timer logic\n'
+    + '- Interactive tools need calculators, converters, real-time updates\n'
+    + '- Dashboards with live data need chart updates, filtering\n'
+    + '- Forms with complex validation, multi-step wizards\n\n'
+    + 'Simple UIs (landing pages, profiles, static dashboards) do NOT need custom code.\n\n'
+    + 'Return JSON: { "needed": true/false, "description": "what the code should do", "elements": ["spec-id-1", ...] }\n'
+    + '"elements" lists the spec element IDs that should be interactive targets.\n'
+    + 'Return ONLY JSON, no explanation.';
+
+  return fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'google/gemini-3.1-flash-lite-preview',
+      messages: [
+        { role: 'system', content: prompt },
+        { role: 'user', content: JSON.stringify(spec) }
+      ],
+      reasoning: { effort: 'low' }
+    })
+  })
+  .then(parseSseResponse)
+  .then(function(raw) {
+    var clean = cleanJSON(raw);
+    if (!clean) return null;
+    try {
+      var result = JSON.parse(clean);
+      if (typeof result.needed === 'boolean') return result;
+    } catch(e) {}
+    return null;
+  })
+  .catch(function() { return null; });
+}
+
+function generateInteractiveCode(spec, analysis) {
+  var prompt = 'You are a JavaScript developer. You receive a DAUB UI component spec and must add interactive code.\n\n'
+    + 'TASK: ' + analysis.description + '\n\n'
+    + 'RULES:\n'
+    + '- Add or modify CustomHTML elements in the spec with "js", "html", and/or "css" props\n'
+    + '- Target existing elements via: preview.querySelector(\'[data-spec-id="elementId"]\')\n'
+    + '- "container" = this CustomHTML element, "preview" = the entire preview root\n'
+    + '- Use vanilla JS only. No frameworks, no imports, no fetch calls\n'
+    + '- For games: use <canvas> inside CustomHTML html prop, game loop in js prop\n'
+    + '- For quizzes: manage state in js, update DOM elements by data-spec-id\n'
+    + '- Wire buttons, inputs, and controls to your logic via event listeners\n'
+    + '- DAUB classes available: db-btn, db-card, db-badge, db-progress, etc.\n'
+    + '- Keep the existing DAUB component structure. Add/modify CustomHTML nodes for code\n'
+    + '- Make it fully functional \u2014 not a stub or placeholder\n\n'
+    + 'TARGET ELEMENTS: ' + JSON.stringify(analysis.elements) + '\n\n'
+    + 'Return the COMPLETE updated JSON spec with your CustomHTML additions.\n'
+    + 'Return ONLY JSON, no explanation.';
+
+  return fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'moonshotai/kimi-k2.5',
+      messages: [
+        { role: 'system', content: prompt },
+        { role: 'user', content: JSON.stringify(spec) }
+      ],
+      reasoning: { effort: 'high' },
+      max_tokens: 32768
+    })
+  })
+  .then(parseSseResponse)
+  .then(function(raw) {
+    var clean = cleanJSON(raw);
+    if (!clean) return null;
+    var updated;
+    try { updated = JSON.parse(clean); } catch(e) { updated = repairJSON(clean); }
+    if (!updated || !updated.root || !updated.elements) return null;
+    return updated;
   })
   .catch(function() { return null; });
 }
@@ -2077,27 +2161,51 @@ function generate() {
           buildResultBubble(streamBubble, spec);
           chatHistory.push({ role: 'assistant', content: 'v' + specVersions.length + ' \u00B7 ' + countComponents(spec) + ' components', versionIdx: specVersions.length - 1 });
           saveChatState();
-          // Self-check: capture screenshot and verify
-          $status.textContent = 'Checking\u2026';
-          capturePreview().then(function(screenshot) {
-            if (!screenshot) { $status.textContent = ''; setLoading(false); return; }
-            return selfCheck(spec, screenshot).then(function(fixedSpec) {
-              if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(spec)) {
-                $json.value = JSON.stringify(fixedSpec, null, 2);
-                var prevForDiff = currentSpec;
-                currentSpec = fixedSpec;
-                pushVersion(fixedSpec, prompt + ' (auto-fixed)');
-                renderSpec(fixedSpec, prevForDiff);
-                refreshJsonTree();
-                updatePreviewToolbar();
-                buildResultBubble(streamBubble, fixedSpec);
-                chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(fixedSpec) + ' components (checked)';
-                saveChatState();
-                $status.textContent = 'Self-check applied fixes';
-              } else {
-                $status.textContent = '';
-              }
-              setLoading(false);
+          // Interactivity pipeline: analyze → generate code → self-check
+          var finalSpec = spec;
+          $status.textContent = 'Analyzing interactivity\u2026';
+          analyzeInteractivity(spec).then(function(analysis) {
+            if (analysis && analysis.needed) {
+              $status.textContent = 'Generating code\u2026';
+              return generateInteractiveCode(spec, analysis).then(function(updatedSpec) {
+                if (updatedSpec) {
+                  finalSpec = updatedSpec;
+                  $json.value = JSON.stringify(updatedSpec, null, 2);
+                  var prevForCode = currentSpec;
+                  currentSpec = updatedSpec;
+                  pushVersion(updatedSpec, prompt + ' (code added)');
+                  renderSpec(updatedSpec, prevForCode);
+                  refreshJsonTree();
+                  updatePreviewToolbar();
+                  buildResultBubble(streamBubble, updatedSpec);
+                  chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(updatedSpec) + ' components (interactive)';
+                  saveChatState();
+                }
+              });
+            }
+          }).then(function() {
+            // Self-check: capture screenshot and verify
+            $status.textContent = 'Checking\u2026';
+            return capturePreview().then(function(screenshot) {
+              if (!screenshot) { $status.textContent = ''; setLoading(false); return; }
+              return selfCheck(finalSpec, screenshot).then(function(fixedSpec) {
+                if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(finalSpec)) {
+                  $json.value = JSON.stringify(fixedSpec, null, 2);
+                  var prevForDiff = currentSpec;
+                  currentSpec = fixedSpec;
+                  pushVersion(fixedSpec, prompt + ' (auto-fixed)');
+                  renderSpec(fixedSpec, prevForDiff);
+                  refreshJsonTree();
+                  updatePreviewToolbar();
+                  buildResultBubble(streamBubble, fixedSpec);
+                  chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(fixedSpec) + ' components (checked)';
+                  saveChatState();
+                  $status.textContent = 'Self-check applied fixes';
+                } else {
+                  $status.textContent = '';
+                }
+                setLoading(false);
+              });
             });
           }).catch(function() { $status.textContent = ''; setLoading(false); });
         } else {

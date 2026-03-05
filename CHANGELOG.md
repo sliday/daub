@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.3.1
+
+**Two-LLM interactivity pipeline for games, quizzes, and interactive apps.**
+
+- Feature: `analyzeInteractivity()` — Gemini 3.1 Flash Lite classifies specs as needing custom JS (games, quizzes, calculators) vs static UIs (landing pages, profiles)
+- Feature: `generateInteractiveCode()` — Kimi K2.5 (via OpenRouter) generates full CustomHTML nodes with JS/HTML/CSS for interactive specs
+- Feature: Two-step pipeline wired into `generate()` — after primary spec renders, Gemini analyzes → if interactive, Kimi generates code → re-render → selfCheck
+- Enhancement: `parseSseResponse()` shared helper extracts text from SSE responses (DRY refactor from selfCheck)
+- Enhancement: Backend `/api/generate` now passes through `max_tokens` from request body (was hardcoded 16384)
+- Enhancement: Status bar shows pipeline progress: "Analyzing interactivity…" → "Generating code…" → "Checking…"
+
 ## v3.3.0
 
 **Iframe-isolated preview + prompt quality + auto-JS interactivity.**
