@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.2.8
+
+**Add Image component + diff-tracking in chat context.**
+
+- Feature: New `Image` component type for standalone images with `src`, `alt`, `width`, `height` props
+- Feature: `computeSpecDiff()` computes structural diff between consecutive spec versions (added/removed/changed elements + meta)
+- Feature: Chat context now includes a concise JSON diff summary of changes from the last iteration, helping the LLM understand spec evolution
+- Enhancement: System prompt updated to document Image component and recommend it for standalone images
+
 ## v3.2.7
 
 **Fix theme widget scoping via MutationObserver.**

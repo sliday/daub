@@ -530,12 +530,31 @@
       opacity: 0.7;
       pointer-events: none;
     }
-    @keyframes pg-diff-flash {
-      0%   { outline: 2px solid var(--db-terracotta); outline-offset: 2px; }
-      100% { outline: 2px solid transparent; outline-offset: 2px; }
+    @keyframes pg-diff-shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
     .pg-diff-changed {
-      animation: pg-diff-flash 1.2s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+    .pg-diff-changed::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 999;
+      background: linear-gradient(
+        110deg,
+        rgba(99, 147, 230, 0.08) 0%,
+        rgba(99, 147, 230, 0.18) 40%,
+        rgba(180, 210, 255, 0.30) 50%,
+        rgba(99, 147, 230, 0.18) 60%,
+        rgba(99, 147, 230, 0.08) 100%
+      );
+      background-size: 200% 100%;
+      animation: pg-diff-shimmer 1.2s ease-in-out;
+      pointer-events: none;
+      border-radius: inherit;
     }
     .pg-chat__examples a:hover { color: var(--db-terracotta); }
     /* Theme picker — move to right bottom on playground */
@@ -1588,7 +1607,7 @@ function tryProgressiveRender(text) {
   try {
     var spec = JSON.parse(trimmed + closers);
     if (spec && spec.root && spec.elements) {
-      renderSpec(spec);
+      renderSpec(spec, progressivePrevSpec);
       progressivePrevSpec = spec;
       $status.textContent = 'Rendering\u2026';
     }
@@ -1601,7 +1620,15 @@ function buildMessages(userPrompt, images, webContexts) {
   if (currentSpec) {
     msgs.push({ role: 'user', content: '(previous request)' });
     msgs.push({ role: 'assistant', content: JSON.stringify(currentSpec) });
-    userPrompt = userPrompt + '\n\nModify the existing spec above. Return the COMPLETE updated spec.';
+    var diffNote = '';
+    if (specVersions.length >= 2) {
+      var prevVer = specVersions[specVersions.length - 2].spec;
+      var specDiff = computeSpecDiff(prevVer, currentSpec);
+      if (specDiff) {
+        diffNote = '\n\nChanges made in the last iteration:\n```json\n' + JSON.stringify(specDiff) + '\n```\n';
+      }
+    }
+    userPrompt = userPrompt + diffNote + '\n\nModify the existing spec above. Return the COMPLETE updated spec.';
   }
   if (webContexts && webContexts.length) {
     var webPreamble = '';
@@ -2328,6 +2355,35 @@ function updateGridForCollapse() {
 
 
 // ============================================================
+//  DIFF — compute structural diff between two specs
+// ============================================================
+function computeSpecDiff(oldSpec, newSpec) {
+  if (!oldSpec || !newSpec) return null;
+  var diff = { added: [], removed: [], changed: [], meta: {} };
+  var oldEls = oldSpec.elements || {};
+  var newEls = newSpec.elements || {};
+  for (var id in newEls) {
+    if (!oldEls[id]) {
+      diff.added.push({ id: id, type: newEls[id].type });
+    } else if (JSON.stringify(oldEls[id]) !== JSON.stringify(newEls[id])) {
+      var changedProps = [];
+      var op = oldEls[id].props || {}, np = newEls[id].props || {};
+      for (var p in np) { if (JSON.stringify(op[p]) !== JSON.stringify(np[p])) changedProps.push(p); }
+      for (var p2 in op) { if (!(p2 in np)) changedProps.push(p2 + ' (removed)'); }
+      diff.changed.push({ id: id, type: newEls[id].type, props: changedProps });
+    }
+  }
+  for (var id2 in oldEls) {
+    if (!newEls[id2]) diff.removed.push({ id: id2, type: oldEls[id2].type });
+  }
+  if (oldSpec.theme !== newSpec.theme) diff.meta.theme = newSpec.theme;
+  if (oldSpec.root !== newSpec.root) diff.meta.root = newSpec.root;
+  if (oldSpec.title !== newSpec.title) diff.meta.title = newSpec.title;
+  if (!diff.added.length && !diff.removed.length && !diff.changed.length && !Object.keys(diff.meta).length) return null;
+  return diff;
+}
+
+// ============================================================
 //  RENDERER — json-render spec to DAUB HTML
 // ============================================================
 var MAX_DEPTH = 20;
@@ -2451,9 +2507,9 @@ function diffElement(oldSpec, newSpec, container, elId) {
 
 function flashChanged(el) {
   el.classList.add('pg-diff-changed');
-  el.addEventListener('animationend', function() {
+  setTimeout(function() {
     el.classList.remove('pg-diff-changed');
-  }, { once: true });
+  }, 1300);
 }
 
 function renderElement(elements, id, depth) {
@@ -3939,6 +3995,29 @@ RENDERERS.CustomHTML = function(p, ch, els, d) {
   return el;
 };
 
+// -- Image --
+RENDERERS.Image = function(p) {
+  var el = document.createElement('img');
+  el.alt = p.alt || '';
+  el.style.maxWidth = '100%';
+  el.style.height = 'auto';
+  el.style.borderRadius = 'var(--db-radius-md)';
+  if (p.src && isSafeUrl(p.src)) {
+    el.src = p.src;
+  } else {
+    // Placeholder when no valid src
+    el.style.display = 'block';
+    el.style.width = p.width ? p.width + 'px' : '100%';
+    el.style.height = p.height ? p.height + 'px' : '200px';
+    el.style.background = 'var(--db-muted)';
+    el.style.objectFit = 'cover';
+    el.removeAttribute('src');
+  }
+  if (p.width) el.style.width = p.width + 'px';
+  if (p.height) el.style.height = p.height + 'px';
+  return el;
+};
+
 // ---- Component props documentation (single source of truth for AI prompt) ----
 var COMP_PROPS = {
   // Layout & Structure
@@ -3993,6 +4072,7 @@ var COMP_PROPS = {
   AspectRatio: 'ratio: "16-9"|"4-3"|"1-1"|"21-9"',
   Chip: 'label: string, color: "red"|"green"|"blue"|"purple"|"amber"|"pink", active: bool, closable: bool',
   ScrollArea: 'direction: "horizontal"|"vertical"',
+  Image: 'src: string (URL), alt: string, width: number, height: number',
   // Feedback
   Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
   Progress: 'value: number, indeterminate: bool',
@@ -4025,7 +4105,7 @@ var COMP_CATEGORIES = [
   ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator']],
   ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
   ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
-  ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea']],
+  ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea', 'Image']],
   ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip']],
   ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette']],
   ['Layout Utilities', ['Accordion', 'Collapsible', 'Resizable', 'DatePicker']],
@@ -4075,7 +4155,7 @@ var SYSTEM_PROMPT = (function() {
     + '- Use StatCard for KPI metrics\n'
     + '- Use real-looking sample data (names, numbers, dates)\n'
     + '- Keep element IDs descriptive and unique\n'
-    + '- For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)\n'
+    + '- For standalone images use the Image component with a src URL. For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)\n'
     + '- CustomHTML is an ESCAPE HATCH — PREFER standard DAUB components for everything. Only use CustomHTML for: (a) inter-component interactions (e.g. a button controlling a modal elsewhere), (b) animations/transitions, (c) widgets not covered by DAUB components\n'
     + '- CustomHTML supports children: use "children" array to nest DAUB components inside CustomHTML (modals, drawers, interactive panels). Children are real DAUB components — themed, diffable, with data-spec-id\n'
     + '- Use "html" only for truly custom markup (decorative elements, SVG, canvas). Use "children" for content that should be standard DAUB components. Can combine both: html renders first, children append after\n'
