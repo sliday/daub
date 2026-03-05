@@ -2585,6 +2585,7 @@ RENDERERS.Separator = function(p) {
   hr.className = 'db-separator' + (p.dashed ? ' db-separator--dashed' : '') + (p.vertical ? ' db-separator--vertical' : '');
   return hr;
 };
+RENDERERS.Divider = RENDERERS.Separator;
 
 // -- Button --
 RENDERERS.Button = function(p) {
@@ -4032,7 +4033,8 @@ var SYSTEM_PROMPT = (function() {
     + '- Button variant "icon-danger"|"icon-success"|"icon-accent" for colored icon buttons (e.g. delete, approve actions)\n'
     + '- StatCard horizontal:true for compact inline stat display (icon + label + value in a row)\n'
     + '- Stepper vertical:true for vertical process flows and timelines\n'
-    + '- Use CustomSelect (not Select) when you need searchable dropdowns or custom-styled options; set selected:true on the default option and disabled:true on unavailable options\n\n';
+    + '- Use CustomSelect (not Select) when you need searchable dropdowns or custom-styled options; set selected:true on the default option and disabled:true on unavailable options\n'
+    + '- Use "Separator" for dividers/horizontal rules — there is no "Divider" component\n\n';
 
   var themes = (function() {
     var fams = DAUB.THEME_FAMILIES;

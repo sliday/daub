@@ -2,6 +2,13 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.2.3
+
+**Handle "Divider" as alias for Separator.**
+
+- Bugfix: Renderer now maps `Divider` → `Separator` so AI-generated specs using the wrong name render correctly instead of showing "Unknown: Divider"
+- Enhancement: System prompt (playground + generate.js) now explicitly states to use "Separator", not "Divider"
+
 ## v3.2.2
 
 **Remove raised surface from playground preview.**

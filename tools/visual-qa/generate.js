@@ -155,7 +155,8 @@ function buildSystemPrompt() {
     + '- Overlays (Modal, Sheet, Drawer) render in closed state by default — for static previews, always include visible content inside them and assume they will be forced open\n'
     + '- When the prompt mentions avatars or user photos, ALWAYS use the Avatar or AvatarGroup component — never use raw <img> or placeholder divs\n'
     + '- Tabs content must be nested INSIDE the Tabs component as children — never place tab panel content as siblings after the Tabs element\n'
-    + '- Carousel slides should use standard DAUB components (Card, Text, Layout) — never put raw HTML strings in slide content\n\n';
+    + '- Carousel slides should use standard DAUB components (Card, Text, Layout) — never put raw HTML strings in slide content\n'
+    + '- Use "Separator" for dividers/horizontal rules — there is no "Divider" component\n\n';
 
   const themes = 'THEMES:\n'
     + 'Set "theme" in the root JSON to apply a DAUB theme. Available themes:\n'
