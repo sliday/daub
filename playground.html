@@ -4628,11 +4628,15 @@ if (sharedSpec) {
     if (spec && spec.root && spec.elements) {
       currentSpec = spec;
       $json.value = JSON.stringify(spec, null, 2);
-      renderSpec(spec);
       refreshJsonTree();
       updatePreviewToolbar();
+      // Wait for iframe to be ready before rendering
+      $previewFrame.addEventListener('load', function onShareLoad() {
+        $previewFrame.removeEventListener('load', onShareLoad);
+        renderSpec(spec);
+      });
     }
-  } catch(e) {}
+  } catch(e) { console.warn('[share] failed to load shared spec:', e); }
   window.history.replaceState({}, '', window.location.pathname);
 }
 
