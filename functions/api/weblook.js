@@ -83,7 +83,9 @@ async function handleRequest(request, env, corsHeaders) {
 
 // CF Workers outbound WebSocket via fetch + Upgrade header
 async function runCDP(connectUrl, targetUrl) {
-  const wsResp = await fetch(connectUrl, {
+  // CF Workers fetch() requires https:// not wss:// for WebSocket upgrade
+  const httpUrl = connectUrl.replace(/^wss:\/\//, 'https://').replace(/^ws:\/\//, 'http://');
+  const wsResp = await fetch(httpUrl, {
     headers: { Upgrade: 'websocket' },
   });
 
