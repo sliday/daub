@@ -2,6 +2,23 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.14
+
+**Component prop coverage + richer playground examples.**
+
+- Enhancement: COMP_PROPS documents Input `type` (email, password, date, number, tel, url, search, time)
+- Enhancement: COMP_PROPS documents Card `interactive` and `clip` props
+- Enhancement: COMP_PROPS documents Button `icon-danger`, `icon-success`, `icon-accent` variants
+- Enhancement: COMP_PROPS documents StatCard `horizontal`, Stepper `vertical` layout props
+- Enhancement: COMP_PROPS documents DropdownMenu item `active` and CustomSelect option `selected`/`disabled`
+- Enhancement: Card renderer applies `db-card--interactive` and `db-card--clip` CSS modifiers from props
+- Enhancement: StatCard renderer applies `db-stat--horizontal` modifier from props
+- Enhancement: Stepper renderer applies `db-stepper--vertical` modifier from props
+- Enhancement: DropdownMenu renderer applies `db-dropdown__item--active` on active items
+- Enhancement: CustomSelect renderer applies `--selected`/`--disabled` on options and shows selected value in trigger
+- Enhancement: AI system prompt includes guidance for interactive cards, semantic input types, icon button variants, horizontal stats, vertical steppers, and CustomSelect usage
+- Enhancement: Playground example prompts rewritten to exercise more component variety and new props
+
 ## v3.0.13
 
 **Calendar: dynamic month navigation + date selection.**

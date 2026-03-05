@@ -53,7 +53,7 @@
           crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.0.13">
+  <link rel="stylesheet" href="daub.css?v=3.0.14">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -641,12 +641,12 @@
               </div>
               <div class="db-collapsible__content">
                 <div style="display:flex;flex-wrap:wrap;gap:4px;padding-top:4px;">
-                  <button class="db-chip db-chip--sm" data-example="Analytics dashboard with a top stats row showing 4 StatCards for revenue, active users, orders, and conversion rate. Below that a two-column layout: left side has a large ChartCard with a line chart of monthly revenue over 12 months, right side has a Card with a sortable DataTable of recent orders showing order ID, customer name, amount, status badge, and date. Add a Breadcrumb at the top and a Pagination bar at the bottom.">Dashboard</button>
-                  <button class="db-chip db-chip--sm" data-example="Login page with a centered Card on a subtle background. Inside the card: app logo at top, heading 'Welcome Back', email and password TextInput fields with proper labels and placeholders, a 'Remember me' Checkbox, a primary 'Sign In' Button full-width, a Divider with 'or continue with' text, then a row of 3 ghost Buttons for Google, GitHub, and Apple sign-in. Below the card a small caption: 'Don't have an account? Sign up'.">Login</button>
-                  <button class="db-chip db-chip--sm" data-example="Settings page with a vertical Layout. At the top a heading 'App Settings' with a caption subtitle. Below that a Tabs component with 4 tabs: General, Notifications, Appearance, Security. The General tab content shows a Card with form fields: TextInput for display name, TextInput for email, Textarea for bio, a Select dropdown for language, and a Toggle for 'Public profile'. Footer row with secondary 'Cancel' and primary 'Save Changes' Buttons.">Settings</button>
-                  <button class="db-chip db-chip--sm" data-example="User profile page with a horizontal two-column layout. Left column (narrow): a Card containing a large Avatar, the user's name as a heading, their role as a caption, a list of stats (posts, followers, following) as Badges, and an 'Edit Profile' Button. Right column (wide): a Card with Tabs for 'Posts', 'Activity', and 'About'. The Posts tab shows a List of 5 items each with a title, date caption, and a short excerpt paragraph.">Profile</button>
-                  <button class="db-chip db-chip--sm" data-example="Team members directory with a heading 'Team Directory', a SearchInput with placeholder 'Search by name or role', and a Card containing a DataTable with columns: avatar + name, email, role (shown as a Chip), department, join date, and a status Badge (active/away/offline). Show 8 rows of realistic team member data. Below the table a Pagination with page numbers. Add a primary 'Invite Member' Button in the top right corner.">Table</button>
-                  <button class="db-chip db-chip--sm" data-example="Pricing page with a centered heading 'Choose Your Plan' and a subtitle caption. Below that a Toggle group to switch between Monthly and Annual billing. Then a 3-column horizontal layout of Cards: Starter ($9/mo), Professional ($29/mo, highlighted with a 'Popular' Badge), and Enterprise ($99/mo). Each card has the plan name, price, a list of 5-6 features with checkmark icons, and a full-width Button (ghost for Starter, primary for Professional, secondary for Enterprise). Professional card should have a subtle raised surface style.">Pricing</button>
+                  <button class="db-chip db-chip--sm" data-example="Analytics dashboard: Breadcrumbs at top (Home > Analytics > Overview). A row of 4 horizontal StatCards showing Revenue ($48.2K, up 12.5%), Active Users (2,847, up 8.1%), Orders (1,423, down 3.2%), Conversion (4.6%, up 0.8%) — each with a relevant icon. Below: two-column layout. Left column: ChartCard titled 'Revenue Trend' with 12-month bar chart. Right column: vertical stack of an interactive Card titled 'Top Products' with a DataTable (product, revenue, units, status badge) showing 5 rows and sortable columns, and a Card with a List of 3 recent activities with icons and timestamps. Pagination bar at the bottom.">Dashboard</button>
+                  <button class="db-chip db-chip--sm" data-example="Login page: centered clipped Card on a raised Surface. Inside: heading 'Welcome Back' with caption 'Sign in to your account'. Field with label 'Email' and an email-type input with placeholder. Field with label 'Password' and a password-type input. Row with a 'Remember me' Checkbox on the left and a ghost Button 'Forgot password?' on the right. Primary 'Sign In' Button full-width. Separator with label 'or continue with'. Row of 3 ghost Buttons with icons for google, github, and apple. Below the card: small text 'Don''t have an account? Sign up'.">Login</button>
+                  <button class="db-chip db-chip--sm" data-example="Settings page: vertical Layout with heading 'Settings' and caption 'Manage your account preferences'. Tabs with 4 tabs: General, Notifications, Appearance, Security. General tab: Card with Fields for Display Name (text input), Email (email-type input), Bio (Textarea, 3 rows), a CustomSelect for timezone with searchable options (UTC-8 Pacific, UTC-5 Eastern, UTC+0 London, UTC+1 Berlin, UTC+9 Tokyo — Pacific pre-selected), and a Switch for 'Public Profile'. Card footer with secondary 'Cancel' and primary 'Save Changes' Buttons. Notifications tab: Card with Switches for Email Notifications, Push Notifications, Weekly Digest, and a RadioGroup for frequency (Instant, Hourly, Daily).">Settings</button>
+                  <button class="db-chip db-chip--sm" data-example="User profile page: two-column horizontal layout. Left column (narrow, 2 cols): Card with a large Avatar (initials JD), heading 'Jane Doe', caption 'Senior Product Designer'. Row of 3 horizontal StatCards: Posts (142), Followers (8.3K), Following (284). 'Edit Profile' primary Button and 'Message' secondary Button side by side. Below: Card with heading 'Skills' containing Chips for UI Design (blue), Figma (purple), React (green), User Research (amber), Prototyping (pink). Right column (wide, 4 cols): Card with Tabs for Posts, Activity, About. Posts tab: List of 5 items with titles, secondary text showing dates, and icons. Activity tab: vertical Stepper showing 4 recent activities as completed/active/pending steps.">Profile</button>
+                  <button class="db-chip db-chip--sm" data-example="Team directory: heading 'Team Directory' with a row containing a Search input (placeholder 'Search by name or role...') and a primary Button with icon user-plus labeled 'Invite Member'. Card containing a selectable DataTable with columns: Name, Email, Role (as Chip — Engineering blue, Design purple, Marketing green, Sales amber), Department, Start Date, Status (Badge — active green, away amber, offline gray). 8 realistic rows of team data. Below the table: row with a CustomSelect for 'Role' filter (options: All Roles pre-selected, Engineering, Design, Marketing, Sales) and Pagination (page 1 of 4, 8 per page). A DropdownMenu labeled 'Actions' with items: Export CSV, Send Invites, separator, Archive Selected (with active state on Export CSV).">Table</button>
+                  <button class="db-chip db-chip--sm" data-example="Pricing page: centered heading 'Choose Your Plan' with caption 'Start free, upgrade when you need to'. ToggleGroup to switch Monthly / Annual (Monthly selected). Three-column layout of interactive clipped Cards: Starter ($9/mo) — feature list with 5 items using check icons, ghost 'Get Started' Button; Professional ($29/mo) — 'Most Popular' Badge at top, raised Surface style, 6 features, primary 'Start Free Trial' Button; Enterprise ($99/mo) — 6 features, secondary 'Contact Sales' Button. Below: Card with heading 'Compare Plans' and a Table comparing all 3 plans across features (Users, Storage, Support, API Access, Analytics) with check/x icons. FAQ Accordion at the bottom with 4 items about billing, cancellation, upgrades, and team plans.">Pricing</button>
                 </div>
               </div>
             </div>
@@ -784,7 +784,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.0.13"></script>
+<script src="daub.js?v=3.0.14"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -2503,7 +2503,9 @@ RENDERERS.CustomSelect = function(p) {
   var trigger = document.createElement('button');
   trigger.className = 'db-custom-select__trigger';
   trigger.type = 'button';
-  trigger.appendChild(mkEl('span', 'db-custom-select__placeholder', p.placeholder || 'Select...'));
+  var selectedOpt = (p.options || []).filter(function(o) { return o.selected; })[0];
+  var triggerText = mkEl('span', 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
+  trigger.appendChild(triggerText);
   var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('class', 'db-custom-select__icon');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -2522,7 +2524,8 @@ RENDERERS.CustomSelect = function(p) {
     dd.appendChild(searchDiv);
   }
   (p.options || []).forEach(function(o) {
-    dd.appendChild(mkEl('div', 'db-custom-select__option', o.label || ''));
+    var optCls = 'db-custom-select__option' + (o.selected ? ' db-custom-select__option--selected' : '') + (o.disabled ? ' db-custom-select__option--disabled' : '');
+    dd.appendChild(mkEl('div', optCls, o.label || ''));
   });
   el.appendChild(dd);
   return el;
@@ -2660,7 +2663,7 @@ RENDERERS.Pagination = function(p) {
 
 // -- Stepper --
 RENDERERS.Stepper = function(p) {
-  var el = mkEl('div', 'db-stepper');
+  var el = mkEl('div', 'db-stepper' + (p.vertical ? ' db-stepper--vertical' : ''));
   (p.steps || []).forEach(function(s, i) {
     var step = mkEl('div', 'db-stepper__step db-stepper__step--' + (s.status || 'pending'));
     step.appendChild(mkEl('div', 'db-stepper__indicator', String(i + 1)));
@@ -2773,7 +2776,7 @@ RENDERERS.BottomNav = function(p) {
 
 // -- Card --
 RENDERERS.Card = function(p, ch, els, d) {
-  var el = mkEl('div', 'db-card' + (p.media ? ' db-card--media' : ''));
+  var el = mkEl('div', 'db-card' + (p.media ? ' db-card--media' : '') + (p.interactive ? ' db-card--interactive' : '') + (p.clip ? ' db-card--clip' : ''));
   if (p.media && isSafeUrl(p.media)) {
     var media = mkEl('div', 'db-card__media');
     var img = document.createElement('img');
@@ -3304,7 +3307,7 @@ RENDERERS.DropdownMenu = function(p, ch, els, d) {
       content.appendChild(mkEl('div', 'db-dropdown__label', item.groupLabel));
     } else {
       var btn = document.createElement('button');
-      btn.className = 'db-dropdown__item';
+      btn.className = 'db-dropdown__item' + (item.active ? ' db-dropdown__item--active' : '');
       if (item.icon) {
         var ico = document.createElement('i');
         ico.setAttribute('data-lucide', item.icon);
@@ -3493,7 +3496,7 @@ RENDERERS.DatePicker = function(p) {
 
 // -- StatCard --
 RENDERERS.StatCard = function(p) {
-  var el = mkEl('div', 'db-stat');
+  var el = mkEl('div', 'db-stat' + (p.horizontal ? ' db-stat--horizontal' : ''));
   if (p.icon) {
     var ico = mkEl('div', 'db-stat__icon');
     var icoI = document.createElement('i');
@@ -3568,10 +3571,10 @@ var COMP_PROPS = {
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
   // Controls
-  Button: 'label: string, variant: "primary"|"secondary"|"ghost", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id)',
+  Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id)',
   ButtonGroup: '(children are Buttons)',
   Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string',
-  Input: 'placeholder: string, size: "sm"|"lg", error: bool',
+  Input: 'placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time"',
   InputGroup: 'addonBefore: string, addonAfter: string (child is Input)',
   InputIcon: 'icon: string, right: bool (child is Input)',
   Search: 'placeholder: string',
@@ -3583,7 +3586,7 @@ var COMP_PROPS = {
   Toggle: 'label: string, pressed: bool, size: "sm"',
   ToggleGroup: 'options: [{label, value}], selected: string',
   Select: 'label: string, options: [{label, value}], selected: string',
-  CustomSelect: 'placeholder: string, options: [{label, value}], searchable: bool',
+  CustomSelect: 'placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool',
   Kbd: 'keys: [string]',
   Label: 'text: string, required: bool, optional: bool',
   Spinner: 'size: "sm"|"lg"|"xl"',
@@ -3592,14 +3595,14 @@ var COMP_PROPS = {
   Tabs: 'tabs: [{label, id}], active: string',
   Breadcrumbs: 'items: [{label, href}]',
   Pagination: 'current: number, total: number, perPage: number',
-  Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}]',
+  Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool',
   NavMenu: 'items: [{label, href, active: bool}]',
   Navbar: 'brand: string, brandHref: string',
   Menubar: 'items: [{label, dropdown: [{label, href}]}]',
   Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool',
   BottomNav: 'items: [{label, icon, active, badge}]',
   // Data Display
-  Card: 'title: string, description: string, media: string, footer: [childIds]',
+  Card: 'title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool',
   Table: 'columns: [{key, label, numeric}], rows: [{}], sortable: bool',
   DataTable: 'columns: [{key, label}], rows: [{}], selectable: bool',
   List: 'items: [{title, secondary, icon}]',
@@ -3625,7 +3628,7 @@ var COMP_PROPS = {
   Drawer: 'id: string',
   Popover: 'position: "top"|"bottom"|"left"|"right"',
   HoverCard: '',
-  DropdownMenu: 'items: [{label, icon, separator, groupLabel}]',
+  DropdownMenu: 'items: [{label, icon, separator, groupLabel, active: bool}]',
   ContextMenu: 'items: [{label, icon, separator}]',
   CommandPalette: 'id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}]',
   // Layout Utilities
@@ -3634,7 +3637,7 @@ var COMP_PROPS = {
   Resizable: 'direction: "horizontal"|"vertical"',
   DatePicker: 'label: string, placeholder: string, selected: string',
   // Dashboard
-  StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string',
+  StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool',
   ChartCard: 'title: string',
   // Custom
   CustomHTML: 'html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector(\'[data-spec-id="someId"]\') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after)'
@@ -3701,7 +3704,13 @@ var SYSTEM_PROMPT = (function() {
     + '- Escape quotes properly in JSON strings: use \\" for double quotes inside string values\n'
     + '- Overlay components (Modal, AlertDialog, Sheet, Drawer) are hidden by default — do NOT add display:none style\n'
     + '- Use trigger: "overlay-id" on Button to open overlays — no CustomHTML JS needed\n'
-    + '- Overlays get DAUB behaviors automatically: overlay click-to-close, ESC key, focus trap (Modal)\n\n';
+    + '- Overlays get DAUB behaviors automatically: overlay click-to-close, ESC key, focus trap (Modal)\n'
+    + '- Card interactive:true for clickable/hoverable cards (adds pointer cursor + hover lift)\n'
+    + '- Input type prop for semantic inputs: type:"email" for emails, type:"date" for dates, type:"password" for passwords, type:"number" for numbers\n'
+    + '- Button variant "icon-danger"|"icon-success"|"icon-accent" for colored icon buttons (e.g. delete, approve actions)\n'
+    + '- StatCard horizontal:true for compact inline stat display (icon + label + value in a row)\n'
+    + '- Stepper vertical:true for vertical process flows and timelines\n'
+    + '- Use CustomSelect (not Select) when you need searchable dropdowns or custom-styled options; set selected:true on the default option and disabled:true on unavailable options\n\n';
 
   var themes = (function() {
     var fams = DAUB.THEME_FAMILIES;
