@@ -1,0 +1,15 @@
+{
+  "name": "daub-visual-qa",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node generate.js",
+    "capture": "node render-capture.js",
+    "analyze": "node analyze.js",
+    "all": "node generate.js && node render-capture.js && node analyze.js"
+  },
+  "dependencies": {
+    "lz-string": "^1.5.0",
+    "playwright": "^1.49.0"
+  }
+}

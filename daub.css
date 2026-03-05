@@ -2536,6 +2536,16 @@ textarea.db-field__input {
   color: var(--db-terracotta);
 }
 
+.db-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 .db-breadcrumbs [aria-current="page"] {
   color: var(--db-charcoal);
   font-weight: 600;
@@ -2839,6 +2849,8 @@ textarea.db-field__input {
 .db-badge {
   display: inline-flex;
   align-items: center;
+  align-self: flex-start;
+  width: fit-content;
   gap: var(--db-space-1);
   font-family: var(--db-font-ui);
   font-size: 0.6875rem;
@@ -3303,7 +3315,7 @@ textarea.db-field__input {
    8e. FEEDBACK — Skeleton Rows
    ------------------------------------------------------------ */
 .db-skeleton {
-  background: var(--db-cream-dark);
+  background: var(--db-skeleton-bg, var(--db-border));
   border-radius: var(--db-radius-2);
   position: relative;
   overflow: hidden;
@@ -3721,6 +3733,7 @@ textarea.db-field__input {
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
+  scrollbar-gutter: stable;
 }
 
 .db-scroll-area::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -4676,7 +4689,7 @@ textarea.db-field__input {
   height: 56px;
   padding: 0 var(--db-space-5);
   background: var(--db-color-surface);
-  border-bottom: 1px solid var(--db-sand);
+  border-bottom: 1px solid var(--db-border, var(--db-sand));
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   font-family: var(--db-font-ui);
 }
@@ -4887,6 +4900,7 @@ textarea.db-field__input {
   border-radius: var(--db-radius-full);
   padding: 0 4px;
 }
+.db-bottom-nav--static { position: relative; }
 @media (min-width: 641px) {
   .db-bottom-nav:not(.db-bottom-nav--always) { display: none; }
 }
@@ -5173,7 +5187,9 @@ textarea.db-field__input {
 .db-chart-card__header { display:flex; align-items:center; justify-content:space-between; padding:var(--db-space-4); border-bottom:1px solid var(--db-sand); }
 .db-chart-card__title { font-family:var(--db-font-ui); font-size:0.875rem; font-weight:600; color:var(--db-charcoal); }
 .db-chart-card__actions { display:flex; gap:var(--db-space-2); }
-.db-chart-card__body { padding:var(--db-space-4); }
+.db-chart-card__body { padding:var(--db-space-4); min-height:200px; }
+.db-chart-card__body:empty { display:flex; align-items:center; justify-content:center; }
+.db-chart-card__body:empty::before { content:'No data'; color:var(--db-warm-gray); font-size:0.875rem; }
 .db-chart-card__body canvas { width:100%!important; display:block; }
 
 /* ------------------------------------------------------------

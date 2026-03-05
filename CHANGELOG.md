@@ -2,6 +2,21 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.2.1
+
+**Visual QA fixes — rendering bugs found by automated 99-layout analysis.**
+
+- Bugfix: Badge no longer stretches full-width in flex columns — added `align-self: flex-start; width: fit-content`
+- Bugfix: Navbar border now adapts to dark themes — uses `var(--db-border, var(--db-sand))` fallback
+- Bugfix: ChartCard body has `min-height: 200px` and `:empty` state with "No data" placeholder
+- Bugfix: Skeleton background uses theme-aware `var(--db-skeleton-bg, var(--db-border))` instead of hardcoded `--db-cream-dark`
+- Bugfix: Breadcrumbs `<ol>` wrapper now has flex layout for proper rendering when json-render wraps items
+- Enhancement: BottomNav `--static` variant with `position: relative` for static/screenshot contexts
+- Enhancement: ScrollArea adds `scrollbar-gutter: stable` for content overflow indication
+- Tools: Removed non-existent "midnight" theme from visual QA generator
+- Tools: Added system prompt guidelines — ban flex-wrap on app shells, mandate Avatar components, nest Tabs content, ban raw HTML in Carousel
+- Tools: Render capture now forces overlays (Modal, Sheet, Drawer) open before screenshot
+
 ## v3.2.0
 
 **Web Look + redesigned chat input.**
