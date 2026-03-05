@@ -137,6 +137,13 @@ html::after {
   pointer-events: none;
   backdrop-filter: saturate(calc(1 + 0.6 * var(--db-temperature))) sepia(calc(max(0, var(--db-temperature)) * 0.18)) hue-rotate(calc(min(0, var(--db-temperature)) * 15deg));
   -webkit-backdrop-filter: saturate(calc(1 + 0.6 * var(--db-temperature))) sepia(calc(max(0, var(--db-temperature)) * 0.18)) hue-rotate(calc(min(0, var(--db-temperature)) * 15deg));
+  background: linear-gradient(
+    rgba(180, 120, 60, calc(max(0, var(--db-temperature)) * 0.06)),
+    rgba(180, 120, 60, calc(max(0, var(--db-temperature)) * 0.06))
+  ), linear-gradient(
+    rgba(60, 100, 180, calc(max(0, calc(-1 * var(--db-temperature))) * 0.08)),
+    rgba(60, 100, 180, calc(max(0, calc(-1 * var(--db-temperature))) * 0.08))
+  );
 }
 
 /* Texture overlay — type set via [data-db-texture] on <html> */
@@ -1684,6 +1691,7 @@ body::before {
   --db-on-accent: #fff;
   --db-text-emboss: 0 1px 0 rgba(var(--db-glow-rgb), 0.5);
   --db-text-emboss-subtle: 0 1px 0 rgba(var(--db-glow-rgb), 0.25);
+  --db-texture-blend: soft-light;
 }
 
 /* ------------------------------------------------------------
