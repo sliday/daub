@@ -2,6 +2,14 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.15
+
+**Orphan overlay rendering + realistic playground prompts.**
+
+- Bugfix: Overlay elements (Modal, AlertDialog, Sheet, Drawer) not in any parent's `children` array are now rendered as orphans appended to the preview root — fixes overlays never appearing when AI omits them from the tree
+- Bugfix: Incremental diff updates (`diffUpdate`) also detect and render newly added orphan elements
+- Enhancement: Playground example prompts rewritten to resemble real products (Stripe, Linear, Notion, Vercel, Dribbble style) with richer descriptions exercising overlays, sheets, alert dialogs, charts, data tables, and more components
+
 ## v3.0.14
 
 **Component prop coverage + richer playground examples.**

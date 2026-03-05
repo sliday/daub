@@ -53,7 +53,7 @@
           crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.0.14">
+  <link rel="stylesheet" href="daub.css?v=3.0.15">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -641,12 +641,12 @@
               </div>
               <div class="db-collapsible__content">
                 <div style="display:flex;flex-wrap:wrap;gap:4px;padding-top:4px;">
-                  <button class="db-chip db-chip--sm" data-example="Analytics dashboard: Breadcrumbs at top (Home > Analytics > Overview). A row of 4 horizontal StatCards showing Revenue ($48.2K, up 12.5%), Active Users (2,847, up 8.1%), Orders (1,423, down 3.2%), Conversion (4.6%, up 0.8%) — each with a relevant icon. Below: two-column layout. Left column: ChartCard titled 'Revenue Trend' with 12-month bar chart. Right column: vertical stack of an interactive Card titled 'Top Products' with a DataTable (product, revenue, units, status badge) showing 5 rows and sortable columns, and a Card with a List of 3 recent activities with icons and timestamps. Pagination bar at the bottom.">Dashboard</button>
-                  <button class="db-chip db-chip--sm" data-example="Login page: centered clipped Card on a raised Surface. Inside: heading 'Welcome Back' with caption 'Sign in to your account'. Field with label 'Email' and an email-type input with placeholder. Field with label 'Password' and a password-type input. Row with a 'Remember me' Checkbox on the left and a ghost Button 'Forgot password?' on the right. Primary 'Sign In' Button full-width. Separator with label 'or continue with'. Row of 3 ghost Buttons with icons for google, github, and apple. Below the card: small text 'Don''t have an account? Sign up'.">Login</button>
-                  <button class="db-chip db-chip--sm" data-example="Settings page: vertical Layout with heading 'Settings' and caption 'Manage your account preferences'. Tabs with 4 tabs: General, Notifications, Appearance, Security. General tab: Card with Fields for Display Name (text input), Email (email-type input), Bio (Textarea, 3 rows), a CustomSelect for timezone with searchable options (UTC-8 Pacific, UTC-5 Eastern, UTC+0 London, UTC+1 Berlin, UTC+9 Tokyo — Pacific pre-selected), and a Switch for 'Public Profile'. Card footer with secondary 'Cancel' and primary 'Save Changes' Buttons. Notifications tab: Card with Switches for Email Notifications, Push Notifications, Weekly Digest, and a RadioGroup for frequency (Instant, Hourly, Daily).">Settings</button>
-                  <button class="db-chip db-chip--sm" data-example="User profile page: two-column horizontal layout. Left column (narrow, 2 cols): Card with a large Avatar (initials JD), heading 'Jane Doe', caption 'Senior Product Designer'. Row of 3 horizontal StatCards: Posts (142), Followers (8.3K), Following (284). 'Edit Profile' primary Button and 'Message' secondary Button side by side. Below: Card with heading 'Skills' containing Chips for UI Design (blue), Figma (purple), React (green), User Research (amber), Prototyping (pink). Right column (wide, 4 cols): Card with Tabs for Posts, Activity, About. Posts tab: List of 5 items with titles, secondary text showing dates, and icons. Activity tab: vertical Stepper showing 4 recent activities as completed/active/pending steps.">Profile</button>
-                  <button class="db-chip db-chip--sm" data-example="Team directory: heading 'Team Directory' with a row containing a Search input (placeholder 'Search by name or role...') and a primary Button with icon user-plus labeled 'Invite Member'. Card containing a selectable DataTable with columns: Name, Email, Role (as Chip — Engineering blue, Design purple, Marketing green, Sales amber), Department, Start Date, Status (Badge — active green, away amber, offline gray). 8 realistic rows of team data. Below the table: row with a CustomSelect for 'Role' filter (options: All Roles pre-selected, Engineering, Design, Marketing, Sales) and Pagination (page 1 of 4, 8 per page). A DropdownMenu labeled 'Actions' with items: Export CSV, Send Invites, separator, Archive Selected (with active state on Export CSV).">Table</button>
-                  <button class="db-chip db-chip--sm" data-example="Pricing page: centered heading 'Choose Your Plan' with caption 'Start free, upgrade when you need to'. ToggleGroup to switch Monthly / Annual (Monthly selected). Three-column layout of interactive clipped Cards: Starter ($9/mo) — feature list with 5 items using check icons, ghost 'Get Started' Button; Professional ($29/mo) — 'Most Popular' Badge at top, raised Surface style, 6 features, primary 'Start Free Trial' Button; Enterprise ($99/mo) — 6 features, secondary 'Contact Sales' Button. Below: Card with heading 'Compare Plans' and a Table comparing all 3 plans across features (Users, Storage, Support, API Access, Analytics) with check/x icons. FAQ Accordion at the bottom with 4 items about billing, cancellation, upgrades, and team plans.">Pricing</button>
+                  <button class="db-chip db-chip--sm" data-example="Stripe-style analytics dashboard: Breadcrumbs (Home > Analytics > Overview). Row of 4 horizontal StatCards: Gross Volume ($142.8K, up 14.2%, icon dollar-sign), Successful Payments (3,847, up 8.1%, icon credit-card), New Customers (284, down 3.2%, icon users), Net Revenue ($128.6K, up 11.4%, icon trending-up). Two-column layout below. Left (4 cols): ChartCard titled 'Revenue Over Time' with a 12-bar chart (Jan–Dec values 85,92,78,105,118,96,110,125,134,128,138,143 max 150). Right (2 cols): Card titled 'Top Products' with a sortable DataTable — columns Product, Revenue, Sales, Status — 5 rows: Pro Plan/$48.2K/1240/active-green, Team Plan/$32.1K/890/active-green, Starter/$24.8K/2100/active-green, Enterprise/$18.4K/42/active-green, Add-ons/$8.6K/680/updated-Badge. Below the columns: Card titled 'Recent Activity' with a List of 5 items: 'Payment received from Acme Corp' (icon check-circle, secondary '2 min ago'), 'Subscription upgraded — Pro to Team' (icon arrow-up-circle, '14 min ago'), 'Refund processed #RF-2847' (icon rotate-ccw, '1 hour ago'), 'New customer signup' (icon user-plus, '3 hours ago'), 'Invoice #INV-1923 sent' (icon send, '5 hours ago'). Pagination at the bottom: page 1 of 12, 10 per page.">Dashboard</button>
+                  <button class="db-chip db-chip--sm" data-example="Sign-in page inspired by Linear/Notion: centered narrow layout with a clipped Card on a raised Surface. Top: heading 'Welcome back' with caption 'Sign in to continue to your workspace'. Field label 'Email address' with email-type input placeholder 'you@company.com'. Field label 'Password' with password-type input. Row: Checkbox 'Remember this device' on the left, ghost Button 'Forgot password?' on the right. Full-width primary Button 'Sign in'. Separator with label 'or'. Row of 3 ghost Buttons with icons: 'Google' (icon chrome), 'GitHub' (icon github), 'SSO' (icon key-round). Below the card: small text 'New to the platform? Create an account'. At the very bottom: small muted text 'By continuing, you agree to our Terms of Service and Privacy Policy'.">Sign In</button>
+                  <button class="db-chip db-chip--sm" data-example="Account settings page like GitHub/GitLab: heading 'Settings' with caption 'Manage your account and preferences'. Tabs: Profile, Notifications, Appearance, Security (Profile active). Profile tab content: Card titled 'Public Profile'. Inside: two-column horizontal layout. Left (4 cols): Field label 'Display name' text input value 'Sarah Chen', Field label 'Username' with InputGroup addonBefore '@' and input value 'sarahchen', Field label 'Bio' with Textarea (3 rows) value 'Design engineer building tools for developers', searchable CustomSelect label 'Timezone' with options (UTC-8 Los Angeles selected, UTC-5 New York, UTC+0 London, UTC+1 Berlin, UTC+8 Singapore, UTC+9 Tokyo). Right (2 cols): Avatar (initials SC, size lg), ghost Button 'Change photo' with icon camera. Switch 'Make profile public' (checked). Separator. Card footer: secondary Button 'Cancel', primary Button 'Save changes'. Below: Card titled 'Danger Zone' on a pressed Surface. Inside: horizontal layout with Text 'Delete your account and all associated data permanently' on the left, a Button variant 'icon-danger' label 'Delete account' with icon trash-2 on the right. An AlertDialog (id 'delete-confirm') titled 'Delete account?' description 'This will permanently delete your account, all projects, and data. This action cannot be undone.' with footer containing a secondary Button 'Cancel' and a danger-variant Button 'Yes, delete my account'.">Settings</button>
+                  <button class="db-chip db-chip--sm" data-example="User profile page like Dribbble/Behance: two-column horizontal layout. Left sidebar (2 cols): Card with large Avatar (initials SC, size lg), heading 'Sarah Chen', caption 'Staff Design Engineer at Vercel'. Row of 3 horizontal StatCards: Projects (47), Followers (12.4K), Following (328). Two Buttons side by side: primary 'Follow' with icon user-plus, secondary 'Message' with icon mail. Separator. Card titled 'Skills' with Chips: Systems Design (blue), React (green), TypeScript (purple), Figma (amber), Motion Design (pink), Accessibility (red). Card titled 'Links' with a List: 'sarahchen.design' (icon globe), '@sarahchen' (icon twitter), 'github.com/sarahchen' (icon github). Right content area (4 cols): Tabs: Projects, Activity, About (Projects active). Card with a 3-column layout of 3 interactive clipped Cards, each with media image (use dummyimage.com 400x240/e0e0e0/999.png with labels 'Design System', 'Dashboard Kit', 'Mobile App'), title, description text, and a footer row with a Badge ('Figma' new-variant) and small muted text '2 days ago'.">Profile</button>
+                  <button class="db-chip db-chip--sm" data-example="Team management page like Slack/Linear admin: heading 'Team Members' with caption '24 members across 5 departments'. Row: Search input placeholder 'Search by name, email, or role...', CustomSelect placeholder 'All Roles' with options (All Roles selected, Engineering, Design, Product, Marketing, Sales), CustomSelect placeholder 'Status' with options (All selected, Active, Away, Offline), DropdownMenu trigger Button (icon more-horizontal, size icon) with items: 'Export as CSV' (icon download), 'Import members' (icon upload), separator, 'Manage roles' (icon shield), 'Bulk actions' (icon layers). Card: selectable DataTable columns Name, Email, Role, Department, Joined, Status — 6 rows of realistic data where Role uses Chips (Engineering blue, Design purple, Product green, Marketing amber) and Status uses Badges (Active green, Away amber). Pagination: page 1 of 4, 25 per page. A Sheet (id 'invite-sheet', position right) containing heading 'Invite New Member', Field 'Email address' email-type, CustomSelect 'Role' with options (Engineering, Design, Product, Marketing, Sales), CustomSelect 'Department' with options (Platform, Growth, Enterprise), Switch 'Send welcome email' checked, footer with secondary Button 'Cancel' and primary Button 'Send Invite'. A primary Button 'Invite Member' with icon user-plus that has trigger 'invite-sheet'.">Team</button>
+                  <button class="db-chip db-chip--sm" data-example="SaaS pricing page like Vercel/Supabase: centered heading 'Simple, transparent pricing' with caption 'Start building for free. Scale with confidence.'. ToggleGroup: Monthly / Annual (Monthly selected). Three-column layout of interactive clipped Cards. Free ($0/mo): 5 features with check icons (Up to 3 projects, 1GB storage, Community support, Basic analytics, 100K API calls/mo), ghost Button 'Get Started'. Pro ($25/mo): Badge 'Popular' (new variant) at top, raised Surface, 6 features (Unlimited projects, 50GB storage, Priority email support, Advanced analytics, 2M API calls/mo, Custom domains), primary Button 'Start Free Trial'. Enterprise (Custom): 6 features (Everything in Pro, Unlimited storage, Dedicated support engineer, SSO and SAML, Unlimited API calls, 99.99% SLA), secondary Button 'Contact Sales'. Separator. Accordion titled 'Frequently Asked Questions' with 4 items: 'Can I switch plans at any time?' / 'Yes — upgrades are immediate, downgrades take effect at next billing cycle.', 'What happens when I hit my usage limit?' / 'We will notify you at 80% and 100%. Your service continues with overage billing at standard rates.', 'Do you offer discounts for startups?' / 'Yes — eligible startups get 50% off Pro for the first year through our Startup Program.', 'How does the 14-day free trial work?' / 'Full access to Pro features, no credit card required. Your projects persist if you upgrade.'.">Pricing</button>
                 </div>
               </div>
             </div>
@@ -784,7 +784,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.0.14"></script>
+<script src="daub.js?v=3.0.15"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -2042,6 +2042,18 @@ function renderSpec(spec, prevSpec) {
     }
   }
 
+  // Render orphan elements (overlays not in any children array)
+  var rendered = {};
+  $preview.querySelectorAll('[data-spec-id]').forEach(function(n) {
+    rendered[n.getAttribute('data-spec-id')] = true;
+  });
+  Object.keys(spec.elements).forEach(function(id) {
+    if (id !== spec.root && !rendered[id]) {
+      var orphan = renderElement(spec.elements, id, 0);
+      if (orphan) $preview.appendChild(orphan);
+    }
+  });
+
   if (spec.theme) {
     $preview.setAttribute('data-theme', spec.theme);
   } else {
@@ -2070,6 +2082,21 @@ function diffUpdate(oldSpec, newSpec, container) {
   }
   // Walk spec tree top-down; replace changed elements, recurse into unchanged ones
   diffElement(oldSpec, newSpec, container, newSpec.root);
+
+  // Render orphan elements (overlays not in any children array)
+  var rendered = {};
+  container.querySelectorAll('[data-spec-id]').forEach(function(n) {
+    rendered[n.getAttribute('data-spec-id')] = true;
+  });
+  Object.keys(newSpec.elements).forEach(function(id) {
+    if (id !== newSpec.root && !rendered[id]) {
+      var orphan = renderElement(newSpec.elements, id, 0);
+      if (orphan) {
+        container.appendChild(orphan);
+        flashChanged(orphan);
+      }
+    }
+  });
 }
 
 function diffElement(oldSpec, newSpec, container, elId) {
