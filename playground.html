@@ -1880,6 +1880,22 @@ function retryCodeGeneration(spec, analysis, errors, onProgress) {
 
 // ---- Map-reduce pipeline: plan → execute chunks → review ----
 
+function parseStateDefs(stateArray) {
+  if (!stateArray || !stateArray.length) return '';
+  return stateArray.map(function(s) {
+    // Parse "(name value)" → "var name = value;"
+    var m = s.match(/^\((\w+)\s+(.+)\)$/);
+    if (!m) return '// ' + s;
+    var val = m[2];
+    if (val === 'true' || val === 'false') return 'var ' + m[1] + ' = ' + val + ';';
+    if (val === 'null') return 'var ' + m[1] + ' = null;';
+    if (!isNaN(Number(val))) return 'var ' + m[1] + ' = ' + val + ';';
+    // String or complex value
+    if (val.charAt(0) === '[' || val.charAt(0) === '{') return 'var ' + m[1] + ' = ' + val + ';';
+    return 'var ' + m[1] + ' = ' + JSON.stringify(val) + ';';
+  }).join(' ');
+}
+
 function planCodeArchitecture(spec, analysis) {
   var prompt = 'You are a senior JavaScript architect. Decompose an interactive UI task into independent chunks for parallel implementation.\n\n'
     + 'TASK: ' + analysis.description + '\n\n'
@@ -1889,16 +1905,22 @@ function planCodeArchitecture(spec, analysis) {
     + '- Each chunk = 1-3 elements, ONE clear responsibility\n'
     + '- Chunks must be implementable independently by a junior developer\n'
     + '- Set chunk "effort" to match complexity: "trivial" (wire a click handler), "low" (simple state + DOM updates), "medium" (game loop, multi-step logic)\n'
-    + '- "sharedStateInit" declares ALL shared variables as globals\n'
-    + '- "wiring" describes how chunks interact AFTER independent implementation\n'
+    + '- "state" declares ALL shared variables as S-expressions: ["(score 0)", "(running false)", "(speed 500)"]\n'
+    + '- "wire" describes how chunks interact AFTER independent implementation\n'
     + '- Cross-chunk communication: use preview.dispatchEvent(new CustomEvent("daub:stateChange", {detail:{...}}))\n'
     + '- If the task is too simple for decomposition, return exactly 1 chunk\n'
-    + '- Each chunk description must be a COMPLETE implementation brief: what to build, which elements, what events, what state\n\n'
+    + '- Use S-expression syntax in "do" and "proof" fields for concise task encoding\n\n'
     + 'Return JSON:\n'
     + '{\n'
-    + '  "chunks": [{ "id": "chunk-name", "description": "Full implementation brief...", "elementIds": ["id1"], "sharedState": ["varName"], "effort": "low|medium|trivial", "type": "modify" }],\n'
-    + '  "sharedStateInit": "var score = 0; var running = false;",\n'
-    + '  "wiring": "How chunks connect after implementation"\n'
+    + '  "state": ["(score 0)", "(running false)"],\n'
+    + '  "chunks": [{\n'
+    + '    "id": "chunk-name",\n'
+    + '    "els": ["element-id1"],\n'
+    + '    "effort": "low|medium|trivial",\n'
+    + '    "do": "(on-click start-btn (toggle running) (if running (interval 1s (decr timer))))",\n'
+    + '    "proof": "(click start-btn → timer updates every 1s) (click again → stops)"\n'
+    + '  }],\n'
+    + '  "wire": "How chunks connect after implementation"\n'
     + '}\n\n'
     + 'Return ONLY JSON, no explanation.';
 
@@ -1924,7 +1946,19 @@ function planCodeArchitecture(spec, analysis) {
     try {
       var plan = JSON.parse(clean);
       if (plan && plan.chunks && plan.chunks.length) {
-        console.log('[planCodeArchitecture] plan:', plan.chunks.length, 'chunks');
+        // Normalize S-expr plan to legacy format for downstream compatibility
+        if (plan.state && !plan.sharedStateInit) {
+          plan.sharedStateInit = parseStateDefs(plan.state);
+        }
+        if (plan.wire && !plan.wiring) plan.wiring = plan.wire;
+        for (var ci = 0; ci < plan.chunks.length; ci++) {
+          var ch = plan.chunks[ci];
+          if (ch.els && !ch.elementIds) ch.elementIds = ch.els;
+          if (ch.do && !ch.description) {
+            ch.description = 'DO: ' + ch.do + (ch.proof ? '\nPROOF: ' + ch.proof : '');
+          }
+        }
+        console.log('[planCodeArchitecture] plan:', plan.chunks.length, 'chunks, state:', plan.sharedStateInit || 'none');
         return plan;
       }
     } catch(e) { console.warn('[planCodeArchitecture] parse error:', e); }
@@ -1933,7 +1967,7 @@ function planCodeArchitecture(spec, analysis) {
   .catch(function(e) { console.warn('[planCodeArchitecture] failed:', e); return null; });
 }
 
-function executeChunk(spec, plan, chunk) {
+function executeChunk(spec, plan, chunk, modelOverride) {
   var relevantEls = [];
   if (spec.elements && chunk.elementIds) {
     (function findEls(els) {
@@ -1969,7 +2003,7 @@ function executeChunk(spec, plan, chunk) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'google/gemini-3.1-flash-lite-preview',
+      model: modelOverride || 'google/gemini-3.1-flash-lite-preview',
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: 'Implement chunk "' + chunk.id + '" now.' }
@@ -2004,6 +2038,23 @@ function executeChunksParallel(spec, plan, onChunkDone) {
     return executeChunk(spec, plan, chunk).then(function(result) {
       completed++;
       if (onChunkDone) onChunkDone(result, completed, plan.chunks.length);
+      return result;
+    });
+  }));
+}
+
+function retryFailedChunks(spec, plan, failedResults, onRetryDone) {
+  var failedChunks = [];
+  failedResults.forEach(function(r) {
+    var chunkDef = plan.chunks.filter(function(ch) { return ch.id === r.chunkId; })[0];
+    if (chunkDef) failedChunks.push(chunkDef);
+  });
+  if (!failedChunks.length) return Promise.resolve([]);
+  var completed = 0;
+  return Promise.all(failedChunks.map(function(chunk) {
+    return executeChunk(spec, plan, chunk, 'google/gemini-2.5-flash').then(function(result) {
+      completed++;
+      if (onRetryDone) onRetryDone(result, completed, failedChunks.length);
       return result;
     });
   }));
@@ -2650,6 +2701,28 @@ function generate() {
             pipeSummary.textContent = 'Pipeline complete';
             pipeDetails.open = false;
           }
+          function _pipeCollapse(container) {
+            var steps = container.querySelectorAll('.pg-pipeline__step--done, .pg-pipeline__step--skip');
+            if (steps.length < 2) return;
+            // Already collapsed?
+            if (container.querySelector('.pg-pipeline__collapsed')) return;
+            var details = document.createElement('details');
+            details.className = 'pg-pipeline__collapsed';
+            var summary = document.createElement('summary');
+            summary.textContent = steps.length + ' steps completed';
+            summary.style.cssText = 'cursor:pointer;font-size:12px;color:#888;padding:2px 0;';
+            details.appendChild(summary);
+            for (var i = 0; i < steps.length; i++) {
+              details.appendChild(steps[i]);
+            }
+            // Insert collapsed block before the first remaining step
+            var firstActive = container.querySelector('.pg-pipeline__step:not(.pg-pipeline__step--done):not(.pg-pipeline__step--skip)');
+            if (firstActive) {
+              container.insertBefore(details, firstActive);
+            } else {
+              container.appendChild(details);
+            }
+          }
 
           function _applySpec(s, suffix) {
             finalSpec = s;
@@ -2791,16 +2864,52 @@ function generate() {
               }).then(function(chunkResults) {
                 _removeSkeleton(_analysis.elements);
                 var succeeded = chunkResults.filter(function(r) { return r.success; });
+                var failed = chunkResults.filter(function(r) { return !r.success; });
                 if (!succeeded.length) {
-                  // All chunks failed — fall back to single-shot
                   _pipeSkip(stepExecute, 'All chunks failed');
                   return _singleShotPath();
                 }
-                _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
 
-                // Collect failed chunk definitions for Kimi to implement
+                // ---- Retry failed chunks with upgraded model ----
+                var retryPromise;
+                if (failed.length) {
+                  _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
+                  codeProgress.textContent = 'Retrying ' + failed.length + ' chunk' + (failed.length > 1 ? 's' : '') + ' with Flash\u2026';
+                  $status.textContent = 'Retrying ' + failed.length + ' failed chunk' + (failed.length > 1 ? 's' : '') + '\u2026';
+                  retryPromise = retryFailedChunks(finalSpec, plan, failed, function(result, done, total) {
+                    var sym = result.success ? '\u2713' : '\u2717';
+                    codeProgress.textContent = 'Retry: ' + sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
+                  }).then(function(retryResults) {
+                    // Merge retry successes into main results
+                    var retriedOk = 0;
+                    retryResults.forEach(function(rr) {
+                      if (rr.success) {
+                        retriedOk++;
+                        // Replace the failed result with the retry success
+                        for (var ri = 0; ri < chunkResults.length; ri++) {
+                          if (chunkResults[ri].chunkId === rr.chunkId) { chunkResults[ri] = rr; break; }
+                        }
+                      }
+                    });
+                    var stillFailed = chunkResults.filter(function(r) { return !r.success; });
+                    if (retriedOk) {
+                      codeProgress.textContent = succeeded.length + retriedOk + '/' + chunkResults.length + ' chunks succeeded (' + retriedOk + ' retried)';
+                    }
+                    if (stillFailed.length) {
+                      console.log('[pipeline] chunks still failed after retry:', stillFailed.map(function(r) { return r.chunkId; }));
+                      codeProgress.textContent += ' \u2014 ' + stillFailed.length + ' \u2192 Kimi';
+                    }
+                    return chunkResults;
+                  });
+                } else {
+                  _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
+                  retryPromise = Promise.resolve(chunkResults);
+                }
+
+                return retryPromise.then(function(finalResults) {
+                // Collect remaining failed chunk definitions for Kimi to implement
                 var failedChunks = [];
-                chunkResults.forEach(function(cr) {
+                finalResults.forEach(function(cr) {
                   if (!cr.success) {
                     var chunkDef = plan.chunks.filter(function(ch) { return ch.id === cr.chunkId; })[0];
                     if (chunkDef) failedChunks.push(chunkDef);
@@ -2811,12 +2920,13 @@ function generate() {
                 }
 
                 // ---- Client-side assembly ----
-                var assembled = assembleChunkResults(finalSpec, plan, chunkResults);
+                var assembled = assembleChunkResults(finalSpec, plan, finalResults);
                 if (assembled.conflicts.length) {
                   console.log('[pipeline] conflicts:', assembled.conflicts);
                 }
 
                 // ---- Step: Review ----
+                _pipeCollapse(pipeDetails);
                 stepReview.classList.add('pg-pipeline__step--active');
                 $status.textContent = failedChunks.length
                   ? 'Reviewing + implementing ' + failedChunks.length + ' failed chunk' + (failedChunks.length > 1 ? 's' : '') + '\u2026'
@@ -2835,6 +2945,7 @@ function generate() {
                   // ---- Step: Verify ----
                   return _runVerifyLoop(finalSpec);
                 });
+              }); // retryPromise.then
               });
             }).then(function() {
               _pipeFinish();

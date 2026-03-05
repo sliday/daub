@@ -2,6 +2,18 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.3.4
+
+**S-expression plan format, failed chunk retry escalation, collapsible pipeline steps.**
+
+- Feature: `planCodeArchitecture()` now uses hybrid JSON+S-expression format — `:do` and `:proof` fields encode tasks concisely with structural intent and acceptance criteria
+- Feature: `parseStateDefs()` converts S-expression state declarations `["(score 0)", "(running false)"]` → `var score = 0; var running = false;`
+- Feature: `retryFailedChunks()` — when Gemini Flash Lite fails a chunk, retries with upgraded `gemini-2.5-flash` before escalating to Kimi review
+- Feature: `_pipeCollapse()` — collapses completed pipeline steps into expandable "N steps completed" summary when ≥2 steps are done
+- Enhancement: `executeChunk()` accepts optional `modelOverride` parameter for retry escalation
+- Enhancement: Plan normalization — S-expr format (`state`, `wire`, `els`, `do`, `proof`) auto-converted to legacy format (`sharedStateInit`, `wiring`, `elementIds`, `description`) for downstream compatibility
+- Enhancement: Pipeline progress messages show retry status: "Retrying 2 chunks with Flash…", "5/6 succeeded (1 retried)"
+
 ## v3.3.3
 
 **Map-reduce code generation pipeline: plan → execute → review.**
