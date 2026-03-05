@@ -1488,20 +1488,126 @@
   /* ----------------------------------------------------------
      Calendar / Date Picker
      ---------------------------------------------------------- */
+  var MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var DAY_LABELS = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+  function renderCalendarGrid(cal, year, month) {
+    cal._dbYear = year;
+    cal._dbMonth = month;
+    var title = cal.querySelector('.db-calendar__title');
+    if (title) title.textContent = MONTH_NAMES[month] + ' ' + year;
+    var grid = cal.querySelector('.db-calendar__grid');
+    if (!grid) return;
+
+    // Clear day buttons but keep labels
+    var labels = grid.querySelectorAll('.db-calendar__day-label');
+    while (grid.firstChild) grid.removeChild(grid.firstChild);
+    labels.forEach(function(l) { grid.appendChild(l); });
+    if (!labels.length) {
+      DAY_LABELS.forEach(function(d) {
+        var lbl = document.createElement('span');
+        lbl.className = 'db-calendar__day-label';
+        lbl.textContent = d;
+        grid.appendChild(lbl);
+      });
+    }
+
+    var now = new Date();
+    var todayY = now.getFullYear(), todayM = now.getMonth(), todayD = now.getDate();
+    var firstDay = new Date(year, month, 1);
+    var startDow = (firstDay.getDay() + 6) % 7; // Monday=0
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+    var daysInPrev = new Date(year, month, 0).getDate();
+    var selectedDate = cal._dbSelected || null;
+
+    // Previous month outside days
+    for (var p = startDow - 1; p >= 0; p--) {
+      var ob = document.createElement('button');
+      ob.className = 'db-calendar__day db-calendar__day--outside';
+      ob.textContent = String(daysInPrev - p);
+      ob.type = 'button';
+      grid.appendChild(ob);
+    }
+
+    // Current month days
+    for (var d = 1; d <= daysInMonth; d++) {
+      var btn = document.createElement('button');
+      btn.className = 'db-calendar__day';
+      btn.type = 'button';
+      if (year === todayY && month === todayM && d === todayD) btn.classList.add('db-calendar__day--today');
+      if (selectedDate && selectedDate.year === year && selectedDate.month === month && selectedDate.day === d) {
+        btn.classList.add('db-calendar__day--selected');
+      }
+      btn.textContent = String(d);
+      btn.setAttribute('data-day', d);
+      grid.appendChild(btn);
+    }
+
+    // Next month outside days to fill last row
+    var totalCells = startDow + daysInMonth;
+    var remainder = totalCells % 7;
+    if (remainder > 0) {
+      for (var n = 1; n <= 7 - remainder; n++) {
+        var nb = document.createElement('button');
+        nb.className = 'db-calendar__day db-calendar__day--outside';
+        nb.textContent = String(n);
+        nb.type = 'button';
+        grid.appendChild(nb);
+      }
+    }
+  }
+
   var _dbCalendarClickInit = false;
   function initCalendars(root) {
     root.querySelectorAll('.db-calendar').forEach(function(cal) {
       if (cal._dbInit) return;
       cal._dbInit = true;
-      cal.querySelectorAll('.db-calendar__day').forEach(function(day) {
-        if (day.classList.contains('db-calendar__day--disabled') || day.classList.contains('db-calendar__day--outside')) return;
-        day.addEventListener('click', function() {
-          cal.querySelectorAll('.db-calendar__day--selected').forEach(function(d) {
-            d.classList.remove('db-calendar__day--selected');
-          });
-          day.classList.add('db-calendar__day--selected');
+
+      // Parse initial state
+      if (cal._dbYear == null) {
+        var titleEl = cal.querySelector('.db-calendar__title');
+        var titleText = titleEl ? titleEl.textContent : '';
+        var match = titleText.match(/(\w+)\s+(\d{4})/);
+        if (match) {
+          var mi = MONTH_NAMES.indexOf(match[1]);
+          cal._dbYear = parseInt(match[2]);
+          cal._dbMonth = mi >= 0 ? mi : new Date().getMonth();
+        } else {
+          cal._dbYear = new Date().getFullYear();
+          cal._dbMonth = new Date().getMonth();
+        }
+      }
+
+      // Detect initial selected day
+      var selBtn = cal.querySelector('.db-calendar__day--selected');
+      if (selBtn && !cal._dbSelected) {
+        var dayNum = parseInt(selBtn.textContent);
+        if (dayNum) cal._dbSelected = { year: cal._dbYear, month: cal._dbMonth, day: dayNum };
+      }
+
+      // Re-render with proper outside days
+      renderCalendarGrid(cal, cal._dbYear, cal._dbMonth);
+
+      // Navigation
+      var navBtns = cal.querySelectorAll('.db-calendar__nav');
+      if (navBtns.length >= 2) {
+        navBtns[0].addEventListener('click', function(e) {
+          e.stopPropagation();
+          var m = cal._dbMonth - 1, y = cal._dbYear;
+          if (m < 0) { m = 11; y--; }
+          renderCalendarGrid(cal, y, m);
+          bindDayClicks(cal);
         });
-      });
+        navBtns[1].addEventListener('click', function(e) {
+          e.stopPropagation();
+          var m = cal._dbMonth + 1, y = cal._dbYear;
+          if (m > 11) { m = 0; y++; }
+          renderCalendarGrid(cal, y, m);
+          bindDayClicks(cal);
+        });
+      }
+
+      bindDayClicks(cal);
     });
 
     root.querySelectorAll('.db-date-picker').forEach(function(dp) {
@@ -1514,6 +1620,20 @@
           dp.classList.toggle('db-date-picker--open');
         });
       }
+
+      // When a day is selected inside date-picker, update trigger and close
+      var cal = dp.querySelector('.db-calendar');
+      if (cal && trigger) {
+        cal.addEventListener('db-date-select', function(e) {
+          var sel = e.detail;
+          var mm = String(sel.month + 1);
+          if (mm.length < 2) mm = '0' + mm;
+          var dd = String(sel.day);
+          if (dd.length < 2) dd = '0' + dd;
+          trigger.textContent = sel.year + '-' + mm + '-' + dd;
+          dp.classList.remove('db-date-picker--open');
+        });
+      }
     });
 
     if (!_dbCalendarClickInit) {
@@ -1524,6 +1644,42 @@
         });
       });
     }
+  }
+
+  function bindDayClicks(cal) {
+    cal.querySelectorAll('.db-calendar__day').forEach(function(day) {
+      if (day._dbBound) return;
+      day._dbBound = true;
+      if (day.classList.contains('db-calendar__day--disabled')) return;
+
+      day.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (day.classList.contains('db-calendar__day--outside')) {
+          // Navigate to that month
+          var dayNum = parseInt(day.textContent);
+          var grid = cal.querySelector('.db-calendar__grid');
+          var allDays = grid.querySelectorAll('.db-calendar__day');
+          var idx = Array.prototype.indexOf.call(allDays, day);
+          var firstCurrent = grid.querySelector('.db-calendar__day:not(.db-calendar__day--outside)');
+          var firstIdx = Array.prototype.indexOf.call(allDays, firstCurrent);
+          var m = cal._dbMonth, y = cal._dbYear;
+          if (idx < firstIdx) { m--; if (m < 0) { m = 11; y--; } }
+          else { m++; if (m > 11) { m = 0; y++; } }
+          cal._dbSelected = { year: y, month: m, day: dayNum };
+          renderCalendarGrid(cal, y, m);
+          bindDayClicks(cal);
+          cal.dispatchEvent(new CustomEvent('db-date-select', { detail: cal._dbSelected, bubbles: true }));
+          return;
+        }
+        cal.querySelectorAll('.db-calendar__day--selected').forEach(function(d) {
+          d.classList.remove('db-calendar__day--selected');
+        });
+        day.classList.add('db-calendar__day--selected');
+        var selDay = parseInt(day.textContent);
+        cal._dbSelected = { year: cal._dbYear, month: cal._dbMonth, day: selDay };
+        cal.dispatchEvent(new CustomEvent('db-date-select', { detail: cal._dbSelected, bubbles: true }));
+      });
+    });
   }
 
   /* ----------------------------------------------------------

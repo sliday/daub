@@ -2966,30 +2966,69 @@ RENDERERS.AvatarGroup = function(p) {
 // -- Calendar --
 RENDERERS.Calendar = function(p) {
   var el = mkEl('div', 'db-calendar');
-  var today = parseInt(p.today) || new Date().getDate();
-  var sel = parseInt(p.selected) || 15;
+  var now = new Date();
+  var selDate = p.selected ? new Date(p.selected) : null;
+  var todayDate = p.today ? new Date(p.today) : now;
+  var viewDate = selDate || todayDate;
+  var year = viewDate.getFullYear(), month = viewDate.getMonth();
   var hdr = mkEl('div', 'db-calendar__header');
   var prevBtn = document.createElement('button');
   prevBtn.className = 'db-calendar__nav';
-  prevBtn.textContent = '\u2039';
+  prevBtn.type = 'button';
+  var prevIco = document.createElement('i');
+  prevIco.setAttribute('data-lucide', 'chevron-left');
+  prevIco.style.width = '14px';
+  prevIco.style.height = '14px';
+  prevBtn.appendChild(prevIco);
   hdr.appendChild(prevBtn);
-  hdr.appendChild(mkEl('span', 'db-calendar__title', 'March 2026'));
+  var MNAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  hdr.appendChild(mkEl('span', 'db-calendar__title', MNAMES[month] + ' ' + year));
   var nextBtn = document.createElement('button');
   nextBtn.className = 'db-calendar__nav';
-  nextBtn.textContent = '\u203A';
+  nextBtn.type = 'button';
+  var nextIco = document.createElement('i');
+  nextIco.setAttribute('data-lucide', 'chevron-right');
+  nextIco.style.width = '14px';
+  nextIco.style.height = '14px';
+  nextBtn.appendChild(nextIco);
   hdr.appendChild(nextBtn);
   el.appendChild(hdr);
   var grid = mkEl('div', 'db-calendar__grid');
   ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(function(d) {
     grid.appendChild(mkEl('span', 'db-calendar__day-label', d));
   });
-  for (var i = 1; i <= 31; i++) {
+  var firstDay = new Date(year, month, 1);
+  var startDow = (firstDay.getDay() + 6) % 7;
+  var daysInMonth = new Date(year, month + 1, 0).getDate();
+  var daysInPrev = new Date(year, month, 0).getDate();
+  var todayY = todayDate.getFullYear(), todayM = todayDate.getMonth(), todayD = todayDate.getDate();
+  var selY = selDate ? selDate.getFullYear() : -1, selM = selDate ? selDate.getMonth() : -1, selD = selDate ? selDate.getDate() : -1;
+  for (var op = startDow - 1; op >= 0; op--) {
+    var ob = document.createElement('button');
+    ob.className = 'db-calendar__day db-calendar__day--outside';
+    ob.type = 'button';
+    ob.textContent = String(daysInPrev - op);
+    grid.appendChild(ob);
+  }
+  for (var i = 1; i <= daysInMonth; i++) {
     var day = document.createElement('button');
     day.className = 'db-calendar__day';
-    if (i === today) day.classList.add('db-calendar__day--today');
-    if (i === sel) day.classList.add('db-calendar__day--selected');
+    day.type = 'button';
+    if (year === todayY && month === todayM && i === todayD) day.classList.add('db-calendar__day--today');
+    if (year === selY && month === selM && i === selD) day.classList.add('db-calendar__day--selected');
     day.textContent = String(i);
     grid.appendChild(day);
+  }
+  var totalCells = startDow + daysInMonth;
+  var rem = totalCells % 7;
+  if (rem > 0) {
+    for (var n = 1; n <= 7 - rem; n++) {
+      var nb = document.createElement('button');
+      nb.className = 'db-calendar__day db-calendar__day--outside';
+      nb.type = 'button';
+      nb.textContent = String(n);
+      grid.appendChild(nb);
+    }
   }
   el.appendChild(grid);
   return el;
@@ -3445,30 +3484,9 @@ RENDERERS.DatePicker = function(p) {
   trigger.textContent = p.selected || p.placeholder || 'Select date...';
   el.appendChild(trigger);
   var dd = mkEl('div', 'db-date-picker__dropdown');
-  var cal = mkEl('div', 'db-calendar');
-  var hdr = mkEl('div', 'db-calendar__header');
-  var prevNav = document.createElement('button');
-  prevNav.className = 'db-calendar__nav';
-  prevNav.textContent = '\u2039';
-  hdr.appendChild(prevNav);
-  hdr.appendChild(mkEl('span', 'db-calendar__title', 'March 2026'));
-  var nextNav = document.createElement('button');
-  nextNav.className = 'db-calendar__nav';
-  nextNav.textContent = '\u203A';
-  hdr.appendChild(nextNav);
-  cal.appendChild(hdr);
-  var grid = mkEl('div', 'db-calendar__grid');
-  ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(function(d) {
-    grid.appendChild(mkEl('span', 'db-calendar__day-label', d));
-  });
-  for (var i = 1; i <= 31; i++) {
-    var day = document.createElement('button');
-    day.className = 'db-calendar__day';
-    day.textContent = String(i);
-    grid.appendChild(day);
-  }
-  cal.appendChild(grid);
-  dd.appendChild(cal);
+  // Reuse Calendar renderer for the embedded calendar
+  var calEl = RENDERERS.Calendar({ selected: p.selected, today: p.today });
+  dd.appendChild(calEl);
   el.appendChild(dd);
   return el;
 };
@@ -3588,7 +3606,7 @@ var COMP_PROPS = {
   Badge: 'text: string, variant: "new"|"updated"|"warning"|"error"',
   Avatar: 'initials: string, src: string, size: "sm"|"md"|"lg"',
   AvatarGroup: 'avatars: [{initials, src}], max: number',
-  Calendar: 'selected: string, today: string',
+  Calendar: 'selected: "YYYY-MM-DD" (date to highlight), today: "YYYY-MM-DD" (today override)',
   Chart: 'bars: [{label, value, max}]',
   Carousel: 'slides: [{content}]',
   AspectRatio: 'ratio: "16-9"|"4-3"|"1-1"|"21-9"',
