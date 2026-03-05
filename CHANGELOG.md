@@ -2,6 +2,18 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.8
+
+**Playground: merged Structure panel into Preview as tabs.**
+
+- Feature: Preview panel now has Design / Structure / Code tabs — 2-panel layout instead of 3
+- Feature: Code tab shows rendered HTML source with monospace formatting
+- Enhancement: Simplified layout — more horizontal space for chat and preview
+- Enhancement: Toolbar buttons adapt per mode (viewport/share/download in Design, Copy JSON in Structure, Copy HTML in Code)
+- Enhancement: Mobile bottom nav simplified to 2 tabs (Chat / Preview)
+- Enhancement: Single resizable divider, cleaner collapse/expand behavior
+- Change: API generate endpoint now passes `reasoning` parameter for supported models
+
 ## v3.0.7
 
 **Playground: flicker-free streaming, Gemini 3.1 Flash Lite default.**

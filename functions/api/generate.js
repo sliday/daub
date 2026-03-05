@@ -57,6 +57,7 @@ export async function onRequestPost(context) {
       max_tokens: 16384,
       stream: true,
       response_format: { type: 'json_object' },
+      reasoning: body.reasoning || { effort: 'medium' },
     }),
   });
 

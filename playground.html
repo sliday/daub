@@ -48,6 +48,10 @@
   <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"
           crossorigin="anonymous"></script>
 
+  <!-- html2canvas — preview screenshot capture for self-check -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+          crossorigin="anonymous"></script>
+
   <!-- DAUB -->
   <link rel="stylesheet" href="daub.css?v=3.0.5">
 
@@ -130,7 +134,7 @@
     }
     .pg-grid {
       display: grid;
-      grid-template-columns: 1fr 6px 1fr 6px 2fr;
+      grid-template-columns: 1fr 6px 2fr;
       flex: 1;
       min-height: 0;
       overflow: hidden;
@@ -526,6 +530,17 @@
       margin-bottom: 8px;
     }
 
+    /* Preview mode tabs & panes */
+    .pg-tab--active { background: var(--db-sand); }
+    .pg-preview-pane { display: none; flex: 1; overflow: auto; min-height: 0; }
+    .pg-preview-pane--active { display: flex; flex-direction: column; }
+    .pg-code-view {
+      flex: 1; overflow: auto; margin: 0; padding: 12px;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 0.75rem;
+      line-height: 1.5; white-space: pre-wrap; word-break: break-word;
+      background: var(--db-cream-dark, var(--db-cream)); color: var(--db-ink); border: none;
+    }
+
     /* Preview panel */
     .pg-preview {
       padding: 16px;
@@ -658,38 +673,16 @@
       <span class="pg-divider__chevron" data-collapse="1">&lsaquo;</span>
     </div>
 
-    <!-- MIDDLE: JSON Panel -->
-    <div class="pg-panel" id="panel-json">
-      <div class="pg-panel__toolbar">
-        <span class="pg-panel__toolbar-title"><strong>Structure</strong></span>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-render" title="Render" style="display:none;"><i data-lucide="play" style="width:12px;height:12px;"></i></button>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON"><i data-lucide="copy" style="width:12px;height:12px;"></i></button>
-      </div>
-      <div class="pg-panel__body" style="display:flex;flex-direction:column;">
-        <div class="pg-json-error">
-          <div class="db-alert db-alert--error">
-            <div class="db-alert__content">
-              <div class="db-alert__title">Invalid JSON</div>
-              <p id="pg-json-error-msg">Parse error</p>
-            </div>
-          </div>
-        </div>
-        <div class="pg-json-area" style="display:none;">
-          <textarea id="pg-json" spellcheck="false"></textarea>
-        </div>
-        <div class="pg-json-tree"></div>
-      </div>
-    </div>
-
-    <!-- Divider 2 -->
-    <div class="pg-divider" data-divider="2">
-      <span class="pg-divider__chevron" data-collapse="2">&lsaquo;</span>
-    </div>
-
-    <!-- RIGHT: Preview Panel -->
+    <!-- RIGHT: Preview Panel (with Design / Structure / Code tabs) -->
     <div class="pg-panel" id="panel-preview">
       <div class="pg-panel__toolbar">
-        <span class="pg-panel__toolbar-title"><strong>Preview</strong></span>
+        <div class="db-btn-group" id="pg-preview-tabs">
+          <button class="db-btn db-btn--ghost db-btn--sm pg-tab pg-tab--active" data-tab="design">Design</button>
+          <button class="db-btn db-btn--ghost db-btn--sm pg-tab" data-tab="structure">Structure</button>
+          <button class="db-btn db-btn--ghost db-btn--sm pg-tab" data-tab="code">Code</button>
+        </div>
+        <span style="flex:1"></span>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-render" title="Render" style="display:none;"><i data-lucide="play" style="width:12px;height:12px;"></i></button>
         <div class="db-btn-group" id="pg-viewport-toggle" style="display:none;">
           <button class="db-btn db-btn--ghost db-btn--sm pg-viewport-btn pg-viewport-btn--active"
                   data-viewport="desktop" title="Desktop"><i data-lucide="monitor" style="width:12px;height:12px;"></i></button>
@@ -703,12 +696,35 @@
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-download" title="Download HTML" style="display:none;">
           <i data-lucide="download" style="width:12px;height:12px;"></i>
         </button>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-html" title="Copy HTML"><i data-lucide="clipboard-copy" style="width:12px;height:12px;"></i></button>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON" style="display:none;"><i data-lucide="copy" style="width:12px;height:12px;"></i></button>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-html" title="Copy HTML" style="display:none;"><i data-lucide="clipboard-copy" style="width:12px;height:12px;"></i></button>
       </div>
-      <div class="pg-panel__body">
-        <div class="pg-preview db-surface--raised" id="pg-preview"></div>
+      <div class="pg-panel__body" id="pg-preview-body" style="display:flex;flex-direction:column;">
+        <!-- Design mode (default) -->
+        <div class="pg-preview-pane pg-preview-pane--active" data-pane="design">
+          <div class="pg-preview db-surface--raised" id="pg-preview"></div>
+        </div>
+        <!-- Structure mode -->
+        <div class="pg-preview-pane" data-pane="structure">
+          <div class="pg-json-error">
+            <div class="db-alert db-alert--error">
+              <div class="db-alert__content">
+                <div class="db-alert__title">Invalid JSON</div>
+                <p id="pg-json-error-msg">Parse error</p>
+              </div>
+            </div>
+          </div>
+          <div class="pg-json-tree"></div>
+        </div>
+        <!-- Code mode -->
+        <div class="pg-preview-pane" data-pane="code">
+          <pre class="pg-code-view" id="pg-code-view"></pre>
+        </div>
       </div>
     </div>
+
+    <!-- Hidden JSON textarea for internal state -->
+    <textarea id="pg-json" spellcheck="false" style="display:none;"></textarea>
 
   </div>
 
@@ -717,10 +733,6 @@
     <button class="db-bottom-nav__item db-bottom-nav__item--active" data-panel="prompt">
       <i data-lucide="sparkles"></i>
       <span>Chat</span>
-    </button>
-    <button class="db-bottom-nav__item" data-panel="json">
-      <i data-lucide="braces"></i>
-      <span>JSON</span>
     </button>
     <button class="db-bottom-nav__item" data-panel="preview">
       <i data-lucide="eye"></i>
@@ -800,7 +812,7 @@ var $copyHtml   = document.getElementById('pg-copy-html');
 var $share      = document.getElementById('pg-share');
 var $download   = document.getElementById('pg-download');
 var $viewportToggle = document.getElementById('pg-viewport-toggle');
-var $panelPreviewBody = document.querySelector('#panel-preview .pg-panel__body');
+var $panelPreviewBody = document.getElementById('pg-preview-body');
 var $status     = document.getElementById('pg-status');
 var $attach     = document.getElementById('pg-attach');
 var $fileInput  = document.getElementById('pg-file-input');
@@ -808,7 +820,6 @@ var $imgStrip   = document.getElementById('pg-img-strip');
 var pendingImages = []; // [{ base64, mimeType, dataUrl }]
 var $jsonError  = document.querySelector('.pg-json-error');
 var $jsonErrMsg = document.getElementById('pg-json-error-msg');
-var $jsonArea   = document.querySelector('.pg-json-area');
 var $jsonTree   = document.querySelector('.pg-json-tree');
 
 // Chat DOM refs
@@ -1208,6 +1219,71 @@ function repairJSON(s) {
   try { return JSON.parse(s + closers); } catch (e) { return null; }
 }
 
+// ---- Screenshot capture for self-check ----
+function capturePreview() {
+  if (!window.html2canvas || !$preview.firstChild) return Promise.resolve(null);
+  return html2canvas($preview, { scale: 1, useCORS: true, logging: false })
+    .then(function(canvas) { return canvas.toDataURL('image/jpeg', 0.7); })
+    .catch(function() { return null; });
+}
+
+// ---- Self-check: verify rendered output and fix issues ----
+function selfCheck(spec, screenshotDataUrl) {
+  var checkPrompt = 'You are reviewing a UI you just generated. Below is the JSON spec and a screenshot of how it rendered.\n\n'
+    + 'Check for:\n'
+    + '1. Layout issues (overlapping, misaligned, or missing elements)\n'
+    + '2. Components that failed to render or look broken\n'
+    + '3. Missing content or placeholder text that should be real data\n'
+    + '4. Visual hierarchy problems\n\n'
+    + 'If the UI looks correct, return the spec JSON unchanged.\n'
+    + 'If there are issues, return a FIXED version of the complete JSON spec.\n'
+    + 'Return ONLY the JSON, no explanation.';
+
+  var messages = [
+    { role: 'system', content: checkPrompt },
+    { role: 'user', content: [
+      { type: 'image_url', image_url: { url: screenshotDataUrl } },
+      { type: 'text', text: JSON.stringify(spec) }
+    ]}
+  ];
+
+  return fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: messages,
+      reasoning: { effort: 'low' }
+    })
+  })
+  .then(function(res) {
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.text();
+  })
+  .then(function(text) {
+    var content = '';
+    text.split('\n').forEach(function(line) {
+      line = line.trim();
+      if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+        try {
+          var chunk = JSON.parse(line.slice(6));
+          var c = chunk.choices && chunk.choices[0];
+          if (c && c.delta && c.delta.content) content += c.delta.content;
+        } catch(e) {}
+      }
+    });
+    return content;
+  })
+  .then(function(raw) {
+    var clean = cleanJSON(raw);
+    if (!clean) return null;
+    var fixed;
+    try { fixed = JSON.parse(clean); } catch(e) { fixed = repairJSON(clean); }
+    if (!fixed || !fixed.root || !fixed.elements) return null;
+    return fixed;
+  })
+  .catch(function() { return null; });
+}
+
 // ---- Progressive rendering (force-close incomplete JSON) ----
 function tryProgressiveRender(text) {
   var s = cleanJSON(text);
@@ -1585,7 +1661,29 @@ function generate() {
           buildResultBubble(streamBubble, spec);
           chatHistory.push({ role: 'assistant', content: 'v' + specVersions.length + ' \u00B7 ' + countComponents(spec) + ' components', versionIdx: specVersions.length - 1 });
           saveChatState();
-          setLoading(false);
+          // Self-check: capture screenshot and verify
+          $status.textContent = 'Checking\u2026';
+          capturePreview().then(function(screenshot) {
+            if (!screenshot) { $status.textContent = ''; setLoading(false); return; }
+            return selfCheck(spec, screenshot).then(function(fixedSpec) {
+              if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(spec)) {
+                $json.value = JSON.stringify(fixedSpec, null, 2);
+                var prevForDiff = currentSpec;
+                currentSpec = fixedSpec;
+                pushVersion(fixedSpec, prompt + ' (auto-fixed)');
+                renderSpec(fixedSpec, prevForDiff);
+                refreshJsonTree();
+                updatePreviewToolbar();
+                buildResultBubble(streamBubble, fixedSpec);
+                chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(fixedSpec) + ' components (checked)';
+                saveChatState();
+                $status.textContent = 'Self-check applied fixes';
+              } else {
+                $status.textContent = '';
+              }
+              setLoading(false);
+            });
+          }).catch(function() { $status.textContent = ''; setLoading(false); });
         } else {
           doRetryOrFallback('Invalid or incomplete JSON response');
         }
@@ -1625,9 +1723,9 @@ function hideJsonError() {
   $jsonError.style.display = 'none';
 }
 
-// Show/hide Render button based on JSON content
+// Show/hide Render button based on JSON content and mode
 function updateRenderVisibility() {
-  $render.style.display = $json.value.trim() ? '' : 'none';
+  $render.style.display = (_previewMode === 'structure' && $json.value.trim()) ? '' : 'none';
 }
 $json.addEventListener('input', updateRenderVisibility);
 
@@ -1655,15 +1753,47 @@ $copyHtml.addEventListener('click', function() {
   });
 });
 
-// ---- Share / Viewport / Download visibility ----
+// ---- Preview mode tabs ----
+var _previewMode = 'design';
 var $toolbarSep = document.getElementById('pg-toolbar-sep');
-function updatePreviewToolbar() {
-  var vis = currentSpec ? '' : 'none';
-  if ($share) $share.style.display = vis;
-  if ($download) $download.style.display = vis;
-  if ($viewportToggle) $viewportToggle.style.display = vis;
-  if ($toolbarSep) $toolbarSep.style.display = vis;
+
+function updateToolbarForMode(mode) {
+  var hasSpec = !!currentSpec;
+  var designOnly = mode === 'design' && hasSpec;
+  if ($viewportToggle) $viewportToggle.style.display = designOnly ? '' : 'none';
+  if ($share) $share.style.display = designOnly ? '' : 'none';
+  if ($download) $download.style.display = designOnly ? '' : 'none';
+  if ($toolbarSep) $toolbarSep.style.display = designOnly ? '' : 'none';
+  if ($copyJson) $copyJson.style.display = mode === 'structure' ? '' : 'none';
+  if ($copyHtml) $copyHtml.style.display = mode === 'code' ? '' : 'none';
+  if ($render) $render.style.display = mode === 'structure' && $json.value.trim() ? '' : 'none';
 }
+
+function updateCodeView() {
+  var el = document.getElementById('pg-code-view');
+  if (el && $preview.innerHTML) el.textContent = $preview.innerHTML;
+}
+
+function updatePreviewToolbar() {
+  updateToolbarForMode(_previewMode);
+}
+
+document.getElementById('pg-preview-tabs').addEventListener('click', function(e) {
+  var btn = e.target.closest('.pg-tab');
+  if (!btn) return;
+  var tab = btn.dataset.tab;
+  if (tab === _previewMode) return;
+  _previewMode = tab;
+  this.querySelectorAll('.pg-tab').forEach(function(b) { b.classList.remove('pg-tab--active'); });
+  btn.classList.add('pg-tab--active');
+  document.querySelectorAll('.pg-preview-pane').forEach(function(p) {
+    var active = p.dataset.pane === tab;
+    p.style.display = active ? '' : 'none';
+    p.classList.toggle('pg-preview-pane--active', active);
+  });
+  if (tab === 'code') updateCodeView();
+  updateToolbarForMode(tab);
+});
 
 // ---- Share click handler ----
 $share.addEventListener('click', function() {
@@ -1902,27 +2032,19 @@ function updateChatTitle() {
 }
 
 // ---- Collapsible panels ----
-// Grid columns: panel-prompt | divider | panel-json | divider | panel-preview
-// Default: 1fr 6px 1fr 6px 2fr  (25%/25%/50%)
-// Collapsed panel gets 40px, others expand proportionally
+// Grid columns: panel-prompt | divider | panel-preview
+// Default: 1fr 6px 2fr
 function updateGridForCollapse() {
   var grid = document.querySelector('.pg-grid');
   var p1 = document.getElementById('panel-prompt').classList.contains('pg-panel--collapsed');
-  var p2 = document.getElementById('panel-json').classList.contains('pg-panel--collapsed');
-  if (p1 || p2) {
-    var d1 = p1 ? '0px' : '6px';
-    var d2 = p2 ? '0px' : '6px';
-    var c1 = p1 ? '40px' : '1fr';
-    var c2 = p2 ? '40px' : '1fr';
-    var c3 = '3fr';
-    grid.style.gridTemplateColumns = c1 + ' ' + d1 + ' ' + c2 + ' ' + d2 + ' ' + c3;
+  if (p1) {
+    grid.style.gridTemplateColumns = '40px 0px 3fr';
   } else {
-    // Restore saved proportions or default
     try {
       var saved = localStorage.getItem('pg-grid-cols');
       if (saved) { grid.style.gridTemplateColumns = saved; return; }
     } catch(e) {}
-    grid.style.gridTemplateColumns = '1fr 6px 1fr 6px 2fr';
+    grid.style.gridTemplateColumns = '1fr 6px 2fr';
   }
 }
 
@@ -3583,44 +3705,38 @@ var SYSTEM_PROMPT = (function() {
   return preamble + sections + guidelines + themes;
 })();
 
-// ---- Panel resize (drag dividers) ----
+// ---- Panel resize (drag divider) ----
 (function initResizers() {
   var grid = document.querySelector('.pg-grid');
-  var dividers = document.querySelectorAll('.pg-divider');
-  var startX, startWidths, dividerIdx;
+  var divider = document.querySelector('.pg-divider');
+  var startX, startWidths;
 
-  dividers.forEach(function(div) {
-    div.addEventListener('mousedown', function(e) {
-      if (e.target.classList.contains('pg-divider__chevron')) return;
-      e.preventDefault();
-      startDrag(e.clientX, this);
-    });
-    div.addEventListener('touchstart', function(e) {
-      if (e.target.classList.contains('pg-divider__chevron')) return;
-      e.preventDefault();
-      startDrag(e.touches[0].clientX, this);
-    }, { passive: false });
-
-    var chevron = div.querySelector('.pg-divider__chevron');
-    if (chevron) {
-      chevron.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var idx = this.dataset.collapse;
-        var panelId = idx === '1' ? 'panel-prompt' : 'panel-json';
-        var panel = document.getElementById(panelId);
-        panel.classList.toggle('pg-panel--collapsed');
-        var collapsed = panel.classList.contains('pg-panel--collapsed');
-        this.textContent = collapsed ? '\u203A' : '\u2039';
-        updateGridForCollapse();
-      });
-    }
+  divider.addEventListener('mousedown', function(e) {
+    if (e.target.classList.contains('pg-divider__chevron')) return;
+    e.preventDefault();
+    startDrag(e.clientX);
   });
+  divider.addEventListener('touchstart', function(e) {
+    if (e.target.classList.contains('pg-divider__chevron')) return;
+    e.preventDefault();
+    startDrag(e.touches[0].clientX);
+  }, { passive: false });
 
-  function startDrag(clientX, divider) {
-    // Don't allow resize while any panel is collapsed
+  var chevron = divider.querySelector('.pg-divider__chevron');
+  if (chevron) {
+    chevron.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var panel = document.getElementById('panel-prompt');
+      panel.classList.toggle('pg-panel--collapsed');
+      var collapsed = panel.classList.contains('pg-panel--collapsed');
+      this.textContent = collapsed ? '\u203A' : '\u2039';
+      updateGridForCollapse();
+    });
+  }
+
+  function startDrag(clientX) {
     if (document.querySelector('.pg-panel--collapsed')) return;
     startX = clientX;
-    dividerIdx = divider.dataset.divider === '1' ? 0 : 1;
     divider.classList.add('pg-divider--dragging');
     var panels = grid.querySelectorAll('.pg-panel');
     startWidths = Array.from(panels).map(function(p) { return p.getBoundingClientRect().width; });
@@ -3633,22 +3749,19 @@ var SYSTEM_PROMPT = (function() {
   function onDrag(e) {
     var clientX = e.touches ? e.touches[0].clientX : e.clientX;
     var dx = clientX - startX;
-    var totalW = grid.clientWidth - 12;
-    var leftIdx = dividerIdx === 0 ? 0 : 1;
-    var rightIdx = dividerIdx === 0 ? 1 : 2;
-    var leftW = startWidths[leftIdx] + dx;
-    var rightW = startWidths[rightIdx] - dx;
+    var totalW = grid.clientWidth - 6;
+    var leftW = startWidths[0] + dx;
+    var rightW = startWidths[1] - dx;
     var minW = 180;
     if (leftW < minW) { rightW -= (minW - leftW); leftW = minW; }
     if (rightW < minW) { leftW -= (minW - rightW); rightW = minW; }
-    var pcts = startWidths.map(function(w) { return w / totalW; });
-    pcts[leftIdx] = leftW / totalW;
-    pcts[rightIdx] = rightW / totalW;
-    grid.style.gridTemplateColumns = pcts.map(function(p) { return (p * 100).toFixed(1) + 'fr'; }).join(' 6px ');
+    var lPct = (leftW / totalW * 100).toFixed(1);
+    var rPct = (rightW / totalW * 100).toFixed(1);
+    grid.style.gridTemplateColumns = lPct + 'fr 6px ' + rPct + 'fr';
   }
 
   function onEnd() {
-    document.querySelectorAll('.pg-divider--dragging').forEach(function(d) { d.classList.remove('pg-divider--dragging'); });
+    divider.classList.remove('pg-divider--dragging');
     document.removeEventListener('mousemove', onDrag);
     document.removeEventListener('mouseup', onEnd);
     document.removeEventListener('touchmove', onDrag);
@@ -3659,7 +3772,7 @@ var SYSTEM_PROMPT = (function() {
   // Restore saved proportions
   try {
     var saved = localStorage.getItem('pg-grid-cols');
-    if (saved && /^[\d.]+(?:fr|px|%)\s*(?:[\d.]+(?:fr|px|%)\s*)*$/.test(saved.trim())) {
+    if (saved && saved.split(' ').length === 3) {
       grid.style.gridTemplateColumns = saved;
     }
   } catch(e) {}
