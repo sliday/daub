@@ -525,6 +525,44 @@
       opacity: 0.7;
       pointer-events: none;
     }
+    .pg-pipeline {
+      margin-top: 8px;
+      font-size: 0.6875rem;
+      border-top: 1px solid var(--db-sand);
+      padding-top: 6px;
+    }
+    .pg-pipeline summary {
+      cursor: pointer;
+      color: var(--db-warm-gray);
+      font-family: var(--db-font-ui);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pg-pipeline summary::-webkit-details-marker { display: none; }
+    .pg-pipeline summary::before {
+      content: '\25B6';
+      font-size: 0.5rem;
+      transition: transform 0.15s;
+    }
+    .pg-pipeline[open] summary::before { transform: rotate(90deg); }
+    .pg-pipeline__step {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 0 3px 14px;
+      color: var(--db-warm-gray);
+      font-family: var(--db-font-ui);
+    }
+    .pg-pipeline__step svg { width: 12px; height: 12px; flex-shrink: 0; }
+    .pg-pipeline__step--active {
+      color: var(--db-ink);
+    }
+    .pg-pipeline__step--active .pg-pipeline__icon { animation: pg-blink 1s infinite; }
+    .pg-pipeline__step--done { color: var(--db-warm-gray); }
+    .pg-pipeline__step--done .pg-pipeline__icon { color: var(--db-success, #4caf50); }
+    .pg-pipeline__step--skip { opacity: 0.4; }
     @keyframes pg-diff-shimmer {
       0%   { background-position: -200% 0; }
       100% { background-position: 200% 0; }
@@ -2171,12 +2209,85 @@ function generate() {
           saveChatState();
           // Interactivity pipeline: analyze → generate code → self-check
           var finalSpec = spec;
+          // SVG icons (static, trusted content)
+          var _svgAnalyze = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+          var _svgCode = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>';
+          var _svgEye = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+          var _svgDone = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+          var _svgDash = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+          // Build pipeline tracker in bubble
+          var pipeDetails = document.createElement('details');
+          pipeDetails.className = 'pg-pipeline';
+          pipeDetails.open = true;
+          var pipeSummary = document.createElement('summary');
+          pipeSummary.textContent = 'Processing\u2026';
+          pipeDetails.appendChild(pipeSummary);
+          function _mkStep(iconHtml, label) {
+            var s = document.createElement('div');
+            s.className = 'pg-pipeline__step';
+            var ico = document.createElement('span');
+            ico.className = 'pg-pipeline__icon';
+            ico.innerHTML = iconHtml; // static SVG, not user content
+            var lbl = document.createElement('span');
+            lbl.className = 'pg-pipeline__label';
+            lbl.textContent = label;
+            s.appendChild(ico);
+            s.appendChild(lbl);
+            pipeDetails.appendChild(s);
+            return s;
+          }
+          var stepAnalyze = _mkStep(_svgAnalyze, 'Analyzing interactivity\u2026');
+          var stepCode = _mkStep(_svgCode, 'Generating code\u2026');
+          var stepCheck = _mkStep(_svgEye, 'Visual check\u2026');
+          stepAnalyze.classList.add('pg-pipeline__step--active');
+          streamBubble.appendChild(pipeDetails);
+          function _pipeDone(step, label) {
+            step.classList.remove('pg-pipeline__step--active');
+            step.classList.add('pg-pipeline__step--done');
+            step.querySelector('.pg-pipeline__icon').innerHTML = _svgDone; // static SVG
+            step.querySelector('.pg-pipeline__label').textContent = label;
+          }
+          function _pipeSkip(step, label) {
+            step.classList.remove('pg-pipeline__step--active');
+            step.classList.add('pg-pipeline__step--skip');
+            step.querySelector('.pg-pipeline__icon').innerHTML = _svgDash; // static SVG
+            step.querySelector('.pg-pipeline__label').textContent = label;
+          }
+          function _addSkeleton(elements) {
+            if (!elements || !elements.length) return;
+            var iframe = document.getElementById('pg-preview-iframe');
+            if (!iframe || !iframe.contentDocument) return;
+            elements.forEach(function(id) {
+              var el = iframe.contentDocument.querySelector('[data-spec-id="' + id + '"]');
+              if (el) el.classList.add('db-skeleton');
+            });
+          }
+          function _removeSkeleton(elements) {
+            if (!elements || !elements.length) return;
+            var iframe = document.getElementById('pg-preview-iframe');
+            if (!iframe || !iframe.contentDocument) return;
+            elements.forEach(function(id) {
+              var el = iframe.contentDocument.querySelector('[data-spec-id="' + id + '"]');
+              if (el) el.classList.remove('db-skeleton');
+            });
+          }
+          function _pipeFinish() {
+            pipeSummary.textContent = 'Pipeline complete';
+            pipeDetails.open = false;
+          }
+
           $status.textContent = 'Analyzing interactivity\u2026';
           analyzeInteractivity(spec).then(function(analysis) {
             if (analysis && analysis.needed) {
+              var desc = (analysis.description || 'yes');
+              _pipeDone(stepAnalyze, desc.length > 60 ? desc.slice(0, 57) + '\u2026' : desc);
+              stepCode.classList.add('pg-pipeline__step--active');
               $status.textContent = 'Generating code\u2026';
+              _addSkeleton(analysis.elements);
               return generateInteractiveCode(spec, analysis).then(function(updatedSpec) {
+                _removeSkeleton(analysis.elements);
                 if (updatedSpec) {
+                  _pipeDone(stepCode, 'Code added');
                   finalSpec = updatedSpec;
                   $json.value = JSON.stringify(updatedSpec, null, 2);
                   var prevForCode = currentSpec;
@@ -2186,18 +2297,31 @@ function generate() {
                   refreshJsonTree();
                   updatePreviewToolbar();
                   buildResultBubble(streamBubble, updatedSpec);
+                  streamBubble.appendChild(pipeDetails);
                   chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(updatedSpec) + ' components (interactive)';
                   saveChatState();
+                } else {
+                  _pipeSkip(stepCode, 'Code generation failed');
                 }
               });
+            } else {
+              _pipeSkip(stepAnalyze, 'No custom code needed');
+              _pipeSkip(stepCode, 'Skipped');
             }
           }).then(function() {
-            // Self-check: capture screenshot and verify
+            stepCheck.classList.add('pg-pipeline__step--active');
             $status.textContent = 'Checking\u2026';
             return capturePreview().then(function(screenshot) {
-              if (!screenshot) { $status.textContent = ''; setLoading(false); return; }
+              if (!screenshot) {
+                _pipeSkip(stepCheck, 'No screenshot');
+                _pipeFinish();
+                $status.textContent = '';
+                setLoading(false);
+                return;
+              }
               return selfCheck(finalSpec, screenshot).then(function(fixedSpec) {
                 if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(finalSpec)) {
+                  _pipeDone(stepCheck, 'Applied fixes');
                   $json.value = JSON.stringify(fixedSpec, null, 2);
                   var prevForDiff = currentSpec;
                   currentSpec = fixedSpec;
@@ -2206,16 +2330,18 @@ function generate() {
                   refreshJsonTree();
                   updatePreviewToolbar();
                   buildResultBubble(streamBubble, fixedSpec);
+                  streamBubble.appendChild(pipeDetails);
                   chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(fixedSpec) + ' components (checked)';
                   saveChatState();
-                  $status.textContent = 'Self-check applied fixes';
                 } else {
-                  $status.textContent = '';
+                  _pipeDone(stepCheck, 'Looks good');
                 }
+                $status.textContent = '';
+                _pipeFinish();
                 setLoading(false);
               });
             });
-          }).catch(function() { $status.textContent = ''; setLoading(false); });
+          }).catch(function() { _pipeFinish(); $status.textContent = ''; setLoading(false); });
         } else {
           doRetryOrFallback('Invalid or incomplete JSON response');
         }
