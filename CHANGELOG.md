@@ -2,6 +2,12 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.2.2
+
+**Remove raised surface from playground preview.**
+
+- Bugfix: Preview pane no longer applies `db-surface--raised` — removes unwanted elevation/shadow that interfered with theme previews
+
 ## v3.2.1
 
 **Visual QA fixes — rendering bugs found by automated 99-layout analysis.**
