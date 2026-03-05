@@ -2702,26 +2702,26 @@ function generate() {
             pipeDetails.open = false;
           }
           function _pipeCollapse(container) {
-            var steps = container.querySelectorAll('.pg-pipeline__step--done, .pg-pipeline__step--skip');
-            if (steps.length < 2) return;
-            // Already collapsed?
-            if (container.querySelector('.pg-pipeline__collapsed')) return;
-            var details = document.createElement('details');
-            details.className = 'pg-pipeline__collapsed';
-            var summary = document.createElement('summary');
-            summary.textContent = steps.length + ' steps completed';
-            summary.style.cssText = 'cursor:pointer;font-size:12px;color:#888;padding:2px 0;';
-            details.appendChild(summary);
-            for (var i = 0; i < steps.length; i++) {
-              details.appendChild(steps[i]);
-            }
-            // Insert collapsed block before the first remaining step
-            var firstActive = container.querySelector('.pg-pipeline__step:not(.pg-pipeline__step--done):not(.pg-pipeline__step--skip)');
-            if (firstActive) {
-              container.insertBefore(details, firstActive);
-            } else {
-              container.appendChild(details);
-            }
+            try {
+              var steps = container.querySelectorAll('.pg-pipeline__step--done, .pg-pipeline__step--skip');
+              if (steps.length < 2) return;
+              if (container.querySelector('.pg-pipeline__collapsed')) return;
+              var details = document.createElement('details');
+              details.className = 'pg-pipeline__collapsed';
+              var summary = document.createElement('summary');
+              summary.textContent = steps.length + ' steps completed';
+              summary.style.cssText = 'cursor:pointer;font-size:12px;color:#888;padding:2px 0;';
+              details.appendChild(summary);
+              for (var i = 0; i < steps.length; i++) {
+                details.appendChild(steps[i]);
+              }
+              var firstActive = container.querySelector('.pg-pipeline__step:not(.pg-pipeline__step--done):not(.pg-pipeline__step--skip)');
+              if (firstActive) {
+                container.insertBefore(details, firstActive);
+              } else {
+                container.appendChild(details);
+              }
+            } catch(e) { console.warn('[_pipeCollapse] error:', e); }
           }
 
           function _applySpec(s, suffix) {
@@ -2944,6 +2944,11 @@ function generate() {
 
                   // ---- Step: Verify ----
                   return _runVerifyLoop(finalSpec);
+                }).catch(function(revErr) {
+                  console.error('[pipeline:review] error:', revErr);
+                  _pipeDone(stepReview, 'Review errored');
+                  _applySpec(assembled.spec, 'interactive (raw)');
+                  _pipeSkip(stepVerify, 'Skipped');
                 });
               }); // retryPromise.then
               });
@@ -2952,7 +2957,7 @@ function generate() {
               $status.textContent = '';
               setLoading(false);
             });
-          }).catch(function() { _pipeFinish(); $status.textContent = ''; setLoading(false); });
+          }).catch(function(err) { console.error('[pipeline] uncaught:', err); _pipeFinish(); $status.textContent = ''; setLoading(false); });
         } else {
           doRetryOrFallback('Invalid or incomplete JSON response');
         }
