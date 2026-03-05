@@ -4,10 +4,16 @@ All notable changes to DAUB are documented here.
 
 ## v3.0.16
 
-**Fix orphan element duplication during streaming.**
+**Fix orphan element duplication during streaming + codebase audit fixes.**
 
 - Bugfix: Stale orphan elements (overlays, pagination) no longer duplicate during streaming — previous-render orphans are cleaned up before re-scanning
 - Bugfix: Removed redundant orphan scan from `diffUpdate()` — `renderSpec()` already handles orphan rendering after both full-render and diff paths
+- Security: CORS on `/api/generate` restricted from wildcard `*` to `daub.dev` and `*.daub.pages.dev` origins only
+- Bugfix: `renderTimer` interval now cleared before retry/fallback in streaming, preventing timer leak
+- Fix: Version header in `daub.js` updated from stale "2.2" to 3.0.16
+- Fix: `package.json` version bumped from 3.0.0 to 3.0.16
+- Fix: `demo.html` and `roadmap.html` cache busters bumped from v3.0.5 to v3.0.16
+- Cleanup: Removed ~100 unreferenced dev screenshots, reference files, and build cache (~47 MB)
 
 ## v3.0.15
 

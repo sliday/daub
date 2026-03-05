@@ -4,8 +4,13 @@
 export async function onRequestPost(context) {
   const { request, env } = context;
 
+  const origin = request.headers.get('Origin') || '';
+  const allowedOrigins = ['https://daub.dev', 'https://daub.pages.dev'];
+  const isAllowed = allowedOrigins.some(o => origin === o || origin.endsWith('.daub.pages.dev'));
+  const corsOrigin = isAllowed ? origin : allowedOrigins[0];
+
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': corsOrigin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
@@ -84,7 +89,7 @@ export async function onRequestOptions() {
   return new Response(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'https://daub.dev',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },

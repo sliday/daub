@@ -1601,6 +1601,7 @@ function generate() {
   }
 
   function doRetryOrFallback(reason) {
+    clearInterval(renderTimer);
     retries++;
     accumulated = '';
     $json.value = '';
