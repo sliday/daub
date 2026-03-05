@@ -2,6 +2,14 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.17
+
+**Fix Temperature and Noise controls regression from v2.0.**
+
+- Bugfix: Removed double-tinting `background` layer from `html::after` temperature overlay — the `linear-gradient` tint added in v3.0.16 caused over-saturated warm tones and had `calc()`-inside-`rgba()` browser compat issues
+- Bugfix: Adjusted `backdrop-filter` coefficients to match v2.0 effective intensity (saturate `0.6`→`0.5`, sepia `0.18`→`0.15`)
+- Bugfix: Dark theme `--db-texture-blend: soft-light` no longer clobbers texture-specific blend modes (e.g. metal `overlay`) — moved from CSS variable override to explicit `body::before` rules with correct source-order specificity
+
 ## v3.0.16
 
 **Fix orphan element duplication during streaming + codebase audit fixes.**
