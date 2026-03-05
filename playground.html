@@ -3528,18 +3528,26 @@ RENDERERS.ChartCard = function(p, ch, els, d) {
   return el;
 };
 
-// -- CustomHTML: raw HTML+JS rendered in a container --
+// -- CustomHTML: raw HTML+CSS+JS rendered in a container --
 RENDERERS.CustomHTML = function(p) {
   var el = document.createElement('div');
   el.className = 'pg-custom-html';
+  if (p.css) {
+    var style = document.createElement('style');
+    style.textContent = p.css;
+    el.appendChild(style);
+  }
   if (p.html) {
-    var safe = p.html.replace(/<script[\s\S]*?<\/script>/gi, '');
-    el.innerHTML = safe; // eslint-disable-line -- intentional: user-authored HTML via AI chat
+    var frag = document.createRange().createContextualFragment(
+      p.html.replace(/<script[\s\S]*?<\/script>/gi, '') // eslint-disable-line -- intentional: user-authored HTML via AI chat
+    );
+    el.appendChild(frag);
   }
   if (p.js) {
     setTimeout(function() {
       try {
-        new Function('container', p.js)(el); // eslint-disable-line -- intentional: user-authored JS via AI chat
+        var preview = document.getElementById('pg-preview');
+        (new Function('container', 'preview', p.js))(el, preview); // eslint-disable-line -- intentional: user-authored JS via AI chat in playground context
       } catch(e) {
         var err = document.createElement('pre');
         err.style.cssText = 'color:var(--db-error);font-size:0.75rem;margin-top:8px;';
@@ -3629,7 +3637,7 @@ var COMP_PROPS = {
   StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string',
   ChartCard: 'title: string',
   // Custom
-  CustomHTML: 'html: string (raw HTML using DAUB classless CSS), js: string (vanilla JS, receives "container" arg pointing to the wrapper div)'
+  CustomHTML: 'html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector(\'[data-spec-id="someId"]\') to target other elements)'
 };
 
 var COMP_CATEGORIES = [
@@ -3684,7 +3692,11 @@ var SYSTEM_PROMPT = (function() {
     + '- Use real-looking sample data (names, numbers, dates)\n'
     + '- Keep element IDs descriptive and unique\n'
     + '- For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)\n'
-    + '- Use CustomHTML when the user needs custom interactive behavior, animations, or widgets not covered by standard components. The html prop is raw HTML (use DAUB CSS classes like db-btn, db-card, etc.). The js prop is vanilla JS that receives a "container" argument referencing the wrapper div. Escape quotes in JSON strings properly.\n\n';
+    + '- CustomHTML is an ESCAPE HATCH — PREFER standard DAUB components for everything. Only use CustomHTML for: (a) inter-component interactions (e.g. a button controlling a modal elsewhere), (b) animations/transitions, (c) widgets not covered by DAUB components\n'
+    + '- CustomHTML props: html (raw HTML, use DAUB CSS classes like db-btn, db-card), css (CSS rules injected as <style>), js (vanilla JS)\n'
+    + '- CustomHTML JS receives two args: "container" (this element\'s wrapper div) and "preview" (the entire preview pane). Use preview.querySelector(\'[data-spec-id="someId"]\') to target other rendered elements by their spec ID\n'
+    + '- Keep CustomHTML JS minimal: event listeners, class toggling, text updates. No frameworks, no fetch calls\n'
+    + '- Escape quotes properly in JSON strings: use \\" for double quotes inside string values\n\n';
 
   var themes = 'THEMES:\n'
     + 'Set "theme" in the root JSON to apply a DAUB theme. Available themes:\n'

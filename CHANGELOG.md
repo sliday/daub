@@ -2,6 +2,14 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.0.9
+
+**Playground: CustomHTML gains CSS support and preview-wide JS scope.**
+
+- Feature: New `css` prop on CustomHTML — inject `<style>` rules for custom styling
+- Feature: CustomHTML JS now receives `preview` as a second argument, enabling cross-component interactions via `preview.querySelector('[data-spec-id="..."]')`
+- Enhancement: System prompt guides AI to prefer standard DAUB components and use CustomHTML only as an escape hatch for interactivity, animations, or custom widgets
+
 ## v3.0.8
 
 **Playground: merged Structure panel into Preview as tabs.**
