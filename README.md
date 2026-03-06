@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.3.9-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.4.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -29,6 +29,10 @@ The Playground uses a task-based model routing strategy:
 | Regular fallback | `kimi-k2.5` | Retry when Flash fails |
 | Quick/Granular | `gemini-3.1-flash-lite-preview` | Regression tests, yes/no decisions |
 | Decision Helper | `minimax-m2.5` | Alternative opinion tool (text only) |
+
+### Fast Mode
+
+Toggle in the Chat toolbar (on by default). Forces `gemini-3.1-flash-lite-preview` across all pipeline stages with reduced reasoning effort per stage complexity. Same orchestration, same flow — just faster and cheaper. Toggle off to restore the full multi-model routing above.
 
 ## Quick Start
 
@@ -391,7 +395,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.3.9** — Hard stop control, non-blocking input, AbortController for all streams. 76 components, 20 theme families.
+**Latest: v3.4.0** — Fast Mode: single-model toggle for blazing-fast generation. 76 components, 20 theme families.
 
 ## License
 

@@ -161,6 +161,12 @@
       align-items: center;
       gap: 6px;
     }
+    .pg-fast-toggle {
+      display: flex; align-items: center; gap: 3px;
+      font-size: 0.6875rem; color: var(--db-warm-gray);
+      font-family: var(--db-font-ui); cursor: pointer; user-select: none;
+    }
+    .pg-fast-toggle input { margin: 0; accent-color: var(--db-terracotta); }
     .pg-panel__body {
       flex: 1;
       overflow: auto;
@@ -732,6 +738,10 @@
       <div class="pg-panel__toolbar">
         <span class="pg-panel__toolbar-title" id="pg-chat-title"><strong>Chat</strong></span>
         <span style="flex:1"></span>
+        <label class="pg-fast-toggle" title="Fast: Gemini Flash Lite for all stages">
+          <input type="checkbox" id="pg-fast-mode" checked>
+          <i data-lucide="zap" style="width:12px;height:12px;"></i> Fast
+        </label>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-new-chat" title="New Chat"><i data-lucide="plus" style="width:12px;height:12px;"></i> New Chat</button>
       </div>
       <div class="pg-panel__body pg-chat">
@@ -947,6 +957,14 @@ var $copyHtml   = document.getElementById('pg-copy-html');
 var $share      = document.getElementById('pg-share');
 var $download   = document.getElementById('pg-download');
 var $viewportToggle = document.getElementById('pg-viewport-toggle');
+var $fastMode = document.getElementById('pg-fast-mode');
+var FAST_MODEL = 'google/gemini-3.1-flash-lite-preview';
+
+function fastModel() { return $fastMode && $fastMode.checked ? FAST_MODEL : null; }
+function fastEffort(stage) {
+  if (!$fastMode || !$fastMode.checked) return null;
+  return ({ generate:'medium', selfCheck:'low', plan:'low', chunk:'low', code:'medium', review:'medium' })[stage] || 'low';
+}
 var $panelPreviewBody = document.getElementById('pg-preview-body');
 var $status     = document.getElementById('pg-status');
 var $attach     = document.getElementById('pg-attach');
@@ -993,6 +1011,110 @@ function buildIframeSrcdoc(theme) {
     + '<script src="daub.js?v=3.0.20"><\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
+    // ---- Declarative State Engine (iframe runtime) ----
+    + 'window.__initDaubState = function(root, sc) {'
+    + '  var _ds = { _state: sc.initialState || {}, _subs: [] };'
+    + '  _ds.get = function(p) {'
+    + '    if (!p || p === "/") return _ds._state;'
+    + '    var parts = p.replace(/^\\//, "").split("/"); var v = _ds._state;'
+    + '    for (var i = 0; i < parts.length; i++) { if (v == null) return undefined; v = v[parts[i]]; }'
+    + '    return v;'
+    + '  };'
+    + '  _ds.set = function(p, val) {'
+    + '    if (!p || p === "/") { _ds._state = val; _ds._notify(); return; }'
+    + '    var parts = p.replace(/^\\//, "").split("/"); var o = _ds._state;'
+    + '    for (var i = 0; i < parts.length - 1; i++) { if (o[parts[i]] == null) o[parts[i]] = {}; o = o[parts[i]]; }'
+    + '    o[parts[parts.length - 1]] = val; _ds._notify();'
+    + '  };'
+    + '  _ds.toggle = function(p) { _ds.set(p, !_ds.get(p)); };'
+    + '  _ds.push = function(p, val) { var a = _ds.get(p); if (!Array.isArray(a)) { a = []; _ds.set(p, a); } a.push(val); _ds._notify(); };'
+    + '  _ds.remove = function(p) {'
+    + '    if (!p || p === "/") { _ds._state = {}; _ds._notify(); return; }'
+    + '    var parts = p.replace(/^\\//, "").split("/"); var o = _ds._state;'
+    + '    for (var i = 0; i < parts.length - 1; i++) { if (o[parts[i]] == null) return; o = o[parts[i]]; }'
+    + '    delete o[parts[parts.length - 1]]; _ds._notify();'
+    + '  };'
+    + '  _ds._notify = function() { for (var i = 0; i < _ds._subs.length; i++) _ds._subs[i](); };'
+    + '  _ds._resolveExpr = function(expr) {'
+    + '    if (expr == null || typeof expr !== "object") return expr;'
+    + '    if (expr["$state"] != null) {'
+    + '      var val = _ds.get(expr["$state"]);'
+    + '      if (expr.eq != null) return val === expr.eq;'
+    + '      if (expr.neq != null) return val !== expr.neq;'
+    + '      return val;'
+    + '    }'
+    + '    if (expr["$cond"] != null) { return _ds._resolveExpr(expr["$cond"]) ? _ds._resolveExpr(expr["$then"]) : _ds._resolveExpr(expr["$else"]); }'
+    + '    if (expr["$template"] != null) { return String(expr["$template"]).replace(/\\$\\{([^}]+)\\}/g, function(_, path) { var v = _ds.get(path); return v != null ? String(v) : ""; }); }'
+    + '    return expr;'
+    + '  };'
+    + '  _ds._dispatch = function(action, evt) {'
+    + '    if (!action) return;'
+    + '    var p = action.params || {};'
+    + '    switch (action.action) {'
+    + '      case "setState": _ds.set(p.path, p.value != null ? p.value : (evt && evt.target ? evt.target.value : undefined)); break;'
+    + '      case "toggleState": _ds.toggle(p.path); break;'
+    + '      case "pushState": _ds.push(p.path, p.value); break;'
+    + '      case "removeState": _ds.remove(p.path); break;'
+    + '    }'
+    + '  };'
+    // Wire data-ds-on: event handlers
+    + '  root.querySelectorAll("[data-ds-on]").forEach(function(el) {'
+    + '    try {'
+    + '      var handlers = JSON.parse(el.getAttribute("data-ds-on"));'
+    + '      Object.keys(handlers).forEach(function(evt) {'
+    + '        var action = handlers[evt];'
+    + '        el.addEventListener(evt, function(e) { _ds._dispatch(action, e); });'
+    + '      });'
+    + '    } catch(err) { console.error("DS on-wire error:", err); }'
+    + '  });'
+    // Wire data-ds-visible: conditional display
+    + '  var visEls = root.querySelectorAll("[data-ds-visible]");'
+    + '  function updateVisibility() {'
+    + '    visEls.forEach(function(el) {'
+    + '      try {'
+    + '        var expr = JSON.parse(el.getAttribute("data-ds-visible"));'
+    + '        var show = _ds._resolveExpr(expr);'
+    + '        el.style.display = show ? "" : "none";'
+    + '      } catch(err) {}'
+    + '    });'
+    + '  }'
+    // Wire data-ds-props: reactive prop updates
+    + '  var propEls = root.querySelectorAll("[data-ds-props]");'
+    + '  function updateProps() {'
+    + '    propEls.forEach(function(el) {'
+    + '      try {'
+    + '        var exprs = JSON.parse(el.getAttribute("data-ds-props"));'
+    + '        Object.keys(exprs).forEach(function(prop) {'
+    + '          var resolved = _ds._resolveExpr(exprs[prop]);'
+    + '          if (prop === "label" || prop === "text" || prop === "title" || prop === "description" || prop === "content" || prop === "helperText") {'
+    + '            var textTarget = el.querySelector(".db-badge") || el.querySelector(".db-btn__label") || el.querySelector(".db-alert__title") || el;'
+    + '            if (textTarget) textTarget.textContent = resolved != null ? String(resolved) : "";'
+    + '          } else if (prop === "value") {'
+    + '            var inp = el.querySelector("input") || el.querySelector("textarea");'
+    + '            if (inp) inp.value = resolved != null ? String(resolved) : "";'
+    + '          } else if (prop === "disabled") {'
+    + '            var btn = el.querySelector("button") || el.querySelector("input") || el;'
+    + '            if (resolved) btn.setAttribute("disabled", ""); else btn.removeAttribute("disabled");'
+    + '          }'
+    + '        });'
+    + '      } catch(err) {}'
+    + '    });'
+    + '  }'
+    // Wire $bindState: two-way form binding
+    + '  (sc.bindings || []).forEach(function(b) {'
+    + '    var el = root.querySelector("[data-spec-id=\\"" + b.id + "\\"]");'
+    + '    if (!el) return;'
+    + '    var input = el.querySelector("input") || el.querySelector("textarea") || el.querySelector("select");'
+    + '    if (!input) return;'
+    + '    input.addEventListener("input", function(e) { _ds.set(b.path, e.target.value); });'
+    + '    input.addEventListener("change", function(e) { _ds.set(b.path, e.target.value); });'
+    + '  });'
+    // Subscribe and initial eval
+    + '  _ds._subs.push(function() { updateVisibility(); updateProps(); });'
+    + '  updateVisibility(); updateProps();'
+    + '  return _ds;'
+    + '};'
+    // ---- End Declarative State Engine ----
     + 'window.addEventListener("message", function(e) {'
     + '  if (!e.data || !e.data.type) return;'
     + '  if (e.data.type === "render") {'
@@ -1000,6 +1122,8 @@ function buildIframeSrcdoc(theme) {
     + '    root.innerHTML = e.data.html;'
     + '    if (window.DAUB) { DAUB.init(root); if (DAUB.fixNestedRadius) DAUB.fixNestedRadius(root); }'
     + '    if (window.lucide) lucide.createIcons({ nodes: root.querySelectorAll("[data-lucide]") });'
+    + '    window.__daubState = null;'
+    + '    if (e.data.stateConfig) { window.__daubState = window.__initDaubState(root, e.data.stateConfig); }'
     + '    if (e.data.js && e.data.js.length) {'
     + '      e.data.js.forEach(function(item) {'
     + '        try {'
@@ -1143,6 +1267,212 @@ try {
 } catch(e) {}
 pgLockChrome();
 
+var LAYOUT_RULES = '# DAUB Layout Principles\n\n'
++ '> Distilled from *Practical UI* (2nd Edition) by Adham Dannaway.\n'
++ '> Use these rules when generating UI specs to produce professional, well-structured layouts.\n\n'
++ '---\n\n'
++ '## 1. Spacing System (8pt Grid)\n\n'
++ '### Spacing Tokens\n'
++ '| Token | Size | Use |\n'
++ '|-------|------|-----|\n'
++ '| XS | 8px | Inline padding, icon gaps |\n'
++ '| S | 16px | Inner content spacing |\n'
++ '| M | 24px | Between related groups |\n'
++ '| L | 32px | Between sections |\n'
++ '| XL | 48px | Major section breaks |\n'
++ '| XXL | 80px | Page-level margins |\n\n'
++ '### DAUB Gap Mapping\n'
++ '| gap | px | Use |\n'
++ '|-----|-----|-----|\n'
++ '| 1 | 4px | Tight inline (label+icon) |\n'
++ '| 2 | 8px | Within groups |\n'
++ '| 3 | 12px | Between items in a group |\n'
++ '| 4 | 16px | Between groups |\n'
++ '| 5 | 24px | Between sections |\n'
++ '| 6 | 32px | Major breaks |\n\n'
++ '### Rules\n'
++ '- Inner content gaps are the smallest; increase outward\n'
++ '- Related elements = less space; unrelated = more space\n'
++ '- When in doubt, use the next size up — generous whitespace beats cramped layouts\n'
++ '- Maintain consistent spacing throughout — no arbitrary pixel values\n'
++ '- Padding inside containers should be proportional to the container size\n\n'
++ '---\n\n'
++ '## 2. Layout Grid\n\n'
++ '- Use a 12-column grid (divisible by 1, 2, 3, 4, 6, 12)\n'
++ '- Gutters are fixed (32px desktop, 16px mobile); columns are fluid\n'
++ '- Margins: XL-XXL on desktop, S on mobile — content never touches viewport edges\n'
++ '- Interfaces are rectangles within rectangles — every element lives inside a clear container\n'
++ '- Sidebar layouts: use 3+9, 4+8, or fixed-width sidebar + fluid main\n'
++ '- Card grids: 2-4 columns desktop, 1-2 mobile. Cards in a row must be equal height\n\n'
++ '---\n\n'
++ '## 3. Grouping & Proximity\n\n'
++ '### Four Grouping Methods\n'
++ '1. **Containers** — borders, cards, backgrounds\n'
++ '2. **Proximity** — close items feel related\n'
++ '3. **Similarity** — same style = same group\n'
++ '4. **Continuity** — alignment creates implicit groups\n\n'
++ '### Rules\n'
++ '- Space between groups must be >= 2x space within groups\n'
++ '- Don\'t over-containerize: if 3 of 4 grouping signals are present, drop the border\n'
++ '- Use whitespace as a grouping mechanism before reaching for borders\n'
++ '- Every element must belong to a visual group — no orphan elements floating alone\n'
++ '- Labels belong to their fields, not to the space between fields\n\n'
++ '---\n\n'
++ '## 4. Visual Hierarchy\n\n'
++ '### Hierarchy Signals (strongest to weakest)\n'
++ '1. Size — larger = more important\n'
++ '2. Color/contrast — high contrast = primary\n'
++ '3. Weight — bolder = more important\n'
++ '4. Position — top-left reads first (LTR)\n'
++ '5. Spacing — more space around = more emphasis\n'
++ '6. Depth — elevated elements draw attention\n\n'
++ '### Rules\n'
++ '- Most important content comes first: top, larger, bolder, higher contrast\n'
++ '- Squint test: blur the UI — can you still identify the key elements?\n'
++ '- One focal point per view — don\'t compete for attention\n'
++ '- Secondary content should be visually subordinate (smaller, lighter, less contrast)\n'
++ '- Depth levels: flat (default) -> subtle shadow (cards) -> medium (dropdowns) -> elevated (modals)\n'
++ '- Progressive disclosure: show summary first, details on demand\n\n'
++ '---\n\n'
++ '## 5. Typography\n\n'
++ '### Typeface\n'
++ '- One sans-serif typeface per project\n'
++ '- Two weights maximum: regular (400) and bold (700)\n'
++ '- Use weight, not new fonts, to create contrast\n\n'
++ '### Type Scale\n'
++ '- Apps/UI: Minor Third (1.2 ratio) — 12, 14, 16, 20, 24, 28\n'
++ '- Marketing/landing pages: Perfect Fourth (1.333) — 14, 18, 24, 32, 42, 56\n'
++ '- Maximum 4-5 font sizes per page\n\n'
++ '### Size Rules\n'
++ '- Body text: minimum 16px\n'
++ '- Long-form content: minimum 18px\n'
++ '- Captions/labels: minimum 12px\n'
++ '- Headings decrease in size as depth increases (h1 > h2 > h3)\n\n'
++ '### Line Height\n'
++ '- Body text: >= 1.5\n'
++ '- Headings: 1.1-1.3 (tighter as size increases)\n'
++ '- Captions: 1.4\n\n'
++ '### Line Length\n'
++ '- Optimal: 45-75 characters per line\n'
++ '- Maximum: 65ch (use max-width)\n'
++ '- Narrow columns: 20-40ch\n\n'
++ '### Alignment\n'
++ '- Left-align by default (matches reading direction)\n'
++ '- Center only for short hero text (< 3 lines)\n'
++ '- Never justify body text on screens\n'
++ '- Right-align numbers in tables\n\n'
++ '---\n\n'
++ '## 6. Color\n\n'
++ '### Design Greyscale First\n'
++ '- Establish hierarchy through size, weight, and spacing before adding color\n'
++ '- If the greyscale version has clear hierarchy, color will enhance it\n'
++ '- If it doesn\'t, color will just mask the problem\n\n'
++ '### Brand Color Usage\n'
++ '- Brand color = interactive elements only (buttons, links, toggles, active states)\n'
++ '- Don\'t use brand color for backgrounds or decorative elements\n'
++ '- One accent color is enough — more creates visual noise\n\n'
++ '### Foreground Opacity Levels\n'
++ '| Level | Opacity | Use |\n'
++ '|-------|---------|-----|\n'
++ '| Strong | 90% | Primary text, headings |\n'
++ '| Medium | 75% | Body text |\n'
++ '| Weak | 60% | Secondary text, placeholders |\n'
++ '| Stroke | 45% | Borders, dividers |\n'
++ '| Stroke-weak | 10% | Subtle separators |\n'
++ '| Fill | 4% | Background tints |\n\n'
++ '### Contrast\n'
++ '- Text: minimum 4.5:1 contrast ratio (WCAG AA)\n'
++ '- Large text (18px+ bold, 24px+ regular): minimum 3:1\n'
++ '- UI elements (borders, icons): minimum 3:1\n'
++ '- Don\'t rely on color alone — use shape, position, or text as well\n\n'
++ '---\n\n'
++ '## 7. Components\n\n'
++ '### Buttons\n'
++ '- One primary button per screen/view\n'
++ '- Three button weights: filled (primary), outlined (secondary), text (tertiary)\n'
++ '- Button hierarchy matches action importance\n'
++ '- Minimum 16px gap between adjacent buttons\n'
++ '- Primary action on the right in button groups (confirmation dialogs)\n'
++ '- Destructive actions use danger variant, not primary\n\n'
++ '### Touch Targets\n'
++ '- Minimum 48x48px touch target (even if visual element is smaller)\n'
++ '- Minimum 8px gap between touch targets\n\n'
++ '### Visual Consistency\n'
++ '- Similar-looking elements must function similarly\n'
++ '- Don\'t style non-interactive elements like buttons\n'
++ '- Active/selected states must be visually distinct from hover states\n'
++ '- Disabled elements: reduce opacity, remove pointer cursor\n\n'
++ '### Forms\n'
++ '- Label above input (not inline or to the left for most cases)\n'
++ '- Helper text below input\n'
++ '- Group related fields in sections with section headings\n'
++ '- One column for forms (two-column forms reduce completion rates)\n'
++ '- Required fields marked, or mark optional fields instead (whichever is fewer)\n\n'
++ '---\n\n'
++ '## 8. Density & Completeness\n\n'
++ '### Element Counts\n'
++ '- Non-trivial UI: 12-25 elements minimum\n'
++ '- Dashboards: 4+ stat cards, 2+ charts/tables, sidebar navigation\n'
++ '- Landing pages: hero + 3-5 content sections + CTA + footer\n'
++ '- Forms: labels, helpers, validation, submit + cancel\n\n'
++ '### Content Rules\n'
++ '- Fill with realistic data — never Lorem ipsum\n'
++ '- Use real-looking names, numbers, dates, and descriptions\n'
++ '- Empty states need purpose: placeholder text, illustration, or CTA\n'
++ '- Never leave blank areas — they look broken, not clean\n\n'
++ '### Information Density\n'
++ '- Remove anything that doesn\'t reduce functionality\n'
++ '- Every element should earn its space\n'
++ '- Prefer data tables over repeated cards for > 5 items\n'
++ '- Use progressive disclosure for complex interfaces\n\n'
++ '---\n\n'
++ '## 9. Layout Patterns\n\n'
++ '### Dashboard\n'
++ '1. Sidebar navigation (if > 5 sections)\n'
++ '2. Stat cards row (3-4 KPIs)\n'
++ '3. Chart/visualization area\n'
++ '4. Data table or detail list\n'
++ '5. Action buttons in headers, not floating\n\n'
++ '### Form Page\n'
++ '1. Page heading with context\n'
++ '2. Grouped input sections\n'
++ '3. Helper/validation text per field\n'
++ '4. Sticky footer with submit/cancel\n\n'
++ '### Landing Page\n'
++ '1. Hero with single CTA\n'
++ '2. Social proof (logos, testimonials)\n'
++ '3. Feature sections (3-column grid or alternating layout)\n'
++ '4. Pricing (if applicable)\n'
++ '5. Final CTA\n'
++ '6. Footer with links\n\n'
++ '### Settings/Profile\n'
++ '1. Sidebar categories or tabs\n'
++ '2. Section headings within each category\n'
++ '3. Description text for each setting\n'
++ '4. Save/cancel per section or global\n\n'
++ '---\n\n'
++ '## 10. Copy & Microcopy\n\n'
++ '- Active voice: "Install the CLI" not "The CLI will be installed"\n'
++ '- Specific button labels: "Save API Key" not "Continue" or "Submit"\n'
++ '- Numerals for counts: "8 deployments" not "eight deployments"\n'
++ '- Error messages include the fix, not just the problem: "File too large (max 5 MB)" not "Upload failed"\n'
++ '- Loading states end with ellipsis: "Saving..." not "Please wait"\n'
++ '- Empty state text tells the user what to do next, not what\'s missing\n\n'
++ '---\n\n'
++ '## Quick Reference: Common Mistakes\n\n'
++ '| Mistake | Fix |\n'
++ '|---------|-----|\n'
++ '| Equal spacing everywhere | Inner gaps < outer gaps |\n'
++ '| Multiple primary buttons | One primary per view |\n'
++ '| Center-aligned paragraphs | Left-align body text |\n'
++ '| Full-width text | max-width: 65ch |\n'
++ '| Empty containers | Add placeholder content or CTA |\n'
++ '| Orphan elements | Group into cards or sections |\n'
++ '| Color-only hierarchy | Size + weight + spacing first |\n'
++ '| Tiny touch targets | Minimum 48x48px |\n'
++ '| Lorem ipsum | Realistic sample data |\n'
++ '| No visual hierarchy | Squint test — fix until it passes |';
+
 function stopGeneration() {
   if (_abortCtrl) { _abortCtrl.abort(); _abortCtrl = null; }
 }
@@ -1198,6 +1528,7 @@ function loadSettings() {
     if (m && $model) $model.value = m;
     var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
     if (keys[p] && $apikey) $apikey.value = keys[p];
+    if (localStorage.getItem('pg-fast-mode') !== null) $fastMode.checked = localStorage.getItem('pg-fast-mode') !== 'false';
     // Chat state
     isDefaultMode = localStorage.getItem('pg-use-default') !== 'false';
     try { chatHistory = JSON.parse(localStorage.getItem('pg-chat-history') || '[]'); } catch(e2) { chatHistory = []; }
@@ -1213,6 +1544,7 @@ function saveSettings() {
     if ($provider && $apikey) { keys[$provider.value] = $apikey.value; }
     localStorage.setItem('pg-apikeys', JSON.stringify(keys));
     localStorage.setItem('pg-use-default', isDefaultMode ? 'true' : 'false');
+    localStorage.setItem('pg-fast-mode', $fastMode.checked);
   } catch(e) {}
 }
 
@@ -1249,6 +1581,7 @@ $provider.addEventListener('change', function() {
 });
 $model.addEventListener('change', saveSettings);
 $apikey.addEventListener('change', saveSettings);
+$fastMode.addEventListener('change', saveSettings);
 
 // ---- Example chips ----
 document.querySelectorAll('[data-example]').forEach(function(chip) {
@@ -1716,16 +2049,19 @@ function parseSseResponse(res) {
 
 // ---- Self-check: verify rendered output and fix issues ----
 function selfCheck(spec, screenshotDataUrl, signal) {
-  var checkPrompt = 'You are reviewing a UI you just generated. Below is the JSON spec and a screenshot of how it rendered.\n\n'
-    + 'Check for:\n'
-    + '1. Layout issues (overlapping, misaligned, or missing elements)\n'
-    + '2. Components that failed to render or look broken\n'
-    + '3. Missing content or placeholder text that should be real data\n'
-    + '4. Visual hierarchy problems\n'
-    + '5. Missing interactivity: progress bars not connected to actions, tabs that don\'t switch, counters without increment logic\n'
-    + '6. Sparse UI: fewer than 12 elements for a non-trivial page — add missing sections, nav, footer\n\n'
-    + 'If interactive elements lack JS wiring, add a hidden CustomHTML element with js to connect them.\n'
-    + 'If the UI looks correct, return the spec JSON unchanged.\n'
+  var checkPrompt = 'You are a UI design reviewer. Below is the JSON spec and a screenshot of how it rendered.\n\n'
+    + '## DESIGN RULES\n' + LAYOUT_RULES + '\n\n'
+    + '## YOUR TASK\nCheck the screenshot against these rules:\n\n'
+    + '1. **Spacing & Grid**: Inner gaps < outer gaps? Consistent 8pt grid? No arbitrary pixel values?\n'
+    + '2. **Hierarchy (Squint Test)**: Blur your eyes — is primary content visually dominant? One focal point per view?\n'
+    + '3. **Grouping**: Related items grouped by proximity/container? No orphan elements? Space between groups >= 2x within?\n'
+    + '4. **Typography**: Max 4-5 font sizes? Body >= 16px? Left-aligned body text? Line length <= 65ch?\n'
+    + '5. **Components**: One primary button per view? Touch targets >= 48px? Labels above inputs?\n'
+    + '6. **Density**: Non-trivial UI has 12-25+ elements? Realistic data (no Lorem ipsum)? No empty containers?\n'
+    + '7. **Color**: Brand color only on interactive elements? Sufficient contrast (4.5:1 text, 3:1 UI)?\n'
+    + '8. **Rendering**: All components visible? No overlapping/clipped elements? No broken layouts?\n'
+    + '9. **Interactivity**: Progress bars connected? Tabs switching? Counters wired? If not, add CustomHTML with js.\n\n'
+    + 'If the UI passes all checks, return the spec JSON unchanged.\n'
     + 'If there are issues, return a FIXED version of the complete JSON spec.\n'
     + 'Return ONLY the JSON, no explanation.';
 
@@ -1741,8 +2077,9 @@ function selfCheck(spec, screenshotDataUrl, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
+      model: fastModel() || undefined,
       messages: messages,
-      reasoning: { effort: 'low' }
+      reasoning: { effort: fastEffort('selfCheck') || 'medium' }
     }),
     signal: signal
   })
@@ -1834,14 +2171,14 @@ function generateInteractiveCode(spec, analysis, onProgress) {
     var startTime = Date.now();
     streamFetch('/api/generate', { 'Content-Type': 'application/json' },
       {
-        model: 'google/gemini-3.1-pro-preview',
+        model: fastModel() || 'google/gemini-3.1-pro-preview',
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(spec) }
         ],
-        reasoning: { effort: 'high' },
+        reasoning: { effort: fastEffort('code') || 'medium' },
         response_format: false,
-        max_tokens: 32768
+        max_tokens: 16384
       },
       function onChunk(chunk) {
         var c = chunk.choices && chunk.choices[0];
@@ -2004,12 +2341,12 @@ function planCodeArchitecture(spec, analysis, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'google/gemini-3.1-pro-preview',
+      model: fastModel() || 'google/gemini-3.1-pro-preview',
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: JSON.stringify(spec) }
       ],
-      reasoning: { effort: 'medium' },
+      reasoning: { effort: fastEffort('plan') || 'medium' },
       max_tokens: 8192
     }),
     signal: signal
@@ -2072,6 +2409,19 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
     + '- Listen for cross-chunk events: preview.addEventListener("daub:stateChange", function(e) {...})\n'
     + '- Use vanilla JS only. No frameworks, no imports, no fetch\n'
     + '- Make it fully functional, not a stub\n\n'
+    + 'DESIGN QUICK-REF (avoid these mistakes):\n'
+    + '| Mistake | Fix |\n'
+    + '|---------|-----|\n'
+    + '| Equal spacing everywhere | Inner gaps < outer gaps |\n'
+    + '| Multiple primary buttons | One primary per view |\n'
+    + '| Center-aligned paragraphs | Left-align body text |\n'
+    + '| Full-width text | max-width: 65ch |\n'
+    + '| Empty containers | Add placeholder content or CTA |\n'
+    + '| Orphan elements | Group into cards or sections |\n'
+    + '| Color-only hierarchy | Size + weight + spacing first |\n'
+    + '| Tiny touch targets | Minimum 48x48px |\n'
+    + '| Lorem ipsum | Realistic sample data |\n'
+    + '| No visual hierarchy | Squint test — fix until it passes |\n\n'
     + 'Return JSON:\n'
     + '{ "chunkId": "' + chunk.id + '", "elements": [{ "id": "element-spec-id", "js": "...", "html": "...", "css": "...", "test": "..." }] }\n'
     + 'Only include properties (js/html/css/test) that you actually set.\n'
@@ -2083,7 +2433,7 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: modelOverride || 'google/gemini-3-flash-preview',
+      model: modelOverride || fastModel() || 'google/gemini-3-flash-preview',
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: 'Implement chunk "' + chunk.id + '" now.' }
@@ -2143,7 +2493,7 @@ function retryFailedChunks(spec, plan, failedResults, onRetryDone, signal) {
   if (!failedChunks.length) return Promise.resolve([]);
   var completed = 0;
   return Promise.all(failedChunks.map(function(chunk) {
-    return executeChunk(spec, plan, chunk, 'moonshotai/kimi-k2.5', signal).then(function(result) {
+    return executeChunk(spec, plan, chunk, fastModel() || 'moonshotai/kimi-k2.5', signal).then(function(result) {
       completed++;
       if (onRetryDone) onRetryDone(result, completed, failedChunks.length);
       return result;
@@ -2319,14 +2669,6 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     + '- Make it fully functional — not stubs\n'
     + '- Keep the overall spec structure, just fix/improve the code\n'
     + '- Return the COMPLETE spec JSON\n\n'
-    + 'LAYOUT CHECK (validate before returning):\n'
-    + '- Spacing consistent: inner gaps < outer gaps, no arbitrary pixel values\n'
-    + '- Hierarchy clear: squint test — primary content visually dominant\n'
-    + '- No orphan elements floating outside groups\n'
-    + '- No empty containers without purpose\n'
-    + '- One primary action per view, secondary actions visually subordinate\n'
-    + '- Text containers have reasonable max-width (not stretching to full viewport)\n'
-    + '- Related items grouped by proximity or container, not scattered\n\n'
     + 'Return ONLY JSON, no explanation.';
 
   return new Promise(function(resolve) {
@@ -2334,14 +2676,14 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     var startTime = Date.now();
     streamFetch('/api/generate', { 'Content-Type': 'application/json' },
       {
-        model: 'google/gemini-3.1-pro-preview',
+        model: fastModel() || 'google/gemini-3.1-pro-preview',
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(assembledSpec) }
         ],
-        reasoning: { effort: 'high' },
+        reasoning: { effort: fastEffort('review') || 'medium' },
         response_format: false,
-        max_tokens: 32768
+        max_tokens: 16384
       },
       function onChunk(chunk) {
         var c = chunk.choices && chunk.choices[0];
@@ -2771,7 +3113,7 @@ function generate() {
     _abortCtrl = new AbortController();
     var signal = _abortCtrl.signal;
     var callStreamFn = function(m, onT, onD, onE) {
-      if (isDefaultMode) streamDefault(m, onT, onD, onE, model, signal);
+      if (isDefaultMode) streamDefault(m, onT, onD, onE, model || fastModel(), signal);
       else streamFn(m, onT, onD, onE, signal);
     };
     callStreamFn(msgs,
@@ -3563,11 +3905,53 @@ function computeSpecDiff(oldSpec, newSpec) {
 // ============================================================
 var MAX_DEPTH = 20;
 
+// ---- Spec Validation & Auto-Fix ----
+function validateSpec(spec) {
+  var issues = [];
+  if (!spec || typeof spec !== 'object') return ['Spec is not an object'];
+  if (!spec.elements || typeof spec.elements !== 'object') issues.push('Missing "elements" object');
+  if (!spec.root) issues.push('Missing "root"');
+  if (spec.root && spec.elements && !spec.elements[spec.root]) issues.push('Root "' + spec.root + '" not found in elements');
+  if (spec.elements) {
+    Object.keys(spec.elements).forEach(function(id) {
+      var def = spec.elements[id];
+      if (!def.type) issues.push('Element "' + id + '" missing "type"');
+      else if (!RENDERERS[def.type] && def.type !== 'CustomHTML') issues.push('Unknown type "' + def.type + '" on element "' + id + '"');
+      var children = def.children || [];
+      children.forEach(function(cid) {
+        if (!spec.elements[cid]) issues.push('Element "' + id + '" references missing child "' + cid + '"');
+      });
+    });
+  }
+  return issues;
+}
+
+function autoFixSpec(spec) {
+  if (!spec || !spec.elements) return spec;
+  // Remove orphan children references
+  Object.keys(spec.elements).forEach(function(id) {
+    var def = spec.elements[id];
+    if (def.children) {
+      def.children = def.children.filter(function(cid) { return !!spec.elements[cid]; });
+    }
+  });
+  // Fix missing root: use first element
+  if (!spec.root || !spec.elements[spec.root]) {
+    var ids = Object.keys(spec.elements);
+    if (ids.length) spec.root = ids[0];
+  }
+  return spec;
+}
+
 function renderSpec(spec, prevSpec) {
   if (!spec || !spec.root || !spec.elements) {
     showJsonError('Spec must have "root" and "elements"');
     return;
   }
+  // Auto-fix and validate spec before rendering
+  spec = autoFixSpec(spec);
+  var issues = validateSpec(spec);
+  if (issues.length) console.warn('[DAUB] Spec issues:', issues);
   // Render into a detached container
   var tempDiv = document.createElement('div');
 
@@ -3597,10 +3981,11 @@ function renderSpec(spec, prevSpec) {
     postToPreview({ type: 'theme', value: spec.theme });
   }
 
-  // Collect CustomHTML JS and serialize DOM to iframe
+  // Collect CustomHTML JS and declarative state config, serialize DOM to iframe
   var jsItems = collectCustomJS(spec);
+  var stateConfig = collectStateConfig(spec);
   _iframeHtmlCache = tempDiv.innerHTML;
-  postToPreview({ type: 'render', html: tempDiv.innerHTML, js: jsItems });
+  postToPreview({ type: 'render', html: tempDiv.innerHTML, js: jsItems, stateConfig: stateConfig });
 }
 
 // Incremental diff: walk spec tree, find DOM nodes by data-spec-id, replace changed subtrees
@@ -3673,6 +4058,12 @@ function renderElement(elements, id, depth) {
   var def = elements[id];
   if (!def) return null;
 
+  // Encode visible expression as data attribute for iframe-side evaluation
+  if (def.visible != null) {
+    // At render time, serialize the visibility expression for the iframe state engine
+    // The iframe will evaluate this and toggle display
+  }
+
   var render = RENDERERS[def.type];
   if (!render) {
     var el = document.createElement('div');
@@ -3689,7 +4080,31 @@ function renderElement(elements, id, depth) {
 
   var children = def.children || (def.props && def.props.children) || [];
   var el = render(def.props || {}, children, elements, depth);
-  if (el && el.setAttribute) el.setAttribute('data-spec-id', id);
+  if (el && el.setAttribute) {
+    el.setAttribute('data-spec-id', id);
+    // Encode declarative state metadata as data attributes for iframe runtime
+    if (def.visible != null) {
+      el.setAttribute('data-ds-visible', JSON.stringify(def.visible));
+    }
+    if (def.on) {
+      el.setAttribute('data-ds-on', JSON.stringify(def.on));
+    }
+    if (def.props) {
+      // Mark $bindState and $state props for iframe-side resolution
+      var stateProps = {};
+      var hasStateProps = false;
+      Object.keys(def.props).forEach(function(k) {
+        var v = def.props[k];
+        if (v && typeof v === 'object' && (v['$state'] != null || v['$bindState'] != null || v['$cond'] != null || v['$template'] != null)) {
+          stateProps[k] = v;
+          hasStateProps = true;
+        }
+      });
+      if (hasStateProps) {
+        el.setAttribute('data-ds-props', JSON.stringify(stateProps));
+      }
+    }
+  }
   return el;
 }
 
@@ -3762,6 +4177,149 @@ function isSafeUrl(url) {
   var trimmed = url.trim().toLowerCase();
   if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) return false;
   return true;
+}
+
+// ---- Declarative State Engine ----
+// Shared between main page (renderElement) and iframe (runtime).
+// The iframe gets a copy of this code injected via buildIframeSrcdoc().
+
+// State store: simple JSON pointer-based reactive store
+function createStateStore(initial) {
+  var _state = initial || {};
+  var _subs = [];
+  function _get(path) {
+    if (!path || path === '/') return _state;
+    var parts = path.replace(/^\//, '').split('/');
+    var v = _state;
+    for (var i = 0; i < parts.length; i++) {
+      if (v == null) return undefined;
+      v = v[parts[i]];
+    }
+    return v;
+  }
+  function _set(path, value) {
+    if (!path || path === '/') { _state = value; _notify(path); return; }
+    var parts = path.replace(/^\//, '').split('/');
+    var obj = _state;
+    for (var i = 0; i < parts.length - 1; i++) {
+      if (obj[parts[i]] == null) obj[parts[i]] = {};
+      obj = obj[parts[i]];
+    }
+    obj[parts[parts.length - 1]] = value;
+    _notify(path);
+  }
+  function _push(path, value) {
+    var arr = _get(path);
+    if (!Array.isArray(arr)) { arr = []; _set(path, arr); }
+    arr.push(value);
+    _notify(path);
+  }
+  function _remove(path) {
+    if (!path || path === '/') { _state = {}; _notify(path); return; }
+    var parts = path.replace(/^\//, '').split('/');
+    var obj = _state;
+    for (var i = 0; i < parts.length - 1; i++) {
+      if (obj[parts[i]] == null) return;
+      obj = obj[parts[i]];
+    }
+    delete obj[parts[parts.length - 1]];
+    _notify(path);
+  }
+  function _toggle(path) {
+    _set(path, !_get(path));
+  }
+  function _notify(path) {
+    for (var i = 0; i < _subs.length; i++) _subs[i](path);
+  }
+  return { get: _get, set: _set, push: _push, remove: _remove, toggle: _toggle, subscribe: function(fn) { _subs.push(fn); }, getAll: function() { return _state; } };
+}
+
+// Resolve $-expressions against state store
+function resolveExpr(expr, store) {
+  if (expr == null || typeof expr !== 'object') return expr;
+  // $state: read value from state
+  if (expr['$state'] != null) {
+    var val = store.get(expr['$state']);
+    if (expr.eq != null) return val === expr.eq;
+    if (expr.neq != null) return val !== expr.neq;
+    return val;
+  }
+  // $cond: conditional expression
+  if (expr['$cond'] != null) {
+    var cond = resolveExpr(expr['$cond'], store);
+    return cond ? resolveExpr(expr['$then'], store) : resolveExpr(expr['$else'], store);
+  }
+  // $template: string template with ${/path} interpolation
+  if (expr['$template'] != null) {
+    return String(expr['$template']).replace(/\$\{([^}]+)\}/g, function(_, path) {
+      var v = store.get(path);
+      return v != null ? String(v) : '';
+    });
+  }
+  return expr;
+}
+
+// Resolve all props that may contain $-expressions
+function resolveProps(props, store) {
+  if (!props || !store) return props;
+  var resolved = {};
+  var keys = Object.keys(props);
+  for (var i = 0; i < keys.length; i++) {
+    var k = keys[i];
+    var v = props[k];
+    if (v && typeof v === 'object' && !Array.isArray(v) && (v['$state'] != null || v['$cond'] != null || v['$template'] != null)) {
+      resolved[k] = resolveExpr(v, store);
+    } else {
+      resolved[k] = v;
+    }
+  }
+  return resolved;
+}
+
+// Dispatch an action from an "on" handler
+function dispatchAction(action, store, event) {
+  if (!action) return;
+  var p = action.params || {};
+  switch (action.action) {
+    case 'setState':
+      store.set(p.path, p.value != null ? p.value : (event && event.target ? event.target.value : undefined));
+      break;
+    case 'toggleState':
+      store.toggle(p.path);
+      break;
+    case 'pushState':
+      store.push(p.path, p.value);
+      break;
+    case 'removeState':
+      store.remove(p.path);
+      break;
+  }
+}
+
+// Collect declarative state actions and initial state from spec
+function collectStateConfig(spec) {
+  var config = { initialState: {}, bindings: [], actions: [] };
+  if (!spec || !spec.elements) return config;
+  if (spec.state) config.initialState = spec.state;
+  Object.keys(spec.elements).forEach(function(id) {
+    var def = spec.elements[id];
+    // Collect $bindState props
+    if (def.props) {
+      Object.keys(def.props).forEach(function(prop) {
+        var v = def.props[prop];
+        if (v && typeof v === 'object' && v['$bindState'] != null) {
+          config.bindings.push({ id: id, prop: prop, path: v['$bindState'] });
+        }
+      });
+    }
+    // Collect "on" handlers
+    if (def.on) {
+      Object.keys(def.on).forEach(function(evt) {
+        config.actions.push({ id: id, event: evt, action: def.on[evt] });
+      });
+    }
+  });
+  return config;
 }
 
 // ---- Component Renderers (67 types) ----
@@ -5334,26 +5892,40 @@ var SYSTEM_PROMPT = (function() {
     + '- Dashboards: stat cards row -> chart/table -> detail list. Sidebar nav if >5 sections\n'
     + '- Forms: label above input, helper text below, group related fields in sections\n'
     + '- No orphan elements: every element belongs to a visual group\n\n'
-    + 'INTERACTIVITY — CustomHTML JS:\n'
-    + '- ALWAYS add a hidden CustomHTML element with js for interactive patterns\n'
-    + '- Progress bars: wire to forms/buttons so they visually update\n'
-    + '- Tabs: switch content panels when tab buttons are clicked\n'
-    + '- Counters: increment/decrement values on button clicks\n'
-    + '- Forms: validate fields, show success/error states on submit\n'
-    + '- Toggles/switches: visually reflect state changes\n'
-    + '- Use a single hidden CustomHTML node (type:"CustomHTML", props:{js:"..."}) at the end of the elements list to wire page-level interactivity\n'
+    + 'INTERACTIVITY — DECLARATIVE STATE (PREFERRED):\n'
+    + '- Use declarative state for tabs, toggles, forms, counters, show/hide — NO JavaScript needed\n'
+    + '- Add "state" to root spec: initial values as JSON object with paths\n'
+    + '- Add "on" to elements: maps DOM events to actions\n'
+    + '- Add "visible" to elements: show/hide based on state\n'
+    + '- Use $state expressions in props for reactive text/values\n\n'
+    + 'STATE FIELDS:\n'
+    + '- "state": { "activeTab": "home", "count": 0 } — initial state at spec root\n'
+    + '- "on": { "click": { "action": "setState", "params": { "path": "/activeTab", "value": "home" } } } — event handler on element\n'
+    + '- "visible": { "$state": "/activeTab", "eq": "home" } — conditional visibility\n'
+    + '- Props with $state: "label": { "$state": "/count" } — reactive text from state\n'
+    + '- Props with $template: "text": { "$template": "Items: ${/count}" } — interpolated strings\n'
+    + '- Props with $cond: "variant": { "$cond": { "$state": "/active" }, "$then": "primary", "$else": "outlined" } — conditional values\n'
+    + '- Props with $bindState: "value": { "$bindState": "/form/email" } — two-way binding for inputs\n\n'
+    + 'ACTIONS:\n'
+    + '- "setState": set a state path to a value — { "action": "setState", "params": { "path": "/x", "value": "y" } }\n'
+    + '- "toggleState": toggle boolean — { "action": "toggleState", "params": { "path": "/expanded" } }\n'
+    + '- "pushState": append to array — { "action": "pushState", "params": { "path": "/items", "value": "new" } }\n'
+    + '- "removeState": delete a state key — { "action": "removeState", "params": { "path": "/x" } }\n\n'
+    + 'EXAMPLE — Tabs with declarative state:\n'
+    + '{"theme":"bone","state":{"activeTab":"home"},"root":"page","elements":{"page":{"type":"Stack","props":{"direction":"vertical","gap":3},"children":["tabs","panel-home","panel-settings"]},'
+    + '"tabs":{"type":"Stack","props":{"direction":"horizontal","gap":1},"children":["tab-home","tab-settings"]},'
+    + '"tab-home":{"type":"Button","props":{"label":"Home","variant":"primary"},"on":{"click":{"action":"setState","params":{"path":"/activeTab","value":"home"}}}},'
+    + '"tab-settings":{"type":"Button","props":{"label":"Settings","variant":"outlined"},"on":{"click":{"action":"setState","params":{"path":"/activeTab","value":"settings"}}}},'
+    + '"panel-home":{"type":"Card","props":{},"visible":{"$state":"/activeTab","eq":"home"},"children":["home-text"]},'
+    + '"panel-settings":{"type":"Card","props":{},"visible":{"$state":"/activeTab","eq":"settings"},"children":["settings-text"]},'
+    + '"home-text":{"type":"Text","props":{"text":"Welcome to the home panel"}},'
+    + '"settings-text":{"type":"Text","props":{"text":"Settings panel content"}}}}\n\n'
+    + 'INTERACTIVITY — CustomHTML JS (FOR COMPLEX CASES):\n'
+    + '- Use CustomHTML JS ONLY for games, canvas drawing, complex animations, and advanced DOM manipulation\n'
+    + '- For tabs, toggles, counters, forms, show/hide — use declarative state instead\n'
     + '- CustomHTML JS receives "container" (this element) and "preview" (root). Use preview.querySelector(\'[data-spec-id="someId"]\') to target elements\n'
     + '- Keep JS focused: event listeners, class toggling, text/attribute updates. No frameworks, no fetch calls\n'
-    + '- CustomHTML also supports children array, html prop (raw markup with DAUB CSS classes), and css prop\n\n'
-    + 'EXAMPLE — Contact form with validation:\n'
-    + '{"theme":"bone","root":"page","elements":{"page":{"type":"Stack","props":{"direction":"vertical","gap":4},"children":["header","form-card","js-wire"]},'
-    + '"header":{"type":"Heading","props":{"level":2,"text":"Contact Us"}},'
-    + '"form-card":{"type":"Card","props":{},"children":["name-input","email-input","msg-input","submit-btn"]},'
-    + '"name-input":{"type":"Input","props":{"label":"Name","placeholder":"Jane Smith"}},'
-    + '"email-input":{"type":"Input","props":{"label":"Email","type":"email","placeholder":"jane@example.com"}},'
-    + '"msg-input":{"type":"Textarea","props":{"label":"Message","placeholder":"How can we help?"}},'
-    + '"submit-btn":{"type":"Button","props":{"label":"Send Message","variant":"primary"}},'
-    + '"js-wire":{"type":"CustomHTML","props":{"js":"var btn=preview.querySelector(\'[data-spec-id=\\\\\"submit-btn\\\\\"]\');if(btn)btn.addEventListener(\'click\',function(){btn.textContent=\'Sent!\';btn.disabled=true;setTimeout(function(){btn.textContent=\'Send Message\';btn.disabled=false;},2000);});"}}}}\n\n';
+    + '- CustomHTML also supports children array, html prop (raw markup with DAUB CSS classes), and css prop\n\n';
 
   var themes = (function() {
     var fams = DAUB.THEME_FAMILIES;

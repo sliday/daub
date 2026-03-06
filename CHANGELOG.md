@@ -2,6 +2,16 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.4.0
+
+**Fast Mode — single-model toggle for all pipeline stages.**
+
+- Feature: "Fast" toggle in Chat toolbar (checked by default) forces `gemini-3.1-flash-lite-preview` across all stages
+- Feature: Per-stage reasoning effort adjustment — low for analysis/planning, medium for code generation/review
+- Feature: Toggle state persists in localStorage across sessions
+- Enhancement: When Fast is off, original multi-model routing applies unchanged (Pro for planning/review, Flash for execution, Kimi for retries)
+- Affects: `generate`, `selfCheck`, `planCodeArchitecture`, `executeChunk`, `executeChunksParallel` retry, `generateInteractiveCode`, `reviewAndAssemble`
+
 ## v3.3.9
 
 **Hard stop control + non-blocking input.**
