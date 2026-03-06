@@ -2,6 +2,18 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.5.0
+
+**Complexity-routed pipeline + component type constraints (SLAG-inspired).**
+
+- Feature: `analyzeInteractivity` returns complexity grade (`none`/`trivial`/`simple`/`complex`) — pipeline routes through optimized paths per tier
+- Feature: `VALID_TYPES_HINT` constraint string built from `COMP_CATEGORIES`, injected into all pipeline stage prompts (`reviewAndAssemble`, `generateInteractiveCode`, `executeChunk`, `selfCheck`)
+- Feature: Trivial interactivity (1-2 elements) skips plan/test/review — single-shot code gen only
+- Feature: Simple interactivity (3-5 elements) skips review stage — plan + execute + verify
+- Feature: Complex interactivity (6+ elements) runs full pipeline with all stages
+- Enhancement: `_applySpec` now runs `validateSpec` + `autoFixSpec` on every spec application, auto-stripping unknown types and broken references
+- Enhancement: Analyze step label shows complexity tier (e.g., `"Analyzed + scaffold [complex]"`)
+
 ## v3.4.0
 
 **Fast Mode — single-model toggle for all pipeline stages.**
