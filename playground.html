@@ -1113,12 +1113,12 @@ var MODELS = {
     { value: 'claude-opus-4-6', label: 'Claude Opus 4.6' }
   ],
   openrouter: [
-    { value: 'openai/gpt-4o-mini', label: 'GPT-4o Mini' },
-    { value: 'openai/gpt-4.1', label: 'GPT-4.1' },
-    { value: 'openai/o4-mini', label: 'o4-mini' },
+    { value: 'google/gemini-3-flash-preview', label: 'Gemini 3 Flash' },
+    { value: 'google/gemini-3.1-pro-preview', label: 'Gemini 3.1 Pro' },
+    { value: 'google/gemini-3.1-flash-lite-preview', label: 'Gemini 3.1 Flash Lite' },
+    { value: 'moonshotai/kimi-k2.5', label: 'Kimi K2.5' },
+    { value: 'minimax/minimax-m2.5', label: 'MiniMax M2.5' },
     { value: 'anthropic/claude-sonnet-4.6', label: 'Claude Sonnet 4.6' },
-    { value: 'anthropic/claude-haiku-4.5', label: 'Claude Haiku 4.5' },
-    { value: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
     { value: 'deepseek/deepseek-r1', label: 'DeepSeek R1' }
   ]
 };
@@ -1477,7 +1477,7 @@ function streamFetch(url, headers, body, onChunk, onDone, onError) {
 // ---- Streaming wrappers (accept messages array) ----
 var _lastFinishReason = '';
 
-var FALLBACK_MODEL = 'xiaomi/mimo-vl-7b-flash:free';
+var FALLBACK_MODEL = 'moonshotai/kimi-k2.5';
 
 function streamDefault(messages, onText, onDone, onError, model) {
   _lastFinishReason = '';
@@ -1758,7 +1758,7 @@ function generateInteractiveCode(spec, analysis, onProgress) {
     var startTime = Date.now();
     streamFetch('/api/generate', { 'Content-Type': 'application/json' },
       {
-        model: 'moonshotai/kimi-k2.5',
+        model: 'google/gemini-3.1-pro-preview',
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(spec) }
@@ -1846,7 +1846,7 @@ function retryCodeGeneration(spec, analysis, errors, onProgress) {
     var startTime = Date.now();
     streamFetch('/api/generate', { 'Content-Type': 'application/json' },
       {
-        model: 'moonshotai/kimi-k2.5',
+        model: 'google/gemini-3.1-pro-preview',
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(spec) }
@@ -2002,7 +2002,7 @@ function executeChunk(spec, plan, chunk, modelOverride) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: modelOverride || 'google/gemini-3.1-flash-lite-preview',
+      model: modelOverride || 'google/gemini-3-flash-preview',
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: 'Implement chunk "' + chunk.id + '" now.' }
@@ -2051,7 +2051,7 @@ function retryFailedChunks(spec, plan, failedResults, onRetryDone) {
   if (!failedChunks.length) return Promise.resolve([]);
   var completed = 0;
   return Promise.all(failedChunks.map(function(chunk) {
-    return executeChunk(spec, plan, chunk, 'google/gemini-2.5-flash').then(function(result) {
+    return executeChunk(spec, plan, chunk, 'moonshotai/kimi-k2.5').then(function(result) {
       completed++;
       if (onRetryDone) onRetryDone(result, completed, failedChunks.length);
       return result;
@@ -2183,6 +2183,14 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     + '- Make it fully functional — not stubs\n'
     + '- Keep the overall spec structure, just fix/improve the code\n'
     + '- Return the COMPLETE spec JSON\n\n'
+    + 'LAYOUT CHECK (validate before returning):\n'
+    + '- Spacing consistent: inner gaps < outer gaps, no arbitrary pixel values\n'
+    + '- Hierarchy clear: squint test — primary content visually dominant\n'
+    + '- No orphan elements floating outside groups\n'
+    + '- No empty containers without purpose\n'
+    + '- One primary action per view, secondary actions visually subordinate\n'
+    + '- Text containers have reasonable max-width (not stretching to full viewport)\n'
+    + '- Related items grouped by proximity or container, not scattered\n\n'
     + 'Return ONLY JSON, no explanation.';
 
   return new Promise(function(resolve) {
@@ -2190,7 +2198,7 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     var startTime = Date.now();
     streamFetch('/api/generate', { 'Content-Type': 'application/json' },
       {
-        model: 'moonshotai/kimi-k2.5',
+        model: 'google/gemini-3.1-pro-preview',
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(assembledSpec) }
@@ -5116,6 +5124,22 @@ var SYSTEM_PROMPT = (function() {
     + '- Use nested Stacks/Cards for visual depth and hierarchy\n'
     + '- Every page needs proper header/nav, main content, and footer/actions\n'
     + '- Use real-looking sample data (names, numbers, dates) throughout\n\n'
+    + 'LAYOUT RULES (8pt grid, information design):\n'
+    + '- Spacing tokens map to visual relationship: gap:1-2 within groups, gap:3-4 between groups, gap:5-6 between sections\n'
+    + '- Space between groups must be >=2x space within groups\n'
+    + '- Related elements close together; unrelated elements far apart\n'
+    + '- Most important content first: top, larger, bolder, higher contrast\n'
+    + '- One primary button per view. Secondary actions use outlined/text buttons\n'
+    + '- Line length: wrap text containers at max-width:65ch\n'
+    + '- Left-align text by default. Center only for short hero headlines (<3 lines)\n'
+    + '- Design greyscale first: hierarchy through size/weight/spacing, not color\n'
+    + '- Brand color for interactive elements only (buttons, links, toggles)\n'
+    + '- Cards group related content; don\'t over-containerize (if proximity + similarity suffice, skip the card border)\n'
+    + '- Empty states need purpose: placeholder text, illustration, or CTA — never blank areas\n'
+    + '- Depth via elevation: flat (default), raised (cards), overlay (modals)\n'
+    + '- Dashboards: stat cards row -> chart/table -> detail list. Sidebar nav if >5 sections\n'
+    + '- Forms: label above input, helper text below, group related fields in sections\n'
+    + '- No orphan elements: every element belongs to a visual group\n\n'
     + 'INTERACTIVITY — CustomHTML JS:\n'
     + '- ALWAYS add a hidden CustomHTML element with js for interactive patterns\n'
     + '- Progress bars: wire to forms/buttons so they visually update\n'

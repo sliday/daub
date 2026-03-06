@@ -56,7 +56,7 @@ export async function onRequestPost(context) {
       'X-Title': 'DAUB Playground',
     },
     body: JSON.stringify(Object.assign({
-      model: body.model || 'google/gemini-3.1-flash-lite-preview',
+      model: body.model || 'google/gemini-3-flash-preview',
       messages: body.messages,
       temperature: 0.7,
       max_tokens: body.max_tokens || 16384,

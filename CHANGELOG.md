@@ -2,6 +2,18 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.3.5
+
+**LLM model taxonomy — task-based model routing across the pipeline.**
+
+- Feature: Defined 5-tier model taxonomy: Planning/Reasoning (`gemini-3.1-pro`), Regular (`gemini-3-flash`), Regular fallback (`kimi-k2.5`), Quick/Granular (`gemini-3.1-flash-lite`), Decision Helper (`minimax-m2.5`)
+- Change: `executeChunk()` default upgraded from `gemini-3.1-flash-lite` → `gemini-3-flash` for better code generation
+- Change: `retryFailedChunks()` retry model changed from `gemini-2.5-flash` → `kimi-k2.5` (reasoning fallback)
+- Change: `planRegressionDesign()` and `reviewAndAssemble()` upgraded from `kimi-k2.5` → `gemini-3.1-pro` (planning/review tier)
+- Change: Backend default (`/api/generate`) upgraded from `gemini-3.1-flash-lite` → `gemini-3-flash`
+- Change: `FALLBACK_MODEL` changed from `xiaomi/mimo-vl-7b-flash:free` → `kimi-k2.5`
+- Enhancement: OpenRouter dropdown updated with taxonomy-aligned model list including MiniMax M2.5
+
 ## v3.3.4
 
 **S-expression plan format, failed chunk retry escalation, collapsible pipeline steps.**
