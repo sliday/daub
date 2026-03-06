@@ -10,3 +10,4 @@ node_modules/
 .npmrc
 tools/visual-qa/results/
 tools/visual-qa/node_modules/
+*.pdf
