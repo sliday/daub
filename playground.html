@@ -1928,13 +1928,12 @@ function planCodeArchitecture(spec, analysis) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'moonshotai/kimi-k2.5',
+      model: 'google/gemini-3.1-pro-preview',
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: JSON.stringify(spec) }
       ],
       reasoning: { effort: 'medium' },
-      response_format: false,
       max_tokens: 8192
     })
   })
