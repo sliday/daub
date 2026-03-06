@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.3.9
+
+**Hard stop control + non-blocking input.**
+
+- Feature: Stop button to abort running generation — AbortController cancels all active streams and pipeline fetch calls
+- Feature: Input field stays active during generation — type a new prompt and press Enter to interrupt and start fresh
+- Feature: Stop button appears during loading, hidden when idle; styled with terracotta accent
+- Feature: Stopped bubbles get `--stopped` class with reduced opacity
+- Enhancement: Signal threaded through `streamFetch`, all 4 stream wrappers, `parseSseResponse` callers, and pipeline functions (`selfCheck`, `analyzeInteractivity`, `planCodeArchitecture`, `executeChunk`)
+- Enhancement: AbortError caught gracefully at every level — no console errors on user-initiated stop
+
 ## v3.3.8
 
 **Shared state scoping fix, pipeline step skip corrections.**

@@ -378,6 +378,15 @@
       user-select: none;
       white-space: nowrap;
     }
+    .pg-chat__stop-btn {
+      background: none; border: 1px solid var(--db-terracotta); cursor: pointer;
+      color: var(--db-terracotta); padding: 2px 8px; border-radius: 4px;
+      font-size: 0.6875rem; font-family: var(--db-font-ui);
+      display: inline-flex; align-items: center; gap: 3px;
+      transition: background 0.15s;
+    }
+    .pg-chat__stop-btn:hover { background: color-mix(in srgb, var(--db-terracotta) 10%, transparent); }
+    .pg-chat__msg--stopped { opacity: 0.6; }
     .pg-chat__img-strip {
       display: none;
       padding: 8px 10px 0;
@@ -777,7 +786,10 @@
                   <i data-lucide="globe" style="width:13px;height:13px;"></i> Link
                 </button>
               </div>
-              <span class="pg-chat__send-hint">&#x23CE; Enter</span>
+              <span class="pg-chat__send-hint" id="pg-send-hint">&#x23CE; Enter</span>
+              <button class="pg-chat__stop-btn" id="pg-stop-btn" style="display:none" title="Stop generation">
+                <i data-lucide="square" style="width:11px;height:11px;"></i> Stop
+              </button>
             </div>
             <input type="file" id="pg-file-input-img" accept="image/*" multiple style="display:none;">
             <input type="file" id="pg-file-input" accept="image/*,application/pdf" multiple style="display:none;">
@@ -925,6 +937,10 @@ var $prompt     = document.getElementById('pg-prompt');
 var $json       = document.getElementById('pg-json');
 var $previewFrame = document.getElementById('pg-preview-frame');
 var _isLoading = false;
+var $stopBtn    = document.getElementById('pg-stop-btn');
+var $sendHint   = document.getElementById('pg-send-hint');
+var _abortCtrl = null;
+var _currentStream = { renderTimer: null, streamBubble: null };
 var $render     = document.getElementById('pg-render');
 var $copyJson   = document.getElementById('pg-copy-json');
 var $copyHtml   = document.getElementById('pg-copy-html');
@@ -1126,6 +1142,20 @@ try {
   }
 } catch(e) {}
 pgLockChrome();
+
+function stopGeneration() {
+  if (_abortCtrl) { _abortCtrl.abort(); _abortCtrl = null; }
+}
+
+function _cleanupCurrentStream() {
+  if (_currentStream.renderTimer) { clearInterval(_currentStream.renderTimer); _currentStream.renderTimer = null; }
+  if (_currentStream.streamBubble) {
+    _currentStream.streamBubble.classList.remove('pg-chat__msg--streaming');
+    _currentStream.streamBubble.classList.add('pg-chat__msg--stopped');
+  }
+  $status.textContent = '';
+  setLoading(false);
+}
 
 // ---- Chat state ----
 var chatHistory = [];
@@ -1469,12 +1499,13 @@ function callOpenRouter(messages) {
 }
 
 // ---- Streaming SSE helper ----
-function streamFetch(url, headers, body, onChunk, onDone, onError) {
+function streamFetch(url, headers, body, onChunk, onDone, onError, signal) {
   if (typeof ReadableStream === 'undefined') { onError('no-stream'); return; }
   fetch(url, {
     method: 'POST',
     headers: headers,
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
+    signal: signal
   }).then(function(res) {
     if (!res.ok) {
       return res.json().catch(function() { return {}; }).then(function(err) {
@@ -1504,10 +1535,13 @@ function streamFetch(url, headers, body, onChunk, onDone, onError) {
           }
         }
         pump();
-      }).catch(function(err) { if (!doneOnce) { doneOnce = true; onError(err); } });
+      }).catch(function(err) { if (!doneOnce) { doneOnce = true; if (err.name === 'AbortError') { onDone(); } else { onError(err); } } });
     }
     pump();
-  }).catch(function(err) { onError(err); });
+  }).catch(function(err) {
+    if (err.name === 'AbortError') { onDone(); return; }
+    onError(err);
+  });
 }
 
 // ---- Streaming wrappers (accept messages array) ----
@@ -1515,7 +1549,7 @@ var _lastFinishReason = '';
 
 var FALLBACK_MODEL = 'moonshotai/kimi-k2.5';
 
-function streamDefault(messages, onText, onDone, onError, model) {
+function streamDefault(messages, onText, onDone, onError, model, signal) {
   _lastFinishReason = '';
   var body = { messages: messages };
   if (model) body.model = model;
@@ -1528,11 +1562,11 @@ function streamDefault(messages, onText, onDone, onError, model) {
       if (c && c.delta && c.delta.content) onText(c.delta.content);
       if (c && c.finish_reason) _lastFinishReason = c.finish_reason;
     },
-    onDone, onError
+    onDone, onError, signal
   );
 }
 
-function streamOpenAI(messages, onText, onDone, onError) {
+function streamOpenAI(messages, onText, onDone, onError, signal) {
   _lastFinishReason = '';
   streamFetch(
     'https://api.openai.com/v1/chat/completions',
@@ -1543,11 +1577,11 @@ function streamOpenAI(messages, onText, onDone, onError) {
       if (c && c.delta && c.delta.content) onText(c.delta.content);
       if (c && c.finish_reason) _lastFinishReason = c.finish_reason;
     },
-    onDone, onError
+    onDone, onError, signal
   );
 }
 
-function streamAnthropic(messages, onText, onDone, onError) {
+function streamAnthropic(messages, onText, onDone, onError, signal) {
   var sys = '', userMsgs = [];
   messages.forEach(function(m) { if (m.role === 'system') sys += m.content + '\n'; else userMsgs.push(m); });
   streamFetch(
@@ -1558,11 +1592,11 @@ function streamAnthropic(messages, onText, onDone, onError) {
       if (chunk.type === 'content_block_delta' && chunk.delta && chunk.delta.text) onText(chunk.delta.text);
       if (chunk.type === 'message_delta' && chunk.delta && chunk.delta.stop_reason === 'max_tokens') _lastFinishReason = 'length';
     },
-    onDone, onError
+    onDone, onError, signal
   );
 }
 
-function streamOpenRouter(messages, onText, onDone, onError) {
+function streamOpenRouter(messages, onText, onDone, onError, signal) {
   _lastFinishReason = '';
   streamFetch(
     'https://openrouter.ai/api/v1/chat/completions',
@@ -1573,7 +1607,7 @@ function streamOpenRouter(messages, onText, onDone, onError) {
       if (c && c.delta && c.delta.content) onText(c.delta.content);
       if (c && c.finish_reason) _lastFinishReason = c.finish_reason;
     },
-    onDone, onError
+    onDone, onError, signal
   );
 }
 
@@ -1681,7 +1715,7 @@ function parseSseResponse(res) {
 }
 
 // ---- Self-check: verify rendered output and fix issues ----
-function selfCheck(spec, screenshotDataUrl) {
+function selfCheck(spec, screenshotDataUrl, signal) {
   var checkPrompt = 'You are reviewing a UI you just generated. Below is the JSON spec and a screenshot of how it rendered.\n\n'
     + 'Check for:\n'
     + '1. Layout issues (overlapping, misaligned, or missing elements)\n'
@@ -1709,7 +1743,8 @@ function selfCheck(spec, screenshotDataUrl) {
     body: JSON.stringify({
       messages: messages,
       reasoning: { effort: 'low' }
-    })
+    }),
+    signal: signal
   })
   .then(parseSseResponse)
   .then(function(sse) {
@@ -1721,11 +1756,11 @@ function selfCheck(spec, screenshotDataUrl) {
     if (!fixed || !fixed.root || !fixed.elements) return null;
     return fixed;
   })
-  .catch(function() { return null; });
+  .catch(function(e) { if (e.name === 'AbortError') return null; return null; });
 }
 
 // ---- Interactivity pipeline: analyze spec → generate code ----
-function analyzeInteractivity(spec) {
+function analyzeInteractivity(spec, signal) {
   var prompt = 'You are analyzing a UI spec to determine if it needs custom JavaScript code.\n\n'
     + 'The spec uses DAUB components (buttons, cards, inputs, tabs, etc.) but some UIs need custom logic:\n'
     + '- Games (Tetris, Snake, puzzles) need game loops, canvas, collision detection\n'
@@ -1755,7 +1790,8 @@ function analyzeInteractivity(spec) {
         { role: 'user', content: JSON.stringify(spec) }
       ],
       reasoning: { effort: 'low' }
-    })
+    }),
+    signal: signal
   })
   .then(parseSseResponse)
   .then(function(sse) {
@@ -1770,7 +1806,7 @@ function analyzeInteractivity(spec) {
     } catch(e) { console.warn('[analyzeInteractivity] parse error:', e); }
     return null;
   })
-  .catch(function(e) { console.warn('[analyzeInteractivity] failed:', e); return null; });
+  .catch(function(e) { if (e.name === 'AbortError') return null; console.warn('[analyzeInteractivity] failed:', e); return null; });
 }
 
 function generateInteractiveCode(spec, analysis, onProgress) {
@@ -1936,7 +1972,7 @@ function parseStateDefs(stateArray) {
   }).join(' ');
 }
 
-function planCodeArchitecture(spec, analysis) {
+function planCodeArchitecture(spec, analysis, signal) {
   var prompt = 'You are a senior JavaScript architect. Decompose an interactive UI task into independent chunks for parallel implementation.\n\n'
     + 'TASK: ' + analysis.description + '\n\n'
     + 'SCAFFOLD (structural reference):\n```\n' + (analysis.scaffold || '// no scaffold') + '\n```\n\n'
@@ -1975,7 +2011,8 @@ function planCodeArchitecture(spec, analysis) {
       ],
       reasoning: { effort: 'medium' },
       max_tokens: 8192
-    })
+    }),
+    signal: signal
   })
   .then(parseSseResponse)
   .then(function(sse) {
@@ -2004,10 +2041,10 @@ function planCodeArchitecture(spec, analysis) {
     } catch(e) { console.warn('[planCodeArchitecture] parse error:', e); }
     return null;
   })
-  .catch(function(e) { console.warn('[planCodeArchitecture] failed:', e); return null; });
+  .catch(function(e) { if (e.name === 'AbortError') return null; console.warn('[planCodeArchitecture] failed:', e); return null; });
 }
 
-function executeChunk(spec, plan, chunk, modelOverride) {
+function executeChunk(spec, plan, chunk, modelOverride, signal) {
   var relevantEls = [];
   if (spec.elements && chunk.elementIds) {
     (function findEls(els) {
@@ -2053,7 +2090,8 @@ function executeChunk(spec, plan, chunk, modelOverride) {
       ],
       reasoning: { effort: effort },
       max_tokens: maxTokens
-    })
+    }),
+    signal: signal
   })
   .then(parseSseResponse)
   .then(function(sse) {
@@ -2079,15 +2117,16 @@ function executeChunk(spec, plan, chunk, modelOverride) {
     return { chunkId: chunk.id, elements: [], success: false, error: 'parse failed', usage: usage };
   })
   .catch(function(e) {
+    if (e.name === 'AbortError') return { chunkId: chunk.id, elements: [], success: false, error: 'aborted' };
     console.warn('[executeChunk:' + chunk.id + '] failed:', e);
     return { chunkId: chunk.id, elements: [], success: false, error: String(e) };
   });
 }
 
-function executeChunksParallel(spec, plan, onChunkDone) {
+function executeChunksParallel(spec, plan, onChunkDone, signal) {
   var completed = 0;
   return Promise.all(plan.chunks.map(function(chunk) {
-    return executeChunk(spec, plan, chunk).then(function(result) {
+    return executeChunk(spec, plan, chunk, null, signal).then(function(result) {
       completed++;
       if (onChunkDone) onChunkDone(result, completed, plan.chunks.length);
       return result;
@@ -2095,7 +2134,7 @@ function executeChunksParallel(spec, plan, onChunkDone) {
   }));
 }
 
-function retryFailedChunks(spec, plan, failedResults, onRetryDone) {
+function retryFailedChunks(spec, plan, failedResults, onRetryDone, signal) {
   var failedChunks = [];
   failedResults.forEach(function(r) {
     var chunkDef = plan.chunks.filter(function(ch) { return ch.id === r.chunkId; })[0];
@@ -2104,7 +2143,7 @@ function retryFailedChunks(spec, plan, failedResults, onRetryDone) {
   if (!failedChunks.length) return Promise.resolve([]);
   var completed = 0;
   return Promise.all(failedChunks.map(function(chunk) {
-    return executeChunk(spec, plan, chunk, 'moonshotai/kimi-k2.5').then(function(result) {
+    return executeChunk(spec, plan, chunk, 'moonshotai/kimi-k2.5', signal).then(function(result) {
       completed++;
       if (onRetryDone) onRetryDone(result, completed, failedChunks.length);
       return result;
@@ -2595,12 +2634,14 @@ function buildResultBubble(bubble, spec, verIdx) {
 // ---- Blocking fallback ----
 function runBlockingGenerate(messages, streamBubble) {
   var provider = isDefaultMode ? 'default' : ($provider ? $provider.value : 'openai');
+  var blockSignal = _abortCtrl ? _abortCtrl.signal : null;
   var apiCall;
   if (isDefaultMode) {
     apiCall = fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: messages })
+      body: JSON.stringify({ messages: messages }),
+      signal: blockSignal
     }).then(function(res) {
       if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
       return res.json();
@@ -2668,8 +2709,9 @@ function generate() {
   $prompt.style.height = '';
 
   // Add streaming indicator bubble
-  var streamBubble = addChatBubble('ai', '');
-  streamBubble.classList.add('pg-chat__msg--streaming');
+  _currentStream.streamBubble = addChatBubble('ai', '');
+  _currentStream.streamBubble.classList.add('pg-chat__msg--streaming');
+  var streamBubble = _currentStream.streamBubble;
 
   saveSettings();
   setLoading(true);
@@ -2689,7 +2731,8 @@ function generate() {
   var retries = 0;
   var MAX_RETRIES = 3;
   var usingFallback = false;
-  var renderTimer = setInterval(function() { tryProgressiveRender(accumulated); refreshJsonTree(); }, 300);
+  _currentStream.renderTimer = setInterval(function() { tryProgressiveRender(accumulated); refreshJsonTree(); }, 300);
+  var renderTimer = _currentStream.renderTimer;
 
   var streamFn;
   var provider;
@@ -2725,9 +2768,11 @@ function generate() {
   }
 
   function startStream(msgs, model) {
+    _abortCtrl = new AbortController();
+    var signal = _abortCtrl.signal;
     var callStreamFn = function(m, onT, onD, onE) {
-      if (isDefaultMode) streamDefault(m, onT, onD, onE, model);
-      else streamFn(m, onT, onD, onE);
+      if (isDefaultMode) streamDefault(m, onT, onD, onE, model, signal);
+      else streamFn(m, onT, onD, onE, signal);
     };
     callStreamFn(msgs,
       function onText(chunk) {
@@ -2898,7 +2943,8 @@ function generate() {
           var _analysis = null; // shared across pipeline steps
 
           $status.textContent = 'Analyzing interactivity\u2026';
-          analyzeInteractivity(spec).then(function(analysis) {
+          var _pipeSignal = _abortCtrl ? _abortCtrl.signal : null;
+          analyzeInteractivity(spec, _pipeSignal).then(function(analysis) {
             _analysis = analysis;
             if (analysis && analysis.needed) {
               var desc = (analysis.description || 'yes');
@@ -2916,7 +2962,7 @@ function generate() {
                 _pipeSkip(stepCheck, 'No screenshot');
                 return;
               }
-              return selfCheck(finalSpec, screenshot).then(function(fixedSpec) {
+              return selfCheck(finalSpec, screenshot, _pipeSignal).then(function(fixedSpec) {
                 if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(finalSpec)) {
                   _pipeDone(stepCheck, 'Applied fixes');
                   _applySpec(fixedSpec, 'auto-fixed');
@@ -3005,7 +3051,7 @@ function generate() {
             // ---- Step: Plan ----
             stepPlan.classList.add('pg-pipeline__step--active');
             $status.textContent = 'Planning architecture\u2026';
-            return planCodeArchitecture(finalSpec, _analysis).then(function(plan) {
+            return planCodeArchitecture(finalSpec, _analysis, _pipeSignal).then(function(plan) {
               // Fallback: plan failed or ≤1 chunk
               if (!plan || !plan.chunks || plan.chunks.length <= 1) {
                 _pipeSkip(stepPlan, plan ? 'Single-shot' : 'Plan failed');
@@ -3021,7 +3067,7 @@ function generate() {
                 var sym = result.success ? '\u2713' : '\u2717';
                 var tokStr = result.usage && result.usage.completion_tokens ? ' \u00B7 ' + result.usage.completion_tokens + 'tok' : '';
                 codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')' + tokStr;
-              }).then(function(chunkResults) {
+              }, _pipeSignal).then(function(chunkResults) {
                 _removeSkeleton(_analysis.elements);
                 var succeeded = chunkResults.filter(function(r) { return r.success; });
                 var failed = chunkResults.filter(function(r) { return !r.success; });
@@ -3039,7 +3085,7 @@ function generate() {
                   retryPromise = retryFailedChunks(finalSpec, plan, failed, function(result, done, total) {
                     var sym = result.success ? '\u2713' : '\u2717';
                     codeProgress.textContent = 'Retry: ' + sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
-                  }).then(function(retryResults) {
+                  }, _pipeSignal).then(function(retryResults) {
                     // Merge retry successes into main results
                     var retriedOk = 0;
                     retryResults.forEach(function(rr) {
@@ -3159,13 +3205,15 @@ function generate() {
 function setLoading(on) {
   _isLoading = on;
   if (on) {
-    $prompt.disabled = true;
     if ($provider) $provider.disabled = true;
     if ($model) $model.disabled = true;
+    $stopBtn.style.display = '';
+    $sendHint.style.display = 'none';
   } else {
-    $prompt.disabled = false;
     if ($provider) $provider.disabled = false;
     if ($model) $model.disabled = false;
+    $stopBtn.style.display = 'none';
+    $sendHint.style.display = '';
     $prompt.focus();
   }
 }
@@ -3373,11 +3421,23 @@ $render.addEventListener('click', function() {
   renderFromEditor();
 });
 
-// Enter to send (Shift+Enter for newline)
+// Enter to send (Shift+Enter for newline, interrupt if loading)
 $prompt.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && !e.shiftKey && !_isLoading) {
+  if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
+    if (!$prompt.value.trim()) return;
+    if (_isLoading) {
+      stopGeneration();
+      _cleanupCurrentStream();
+    }
     generate();
+  }
+});
+
+$stopBtn.addEventListener('click', function() {
+  if (_isLoading) {
+    stopGeneration();
+    _cleanupCurrentStream();
   }
 });
 
