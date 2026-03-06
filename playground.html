@@ -2071,7 +2071,8 @@ function selfCheck(spec, screenshotDataUrl, signal) {
     + '8. **Rendering**: All components visible? No overlapping/clipped elements? No broken layouts?\n'
     + '9. **Interactivity**: Progress bars connected? Tabs switching? Counters wired? If not, add CustomHTML with js.\n\n'
     + 'If the UI passes all checks, return the spec JSON unchanged.\n'
-    + 'If there are issues, return a FIXED version of the complete JSON spec.\n'
+    + 'If there are issues, return a FIXED version of the complete JSON spec.\n\n'
+    + VALID_TYPES_HINT + '\n'
     + 'Return ONLY the JSON, no explanation.';
 
   var messages = [
@@ -2115,7 +2116,12 @@ function analyzeInteractivity(spec, signal) {
     + '- Dashboards with live data need chart updates, filtering\n'
     + '- Forms with complex validation, multi-step wizards\n\n'
     + 'Simple UIs (landing pages, profiles, static dashboards) do NOT need custom code.\n\n'
-    + 'Return JSON: { "needed": true/false, "description": "what the code should do", "elements": ["spec-id-1", ...], "scaffold": "// code..." }\n'
+    + 'Return JSON: { "needed": true/false, "complexity": "none|trivial|simple|complex", "description": "what the code should do", "elements": ["spec-id-1", ...], "scaffold": "// code..." }\n'
+    + '"complexity" grades the interactivity:\n'
+    + '- "none": No code needed (static page)\n'
+    + '- "trivial": Wire a click handler or toggle (1-2 elements)\n'
+    + '- "simple": Form logic, tabs, basic state (3-5 elements)\n'
+    + '- "complex": Game loop, canvas, multi-step logic (6+ elements)\n'
     + '"elements" lists the spec element IDs that should be interactive targets.\n'
     + 'If needed is true, also include "scaffold": a rough JavaScript code skeleton showing:\n'
     + '- Which DOM elements to query (using data-spec-id selectors)\n'
@@ -2172,7 +2178,8 @@ function generateInteractiveCode(spec, analysis, onProgress) {
     + '- Keep the existing DAUB component structure. Add/modify CustomHTML nodes for code\n'
     + '- Make it fully functional \u2014 not a stub or placeholder\n\n'
     + 'TARGET ELEMENTS: ' + JSON.stringify(analysis.elements) + '\n\n'
-    + 'Return the COMPLETE updated JSON spec with your CustomHTML additions.\n'
+    + 'Return the COMPLETE updated JSON spec with your CustomHTML additions.\n\n'
+    + VALID_TYPES_HINT + '\n'
     + 'Return ONLY JSON, no explanation.';
 
   return new Promise(function(resolve) {
@@ -2435,7 +2442,8 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
     + '{ "chunkId": "' + chunk.id + '", "elements": [{ "id": "element-spec-id", "js": "...", "html": "...", "css": "...", "test": "..." }] }\n'
     + 'Only include properties (js/html/css/test) that you actually set.\n'
     + '"test" is optional: a JS function body receiving (container, preview) that validates the acceptance criteria.\n'
-    + 'Throw Error on failure, return normally on success. For async checks (animations, short timers), return a Promise.\n'
+    + 'Throw Error on failure, return normally on success. For async checks (animations, short timers), return a Promise.\n\n'
+    + VALID_TYPES_HINT + '\n'
     + 'Return ONLY JSON.';
 
   return fetch('/api/generate', {
@@ -2678,6 +2686,7 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     + '- Make it fully functional — not stubs\n'
     + '- Keep the overall spec structure, just fix/improve the code\n'
     + '- Return the COMPLETE spec JSON\n\n'
+    + VALID_TYPES_HINT + '\n'
     + 'Return ONLY JSON, no explanation.';
 
   return new Promise(function(resolve) {
@@ -3292,6 +3301,11 @@ function generate() {
           }
 
           function _applySpec(s, suffix) {
+            var issues = validateSpec(s);
+            if (issues.length) {
+              console.warn('[pipeline] Spec validation issues (' + suffix + '):', issues);
+              s = autoFixSpec(s);
+            }
             finalSpec = s;
             $json.value = JSON.stringify(s, null, 2);
             var prev = currentSpec;
@@ -3314,7 +3328,8 @@ function generate() {
             _analysis = analysis;
             if (analysis && analysis.needed) {
               var desc = (analysis.description || 'yes');
-              var analyzeLabel = analysis.scaffold ? 'Analyzed + scaffold' : (desc.length > 60 ? desc.slice(0, 57) + '\u2026' : desc);
+              var cplx = analysis.complexity ? ' [' + analysis.complexity + ']' : '';
+              var analyzeLabel = (analysis.scaffold ? 'Analyzed + scaffold' : (desc.length > 60 ? desc.slice(0, 57) + '\u2026' : desc)) + cplx;
               _pipeDone(stepAnalyze, analyzeLabel);
             } else {
               _pipeSkip(stepAnalyze, 'No custom code needed');
@@ -3343,8 +3358,12 @@ function generate() {
               });
             });
           }).then(function() {
-            // ---- Code generation pipeline (map-reduce or single-shot) ----
-            if (!_analysis || !_analysis.needed) {
+            // ---- Code generation pipeline (complexity-routed) ----
+            var _complexity = (_analysis && _analysis.complexity) || 'none';
+            if (!_analysis || !_analysis.needed) _complexity = 'none';
+            console.log('[pipeline] complexity:', _complexity);
+
+            if (_complexity === 'none') {
               _pipeSkip(stepPlan, 'Skipped');
               _pipeSkip(stepExecute, 'Skipped');
               _pipeSkip(stepTest, 'Skipped');
@@ -3419,7 +3438,48 @@ function generate() {
               });
             }
 
-            // ---- Step: Plan ----
+            // ---- Trivial path: single-shot, skip plan ----
+            if (_complexity === 'trivial') {
+              _pipeSkip(stepPlan, 'Trivial');
+              return _singleShotPath();
+            }
+
+            // ---- Simple path: plan + execute, skip review ----
+            if (_complexity === 'simple') {
+              stepPlan.classList.add('pg-pipeline__step--active');
+              $status.textContent = 'Planning architecture\u2026';
+              return planCodeArchitecture(finalSpec, _analysis, _pipeSignal).then(function(plan) {
+                if (!plan || !plan.chunks || plan.chunks.length <= 1) {
+                  _pipeSkip(stepPlan, plan ? 'Single-shot' : 'Plan failed');
+                  _pipeSkip(stepReview, 'Simple');
+                  return _singleShotPath();
+                }
+                _pipeDone(stepPlan, plan.chunks.length + ' chunks planned');
+                stepExecute.classList.add('pg-pipeline__step--active');
+                $status.textContent = 'Executing ' + plan.chunks.length + ' chunks\u2026';
+                _addSkeleton(_analysis.elements);
+                return executeChunksParallel(finalSpec, plan, function(result, done, total) {
+                  var sym = result.success ? '\u2713' : '\u2717';
+                  codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
+                }, _pipeSignal).then(function(chunkResults) {
+                  _removeSkeleton(_analysis.elements);
+                  var succeeded = chunkResults.filter(function(r) { return r.success; });
+                  if (!succeeded.length) {
+                    _pipeSkip(stepExecute, 'All chunks failed');
+                    _pipeSkip(stepReview, 'Simple');
+                    return _singleShotPath();
+                  }
+                  _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
+                  _pipeSkip(stepTest, 'Simple');
+                  _pipeSkip(stepReview, 'Simple');
+                  var assembled = assembleChunkResults(finalSpec, plan, chunkResults);
+                  _applySpec(assembled.spec, 'interactive');
+                  return _runVerifyLoop(finalSpec);
+                });
+              });
+            }
+
+            // ---- Complex path: full pipeline (plan → execute → test → review → verify) ----
             stepPlan.classList.add('pg-pipeline__step--active');
             $status.textContent = 'Planning architecture\u2026';
             return planCodeArchitecture(finalSpec, _analysis, _pipeSignal).then(function(plan) {
@@ -5843,6 +5903,14 @@ var COMP_CATEGORIES = [
   ['Dashboard', ['StatCard', 'ChartCard']],
   ['Custom', ['CustomHTML']]
 ];
+
+var VALID_TYPES_HINT = (function() {
+  var types = [];
+  COMP_CATEGORIES.forEach(function(cat) { types = types.concat(cat[1]); });
+  return 'VALID COMPONENT TYPES (use ONLY these): ' + types.join(', ') + ', CustomHTML\n'
+    + 'Do NOT invent new types. Do NOT use nested elements objects — use flat ID references in "children" arrays.\n'
+    + 'FORMAT: {"theme":"...","root":"id","elements":{"id":{"type":"ValidType","props":{...},"children":["child-id"]}}}\n';
+})();
 
 // ---- Dynamic system prompt (built from RENDERERS + COMP_PROPS) ----
 var SYSTEM_PROMPT = (function() {
