@@ -3441,7 +3441,9 @@ function generate() {
             // ---- Trivial path: single-shot, skip plan ----
             if (_complexity === 'trivial') {
               _pipeSkip(stepPlan, 'Trivial');
-              return _singleShotPath();
+              return _singleShotPath().then(function() {
+                _pipeFinish(); $status.textContent = ''; setLoading(false);
+              });
             }
 
             // ---- Simple path: plan + execute, skip review ----
@@ -3476,6 +3478,8 @@ function generate() {
                   _applySpec(assembled.spec, 'interactive');
                   return _runVerifyLoop(finalSpec);
                 });
+              }).then(function() {
+                _pipeFinish(); $status.textContent = ''; setLoading(false);
               });
             }
 
