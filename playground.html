@@ -290,7 +290,16 @@
       font-size: 0.8125rem;
       line-height: 1.5;
       word-break: break-word;
+      position: relative;
     }
+    .pg-chat__copy {
+      position: absolute; top: 4px; right: 4px;
+      background: none; border: none; cursor: pointer; padding: 2px;
+      color: inherit; opacity: 0; transition: opacity 0.15s;
+      line-height: 0;
+    }
+    .pg-chat__msg:hover .pg-chat__copy { opacity: 0.5; }
+    .pg-chat__msg:hover .pg-chat__copy:hover { opacity: 1; }
     .pg-chat__msg--user {
       align-self: flex-end;
       max-width: 80%;
@@ -2862,6 +2871,21 @@ function addChatBubble(role, text, images) {
   var span = document.createElement('span');
   span.textContent = text;
   div.appendChild(span);
+  // Copy button (static SVG icons, no user content)
+  var _svgCopy = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var _svgCheck = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  var copyBtn = document.createElement('button');
+  copyBtn.className = 'pg-chat__copy';
+  copyBtn.title = 'Copy to clipboard';
+  copyBtn.innerHTML = _svgCopy; // safe: static SVG constant
+  copyBtn.addEventListener('click', function() {
+    var t = div.textContent.replace(/^\s+|\s+$/g, '');
+    navigator.clipboard.writeText(t).then(function() {
+      copyBtn.innerHTML = _svgCheck; // safe: static SVG constant
+      setTimeout(function() { copyBtn.innerHTML = _svgCopy; }, 1500); // safe: static SVG constant
+    });
+  });
+  div.appendChild(copyBtn);
   $chatMessages.appendChild(div);
   $chatMessages.scrollTop = $chatMessages.scrollHeight;
   return div;
