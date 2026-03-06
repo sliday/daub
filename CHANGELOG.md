@@ -2,6 +2,22 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.3.6
+
+**Pipeline TDD, token/timing stats, JSON repair hardening.**
+
+- Bugfix: `executeChunk()` now calls `repairJSON()` on truncated JSON — matches pattern used by `selfCheck`, `reviewAndAssemble`, `planCodeArchitecture`
+- Feature: `parseSseResponse()` returns `{ content, usage }` — captures OpenRouter token counts from final SSE event
+- Feature: Pipeline steps show elapsed time and token counts via `._stats` span and auto-timing in `_mkStep` / `_pipeDone`
+- Feature: Per-chunk progress displays token count when available (e.g. `✓ game-controls (2/3) · 847tok`)
+- Feature: `runChunkTests()` — collects `test` fields from chunk results, executes them in sandboxed iframe, returns pass/fail results
+- Feature: Iframe test handler — supports sync (throw = fail) and async (Promise) test functions with configurable timeout
+- Feature: New pipeline step "Running tests..." between Execute and Review — shows pass/fail counts
+- Feature: Test failures passed as context to `reviewAndAssemble()` for informed fixes (informational, not blocking)
+- Enhancement: `executeChunk()` prompt now requests optional `test` field — JS function body validating acceptance criteria
+- Enhancement: Token budget increased: trivial 2048→3072, low 4096→5120, medium 8192→10240
+- Enhancement: Pipeline panel wider (`max-width: 600px`) for better readability
+
 ## v3.3.5
 
 **LLM model taxonomy — task-based model routing across the pipeline.**

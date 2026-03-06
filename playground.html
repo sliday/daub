@@ -525,6 +525,7 @@
       opacity: 0.7;
       pointer-events: none;
     }
+    .pg-chat__msg .pg-pipeline { max-width: 600px; }
     .pg-pipeline {
       margin-top: 8px;
       font-size: 0.6875rem;
@@ -563,6 +564,13 @@
     .pg-pipeline__step--done { color: var(--db-warm-gray); }
     .pg-pipeline__step--done .pg-pipeline__icon { color: var(--db-success, #4caf50); }
     .pg-pipeline__step--skip { opacity: 0.4; }
+    .pg-pipeline__stats {
+      margin-left: auto;
+      font-size: 0.5625rem;
+      color: var(--db-warm-gray);
+      font-family: var(--db-font-mono, monospace);
+      opacity: 0.7;
+    }
     .pg-pipeline__progress {
       padding-left: 32px; font-size: 0.625rem;
       color: var(--db-warm-gray); font-family: var(--db-font-mono, monospace);
@@ -1000,6 +1008,32 @@ function buildIframeSrcdoc(theme) {
     + '    html2canvas(root, { scale: 1, useCORS: true, logging: false })'
     + '      .then(function(c) { parent.postMessage({ type: "screenshot", data: c.toDataURL("image/jpeg", 0.7) }, "*"); })'
     + '      .catch(function() { parent.postMessage({ type: "screenshot", data: null }, "*"); });'
+    + '  }'
+    + '  if (e.data.type === "test") {'
+    + '    var tests = e.data.tests || [];'
+    + '    var timeout = e.data.timeout || 2000;'
+    + '    var results = [];'
+    + '    var pending = tests.length;'
+    + '    if (!pending) { parent.postMessage({ type: "testResults", results: [] }, "*"); return; }'
+    + '    tests.forEach(function(t) {'
+    + '      try {'
+    + '        var container = t.elementId ? root.querySelector("[data-spec-id=\\"" + t.elementId + "\\"]") : root;'
+    // eslint-disable-line -- intentional: AI-generated test code in sandboxed iframe, same pattern as line 982
+    + '        var ret = (new Function("container", "preview", t.code))(container || root, root);'
+    + '        if (ret && typeof ret.then === "function") {'
+    + '          var done = false;'
+    + '          var timer = setTimeout(function() { if (!done) { done = true; results.push({ chunkId: t.chunkId, pass: false, error: "timeout" }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*"); } }, timeout);'
+    + '          ret.then(function() { if (!done) { done = true; clearTimeout(timer); results.push({ chunkId: t.chunkId, pass: true, error: null }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*"); } })'
+    + '            .catch(function(err) { if (!done) { done = true; clearTimeout(timer); results.push({ chunkId: t.chunkId, pass: false, error: String(err) }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*"); } });'
+    + '        } else {'
+    + '          results.push({ chunkId: t.chunkId, pass: true, error: null });'
+    + '          if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*");'
+    + '        }'
+    + '      } catch(err) {'
+    + '        results.push({ chunkId: t.chunkId, pass: false, error: String(err) });'
+    + '        if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*");'
+    + '      }'
+    + '    });'
     + '  }'
     + '  if (e.data.type === "getHtml") {'
     + '    parent.postMessage({ type: "html", data: root.innerHTML }, "*");'
@@ -1628,17 +1662,19 @@ function parseSseResponse(res) {
   if (!res.ok) throw new Error('HTTP ' + res.status);
   return res.text().then(function(text) {
     var content = '';
+    var usage = null;
     text.split('\n').forEach(function(line) {
       line = line.trim();
       if (line.startsWith('data: ') && line !== 'data: [DONE]') {
         try {
           var chunk = JSON.parse(line.slice(6));
+          if (chunk.usage) usage = chunk.usage;
           var c = chunk.choices && chunk.choices[0];
           if (c && c.delta && c.delta.content) content += c.delta.content;
         } catch(e) {}
       }
     });
-    return content;
+    return { content: content, usage: usage };
   });
 }
 
@@ -1674,7 +1710,8 @@ function selfCheck(spec, screenshotDataUrl) {
     })
   })
   .then(parseSseResponse)
-  .then(function(raw) {
+  .then(function(sse) {
+    var raw = sse.content;
     var clean = cleanJSON(raw);
     if (!clean) return null;
     var fixed;
@@ -1719,7 +1756,8 @@ function analyzeInteractivity(spec) {
     })
   })
   .then(parseSseResponse)
-  .then(function(raw) {
+  .then(function(sse) {
+    var raw = sse.content;
     console.log('[analyzeInteractivity] raw:', raw.slice(0, 200));
     var clean = cleanJSON(raw);
     if (!clean) return null;
@@ -1938,7 +1976,8 @@ function planCodeArchitecture(spec, analysis) {
     })
   })
   .then(parseSseResponse)
-  .then(function(raw) {
+  .then(function(sse) {
+    var raw = sse.content;
     console.log('[planCodeArchitecture] raw:', raw.slice(0, 300));
     var clean = cleanJSON(raw);
     if (!clean) return null;
@@ -1978,7 +2017,7 @@ function executeChunk(spec, plan, chunk, modelOverride) {
   }
 
   var effortMap = { trivial: 'low', low: 'low', medium: 'medium' };
-  var tokensMap = { trivial: 2048, low: 4096, medium: 8192 };
+  var tokensMap = { trivial: 3072, low: 5120, medium: 10240 };
   var effort = effortMap[chunk.effort] || 'low';
   var maxTokens = tokensMap[chunk.effort] || 4096;
 
@@ -1995,8 +2034,11 @@ function executeChunk(spec, plan, chunk, modelOverride) {
     + '- Use vanilla JS only. No frameworks, no imports, no fetch\n'
     + '- Make it fully functional, not a stub\n\n'
     + 'Return JSON:\n'
-    + '{ "chunkId": "' + chunk.id + '", "elements": [{ "id": "element-spec-id", "js": "...", "html": "...", "css": "..." }] }\n'
-    + 'Only include properties (js/html/css) that you actually set. Return ONLY JSON.';
+    + '{ "chunkId": "' + chunk.id + '", "elements": [{ "id": "element-spec-id", "js": "...", "html": "...", "css": "...", "test": "..." }] }\n'
+    + 'Only include properties (js/html/css/test) that you actually set.\n'
+    + '"test" is optional: a JS function body receiving (container, preview) that validates the acceptance criteria.\n'
+    + 'Throw Error on failure, return normally on success. For async checks (animations, short timers), return a Promise.\n'
+    + 'Return ONLY JSON.';
 
   return fetch('/api/generate', {
     method: 'POST',
@@ -2012,18 +2054,27 @@ function executeChunk(spec, plan, chunk, modelOverride) {
     })
   })
   .then(parseSseResponse)
-  .then(function(raw) {
+  .then(function(sse) {
+    var raw = sse.content;
+    var usage = sse.usage;
     console.log('[executeChunk:' + chunk.id + '] raw:', raw.slice(0, 200));
     var clean = cleanJSON(raw);
-    if (!clean) return { chunkId: chunk.id, elements: [], success: false, error: 'empty response' };
+    if (!clean) return { chunkId: chunk.id, elements: [], success: false, error: 'empty response', usage: usage };
     try {
       var result = JSON.parse(clean);
       if (result && result.elements) {
         console.log('[executeChunk:' + chunk.id + '] success:', result.elements.length, 'elements');
-        return { chunkId: chunk.id, elements: result.elements, success: true, error: null };
+        return { chunkId: chunk.id, elements: result.elements, success: true, error: null, usage: usage };
       }
-    } catch(e) { console.warn('[executeChunk:' + chunk.id + '] parse error:', e); }
-    return { chunkId: chunk.id, elements: [], success: false, error: 'parse failed' };
+    } catch(e) {
+      console.warn('[executeChunk:' + chunk.id + '] parse error:', e);
+      var repaired = repairJSON(clean);
+      if (repaired && repaired.elements) {
+        console.log('[executeChunk:' + chunk.id + '] repaired:', repaired.elements.length, 'elements');
+        return { chunkId: chunk.id, elements: repaired.elements, success: true, error: null, usage: usage };
+      }
+    }
+    return { chunkId: chunk.id, elements: [], success: false, error: 'parse failed', usage: usage };
   })
   .catch(function(e) {
     console.warn('[executeChunk:' + chunk.id + '] failed:', e);
@@ -2158,7 +2209,41 @@ function assembleChunkResults(spec, plan, chunkResults) {
   return { spec: assembled, conflicts: conflicts };
 }
 
-function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedChunks, onProgress) {
+function runChunkTests(chunkResults, timeout) {
+  var tests = [];
+  chunkResults.forEach(function(cr) {
+    if (!cr.success || !cr.elements) return;
+    cr.elements.forEach(function(el) {
+      if (el.test) {
+        tests.push({ chunkId: cr.chunkId, elementId: el.id, code: el.test });
+      }
+    });
+  });
+  if (!tests.length) return Promise.resolve([]);
+  var iframe = document.getElementById('pg-preview-iframe');
+  if (!iframe || !iframe.contentWindow) return Promise.resolve([]);
+  return new Promise(function(resolve) {
+    var resolved = false;
+    function onMessage(e) {
+      if (e.data && e.data.type === 'testResults' && !resolved) {
+        resolved = true;
+        window.removeEventListener('message', onMessage);
+        resolve(e.data.results || []);
+      }
+    }
+    window.addEventListener('message', onMessage);
+    iframe.contentWindow.postMessage({ type: 'test', tests: tests, timeout: timeout || 2000 }, '*');
+    setTimeout(function() {
+      if (!resolved) {
+        resolved = true;
+        window.removeEventListener('message', onMessage);
+        resolve([]);
+      }
+    }, (timeout || 2000) + 500);
+  });
+}
+
+function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedChunks, onProgress, testFailures) {
   var failedSection = '';
   if (failedChunks && failedChunks.length) {
     failedSection = 'FAILED CHUNKS (junior agents could not implement these — YOU must implement them now):\n';
@@ -2169,10 +2254,20 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     failedSection += '\nIMPORTANT: The above chunks are MISSING from the assembled spec. You must implement their full logic.\n\n';
   }
 
+  var testSection = '';
+  if (testFailures && testFailures.length) {
+    testSection = 'TEST FAILURES (chunks that failed acceptance criteria):\n';
+    for (var tf = 0; tf < testFailures.length; tf++) {
+      testSection += '- "' + testFailures[tf].chunkId + '": ' + (testFailures[tf].error || 'unknown error') + '\n';
+    }
+    testSection += 'Fix these issues in the final assembly.\n\n';
+  }
+
   var prompt = 'You are a senior developer reviewing code assembled from parallel chunks. Your job: make it work as one cohesive unit.\n\n'
     + 'ORIGINAL PLAN:\n' + JSON.stringify(plan, null, 2) + '\n\n'
     + 'WIRING NOTES: ' + (plan.wiring || 'none') + '\n\n'
     + failedSection
+    + testSection
     + (conflicts.length ? 'CONFLICTS (multiple chunks touched same element):\n' + JSON.stringify(conflicts) + '\nMerge the conflicting code logically.\n\n' : '')
     + 'RULES:\n'
     + '- The spec below has rough code from parallel agents — clean it up, fix bugs, wire interactions\n'
@@ -2691,12 +2786,17 @@ function generate() {
             s.className = 'pg-pipeline__step';
             var ico = document.createElement('span');
             ico.className = 'pg-pipeline__icon';
-            ico.innerHTML = iconHtml; // static SVG, not user content
+            ico.innerHTML = iconHtml; // safe: static SVG constants, not user content
             var lbl = document.createElement('span');
             lbl.className = 'pg-pipeline__label';
             lbl.textContent = label;
+            var stats = document.createElement('span');
+            stats.className = 'pg-pipeline__stats';
             s.appendChild(ico);
             s.appendChild(lbl);
+            s.appendChild(stats);
+            s._stats = stats;
+            s._startTime = Date.now();
             pipeDetails.appendChild(s);
             return s;
           }
@@ -2710,16 +2810,22 @@ function generate() {
           var codeProgress = document.createElement('div');
           codeProgress.className = 'pg-pipeline__progress';
           pipeDetails.appendChild(codeProgress);
+          var _svgTest = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="13" y2="11"/></svg>';
+          var stepTest = _mkStep(_svgTest, 'Running tests\u2026');
           var stepReview = _mkStep(_svgDoc, 'Reviewing assembly\u2026');
           var _svgVerify = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>';
           var stepVerify = _mkStep(_svgVerify, 'Verify code\u2026');
           stepAnalyze.classList.add('pg-pipeline__step--active');
           streamBubble.appendChild(pipeDetails);
-          function _pipeDone(step, label) {
+          function _pipeDone(step, label, statsText) {
             step.classList.remove('pg-pipeline__step--active');
             step.classList.add('pg-pipeline__step--done');
-            step.querySelector('.pg-pipeline__icon').innerHTML = _svgDone; // static SVG
+            step.querySelector('.pg-pipeline__icon').innerHTML = _svgDone; // safe: static SVG constant
             step.querySelector('.pg-pipeline__label').textContent = label;
+            if (statsText && step._stats) step._stats.textContent = statsText;
+            else if (step._stats && step._startTime) {
+              step._stats.textContent = ((Date.now() - step._startTime) / 1000).toFixed(1) + 's';
+            }
           }
           function _pipeSkip(step, label) {
             step.classList.remove('pg-pipeline__step--active');
@@ -2908,7 +3014,8 @@ function generate() {
               _addSkeleton(_analysis.elements);
               return executeChunksParallel(finalSpec, plan, function(result, done, total) {
                 var sym = result.success ? '\u2713' : '\u2717';
-                codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
+                var tokStr = result.usage && result.usage.completion_tokens ? ' \u00B7 ' + result.usage.completion_tokens + 'tok' : '';
+                codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')' + tokStr;
               }).then(function(chunkResults) {
                 _removeSkeleton(_analysis.elements);
                 var succeeded = chunkResults.filter(function(r) { return r.success; });
@@ -2973,6 +3080,26 @@ function generate() {
                   console.log('[pipeline] conflicts:', assembled.conflicts);
                 }
 
+                // ---- Step: Test ----
+                stepTest.classList.add('pg-pipeline__step--active');
+                $status.textContent = 'Running tests\u2026';
+                _applySpec(assembled.spec, 'test-render');
+                var testFailures = [];
+                return runChunkTests(finalResults, 2000).then(function(testResults) {
+                  if (testResults.length) {
+                    var passed = testResults.filter(function(t) { return t.pass; }).length;
+                    var total = testResults.length;
+                    testFailures = testResults.filter(function(t) { return !t.pass; });
+                    if (testFailures.length) {
+                      _pipeDone(stepTest, passed + '/' + total + ' tests passed');
+                      console.log('[pipeline:test] failures:', testFailures);
+                    } else {
+                      _pipeDone(stepTest, 'All ' + total + ' tests passed');
+                    }
+                  } else {
+                    _pipeSkip(stepTest, 'No tests returned');
+                  }
+
                 // ---- Step: Review ----
                 _pipeCollapse(pipeDetails);
                 stepReview.classList.add('pg-pipeline__step--active');
@@ -2981,7 +3108,7 @@ function generate() {
                   : 'Reviewing assembly\u2026';
                 return reviewAndAssemble(finalSpec, plan, assembled.spec, assembled.conflicts, failedChunks, function(bytes, lines, secs) {
                   codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
-                }).then(function(reviewedSpec) {
+                }, testFailures).then(function(reviewedSpec) {
                   if (reviewedSpec) {
                     _pipeDone(stepReview, 'Review complete');
                     _applySpec(reviewedSpec, 'interactive');
@@ -2998,6 +3125,7 @@ function generate() {
                   _applySpec(assembled.spec, 'interactive (raw)');
                   _pipeSkip(stepVerify, 'Skipped');
                 });
+                }); // runChunkTests.then
               }); // retryPromise.then
               });
             }).then(function() {
