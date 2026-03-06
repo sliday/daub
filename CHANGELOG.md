@@ -13,6 +13,7 @@ All notable changes to DAUB are documented here.
 - Feature: Complex interactivity (6+ elements) runs full pipeline with all stages
 - Enhancement: `_applySpec` now runs `validateSpec` + `autoFixSpec` on every spec application, auto-stripping unknown types and broken references
 - Enhancement: Analyze step label shows complexity tier (e.g., `"Analyzed + scaffold [complex]"`)
+- Bugfix: Pipeline cleanup (`_pipeFinish`, `setLoading(false)`) now fires for trivial/simple paths — Stop button and "Processing..." header no longer stuck
 
 ## v3.4.0
 
