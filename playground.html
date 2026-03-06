@@ -2064,15 +2064,32 @@ function assembleChunkResults(spec, plan, chunkResults) {
   var assembled = JSON.parse(JSON.stringify(spec));
   var conflicts = [];
   var touchedIds = {};
+  var isObjFormat = !Array.isArray(assembled.elements);
 
   // Build element lookup (flat)
   var elMap = {};
-  (function buildMap(els, parent) {
-    for (var i = 0; i < els.length; i++) {
-      elMap[els[i].id] = { el: els[i], parent: parent, idx: i };
-      if (els[i].children) buildMap(els[i].children, els[i]);
-    }
-  })(assembled.elements, null);
+  if (isObjFormat) {
+    Object.keys(assembled.elements).forEach(function(key) {
+      var el = assembled.elements[key];
+      el._id = key;
+      elMap[key] = { el: el, key: key };
+      if (el.children) {
+        el.children.forEach(function(childId) {
+          if (assembled.elements[childId]) {
+            assembled.elements[childId]._id = childId;
+            elMap[childId] = { el: assembled.elements[childId], key: childId };
+          }
+        });
+      }
+    });
+  } else {
+    (function buildMap(els, parent) {
+      for (var i = 0; i < els.length; i++) {
+        elMap[els[i].id] = { el: els[i], parent: parent, idx: i };
+        if (els[i].children) buildMap(els[i].children, els[i]);
+      }
+    })(assembled.elements, null);
+  }
 
   // Merge chunk results
   for (var c = 0; c < chunkResults.length; c++) {
@@ -2089,30 +2106,54 @@ function assembleChunkResults(spec, plan, chunkResults) {
       if (elMap[cel.id]) {
         // Merge onto existing element
         var target = elMap[cel.id].el;
-        target.type = 'CustomHTML';
-        if (cel.js) target.js = (target.js ? target.js + '\n' : '') + cel.js;
-        if (cel.html) target.html = cel.html;
-        if (cel.css) target.css = (target.css ? target.css + '\n' : '') + cel.css;
+        if (isObjFormat) {
+          if (!target.props) target.props = {};
+          if (cel.js) target.props.js = (target.props.js ? target.props.js + '\n' : '') + cel.js;
+          if (cel.html) target.props.html = cel.html;
+          if (cel.css) target.props.css = (target.props.css ? target.props.css + '\n' : '') + cel.css;
+        } else {
+          target.type = 'CustomHTML';
+          if (cel.js) target.js = (target.js ? target.js + '\n' : '') + cel.js;
+          if (cel.html) target.html = cel.html;
+          if (cel.css) target.css = (target.css ? target.css + '\n' : '') + cel.css;
+        }
       } else {
         // New element — append to root
-        var newEl = { id: cel.id, type: 'CustomHTML' };
-        if (cel.js) newEl.js = cel.js;
-        if (cel.html) newEl.html = cel.html;
-        if (cel.css) newEl.css = cel.css;
-        assembled.elements.push(newEl);
+        if (isObjFormat) {
+          var newProps = {};
+          if (cel.js) newProps.js = cel.js;
+          if (cel.html) newProps.html = cel.html;
+          if (cel.css) newProps.css = cel.css;
+          assembled.elements[cel.id] = { type: 'CustomHTML', props: newProps };
+          // Add to root's children
+          var rootEl = assembled.elements[assembled.root];
+          if (rootEl && rootEl.children) rootEl.children.push(cel.id);
+        } else {
+          var newEl = { id: cel.id, type: 'CustomHTML' };
+          if (cel.js) newEl.js = cel.js;
+          if (cel.html) newEl.html = cel.html;
+          if (cel.css) newEl.css = cel.css;
+          assembled.elements.push(newEl);
+        }
       }
     }
   }
 
-  // Inject shared state init as hidden element at index 0
+  // Inject shared state init
   if (plan.sharedStateInit) {
-    assembled.elements.unshift({
-      id: '_shared_state',
-      type: 'CustomHTML',
-      js: plan.sharedStateInit,
-      html: '',
-      css: ''
-    });
+    if (isObjFormat) {
+      assembled.elements['_shared_state'] = { type: 'CustomHTML', props: { js: plan.sharedStateInit, html: '', css: '' } };
+      var rootEl = assembled.elements[assembled.root];
+      if (rootEl && rootEl.children) rootEl.children.unshift('_shared_state');
+    } else {
+      assembled.elements.unshift({
+        id: '_shared_state',
+        type: 'CustomHTML',
+        js: plan.sharedStateInit,
+        html: '',
+        css: ''
+      });
+    }
   }
 
   return { spec: assembled, conflicts: conflicts };
