@@ -2,6 +2,13 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.3.8
+
+**Shared state scoping fix, pipeline step skip corrections.**
+
+- Bugfix: `parseStateDefs()` changed from `var x = val` to `window.x = val` — shared state variables now accessible across chunks in separate execution scopes
+- Bugfix: `stepTest` now properly skipped in "no interactivity needed" and single-shot fallback paths (was hanging as active)
+
 ## v3.3.7
 
 **Chat UI polish — auto-sizing textarea, wider response bubbles.**

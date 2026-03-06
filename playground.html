@@ -1923,16 +1923,16 @@ function retryCodeGeneration(spec, analysis, errors, onProgress) {
 function parseStateDefs(stateArray) {
   if (!stateArray || !stateArray.length) return '';
   return stateArray.map(function(s) {
-    // Parse "(name value)" → "var name = value;"
+    // Parse "(name value)" → "window.name = value;" (must be global — chunks run in separate Function scopes)
     var m = s.match(/^\((\w+)\s+(.+)\)$/);
     if (!m) return '// ' + s;
     var val = m[2];
-    if (val === 'true' || val === 'false') return 'var ' + m[1] + ' = ' + val + ';';
-    if (val === 'null') return 'var ' + m[1] + ' = null;';
-    if (!isNaN(Number(val))) return 'var ' + m[1] + ' = ' + val + ';';
+    if (val === 'true' || val === 'false') return 'window.' + m[1] + ' = ' + val + ';';
+    if (val === 'null') return 'window.' + m[1] + ' = null;';
+    if (!isNaN(Number(val))) return 'window.' + m[1] + ' = ' + val + ';';
     // String or complex value
-    if (val.charAt(0) === '[' || val.charAt(0) === '{') return 'var ' + m[1] + ' = ' + val + ';';
-    return 'var ' + m[1] + ' = ' + JSON.stringify(val) + ';';
+    if (val.charAt(0) === '[' || val.charAt(0) === '{') return 'window.' + m[1] + ' = ' + val + ';';
+    return 'window.' + m[1] + ' = ' + JSON.stringify(val) + ';';
   }).join(' ');
 }
 
@@ -2930,6 +2930,7 @@ function generate() {
             if (!_analysis || !_analysis.needed) {
               _pipeSkip(stepPlan, 'Skipped');
               _pipeSkip(stepExecute, 'Skipped');
+              _pipeSkip(stepTest, 'Skipped');
               _pipeSkip(stepReview, 'Skipped');
               _pipeSkip(stepVerify, 'Skipped');
               _pipeFinish();
@@ -2988,11 +2989,13 @@ function generate() {
                 _removeSkeleton(_analysis.elements);
                 if (updatedSpec) {
                   _pipeDone(stepExecute, 'Code added (single-shot)');
+                  _pipeSkip(stepTest, 'Skipped');
                   _pipeSkip(stepReview, 'Skipped');
                   _applySpec(updatedSpec, 'interactive');
                   return _runVerifyLoop(finalSpec);
                 } else {
                   _pipeSkip(stepExecute, 'Code generation failed');
+                  _pipeSkip(stepTest, 'Skipped');
                   _pipeSkip(stepReview, 'Skipped');
                   _pipeSkip(stepVerify, 'Skipped');
                 }
