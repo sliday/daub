@@ -3297,6 +3297,11 @@ function generate() {
             }
           }).then(function() {
             // ---- Visual check (runs on initial spec, before code gen) ----
+            // Fast mode: skip visual check to save an AI round-trip
+            if (fastModel()) {
+              _pipeSkip(stepCheck, 'Skipped (fast)');
+              return;
+            }
             stepCheck.classList.add('pg-pipeline__step--active');
             $status.textContent = 'Visual check\u2026';
             return capturePreview().then(function(screenshot) {
