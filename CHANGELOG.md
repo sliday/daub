@@ -2,6 +2,14 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.3.7
+
+**Chat UI polish — auto-sizing textarea, wider response bubbles.**
+
+- Enhancement: Textarea auto-sizes to content via `field-sizing: content` (modern CSS) with JS fallback
+- Enhancement: AI response bubbles widened from 88% to 96% max-width; user bubbles stay compact at 80%
+- Fix: Reset textarea height on "New Chat" click
+
 ## v3.3.6
 
 **Pipeline TDD, token/timing stats, JSON repair hardening.**

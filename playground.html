@@ -277,7 +277,7 @@
       color: var(--db-warm-gray);
     }
     .pg-chat__msg {
-      max-width: 88%;
+      max-width: 96%;
       padding: 8px 12px;
       border-radius: var(--db-radius-2);
       font-family: var(--db-font-ui);
@@ -287,6 +287,7 @@
     }
     .pg-chat__msg--user {
       align-self: flex-end;
+      max-width: 80%;
       background: var(--db-terracotta);
       color: #fff;
     }
@@ -347,6 +348,7 @@
       outline: none !important;
       box-shadow: none !important;
       overflow-y: auto;
+      field-sizing: content;
     }
     .pg-chat__input-actions {
       display: flex;
@@ -3397,6 +3399,7 @@ $newChat.addEventListener('click', function() {
   postToPreview({ type: 'clear' });
   _iframeHtmlCache = '';
   $prompt.value = '';
+  $prompt.style.height = '';
   $status.textContent = '';
   hideJsonError();
   clearImageStrip();
