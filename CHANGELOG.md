@@ -2,6 +2,18 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.5.2
+
+**Clean toolbar UI with pill toggles + Star History.**
+
+- UI: Removed Fast toggle from title bar — title bar now shows only "Chat" + "New Chat"
+- UI: New options bar in chat footer with pill-shaped toggles for Fast and Verify
+- UI: Fast pill features a zap-icon square that fills terracotta when active
+- UI: Examples collapsible moved into options bar as a trigger button with rotating chevron
+- UI: "Own Key" link right-aligned and de-emphasized
+- UI: Examples row + separator auto-hide when chat has messages; toggles persist
+- Docs: Added Star History chart to README
+
 ## v3.5.1
 
 **Session-scoped chat state + visual check always runs.**
