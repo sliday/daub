@@ -2,6 +2,12 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.6.1
+
+**Bugfix: prevent recursive iframe nesting.**
+
+- Fix: clicking links inside AI-generated preview no longer navigates within the iframe — all links now open in a new tab via `<base target="_blank">`
+
 ## v3.6.0
 
 **Figma design integration for playground.**
