@@ -520,6 +520,151 @@
       .db-ai-grid { grid-template-columns: 1fr; }
     }
 
+    /* MCP Server section */
+    .db-mcp-section {
+      max-width: 960px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .db-mcp-section__heading {
+      font-family: var(--db-font-heading);
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 700;
+      color: var(--db-ink);
+      margin: 12px 0 12px;
+    }
+    .db-mcp-section__desc {
+      font-family: var(--db-font-body);
+      font-size: 1.0625rem;
+      color: var(--db-warm-gray);
+      max-width: 600px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+    .db-mcp-install {
+      max-width: 640px;
+      margin: 0 auto 32px;
+      text-align: left;
+    }
+    .db-mcp-install__label {
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--db-warm-gray);
+      margin-bottom: 8px;
+    }
+    .db-mcp-install__cmd {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: var(--db-charcoal, #2D2A26);
+      border-radius: 8px;
+      font-family: var(--db-font-mono, 'SF Mono', 'Fira Code', monospace);
+      font-size: 0.8125rem;
+      color: var(--db-cream, #FAF8F0);
+      overflow-x: auto;
+    }
+    .db-mcp-install__cmd code { flex: 1; white-space: nowrap; }
+    .db-mcp-install__cmd .db-hero__copy {
+      flex-shrink: 0;
+      color: var(--db-cream, #FAF8F0);
+      opacity: 0.6;
+    }
+    .db-mcp-install__cmd .db-hero__copy:hover { opacity: 1; }
+    .db-mcp-tools {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      max-width: 640px;
+      margin: 0 auto 32px;
+      text-align: left;
+    }
+    .db-mcp-tool {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      background: var(--db-color-surface, var(--db-white, #fff));
+      border: 1px solid var(--db-color-border, var(--db-sand));
+      border-radius: 8px;
+    }
+    .db-mcp-tool__icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--db-sand, #EDE8D0);
+      border-radius: 8px;
+      color: var(--db-terracotta);
+    }
+    .db-mcp-tool__name {
+      font-family: var(--db-font-mono, monospace);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--db-ink);
+      margin-bottom: 4px;
+    }
+    .db-mcp-tool__desc {
+      font-size: 0.8125rem;
+      color: var(--db-warm-gray);
+      line-height: 1.5;
+    }
+    .db-mcp-example {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .db-mcp-example__label {
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--db-warm-gray);
+      margin-bottom: 12px;
+    }
+    .db-mcp-example__flow {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .db-mcp-example__step {
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    .db-mcp-example__step--user {
+      background: var(--db-color-surface, var(--db-sand));
+      color: var(--db-ink);
+      margin-right: 48px;
+    }
+    .db-mcp-example__step--ai {
+      background: var(--db-charcoal, #2D2A26);
+      color: var(--db-cream, #FAF8F0);
+      margin-left: 48px;
+    }
+    .db-mcp-example__role {
+      display: block;
+      font-family: var(--db-font-ui);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+      opacity: 0.6;
+    }
+    @media (max-width: 720px) {
+      .db-mcp-tools { grid-template-columns: 1fr; }
+      .db-mcp-example__step--user { margin-right: 16px; }
+      .db-mcp-example__step--ai { margin-left: 16px; }
+    }
+
     /* Use with AI section */
     .db-use-ai {
       max-width: 960px;
@@ -958,18 +1103,83 @@
         </div>
         <p class="db-card__desc">Drop in <a href="https://daub.dev/daub-classless.css" style="color:var(--db-terracotta);">daub-classless.css</a> — plain HTML looks good. No classes needed.</p>
       </div>
-      <div class="db-card">
-        <div class="db-card__header">
-          <div class="db-avatar db-avatar--sm">
-            <i data-lucide="cpu" style="width:16px;height:16px;"></i>
-          </div>
-          <div>
-            <div class="db-card__title">MCP Server</div>
-            <div class="db-caption">Remote Tools</div>
-          </div>
+      <a href="#mcp" class="db-card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;">
+        <div class="db-avatar db-avatar--sm" style="margin-bottom:8px;">
+          <i data-lucide="cpu" style="width:16px;height:16px;"></i>
         </div>
-        <p class="db-card__desc">Remote <a href="https://modelcontextprotocol.io" style="color:var(--db-terracotta);">MCP</a> server on Cloudflare's edge. Ask your AI to build a dashboard — it calls <code style="font-size:0.75rem;">generate_ui</code> and returns a complete spec. No API key needed.</p>
-        <div style="margin-top:8px;padding:8px 12px;background:var(--db-color-surface,var(--db-sand));border-radius:6px;font-family:var(--db-font-mono,monospace);font-size:0.7rem;line-height:1.5;color:var(--db-color-text-secondary,var(--db-clay));overflow-x:auto;white-space:nowrap;">claude mcp add daub --transport http https://daub.dev/api/mcp</div>
+        <div class="db-card__title">MCP Server</div>
+        <p class="db-card__desc" style="margin-top:4px;">Generate UIs from any AI assistant. <span style="color:var(--db-terracotta);">Learn more &darr;</span></p>
+      </a>
+    </div>
+  </section>
+
+  <!-- MCP Server Section -->
+  <section class="db-mcp-section" id="mcp">
+    <span class="db-badge db-badge--new">New</span>
+    <h2 class="db-mcp-section__heading">MCP Server</h2>
+    <p class="db-mcp-section__desc">A remote <a href="https://modelcontextprotocol.io" style="color:var(--db-terracotta);">Model Context Protocol</a> server on Cloudflare's edge. Connect your AI assistant and generate complete DAUB interfaces through natural conversation. No API key required.</p>
+
+    <div class="db-mcp-install">
+      <div class="db-mcp-install__label">Add to Claude Code, Cursor, or any MCP client</div>
+      <div class="db-mcp-install__cmd">
+        <code>claude mcp add daub --transport http https://daub.dev/api/mcp</code>
+        <button class="db-hero__copy" aria-label="Copy to clipboard" onclick="navigator.clipboard.writeText('claude mcp add daub --transport http https://daub.dev/api/mcp').then(function(){DAUB.toast({type:'success',title:'Copied!',message:'MCP command copied to clipboard.',duration:2000})})">
+          <i data-lucide="copy" style="width:14px;height:14px;"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="db-mcp-tools">
+      <div class="db-mcp-tool">
+        <div class="db-mcp-tool__icon"><i data-lucide="wand-2" style="width:18px;height:18px;"></i></div>
+        <div>
+          <div class="db-mcp-tool__name">generate_ui</div>
+          <div class="db-mcp-tool__desc">Describe what you want in plain English. The AI generates a complete DAUB spec with layouts, components, sample data, and theme.</div>
+        </div>
+      </div>
+      <div class="db-mcp-tool">
+        <div class="db-mcp-tool__icon"><i data-lucide="book-open" style="width:18px;height:18px;"></i></div>
+        <div>
+          <div class="db-mcp-tool__name">get_component_catalog</div>
+          <div class="db-mcp-tool__desc">Browse all 76 components, their props, categories, themes, and the spec format — so the AI can build specs without guessing.</div>
+        </div>
+      </div>
+      <div class="db-mcp-tool">
+        <div class="db-mcp-tool__icon"><i data-lucide="check-circle" style="width:18px;height:18px;"></i></div>
+        <div>
+          <div class="db-mcp-tool__name">validate_spec</div>
+          <div class="db-mcp-tool__desc">Check a spec for missing children, unknown component types, broken references. Returns detailed issue reports.</div>
+        </div>
+      </div>
+      <div class="db-mcp-tool">
+        <div class="db-mcp-tool__icon"><i data-lucide="eye" style="width:18px;height:18px;"></i></div>
+        <div>
+          <div class="db-mcp-tool__name">render_spec</div>
+          <div class="db-mcp-tool__desc">Get a live playground preview URL for any spec — open in a browser to see the rendered result instantly.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="db-mcp-example">
+      <div class="db-mcp-example__label">Example conversation</div>
+      <div class="db-mcp-example__flow">
+        <div class="db-mcp-example__step db-mcp-example__step--user">
+          <span class="db-mcp-example__role">You</span>
+          Build me a settings page with a sidebar, profile card with avatar and form fields, and notification toggles. Use the nord theme.
+        </div>
+        <div class="db-mcp-example__step db-mcp-example__step--ai">
+          <span class="db-mcp-example__role">AI <span class="db-badge db-badge--new" style="font-size:0.6rem;padding:1px 6px;margin-left:4px;">generate_ui</span></span>
+          Generated a 12-element spec with Sidebar, Card, Avatar, Field, and Switch components. Theme: nord-light.
+          <a href="https://daub.dev/playground.html" style="color:var(--db-terracotta);font-size:0.8125rem;display:inline-block;margin-top:4px;">Open in Playground &rarr;</a>
+        </div>
+        <div class="db-mcp-example__step db-mcp-example__step--user">
+          <span class="db-mcp-example__role">You</span>
+          Add a danger zone with a delete account button that opens an alert dialog.
+        </div>
+        <div class="db-mcp-example__step db-mcp-example__step--ai">
+          <span class="db-mcp-example__role">AI <span class="db-badge db-badge--new" style="font-size:0.6rem;padding:1px 6px;margin-left:4px;">generate_ui</span></span>
+          Updated spec: added danger-card with AlertDialog overlay. Now 16 elements. Validation: all clear.
+        </div>
       </div>
     </div>
   </section>
