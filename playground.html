@@ -147,6 +147,8 @@
       align-items: center;
       gap: 8px;
       padding: 8px 12px;
+      min-height: 40px;
+      box-sizing: border-box;
       border-bottom: 1px solid var(--db-sand);
       background: var(--db-cream);
       font-family: var(--db-font-ui);
@@ -2325,17 +2327,17 @@ function selfCheck(spec, screenshotDataUrl, signal) {
   var checkPrompt = 'You are a UI design reviewer. Below is the JSON spec and a screenshot of how it rendered.\n\n'
     + '## DESIGN RULES\n' + LAYOUT_RULES + '\n\n'
     + '## YOUR TASK\nCheck the screenshot against these rules:\n\n'
-    + '1. **Spacing & Grid**: Inner gaps < outer gaps? Consistent 8pt grid? No arbitrary pixel values?\n'
-    + '2. **Hierarchy (Squint Test)**: Blur your eyes — is primary content visually dominant? One focal point per view?\n'
-    + '3. **Grouping**: Related items grouped by proximity/container? No orphan elements? Space between groups >= 2x within?\n'
-    + '4. **Typography**: Max 4-5 font sizes? Body >= 16px? Left-aligned body text? Line length <= 65ch?\n'
-    + '5. **Components**: One primary button per view? Touch targets >= 48px? Labels above inputs?\n'
-    + '6. **Density**: Non-trivial UI has 12-25+ elements? Realistic data (no Lorem ipsum)? No empty containers?\n'
-    + '7. **Color**: Brand color only on interactive elements? Sufficient contrast (4.5:1 text, 3:1 UI)?\n'
-    + '8. **Rendering**: All components visible? No overlapping/clipped elements? No broken layouts?\n'
-    + '9. **Interactivity**: Progress bars connected? Tabs switching? Counters wired? If not, add CustomHTML with js.\n\n'
-    + 'If the UI passes all checks, return the spec JSON unchanged.\n'
-    + 'If there are issues, return a FIXED version of the complete JSON spec.\n\n'
+    + '1. **Spacing & Grid**: Inner gaps < outer gaps? Consistent 8pt grid?\n'
+    + '2. **Hierarchy**: Primary content visually dominant?\n'
+    + '3. **Rendering**: All components visible? No overlapping/clipped elements? No broken layouts?\n\n'
+    + '## CRITICAL CONSTRAINTS\n'
+    + '- NEVER remove, rename, or restructure existing elements\n'
+    + '- NEVER reduce the number of elements — only adjust properties (gap, padding, style, variant)\n'
+    + '- NEVER simplify or consolidate sections\n'
+    + '- Keep ALL existing element IDs, types, children, and content text intact\n'
+    + '- Only fix: gap values, padding, style props, variant, cols — cosmetic tweaks\n'
+    + '- If the UI looks good overall, return the spec JSON UNCHANGED\n'
+    + '- When in doubt, do NOT change it\n\n'
     + VALID_TYPES_HINT + '\n'
     + 'Return ONLY the JSON, no explanation.';
 
@@ -2365,6 +2367,13 @@ function selfCheck(spec, screenshotDataUrl, signal) {
     var fixed;
     try { fixed = JSON.parse(clean); } catch(e) { fixed = repairJSON(clean); }
     if (!fixed || !fixed.root || !fixed.elements) return null;
+    // Guard: reject fixes that drop more than 20% of elements
+    var origCount = Object.keys(spec.elements).length;
+    var fixedCount = Object.keys(fixed.elements).length;
+    if (fixedCount < origCount * 0.8) {
+      console.warn('[selfCheck] Rejected fix: dropped too many elements (' + origCount + ' → ' + fixedCount + ')');
+      return null;
+    }
     return fixed;
   })
   .catch(function(e) { if (e.name === 'AbortError') return null; return null; });
