@@ -3086,7 +3086,7 @@ function buildMessages(userPrompt, images, webContexts, figmaContexts) {
     });
   }
   if (images && images.length) {
-    var provider = isDefaultMode ? 'default' : ($provider ? $provider.value : 'openai');
+    var provider = (isDefaultMode || (figmaContexts && figmaContexts.length)) ? 'default' : ($provider ? $provider.value : 'openai');
     var parts = [];
     images.forEach(function(img) {
       if (img.isPdf) {
@@ -3347,18 +3347,21 @@ function generate() {
   var prompt = $prompt.value.trim();
   if (!prompt) return;
 
-  if (!isDefaultMode) {
+  // Capture attached images, web contexts, and figma contexts before clearing
+  var imagesForThisMsg = pendingImages.slice();
+  var webContextsForThisMsg = pendingWebContexts.slice();
+  var figmaContextsForThisMsg = pendingFigmaContexts.slice();
+
+  // Figma contexts always route through the default AI backend
+  var useDefault = isDefaultMode || figmaContextsForThisMsg.length > 0;
+
+  if (!useDefault) {
     var key = $apikey ? $apikey.value.trim() : '';
     if (!key) {
       showJsonError('Please add your API key in the settings below.');
       return;
     }
   }
-
-  // Capture attached images, web contexts, and figma contexts before clearing
-  var imagesForThisMsg = pendingImages.slice();
-  var webContextsForThisMsg = pendingWebContexts.slice();
-  var figmaContextsForThisMsg = pendingFigmaContexts.slice();
   clearImageStrip();
 
   // Add user bubble
@@ -3400,7 +3403,7 @@ function generate() {
 
   var streamFn;
   var provider;
-  if (isDefaultMode) {
+  if (useDefault) {
     streamFn = streamDefault;
   } else {
     provider = $provider ? $provider.value : 'openai';
@@ -3415,7 +3418,7 @@ function generate() {
     if (retries <= MAX_RETRIES) {
       $status.textContent = 'Retry ' + retries + '/' + MAX_RETRIES + ' \u2014 ' + reason;
       setTimeout(function() { startStream(messages); }, 500);
-    } else if (isDefaultMode && !usingFallback) {
+    } else if (useDefault && !usingFallback) {
       usingFallback = true;
       retries = 0;
       $status.textContent = 'Switching to fallback model\u2026';
@@ -3435,7 +3438,7 @@ function generate() {
     _abortCtrl = new AbortController();
     var signal = _abortCtrl.signal;
     var callStreamFn = function(m, onT, onD, onE) {
-      if (isDefaultMode) streamDefault(m, onT, onD, onE, model || fastModel(), signal);
+      if (useDefault) streamDefault(m, onT, onD, onE, model || fastModel(), signal);
       else streamFn(m, onT, onD, onE, signal);
     };
     callStreamFn(msgs,
