@@ -863,6 +863,9 @@
                 <button class="pg-chat__attach-btn" id="pg-weblook" title="Attach web page">
                   <i data-lucide="globe" style="width:13px;height:13px;"></i> Link
                 </button>
+                <button class="pg-chat__attach-btn" id="pg-figma" title="Attach Figma design">
+                  <i data-lucide="figma" style="width:13px;height:13px;"></i> Figma
+                </button>
               </div>
               <span class="pg-chat__send-hint" id="pg-send-hint">&#x23CE; Enter</span>
               <button class="pg-chat__stop-btn" id="pg-stop-btn" style="display:none" title="Stop generation">
@@ -985,6 +988,11 @@
           <input class="db-field__input" type="password" id="pg-apikey" placeholder="sk-... or sk-ant-..." autocomplete="off">
           <span class="db-field__helper">Stored in localStorage only.</span>
         </div>
+        <div class="db-field" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--db-sand);">
+          <label class="db-field__label">Figma Token <small style="opacity:0.6">(optional)</small></label>
+          <input class="db-field__input" type="password" id="pg-figma-token" placeholder="figd_..." autocomplete="off">
+          <span class="db-field__helper">Personal Access Token from figma.com/developers</span>
+        </div>
         <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;">
           <small><a href="#" id="pg-default-link">Use Free DAUB AI</a></small>
           <button class="db-btn db-btn--primary db-btn--sm" id="pg-byok-save">Save &amp; Close</button>
@@ -1043,6 +1051,9 @@ var $imgStrip   = document.getElementById('pg-img-strip');
 var pendingImages = []; // [{ base64, mimeType, dataUrl }]
 var pendingWebContexts = []; // [{ title, url, content, screenshot }]
 var $weblook   = document.getElementById('pg-weblook');
+var pendingFigmaContexts = []; // [{ name, url, designContext, screenshot }]
+var $figma     = document.getElementById('pg-figma');
+var $figmaToken = document.getElementById('pg-figma-token');
 var $jsonError  = document.querySelector('.pg-json-error');
 var $jsonErrMsg = document.getElementById('pg-json-error-msg');
 var $jsonTree   = document.querySelector('.pg-json-tree');
@@ -1610,6 +1621,7 @@ function loadSettings() {
     var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
     if (keys[p] && $apikey) $apikey.value = keys[p];
     if (localStorage.getItem('pg-fast-mode') !== null) $fastMode.checked = localStorage.getItem('pg-fast-mode') !== 'false';
+    if ($figmaToken) $figmaToken.value = localStorage.getItem('pg-figma-token') || '';
     // Chat state
     isDefaultMode = localStorage.getItem('pg-use-default') !== 'false';
     try { chatHistory = JSON.parse(sessionStorage.getItem('pg-chat-history') || '[]'); } catch(e2) { chatHistory = []; }
@@ -1626,6 +1638,7 @@ function saveSettings() {
     localStorage.setItem('pg-apikeys', JSON.stringify(keys));
     localStorage.setItem('pg-use-default', isDefaultMode ? 'true' : 'false');
     localStorage.setItem('pg-fast-mode', $fastMode.checked);
+    if ($figmaToken) localStorage.setItem('pg-figma-token', $figmaToken.value);
   } catch(e) {}
 }
 
@@ -1663,6 +1676,7 @@ $provider.addEventListener('change', function() {
 $model.addEventListener('change', saveSettings);
 $apikey.addEventListener('change', saveSettings);
 $fastMode.addEventListener('change', saveSettings);
+if ($figmaToken) $figmaToken.addEventListener('change', saveSettings);
 
 // ---- Example chips ----
 document.querySelectorAll('[data-example]').forEach(function(chip) {
@@ -1762,6 +1776,7 @@ function addImageToStrip(imgData) {
 function clearImageStrip() {
   pendingImages = [];
   pendingWebContexts = [];
+  pendingFigmaContexts = [];
   while ($imgStrip.firstChild) $imgStrip.removeChild($imgStrip.firstChild);
   $imgStrip.classList.remove('has-images');
 }
@@ -1800,6 +1815,8 @@ $weblook.addEventListener('click', function() {
   if (!url || !url.trim()) return;
   url = url.trim();
   if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  // Route Figma URLs to Figma handler
+  if (/figma\.com\/(file|design|proto)\//i.test(url)) { fetchFigmaDesign(url); return; }
 
   var placeholder = { url: url };
   var els = addWebContextToStrip(placeholder, true);
@@ -1849,8 +1866,109 @@ $weblook.addEventListener('click', function() {
   });
 });
 
-// ---- Paste images from clipboard ----
+// ---- Figma design attachment ----
+function addFigmaContextToStrip(figmaCtx, loading) {
+  var item = document.createElement('div');
+  item.className = 'pg-chat__img-item pg-chat__web-item';
+  if (loading) item.classList.add('pg-chat__web-item--loading');
+  var icon = document.createElement('i');
+  icon.setAttribute('data-lucide', 'figma');
+  icon.style.cssText = 'width:20px;height:20px;color:var(--db-ink-muted,#666)';
+  var label = document.createElement('span');
+  label.className = 'pg-web-label';
+  label.textContent = loading ? 'Loading\u2026' : (figmaCtx.name || 'Figma');
+  item.appendChild(icon);
+  item.appendChild(label);
+  requestAnimationFrame(function() { if (window.lucide) lucide.createIcons({ nodes: [item] }); });
+  var x = document.createElement('button');
+  x.className = 'pg-img-x';
+  x.textContent = '\u00d7';
+  x.addEventListener('click', function() {
+    var idx = pendingFigmaContexts.indexOf(figmaCtx);
+    if (idx > -1) pendingFigmaContexts.splice(idx, 1);
+    item.remove();
+    if (!pendingImages.length && !pendingWebContexts.length && !pendingFigmaContexts.length) $imgStrip.classList.remove('has-images');
+  });
+  item.appendChild(x);
+  $imgStrip.appendChild(item);
+  $imgStrip.classList.add('has-images');
+  return { item: item, label: label };
+}
+
+function fetchFigmaDesign(url) {
+  var token = $figmaToken ? $figmaToken.value.trim() : '';
+  if (!token) {
+    DAUB.toast({ type: 'warning', message: 'Add Figma token in settings first' });
+    openByokModal();
+    return;
+  }
+  if (!/figma\.com\/(file|design|proto)\//i.test(url)) {
+    DAUB.toast({ type: 'error', message: 'Not a valid Figma URL' });
+    return;
+  }
+  var placeholder = { url: url, name: 'Figma' };
+  var els = addFigmaContextToStrip(placeholder, true);
+
+  fetch('/api/figma', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: url, token: token }),
+  })
+  .then(function(r) {
+    if (!r.ok) return r.json().catch(function() { return { error: 'HTTP ' + r.status }; }).then(function(d) { throw new Error(d.error || 'HTTP ' + r.status); });
+    return r.json();
+  })
+  .then(function(data) {
+    if (data.error) {
+      DAUB.toast({ type: 'error', message: 'Figma: ' + data.error });
+      els.item.remove();
+      if (!pendingImages.length && !pendingWebContexts.length && !pendingFigmaContexts.length) $imgStrip.classList.remove('has-images');
+      return;
+    }
+    var figmaCtx = { name: data.name || 'Untitled', url: data.url || url, designContext: data.designContext || '', screenshot: data.screenshot || '' };
+    pendingFigmaContexts.push(figmaCtx);
+    els.item.classList.remove('pg-chat__web-item--loading');
+    els.label.textContent = figmaCtx.name;
+    var oldX = els.item.querySelector('.pg-img-x');
+    if (oldX) oldX.addEventListener('click', function() {
+      var idx = pendingFigmaContexts.indexOf(figmaCtx);
+      if (idx > -1) pendingFigmaContexts.splice(idx, 1);
+    });
+    if (figmaCtx.screenshot) {
+      var img = document.createElement('img');
+      img.src = 'data:image/png;base64,' + figmaCtx.screenshot;
+      img.alt = 'figma preview';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;border-radius:inherit;';
+      els.item.insertBefore(img, els.item.firstChild);
+    }
+  })
+  .catch(function(e) {
+    DAUB.toast({ type: 'error', message: 'Figma: ' + e.message });
+    els.item.remove();
+    if (!pendingImages.length && !pendingWebContexts.length && !pendingFigmaContexts.length) $imgStrip.classList.remove('has-images');
+  });
+}
+
+$figma.addEventListener('click', function() {
+  var url = prompt('Enter Figma URL:');
+  if (!url || !url.trim()) return;
+  fetchFigmaDesign(url.trim());
+});
+
+// ---- Paste images + Figma URLs from clipboard ----
 $prompt.addEventListener('paste', function(e) {
+  // Detect Figma URL in pasted text
+  var pastedText = e.clipboardData && e.clipboardData.getData('text/plain');
+  if (pastedText && /figma\.com\/(file|design|proto)\//i.test(pastedText.trim())) {
+    var token = $figmaToken ? $figmaToken.value.trim() : '';
+    if (token) {
+      e.preventDefault();
+      fetchFigmaDesign(pastedText.trim());
+      return;
+    } else {
+      DAUB.toast({ type: 'info', message: 'Add a Figma token in settings to auto-attach designs' });
+    }
+  }
   var items = e.clipboardData && e.clipboardData.items;
   if (!items) return;
   for (var i = 0; i < items.length; i++) {
@@ -2852,7 +2970,7 @@ function tryProgressiveRender(text) {
 }
 
 // ---- Chat message helpers ----
-function buildMessages(userPrompt, images, webContexts) {
+function buildMessages(userPrompt, images, webContexts, figmaContexts) {
   var msgs = [{ role: 'system', content: SYSTEM_PROMPT }];
   if (currentSpec) {
     msgs.push({ role: 'user', content: '(previous request)' });
@@ -2866,6 +2984,19 @@ function buildMessages(userPrompt, images, webContexts) {
       }
     }
     userPrompt = userPrompt + diffNote + '\n\nModify the existing spec above. Return the COMPLETE updated spec.';
+  }
+  if (figmaContexts && figmaContexts.length) {
+    var figmaPreamble = '';
+    figmaContexts.forEach(function(fc) {
+      figmaPreamble += '[Figma Design: ' + (fc.name || 'Untitled') + ']\nURL: ' + fc.url + '\nDesign specification:\n' + fc.designContext + '\n---\n';
+    });
+    userPrompt = figmaPreamble + userPrompt;
+    if (!images) images = [];
+    figmaContexts.forEach(function(fc) {
+      if (fc.screenshot) {
+        images.push({ base64: fc.screenshot, mimeType: 'image/png', dataUrl: 'data:image/png;base64,' + fc.screenshot });
+      }
+    });
   }
   if (webContexts && webContexts.length) {
     var webPreamble = '';
@@ -2917,8 +3048,19 @@ function addChatBubble(role, text, images) {
       var url = typeof entry === 'string' ? entry : entry.url;
       var isPdf = typeof entry === 'string' ? url.indexOf('data:application/pdf') === 0 : entry.isPdf;
       var isWeb = typeof entry === 'object' && entry.isWeb;
+      var isFigma = typeof entry === 'object' && entry.isFigma;
       var name = typeof entry === 'string' ? 'PDF' : (entry.name || 'PDF');
-      if (isWeb) {
+      if (isFigma) {
+        var fBadge = document.createElement('span');
+        fBadge.className = 'pg-chat__msg-web';
+        var fIcon = document.createElement('i');
+        fIcon.setAttribute('data-lucide', 'figma');
+        fIcon.style.cssText = 'width:14px;height:14px';
+        fBadge.appendChild(fIcon);
+        fBadge.appendChild(document.createTextNode(' ' + (entry.title || 'Figma')));
+        strip.appendChild(fBadge);
+        requestAnimationFrame(function() { if (window.lucide) lucide.createIcons({ nodes: [fBadge] }); });
+      } else if (isWeb) {
         var wBadge = document.createElement('span');
         wBadge.className = 'pg-chat__msg-web';
         var wIcon = document.createElement('i');
@@ -3140,15 +3282,17 @@ function generate() {
     }
   }
 
-  // Capture attached images and web contexts before clearing
+  // Capture attached images, web contexts, and figma contexts before clearing
   var imagesForThisMsg = pendingImages.slice();
   var webContextsForThisMsg = pendingWebContexts.slice();
+  var figmaContextsForThisMsg = pendingFigmaContexts.slice();
   clearImageStrip();
 
   // Add user bubble
   var imageEntries = imagesForThisMsg.map(function(d) { return { url: d.dataUrl, isPdf: !!d.isPdf, name: d.fileName || '' }; });
   var webEntries = webContextsForThisMsg.map(function(wc) { return { isWeb: true, url: wc.url, title: wc.title }; });
-  var allEntries = imageEntries.concat(webEntries);
+  var figmaEntries = figmaContextsForThisMsg.map(function(fc) { return { isFigma: true, url: fc.url, title: fc.name }; });
+  var allEntries = imageEntries.concat(webEntries).concat(figmaEntries);
   chatHistory.push({ role: 'user', content: prompt, images: allEntries.length ? allEntries : undefined });
   addChatBubble('user', prompt, allEntries.length ? allEntries : null);
   updateChatState();
@@ -3171,7 +3315,7 @@ function generate() {
     postToPreview({ type: 'clear' });
   }
 
-  var messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg);
+  var messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg);
   var accumulated = '';
   var continuations = 0;
   var MAX_CONTINUATIONS = 2;
