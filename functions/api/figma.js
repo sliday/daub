@@ -294,7 +294,10 @@ async function handleRequest(request, env, corsHeaders) {
   }
 
   const { fileKey, nodeId } = parsed;
-  const figmaHeaders = { 'X-Figma-Token': token };
+  // OAuth tokens use Bearer auth; personal access tokens use X-Figma-Token
+  const figmaHeaders = token.startsWith('figd_')
+    ? { 'X-Figma-Token': token }
+    : { 'Authorization': 'Bearer ' + token };
 
   // 1. Fetch file data
   let fileData;
