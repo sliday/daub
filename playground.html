@@ -2379,6 +2379,138 @@ function selfCheck(spec, screenshotDataUrl, signal) {
   .catch(function(e) { if (e.name === 'AbortError') return null; return null; });
 }
 
+function analyzeLayout(userPrompt, images, webContexts, figmaContexts, signal) {
+  var sysPrompt = 'You are a UI layout architect. Analyze the user request and produce a structured layout brief.\n\n'
+    + 'Output format (plain text, NOT JSON):\n'
+    + '[Layout Analysis]\n'
+    + 'Pattern: <layout pattern e.g. sidebar + main content area>\n'
+    + 'Sections: <list of sections with orientation and child counts>\n'
+    + 'Components: <comma-separated list of DAUB component types to use>\n'
+    + 'Content: <quantified content items e.g. 4 stat cards, table with 6 rows>\n'
+    + 'Spacing: <spacing strategy e.g. generous (gap 4-5 between sections, gap 2-3 within)>\n'
+    + 'Structure: <nested structure e.g. page > [navbar, body > [sidebar, main > [stats-row, table-section]]]>\n\n'
+    + 'For images: describe what is visible, then plan DAUB component mapping.\n'
+    + 'For text: plan the ideal layout from the description.\n\n'
+    + VALID_TYPES_HINT + '\n\n'
+    + 'Rules: use only valid DAUB types listed above. Keep under 400 words. Focus on structure, not styling.';
+
+  var parts = [];
+  if (images && images.length) {
+    var provider = (isDefaultMode || (figmaContexts && figmaContexts.length)) ? 'default' : ($provider ? $provider.value : 'openai');
+    images.forEach(function(img) {
+      if (img.isPdf) {
+        if (provider === 'anthropic') {
+          parts.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: img.base64 } });
+        } else {
+          parts.push({ type: 'image_url', image_url: { url: img.dataUrl } });
+        }
+      } else {
+        if (provider === 'anthropic') {
+          parts.push({ type: 'image', source: { type: 'base64', media_type: img.mimeType, data: img.base64 } });
+        } else {
+          parts.push({ type: 'image_url', image_url: { url: img.dataUrl } });
+        }
+      }
+    });
+  }
+  if (figmaContexts && figmaContexts.length) {
+    figmaContexts.forEach(function(fc) {
+      if (fc.screenshot) {
+        parts.push({ type: 'image_url', image_url: { url: 'data:image/png;base64,' + fc.screenshot } });
+      }
+    });
+  }
+  var textContent = '';
+  if (webContexts && webContexts.length) {
+    webContexts.forEach(function(wc) {
+      textContent += '[Web page: ' + (wc.title || wc.url) + ']\n' + wc.content + '\n---\n';
+    });
+  }
+  if (figmaContexts && figmaContexts.length) {
+    figmaContexts.forEach(function(fc) {
+      textContent += '[Figma Design: ' + (fc.name || 'Untitled') + ']\n' + fc.designContext + '\n---\n';
+    });
+  }
+  textContent += userPrompt;
+  parts.push({ type: 'text', text: textContent });
+
+  var messages = [
+    { role: 'system', content: sysPrompt },
+    { role: 'user', content: parts.length > 1 ? parts : textContent }
+  ];
+
+  return fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: fastModel() || undefined,
+      messages: messages,
+      reasoning: { effort: 'low' },
+      max_tokens: 800,
+      response_format: false
+    }),
+    signal: signal
+  })
+  .then(parseSseResponse)
+  .then(function(sse) { return sse.content || null; })
+  .catch(function(e) { console.warn('[analyzeLayout] Failed:', e.message); return null; });
+}
+
+function visualDiff(spec, renderedScreenshot, originalImageDataUrl, signal) {
+  var diffPrompt = 'You are a UI design comparator.\n\n'
+    + 'Image 1 is the TARGET design the user wants to reproduce.\n'
+    + 'Image 2 is the CURRENT render of the JSON spec.\n\n'
+    + 'Compare them and fix the JSON spec to match the target more closely.\n\n'
+    + '## CRITICAL CONSTRAINTS\n'
+    + '- NEVER remove, rename, or restructure existing elements\n'
+    + '- NEVER reduce the number of elements — only adjust properties\n'
+    + '- NEVER simplify or consolidate sections\n'
+    + '- Keep ALL existing element IDs, types, children, and content text intact\n'
+    + '- Only adjust: layout direction, gap, cols, padding, props, style, variant\n'
+    + '- ADD missing elements that appear in target but not in the current render\n'
+    + '- Fix ordering, sizing, spacing, content to match the target\n'
+    + '- If the render already closely matches the target, return the spec JSON UNCHANGED\n\n'
+    + VALID_TYPES_HINT + '\n'
+    + 'Return ONLY the fixed JSON spec, no explanation.';
+
+  var messages = [
+    { role: 'system', content: diffPrompt },
+    { role: 'user', content: [
+      { type: 'image_url', image_url: { url: originalImageDataUrl } },
+      { type: 'image_url', image_url: { url: renderedScreenshot } },
+      { type: 'text', text: JSON.stringify(spec) }
+    ]}
+  ];
+
+  return fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: fastModel() || undefined,
+      messages: messages,
+      reasoning: { effort: fastEffort('selfCheck') || 'medium' }
+    }),
+    signal: signal
+  })
+  .then(parseSseResponse)
+  .then(function(sse) {
+    var raw = sse.content;
+    var clean = cleanJSON(raw);
+    if (!clean) return null;
+    var fixed;
+    try { fixed = JSON.parse(clean); } catch(e) { fixed = repairJSON(clean); }
+    if (!fixed || !fixed.root || !fixed.elements) return null;
+    var origCount = Object.keys(spec.elements).length;
+    var fixedCount = Object.keys(fixed.elements).length;
+    if (fixedCount < origCount * 0.8) {
+      console.warn('[visualDiff] Rejected fix: dropped too many elements (' + origCount + ' → ' + fixedCount + ')');
+      return null;
+    }
+    return fixed;
+  })
+  .catch(function(e) { if (e.name === 'AbortError') return null; console.warn('[visualDiff] Failed:', e.message); return null; });
+}
+
 // ---- Interactivity pipeline: analyze spec → generate code ----
 function analyzeInteractivity(spec, signal) {
   var prompt = 'You are analyzing a UI spec to determine if it needs custom JavaScript code.\n\n'
@@ -3053,8 +3185,11 @@ function tryProgressiveRender(text) {
 }
 
 // ---- Chat message helpers ----
-function buildMessages(userPrompt, images, webContexts, figmaContexts) {
+function buildMessages(userPrompt, images, webContexts, figmaContexts, analysisBrief) {
   var msgs = [{ role: 'system', content: SYSTEM_PROMPT }];
+  if (analysisBrief) {
+    userPrompt = analysisBrief + '\n---\n' + userPrompt;
+  }
   if (currentSpec) {
     msgs.push({ role: 'user', content: '(previous request)' });
     msgs.push({ role: 'assistant', content: JSON.stringify(currentSpec) });
@@ -3361,6 +3496,8 @@ function generate() {
   var imagesForThisMsg = pendingImages.slice();
   var webContextsForThisMsg = pendingWebContexts.slice();
   var figmaContextsForThisMsg = pendingFigmaContexts.slice();
+  var hasOriginalImage = imagesForThisMsg.length > 0 && !imagesForThisMsg[0].isPdf;
+  var originalImageUrl = hasOriginalImage ? imagesForThisMsg[0].dataUrl : null;
 
   // Figma contexts always route through the default AI backend
   var useDefault = isDefaultMode || figmaContextsForThisMsg.length > 0;
@@ -3401,7 +3538,15 @@ function generate() {
     postToPreview({ type: 'clear' });
   }
 
-  var messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg);
+  _abortCtrl = new AbortController();
+  var analysisPromise;
+  if (!currentSpec) {
+    $status.textContent = 'Analyzing layout\u2026';
+    analysisPromise = analyzeLayout(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, _abortCtrl.signal);
+  } else {
+    analysisPromise = Promise.resolve(null);
+  }
+  var messages; // set after analysis completes
   var accumulated = '';
   var continuations = 0;
   var MAX_CONTINUATIONS = 2;
@@ -3525,7 +3670,7 @@ function generate() {
             return s;
           }
           var stepAnalyze = _mkStep(_svgAnalyze, 'Analyzing interactivity\u2026');
-          var stepCheck = _mkStep(_svgEye, 'Visual check\u2026');
+          var stepCheck = _mkStep(_svgEye, hasOriginalImage ? 'Comparing with target\u2026' : 'Visual check\u2026');
           var _svgLayout = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>';
           var _svgPlay = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
           var _svgDoc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
@@ -3637,20 +3782,23 @@ function generate() {
               _pipeSkip(stepAnalyze, 'No custom code needed');
             }
           }).then(function() {
-            // ---- Visual check (runs on initial spec, before code gen) ----
+            // ---- Visual check / visual diff (runs on initial spec, before code gen) ----
             stepCheck.classList.add('pg-pipeline__step--active');
-            $status.textContent = 'Visual check\u2026';
+            $status.textContent = hasOriginalImage ? 'Comparing with target\u2026' : 'Visual check\u2026';
             return capturePreview().then(function(screenshot) {
               if (!screenshot) {
                 _pipeSkip(stepCheck, 'No screenshot');
                 return;
               }
-              return selfCheck(finalSpec, screenshot, _pipeSignal).then(function(fixedSpec) {
+              var checkPromise = hasOriginalImage
+                ? visualDiff(finalSpec, screenshot, originalImageUrl, _pipeSignal)
+                : selfCheck(finalSpec, screenshot, _pipeSignal);
+              return checkPromise.then(function(fixedSpec) {
                 if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(finalSpec)) {
-                  _pipeDone(stepCheck, 'Applied fixes');
-                  _applySpec(fixedSpec, 'auto-fixed');
+                  _pipeDone(stepCheck, hasOriginalImage ? 'Matched to target' : 'Applied fixes');
+                  _applySpec(fixedSpec, hasOriginalImage ? 'visual-diff' : 'auto-fixed');
                 } else {
-                  _pipeDone(stepCheck, 'Looks good');
+                  _pipeDone(stepCheck, hasOriginalImage ? 'Close match' : 'Looks good');
                 }
               });
             });
@@ -3931,7 +4079,13 @@ function generate() {
       }
     );
   }
-  startStream(messages);
+  analysisPromise.then(function(analysisBrief) {
+    if (analysisBrief) console.log('[analyzeLayout] Brief:', analysisBrief.slice(0, 200));
+    else if (!currentSpec) console.warn('[analyzeLayout] Skipped or failed');
+    messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief);
+    $status.textContent = 'Streaming\u2026';
+    startStream(messages);
+  });
 }
 
 function setLoading(on) {

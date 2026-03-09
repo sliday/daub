@@ -2,6 +2,16 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.7.0
+
+**Smarter generation: two-pass layout analysis and visual diff feedback.**
+
+- Feature: `analyzeLayout()` — new pre-generation step that produces a structured layout brief (pattern, sections, components, spacing, structure) before the main LLM call, improving initial render quality for complex UIs
+- Feature: `visualDiff()` — when an image is uploaded, the visual check step now compares the rendered output against the original target image and adjusts the spec to match more closely
+- Enhancement: layout analysis runs only for new generations (skipped for modifications), adding ~2s overhead
+- Enhancement: visual diff replaces selfCheck when a target image is available; selfCheck still runs for text-only prompts
+- Enhancement: pipeline step labels reflect the mode ("Comparing with target…" vs "Visual check…")
+
 ## v3.6.2
 
 **Bugfix: prevent visual check from destroying generated UIs.**
