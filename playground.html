@@ -1011,12 +1011,25 @@ function buildIframeSrcdoc(theme) {
     + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
     + '<style>html,body{margin:0;min-height:100%;}'
     + '.pg-iframe-empty{display:flex;align-items:center;justify-content:center;min-height:100vh;}'
-    + '.pg-iframe-empty::after{content:"\\201CThe details are not the details. They make the design.\\201D\\A\\2014 Charles Eames";'
+    + '.pg-iframe-empty::after{content:attr(data-quote);'
     + 'white-space:pre-wrap;text-align:center;font-family:var(--db-font-heading);font-size:0.9375rem;'
     + 'font-style:italic;line-height:1.6;color:var(--db-warm-gray);opacity:0.6;max-width:260px;}'
     + '.pg-preview-body{padding:16px;}</style>'
     + '</head><body>'
     + '<div id="pg-iframe-root" class="pg-iframe-empty"></div>'
+    + '<script>(function(){var qs=['
+    + '"\u201CThe details are not the details. They make the design.\u201D\\n\u2014 Charles Eames",'
+    + '"\u201CGood design is as little design as possible.\u201D\\n\u2014 Dieter Rams",'
+    + '"\u201CDesign is not just what it looks like and feels like. Design is how it works.\u201D\\n\u2014 Steve Jobs",'
+    + '"\u201CSimplicity is the ultimate sophistication.\u201D\\n\u2014 Leonardo da Vinci",'
+    + '"\u201CHave no fear of perfection \u2014 you\\u2019ll never reach it.\u201D\\n\u2014 Salvador Dal\u00ED",'
+    + '"\u201CLess is more.\u201D\\n\u2014 Ludwig Mies van der Rohe",'
+    + '"\u201CWhite space is to be regarded as an active element, not a passive background.\u201D\\n\u2014 Jan Tschichold",'
+    + '"\u201CDesign is thinking made visual.\u201D\\n\u2014 Saul Bass",'
+    + '"\u201CContent precedes design. Design in the absence of content is not design, it\\u2019s decoration.\u201D\\n\u2014 Jeffrey Zeldman",'
+    + '"\u201CThe best design is the simplest one that works.\u201D\\n\u2014 Albert Einstein",'
+    + '"\u201CTypography is the craft of endowing human language with a durable visual form.\u201D\\n\u2014 Robert Bringhurst"'
+    + '];document.getElementById("pg-iframe-root").setAttribute("data-quote",qs[Math.floor(Math.random()*qs.length)])})()<\/script>'
     + '<script src="daub.js?v=3.0.20"><\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
@@ -1540,8 +1553,8 @@ function loadSettings() {
     if (localStorage.getItem('pg-fast-mode') !== null) $fastMode.checked = localStorage.getItem('pg-fast-mode') !== 'false';
     // Chat state
     isDefaultMode = localStorage.getItem('pg-use-default') !== 'false';
-    try { chatHistory = JSON.parse(localStorage.getItem('pg-chat-history') || '[]'); } catch(e2) { chatHistory = []; }
-    try { currentSpec = JSON.parse(localStorage.getItem('pg-current-spec') || 'null'); } catch(e3) { currentSpec = null; }
+    try { chatHistory = JSON.parse(sessionStorage.getItem('pg-chat-history') || '[]'); } catch(e2) { chatHistory = []; }
+    try { currentSpec = JSON.parse(sessionStorage.getItem('pg-current-spec') || 'null'); } catch(e3) { currentSpec = null; }
   } catch(e) {}
 }
 
@@ -1564,8 +1577,8 @@ function saveChatState() {
       if (m.images) { var c = {}; for (var k in m) c[k] = m[k]; c.images = undefined; return c; }
       return m;
     });
-    localStorage.setItem('pg-chat-history', JSON.stringify(stripped));
-    localStorage.setItem('pg-current-spec', currentSpec ? JSON.stringify(currentSpec) : 'null');
+    sessionStorage.setItem('pg-chat-history', JSON.stringify(stripped));
+    sessionStorage.setItem('pg-current-spec', currentSpec ? JSON.stringify(currentSpec) : 'null');
   } catch(e) {}
 }
 
@@ -3336,11 +3349,6 @@ function generate() {
             }
           }).then(function() {
             // ---- Visual check (runs on initial spec, before code gen) ----
-            // Fast mode: skip visual check to save an AI round-trip
-            if (fastModel()) {
-              _pipeSkip(stepCheck, 'Skipped (fast)');
-              return;
-            }
             stepCheck.classList.add('pg-pipeline__step--active');
             $status.textContent = 'Visual check\u2026';
             return capturePreview().then(function(screenshot) {

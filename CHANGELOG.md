@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.5.1
+
+**Session-scoped chat state + visual check always runs.**
+
+- Fix: Visual check no longer skipped in fast mode — it's cheap and catches layout issues early
+- Change: Chat history and current spec moved from `localStorage` to `sessionStorage` — state persists across refreshes but clears when the tab closes, eliminating stale state issues during development
+- Settings (provider, model, API keys, toggles) remain in `localStorage` as user preferences
+- Docs: Added `PIPELINE.md` documenting the full code generation pipeline
+
 ## v3.5.0
 
 **Complexity-routed pipeline + component type constraints (SLAG-inspired).**
