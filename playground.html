@@ -734,7 +734,15 @@
     }
 
     /* Preview mode tabs & panes */
-    .pg-tab--active { background: var(--db-sand); }
+    .pg-preview-tabs {
+      border-bottom: none; padding: 0; gap: 0; flex-shrink: 0;
+    }
+    .pg-preview-tabs .db-tabs__tab {
+      font-size: 0.75rem; padding: 6px 12px;
+      border-bottom: 2px solid transparent; margin-bottom: 0;
+      border-radius: 0;
+    }
+    .pg-tab--active { font-weight: 600; }
     .pg-preview-pane { display: none; flex: 1; overflow: auto; min-height: 0; }
     .pg-preview-pane--active { display: flex; flex-direction: column; }
     .pg-code-view {
@@ -876,10 +884,10 @@
     <!-- RIGHT: Preview Panel (with Design / Structure / Code tabs) -->
     <div class="pg-panel" id="panel-preview">
       <div class="pg-panel__toolbar">
-        <div class="db-btn-group" id="pg-preview-tabs">
-          <button class="db-btn db-btn--ghost db-btn--sm pg-tab pg-tab--active" data-tab="design">Design</button>
-          <button class="db-btn db-btn--ghost db-btn--sm pg-tab" data-tab="structure">Structure</button>
-          <button class="db-btn db-btn--ghost db-btn--sm pg-tab" data-tab="code">Code</button>
+        <div class="db-tabs__list pg-preview-tabs" id="pg-preview-tabs">
+          <button class="db-tabs__tab pg-tab pg-tab--active" data-tab="design" aria-selected="true">Design</button>
+          <button class="db-tabs__tab pg-tab" data-tab="structure">Structure</button>
+          <button class="db-tabs__tab pg-tab" data-tab="code">Code</button>
         </div>
         <span class="db-caption db-text-muted" id="pg-status" style="font-family:var(--db-font-ui);white-space:nowrap;"></span>
         <span style="flex:1"></span>
@@ -897,8 +905,8 @@
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-download" title="Download HTML" style="display:none;">
           <i data-lucide="download" style="width:12px;height:12px;"></i>
         </button>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON" style="display:none;"><i data-lucide="copy" style="width:12px;height:12px;"></i></button>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-html" title="Copy HTML" style="display:none;"><i data-lucide="clipboard-copy" style="width:12px;height:12px;"></i></button>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON" style="display:none;"><i data-lucide="copy" style="width:12px;height:12px;"></i> Copy</button>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-html" title="Copy HTML" style="display:none;"><i data-lucide="clipboard-copy" style="width:12px;height:12px;"></i> Copy</button>
       </div>
       <div class="pg-panel__body" id="pg-preview-body" style="display:flex;flex-direction:column;padding:0;min-height:0;">
         <!-- Design mode (default) -->
@@ -3781,8 +3789,9 @@ document.getElementById('pg-preview-tabs').addEventListener('click', function(e)
   var tab = btn.dataset.tab;
   if (tab === _previewMode) return;
   _previewMode = tab;
-  this.querySelectorAll('.pg-tab').forEach(function(b) { b.classList.remove('pg-tab--active'); });
+  this.querySelectorAll('.pg-tab').forEach(function(b) { b.classList.remove('pg-tab--active'); b.setAttribute('aria-selected', 'false'); });
   btn.classList.add('pg-tab--active');
+  btn.setAttribute('aria-selected', 'true');
   document.querySelectorAll('.pg-preview-pane').forEach(function(p) {
     var active = p.dataset.pane === tab;
     p.style.display = active ? '' : 'none';
