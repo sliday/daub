@@ -988,10 +988,14 @@
           <input class="db-field__input" type="password" id="pg-apikey" placeholder="sk-... or sk-ant-..." autocomplete="off">
           <span class="db-field__helper">Stored in localStorage only.</span>
         </div>
-        <div class="db-field" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--db-sand);">
-          <label class="db-field__label">Figma Token <small style="opacity:0.6">(optional)</small></label>
-          <input class="db-field__input" type="password" id="pg-figma-token" placeholder="figd_..." autocomplete="off">
-          <span class="db-field__helper">Personal Access Token from figma.com/developers</span>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--db-sand);">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <label class="db-field__label" style="margin:0;">Figma</label>
+            <span id="pg-figma-status" style="font-size:0.75rem;color:var(--db-ink-muted,#888);"></span>
+          </div>
+          <button class="db-btn db-btn--secondary db-btn--sm" id="pg-figma-connect" style="margin-top:6px;width:100%;">
+            <i data-lucide="figma" style="width:13px;height:13px;"></i> Connect Figma
+          </button>
         </div>
         <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;">
           <small><a href="#" id="pg-default-link">Use Free DAUB AI</a></small>
@@ -1053,7 +1057,9 @@ var pendingWebContexts = []; // [{ title, url, content, screenshot }]
 var $weblook   = document.getElementById('pg-weblook');
 var pendingFigmaContexts = []; // [{ name, url, designContext, screenshot }]
 var $figma     = document.getElementById('pg-figma');
-var $figmaToken = document.getElementById('pg-figma-token');
+var $figmaConnect = document.getElementById('pg-figma-connect');
+var $figmaStatus  = document.getElementById('pg-figma-status');
+var figmaClientId = ''; // fetched from server
 var $jsonError  = document.querySelector('.pg-json-error');
 var $jsonErrMsg = document.getElementById('pg-json-error-msg');
 var $jsonTree   = document.querySelector('.pg-json-tree');
@@ -1621,7 +1627,7 @@ function loadSettings() {
     var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
     if (keys[p] && $apikey) $apikey.value = keys[p];
     if (localStorage.getItem('pg-fast-mode') !== null) $fastMode.checked = localStorage.getItem('pg-fast-mode') !== 'false';
-    if ($figmaToken) $figmaToken.value = localStorage.getItem('pg-figma-token') || '';
+    updateFigmaStatus();
     // Chat state
     isDefaultMode = localStorage.getItem('pg-use-default') !== 'false';
     try { chatHistory = JSON.parse(sessionStorage.getItem('pg-chat-history') || '[]'); } catch(e2) { chatHistory = []; }
@@ -1638,7 +1644,6 @@ function saveSettings() {
     localStorage.setItem('pg-apikeys', JSON.stringify(keys));
     localStorage.setItem('pg-use-default', isDefaultMode ? 'true' : 'false');
     localStorage.setItem('pg-fast-mode', $fastMode.checked);
-    if ($figmaToken) localStorage.setItem('pg-figma-token', $figmaToken.value);
   } catch(e) {}
 }
 
@@ -1676,7 +1681,99 @@ $provider.addEventListener('change', function() {
 $model.addEventListener('change', saveSettings);
 $apikey.addEventListener('change', saveSettings);
 $fastMode.addEventListener('change', saveSettings);
-if ($figmaToken) $figmaToken.addEventListener('change', saveSettings);
+
+// ---- Figma OAuth ----
+function getFigmaToken() { return localStorage.getItem('pg-figma-access-token') || ''; }
+function getFigmaRefresh() { return localStorage.getItem('pg-figma-refresh-token') || ''; }
+
+function updateFigmaStatus() {
+  if (!$figmaStatus || !$figmaConnect) return;
+  if (getFigmaToken()) {
+    $figmaStatus.textContent = 'Connected';
+    $figmaStatus.style.color = 'var(--db-green,#3a7)';
+    $figmaConnect.textContent = 'Disconnect Figma';
+  } else {
+    $figmaStatus.textContent = '';
+    $figmaConnect.textContent = '';
+    var icon = document.createElement('i');
+    icon.setAttribute('data-lucide', 'figma');
+    icon.style.cssText = 'width:13px;height:13px;';
+    $figmaConnect.appendChild(icon);
+    $figmaConnect.appendChild(document.createTextNode(' Connect Figma'));
+    requestAnimationFrame(function() { if (window.lucide) lucide.createIcons({ nodes: [$figmaConnect] }); });
+  }
+}
+
+function startFigmaOAuth() {
+  if (!figmaClientId) {
+    DAUB.toast({ type: 'error', message: 'Figma OAuth not available' });
+    return;
+  }
+  var redirectUri = window.location.origin + '/api/figma-callback';
+  var authUrl = 'https://www.figma.com/oauth?client_id=' + encodeURIComponent(figmaClientId)
+    + '&redirect_uri=' + encodeURIComponent(redirectUri)
+    + '&scope=file_content:read,file_metadata:read'
+    + '&state=daub'
+    + '&response_type=code';
+  window.open(authUrl, 'figma-oauth', 'width=480,height=640');
+}
+
+window.addEventListener('message', function(e) {
+  if (e.origin !== window.location.origin) return;
+  if (e.data && e.data.type === 'figma-oauth-success') {
+    localStorage.setItem('pg-figma-access-token', e.data.accessToken);
+    if (e.data.refreshToken) localStorage.setItem('pg-figma-refresh-token', e.data.refreshToken);
+    if (e.data.expiresIn) localStorage.setItem('pg-figma-token-expires', Date.now() + e.data.expiresIn * 1000);
+    updateFigmaStatus();
+    DAUB.toast({ type: 'success', message: 'Figma connected!' });
+  }
+  if (e.data && e.data.type === 'figma-oauth-error') {
+    DAUB.toast({ type: 'error', message: 'Figma: ' + e.data.error });
+  }
+});
+
+if ($figmaConnect) $figmaConnect.addEventListener('click', function() {
+  if (getFigmaToken()) {
+    localStorage.removeItem('pg-figma-access-token');
+    localStorage.removeItem('pg-figma-refresh-token');
+    localStorage.removeItem('pg-figma-token-expires');
+    updateFigmaStatus();
+    DAUB.toast({ type: 'info', message: 'Figma disconnected' });
+  } else {
+    startFigmaOAuth();
+  }
+});
+
+// Fetch client ID on load
+fetch('/api/figma').then(function(r) { return r.json(); }).then(function(d) {
+  if (d.clientId) figmaClientId = d.clientId;
+}).catch(function() {});
+
+// Auto-refresh token if near expiry
+function ensureFigmaToken() {
+  return new Promise(function(resolve) {
+    var token = getFigmaToken();
+    if (!token) { resolve(''); return; }
+    var expires = parseInt(localStorage.getItem('pg-figma-token-expires') || '0', 10);
+    if (expires && Date.now() > expires - 60000) {
+      var refresh = getFigmaRefresh();
+      if (!refresh) { resolve(token); return; }
+      fetch('/api/figma?refresh', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken: refresh }),
+      }).then(function(r) { return r.json(); }).then(function(d) {
+        if (d.accessToken) {
+          localStorage.setItem('pg-figma-access-token', d.accessToken);
+          if (d.expiresIn) localStorage.setItem('pg-figma-token-expires', Date.now() + d.expiresIn * 1000);
+          resolve(d.accessToken);
+        } else { resolve(token); }
+      }).catch(function() { resolve(token); });
+    } else {
+      resolve(token);
+    }
+  });
+}
 
 // ---- Example chips ----
 document.querySelectorAll('[data-example]').forEach(function(chip) {
@@ -1896,9 +1993,8 @@ function addFigmaContextToStrip(figmaCtx, loading) {
 }
 
 function fetchFigmaDesign(url) {
-  var token = $figmaToken ? $figmaToken.value.trim() : '';
-  if (!token) {
-    DAUB.toast({ type: 'warning', message: 'Add Figma token in settings first' });
+  if (!getFigmaToken()) {
+    DAUB.toast({ type: 'warning', message: 'Connect Figma in settings first' });
     openByokModal();
     return;
   }
@@ -1909,10 +2005,13 @@ function fetchFigmaDesign(url) {
   var placeholder = { url: url, name: 'Figma' };
   var els = addFigmaContextToStrip(placeholder, true);
 
-  fetch('/api/figma', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: url, token: token }),
+  ensureFigmaToken().then(function(token) {
+    if (!token) throw new Error('Figma token expired — reconnect in settings');
+    return fetch('/api/figma', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: url, token: token }),
+    });
   })
   .then(function(r) {
     if (!r.ok) return r.json().catch(function() { return { error: 'HTTP ' + r.status }; }).then(function(d) { throw new Error(d.error || 'HTTP ' + r.status); });
@@ -1960,13 +2059,12 @@ $prompt.addEventListener('paste', function(e) {
   // Detect Figma URL in pasted text
   var pastedText = e.clipboardData && e.clipboardData.getData('text/plain');
   if (pastedText && /figma\.com\/(file|design|proto)\//i.test(pastedText.trim())) {
-    var token = $figmaToken ? $figmaToken.value.trim() : '';
-    if (token) {
+    if (getFigmaToken()) {
       e.preventDefault();
       fetchFigmaDesign(pastedText.trim());
       return;
     } else {
-      DAUB.toast({ type: 'info', message: 'Add a Figma token in settings to auto-attach designs' });
+      DAUB.toast({ type: 'info', message: 'Connect Figma in settings to auto-attach designs' });
     }
   }
   var items = e.clipboardData && e.clipboardData.items;

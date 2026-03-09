@@ -1,5 +1,7 @@
 // Cloudflare Pages Function — Figma design extraction proxy
-// POST /api/figma  { url: "https://figma.com/design/...", token: "figd_..." }
+// GET  /api/figma          → returns { clientId } for OAuth initiation
+// POST /api/figma          → { url, token } → design context extraction
+// POST /api/figma?refresh  → { refreshToken } → new access token
 
 function getCorsHeaders(request) {
   const origin = request.headers.get('Origin') || '';
@@ -8,7 +10,7 @@ function getCorsHeaders(request) {
   const corsOrigin = isAllowed ? origin : allowedOrigins[0];
   return {
     'Access-Control-Allow-Origin': corsOrigin,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
 }
@@ -20,10 +22,22 @@ function jsonResponse(data, status, corsHeaders) {
   });
 }
 
+export async function onRequestGet(context) {
+  const { env, request } = context;
+  const corsHeaders = getCorsHeaders(request);
+  const clientId = env.FIGMA_CLIENT_ID || '';
+  if (!clientId) return jsonResponse({ error: 'Figma OAuth not configured' }, 500, corsHeaders);
+  return jsonResponse({ clientId }, 200, corsHeaders);
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
   const corsHeaders = getCorsHeaders(request);
   try {
+    const url = new URL(request.url);
+    if (url.searchParams.has('refresh')) {
+      return await handleRefresh(request, env, corsHeaders);
+    }
     return await handleRequest(request, env, corsHeaders);
   } catch (e) {
     return jsonResponse({ error: 'Internal error: ' + (e.message || String(e)) }, 500, corsHeaders);
@@ -35,6 +49,33 @@ export async function onRequestOptions(context) {
     status: 204,
     headers: getCorsHeaders(context.request),
   });
+}
+
+async function handleRefresh(request, env, corsHeaders) {
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: 'Invalid JSON' }, 400, corsHeaders); }
+  const refreshToken = (body.refreshToken || '').trim();
+  if (!refreshToken) return jsonResponse({ error: 'refreshToken required' }, 400, corsHeaders);
+
+  const clientId = env.FIGMA_CLIENT_ID;
+  const clientSecret = env.FIGMA_CLIENT_SECRET;
+  if (!clientId || !clientSecret) return jsonResponse({ error: 'Server misconfigured' }, 500, corsHeaders);
+
+  const res = await fetch('https://api.figma.com/v1/oauth/refresh', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refreshToken,
+    }).toString(),
+  });
+  if (!res.ok) {
+    const t = await res.text();
+    return jsonResponse({ error: 'Refresh failed: ' + t.substring(0, 200) }, 502, corsHeaders);
+  }
+  const data = await res.json();
+  return jsonResponse({ accessToken: data.access_token, expiresIn: data.expires_in || 0 }, 200, corsHeaders);
 }
 
 // ---- URL parsing ----
