@@ -2,6 +2,14 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.6.2
+
+**Bugfix: prevent visual check from destroying generated UIs.**
+
+- Fix: tighten selfCheck prompt to only allow cosmetic tweaks (gap, padding, style) — never remove or restructure elements
+- Fix: add element-count guard — reject fixes that drop more than 20% of components
+- Fix: match chat and preview toolbar heights (min-height: 40px)
+
 ## v3.6.1
 
 **Bugfix: prevent recursive iframe nesting.**
