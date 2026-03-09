@@ -715,8 +715,8 @@
       font-size: 0.75rem;
       line-height: 1.6;
       padding: 12px;
-      border: 1px solid var(--db-sand);
-      border-radius: var(--db-radius-2);
+      border: none;
+      border-radius: 0;
       background: var(--db-cream-dark, var(--db-cream));
       color: var(--db-ink);
     }
@@ -740,9 +740,9 @@
     .pg-preview-tabs .db-tabs__tab {
       font-size: 0.75rem; padding: 6px 12px;
       border-bottom: 2px solid transparent; margin-bottom: 0;
-      border-radius: 0;
+      border-radius: 0; font-weight: 500;
     }
-    .pg-tab--active { font-weight: 600; }
+    .pg-preview-tabs .db-tabs__tab[aria-selected="true"] { font-weight: 500; }
     .pg-preview-pane { display: none; flex: 1; overflow: auto; min-height: 0; }
     .pg-preview-pane--active { display: flex; flex-direction: column; }
     .pg-code-view {
