@@ -24,12 +24,14 @@ export async function onRequestGet(context) {
 
   // Exchange code for access token
   try {
+    const basicAuth = btoa(clientId + ':' + clientSecret);
     const tokenRes = await fetch('https://api.figma.com/v1/oauth/token', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + basicAuth,
+      },
       body: new URLSearchParams({
-        client_id: clientId,
-        client_secret: clientSecret,
         redirect_uri: new URL('/api/figma-callback', url.origin).toString(),
         code: code,
         grant_type: 'authorization_code',

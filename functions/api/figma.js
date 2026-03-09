@@ -61,12 +61,14 @@ async function handleRefresh(request, env, corsHeaders) {
   const clientSecret = env.FIGMA_CLIENT_SECRET;
   if (!clientId || !clientSecret) return jsonResponse({ error: 'Server misconfigured' }, 500, corsHeaders);
 
+  const basicAuth = btoa(clientId + ':' + clientSecret);
   const res = await fetch('https://api.figma.com/v1/oauth/refresh', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + basicAuth,
+    },
     body: new URLSearchParams({
-      client_id: clientId,
-      client_secret: clientSecret,
       refresh_token: refreshToken,
     }).toString(),
   });
