@@ -247,12 +247,63 @@ function specSummary(spec) {
   return `${Object.keys(spec.elements).length} elements, ${types.size} component types, theme: ${spec.theme || 'light'}`;
 }
 
+// ---- Render spec to self-contained HTML ----
+
+function renderToHTML(spec) {
+  const theme = spec.theme || 'light';
+  const specJSON = JSON.stringify(spec);
+  return `<!DOCTYPE html>
+<html data-theme="${theme}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAUB UI</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@3/daub.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"><\/script>
+  <style>
+    body { margin: 0; padding: 16px; font-family: Inter, system-ui, sans-serif; background: var(--db-bg); color: var(--db-fg); }
+    #app { max-width: 1200px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="https://cdn.jsdelivr.net/npm/daub-ui@3/daub.js"><\/script>
+  <script>
+  (function() {
+    var spec = ${specJSON};
+    // Load renderer from playground and render spec
+    var s = document.createElement('script');
+    s.src = 'https://daub.dev/daub-render.js';
+    s.onload = function() {
+      if (typeof renderElement === 'function') {
+        var root = renderElement(spec.elements, spec.root, 0);
+        if (root) document.getElementById('app').appendChild(root);
+        var rendered = {};
+        document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+        Object.keys(spec.elements).forEach(function(id) {
+          if (id !== spec.root && !rendered[id]) {
+            var orphan = renderElement(spec.elements, id, 0);
+            if (orphan) document.getElementById('app').appendChild(orphan);
+          }
+        });
+        if (typeof DAUB !== 'undefined') DAUB.init();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+    };
+    document.body.appendChild(s);
+  })();
+  <\/script>
+</body>
+</html>`;
+}
+
 // ---- MCP Tool Definitions ----
 
 const TOOLS = [
   {
     name: 'generate_ui',
-    description: 'Generate a complete DAUB UI from a natural language prompt. Returns a JSON spec, validation results, and a summary.',
+    description: 'Generate a complete DAUB UI from a natural language prompt. Returns a JSON spec (json-render format), self-contained HTML, validation results, and a summary.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -286,7 +337,7 @@ const TOOLS = [
   },
   {
     name: 'render_spec',
-    description: 'Render an existing DAUB spec JSON. Returns a playground preview URL and validation results.',
+    description: 'Render an existing DAUB spec JSON into self-contained HTML. Returns the spec, rendered HTML, and validation results.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -310,7 +361,8 @@ async function handleToolCall(name, args, env) {
       }
       const { spec, validation } = await generateSpec(args.prompt, options, apiKey);
       const summary = specSummary(spec);
-      return JSON.stringify({ spec, summary, validation: { valid: validation.valid, issues: validation.issues } }, null, 2);
+      const html = renderToHTML(spec);
+      return JSON.stringify({ spec, html, summary, validation: { valid: validation.valid, issues: validation.issues } }, null, 2);
     }
 
     case 'get_component_catalog': {
@@ -351,13 +403,8 @@ async function handleToolCall(name, args, env) {
     case 'render_spec': {
       const spec = JSON.parse(args.spec);
       const validation = validateSpec(spec);
-      // Can't write to filesystem in CF — return preview URL placeholder
-      const specJson = JSON.stringify(spec);
-      const encodedSpec = encodeURIComponent(btoa(unescape(encodeURIComponent(specJson))));
-      return JSON.stringify({
-        preview_url: `https://daub.dev/playground?b64=${encodedSpec}`,
-        validation,
-      }, null, 2);
+      const html = renderToHTML(spec);
+      return JSON.stringify({ spec, html, validation }, null, 2);
     }
 
     default:
