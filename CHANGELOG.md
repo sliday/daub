@@ -2,6 +2,19 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.8.0
+
+**Remote MCP server for AI-powered UI generation.**
+
+- Feature: remote MCP server deployed on Cloudflare's edge network at `https://daub.dev/api/mcp`
+- Feature: `generate_ui` tool — generate complete DAUB UI specs from natural language prompts via MCP
+- Feature: `get_component_catalog` tool — browse all 76 components, props, themes, and spec format
+- Feature: `validate_spec` tool — validate DAUB spec JSON with detailed issue reports
+- Feature: `render_spec` tool — get playground preview URLs for any spec
+- Enhancement: no API key required for MCP clients — uses server-side infrastructure
+- Enhancement: stateless HTTP transport — works with Claude Code, Cursor, and any MCP-compatible client
+- Setup: `claude mcp add daub --transport http https://daub.dev/api/mcp`
+
 ## v3.7.0
 
 **Smarter generation: two-pass layout analysis and visual diff feedback.**

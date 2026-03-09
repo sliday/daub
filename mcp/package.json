@@ -1,0 +1,14 @@
+{
+  "name": "daub-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for generating DAUB UI specs",
+  "type": "module",
+  "bin": {
+    "daub-mcp": "./server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "lz-string": "^1.5.0",
+    "zod": "^3.24.0"
+  }
+}

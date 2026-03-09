@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.7.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.8.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -303,6 +303,42 @@ Point your AI at `https://daub.dev/llms.txt` for complete component docs with HT
 
 For **json-render** (Vercel Generative UI): see the [integration recipe in llms.txt](https://daub.dev/llms.txt#json-render-integration-vercel-generative-ui).
 
+## MCP Server
+
+DAUB includes a remote [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that lets AI assistants generate, validate, and render DAUB UI specs directly.
+
+### Setup
+
+Add to Claude Code (or any MCP-compatible client):
+
+```bash
+claude mcp add daub --transport http https://daub.dev/api/mcp
+```
+
+Or add manually to your MCP config:
+
+```json
+{
+  "mcpServers": {
+    "daub": {
+      "type": "http",
+      "url": "https://daub.dev/api/mcp"
+    }
+  }
+}
+```
+
+### Tools
+
+| Tool | Description |
+|------|-------------|
+| `generate_ui` | Generate a complete DAUB UI from a natural language prompt |
+| `get_component_catalog` | Browse available components, props, themes, and spec format |
+| `validate_spec` | Validate a DAUB spec JSON and get issue reports |
+| `render_spec` | Get a playground preview URL for any spec |
+
+No API key required. The server runs on Cloudflare's edge network.
+
 ## Use with AI
 
 Drop these prompts into Claude, ChatGPT, Cursor, or any AI assistant. Each produces a complete, working HTML page. Add "Fetch docs from daub.dev/llms.txt first" for best results.
@@ -395,7 +431,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.7.0** — Two-pass layout analysis, visual diff feedback loop. 76 components, 20 theme families.
+**Latest: v3.8.0** — Remote MCP server for AI-powered UI generation. 76 components, 20 theme families.
 
 ## Star History
 
