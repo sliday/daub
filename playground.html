@@ -1071,6 +1071,7 @@ function buildIframeSrcdoc(theme) {
   var themeAttr = theme ? ' data-theme="' + theme + '"' : '';
   return '<!DOCTYPE html><html lang="en"' + themeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
+    + '<base target="_blank">'
     + '<link rel="stylesheet" href="daub.css?v=3.0.20">'
     + '<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" crossorigin="anonymous"><\/script>'
     + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
