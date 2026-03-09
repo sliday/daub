@@ -988,15 +988,6 @@
           <input class="db-field__input" type="password" id="pg-apikey" placeholder="sk-... or sk-ant-..." autocomplete="off">
           <span class="db-field__helper">Stored in localStorage only.</span>
         </div>
-        <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--db-sand);">
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <label class="db-field__label" style="margin:0;">Figma</label>
-            <span id="pg-figma-status" style="font-size:0.75rem;color:var(--db-ink-muted,#888);"></span>
-          </div>
-          <button class="db-btn db-btn--secondary db-btn--sm" id="pg-figma-connect" style="margin-top:6px;width:100%;">
-            <i data-lucide="figma" style="width:13px;height:13px;"></i> Connect Figma
-          </button>
-        </div>
         <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;">
           <small><a href="#" id="pg-default-link">Use Free DAUB AI</a></small>
           <button class="db-btn db-btn--primary db-btn--sm" id="pg-byok-save">Save &amp; Close</button>
@@ -1057,8 +1048,6 @@ var pendingWebContexts = []; // [{ title, url, content, screenshot }]
 var $weblook   = document.getElementById('pg-weblook');
 var pendingFigmaContexts = []; // [{ name, url, designContext, screenshot }]
 var $figma     = document.getElementById('pg-figma');
-var $figmaConnect = document.getElementById('pg-figma-connect');
-var $figmaStatus  = document.getElementById('pg-figma-status');
 var figmaClientId = ''; // fetched from server
 var $jsonError  = document.querySelector('.pg-json-error');
 var $jsonErrMsg = document.getElementById('pg-json-error-msg');
@@ -1687,20 +1676,13 @@ function getFigmaToken() { return localStorage.getItem('pg-figma-access-token') 
 function getFigmaRefresh() { return localStorage.getItem('pg-figma-refresh-token') || ''; }
 
 function updateFigmaStatus() {
-  if (!$figmaStatus || !$figmaConnect) return;
+  if (!$figma) return;
   if (getFigmaToken()) {
-    $figmaStatus.textContent = 'Connected';
-    $figmaStatus.style.color = 'var(--db-green,#3a7)';
-    $figmaConnect.textContent = 'Disconnect Figma';
+    $figma.title = 'Attach Figma design (connected)';
+    $figma.style.opacity = '1';
   } else {
-    $figmaStatus.textContent = '';
-    $figmaConnect.textContent = '';
-    var icon = document.createElement('i');
-    icon.setAttribute('data-lucide', 'figma');
-    icon.style.cssText = 'width:13px;height:13px;';
-    $figmaConnect.appendChild(icon);
-    $figmaConnect.appendChild(document.createTextNode(' Connect Figma'));
-    requestAnimationFrame(function() { if (window.lucide) lucide.createIcons({ nodes: [$figmaConnect] }); });
+    $figma.title = 'Connect & attach Figma design';
+    $figma.style.opacity = '';
   }
 }
 
@@ -1732,17 +1714,6 @@ window.addEventListener('message', function(e) {
   }
 });
 
-if ($figmaConnect) $figmaConnect.addEventListener('click', function() {
-  if (getFigmaToken()) {
-    localStorage.removeItem('pg-figma-access-token');
-    localStorage.removeItem('pg-figma-refresh-token');
-    localStorage.removeItem('pg-figma-token-expires');
-    updateFigmaStatus();
-    DAUB.toast({ type: 'info', message: 'Figma disconnected' });
-  } else {
-    startFigmaOAuth();
-  }
-});
 
 // Fetch client ID on load
 fetch('/api/figma').then(function(r) { return r.json(); }).then(function(d) {
@@ -1994,8 +1965,8 @@ function addFigmaContextToStrip(figmaCtx, loading) {
 
 function fetchFigmaDesign(url) {
   if (!getFigmaToken()) {
-    DAUB.toast({ type: 'warning', message: 'Connect Figma in settings first' });
-    openByokModal();
+    DAUB.toast({ type: 'warning', message: 'Connect your Figma account first' });
+    startFigmaOAuth();
     return;
   }
   if (!/figma\.com\/(file|design|proto)\//i.test(url)) {
@@ -2049,6 +2020,10 @@ function fetchFigmaDesign(url) {
 }
 
 $figma.addEventListener('click', function() {
+  if (!getFigmaToken()) {
+    startFigmaOAuth();
+    return;
+  }
   var url = prompt('Enter Figma URL:');
   if (!url || !url.trim()) return;
   fetchFigmaDesign(url.trim());
