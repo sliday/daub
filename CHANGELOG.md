@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.8.1
+
+**MCP tools now return spec JSON + rendered HTML.**
+
+- Fix: `generate_ui` and `render_spec` return both the json-render spec object and self-contained HTML (no more broken preview URLs)
+- Enhancement: dedicated MCP section on daub.dev with install command, tool descriptions, and conversation example
+- Enhancement: MCP tools documented in SKILL.md with allowed-tools and workflow guide
+- Added: `daub-render.js` — spec-to-DOM renderer served from CDN for rendered HTML output
+
 ## v3.8.0
 
 **Remote MCP server for AI-powered UI generation.**
