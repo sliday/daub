@@ -305,17 +305,21 @@ For **json-render** (Vercel Generative UI): see the [integration recipe in llms.
 
 ## MCP Server
 
-DAUB includes a remote [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that lets AI assistants generate, validate, and render DAUB UI specs directly.
+DAUB includes a remote [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that lets AI assistants generate, validate, and render DAUB UI specs directly — no API key required.
+
+### What is MCP?
+
+MCP is an open protocol that lets AI assistants use external tools. Once you connect the DAUB MCP server, your AI can generate full UI layouts, validate specs, and preview results — all through natural conversation.
 
 ### Setup
 
-Add to Claude Code (or any MCP-compatible client):
+Add to Claude Code:
 
 ```bash
 claude mcp add daub --transport http https://daub.dev/api/mcp
 ```
 
-Or add manually to your MCP config:
+For Cursor, Windsurf, or other MCP clients, add to your config:
 
 ```json
 {
@@ -337,7 +341,42 @@ Or add manually to your MCP config:
 | `validate_spec` | Validate a DAUB spec JSON and get issue reports |
 | `render_spec` | Get a playground preview URL for any spec |
 
-No API key required. The server runs on Cloudflare's edge network.
+### Example Workflow
+
+Once connected, just ask your AI assistant naturally:
+
+> "Build me a settings page with a sidebar, profile card, and notification toggles. Use the nord theme."
+
+The AI will call `generate_ui` behind the scenes and return a complete DAUB spec — a flat JSON object describing every component, its props, and layout hierarchy:
+
+```json
+{
+  "theme": "nord-light",
+  "root": "page",
+  "elements": {
+    "page": { "type": "Stack", "props": { "direction": "horizontal", "gap": 4 }, "children": ["sidebar", "main"] },
+    "sidebar": { "type": "Sidebar", "props": { "sections": [{ "title": "Settings", "items": [{ "label": "Profile", "icon": "user", "active": true }, { "label": "Notifications", "icon": "bell" }] }] } },
+    "main": { "type": "Stack", "props": { "direction": "vertical", "gap": 4 }, "children": ["profile-card", "notif-card"] },
+    "profile-card": { "type": "Card", "props": { "title": "Profile", "description": "Manage your account details" }, "children": ["avatar", "name-field", "email-field"] },
+    "avatar": { "type": "Avatar", "props": { "initials": "JD", "size": "lg" } },
+    "name-field": { "type": "Field", "props": { "label": "Full Name", "placeholder": "Jane Doe" } },
+    "email-field": { "type": "Field", "props": { "label": "Email", "placeholder": "jane@example.com", "type": "email" } },
+    "notif-card": { "type": "Card", "props": { "title": "Notifications" }, "children": ["email-switch", "push-switch"] },
+    "email-switch": { "type": "Switch", "props": { "label": "Email notifications", "checked": true } },
+    "push-switch": { "type": "Switch", "props": { "label": "Push notifications" } }
+  }
+}
+```
+
+You can then:
+- **Iterate** — "Add a danger zone section with a delete account button and alert dialog"
+- **Validate** — the AI calls `validate_spec` to check for missing children, unknown types, etc.
+- **Preview** — the AI calls `render_spec` to get a live playground URL
+- **Refine** — "Switch to the dracula theme and make the sidebar collapsible"
+
+The spec renders directly in the [DAUB Playground](https://daub.dev/playground.html) or any page with `daub.css` + `daub.js`.
+
+No API key required. Runs on Cloudflare's edge network.
 
 ## Use with AI
 
