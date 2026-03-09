@@ -9,6 +9,10 @@ allowed-tools:
   - Edit
   - Bash
   - WebFetch
+  - mcp__daub__generate_ui
+  - mcp__daub__get_component_catalog
+  - mcp__daub__validate_spec
+  - mcp__daub__render_spec
 ---
 
 # DAUB UI — Component Library
@@ -164,6 +168,32 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Field inputs**: `db-field__input` goes on the wrapper element (not just `<input>`) — applies to input, textarea, select wrappers, or custom control elements.
 - **Icons**: DAUB pairs well with [Lucide](https://lucide.dev) icons (`<script src="https://unpkg.com/lucide@latest"></script>`). All demos use Lucide.
 - **Overlay BEM**: Overlay components use hyphenated block names (e.g. `db-modal-overlay`, `db-alert-dialog`) with `__` children (e.g. `__panel`, `__body`). The outer wrapper gets the `id` and `aria-hidden` attributes that JS targets.
+
+## MCP Server
+
+DAUB has a remote MCP server — if it's connected, use the tools instead of manually building HTML.
+
+**Setup** (one-time):
+```bash
+claude mcp add daub --transport http https://daub.dev/api/mcp
+```
+
+**Tools available:**
+
+| Tool | When to use |
+|------|-------------|
+| `generate_ui` | Generate a full DAUB spec from a natural language prompt. Returns a JSON spec with components, props, layout, and theme. |
+| `get_component_catalog` | Look up available components, their props, valid themes, and the spec format. Use before hand-building specs. |
+| `validate_spec` | Check a spec for broken references, unknown types, missing children. Run after editing specs manually. |
+| `render_spec` | Get a playground preview URL for any spec. |
+
+**Workflow with MCP:**
+1. Call `generate_ui` with a prompt like "Admin dashboard with sidebar, stat cards, and data table. Dracula theme."
+2. The tool returns a flat JSON spec — iterate by calling `generate_ui` again with `existing_spec` + modification instructions
+3. Call `validate_spec` to verify the spec is clean
+4. Call `render_spec` to get a preview URL
+
+**Without MCP** (fallback): Build HTML manually using the component classes documented above, or point the LLM at `https://daub.dev/llms.txt`.
 
 ## Full Docs
 
