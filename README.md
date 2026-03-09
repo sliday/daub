@@ -395,7 +395,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.5.2** — Clean toolbar UI with pill toggles. 76 components, 20 theme families.
+**Latest: v3.6.0** — Figma design integration for playground. 76 components, 20 theme families.
 
 ## Star History
 
