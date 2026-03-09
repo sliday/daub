@@ -6,13 +6,15 @@ All notable changes to DAUB are documented here.
 
 **Figma design integration for playground.**
 
-- Feature: Figma button in chat attach bar — paste a Figma URL, extract design context (colors, typography, layout hierarchy, components) via Figma REST API
-- Feature: New `/api/figma` Cloudflare Pages Function — proxies Figma API calls, extracts compact design specification (~5-7KB) from arbitrarily large Figma files
-- Feature: Figma token field in BYOK settings modal (stored in localStorage)
+- Feature: Figma button in chat attach bar — click to connect via OAuth, then paste any Figma URL to extract design context (colors, typography, layout hierarchy, components)
+- Feature: Figma OAuth flow — one-click "Connect Figma" via the Figma button, no personal access token needed
+- Feature: New `/api/figma` Cloudflare Pages Function — proxies Figma REST API, extracts compact design specification (~5-7KB) from arbitrarily large files
+- Feature: New `/api/figma-callback` — OAuth callback for token exchange with auto-refresh support
 - Feature: Smart URL routing — pasting or entering a figma.com URL in the Link button auto-routes to Figma handler
-- Feature: Paste detection — pasting a Figma URL auto-attaches the design if token is configured
+- Feature: Paste detection — pasting a Figma URL auto-attaches the design if Figma is connected
 - Feature: Figma screenshots captured and sent alongside design context to AI for visual matching
 - Feature: Figma entries shown in chat bubbles with Figma icon
+- Change: Figma-attached prompts always route through default DAUB AI backend (ignores custom key) — Fast and Verify toggles remain independent
 
 ## v3.5.2
 
