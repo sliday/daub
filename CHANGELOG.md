@@ -2,6 +2,18 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.9.0
+
+**Complexity-based model routing for MCP server.**
+
+- Feature: prompt complexity scoring — 6 weighted dimensions (length, specificity, interactivity, multi-component, constraint density, creativity) classify prompts into SIMPLE/MEDIUM/COMPLEX/PREMIUM tiers
+- Feature: tiered model selection — each tier routes to a primary model with two fallbacks, Google-first for multimodality
+- Feature: exponential backoff retry — 500ms × 2^attempt, max 3 retries per model, max 2 fallback models on 429/502/503/504 or parse errors
+- Feature: routing metadata in `generate_ui` responses — tier, score, dimensions, model used, attempt count, token usage
+- Feature: graceful degradation — on total failure returns partial result with raw text and error context
+- Enhancement: model tiers use verified OpenRouter pricing (Flash Lite → Flash → Pro → Sonnet 4.6)
+- Fix: playground toolbar padding reduced for tighter layout
+
 ## v3.8.1
 
 **MCP tools now return spec JSON + rendered HTML.**

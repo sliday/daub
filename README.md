@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.8.1-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.9.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -307,6 +307,15 @@ For **json-render** (Vercel Generative UI): see the [integration recipe in llms.
 
 DAUB includes a remote [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that lets AI assistants generate, validate, and render DAUB UI specs directly — no API key required.
 
+The MCP server uses complexity-based model routing: each prompt is scored across 6 dimensions and routed to an appropriate model tier with automatic fallback chains and exponential backoff.
+
+| Tier | Score | Primary | Fallbacks |
+|------|-------|---------|-----------|
+| SIMPLE | 0–15 | Gemini 3.1 Flash Lite | DeepSeek V3.2, Grok 4.1 Fast |
+| MEDIUM | 16–35 | Gemini 3 Flash | MiniMax M2.5, Kimi K2.5 |
+| COMPLEX | 36–60 | Gemini 3.1 Pro | Claude Haiku 4.5, GPT-5.4 |
+| PREMIUM | 61–100 | Claude Sonnet 4.6 | Claude Opus 4.6, GPT-5.4 Pro |
+
 ### What is MCP?
 
 MCP is an open protocol that lets AI assistants use external tools. Once you connect the DAUB MCP server, your AI can generate full UI layouts, validate specs, and preview results — all through natural conversation.
@@ -470,7 +479,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.8.1** — Remote MCP server with spec JSON + rendered HTML output. 76 components, 20 theme families.
+**Latest: v3.9.0** — Complexity-based model routing for MCP server with tiered fallback chains. 76 components, 20 theme families.
 
 ## Star History
 
