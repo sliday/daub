@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.9.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.10.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -303,6 +303,24 @@ Point your AI at `https://daub.dev/llms.txt` for complete component docs with HT
 
 For **json-render** (Vercel Generative UI): see the [integration recipe in llms.txt](https://daub.dev/llms.txt#json-render-integration-vercel-generative-ui).
 
+## Block Library
+
+DAUB includes 22 pre-made layout patterns across 7 categories. Blocks are proven DAUB specs that serve as structural templates during AI generation.
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| Landing | 5 | Hero, Features Grid, Pricing, Testimonials, Footer |
+| Dashboard | 5 | Sidebar Layout, Stats Row, Chart Panel, Data Table, Header |
+| Forms | 5 | Login, Signup, Contact, Checkout, Settings |
+| Ecommerce | 2 | Product Grid, Order Summary |
+| Data Display | 3 | Profile, Notification Center, Empty State |
+| Auth | 1 | Split-screen Auth Page |
+| Mobile | 1 | App Shell with Bottom Nav |
+
+Blocks are automatically retrieved via **RAG** (Retrieval-Augmented Generation) during `generate_ui` calls. The system embeds user prompts with Gemini, finds the top-5 matching blocks by cosine similarity, and injects their full specs as few-shot examples.
+
+Browse blocks via the MCP `get_block_library` tool or view them at `blocks/index.json`.
+
 ## MCP Server
 
 DAUB includes a remote [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that lets AI assistants generate, validate, and render DAUB UI specs directly — no API key required.
@@ -349,6 +367,7 @@ For Cursor, Windsurf, or other MCP clients, add to your config:
 | `get_component_catalog` | Browse available components, props, themes, and spec format |
 | `validate_spec` | Validate a DAUB spec JSON and get issue reports |
 | `render_spec` | Get a playground preview URL for any spec |
+| `get_block_library` | Browse pre-made layout blocks by category |
 
 ### Example Workflow
 
@@ -479,7 +498,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.9.0** — Complexity-based model routing for MCP server with tiered fallback chains. 76 components, 20 theme families.
+**Latest: v3.10.0** — Block library with RAG-powered generation, design knowledge integration, 22 pre-made layout patterns. 76 components, 20 theme families.
 
 ## Star History
 

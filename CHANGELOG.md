@@ -2,6 +2,22 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.10.0
+
+**Block library with RAG-powered generation and design knowledge integration.**
+
+- Feature: 22 pre-made block specs across 7 categories (landing, dashboard, forms, ecommerce, data-display, auth, mobile)
+- Feature: multimodal RAG retrieval — Gemini embeddings + cosine similarity retrieves top-5 blocks as few-shot examples during generation
+- Feature: condensed design knowledge injected into system prompt — 8pt grid rules, grouping, visual hierarchy, typography, color, component guidelines
+- Feature: conditional landing page patterns — headline-awareness mapping, page formulas by product type, visitor monologue sequence, CTA rules — activated by keyword detection
+- Feature: `get_block_library` MCP tool for browsing available blocks by category
+- Feature: 148-block taxonomy JSON for future block generation reference
+- Feature: block toolchain — generation, screenshots, embeddings, QA validation, index builder
+- Enhancement: NavMenu supports vertical layout for footer link columns
+- Enhancement: declarative state system for tabs, toggles, forms, counters, show/hide
+- Enhancement: `buildSystemPrompt` accepts user prompt for conditional knowledge injection
+- Fix: duplicate CustomHTML elements no longer shadow existing components
+
 ## v3.9.0
 
 **Complexity-based model routing for MCP server.**
