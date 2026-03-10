@@ -20,21 +20,28 @@ The stack builds progressively. Each layer enables the next.
 |-------|--------|--------------|
 | `daub-classless.css` | **Shipped** (v3.0) | Plain HTML looks good. Zero classes needed. |
 | `daub.css` + `daub.js` | **Shipped** (v2.9) | 76 class-based components, 40 theme variants. |
-| JSON-Render spec | **Working** (playground) | AI outputs JSON, DAUB renders live UI. |
+| JSON-Render spec | **Shipped** (v3.5+) | AI outputs JSON, DAUB renders live UI. Full pipeline with complexity routing. |
+| AI Playground | **Shipped** (v3.9) | 7-stage pipeline: analyze, scaffold, generate, selfCheck, verify, repair, visual diff. Figma input, mobile detection, complexity-based model routing. |
+| MCP Server | **Shipped** (v3.8-3.9) | Remote edge server on Cloudflare. Prompt complexity scoring, tiered model routing with fallback chains. |
 | React/JSX wrappers | Planned | `<DaubCard>`, `<DaubButton>` — typed components. |
-| Intent Engine | Future | Natural language in, UI spec out, live render. |
+| Intent Engine | In Progress | Natural language in, UI spec out, live render. Playground is the working prototype. |
 | Agent Runtime | Future | Multi-agent system orchestrates APIs + UI. |
 
 The bottom layers are infrastructure. The top layers are where it gets interesting.
 
 ---
 
-## Where We Are (v2.9 → v3.0)
+## Where We Are (v3.9)
 
 - **76 components** — buttons, cards, modals, tabs, drawers, data tables, and more
 - **20 theme families** with 40 variants — from clean corporate to tactile grunge
-- **Classless CSS layer** — just shipped. Drop in the stylesheet, write plain HTML, it looks good
-- **AI Playground** — type a prompt, get a JSON spec, see live component preview
+- **AI Playground** with full 7-stage pipeline — analyze, scaffold, generate, selfCheck, verify, repair loop, visual diff
+- **Complexity-based model routing** — prompts scored across 6 dimensions, routed to tiered models with exponential backoff fallbacks
+- **MCP server** on Cloudflare's edge — `generate_ui`, `render_spec`, `validate_spec`, `get_component_catalog` tools
+- **Figma design import** — OAuth flow, screenshot capture, layout analysis fed into generation
+- **Visual diff** — compare rendered output against uploaded target images for iterative refinement
+- **Mobile-responsive generation** — auto-detects mobile app prompts and switches layout strategy
+- **Content integrity guards** — `measureTextContent`, element-count guards, CustomHTML dedup
 - **`llms.txt` + `llms-compact.txt`** — documentation formatted for AI agent consumption
 - **Zero build step** — CDN-first, no bundler, no compile step, no config files
 
@@ -42,29 +49,29 @@ The bottom layers are infrastructure. The top layers are where it gets interesti
 
 ## Near-Term
 
-### v3.1 — React Wrappers
-Typed JSX components that wrap DAUB's CSS classes. `<DaubCard variant="elevated">` instead of `<div class="card elevated">`. Full TypeScript support, proper prop validation, IDE autocomplete.
+### v3.10 — Playground Resilience
+Per-tier fallback chains in the playground, matching the MCP server's retry pattern. Exponential backoff for streaming retries. Unified model routing config shared between playground and MCP server so both environments behave identically.
 
-### v3.2 — Streaming Render
-Progressive UI construction during LLM streaming. Partial JSON arrives, partial UI appears. No waiting for the full response — components materialize as the model thinks.
+### v3.11 — Action Bindings
+Generated buttons that POST to real endpoints. Forms with submit handlers. Cards that link to live URLs. The gap between "pretty mockup" and "functional UI" — this is where it closes.
 
-### v3.3 — Layout Intelligence
-The AI picks the right layout based on what the data looks like. A list of restaurants? Cards in a grid. A single article? Long-form reader. A comparison? Side-by-side table. The shape of the data determines the shape of the UI.
+### v3.12 — Persistence & Sharing
+Save generated UIs to shareable URLs. Version history for iterative refinement. Export to standalone HTML file. The generated interface outlives the session that created it.
 
-### v3.4 — Action Bindings
-Components that do things. Buttons that POST. Forms that submit. Cards that link to real endpoints. The generated UI isn't just a picture — it's functional.
+### v4.0 — React Wrappers (if demand warrants)
+Typed JSX components wrapping DAUB CSS. `<DaubCard variant="elevated">` with full TypeScript support, proper prop validation, IDE autocomplete. Only if community demand justifies the maintenance burden.
 
 ---
 
 ## Mid-Term Vision
 
-**Intent Parser** — "I need to track my expenses" becomes a spending dashboard with charts, category breakdowns, and an input form. No wireframes. No product spec. Just the thing you asked for.
+**Intent Parser** — Partially built in the playground's analyze-generate pipeline. Needs formalization into a standalone module. "I need to track my expenses" becomes a spending dashboard with charts, category breakdowns, and an input form. No wireframes. No product spec. Just the thing you asked for.
 
-**Context Awareness** — Location, time of day, user history all inform what gets generated. Ask for "lunch" at noon near downtown and the UI knows what you mean.
+**Context Awareness** — Location, time of day, user history all inform what gets generated. Ask for "lunch" at noon near downtown and the UI knows what you mean. Still future work.
 
-**Adaptive Complexity** — Start simple. Show three options. As the user engages, reveal depth — filters, sorting, advanced settings. Complexity is earned, not imposed.
+**Adaptive Complexity** — Partially built. The complexity-routed pipeline already classifies prompts into tiers and adjusts generation strategy. Next step: extend this to the UI itself — start simple, reveal depth as the user engages. Complexity is earned, not imposed.
 
-**Multi-Agent Backend** — One agent fetches data. Another decides layout. A third handles user actions. The UI is just the surface of a coordinated system underneath. Think OpenClaw-style orchestration, but the output is a live interface.
+**Multi-Agent Backend** — Foundation laid. The MCP server is the first agent in the system. Next: one agent fetches data, another decides layout, a third handles user actions. The UI is just the surface of a coordinated system underneath.
 
 ---
 
@@ -72,10 +79,10 @@ Components that do things. Buttons that POST. Forms that submit. Cards that link
 
 **You describe what you need. The computer builds it. No apps. No navigation. No learning curve.**
 
-- "Pizza" → cards of nearby places with ratings, ETA, order button
-- "Track my spending" → categorized expense dashboard with input form and charts
-- "Plan a trip to Tokyo" → itinerary builder with maps, hotels, flights, day-by-day
-- "Help me write a cover letter" → editor with AI suggestions, tone controls, export to PDF
+- "Pizza" -> cards of nearby places with ratings, ETA, order button
+- "Track my spending" -> categorized expense dashboard with input form and charts
+- "Plan a trip to Tokyo" -> itinerary builder with maps, hotels, flights, day-by-day
+- "Help me write a cover letter" -> editor with AI suggestions, tone controls, export to PDF
 
 The interface serves the moment, then it's gone. Next thought, next surface.
 
@@ -100,7 +107,13 @@ These carry through from handcrafted components to AI-generated UI.
 ## Open Questions
 
 - **Voice input** — Web Speech API or an external service? Browser support is spotty. Latency matters.
-- **Persistence** — Should generated UIs be saveable? Shareable via URL? Version-controlled?
 - **Offline** — Can the intent engine run with local models? WebLLM? ONNX in the browser?
-- **Multi-modal input** — Can the system accept screenshots, photos, or sketches as input alongside text?
 - **Trust** — When the system generates a "buy" button, how does the user know it's safe? What's the verification layer?
+- **Stateful UIs** — How to handle forms, wizards, and multi-step flows? The current pipeline generates static snapshots. What's the model for state transitions?
+- **MCP streaming** — Should the MCP server support streaming responses for progressive rendering in connected clients?
+- **Automated quality testing** — How to test generated UI quality at scale? Automated visual regression across prompt categories?
+
+### Resolved
+
+- **Persistence** — Moved to near-term roadmap (v3.12).
+- **Multi-modal input** — Partially resolved. Figma screenshots and image upload feed into the generation pipeline (v3.6-3.7).

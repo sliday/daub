@@ -1,8 +1,17 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { LAYOUT_RULES_COMPACT, LANDING_PAGE_RULES, detectLandingIntent } from './design-knowledge.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Load block library index
+let BLOCK_INDEX = [];
+try {
+  BLOCK_INDEX = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'blocks', 'index.json'), 'utf-8'));
+} catch {
+  BLOCK_INDEX = [];
+}
 
 // Current COMP_PROPS from playground.html (Stack/Grid, not legacy Layout)
 export const COMP_PROPS = {
@@ -92,16 +101,9 @@ export const COMP_CATEGORIES = [
 
 export const VALID_TYPES = COMP_CATEGORIES.flatMap(([, types]) => types);
 
-// Load LAYOUT-RULES.md if available
-let LAYOUT_RULES = '';
-try {
-  LAYOUT_RULES = fs.readFileSync(path.join(__dirname, '..', '..', 'tools', 'LAYOUT-RULES.md'), 'utf-8');
-} catch {
-  // Fallback: inline summary
-  LAYOUT_RULES = '';
-}
+export { BLOCK_INDEX };
 
-export function buildSystemPrompt() {
+export function buildSystemPrompt(ragBlocks, userPrompt) {
   let preamble = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\n'
     + 'BE EXHAUSTIVE AND DETAILED. Generate complete, production-realistic UIs:\n'
     + '- Include ALL elements mentioned in the prompt — do not skip or summarize\n'
@@ -171,17 +173,11 @@ export function buildSystemPrompt() {
     + '- Every page needs proper header/nav, main content, and footer/actions\n'
     + '- Use real-looking sample data (names, numbers, dates) throughout\n\n';
 
-  const layoutRulesSection = LAYOUT_RULES
-    ? 'LAYOUT RULES (8pt grid, information design):\n' + LAYOUT_RULES + '\n\n'
-    : 'LAYOUT RULES (8pt grid, information design):\n'
-      + '- Spacing tokens map to visual relationship: gap:1-2 within groups, gap:3-4 between groups, gap:5-6 between sections\n'
-      + '- Space between groups must be >=2x space within groups\n'
-      + '- Related elements close together; unrelated elements far apart\n'
-      + '- Most important content first: top, larger, bolder, higher contrast\n'
-      + '- One primary button per view. Secondary actions use outlined/text buttons\n'
-      + '- Cards group related content; don\'t over-containerize\n'
-      + '- Dashboards: stat cards row -> chart/table -> detail list\n'
-      + '- Forms: label above input, helper text below, group related fields in sections\n\n';
+  const layoutRulesSection = LAYOUT_RULES_COMPACT + '\n\n';
+
+  const landingSection = detectLandingIntent(userPrompt)
+    ? LANDING_PAGE_RULES + '\n\n'
+    : '';
 
   const stateSection = 'INTERACTIVITY — DECLARATIVE STATE (PREFERRED):\n'
     + '- Use declarative state for tabs, toggles, forms, counters, show/hide — NO JavaScript needed\n'
@@ -215,5 +211,34 @@ export function buildSystemPrompt() {
     + '- Warm/cozy → "gruvbox-light" or "catppuccin"\n'
     + '- Default: "light" when no preference is detected\n';
 
-  return preamble + sections + guidelines + density + layoutRulesSection + stateSection + themes;
+  let blocksSection = '';
+  if (ragBlocks && ragBlocks.length > 0) {
+    // RAG-retrieved blocks as few-shot examples (dynamic)
+    blocksSection = 'REFERENCE BLOCKS (proven layout patterns matching the request — use these as structural templates):\n'
+      + 'Study these specs carefully and follow the same patterns for layout structure, component nesting, and data density.\n\n';
+    for (const block of ragBlocks) {
+      const indexEntry = BLOCK_INDEX.find(b => b.id === block.id);
+      const desc = indexEntry?.description || block.id;
+      blocksSection += `--- ${block.id}: ${desc} ---\n`;
+      blocksSection += JSON.stringify(block.spec, null, 2) + '\n\n';
+    }
+  } else if (BLOCK_INDEX.length > 0) {
+    // Fallback: static block summaries
+    const byCategory = {};
+    for (const b of BLOCK_INDEX) {
+      (byCategory[b.category] = byCategory[b.category] || []).push(b);
+    }
+    blocksSection = 'BUILDING BLOCKS (pre-made layout patterns — use these as structural references):\n'
+      + 'When a prompt matches one of these patterns, follow the same layout structure.\n'
+      + 'Combine multiple blocks for full pages (e.g. hero-01 + features-grid-01 + pricing-01 + footer-01 for a landing page).\n\n';
+    for (const [cat, blocks] of Object.entries(byCategory)) {
+      blocksSection += cat.charAt(0).toUpperCase() + cat.slice(1) + ':\n';
+      for (const b of blocks) {
+        blocksSection += `- ${b.id}: ${b.description}\n`;
+      }
+      blocksSection += '\n';
+    }
+  }
+
+  return preamble + sections + guidelines + density + layoutRulesSection + landingSection + blocksSection + stateSection + themes;
 }

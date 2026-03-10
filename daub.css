@@ -4657,6 +4657,10 @@ textarea.db-field__input {
   align-items: center;
   gap: var(--db-space-1);
 }
+.db-nav-menu--vertical {
+  flex-direction: column;
+  align-items: flex-start;
+}
 
 .db-nav-menu__item {
   padding: var(--db-space-2) var(--db-space-3);

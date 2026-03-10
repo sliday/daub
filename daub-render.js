@@ -771,7 +771,7 @@
     // -- NavMenu --
     RENDERERS.NavMenu = function(p) {
       var el = document.createElement('nav');
-      el.className = 'db-nav-menu';
+      el.className = 'db-nav-menu' + (p.direction === 'vertical' ? ' db-nav-menu--vertical' : '');
       (p.items || []).forEach(function(item) {
         var a = document.createElement('a');
         a.className = 'db-nav-menu__item' + (item.active ? ' db-nav-menu__item--active' : '');

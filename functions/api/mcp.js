@@ -128,9 +128,158 @@ function autoFixSpec(spec) {
   return spec;
 }
 
+// ---- RAG: Vector Math ----
+
+function cosineSimilarity(a, b) {
+  let dot = 0;
+  for (let i = 0; i < a.length; i++) dot += a[i] * b[i];
+  return dot; // Pre-normalized vectors: dot product = cosine similarity
+}
+
+function normalizeVector(vec) {
+  let norm = 0;
+  for (let i = 0; i < vec.length; i++) norm += vec[i] * vec[i];
+  norm = Math.sqrt(norm);
+  if (norm === 0) return vec;
+  return vec.map(v => v / norm);
+}
+
+// ---- RAG: Gemini Embedding (gemini-embedding-2-preview, Google-only) ----
+// Must use same model as block-embed.js (embedding spaces are incompatible between models)
+
+const EMBEDDING_DIMS = 768;
+
+async function embedQuery(text, geminiKey) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-2-preview:embedContent?key=${geminiKey}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      taskType: 'RETRIEVAL_QUERY',
+      content: { parts: [{ text }] },
+      output_dimensionality: EMBEDDING_DIMS,
+    }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  const values = data.embedding?.values;
+  return values ? normalizeVector(values) : null;
+}
+
+// ---- RAG: Block Retrieval ----
+
+// Embeddings loaded lazily from CDN (cached in global scope for Worker reuse)
+let _embeddingsCache = null;
+let _blockSpecsCache = {};
+
+async function loadEmbeddings() {
+  if (_embeddingsCache) return _embeddingsCache;
+  try {
+    const res = await fetch('https://daub.dev/blocks/embeddings.json');
+    if (res.ok) {
+      _embeddingsCache = await res.json();
+      return _embeddingsCache;
+    }
+  } catch {}
+  return null;
+}
+
+async function loadBlockSpec(blockId, category) {
+  const cacheKey = blockId;
+  if (_blockSpecsCache[cacheKey]) return _blockSpecsCache[cacheKey];
+  try {
+    // Try loading from CDN — blocks are served as static files
+    const filePath = BLOCK_INDEX.find(b => b.id === blockId)?.file;
+    if (!filePath) return null;
+    const res = await fetch(`https://daub.dev/blocks/${filePath}`);
+    if (res.ok) {
+      const spec = await res.json();
+      _blockSpecsCache[cacheKey] = spec;
+      return spec;
+    }
+  } catch {}
+  return null;
+}
+
+async function retrieveTopBlocks(queryText, geminiKey, topK = 5) {
+  const [queryVec, embeddings] = await Promise.all([
+    embedQuery(queryText, geminiKey),
+    loadEmbeddings(),
+  ]);
+
+  if (!queryVec || !embeddings) return [];
+
+  const scores = [];
+  for (const [blockId, blockVec] of Object.entries(embeddings)) {
+    scores.push({ id: blockId, score: cosineSimilarity(queryVec, blockVec) });
+  }
+
+  scores.sort((a, b) => b.score - a.score);
+  return scores.slice(0, topK);
+}
+
+// ---- Design Knowledge Constants ----
+
+const LAYOUT_RULES_COMPACT = `LAYOUT RULES (8pt grid):
+Spacing tokens: XS=8px, S=16px, M=24px, L=32px, XL=48px, XXL=80px
+DAUB gap mapping: 0=0, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px
+
+Grouping: 4 methods — containers, proximity, similarity, continuity. Space between groups >= 2x within groups. Don't over-containerize: if 3/4 signals present, drop the border.
+
+Visual hierarchy (strongest→weakest): size, color/contrast, weight, position, spacing, depth. One focal point per view. Squint test: blur UI, key elements must still be identifiable.
+
+Typography: one sans-serif, two weights max (400/700). App scale 1.2 ratio (12-14-16-20-24-28), marketing scale 1.333 (14-18-24-32-42-56). Max 4-5 sizes/page. Body >=16px, line-height >=1.5 body / 1.1-1.3 headings. Max 65ch line length. Left-align body, center only short hero text (<3 lines).
+
+Color: design greyscale first. Brand color = interactive only (buttons, links, toggles). One accent. Foreground opacity: 90% primary, 75% body, 60% secondary, 45% borders, 10% separators, 4% fills. Contrast: 4.5:1 text, 3:1 large text/UI.
+
+Components: one primary button per view. Three weights: filled/outlined/text. Min 48x48px touch targets, 8px gap between. Label above input, helper below. One-column forms.
+
+Common mistakes: equal spacing everywhere (fix: inner < outer) | multiple primary buttons | center-aligned paragraphs | full-width text (max 65ch) | empty containers | orphan elements | color-only hierarchy | tiny touch targets | lorem ipsum.`;
+
+const LANDING_PAGE_RULES = `LANDING PAGE PATTERNS:
+Hero essentials: headline + subhead + hero image + CTA. No carousels in hero. Ever.
+
+Headline→awareness mapping:
+- Unaware: pain remover, problem/question ("Tired of X?")
+- Problem-aware: benefit, easy way ("The fastest way to X")
+- Solution-aware: product description, category ("Simple help desk software")
+- Product-aware: comparison, social proof, double benefit
+- Most aware: promise, testimonial ("You'll have X in Y days")
+Rules: customer-focused (never "We..."), clear > clever, big visual weight.
+
+Page formulas by product type:
+- SaaS: Hero→How it works→Main benefit→Features→Integrations→Testimonial→Use cases→Pricing→Footer
+- Physical: Hero→Description→Features→Proof gallery→More features→Cross-sell→Specs→Guarantees
+- Mobile App (known): Hero + download CTA. Done.
+- Mobile App (new): Hero→Benefits summary→Benefits detail→Features grid→Press→Testimonials→Logos+CTA→Footer
+- Desktop App: Hero→Benefits→Use cases→Proof→Awards+CTA
+- Book/Info: Hero (cover+proof)→About→Why buy→Contents→Author bio
+
+Visitor inner monologue (section ordering):
+1. What is this? → headline+image
+2. Why should I care? → main benefit
+3. How does it work? → how-it-works
+4. What do I get? → features
+5. Can I trust this? → proof
+6. Will it work for me? → use cases/testimonials
+7. What do others think? → more proof
+8. How much? → pricing
+9. What if it fails? → FAQ/guarantees
+10. How do I start? → bottom CTA
+
+CTA rules: one goal per page, verb-first text, never "Submit", big+contrasting+repeated, match aggressiveness to awareness. Always include bottom CTA.
+
+Proof placement: adjacent to claims, not in a separate section. Start proof early (hero if possible). Specific > general ("23% churn reduction" > "great product").
+
+Red lines: no carousels in hero, no "Submit" CTA, no company-name-only headlines, mandatory bottom CTA, no lorem ipsum, no low-quality images.`;
+
+function detectLandingIntent(prompt) {
+  return /landing\s*page|hero\s*section|marketing|pricing\s*(page|table)|signup\s*page|\bcta\b|conversion|above.?the.?fold|sales\s*page|lead\s*gen/i.test(prompt || '');
+}
+
 // ---- System Prompt Builder ----
 
-function buildSystemPrompt() {
+function buildSystemPrompt(ragBlocks, userPrompt) {
   let prompt = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\n'
     + 'BE EXHAUSTIVE AND DETAILED. Generate complete, production-realistic UIs:\n'
     + '- Include ALL elements mentioned in the prompt\n'
@@ -166,8 +315,43 @@ function buildSystemPrompt() {
     + '- Gap tokens: 0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px\n'
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'
-    + '- Use trigger:"overlay-id" on Button to open overlays\n\n'
-    + 'THEMES:\n'
+    + '- Use trigger:"overlay-id" on Button to open overlays\n\n';
+
+  prompt += LAYOUT_RULES_COMPACT + '\n\n';
+
+  if (detectLandingIntent(userPrompt)) {
+    prompt += LANDING_PAGE_RULES + '\n\n';
+  }
+
+  // RAG-retrieved blocks as few-shot examples (dynamic)
+  if (ragBlocks && ragBlocks.length > 0) {
+    prompt += 'REFERENCE BLOCKS (proven layout patterns matching the request — use these as structural templates):\n'
+      + 'Study these specs carefully and follow the same patterns for layout structure, component nesting, and data density.\n\n';
+    for (const block of ragBlocks) {
+      const indexEntry = BLOCK_INDEX.find(b => b.id === block.id);
+      const desc = indexEntry?.description || block.id;
+      prompt += `--- ${block.id}: ${desc} ---\n`;
+      prompt += JSON.stringify(block.spec, null, 2) + '\n\n';
+    }
+  } else {
+    // Fallback: static block summaries (original behavior)
+    prompt += 'BUILDING BLOCKS (pre-made layout patterns — use these as structural references):\n'
+      + 'When a prompt matches one of these patterns, follow the same layout structure.\n'
+      + 'Combine multiple blocks for full pages (e.g. hero-01 + features-grid-01 + pricing-01 + footer-01 for a landing page).\n\n';
+    const byCategory = {};
+    for (const b of BLOCK_INDEX) {
+      (byCategory[b.category] = byCategory[b.category] || []).push(b);
+    }
+    for (const [cat, blocks] of Object.entries(byCategory)) {
+      prompt += cat.charAt(0).toUpperCase() + cat.slice(1) + ':\n';
+      for (const b of blocks) {
+        prompt += `- ${b.id}: ${b.description}\n`;
+      }
+      prompt += '\n';
+    }
+  }
+
+  prompt += 'THEMES:\n'
     + '- Light: light, bone, material-light, github, nord-light, solarized-light, catppuccin, gruvbox-light, paper, grunge-light\n'
     + '- Dark: dark, material-dark, github-dark, nord, solarized-dark, catppuccin-dark, gruvbox-dark, dracula, grunge-dark, synthwave, tokyo-night\n';
 
@@ -308,12 +492,38 @@ async function callOpenRouter(model, messages, apiKey) {
   return { rawContent, usage: data.usage || null };
 }
 
-async function generateSpecWithRouting(prompt, options, apiKey) {
+async function generateSpecWithRouting(prompt, options, apiKey, env) {
   const complexity = scorePromptComplexity(prompt);
   const tierConfig = MODEL_TIERS[complexity.tier];
   const modelsToTry = [tierConfig.primary, ...tierConfig.fallbacks.slice(0, MAX_FALLBACK_MODELS)];
 
-  const messages = [{ role: 'system', content: buildSystemPrompt() }];
+  // RAG: retrieve relevant blocks as few-shot examples
+  let ragBlocks = null;
+  let ragMeta = null;
+  const geminiKey = env?.GEMINI_API_KEY;
+  if (geminiKey) {
+    try {
+      const topMatches = await retrieveTopBlocks(prompt, geminiKey, 5);
+      if (topMatches.length > 0) {
+        ragBlocks = [];
+        ragMeta = [];
+        for (const match of topMatches) {
+          const indexEntry = BLOCK_INDEX.find(b => b.id === match.id);
+          if (!indexEntry) continue;
+          const spec = await loadBlockSpec(match.id, indexEntry.category);
+          if (spec) {
+            ragBlocks.push({ id: match.id, spec });
+            ragMeta.push({ id: match.id, score: Math.round(match.score * 1000) / 1000 });
+          }
+        }
+        if (ragBlocks.length === 0) ragBlocks = null;
+      }
+    } catch {
+      // RAG failure is non-fatal — fall back to static blocks
+    }
+  }
+
+  const messages = [{ role: 'system', content: buildSystemPrompt(ragBlocks, prompt) }];
   if (options.existing_spec) {
     messages.push({
       role: 'assistant',
@@ -362,6 +572,7 @@ async function generateSpecWithRouting(prompt, options, apiKey) {
             dimensions: complexity.dimensions,
             model_used: model,
             attempts: totalAttempts,
+            rag_blocks: ragMeta || null,
           },
           usage,
         };
@@ -382,6 +593,7 @@ async function generateSpecWithRouting(prompt, options, apiKey) {
       dimensions: complexity.dimensions,
       model_used: null,
       attempts: totalAttempts,
+      rag_blocks: ragMeta || null,
     },
     usage: null,
     parse_error: true,
@@ -499,6 +711,43 @@ const TOOLS = [
       required: ['spec'],
     },
   },
+  {
+    name: 'get_block_library',
+    description: 'Returns available pre-made UI building blocks (layout patterns). Each block is a proven DAUB spec that can be used as-is or adapted. Use blocks as starting points for common UI patterns like dashboards, landing pages, forms, etc.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        category: { type: 'string', description: 'Filter by category: "landing", "dashboard", "forms", "auth", "ecommerce", "data-display", "mobile"' },
+      },
+    },
+  },
+];
+
+// ---- Block Library (inlined from blocks/index.json) ----
+
+const BLOCK_INDEX = [
+  { id: 'auth-page-01', name: 'Auth Page', category: 'auth', file: 'auth/auth-page-01.json', description: 'Split-screen auth: branding panel (left) + login form (right) in 2-column grid', tags: ['auth', 'login', 'split-screen', 'branding'] },
+  { id: 'chart-panel-01', name: 'Chart Panel', category: 'dashboard', file: 'dashboard/chart-panel-01.json', description: 'Revenue analytics panel with bar chart, donut breakdown, and 4 summary stat cards', tags: ['dashboard', 'chart', 'analytics', 'visualization'] },
+  { id: 'data-table-01', name: 'Data Table Section', category: 'dashboard', file: 'dashboard/data-table-01.json', description: 'Data table with header bar (title + search + filter), 6 rows, and pagination', tags: ['dashboard', 'table', 'data', 'pagination'] },
+  { id: 'header-01', name: 'Dashboard Header', category: 'dashboard', file: 'dashboard/header-01.json', description: 'Three-tier dashboard header: top bar with search/avatar, nav row with breadcrumbs/tabs, page title with action buttons', tags: ['dashboard', 'header', 'navigation', 'search'] },
+  { id: 'sidebar-layout-01', name: 'Dashboard Sidebar Layout', category: 'dashboard', file: 'dashboard/sidebar-layout-01.json', description: 'Full dashboard with sidebar nav, KPI stat cards, data table, activity feed, and performance metrics', tags: ['dashboard', 'sidebar', 'layout', 'navigation'] },
+  { id: 'stats-row-01', name: 'Stats Row', category: 'dashboard', file: 'dashboard/stats-row-01.json', description: '4-column KPI stat cards row (Revenue, Users, Conversion, Avg Order) with trends', tags: ['dashboard', 'stats', 'kpi', 'metrics'] },
+  { id: 'empty-state-01', name: 'Empty State', category: 'data-display', file: 'data-display/empty-state-01.json', description: 'Centered empty state with icon, title, message, and action button', tags: ['empty', 'placeholder', 'no-data', 'cta'] },
+  { id: 'notification-center-01', name: 'Notification Center', category: 'data-display', file: 'data-display/notification-center-01.json', description: 'Notification list with header, mark-all-read button, and 6 notification items', tags: ['notifications', 'list', 'alerts', 'inbox'] },
+  { id: 'profile-01', name: 'User Profile', category: 'data-display', file: 'data-display/profile-01.json', description: 'Profile page with avatar header, 3 stat cards, tabbed content, activity list', tags: ['profile', 'user', 'stats', 'tabs', 'activity'] },
+  { id: 'order-summary-01', name: 'Order Summary', category: 'ecommerce', file: 'ecommerce/order-summary-01.json', description: 'Order summary card with line items, subtotal/shipping/tax/total, promo code, checkout', tags: ['ecommerce', 'order', 'cart', 'summary', 'checkout'] },
+  { id: 'product-grid-01', name: 'Product Grid', category: 'ecommerce', file: 'ecommerce/product-grid-01.json', description: 'Product listing with filter chips and 3-column grid of 6 product cards', tags: ['ecommerce', 'products', 'grid', 'cards', 'shopping'] },
+  { id: 'checkout-01', name: 'Checkout Form', category: 'forms', file: 'forms/checkout-01.json', description: '2-column checkout: shipping form (left) + order summary with totals (right)', tags: ['form', 'checkout', 'ecommerce', 'payment'] },
+  { id: 'contact-01', name: 'Contact Form', category: 'forms', file: 'forms/contact-01.json', description: 'Contact form with name, email, subject dropdown, message textarea, submit', tags: ['form', 'contact', 'message', 'support'] },
+  { id: 'login-01', name: 'Login Form', category: 'forms', file: 'forms/login-01.json', description: 'Login card with email/password fields, remember me, social login, forgot password', tags: ['form', 'login', 'auth', 'email', 'password'] },
+  { id: 'settings-01', name: 'Settings Form', category: 'forms', file: 'forms/settings-01.json', description: 'Profile settings with sections: profile info, notification toggles, danger zone', tags: ['form', 'settings', 'profile', 'preferences'] },
+  { id: 'signup-01', name: 'Signup Form', category: 'forms', file: 'forms/signup-01.json', description: 'Registration card with name (2-col), email, password, terms, create account', tags: ['form', 'signup', 'registration', 'auth'] },
+  { id: 'features-grid-01', name: 'Features Grid', category: 'landing', file: 'landing/features-grid-01.json', description: '6-item feature grid with icons, titles, and descriptions in 3 columns', tags: ['landing', 'features', 'grid', 'marketing'] },
+  { id: 'footer-01', name: 'Footer', category: 'landing', file: 'landing/footer-01.json', description: '4-column link footer (Product/Company/Resources/Legal) with vertical NavMenus and social links', tags: ['landing', 'footer', 'navigation'] },
+  { id: 'hero-01', name: 'Hero Section', category: 'landing', file: 'landing/hero-01.json', description: 'Centered hero with badge, heading, CTA buttons, product image, trusted-by logos, and stat cards', tags: ['landing', 'hero', 'cta', 'marketing'] },
+  { id: 'pricing-01', name: 'Pricing Table', category: 'landing', file: 'landing/pricing-01.json', description: '3-tier pricing cards (Free/Pro/Enterprise) with features and CTA buttons', tags: ['landing', 'pricing', 'cards', 'marketing'] },
+  { id: 'testimonials-01', name: 'Testimonials', category: 'landing', file: 'landing/testimonials-01.json', description: '3 testimonial cards with quotes, avatars, names, and roles', tags: ['landing', 'testimonials', 'social-proof'] },
+  { id: 'app-shell-01', name: 'Mobile App Shell', category: 'mobile', file: 'mobile/app-shell-01.json', description: 'Mobile home screen with navbar, greeting, quick actions, stat cards, activity feed, and bottom nav', tags: ['mobile', 'app', 'navigation', 'bottom-nav', 'shell'] },
 ];
 
 // ---- MCP Tool Handlers ----
@@ -512,7 +761,7 @@ async function handleToolCall(name, args, env) {
       if (args.existing_spec) {
         try { options.existing_spec = JSON.parse(args.existing_spec); } catch { options.existing_spec = args.existing_spec; }
       }
-      const result = await generateSpecWithRouting(args.prompt, options, apiKey);
+      const result = await generateSpecWithRouting(args.prompt, options, apiKey, env);
       if (result.parse_error || !result.spec) {
         return JSON.stringify({
           error: 'Generation failed after all retries',
@@ -573,6 +822,27 @@ async function handleToolCall(name, args, env) {
       const validation = validateSpec(spec);
       const html = renderToHTML(spec);
       return JSON.stringify({ spec, html, validation }, null, 2);
+    }
+
+    case 'get_block_library': {
+      let blocks = BLOCK_INDEX;
+      if (args.category) {
+        blocks = blocks.filter(b => b.category === args.category);
+      }
+      const byCategory = {};
+      for (const b of blocks) {
+        (byCategory[b.category] = byCategory[b.category] || []).push({
+          id: b.id,
+          name: b.name,
+          description: b.description,
+          tags: b.tags,
+        });
+      }
+      return JSON.stringify({
+        total: blocks.length,
+        categories: byCategory,
+        usage: 'Use block IDs as references when prompting generate_ui. Example: "Build a landing page using the hero-01 and pricing-01 patterns"',
+      }, null, 2);
     }
 
     default:
