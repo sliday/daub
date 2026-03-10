@@ -1,0 +1,102 @@
+{
+  "root": "stats-row",
+  "elements": {
+    "stats-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "justify": "space-between",
+      "container": true,
+      "children": ["sr-stat-1", "sr-sep-1", "sr-stat-2", "sr-sep-2", "sr-stat-3", "sr-sep-3", "sr-stat-4"]
+    },
+    "sr-stat-1": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "align": "center",
+      "children": ["sr-val-1", "sr-lbl-1"]
+    },
+    "sr-val-1": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "2.4M+",
+      "weight": "bold"
+    },
+    "sr-lbl-1": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Active Users",
+      "variant": "muted"
+    },
+    "sr-sep-1": {
+      "type": "Separator",
+      "orientation": "vertical"
+    },
+    "sr-stat-2": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "align": "center",
+      "children": ["sr-val-2", "sr-lbl-2"]
+    },
+    "sr-val-2": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "99.98%",
+      "weight": "bold"
+    },
+    "sr-lbl-2": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Uptime SLA",
+      "variant": "muted"
+    },
+    "sr-sep-2": {
+      "type": "Separator",
+      "orientation": "vertical"
+    },
+    "sr-stat-3": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "align": "center",
+      "children": ["sr-val-3", "sr-lbl-3"]
+    },
+    "sr-val-3": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "148",
+      "weight": "bold"
+    },
+    "sr-lbl-3": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Countries Served",
+      "variant": "muted"
+    },
+    "sr-sep-3": {
+      "type": "Separator",
+      "orientation": "vertical"
+    },
+    "sr-stat-4": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "align": "center",
+      "children": ["sr-val-4", "sr-lbl-4"]
+    },
+    "sr-val-4": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "4.9/5",
+      "weight": "bold"
+    },
+    "sr-lbl-4": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Customer Rating",
+      "variant": "muted"
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "root": "settings-form",
+  "elements": {
+    "settings-form": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "children": ["settings-heading", "section-notifications", "separator-1", "section-appearance", "separator-2", "section-privacy", "settings-actions"]
+    },
+    "settings-heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Preferences",
+      "weight": "bold"
+    },
+    "section-notifications": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["notif-heading", "notif-description", "switch-email-notif", "switch-push-notif", "switch-sms-notif", "select-digest"]
+    },
+    "notif-heading": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Notifications",
+      "weight": "semibold"
+    },
+    "notif-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Choose how you want to be notified about updates and activity.",
+      "variant": "muted"
+    },
+    "switch-email-notif": {
+      "type": "Switch",
+      "label": "Email notifications",
+      "checked": true
+    },
+    "switch-push-notif": {
+      "type": "Switch",
+      "label": "Push notifications",
+      "checked": true
+    },
+    "switch-sms-notif": {
+      "type": "Switch",
+      "label": "SMS notifications",
+      "checked": false
+    },
+    "select-digest": {
+      "type": "Select",
+      "label": "Email digest frequency",
+      "options": [
+        { "label": "Real-time", "value": "realtime" },
+        { "label": "Hourly", "value": "hourly" },
+        { "label": "Daily", "value": "daily" },
+        { "label": "Weekly", "value": "weekly" }
+      ]
+    },
+    "separator-1": {
+      "type": "Separator"
+    },
+    "section-appearance": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["appearance-heading", "toggle-theme", "select-language", "select-timezone"]
+    },
+    "appearance-heading": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Appearance & Locale",
+      "weight": "semibold"
+    },
+    "toggle-theme": {
+      "type": "ToggleGroup",
+      "label": "Theme",
+      "items": [
+        { "label": "Light", "value": "light" },
+        { "label": "Dark", "value": "dark" },
+        { "label": "System", "value": "system" }
+      ]
+    },
+    "select-language": {
+      "type": "Select",
+      "label": "Language",
+      "options": [
+        { "label": "English (US)", "value": "en-US" },
+        { "label": "Spanish", "value": "es" },
+        { "label": "French", "value": "fr" },
+        { "label": "German", "value": "de" },
+        { "label": "Japanese", "value": "ja" }
+      ]
+    },
+    "select-timezone": {
+      "type": "Select",
+      "label": "Timezone",
+      "options": [
+        { "label": "Pacific Time (PT)", "value": "America/Los_Angeles" },
+        { "label": "Eastern Time (ET)", "value": "America/New_York" },
+        { "label": "Central European (CET)", "value": "Europe/Berlin" },
+        { "label": "Japan Standard (JST)", "value": "Asia/Tokyo" }
+      ]
+    },
+    "separator-2": {
+      "type": "Separator"
+    },
+    "section-privacy": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["privacy-heading", "switch-analytics", "switch-profile-visible", "switch-two-factor"]
+    },
+    "privacy-heading": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Privacy & Security",
+      "weight": "semibold"
+    },
+    "switch-analytics": {
+      "type": "Switch",
+      "label": "Share anonymous usage analytics",
+      "checked": true
+    },
+    "switch-profile-visible": {
+      "type": "Switch",
+      "label": "Make profile visible to search engines",
+      "checked": false
+    },
+    "switch-two-factor": {
+      "type": "Switch",
+      "label": "Two-factor authentication",
+      "checked": true
+    },
+    "settings-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "justify": "flex-end",
+      "children": ["btn-discard", "btn-save"]
+    },
+    "btn-discard": {
+      "type": "Button",
+      "label": "Discard Changes",
+      "variant": "outline"
+    },
+    "btn-save": {
+      "type": "Button",
+      "label": "Save Preferences",
+      "variant": "default"
+    }
+  }
+}

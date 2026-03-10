@@ -1,0 +1,68 @@
+{
+  "root": "banner-inline",
+  "elements": {
+    "banner-inline": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "container": true,
+      "children": ["banner-inline-card"]
+    },
+    "banner-inline-card": {
+      "type": "Surface",
+      "variant": "raised",
+      "children": ["banner-inline-content"]
+    },
+    "banner-inline-content": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 4,
+      "children": ["banner-inline-text", "banner-inline-image"]
+    },
+    "banner-inline-text": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "justify": "center",
+      "children": ["banner-inline-chip", "banner-inline-title", "banner-inline-desc", "banner-inline-actions"]
+    },
+    "banner-inline-chip": {
+      "type": "Chip",
+      "label": "Limited Time",
+      "variant": "default"
+    },
+    "banner-inline-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Upgrade to Pro and Save 40%",
+      "weight": "bold"
+    },
+    "banner-inline-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Get unlimited projects, priority support, and advanced analytics. Annual plans are 40% off through the end of the month.",
+      "variant": "muted"
+    },
+    "banner-inline-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "children": ["banner-inline-cta", "banner-inline-dismiss-link"]
+    },
+    "banner-inline-cta": {
+      "type": "Button",
+      "label": "Claim Offer",
+      "variant": "default"
+    },
+    "banner-inline-dismiss-link": {
+      "type": "Button",
+      "label": "Maybe Later",
+      "variant": "ghost"
+    },
+    "banner-inline-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/promo-upgrade/480/300",
+      "alt": "Pro plan dashboard preview showing advanced analytics"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "root": "dashboard-header",
+  "elements": {
+    "dashboard-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "align": "center",
+      "gap": 4,
+      "children": ["header-left", "header-right"]
+    },
+    "header-left": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["page-title", "page-subtitle"]
+    },
+    "page-title": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "Dashboard",
+      "weight": "bold"
+    },
+    "page-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Welcome back, Sarah. Here's what's happening today.",
+      "variant": "muted"
+    },
+    "header-right": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["date-picker", "btn-refresh", "btn-add-new"]
+    },
+    "date-picker": {
+      "type": "DatePicker",
+      "label": "Date Range",
+      "placeholder": "Mar 1 - Mar 10, 2026"
+    },
+    "btn-refresh": {
+      "type": "Button",
+      "label": "Refresh",
+      "variant": "outline",
+      "size": "sm",
+      "icon": "refresh-cw"
+    },
+    "btn-add-new": {
+      "type": "Button",
+      "label": "Add Widget",
+      "variant": "default",
+      "size": "sm",
+      "icon": "plus"
+    }
+  }
+}

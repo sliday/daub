@@ -1,101 +1,303 @@
 {
-  "root": "order-summary",
+  "root": "order-confirmation",
   "elements": {
-    "order-summary": {
+    "order-confirmation": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 4 },
-      "children": ["summary-title", "items-list", "sep-1", "subtotal-row", "shipping-row", "tax-row", "sep-2", "total-row", "promo-row", "checkout-btn"]
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["success-header", "order-info-row", "separator-1", "line-items-section", "separator-2", "totals-section", "separator-3", "shipping-details", "action-buttons"]
     },
-    "summary-title": {
+    "success-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["success-badge", "success-heading", "success-description"]
+    },
+    "success-badge": {
+      "type": "Badge",
+      "text": "Order Confirmed",
+      "variant": "success"
+    },
+    "success-heading": {
       "type": "Text",
-      "props": { "tag": "h3", "content": "Order Summary" }
+      "tag": "h1",
+      "content": "Thank you for your order!",
+      "weight": "bold",
+      "align": "center"
     },
-    "items-list": {
-      "type": "List",
-      "props": {
-        "items": [
-          { "title": "Wireless Headphones x1", "secondary": "$79.99", "icon": "headphones" },
-          { "title": "Leather Backpack x1", "secondary": "$124.00", "icon": "shopping-bag" },
-          { "title": "Ceramic Mug Set x2", "secondary": "$69.00", "icon": "coffee" }
-        ]
-      }
+    "success-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "A confirmation email has been sent to john@example.com with your order details and tracking information.",
+      "variant": "muted",
+      "align": "center"
     },
-    "sep-1": {
+    "order-info-row": {
+      "type": "Grid",
+      "columns": 3,
+      "gap": 3,
+      "children": ["order-number-card", "order-date-card", "payment-card"]
+    },
+    "order-number-card": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["order-number-stack"]
+    },
+    "order-number-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["order-number-label", "order-number-value"]
+    },
+    "order-number-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Order Number",
+      "variant": "muted"
+    },
+    "order-number-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "#ORD-2026-48291",
+      "weight": "bold"
+    },
+    "order-date-card": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["order-date-stack"]
+    },
+    "order-date-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["order-date-label", "order-date-value"]
+    },
+    "order-date-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Order Date",
+      "variant": "muted"
+    },
+    "order-date-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "March 10, 2026",
+      "weight": "bold"
+    },
+    "payment-card": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["payment-stack"]
+    },
+    "payment-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["payment-label", "payment-value"]
+    },
+    "payment-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Payment",
+      "variant": "muted"
+    },
+    "payment-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Visa ending in 4242",
+      "weight": "bold"
+    },
+    "separator-1": {
       "type": "Separator",
-      "props": {}
+      "orientation": "horizontal"
+    },
+    "line-items-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["items-heading", "items-table"]
+    },
+    "items-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Items Ordered",
+      "weight": "bold"
+    },
+    "items-table": {
+      "type": "DataTable",
+      "columns": [
+        { "key": "item", "label": "Item" },
+        { "key": "qty", "label": "Qty" },
+        { "key": "price", "label": "Unit Price" },
+        { "key": "total", "label": "Total" }
+      ],
+      "rows": [
+        { "item": "Sony WH-1000XM5 (Black)", "qty": "1", "price": "$328.00", "total": "$328.00" },
+        { "item": "Apple AirPods Pro 2", "qty": "1", "price": "$249.00", "total": "$249.00" },
+        { "item": "Anker USB-C Cable 3-Pack", "qty": "1", "price": "$15.99", "total": "$15.99" }
+      ]
+    },
+    "separator-2": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "totals-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["subtotal-row", "shipping-row", "tax-row", "totals-separator", "total-row"]
     },
     "subtotal-row": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 0, "justify": "between" },
+      "direction": "horizontal",
+      "justify": "space-between",
       "children": ["subtotal-label", "subtotal-value"]
     },
     "subtotal-label": {
       "type": "Text",
-      "props": { "tag": "p", "content": "Subtotal" }
+      "tag": "span",
+      "content": "Subtotal"
     },
     "subtotal-value": {
       "type": "Text",
-      "props": { "tag": "p", "content": "$272.99" }
+      "tag": "span",
+      "content": "$592.99"
     },
     "shipping-row": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 0, "justify": "between" },
+      "direction": "horizontal",
+      "justify": "space-between",
       "children": ["shipping-label", "shipping-value"]
     },
     "shipping-label": {
       "type": "Text",
-      "props": { "tag": "p", "content": "Shipping" }
+      "tag": "span",
+      "content": "Shipping"
     },
     "shipping-value": {
       "type": "Text",
-      "props": { "tag": "p", "content": "$9.99" }
+      "tag": "span",
+      "content": "Free"
     },
     "tax-row": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 0, "justify": "between" },
+      "direction": "horizontal",
+      "justify": "space-between",
       "children": ["tax-label", "tax-value"]
     },
     "tax-label": {
       "type": "Text",
-      "props": { "tag": "p", "content": "Tax" }
+      "tag": "span",
+      "content": "Tax"
     },
     "tax-value": {
       "type": "Text",
-      "props": { "tag": "p", "content": "$22.64" }
+      "tag": "span",
+      "content": "$48.92"
     },
-    "sep-2": {
+    "totals-separator": {
       "type": "Separator",
-      "props": {}
+      "orientation": "horizontal"
     },
     "total-row": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 0, "justify": "between" },
+      "direction": "horizontal",
+      "justify": "space-between",
       "children": ["total-label", "total-value"]
     },
     "total-label": {
       "type": "Text",
-      "props": { "tag": "h3", "content": "Total" }
+      "tag": "h2",
+      "content": "Total",
+      "weight": "bold"
     },
     "total-value": {
       "type": "Text",
-      "props": { "tag": "h3", "content": "$305.62" }
+      "tag": "h2",
+      "content": "$641.91",
+      "weight": "bold"
     },
-    "promo-row": {
+    "separator-3": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "shipping-details": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["shipping-details-stack"]
+    },
+    "shipping-details-stack": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 2 },
-      "children": ["promo-input", "promo-btn"]
+      "direction": "horizontal",
+      "gap": 4,
+      "children": ["ship-to-section", "delivery-section"]
     },
-    "promo-input": {
-      "type": "Input",
-      "props": { "placeholder": "Promo code", "type": "text" }
+    "ship-to-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["ship-to-label", "ship-to-name", "ship-to-address"]
     },
-    "promo-btn": {
+    "ship-to-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Ship To",
+      "weight": "bold"
+    },
+    "ship-to-name": {
+      "type": "Text",
+      "tag": "span",
+      "content": "John Doe"
+    },
+    "ship-to-address": {
+      "type": "Text",
+      "tag": "span",
+      "content": "123 Main St, Apt 4B, New York, NY 10001",
+      "variant": "muted"
+    },
+    "delivery-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["delivery-label", "delivery-method", "delivery-estimate"]
+    },
+    "delivery-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Estimated Delivery",
+      "weight": "bold"
+    },
+    "delivery-method": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Standard Shipping (Free)"
+    },
+    "delivery-estimate": {
+      "type": "Text",
+      "tag": "span",
+      "content": "March 14-17, 2026",
+      "variant": "muted"
+    },
+    "action-buttons": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "justify": "center",
+      "children": ["track-order-btn", "continue-btn"]
+    },
+    "track-order-btn": {
       "type": "Button",
-      "props": { "label": "Apply", "variant": "secondary", "size": "sm" }
+      "label": "Track Order",
+      "variant": "primary",
+      "icon": "package"
     },
-    "checkout-btn": {
+    "continue-btn": {
       "type": "Button",
-      "props": { "label": "Proceed to Checkout", "variant": "primary", "size": "lg" }
+      "label": "Continue Shopping",
+      "variant": "outline",
+      "icon": "arrow-right"
     }
   }
 }

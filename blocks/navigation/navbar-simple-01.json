@@ -1,0 +1,23 @@
+{
+  "root": "navbar",
+  "elements": {
+    "navbar": {
+      "type": "Navbar",
+      "brand": "Meridian",
+      "items": [
+        { "label": "Products", "href": "/products" },
+        { "label": "Solutions", "href": "/solutions" },
+        { "label": "Pricing", "href": "/pricing" },
+        { "label": "Resources", "href": "/resources" },
+        { "label": "Company", "href": "/company" }
+      ],
+      "actions": ["nav-cta"]
+    },
+    "nav-cta": {
+      "type": "Button",
+      "label": "Get Started",
+      "variant": "primary",
+      "size": "sm"
+    }
+  }
+}

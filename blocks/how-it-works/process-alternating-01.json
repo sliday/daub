@@ -1,0 +1,144 @@
+{
+  "root": "process-alternating",
+  "elements": {
+    "process-alternating": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 6,
+      "container": true,
+      "children": ["process-header", "process-step-1", "process-step-2", "process-step-3"]
+    },
+    "process-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["process-title", "process-subtitle"]
+    },
+    "process-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "How We Build Together",
+      "weight": "bold",
+      "align": "center"
+    },
+    "process-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "A streamlined process designed to go from idea to launch with confidence.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "process-step-1": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 4,
+      "children": ["step-1-text-block", "step-1-image"]
+    },
+    "step-1-text-block": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "justify": "center",
+      "children": ["step-1-chip", "step-1-heading", "step-1-description"]
+    },
+    "step-1-chip": {
+      "type": "Chip",
+      "label": "Step 1",
+      "variant": "default"
+    },
+    "step-1-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Discovery & Strategy",
+      "weight": "bold"
+    },
+    "step-1-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "We start by understanding your goals, audience, and technical requirements. Through collaborative workshops we define the scope, identify key user journeys, and create a prioritized feature roadmap that aligns with your timeline and budget.",
+      "variant": "muted"
+    },
+    "step-1-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/discovery/600/400",
+      "alt": "Team brainstorming during a discovery workshop"
+    },
+    "process-step-2": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 4,
+      "children": ["step-2-image", "step-2-text-block"]
+    },
+    "step-2-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/design-build/600/400",
+      "alt": "Design mockups and code editor side by side"
+    },
+    "step-2-text-block": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "justify": "center",
+      "children": ["step-2-chip", "step-2-heading", "step-2-description"]
+    },
+    "step-2-chip": {
+      "type": "Chip",
+      "label": "Step 2",
+      "variant": "default"
+    },
+    "step-2-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Design & Development",
+      "weight": "bold"
+    },
+    "step-2-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Our designers create high-fidelity prototypes while engineers build in parallel using two-week sprints. You review progress in real time through a shared staging environment and provide feedback directly in context.",
+      "variant": "muted"
+    },
+    "process-step-3": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 4,
+      "children": ["step-3-text-block", "step-3-image"]
+    },
+    "step-3-text-block": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "justify": "center",
+      "children": ["step-3-chip", "step-3-heading", "step-3-description", "step-3-cta"]
+    },
+    "step-3-chip": {
+      "type": "Chip",
+      "label": "Step 3",
+      "variant": "default"
+    },
+    "step-3-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Launch & Optimize",
+      "weight": "bold"
+    },
+    "step-3-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "After thorough QA and performance testing, we deploy to production with zero-downtime rollout. Post-launch, we monitor analytics, gather user feedback, and iterate to continuously improve conversion and engagement.",
+      "variant": "muted"
+    },
+    "step-3-cta": {
+      "type": "Button",
+      "label": "Start a Project",
+      "variant": "default",
+      "icon": "arrow-right"
+    },
+    "step-3-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/launch-rocket/600/400",
+      "alt": "Dashboard showing live analytics after product launch"
+    }
+  }
+}

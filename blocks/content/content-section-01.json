@@ -1,0 +1,72 @@
+{
+  "root": "content-section",
+  "elements": {
+    "content-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "container": "narrow",
+      "children": ["content-header", "content-body", "content-image", "content-cta"]
+    },
+    "content-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["content-chip", "content-title"]
+    },
+    "content-chip": {
+      "type": "Chip",
+      "label": "Sustainability"
+    },
+    "content-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Our commitment to net-zero by 2030",
+      "weight": "bold"
+    },
+    "content-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["content-p1", "content-p2", "content-p3"]
+    },
+    "content-p1": {
+      "type": "Text",
+      "tag": "p",
+      "content": "In 2023, we set a science-based target to reduce Scope 1, 2, and 3 emissions by 50% before the end of this decade. Eighteen months in, we have already cut operational carbon by 32% through facility electrification and renewable energy procurement."
+    },
+    "content-p2": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Our supply chain accounts for 78% of total emissions. We partnered with 140 tier-one suppliers to transition to low-carbon manufacturing processes, and we now require all new vendors to disclose emissions data before onboarding."
+    },
+    "content-p3": {
+      "type": "Text",
+      "tag": "p",
+      "content": "For residual emissions we cannot yet eliminate, we invest in verified carbon removal projects including direct air capture in Iceland and reforestation across 12,000 hectares in the Pacific Northwest."
+    },
+    "content-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/sustainability-forest/800/400",
+      "alt": "Aerial view of reforestation project in the Pacific Northwest"
+    },
+    "content-cta": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "children": ["cta-report", "cta-goals"]
+    },
+    "cta-report": {
+      "type": "Button",
+      "label": "Read 2025 Impact Report",
+      "variant": "primary",
+      "size": "md"
+    },
+    "cta-goals": {
+      "type": "Button",
+      "label": "View Our Climate Goals",
+      "variant": "outline",
+      "size": "md"
+    }
+  }
+}

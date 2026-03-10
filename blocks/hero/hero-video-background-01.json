@@ -1,0 +1,65 @@
+{
+  "root": "hero-video",
+  "elements": {
+    "hero-video": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "align": "center",
+      "justify": "center",
+      "children": ["hero-video-bg", "hero-video-content"]
+    },
+    "hero-video-bg": {
+      "type": "CustomHTML",
+      "html": "<video autoplay muted loop playsinline style=\"position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.3;z-index:0;\"><source src=\"/videos/aerial-city.mp4\" type=\"video/mp4\"></video>"
+    },
+    "hero-video-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "align": "center",
+      "container": "narrow",
+      "children": ["hero-video-eyebrow", "hero-video-heading", "hero-video-sub", "hero-video-actions"]
+    },
+    "hero-video-eyebrow": {
+      "type": "Text",
+      "tag": "p",
+      "content": "COMMERCIAL REAL ESTATE INTELLIGENCE",
+      "weight": "semibold",
+      "align": "center"
+    },
+    "hero-video-heading": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "See every opportunity before your competitors do",
+      "weight": "bold",
+      "align": "center"
+    },
+    "hero-video-sub": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Greystone aggregates lease expirations, zoning changes, and market signals across 200 metro areas. Institutional-grade data, accessible to every broker.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "hero-video-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "justify": "center",
+      "children": ["hero-video-cta", "hero-video-secondary"]
+    },
+    "hero-video-cta": {
+      "type": "Button",
+      "label": "Request Access",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "hero-video-secondary": {
+      "type": "Button",
+      "label": "See a Market Report",
+      "variant": "outline",
+      "size": "lg"
+    }
+  }
+}

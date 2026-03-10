@@ -1,0 +1,102 @@
+{
+  "root": "scrolling-logos-section",
+  "elements": {
+    "scrolling-logos-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "align": "center",
+      "children": ["scroll-heading", "scroll-track"]
+    },
+    "scroll-heading": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Join 4,000+ companies already scaling with us",
+      "variant": "muted",
+      "align": "center"
+    },
+    "scroll-track": {
+      "type": "ScrollArea",
+      "children": ["scroll-row"]
+    },
+    "scroll-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 6,
+      "align": "center",
+      "children": ["brand-airbnb", "brand-asana", "brand-dropbox", "brand-hubspot", "brand-intercom", "brand-loom", "brand-miro", "brand-monday", "brand-salesforce", "brand-segment", "brand-zendesk", "brand-zapier"]
+    },
+    "brand-airbnb": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Airbnb",
+      "weight": "bold"
+    },
+    "brand-asana": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Asana",
+      "weight": "bold"
+    },
+    "brand-dropbox": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Dropbox",
+      "weight": "bold"
+    },
+    "brand-hubspot": {
+      "type": "Text",
+      "tag": "span",
+      "content": "HubSpot",
+      "weight": "bold"
+    },
+    "brand-intercom": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Intercom",
+      "weight": "bold"
+    },
+    "brand-loom": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Loom",
+      "weight": "bold"
+    },
+    "brand-miro": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Miro",
+      "weight": "bold"
+    },
+    "brand-monday": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Monday.com",
+      "weight": "bold"
+    },
+    "brand-salesforce": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Salesforce",
+      "weight": "bold"
+    },
+    "brand-segment": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Segment",
+      "weight": "bold"
+    },
+    "brand-zendesk": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Zendesk",
+      "weight": "bold"
+    },
+    "brand-zapier": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Zapier",
+      "weight": "bold"
+    }
+  }
+}

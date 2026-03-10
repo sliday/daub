@@ -1,0 +1,116 @@
+{
+  "root": "schedule-tabs",
+  "elements": {
+    "schedule-tabs": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["schedule-header", "schedule-tabs-nav"]
+    },
+    "schedule-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["schedule-title", "schedule-subtitle"]
+    },
+    "schedule-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Conference Schedule",
+      "weight": "bold",
+      "align": "center"
+    },
+    "schedule-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Two days of talks, workshops, and networking. All times in Pacific Time.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "schedule-tabs-nav": {
+      "type": "Tabs",
+      "items": [
+        {
+          "label": "Day 1 — June 14",
+          "content": "day-1-sessions"
+        },
+        {
+          "label": "Day 2 — June 15",
+          "content": "day-2-sessions"
+        }
+      ]
+    },
+    "day-1-sessions": {
+      "type": "List",
+      "items": [
+        {
+          "primary": "Opening Keynote: The Future of Developer Tools",
+          "secondary": "Sarah Chen, CEO — Main Stage",
+          "icon": "mic",
+          "meta": "9:00 AM"
+        },
+        {
+          "primary": "Workshop: Building Production-Ready APIs in 60 Minutes",
+          "secondary": "Marcus Rivera, Staff Engineer — Room B",
+          "icon": "code",
+          "meta": "10:30 AM"
+        },
+        {
+          "primary": "Panel: Scaling Teams Without Losing Culture",
+          "secondary": "Moderator: Lisa Park — Main Stage",
+          "icon": "users",
+          "meta": "1:00 PM"
+        },
+        {
+          "primary": "Talk: Zero-Downtime Migrations at Scale",
+          "secondary": "James Okonkwo, Platform Lead — Room A",
+          "icon": "database",
+          "meta": "2:30 PM"
+        },
+        {
+          "primary": "Networking Happy Hour",
+          "secondary": "Open bar and appetizers — Rooftop Terrace",
+          "icon": "wine",
+          "meta": "5:00 PM"
+        }
+      ]
+    },
+    "day-2-sessions": {
+      "type": "List",
+      "items": [
+        {
+          "primary": "Talk: Designing for Accessibility-First",
+          "secondary": "Priya Sharma, Design Director — Main Stage",
+          "icon": "accessibility",
+          "meta": "9:00 AM"
+        },
+        {
+          "primary": "Workshop: End-to-End Testing with Playwright",
+          "secondary": "Tom Barrett, QA Lead — Room B",
+          "icon": "test-tube",
+          "meta": "10:30 AM"
+        },
+        {
+          "primary": "Talk: AI-Assisted Code Review in Practice",
+          "secondary": "Aiko Tanaka, ML Engineer — Room A",
+          "icon": "brain",
+          "meta": "1:00 PM"
+        },
+        {
+          "primary": "Lightning Talks: Community Showcase",
+          "secondary": "6 speakers, 5 minutes each — Main Stage",
+          "icon": "zap",
+          "meta": "3:00 PM"
+        },
+        {
+          "primary": "Closing Keynote & Awards",
+          "secondary": "Sarah Chen, CEO — Main Stage",
+          "icon": "award",
+          "meta": "4:30 PM"
+        }
+      ]
+    }
+  }
+}

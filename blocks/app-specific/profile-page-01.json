@@ -1,0 +1,130 @@
+{
+  "root": "profile-page-root",
+  "elements": {
+    "profile-page-root": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "children": ["profile-header", "profile-stats-grid", "profile-separator", "profile-activity-section"]
+    },
+    "profile-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "children": ["profile-avatar", "profile-info"]
+    },
+    "profile-avatar": {
+      "type": "Avatar",
+      "initials": "SK",
+      "size": "xl"
+    },
+    "profile-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["profile-name", "profile-role", "profile-bio", "profile-actions"]
+    },
+    "profile-name": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Sarah Kim",
+      "weight": "bold"
+    },
+    "profile-role": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["profile-role-badge", "profile-joined"]
+    },
+    "profile-role-badge": {
+      "type": "Badge",
+      "text": "Senior Engineer",
+      "variant": "secondary"
+    },
+    "profile-joined": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Joined March 2024",
+      "variant": "muted"
+    },
+    "profile-bio": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Full-stack developer passionate about design systems and developer tooling. Based in San Francisco."
+    },
+    "profile-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "children": ["profile-edit-btn", "profile-share-btn"]
+    },
+    "profile-edit-btn": {
+      "type": "Button",
+      "label": "Edit profile",
+      "variant": "outline",
+      "size": "sm",
+      "icon": "pencil"
+    },
+    "profile-share-btn": {
+      "type": "Button",
+      "label": "Share",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "share"
+    },
+    "profile-stats-grid": {
+      "type": "Grid",
+      "columns": 4,
+      "gap": 3,
+      "children": ["profile-stat-projects", "profile-stat-commits", "profile-stat-reviews", "profile-stat-streak"]
+    },
+    "profile-stat-projects": {
+      "type": "StatCard",
+      "title": "Projects",
+      "value": "12"
+    },
+    "profile-stat-commits": {
+      "type": "StatCard",
+      "title": "Commits",
+      "value": "1,847"
+    },
+    "profile-stat-reviews": {
+      "type": "StatCard",
+      "title": "Reviews",
+      "value": "364"
+    },
+    "profile-stat-streak": {
+      "type": "StatCard",
+      "title": "Day streak",
+      "value": "23"
+    },
+    "profile-separator": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "profile-activity-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["profile-activity-heading", "profile-activity-list"]
+    },
+    "profile-activity-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Recent Activity",
+      "weight": "semibold"
+    },
+    "profile-activity-list": {
+      "type": "List",
+      "items": [
+        { "primary": "Merged PR #482: Add dark mode support", "secondary": "design-system", "meta": "2 hours ago", "icon": "git-merge" },
+        { "primary": "Commented on issue #315", "secondary": "api-gateway", "meta": "5 hours ago", "icon": "message-circle" },
+        { "primary": "Pushed 3 commits to feature/auth-flow", "secondary": "web-app", "meta": "Yesterday", "icon": "git-commit" },
+        { "primary": "Created issue #320: Refactor token refresh logic", "secondary": "api-gateway", "meta": "2 days ago", "icon": "plus-circle" },
+        { "primary": "Approved PR #478: Update caching strategy", "secondary": "infrastructure", "meta": "3 days ago", "icon": "check-circle" }
+      ]
+    }
+  }
+}

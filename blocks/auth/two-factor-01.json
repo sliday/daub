@@ -1,0 +1,90 @@
+{
+  "root": "two-factor",
+  "elements": {
+    "two-factor": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "align": "center",
+      "justify": "center",
+      "container": "narrow",
+      "children": ["tfa-card"]
+    },
+    "tfa-card": {
+      "type": "Card",
+      "title": "Two-factor authentication",
+      "description": "Enter the 6-digit code from your authenticator app to verify your identity.",
+      "children": ["card-body"]
+    },
+    "card-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "align": "center",
+      "children": ["icon-badge", "otp-field", "verify-btn", "divider", "fallback-group"]
+    },
+    "icon-badge": {
+      "type": "Button",
+      "icon": "shield",
+      "variant": "ghost",
+      "size": "lg"
+    },
+    "otp-field": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["otp-label", "otp-input"]
+    },
+    "otp-label": {
+      "type": "Label",
+      "content": "Verification Code"
+    },
+    "otp-input": {
+      "type": "InputOTP",
+      "length": 6
+    },
+    "verify-btn": {
+      "type": "Button",
+      "label": "Verify",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "divider": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "fallback-group": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["trouble-text", "fallback-actions"]
+    },
+    "trouble-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Having trouble?",
+      "variant": "muted"
+    },
+    "fallback-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["recovery-link", "resend-link"]
+    },
+    "recovery-link": {
+      "type": "Button",
+      "label": "Use recovery code",
+      "variant": "ghost",
+      "size": "sm"
+    },
+    "resend-link": {
+      "type": "Button",
+      "label": "Resend code",
+      "variant": "ghost",
+      "size": "sm"
+    }
+  }
+}

@@ -1,0 +1,243 @@
+{
+  "root": "review-stars",
+  "elements": {
+    "review-stars": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": "narrow",
+      "children": ["review-header", "review-summary", "separator", "review-list"]
+    },
+    "review-header": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Customer Reviews"
+    },
+    "review-summary": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "children": ["summary-score", "summary-breakdown"]
+    },
+    "summary-score": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["score-number", "score-stars", "score-count"]
+    },
+    "score-number": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "4.8"
+    },
+    "score-stars": {
+      "type": "Text",
+      "tag": "span",
+      "content": "\u2605\u2605\u2605\u2605\u2605"
+    },
+    "score-count": {
+      "type": "Text",
+      "tag": "span",
+      "content": "2,847 reviews",
+      "variant": "muted"
+    },
+    "summary-breakdown": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["bar-5", "bar-4", "bar-3", "bar-2", "bar-1"]
+    },
+    "bar-5": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["bar-5-label", "bar-5-progress", "bar-5-count"]
+    },
+    "bar-5-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "5 \u2605"
+    },
+    "bar-5-progress": {
+      "type": "Progress",
+      "value": 78
+    },
+    "bar-5-count": {
+      "type": "Text",
+      "tag": "span",
+      "content": "2,221",
+      "variant": "muted"
+    },
+    "bar-4": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["bar-4-label", "bar-4-progress", "bar-4-count"]
+    },
+    "bar-4-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "4 \u2605"
+    },
+    "bar-4-progress": {
+      "type": "Progress",
+      "value": 14
+    },
+    "bar-4-count": {
+      "type": "Text",
+      "tag": "span",
+      "content": "399",
+      "variant": "muted"
+    },
+    "bar-3": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["bar-3-label", "bar-3-progress", "bar-3-count"]
+    },
+    "bar-3-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "3 \u2605"
+    },
+    "bar-3-progress": {
+      "type": "Progress",
+      "value": 5
+    },
+    "bar-3-count": {
+      "type": "Text",
+      "tag": "span",
+      "content": "142",
+      "variant": "muted"
+    },
+    "bar-2": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["bar-2-label", "bar-2-progress", "bar-2-count"]
+    },
+    "bar-2-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "2 \u2605"
+    },
+    "bar-2-progress": {
+      "type": "Progress",
+      "value": 2
+    },
+    "bar-2-count": {
+      "type": "Text",
+      "tag": "span",
+      "content": "57",
+      "variant": "muted"
+    },
+    "bar-1": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["bar-1-label", "bar-1-progress", "bar-1-count"]
+    },
+    "bar-1-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "1 \u2605"
+    },
+    "bar-1-progress": {
+      "type": "Progress",
+      "value": 1
+    },
+    "bar-1-count": {
+      "type": "Text",
+      "tag": "span",
+      "content": "28",
+      "variant": "muted"
+    },
+    "separator": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "review-list": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["review-item-1", "review-item-2"]
+    },
+    "review-item-1": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["review-1-header", "review-1-text"]
+    },
+    "review-1-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["review-1-stars", "review-1-author", "review-1-date"]
+    },
+    "review-1-stars": {
+      "type": "Text",
+      "tag": "span",
+      "content": "\u2605\u2605\u2605\u2605\u2605"
+    },
+    "review-1-author": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Nadia Petrov",
+      "weight": "semibold"
+    },
+    "review-1-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Feb 28, 2026",
+      "variant": "muted"
+    },
+    "review-1-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Migrated our entire e-commerce backend in a weekend. The import tools handled 1.2 million SKUs without a hitch. Customer support responded within minutes when I had questions about the webhook configuration."
+    },
+    "review-item-2": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["review-2-header", "review-2-text"]
+    },
+    "review-2-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["review-2-stars", "review-2-author", "review-2-date"]
+    },
+    "review-2-stars": {
+      "type": "Text",
+      "tag": "span",
+      "content": "\u2605\u2605\u2605\u2605\u2606"
+    },
+    "review-2-author": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Ryan Cho",
+      "weight": "semibold"
+    },
+    "review-2-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Feb 15, 2026",
+      "variant": "muted"
+    },
+    "review-2-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Solid product overall. The API documentation is excellent and the SDK covers everything we need. Only knock is that the dashboard can be slow when loading large datasets, but they say a fix is coming."
+    }
+  }
+}

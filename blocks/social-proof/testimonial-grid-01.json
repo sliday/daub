@@ -1,0 +1,181 @@
+{
+  "root": "testimonial-grid",
+  "elements": {
+    "testimonial-grid": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "container": "wide",
+      "children": ["section-header", "grid"]
+    },
+    "section-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["section-badge", "section-title", "section-subtitle"]
+    },
+    "section-badge": {
+      "type": "Badge",
+      "text": "Testimonials",
+      "variant": "info"
+    },
+    "section-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Trusted by teams worldwide",
+      "align": "center"
+    },
+    "section-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Hear from the companies building faster with our platform.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "grid": {
+      "type": "Grid",
+      "columns": 3,
+      "gap": 4,
+      "children": ["card-1", "card-2", "card-3"]
+    },
+    "card-1": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["card-1-inner"]
+    },
+    "card-1-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["card-1-quote", "card-1-author-row"]
+    },
+    "card-1-quote": {
+      "type": "Text",
+      "tag": "p",
+      "content": "We migrated 140 microservices to their platform in three months. Downtime dropped 94% and our on-call engineers finally sleep through the night."
+    },
+    "card-1-author-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["card-1-avatar", "card-1-info"]
+    },
+    "card-1-avatar": {
+      "type": "Avatar",
+      "initials": "MK",
+      "src": "https://i.pravatar.cc/96?u=marcus-kim"
+    },
+    "card-1-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["card-1-name", "card-1-role"]
+    },
+    "card-1-name": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Marcus Kim",
+      "weight": "semibold"
+    },
+    "card-1-role": {
+      "type": "Text",
+      "tag": "span",
+      "content": "CTO, Brex",
+      "variant": "muted"
+    },
+    "card-2": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["card-2-inner"]
+    },
+    "card-2-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["card-2-quote", "card-2-author-row"]
+    },
+    "card-2-quote": {
+      "type": "Text",
+      "tag": "p",
+      "content": "The analytics dashboard gave us visibility we never had before. We identified a $2.3M billing leak within the first week of going live."
+    },
+    "card-2-author-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["card-2-avatar", "card-2-info"]
+    },
+    "card-2-avatar": {
+      "type": "Avatar",
+      "initials": "LP",
+      "src": "https://i.pravatar.cc/96?u=lisa-pham"
+    },
+    "card-2-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["card-2-name", "card-2-role"]
+    },
+    "card-2-name": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Lisa Pham",
+      "weight": "semibold"
+    },
+    "card-2-role": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Head of Finance, Ramp",
+      "variant": "muted"
+    },
+    "card-3": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["card-3-inner"]
+    },
+    "card-3-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["card-3-quote", "card-3-author-row"]
+    },
+    "card-3-quote": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Our design-to-production handoff went from 8 days to same-day. The component library integration is seamless and our designers love it."
+    },
+    "card-3-author-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["card-3-avatar", "card-3-info"]
+    },
+    "card-3-avatar": {
+      "type": "Avatar",
+      "initials": "JW",
+      "src": "https://i.pravatar.cc/96?u=james-wu"
+    },
+    "card-3-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["card-3-name", "card-3-role"]
+    },
+    "card-3-name": {
+      "type": "Text",
+      "tag": "p",
+      "content": "James Wu",
+      "weight": "semibold"
+    },
+    "card-3-role": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Design Lead, Figma",
+      "variant": "muted"
+    }
+  }
+}

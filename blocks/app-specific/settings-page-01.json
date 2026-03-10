@@ -1,0 +1,150 @@
+{
+  "root": "settings-page-root",
+  "elements": {
+    "settings-page-root": {
+      "type": "Grid",
+      "columns": 4,
+      "gap": 5,
+      "children": ["settings-sidebar", "settings-content"]
+    },
+    "settings-sidebar": {
+      "type": "Sidebar",
+      "sections": [
+        {
+          "title": "Account",
+          "items": [
+            { "label": "General", "icon": "settings", "active": true, "href": "#general" },
+            { "label": "Security", "icon": "shield", "href": "#security" },
+            { "label": "Notifications", "icon": "bell", "href": "#notifications" }
+          ]
+        },
+        {
+          "title": "Workspace",
+          "items": [
+            { "label": "Members", "icon": "users", "href": "#members" },
+            { "label": "Billing", "icon": "credit-card", "href": "#billing" },
+            { "label": "Integrations", "icon": "plug", "href": "#integrations" }
+          ]
+        }
+      ]
+    },
+    "settings-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "children": ["settings-title", "settings-general-section", "settings-separator-1", "settings-notifications-section", "settings-separator-2", "settings-privacy-section", "settings-save-bar"]
+    },
+    "settings-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "General Settings",
+      "weight": "bold"
+    },
+    "settings-general-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["settings-general-heading", "settings-language-select", "settings-timezone-select"]
+    },
+    "settings-general-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Preferences",
+      "weight": "semibold"
+    },
+    "settings-language-select": {
+      "type": "Select",
+      "label": "Language",
+      "options": [
+        { "label": "English (US)", "value": "en-US" },
+        { "label": "Spanish", "value": "es" },
+        { "label": "French", "value": "fr" },
+        { "label": "German", "value": "de" }
+      ]
+    },
+    "settings-timezone-select": {
+      "type": "Select",
+      "label": "Timezone",
+      "options": [
+        { "label": "UTC-8 Pacific Time", "value": "America/Los_Angeles" },
+        { "label": "UTC-5 Eastern Time", "value": "America/New_York" },
+        { "label": "UTC+0 London", "value": "Europe/London" },
+        { "label": "UTC+1 Berlin", "value": "Europe/Berlin" }
+      ]
+    },
+    "settings-separator-1": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "settings-notifications-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["settings-notif-heading", "settings-email-switch", "settings-push-switch", "settings-digest-switch"]
+    },
+    "settings-notif-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Notifications",
+      "weight": "semibold"
+    },
+    "settings-email-switch": {
+      "type": "Switch",
+      "label": "Email notifications",
+      "checked": true
+    },
+    "settings-push-switch": {
+      "type": "Switch",
+      "label": "Push notifications",
+      "checked": true
+    },
+    "settings-digest-switch": {
+      "type": "Switch",
+      "label": "Weekly digest",
+      "checked": false
+    },
+    "settings-separator-2": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "settings-privacy-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["settings-privacy-heading", "settings-analytics-switch", "settings-public-switch"]
+    },
+    "settings-privacy-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Privacy",
+      "weight": "semibold"
+    },
+    "settings-analytics-switch": {
+      "type": "Switch",
+      "label": "Share usage analytics",
+      "checked": false
+    },
+    "settings-public-switch": {
+      "type": "Switch",
+      "label": "Make profile public",
+      "checked": true
+    },
+    "settings-save-bar": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "justify": "end",
+      "children": ["settings-cancel-btn", "settings-save-btn"]
+    },
+    "settings-cancel-btn": {
+      "type": "Button",
+      "label": "Cancel",
+      "variant": "outline"
+    },
+    "settings-save-btn": {
+      "type": "Button",
+      "label": "Save changes",
+      "variant": "default"
+    }
+  }
+}

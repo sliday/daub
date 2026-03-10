@@ -1,0 +1,18 @@
+{
+  "root": "back-to-top-root",
+  "elements": {
+    "back-to-top-root": {
+      "type": "Stack",
+      "direction": "vertical",
+      "align": "end",
+      "children": ["back-to-top-btn"]
+    },
+    "back-to-top-btn": {
+      "type": "Button",
+      "label": "Back to top",
+      "variant": "outline",
+      "size": "sm",
+      "icon": "arrow-up"
+    }
+  }
+}

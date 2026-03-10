@@ -1,0 +1,159 @@
+{
+  "root": "contact-offices",
+  "elements": {
+    "contact-offices": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "container": "wide",
+      "children": ["header-group", "offices-grid"]
+    },
+    "header-group": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["heading", "subheading"]
+    },
+    "heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Our Offices",
+      "weight": "bold",
+      "align": "center"
+    },
+    "subheading": {
+      "type": "Text",
+      "tag": "p",
+      "content": "With locations across three cities, we're never far away.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "offices-grid": {
+      "type": "Grid",
+      "columns": 3,
+      "gap": 4,
+      "children": ["sf-office", "ny-office", "london-office"]
+    },
+    "sf-office": {
+      "type": "Card",
+      "title": "San Francisco",
+      "description": "Headquarters",
+      "children": ["sf-body"]
+    },
+    "sf-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["sf-badge", "sf-address", "sf-phone", "sf-email", "sf-hours"]
+    },
+    "sf-badge": {
+      "type": "Badge",
+      "text": "HQ",
+      "variant": "primary"
+    },
+    "sf-address": {
+      "type": "Text",
+      "tag": "p",
+      "content": "350 Mission St, Suite 200\nSan Francisco, CA 94105",
+      "variant": "muted"
+    },
+    "sf-phone": {
+      "type": "Text",
+      "tag": "p",
+      "content": "+1 (415) 555-0198"
+    },
+    "sf-email": {
+      "type": "Text",
+      "tag": "p",
+      "content": "sf@acmestudio.com",
+      "variant": "muted"
+    },
+    "sf-hours": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Mon-Fri, 9 AM - 6 PM PST",
+      "variant": "muted"
+    },
+    "ny-office": {
+      "type": "Card",
+      "title": "New York",
+      "description": "East Coast Hub",
+      "children": ["ny-body"]
+    },
+    "ny-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["ny-badge", "ny-address", "ny-phone", "ny-email", "ny-hours"]
+    },
+    "ny-badge": {
+      "type": "Badge",
+      "text": "East Coast",
+      "variant": "secondary"
+    },
+    "ny-address": {
+      "type": "Text",
+      "tag": "p",
+      "content": "120 Broadway, Floor 15\nNew York, NY 10271",
+      "variant": "muted"
+    },
+    "ny-phone": {
+      "type": "Text",
+      "tag": "p",
+      "content": "+1 (212) 555-0342"
+    },
+    "ny-email": {
+      "type": "Text",
+      "tag": "p",
+      "content": "nyc@acmestudio.com",
+      "variant": "muted"
+    },
+    "ny-hours": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Mon-Fri, 9 AM - 6 PM EST",
+      "variant": "muted"
+    },
+    "london-office": {
+      "type": "Card",
+      "title": "London",
+      "description": "EMEA Office",
+      "children": ["london-body"]
+    },
+    "london-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["london-badge", "london-address", "london-phone", "london-email", "london-hours"]
+    },
+    "london-badge": {
+      "type": "Badge",
+      "text": "EMEA",
+      "variant": "secondary"
+    },
+    "london-address": {
+      "type": "Text",
+      "tag": "p",
+      "content": "1 Canada Square, Level 28\nLondon E14 5AB, UK",
+      "variant": "muted"
+    },
+    "london-phone": {
+      "type": "Text",
+      "tag": "p",
+      "content": "+44 20 7946 0958"
+    },
+    "london-email": {
+      "type": "Text",
+      "tag": "p",
+      "content": "london@acmestudio.com",
+      "variant": "muted"
+    },
+    "london-hours": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Mon-Fri, 9 AM - 6 PM GMT",
+      "variant": "muted"
+    }
+  }
+}

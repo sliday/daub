@@ -1,0 +1,67 @@
+{
+  "root": "cta-floating",
+  "elements": {
+    "cta-floating": {
+      "type": "Surface",
+      "variant": "raised",
+      "children": ["floating-inner"]
+    },
+    "floating-inner": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "justify": "between",
+      "container": "wide",
+      "children": ["floating-left", "floating-right"]
+    },
+    "floating-left": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["floating-icon", "floating-text"]
+    },
+    "floating-icon": {
+      "type": "Badge",
+      "text": "NEW",
+      "variant": "new"
+    },
+    "floating-text": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["floating-title", "floating-desc"]
+    },
+    "floating-title": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Announcing Relay 2.0 \u2014 real-time collaboration for every team",
+      "weight": "semibold"
+    },
+    "floating-desc": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Multiplayer editing, live cursors, and instant sync across all devices.",
+      "variant": "muted"
+    },
+    "floating-right": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["floating-btn", "floating-dismiss"]
+    },
+    "floating-btn": {
+      "type": "Button",
+      "label": "Try it free",
+      "variant": "primary"
+    },
+    "floating-dismiss": {
+      "type": "Button",
+      "label": "Dismiss",
+      "variant": "ghost",
+      "icon": "x"
+    }
+  }
+}

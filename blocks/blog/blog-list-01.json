@@ -1,0 +1,200 @@
+{
+  "root": "blog-list",
+  "elements": {
+    "blog-list": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["bl-header", "bl-entries"]
+    },
+    "bl-header": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Recent Articles",
+      "weight": "bold"
+    },
+    "bl-entries": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["bl-entry-1", "bl-sep-1", "bl-entry-2", "bl-sep-2", "bl-entry-3", "bl-sep-3", "bl-entry-4"]
+    },
+    "bl-entry-1": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["bl-thumb-1", "bl-info-1"]
+    },
+    "bl-thumb-1": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/art-edge/240/160",
+      "alt": "Edge Computing"
+    },
+    "bl-info-1": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["bl-cat-1", "bl-title-1", "bl-excerpt-1", "bl-meta-1"]
+    },
+    "bl-cat-1": {
+      "type": "Chip",
+      "label": "Infrastructure",
+      "variant": "secondary"
+    },
+    "bl-title-1": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Why We Moved Everything to the Edge",
+      "weight": "bold"
+    },
+    "bl-excerpt-1": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Our migration from centralized data centers to a globally distributed edge network reduced latency by 73%.",
+      "variant": "muted"
+    },
+    "bl-meta-1": {
+      "type": "Text",
+      "tag": "p",
+      "content": "By Alex Novak · Mar 8, 2026 · 11 min",
+      "variant": "muted"
+    },
+    "bl-sep-1": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "bl-entry-2": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["bl-thumb-2", "bl-info-2"]
+    },
+    "bl-thumb-2": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/art-ux/240/160",
+      "alt": "UX Research"
+    },
+    "bl-info-2": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["bl-cat-2", "bl-title-2", "bl-excerpt-2", "bl-meta-2"]
+    },
+    "bl-cat-2": {
+      "type": "Chip",
+      "label": "UX Research",
+      "variant": "secondary"
+    },
+    "bl-title-2": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "The Surprising Findings from 200 User Interviews",
+      "weight": "bold"
+    },
+    "bl-excerpt-2": {
+      "type": "Text",
+      "tag": "p",
+      "content": "We interviewed users across 15 industries and discovered that feature discoverability matters more than feature count.",
+      "variant": "muted"
+    },
+    "bl-meta-2": {
+      "type": "Text",
+      "tag": "p",
+      "content": "By Lisa Park · Mar 1, 2026 · 7 min",
+      "variant": "muted"
+    },
+    "bl-sep-2": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "bl-entry-3": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["bl-thumb-3", "bl-info-3"]
+    },
+    "bl-thumb-3": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/art-testing/240/160",
+      "alt": "Testing at Scale"
+    },
+    "bl-info-3": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["bl-cat-3", "bl-title-3", "bl-excerpt-3", "bl-meta-3"]
+    },
+    "bl-cat-3": {
+      "type": "Chip",
+      "label": "Engineering",
+      "variant": "primary"
+    },
+    "bl-title-3": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "From 45 Minutes to 3: Parallelizing Our Test Suite",
+      "weight": "bold"
+    },
+    "bl-excerpt-3": {
+      "type": "Text",
+      "tag": "p",
+      "content": "How we restructured 8,000 tests for maximum parallelism using sharded runners and smart test ordering.",
+      "variant": "muted"
+    },
+    "bl-meta-3": {
+      "type": "Text",
+      "tag": "p",
+      "content": "By David Kim · Feb 22, 2026 · 14 min",
+      "variant": "muted"
+    },
+    "bl-sep-3": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "bl-entry-4": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["bl-thumb-4", "bl-info-4"]
+    },
+    "bl-thumb-4": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/art-pricing/240/160",
+      "alt": "Pricing Strategy"
+    },
+    "bl-info-4": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["bl-cat-4", "bl-title-4", "bl-excerpt-4", "bl-meta-4"]
+    },
+    "bl-cat-4": {
+      "type": "Chip",
+      "label": "Business",
+      "variant": "secondary"
+    },
+    "bl-title-4": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Rethinking SaaS Pricing in the Age of AI",
+      "weight": "bold"
+    },
+    "bl-excerpt-4": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Usage-based pricing, seat licenses, or outcome-based billing? We analyzed what works and why.",
+      "variant": "muted"
+    },
+    "bl-meta-4": {
+      "type": "Text",
+      "tag": "p",
+      "content": "By Anna Bergstrom · Feb 15, 2026 · 9 min",
+      "variant": "muted"
+    }
+  }
+}

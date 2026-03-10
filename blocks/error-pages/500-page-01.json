@@ -1,0 +1,98 @@
+{
+  "root": "server-error-page",
+  "elements": {
+    "server-error-page": {
+      "type": "Stack",
+      "direction": "vertical",
+      "align": "center",
+      "justify": "center",
+      "gap": 4,
+      "container": true,
+      "children": ["error-icon-area", "error-code", "error-heading", "error-description", "error-details", "action-buttons", "status-info"]
+    },
+    "error-icon-area": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/server500/400/250",
+      "alt": "Server error illustration"
+    },
+    "error-code": {
+      "type": "Text",
+      "tag": "span",
+      "content": "500",
+      "weight": "bold",
+      "align": "center",
+      "variant": "muted"
+    },
+    "error-heading": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "Internal Server Error",
+      "weight": "bold",
+      "align": "center"
+    },
+    "error-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Something went wrong on our end. Our engineering team has been notified and is working on a fix. Please try again in a few moments.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "error-details": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["details-stack"]
+    },
+    "details-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["details-label", "error-id", "error-timestamp"]
+    },
+    "details-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Error Details",
+      "weight": "bold"
+    },
+    "error-id": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Request ID: req_8f2a4b6c-d91e-4073-b5f8-1a2c3d4e5f67",
+      "variant": "muted"
+    },
+    "error-timestamp": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Timestamp: 2026-03-10T14:32:18Z",
+      "variant": "muted"
+    },
+    "action-buttons": {
+      "type": "ButtonGroup",
+      "children": ["retry-button", "home-button", "report-button"]
+    },
+    "retry-button": {
+      "type": "Button",
+      "label": "Try Again",
+      "variant": "primary",
+      "icon": "refresh-cw"
+    },
+    "home-button": {
+      "type": "Button",
+      "label": "Go to Homepage",
+      "variant": "outline",
+      "icon": "home"
+    },
+    "report-button": {
+      "type": "Button",
+      "label": "Report Issue",
+      "variant": "ghost",
+      "icon": "flag"
+    },
+    "status-info": {
+      "type": "Alert",
+      "title": "System Status",
+      "description": "Check our status page for real-time updates on service availability.",
+      "variant": "info"
+    }
+  }
+}

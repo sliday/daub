@@ -1,0 +1,90 @@
+{
+  "root": "vs-layout-root",
+  "elements": {
+    "vs-layout-root": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["vs-heading", "vs-subtext", "vs-grid", "vs-separator", "vs-verdict-card"]
+    },
+    "vs-heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "React vs. Vue",
+      "weight": "bold",
+      "align": "center"
+    },
+    "vs-subtext": {
+      "type": "Text",
+      "tag": "p",
+      "content": "A practical comparison for your next front-end project",
+      "variant": "muted",
+      "align": "center"
+    },
+    "vs-grid": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 4,
+      "children": ["vs-react-card", "vs-vue-card"]
+    },
+    "vs-react-card": {
+      "type": "Card",
+      "title": "React",
+      "description": "A JavaScript library for building user interfaces",
+      "children": ["vs-react-details"]
+    },
+    "vs-react-details": {
+      "type": "List",
+      "items": [
+        { "primary": "Learning curve", "secondary": "Moderate — JSX and hooks take time", "icon": "book" },
+        { "primary": "Ecosystem", "secondary": "Massive — Next.js, Redux, React Native", "icon": "package" },
+        { "primary": "Performance", "secondary": "Virtual DOM with concurrent rendering", "icon": "zap" },
+        { "primary": "Community", "secondary": "228k+ GitHub stars, backed by Meta", "icon": "users" },
+        { "primary": "TypeScript", "secondary": "Excellent support, widely adopted", "icon": "check-circle" }
+      ]
+    },
+    "vs-vue-card": {
+      "type": "Card",
+      "title": "Vue",
+      "description": "The progressive JavaScript framework",
+      "children": ["vs-vue-details"]
+    },
+    "vs-vue-details": {
+      "type": "List",
+      "items": [
+        { "primary": "Learning curve", "secondary": "Gentle — template syntax feels natural", "icon": "book" },
+        { "primary": "Ecosystem", "secondary": "Growing — Nuxt, Pinia, Vuetify", "icon": "package" },
+        { "primary": "Performance", "secondary": "Proxy-based reactivity, compiler optimizations", "icon": "zap" },
+        { "primary": "Community", "secondary": "46k+ GitHub stars, independent project", "icon": "users" },
+        { "primary": "TypeScript", "secondary": "First-class support since Vue 3", "icon": "check-circle" }
+      ]
+    },
+    "vs-separator": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "vs-verdict-card": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["vs-verdict-stack"]
+    },
+    "vs-verdict-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["vs-verdict-label", "vs-verdict-text"]
+    },
+    "vs-verdict-label": {
+      "type": "Badge",
+      "text": "Verdict",
+      "variant": "default"
+    },
+    "vs-verdict-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Choose React for large teams and complex apps with extensive third-party integrations. Pick Vue for faster onboarding, smaller projects, or when you value convention over configuration.",
+      "align": "center"
+    }
+  }
+}

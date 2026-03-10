@@ -1,0 +1,173 @@
+{
+  "root": "gallery-carousel",
+  "elements": {
+    "gallery-carousel": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["carousel-header", "carousel-slider"]
+    },
+    "carousel-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["carousel-title", "carousel-subtitle"]
+    },
+    "carousel-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Featured Work",
+      "weight": "bold",
+      "align": "center"
+    },
+    "carousel-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Browse through recent client projects and case studies.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "carousel-slider": {
+      "type": "Carousel",
+      "children": ["carousel-slide-1", "carousel-slide-2", "carousel-slide-3", "carousel-slide-4"]
+    },
+    "carousel-slide-1": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["carousel-img-1", "carousel-caption-1"]
+    },
+    "carousel-img-1": {
+      "type": "AspectRatio",
+      "ratio": "16/9",
+      "children": ["carousel-image-1"]
+    },
+    "carousel-image-1": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/case-fintech/800/450",
+      "alt": "Fintech dashboard redesign for Apex Banking"
+    },
+    "carousel-caption-1": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["carousel-caption-1-title", "carousel-caption-1-desc"]
+    },
+    "carousel-caption-1-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Apex Banking — Dashboard Redesign",
+      "weight": "bold"
+    },
+    "carousel-caption-1-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "A complete overhaul of the consumer banking dashboard, resulting in a 28% increase in daily active usage.",
+      "variant": "muted"
+    },
+    "carousel-slide-2": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["carousel-img-2", "carousel-caption-2"]
+    },
+    "carousel-img-2": {
+      "type": "AspectRatio",
+      "ratio": "16/9",
+      "children": ["carousel-image-2"]
+    },
+    "carousel-image-2": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/case-ecommerce/800/450",
+      "alt": "E-commerce storefront for Bloom & Branch"
+    },
+    "carousel-caption-2": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["carousel-caption-2-title", "carousel-caption-2-desc"]
+    },
+    "carousel-caption-2-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Bloom & Branch — E-Commerce Platform",
+      "weight": "bold"
+    },
+    "carousel-caption-2-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Built a headless commerce storefront with sub-second page loads and a 35% improvement in conversion rate.",
+      "variant": "muted"
+    },
+    "carousel-slide-3": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["carousel-img-3", "carousel-caption-3"]
+    },
+    "carousel-img-3": {
+      "type": "AspectRatio",
+      "ratio": "16/9",
+      "children": ["carousel-image-3"]
+    },
+    "carousel-image-3": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/case-health/800/450",
+      "alt": "Patient portal interface for MedSync Health"
+    },
+    "carousel-caption-3": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["carousel-caption-3-title", "carousel-caption-3-desc"]
+    },
+    "carousel-caption-3-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "MedSync — Patient Portal",
+      "weight": "bold"
+    },
+    "carousel-caption-3-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "HIPAA-compliant patient portal with appointment scheduling, telehealth, and secure messaging for 500K+ users.",
+      "variant": "muted"
+    },
+    "carousel-slide-4": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["carousel-img-4", "carousel-caption-4"]
+    },
+    "carousel-img-4": {
+      "type": "AspectRatio",
+      "ratio": "16/9",
+      "children": ["carousel-image-4"]
+    },
+    "carousel-image-4": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/case-saas/800/450",
+      "alt": "SaaS analytics dashboard for DataPulse"
+    },
+    "carousel-caption-4": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["carousel-caption-4-title", "carousel-caption-4-desc"]
+    },
+    "carousel-caption-4-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "DataPulse — Analytics Platform",
+      "weight": "bold"
+    },
+    "carousel-caption-4-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Real-time analytics dashboard processing 2 billion events per day with custom visualization builder.",
+      "variant": "muted"
+    }
+  }
+}

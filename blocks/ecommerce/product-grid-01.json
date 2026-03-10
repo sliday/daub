@@ -1,116 +1,134 @@
 {
-  "root": "product-listing",
+  "root": "product-grid-section",
   "elements": {
-    "product-listing": {
+    "product-grid-section": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 5 },
-      "children": ["header-row", "filter-row", "products-grid"]
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["grid-header", "grid-toolbar", "products-grid", "load-more-row"]
     },
-    "header-row": {
+    "grid-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "align": "center",
+      "children": ["grid-title", "results-count"]
+    },
+    "grid-title": {
       "type": "Text",
-      "props": { "tag": "h2", "content": "Shop All Products" }
+      "tag": "h2",
+      "content": "Wireless Headphones",
+      "weight": "bold"
     },
-    "filter-row": {
+    "results-count": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Showing 8 of 124 products",
+      "variant": "muted"
+    },
+    "grid-toolbar": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 2 },
-      "children": ["chip-all", "chip-new", "chip-sale", "chip-popular", "chip-rated"]
+      "direction": "horizontal",
+      "justify": "space-between",
+      "align": "center",
+      "gap": 2,
+      "children": ["sort-select", "filter-chips"]
+    },
+    "sort-select": {
+      "type": "Select",
+      "label": "Sort by",
+      "options": [
+        { "label": "Most Popular", "value": "popular" },
+        { "label": "Price: Low to High", "value": "price-asc" },
+        { "label": "Price: High to Low", "value": "price-desc" },
+        { "label": "Highest Rated", "value": "rating" },
+        { "label": "Newest", "value": "newest" }
+      ]
+    },
+    "filter-chips": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 1,
+      "children": ["chip-all", "chip-on-sale", "chip-in-stock", "chip-top-rated"]
     },
     "chip-all": {
       "type": "Chip",
-      "props": { "label": "All", "color": "blue", "active": true }
+      "label": "All",
+      "variant": "primary"
     },
-    "chip-new": {
+    "chip-on-sale": {
       "type": "Chip",
-      "props": { "label": "New Arrivals", "color": "green", "active": false }
+      "label": "On Sale",
+      "variant": "default"
     },
-    "chip-sale": {
+    "chip-in-stock": {
       "type": "Chip",
-      "props": { "label": "On Sale", "color": "red", "active": false }
+      "label": "In Stock",
+      "variant": "default"
     },
-    "chip-popular": {
+    "chip-top-rated": {
       "type": "Chip",
-      "props": { "label": "Popular", "color": "purple", "active": false }
-    },
-    "chip-rated": {
-      "type": "Chip",
-      "props": { "label": "Top Rated", "color": "amber", "active": false }
+      "label": "Top Rated",
+      "variant": "default"
     },
     "products-grid": {
       "type": "Grid",
-      "props": { "columns": 3, "gap": 4 },
-      "children": ["product-1", "product-2", "product-3", "product-4", "product-5", "product-6"]
+      "columns": 4,
+      "gap": 3,
+      "children": ["product-1", "product-2", "product-3", "product-4", "product-5", "product-6", "product-7", "product-8"]
     },
     "product-1": {
       "type": "Card",
-      "props": { "title": "Wireless Headphones", "description": "$79.99", "media": "https://picsum.photos/seed/headphones/400/300", "interactive": true, "footer": ["p1-rating", "p1-cart"] }
-    },
-    "p1-rating": {
-      "type": "Badge",
-      "props": { "text": "4.8 ★", "variant": "new" }
-    },
-    "p1-cart": {
-      "type": "Button",
-      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+      "title": "Sony WH-1000XM5",
+      "description": "$328.00 — ★★★★★ (2,847)"
     },
     "product-2": {
       "type": "Card",
-      "props": { "title": "Leather Backpack", "description": "$124.00", "media": "https://picsum.photos/seed/backpack/400/300", "interactive": true, "footer": ["p2-rating", "p2-cart"] }
-    },
-    "p2-rating": {
-      "type": "Badge",
-      "props": { "text": "4.5 ★", "variant": "updated" }
-    },
-    "p2-cart": {
-      "type": "Button",
-      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+      "title": "Apple AirPods Max",
+      "description": "$449.00 — ★★★★☆ (1,923)"
     },
     "product-3": {
       "type": "Card",
-      "props": { "title": "Smart Watch Pro", "description": "$249.99", "media": "https://picsum.photos/seed/watch/400/300", "interactive": true, "footer": ["p3-rating", "p3-cart"] }
-    },
-    "p3-rating": {
-      "type": "Badge",
-      "props": { "text": "4.9 ★", "variant": "new" }
-    },
-    "p3-cart": {
-      "type": "Button",
-      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+      "title": "Bose QuietComfort Ultra",
+      "description": "$379.00 — ★★★★★ (3,102)"
     },
     "product-4": {
       "type": "Card",
-      "props": { "title": "Running Shoes", "description": "$89.95", "media": "https://picsum.photos/seed/shoes/400/300", "interactive": true, "footer": ["p4-rating", "p4-cart"] }
-    },
-    "p4-rating": {
-      "type": "Badge",
-      "props": { "text": "4.3 ★", "variant": "updated" }
-    },
-    "p4-cart": {
-      "type": "Button",
-      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+      "title": "Sennheiser Momentum 4",
+      "description": "$299.95 — ★★★★☆ (1,456)"
     },
     "product-5": {
       "type": "Card",
-      "props": { "title": "Ceramic Mug Set", "description": "$34.50", "media": "https://picsum.photos/seed/mugs/400/300", "interactive": true, "footer": ["p5-rating", "p5-cart"] }
-    },
-    "p5-rating": {
-      "type": "Badge",
-      "props": { "text": "4.7 ★", "variant": "new" }
-    },
-    "p5-cart": {
-      "type": "Button",
-      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+      "title": "Beats Studio Pro",
+      "description": "$249.99 — ★★★★☆ (2,108)"
     },
     "product-6": {
       "type": "Card",
-      "props": { "title": "Desk Lamp", "description": "$56.00", "media": "https://picsum.photos/seed/lamp/400/300", "interactive": true, "footer": ["p6-rating", "p6-cart"] }
+      "title": "Jabra Elite 85h",
+      "description": "$199.99 — ★★★★☆ (987)"
     },
-    "p6-rating": {
-      "type": "Badge",
-      "props": { "text": "4.6 ★", "variant": "updated" }
+    "product-7": {
+      "type": "Card",
+      "title": "Bang & Olufsen Beoplay HX",
+      "description": "$499.00 — ★★★★★ (642)"
     },
-    "p6-cart": {
+    "product-8": {
+      "type": "Card",
+      "title": "Marshall Monitor II ANC",
+      "description": "$279.99 — ★★★★☆ (1,234)"
+    },
+    "load-more-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "center",
+      "children": ["load-more-button"]
+    },
+    "load-more-button": {
       "type": "Button",
-      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+      "label": "Load More Products",
+      "variant": "outline",
+      "icon": "chevron-down"
     }
   }
 }

@@ -1,0 +1,344 @@
+{
+  "root": "shopping-cart",
+  "elements": {
+    "shopping-cart": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["cart-header", "cart-content"]
+    },
+    "cart-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "align": "center",
+      "children": ["cart-title", "item-count-badge"]
+    },
+    "cart-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Shopping Cart",
+      "weight": "bold"
+    },
+    "item-count-badge": {
+      "type": "Badge",
+      "text": "3 items",
+      "variant": "info"
+    },
+    "cart-content": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 5,
+      "children": ["items-section", "summary-section"]
+    },
+    "items-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["cart-item-1", "separator-1", "cart-item-2", "separator-2", "cart-item-3"]
+    },
+    "cart-item-1": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["item-1-image", "item-1-details", "item-1-actions"]
+    },
+    "item-1-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/cartitem1/120/120",
+      "alt": "Sony WH-1000XM5"
+    },
+    "item-1-details": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["item-1-name", "item-1-variant", "item-1-price"]
+    },
+    "item-1-name": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Sony WH-1000XM5",
+      "weight": "bold"
+    },
+    "item-1-variant": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Color: Black",
+      "variant": "muted"
+    },
+    "item-1-price": {
+      "type": "Text",
+      "tag": "span",
+      "content": "$328.00",
+      "weight": "bold"
+    },
+    "item-1-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["item-1-qty", "item-1-remove"]
+    },
+    "item-1-qty": {
+      "type": "Select",
+      "label": "Qty",
+      "options": [
+        { "label": "1", "value": "1" },
+        { "label": "2", "value": "2" },
+        { "label": "3", "value": "3" }
+      ]
+    },
+    "item-1-remove": {
+      "type": "Button",
+      "label": "Remove",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "trash-2"
+    },
+    "separator-1": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "cart-item-2": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["item-2-image", "item-2-details", "item-2-actions"]
+    },
+    "item-2-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/cartitem2/120/120",
+      "alt": "Apple AirPods Pro 2"
+    },
+    "item-2-details": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["item-2-name", "item-2-variant", "item-2-price"]
+    },
+    "item-2-name": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Apple AirPods Pro 2",
+      "weight": "bold"
+    },
+    "item-2-variant": {
+      "type": "Text",
+      "tag": "span",
+      "content": "With MagSafe Charging Case",
+      "variant": "muted"
+    },
+    "item-2-price": {
+      "type": "Text",
+      "tag": "span",
+      "content": "$249.00",
+      "weight": "bold"
+    },
+    "item-2-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["item-2-qty", "item-2-remove"]
+    },
+    "item-2-qty": {
+      "type": "Select",
+      "label": "Qty",
+      "options": [
+        { "label": "1", "value": "1" },
+        { "label": "2", "value": "2" },
+        { "label": "3", "value": "3" }
+      ]
+    },
+    "item-2-remove": {
+      "type": "Button",
+      "label": "Remove",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "trash-2"
+    },
+    "separator-2": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "cart-item-3": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["item-3-image", "item-3-details", "item-3-actions"]
+    },
+    "item-3-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/cartitem3/120/120",
+      "alt": "Anker USB-C Cable 3-Pack"
+    },
+    "item-3-details": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["item-3-name", "item-3-variant", "item-3-price"]
+    },
+    "item-3-name": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Anker USB-C Cable 3-Pack",
+      "weight": "bold"
+    },
+    "item-3-variant": {
+      "type": "Text",
+      "tag": "span",
+      "content": "6ft, Braided Nylon",
+      "variant": "muted"
+    },
+    "item-3-price": {
+      "type": "Text",
+      "tag": "span",
+      "content": "$15.99",
+      "weight": "bold"
+    },
+    "item-3-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["item-3-qty", "item-3-remove"]
+    },
+    "item-3-qty": {
+      "type": "Select",
+      "label": "Qty",
+      "options": [
+        { "label": "1", "value": "1" },
+        { "label": "2", "value": "2" },
+        { "label": "3", "value": "3" }
+      ]
+    },
+    "item-3-remove": {
+      "type": "Button",
+      "label": "Remove",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "trash-2"
+    },
+    "summary-section": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["summary-stack"]
+    },
+    "summary-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["summary-title", "subtotal-row", "shipping-row", "tax-row", "summary-separator", "total-row", "promo-section", "checkout-button", "continue-shopping"]
+    },
+    "summary-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Order Summary",
+      "weight": "bold"
+    },
+    "subtotal-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "children": ["subtotal-label", "subtotal-value"]
+    },
+    "subtotal-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Subtotal"
+    },
+    "subtotal-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "$592.99"
+    },
+    "shipping-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "children": ["shipping-label", "shipping-value"]
+    },
+    "shipping-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Shipping"
+    },
+    "shipping-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Free",
+      "variant": "muted"
+    },
+    "tax-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "children": ["tax-label", "tax-value"]
+    },
+    "tax-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Estimated Tax"
+    },
+    "tax-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "$48.92"
+    },
+    "summary-separator": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "total-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "children": ["total-label", "total-value"]
+    },
+    "total-label": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Total",
+      "weight": "bold"
+    },
+    "total-value": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "$641.91",
+      "weight": "bold"
+    },
+    "promo-section": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "children": ["promo-input", "promo-button"]
+    },
+    "promo-input": {
+      "type": "Input",
+      "placeholder": "Promo code"
+    },
+    "promo-button": {
+      "type": "Button",
+      "label": "Apply",
+      "variant": "secondary",
+      "size": "sm"
+    },
+    "checkout-button": {
+      "type": "Button",
+      "label": "Proceed to Checkout",
+      "variant": "primary",
+      "size": "lg",
+      "icon": "lock"
+    },
+    "continue-shopping": {
+      "type": "Button",
+      "label": "Continue Shopping",
+      "variant": "ghost",
+      "icon": "arrow-left"
+    }
+  }
+}

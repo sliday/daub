@@ -1,0 +1,64 @@
+{
+  "root": "stats-grid",
+  "elements": {
+    "stats-grid": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["sg-header", "sg-sub", "sg-cards"]
+    },
+    "sg-header": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Platform Performance",
+      "weight": "bold",
+      "align": "center"
+    },
+    "sg-sub": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Real-time metrics from the last 30 days.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "sg-cards": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 3,
+      "children": ["sg-card-1", "sg-card-2", "sg-card-3", "sg-card-4"]
+    },
+    "sg-card-1": {
+      "type": "StatCard",
+      "value": "$3.2M",
+      "label": "Monthly Revenue",
+      "icon": "dollar-sign",
+      "trend": "up",
+      "trendValue": "+12.5%"
+    },
+    "sg-card-2": {
+      "type": "StatCard",
+      "value": "84,291",
+      "label": "New Signups",
+      "icon": "users",
+      "trend": "up",
+      "trendValue": "+8.3%"
+    },
+    "sg-card-3": {
+      "type": "StatCard",
+      "value": "23ms",
+      "label": "Avg Response Time",
+      "icon": "zap",
+      "trend": "down",
+      "trendValue": "-15.2%"
+    },
+    "sg-card-4": {
+      "type": "StatCard",
+      "value": "97.4%",
+      "label": "Customer Satisfaction",
+      "icon": "heart",
+      "trend": "up",
+      "trendValue": "+2.1%"
+    }
+  }
+}

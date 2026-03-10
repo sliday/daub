@@ -1,0 +1,221 @@
+{
+  "root": "pricing-tiers",
+  "elements": {
+    "pricing-tiers": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "align": "center",
+      "container": "wide",
+      "children": ["pricing-header", "tiers-grid"]
+    },
+    "pricing-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["pricing-title", "pricing-subtitle"]
+    },
+    "pricing-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Simple, transparent pricing",
+      "align": "center"
+    },
+    "pricing-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "No hidden fees. Cancel anytime.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "tiers-grid": {
+      "type": "Grid",
+      "columns": 3,
+      "gap": 4,
+      "children": ["tier-starter", "tier-pro", "tier-enterprise"]
+    },
+    "tier-starter": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["starter-inner"]
+    },
+    "starter-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["starter-header", "starter-price", "starter-desc", "starter-btn", "starter-sep", "starter-features"]
+    },
+    "starter-header": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Starter"
+    },
+    "starter-price": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 0,
+      "align": "end",
+      "children": ["starter-amount", "starter-period"]
+    },
+    "starter-amount": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "$29"
+    },
+    "starter-period": {
+      "type": "Text",
+      "tag": "span",
+      "content": "/month",
+      "variant": "muted"
+    },
+    "starter-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "For small teams getting started with modern infrastructure.",
+      "variant": "muted"
+    },
+    "starter-btn": {
+      "type": "Button",
+      "label": "Start free trial",
+      "variant": "outline"
+    },
+    "starter-sep": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "starter-features": {
+      "type": "List",
+      "items": [
+        "Up to 5 team members",
+        "10 GB storage",
+        "Basic analytics",
+        "Community support",
+        "1 environment"
+      ]
+    },
+    "tier-pro": {
+      "type": "Surface",
+      "variant": "raised",
+      "children": ["pro-inner"]
+    },
+    "pro-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["pro-header-row", "pro-price", "pro-desc", "pro-btn", "pro-sep", "pro-features"]
+    },
+    "pro-header-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["pro-header", "pro-badge"]
+    },
+    "pro-header": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Pro"
+    },
+    "pro-badge": {
+      "type": "Badge",
+      "text": "Most Popular",
+      "variant": "new"
+    },
+    "pro-price": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 0,
+      "align": "end",
+      "children": ["pro-amount", "pro-period"]
+    },
+    "pro-amount": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "$79"
+    },
+    "pro-period": {
+      "type": "Text",
+      "tag": "span",
+      "content": "/month",
+      "variant": "muted"
+    },
+    "pro-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "For growing teams that need advanced features and priority support.",
+      "variant": "muted"
+    },
+    "pro-btn": {
+      "type": "Button",
+      "label": "Start free trial",
+      "variant": "primary"
+    },
+    "pro-sep": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "pro-features": {
+      "type": "List",
+      "items": [
+        "Up to 20 team members",
+        "100 GB storage",
+        "Advanced analytics & reports",
+        "Priority email support",
+        "5 environments",
+        "Custom domains",
+        "SSO integration"
+      ]
+    },
+    "tier-enterprise": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["enterprise-inner"]
+    },
+    "enterprise-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["enterprise-header", "enterprise-price", "enterprise-desc", "enterprise-btn", "enterprise-sep", "enterprise-features"]
+    },
+    "enterprise-header": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Enterprise"
+    },
+    "enterprise-price": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Custom"
+    },
+    "enterprise-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "For organizations with advanced security, compliance, and scale requirements.",
+      "variant": "muted"
+    },
+    "enterprise-btn": {
+      "type": "Button",
+      "label": "Contact sales",
+      "variant": "outline"
+    },
+    "enterprise-sep": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "enterprise-features": {
+      "type": "List",
+      "items": [
+        "Unlimited team members",
+        "Unlimited storage",
+        "Custom analytics & BI exports",
+        "Dedicated account manager",
+        "Unlimited environments",
+        "Custom domains & white-label",
+        "SAML SSO & SCIM",
+        "99.99% SLA",
+        "SOC 2 & HIPAA compliance"
+      ]
+    }
+  }
+}

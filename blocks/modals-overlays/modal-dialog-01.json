@@ -1,0 +1,108 @@
+{
+  "root": "edit-profile-modal",
+  "elements": {
+    "edit-profile-modal": {
+      "type": "Modal",
+      "title": "Edit Profile",
+      "description": "Update your personal information and profile picture.",
+      "children": ["modal-body", "modal-footer"]
+    },
+    "modal-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["avatar-row", "field-display-name", "field-bio", "row-location-website", "field-birthday"]
+    },
+    "avatar-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["profile-avatar", "btn-change-photo"]
+    },
+    "profile-avatar": {
+      "type": "Avatar",
+      "name": "Sarah Mitchell",
+      "size": "lg"
+    },
+    "btn-change-photo": {
+      "type": "Button",
+      "label": "Change Photo",
+      "variant": "outline",
+      "size": "sm",
+      "icon": "camera"
+    },
+    "field-display-name": {
+      "type": "Field",
+      "label": "Display Name",
+      "children": ["input-display-name"]
+    },
+    "input-display-name": {
+      "type": "Input",
+      "placeholder": "Sarah Mitchell",
+      "type_input": "text"
+    },
+    "field-bio": {
+      "type": "Field",
+      "label": "Bio",
+      "children": ["textarea-bio"]
+    },
+    "textarea-bio": {
+      "type": "Textarea",
+      "placeholder": "Product designer based in San Francisco. Passionate about design systems and accessible interfaces.",
+      "rows": 3
+    },
+    "row-location-website": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 3,
+      "children": ["field-location", "field-website"]
+    },
+    "field-location": {
+      "type": "Field",
+      "label": "Location",
+      "children": ["input-location"]
+    },
+    "input-location": {
+      "type": "Input",
+      "placeholder": "San Francisco, CA",
+      "type_input": "text"
+    },
+    "field-website": {
+      "type": "Field",
+      "label": "Website",
+      "children": ["input-website"]
+    },
+    "input-website": {
+      "type": "Input",
+      "placeholder": "https://sarahmitchell.design",
+      "type_input": "url"
+    },
+    "field-birthday": {
+      "type": "Field",
+      "label": "Birthday",
+      "children": ["input-birthday"]
+    },
+    "input-birthday": {
+      "type": "DatePicker",
+      "placeholder": "Select your birthday"
+    },
+    "modal-footer": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "justify": "flex-end",
+      "children": ["btn-modal-cancel", "btn-modal-save"]
+    },
+    "btn-modal-cancel": {
+      "type": "Button",
+      "label": "Cancel",
+      "variant": "outline"
+    },
+    "btn-modal-save": {
+      "type": "Button",
+      "label": "Save Changes",
+      "variant": "default"
+    }
+  }
+}

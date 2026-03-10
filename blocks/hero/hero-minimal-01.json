@@ -1,0 +1,49 @@
+{
+  "root": "hero-minimal",
+  "elements": {
+    "hero-minimal": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "align": "center",
+      "container": "narrow",
+      "children": ["hero-min-heading", "hero-min-separator", "hero-min-body", "hero-min-link"]
+    },
+    "hero-min-heading": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "We craft typefaces for brands that refuse to blend in.",
+      "weight": "bold",
+      "align": "center"
+    },
+    "hero-min-separator": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "hero-min-body": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Foundry Nine is an independent type studio based in Amsterdam. Since 2018, we have designed custom typefaces for Aesop, Acne Studios, Cos, Rimowa, and over sixty other brands across fashion, architecture, and luxury hospitality.",
+      "align": "center"
+    },
+    "hero-min-link": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "justify": "center",
+      "children": ["hero-min-cta-work", "hero-min-cta-contact"]
+    },
+    "hero-min-cta-work": {
+      "type": "Button",
+      "label": "View Selected Work",
+      "variant": "outline",
+      "size": "lg"
+    },
+    "hero-min-cta-contact": {
+      "type": "Button",
+      "label": "Commission a Typeface",
+      "variant": "ghost",
+      "size": "lg"
+    }
+  }
+}

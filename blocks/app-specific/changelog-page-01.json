@@ -1,0 +1,218 @@
+{
+  "root": "changelog-root",
+  "elements": {
+    "changelog-root": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "children": ["changelog-header", "changelog-entry-1", "changelog-sep-1", "changelog-entry-2", "changelog-sep-2", "changelog-entry-3", "changelog-sep-3", "changelog-entry-4", "changelog-sep-4", "changelog-entry-5"]
+    },
+    "changelog-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["changelog-title", "changelog-subtitle"]
+    },
+    "changelog-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Changelog",
+      "weight": "bold",
+      "align": "center"
+    },
+    "changelog-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "New features, improvements, and bug fixes",
+      "variant": "muted",
+      "align": "center"
+    },
+    "changelog-entry-1": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["changelog-entry-1-meta", "changelog-entry-1-title", "changelog-entry-1-body"]
+    },
+    "changelog-entry-1-meta": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["changelog-entry-1-badge", "changelog-entry-1-date"]
+    },
+    "changelog-entry-1-badge": {
+      "type": "Badge",
+      "text": "v3.2.0",
+      "variant": "default"
+    },
+    "changelog-entry-1-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "March 8, 2026",
+      "variant": "muted"
+    },
+    "changelog-entry-1-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Real-time collaboration",
+      "weight": "semibold"
+    },
+    "changelog-entry-1-body": {
+      "type": "Prose",
+      "content": "Multiple team members can now edit documents simultaneously with live cursors and presence indicators. Conflicts are automatically resolved using operational transforms."
+    },
+    "changelog-sep-1": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "changelog-entry-2": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["changelog-entry-2-meta", "changelog-entry-2-title", "changelog-entry-2-body"]
+    },
+    "changelog-entry-2-meta": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["changelog-entry-2-badge", "changelog-entry-2-date"]
+    },
+    "changelog-entry-2-badge": {
+      "type": "Badge",
+      "text": "v3.1.2",
+      "variant": "secondary"
+    },
+    "changelog-entry-2-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "February 22, 2026",
+      "variant": "muted"
+    },
+    "changelog-entry-2-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Performance improvements",
+      "weight": "semibold"
+    },
+    "changelog-entry-2-body": {
+      "type": "Prose",
+      "content": "Dashboard load times reduced by 40% through lazy loading and query optimization. Large datasets now render incrementally with virtual scrolling."
+    },
+    "changelog-sep-2": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "changelog-entry-3": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["changelog-entry-3-meta", "changelog-entry-3-title", "changelog-entry-3-body"]
+    },
+    "changelog-entry-3-meta": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["changelog-entry-3-badge", "changelog-entry-3-date"]
+    },
+    "changelog-entry-3-badge": {
+      "type": "Badge",
+      "text": "v3.1.0",
+      "variant": "default"
+    },
+    "changelog-entry-3-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "February 10, 2026",
+      "variant": "muted"
+    },
+    "changelog-entry-3-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Custom webhooks",
+      "weight": "semibold"
+    },
+    "changelog-entry-3-body": {
+      "type": "Prose",
+      "content": "Configure webhooks for any event type including project updates, comment threads, and status changes. Supports HMAC signature verification and automatic retries."
+    },
+    "changelog-sep-3": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "changelog-entry-4": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["changelog-entry-4-meta", "changelog-entry-4-title", "changelog-entry-4-body"]
+    },
+    "changelog-entry-4-meta": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["changelog-entry-4-badge", "changelog-entry-4-date"]
+    },
+    "changelog-entry-4-badge": {
+      "type": "Badge",
+      "text": "v3.0.1",
+      "variant": "outline"
+    },
+    "changelog-entry-4-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "January 28, 2026",
+      "variant": "muted"
+    },
+    "changelog-entry-4-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Bug fixes and stability",
+      "weight": "semibold"
+    },
+    "changelog-entry-4-body": {
+      "type": "Prose",
+      "content": "Fixed an issue where file uploads would silently fail for files larger than 50MB. Resolved a race condition in the notification system that caused duplicate alerts."
+    },
+    "changelog-sep-4": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "changelog-entry-5": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["changelog-entry-5-meta", "changelog-entry-5-title", "changelog-entry-5-body"]
+    },
+    "changelog-entry-5-meta": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["changelog-entry-5-badge", "changelog-entry-5-date"]
+    },
+    "changelog-entry-5-badge": {
+      "type": "Badge",
+      "text": "v3.0.0",
+      "variant": "default"
+    },
+    "changelog-entry-5-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "January 15, 2026",
+      "variant": "muted"
+    },
+    "changelog-entry-5-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Version 3 launch",
+      "weight": "semibold"
+    },
+    "changelog-entry-5-body": {
+      "type": "Prose",
+      "content": "Major release introducing a redesigned interface, new API versioning, enhanced role-based access control, and support for custom workflows with an automation builder."
+    }
+  }
+}

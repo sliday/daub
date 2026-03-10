@@ -1,0 +1,164 @@
+{
+  "root": "integration-showcase",
+  "elements": {
+    "integration-showcase": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["showcase-header", "showcase-content"]
+    },
+    "showcase-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["showcase-badge", "showcase-title", "showcase-subtitle"]
+    },
+    "showcase-badge": {
+      "type": "Badge",
+      "text": "Featured Integration",
+      "variant": "secondary"
+    },
+    "showcase-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Slack Integration",
+      "weight": "bold",
+      "align": "center"
+    },
+    "showcase-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Get real-time notifications, run commands, and collaborate without leaving Slack.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "showcase-content": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 4,
+      "children": ["showcase-screenshot", "showcase-details"]
+    },
+    "showcase-screenshot": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["showcase-image"]
+    },
+    "showcase-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/slack-integration/640/420",
+      "alt": "Slack integration showing notification messages in a channel"
+    },
+    "showcase-details": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["showcase-features", "showcase-sep", "showcase-stats", "showcase-actions"]
+    },
+    "showcase-features": {
+      "type": "List",
+      "items": [
+        {
+          "primary": "Instant Notifications",
+          "secondary": "Get alerts for new signups, failed payments, deployment status, and custom events directly in your channels.",
+          "icon": "bell"
+        },
+        {
+          "primary": "Slash Commands",
+          "secondary": "Use /status, /deploy, and /lookup to query your dashboard and trigger actions without switching apps.",
+          "icon": "terminal"
+        },
+        {
+          "primary": "Thread Summaries",
+          "secondary": "Automatically summarize long threads and post key decisions back to a tracking channel.",
+          "icon": "message-square"
+        },
+        {
+          "primary": "Approval Workflows",
+          "secondary": "Route approval requests to the right people with interactive buttons for approve, reject, and escalate.",
+          "icon": "shield-check"
+        }
+      ]
+    },
+    "showcase-sep": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "showcase-stats": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "children": ["stat-teams", "stat-messages", "stat-rating"]
+    },
+    "stat-teams": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["stat-teams-value", "stat-teams-label"]
+    },
+    "stat-teams-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "8,400+",
+      "weight": "bold"
+    },
+    "stat-teams-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Teams connected",
+      "variant": "muted"
+    },
+    "stat-messages": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["stat-messages-value", "stat-messages-label"]
+    },
+    "stat-messages-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "2.1M",
+      "weight": "bold"
+    },
+    "stat-messages-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Messages/month",
+      "variant": "muted"
+    },
+    "stat-rating": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["stat-rating-value", "stat-rating-label"]
+    },
+    "stat-rating-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "4.8/5",
+      "weight": "bold"
+    },
+    "stat-rating-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "User rating",
+      "variant": "muted"
+    },
+    "showcase-actions": {
+      "type": "ButtonGroup",
+      "children": ["showcase-install-btn", "showcase-docs-btn"]
+    },
+    "showcase-install-btn": {
+      "type": "Button",
+      "label": "Add to Slack",
+      "variant": "default",
+      "icon": "plus"
+    },
+    "showcase-docs-btn": {
+      "type": "Button",
+      "label": "View Documentation",
+      "variant": "outline"
+    }
+  }
+}

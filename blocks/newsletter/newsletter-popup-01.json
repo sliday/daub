@@ -1,0 +1,66 @@
+{
+  "root": "newsletter-popup",
+  "elements": {
+    "newsletter-popup": {
+      "type": "Modal",
+      "title": "Don't miss out",
+      "children": ["nl-popup-body"]
+    },
+    "nl-popup-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["nl-popup-icon", "nl-popup-heading", "nl-popup-desc", "nl-popup-form", "nl-popup-footer"]
+    },
+    "nl-popup-icon": {
+      "type": "Text",
+      "tag": "span",
+      "content": "📬",
+      "align": "center"
+    },
+    "nl-popup-heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Get 20% off your first order",
+      "weight": "bold",
+      "align": "center"
+    },
+    "nl-popup-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Subscribe to our newsletter and receive an exclusive discount code, plus early access to new releases and member-only deals.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "nl-popup-form": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["nl-popup-email", "nl-popup-submit"]
+    },
+    "nl-popup-email": {
+      "type": "Input",
+      "placeholder": "Enter your email address",
+      "type": "email"
+    },
+    "nl-popup-submit": {
+      "type": "Button",
+      "label": "Claim My Discount",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "nl-popup-footer": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "justify": "center",
+      "children": ["nl-popup-lock-text"]
+    },
+    "nl-popup-lock-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Your information is secure. Unsubscribe at any time.",
+      "variant": "muted"
+    }
+  }
+}

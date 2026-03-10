@@ -1,0 +1,150 @@
+{
+  "root": "blog-newsletter",
+  "elements": {
+    "blog-newsletter": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["bn-header", "bn-posts", "bn-cta-card"]
+    },
+    "bn-header": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "From the Blog",
+      "weight": "bold"
+    },
+    "bn-posts": {
+      "type": "Grid",
+      "columns": 3,
+      "gap": 3,
+      "children": ["bn-post-1", "bn-post-2", "bn-post-3"]
+    },
+    "bn-post-1": {
+      "type": "Card",
+      "children": ["bn-p1-inner"]
+    },
+    "bn-p1-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["bn-p1-img", "bn-p1-title", "bn-p1-date"]
+    },
+    "bn-p1-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/bn-wasm/400/240",
+      "alt": "WebAssembly"
+    },
+    "bn-p1-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "WebAssembly Is Ready for Production",
+      "weight": "bold"
+    },
+    "bn-p1-date": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Mar 7, 2026",
+      "variant": "muted"
+    },
+    "bn-post-2": {
+      "type": "Card",
+      "children": ["bn-p2-inner"]
+    },
+    "bn-p2-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["bn-p2-img", "bn-p2-title", "bn-p2-date"]
+    },
+    "bn-p2-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/bn-observ/400/240",
+      "alt": "Observability"
+    },
+    "bn-p2-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Beyond Logging: Modern Observability Stack",
+      "weight": "bold"
+    },
+    "bn-p2-date": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Feb 28, 2026",
+      "variant": "muted"
+    },
+    "bn-post-3": {
+      "type": "Card",
+      "children": ["bn-p3-inner"]
+    },
+    "bn-p3-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["bn-p3-img", "bn-p3-title", "bn-p3-date"]
+    },
+    "bn-p3-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/bn-micro/400/240",
+      "alt": "Micro-frontends"
+    },
+    "bn-p3-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Micro-Frontends Done Right",
+      "weight": "bold"
+    },
+    "bn-p3-date": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Feb 20, 2026",
+      "variant": "muted"
+    },
+    "bn-cta-card": {
+      "type": "Surface",
+      "variant": "raised",
+      "children": ["bn-cta-inner"]
+    },
+    "bn-cta-inner": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "justify": "space-between",
+      "children": ["bn-cta-text", "bn-cta-form"]
+    },
+    "bn-cta-text": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["bn-cta-heading", "bn-cta-desc"]
+    },
+    "bn-cta-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Never miss a post",
+      "weight": "bold"
+    },
+    "bn-cta-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Get our best articles delivered to your inbox every week. Join 14,000+ engineers.",
+      "variant": "muted"
+    },
+    "bn-cta-form": {
+      "type": "InputGroup",
+      "children": ["bn-cta-input", "bn-cta-btn"]
+    },
+    "bn-cta-input": {
+      "type": "Input",
+      "placeholder": "you@company.com",
+      "type": "email"
+    },
+    "bn-cta-btn": {
+      "type": "Button",
+      "label": "Subscribe",
+      "variant": "primary"
+    }
+  }
+}

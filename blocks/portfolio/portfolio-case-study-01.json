@@ -1,0 +1,210 @@
+{
+  "root": "portfolio-case-study",
+  "elements": {
+    "portfolio-case-study": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "container": true,
+      "children": ["cs-header", "cs-hero", "cs-metrics", "cs-content", "cs-results", "cs-testimonial", "cs-cta"]
+    },
+    "cs-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["cs-breadcrumbs", "cs-badge-row", "cs-title", "cs-subtitle"]
+    },
+    "cs-breadcrumbs": {
+      "type": "Breadcrumbs",
+      "items": [
+        { "label": "Portfolio" },
+        { "label": "Case Studies" },
+        { "label": "Nexus Health" }
+      ]
+    },
+    "cs-badge-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 1,
+      "children": ["cs-badge-industry", "cs-badge-year"]
+    },
+    "cs-badge-industry": {
+      "type": "Badge",
+      "text": "Healthcare",
+      "variant": "primary"
+    },
+    "cs-badge-year": {
+      "type": "Badge",
+      "text": "2025",
+      "variant": "secondary"
+    },
+    "cs-title": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "Nexus Health: Reimagining Patient Care Management",
+      "weight": "bold"
+    },
+    "cs-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "How we helped a regional hospital network digitize patient intake, reduce wait times by 58%, and improve satisfaction scores from 3.2 to 4.7 stars.",
+      "variant": "muted"
+    },
+    "cs-hero": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/nexus-health/1200/500",
+      "alt": "Nexus Health platform dashboard showing patient management interface"
+    },
+    "cs-metrics": {
+      "type": "Grid",
+      "columns": 4,
+      "gap": 3,
+      "children": ["cs-metric-1", "cs-metric-2", "cs-metric-3", "cs-metric-4"]
+    },
+    "cs-metric-1": {
+      "type": "StatCard",
+      "value": "58%",
+      "label": "Shorter Wait Times",
+      "icon": "clock",
+      "trend": "down",
+      "trendValue": "from 34 min avg"
+    },
+    "cs-metric-2": {
+      "type": "StatCard",
+      "value": "4.7/5",
+      "label": "Patient Satisfaction",
+      "icon": "star",
+      "trend": "up",
+      "trendValue": "from 3.2/5"
+    },
+    "cs-metric-3": {
+      "type": "StatCard",
+      "value": "$2.1M",
+      "label": "Annual Cost Savings",
+      "icon": "dollar-sign",
+      "trend": "up",
+      "trendValue": "year one"
+    },
+    "cs-metric-4": {
+      "type": "StatCard",
+      "value": "12 weeks",
+      "label": "Time to Launch",
+      "icon": "rocket",
+      "trend": "down",
+      "trendValue": "vs. 9 mo. estimate"
+    },
+    "cs-content": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "children": ["cs-challenge", "cs-solution"]
+    },
+    "cs-challenge": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["cs-challenge-title", "cs-challenge-text"]
+    },
+    "cs-challenge-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "The Challenge",
+      "weight": "bold"
+    },
+    "cs-challenge-text": {
+      "type": "Prose",
+      "content": "Nexus Health operated 14 clinics across three states with entirely paper-based patient intake. Nurses spent 40% of their shift on administrative tasks. Patients waited an average of 34 minutes before seeing a provider, and inter-clinic referrals took 5-7 business days to process."
+    },
+    "cs-solution": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["cs-solution-title", "cs-solution-text"]
+    },
+    "cs-solution-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Our Solution",
+      "weight": "bold"
+    },
+    "cs-solution-text": {
+      "type": "Prose",
+      "content": "We built a HIPAA-compliant web platform with mobile check-in, automated insurance verification, real-time queue management, and instant inter-clinic referrals. The system integrates with Epic EHR via HL7 FHIR APIs and supports offline-first operation for rural clinics with unreliable connectivity."
+    },
+    "cs-results": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["cs-results-title", "cs-results-list"]
+    },
+    "cs-results-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Key Results",
+      "weight": "bold"
+    },
+    "cs-results-list": {
+      "type": "List",
+      "items": [
+        "Patient wait times reduced from 34 minutes to 14 minutes on average",
+        "Nurse administrative time cut by 62%, freeing 3.5 hours per shift for patient care",
+        "Inter-clinic referral processing reduced from 5 days to under 4 hours",
+        "Digital check-in adoption reached 78% within 6 weeks of launch",
+        "Annual operational savings of $2.1M across all 14 clinic locations"
+      ]
+    },
+    "cs-testimonial": {
+      "type": "Surface",
+      "variant": "raised",
+      "children": ["cs-quote-inner"]
+    },
+    "cs-quote-inner": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["cs-quote-avatar", "cs-quote-content"]
+    },
+    "cs-quote-avatar": {
+      "type": "Avatar",
+      "src": "https://picsum.photos/seed/dr-reeves/100/100",
+      "initials": "DR",
+      "size": "lg"
+    },
+    "cs-quote-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["cs-quote-text", "cs-quote-author"]
+    },
+    "cs-quote-text": {
+      "type": "Prose",
+      "content": "\"This project transformed how we deliver care. Our nurses are happier, our patients are happier, and we're saving millions. The team delivered in 12 weeks what our previous vendor estimated would take 9 months.\""
+    },
+    "cs-quote-author": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Dr. Sandra Reeves, CMO at Nexus Health",
+      "weight": "bold"
+    },
+    "cs-cta": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "justify": "center",
+      "children": ["cs-cta-contact", "cs-cta-portfolio"]
+    },
+    "cs-cta-contact": {
+      "type": "Button",
+      "label": "Start Your Project",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "cs-cta-portfolio": {
+      "type": "Button",
+      "label": "View More Work",
+      "variant": "outline",
+      "size": "lg"
+    }
+  }
+}

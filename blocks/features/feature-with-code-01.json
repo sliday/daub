@@ -1,0 +1,140 @@
+{
+  "root": "feature-code-section",
+  "elements": {
+    "feature-code-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "container": "wide",
+      "children": ["code-header", "code-columns"]
+    },
+    "code-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["code-badge", "code-title", "code-desc"]
+    },
+    "code-badge": {
+      "type": "Badge",
+      "text": "Developer API",
+      "variant": "info"
+    },
+    "code-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Ship payments in an afternoon, not a quarter",
+      "weight": "bold",
+      "align": "center"
+    },
+    "code-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "The Vault Payments API handles card tokenization, 3D Secure, and 40+ payment methods with a single integration.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "code-columns": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 5,
+      "align": "start",
+      "children": ["code-features", "code-snippet"]
+    },
+    "code-features": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["feat-tokenize", "feat-sep-1", "feat-webhooks", "feat-sep-2", "feat-idempotency"]
+    },
+    "feat-tokenize": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["tokenize-title", "tokenize-desc"]
+    },
+    "tokenize-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "PCI-Compliant Tokenization",
+      "weight": "semibold"
+    },
+    "tokenize-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Card numbers never touch your servers. Our client SDK captures and encrypts payment details, returning a reusable token for charging.",
+      "variant": "muted"
+    },
+    "feat-sep-1": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "feat-webhooks": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["webhooks-title", "webhooks-desc"]
+    },
+    "webhooks-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Reliable Webhooks",
+      "weight": "semibold"
+    },
+    "webhooks-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Signed webhooks with automatic retries and exponential backoff. Replay any event from the last 30 days via the dashboard.",
+      "variant": "muted"
+    },
+    "feat-sep-2": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "feat-idempotency": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["idempotency-title", "idempotency-desc"]
+    },
+    "idempotency-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Idempotent Requests",
+      "weight": "semibold"
+    },
+    "idempotency-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Pass an idempotency key with any POST request to safely retry without creating duplicate charges, even during network failures.",
+      "variant": "muted"
+    },
+    "code-snippet": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["snippet-content"]
+    },
+    "snippet-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["snippet-label", "snippet-code", "snippet-cta"]
+    },
+    "snippet-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Create a payment intent",
+      "variant": "muted"
+    },
+    "snippet-code": {
+      "type": "CustomHTML",
+      "html": "<pre style=\"background:#1e1e2e;color:#cdd6f4;padding:1.25rem;border-radius:0.5rem;font-size:0.875rem;overflow-x:auto;line-height:1.6\"><code><span style=\"color:#cba6f7\">const</span> payment = <span style=\"color:#cba6f7\">await</span> vault.payments.<span style=\"color:#89b4fa\">create</span>({\n  amount: <span style=\"color:#fab387\">4999</span>,\n  currency: <span style=\"color:#a6e3a1\">'usd'</span>,\n  token: <span style=\"color:#a6e3a1\">'tok_2xK9mR4vLpQw'</span>,\n  description: <span style=\"color:#a6e3a1\">'Pro plan — annual'</span>,\n  metadata: {\n    customer_id: <span style=\"color:#a6e3a1\">'cus_8nLzVb'</span>,\n    invoice: <span style=\"color:#a6e3a1\">'INV-2024-0847'</span>\n  }\n});\n\n<span style=\"color:#6c7086\">// payment.id → \"pay_3fGh7kNpW\"</span>\n<span style=\"color:#6c7086\">// payment.status → \"succeeded\"</span></code></pre>"
+    },
+    "snippet-cta": {
+      "type": "Button",
+      "label": "Read Full API Docs",
+      "variant": "primary",
+      "size": "sm"
+    }
+  }
+}

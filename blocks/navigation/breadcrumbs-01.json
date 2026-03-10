@@ -1,0 +1,27 @@
+{
+  "root": "breadcrumbs-wrapper",
+  "elements": {
+    "breadcrumbs-wrapper": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["breadcrumbs-nav", "breadcrumbs-page-title"]
+    },
+    "breadcrumbs-nav": {
+      "type": "Breadcrumbs",
+      "items": [
+        { "label": "Home", "href": "/" },
+        { "label": "Electronics", "href": "/electronics" },
+        { "label": "Audio", "href": "/electronics/audio" },
+        { "label": "Headphones", "href": "/electronics/audio/headphones" },
+        { "label": "Sony WH-1000XM6" }
+      ]
+    },
+    "breadcrumbs-page-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Sony WH-1000XM6 Wireless Noise Cancelling Headphones",
+      "weight": "bold"
+    }
+  }
+}

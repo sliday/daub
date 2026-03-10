@@ -1,0 +1,54 @@
+{
+  "root": "cta-banner",
+  "elements": {
+    "cta-banner": {
+      "type": "Surface",
+      "variant": "raised",
+      "children": ["banner-inner"]
+    },
+    "banner-inner": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 5,
+      "align": "center",
+      "justify": "between",
+      "container": "wide",
+      "children": ["banner-content", "banner-actions"]
+    },
+    "banner-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["banner-heading", "banner-description"]
+    },
+    "banner-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Black Friday: 40% off all annual plans"
+    },
+    "banner-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Lock in the lowest price we've ever offered. Includes all features, unlimited users, and priority support. Offer ends December 2, 2025.",
+      "variant": "muted"
+    },
+    "banner-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["banner-btn-primary", "banner-btn-secondary"]
+    },
+    "banner-btn-primary": {
+      "type": "Button",
+      "label": "Claim 40% off",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "banner-btn-secondary": {
+      "type": "Button",
+      "label": "View plans",
+      "variant": "ghost"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "root": "sidebar",
+  "elements": {
+    "sidebar": {
+      "type": "Sidebar",
+      "sections": [
+        {
+          "title": "Overview",
+          "items": [
+            { "label": "Dashboard", "icon": "layout-dashboard", "href": "/dashboard", "active": true },
+            { "label": "Analytics", "icon": "bar-chart-2", "href": "/analytics" },
+            { "label": "Notifications", "icon": "bell", "href": "/notifications" }
+          ]
+        },
+        {
+          "title": "Management",
+          "items": [
+            { "label": "Projects", "icon": "folder", "href": "/projects" },
+            { "label": "Team Members", "icon": "users", "href": "/team" },
+            { "label": "Clients", "icon": "building", "href": "/clients" },
+            { "label": "Invoices", "icon": "file-text", "href": "/invoices" }
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            { "label": "Calendar", "icon": "calendar", "href": "/calendar" },
+            { "label": "Time Tracking", "icon": "clock", "href": "/time" },
+            { "label": "Documents", "icon": "file", "href": "/documents" }
+          ]
+        },
+        {
+          "title": "Account",
+          "items": [
+            { "label": "Settings", "icon": "settings", "href": "/settings" },
+            { "label": "Billing", "icon": "credit-card", "href": "/billing" },
+            { "label": "Help & Support", "icon": "help-circle", "href": "/support" }
+          ]
+        }
+      ]
+    }
+  }
+}

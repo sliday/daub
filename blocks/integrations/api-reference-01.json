@@ -1,0 +1,215 @@
+{
+  "root": "api-reference",
+  "elements": {
+    "api-reference": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["api-header", "api-endpoints", "api-footer"]
+    },
+    "api-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["api-title", "api-subtitle"]
+    },
+    "api-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "API Reference",
+      "weight": "bold"
+    },
+    "api-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Build custom integrations with our RESTful API. All endpoints return JSON and require Bearer token authentication.",
+      "variant": "muted"
+    },
+    "api-endpoints": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["endpoint-1", "endpoint-sep-1", "endpoint-2", "endpoint-sep-2", "endpoint-3"]
+    },
+    "endpoint-1": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["endpoint-1-content"]
+    },
+    "endpoint-1-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["endpoint-1-header", "endpoint-1-desc", "endpoint-1-details"]
+    },
+    "endpoint-1-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["endpoint-1-method", "endpoint-1-path"]
+    },
+    "endpoint-1-method": {
+      "type": "Badge",
+      "text": "GET",
+      "variant": "default"
+    },
+    "endpoint-1-path": {
+      "type": "Text",
+      "tag": "code",
+      "content": "/v2/projects",
+      "weight": "medium"
+    },
+    "endpoint-1-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Returns a paginated list of all projects in the authenticated workspace. Supports filtering by status, owner, and creation date.",
+      "variant": "muted"
+    },
+    "endpoint-1-details": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "children": ["endpoint-1-rate", "endpoint-1-auth"]
+    },
+    "endpoint-1-rate": {
+      "type": "Chip",
+      "label": "100 req/min",
+      "variant": "secondary"
+    },
+    "endpoint-1-auth": {
+      "type": "Chip",
+      "label": "Requires: read:projects",
+      "variant": "secondary"
+    },
+    "endpoint-sep-1": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "endpoint-2": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["endpoint-2-content"]
+    },
+    "endpoint-2-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["endpoint-2-header", "endpoint-2-desc", "endpoint-2-details"]
+    },
+    "endpoint-2-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["endpoint-2-method", "endpoint-2-path"]
+    },
+    "endpoint-2-method": {
+      "type": "Badge",
+      "text": "POST",
+      "variant": "secondary"
+    },
+    "endpoint-2-path": {
+      "type": "Text",
+      "tag": "code",
+      "content": "/v2/projects/{id}/deploy",
+      "weight": "medium"
+    },
+    "endpoint-2-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Triggers a new deployment for the specified project. Accepts an optional branch parameter and environment target (staging or production).",
+      "variant": "muted"
+    },
+    "endpoint-2-details": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "children": ["endpoint-2-rate", "endpoint-2-auth"]
+    },
+    "endpoint-2-rate": {
+      "type": "Chip",
+      "label": "10 req/min",
+      "variant": "secondary"
+    },
+    "endpoint-2-auth": {
+      "type": "Chip",
+      "label": "Requires: write:deployments",
+      "variant": "secondary"
+    },
+    "endpoint-sep-2": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "endpoint-3": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["endpoint-3-content"]
+    },
+    "endpoint-3-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["endpoint-3-header", "endpoint-3-desc", "endpoint-3-details"]
+    },
+    "endpoint-3-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["endpoint-3-method", "endpoint-3-path"]
+    },
+    "endpoint-3-method": {
+      "type": "Badge",
+      "text": "DELETE",
+      "variant": "destructive"
+    },
+    "endpoint-3-path": {
+      "type": "Text",
+      "tag": "code",
+      "content": "/v2/projects/{id}",
+      "weight": "medium"
+    },
+    "endpoint-3-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Permanently deletes a project and all associated deployments, environment variables, and logs. This action cannot be undone.",
+      "variant": "muted"
+    },
+    "endpoint-3-details": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "children": ["endpoint-3-rate", "endpoint-3-auth"]
+    },
+    "endpoint-3-rate": {
+      "type": "Chip",
+      "label": "10 req/min",
+      "variant": "secondary"
+    },
+    "endpoint-3-auth": {
+      "type": "Chip",
+      "label": "Requires: admin:projects",
+      "variant": "secondary"
+    },
+    "api-footer": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "children": ["api-docs-btn", "api-playground-btn"]
+    },
+    "api-docs-btn": {
+      "type": "Button",
+      "label": "Full API Documentation",
+      "variant": "default",
+      "icon": "book-open"
+    },
+    "api-playground-btn": {
+      "type": "Button",
+      "label": "Open API Playground",
+      "variant": "outline",
+      "icon": "play"
+    }
+  }
+}

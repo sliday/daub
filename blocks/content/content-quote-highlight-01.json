@@ -1,0 +1,112 @@
+{
+  "root": "quote-highlight-section",
+  "elements": {
+    "quote-highlight-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "container": "narrow",
+      "children": ["quote-header", "quote-intro", "quote-block", "quote-body", "quote-results"]
+    },
+    "quote-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["quote-chip", "quote-title"]
+    },
+    "quote-chip": {
+      "type": "Chip",
+      "label": "Customer Story"
+    },
+    "quote-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "How Meridian Logistics cut delivery times by 41%",
+      "weight": "bold"
+    },
+    "quote-intro": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Meridian Logistics operates a fleet of 2,800 vehicles across the eastern United States, handling 340,000 deliveries per week. When rising fuel costs and driver shortages threatened their on-time guarantee, they turned to RouteIQ for intelligent dispatch optimization."
+    },
+    "quote-block": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["quote-inner"]
+    },
+    "quote-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["quote-text", "quote-attribution"]
+    },
+    "quote-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "\"Within six weeks of deploying RouteIQ, our average delivery window dropped from 4.2 hours to 2.5 hours. Drivers are completing 23% more stops per shift, and customer satisfaction scores hit an all-time high of 94.\"",
+      "weight": "semibold"
+    },
+    "quote-attribution": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["attribution-avatar", "attribution-info"]
+    },
+    "attribution-avatar": {
+      "type": "Avatar",
+      "children": ["avatar-initials"]
+    },
+    "avatar-initials": {
+      "type": "Text",
+      "tag": "span",
+      "content": "DP"
+    },
+    "attribution-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["attribution-name", "attribution-role"]
+    },
+    "attribution-name": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Diana Petrova",
+      "weight": "semibold"
+    },
+    "attribution-role": {
+      "type": "Text",
+      "tag": "span",
+      "content": "VP of Operations, Meridian Logistics",
+      "variant": "muted"
+    },
+    "quote-body": {
+      "type": "Text",
+      "tag": "p",
+      "content": "The team integrated RouteIQ's API into their existing dispatch system over a long weekend. The machine learning engine analyzed three years of historical delivery data to build predictive models for traffic patterns, load times, and customer availability windows.",
+      "variant": "muted"
+    },
+    "quote-results": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "justify": "between",
+      "children": ["result-time", "result-fuel", "result-nps"]
+    },
+    "result-time": {
+      "type": "StatCard",
+      "title": "Delivery Time",
+      "description": "-41% reduction"
+    },
+    "result-fuel": {
+      "type": "StatCard",
+      "title": "Fuel Costs",
+      "description": "-$2.1M annually"
+    },
+    "result-nps": {
+      "type": "StatCard",
+      "title": "Customer NPS",
+      "description": "67 to 82"
+    }
+  }
+}

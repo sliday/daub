@@ -1,0 +1,242 @@
+{
+  "root": "wishlist-section",
+  "elements": {
+    "wishlist-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["wishlist-header", "wishlist-grid", "wishlist-footer"]
+    },
+    "wishlist-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "align": "center",
+      "children": ["wishlist-title-group", "share-button"]
+    },
+    "wishlist-title-group": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["wishlist-heading", "wishlist-count"]
+    },
+    "wishlist-heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "My Wishlist",
+      "weight": "bold"
+    },
+    "wishlist-count": {
+      "type": "Badge",
+      "text": "4 items",
+      "variant": "info"
+    },
+    "share-button": {
+      "type": "Button",
+      "label": "Share Wishlist",
+      "variant": "outline",
+      "size": "sm",
+      "icon": "share-2"
+    },
+    "wishlist-grid": {
+      "type": "Grid",
+      "columns": 4,
+      "gap": 3,
+      "children": ["wish-item-1", "wish-item-2", "wish-item-3", "wish-item-4"]
+    },
+    "wish-item-1": {
+      "type": "Card",
+      "title": "Kindle Paperwhite",
+      "description": "$139.99",
+      "children": ["wish-1-content"]
+    },
+    "wish-1-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["wish-1-image", "wish-1-stock", "wish-1-actions"]
+    },
+    "wish-1-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/kindle22/300/300",
+      "alt": "Kindle Paperwhite e-reader"
+    },
+    "wish-1-stock": {
+      "type": "Badge",
+      "text": "In Stock",
+      "variant": "success"
+    },
+    "wish-1-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 1,
+      "children": ["wish-1-cart", "wish-1-remove"]
+    },
+    "wish-1-cart": {
+      "type": "Button",
+      "label": "Add to Cart",
+      "variant": "primary",
+      "size": "sm",
+      "icon": "shopping-cart"
+    },
+    "wish-1-remove": {
+      "type": "Button",
+      "label": "",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "x"
+    },
+    "wish-item-2": {
+      "type": "Card",
+      "title": "Lego Technic Porsche 911",
+      "description": "$169.99",
+      "children": ["wish-2-content"]
+    },
+    "wish-2-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["wish-2-image", "wish-2-stock", "wish-2-actions"]
+    },
+    "wish-2-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/legocar/300/300",
+      "alt": "Lego Technic Porsche 911 GT3 RS"
+    },
+    "wish-2-stock": {
+      "type": "Badge",
+      "text": "Only 3 left",
+      "variant": "warning"
+    },
+    "wish-2-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 1,
+      "children": ["wish-2-cart", "wish-2-remove"]
+    },
+    "wish-2-cart": {
+      "type": "Button",
+      "label": "Add to Cart",
+      "variant": "primary",
+      "size": "sm",
+      "icon": "shopping-cart"
+    },
+    "wish-2-remove": {
+      "type": "Button",
+      "label": "",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "x"
+    },
+    "wish-item-3": {
+      "type": "Card",
+      "title": "Aesop Reverence Hand Wash",
+      "description": "$40.00",
+      "children": ["wish-3-content"]
+    },
+    "wish-3-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["wish-3-image", "wish-3-stock", "wish-3-actions"]
+    },
+    "wish-3-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/aesop11/300/300",
+      "alt": "Aesop Reverence Aromatique Hand Wash"
+    },
+    "wish-3-stock": {
+      "type": "Badge",
+      "text": "In Stock",
+      "variant": "success"
+    },
+    "wish-3-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 1,
+      "children": ["wish-3-cart", "wish-3-remove"]
+    },
+    "wish-3-cart": {
+      "type": "Button",
+      "label": "Add to Cart",
+      "variant": "primary",
+      "size": "sm",
+      "icon": "shopping-cart"
+    },
+    "wish-3-remove": {
+      "type": "Button",
+      "label": "",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "x"
+    },
+    "wish-item-4": {
+      "type": "Card",
+      "title": "Herman Miller Aeron Chair",
+      "description": "$1,395.00",
+      "children": ["wish-4-content"]
+    },
+    "wish-4-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["wish-4-image", "wish-4-stock", "wish-4-price-drop", "wish-4-actions"]
+    },
+    "wish-4-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/aeron33/300/300",
+      "alt": "Herman Miller Aeron ergonomic office chair"
+    },
+    "wish-4-stock": {
+      "type": "Badge",
+      "text": "Out of Stock",
+      "variant": "error"
+    },
+    "wish-4-price-drop": {
+      "type": "Alert",
+      "title": "Price dropped $100 since added",
+      "variant": "info"
+    },
+    "wish-4-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 1,
+      "children": ["wish-4-notify", "wish-4-remove"]
+    },
+    "wish-4-notify": {
+      "type": "Button",
+      "label": "Notify When Available",
+      "variant": "secondary",
+      "size": "sm",
+      "icon": "bell"
+    },
+    "wish-4-remove": {
+      "type": "Button",
+      "label": "",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "x"
+    },
+    "wishlist-footer": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "align": "center",
+      "children": ["add-all-button", "total-text"]
+    },
+    "add-all-button": {
+      "type": "Button",
+      "label": "Add All to Cart",
+      "variant": "primary",
+      "icon": "shopping-cart"
+    },
+    "total-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Wishlist Total: $1,744.98",
+      "weight": "bold"
+    }
+  }
+}

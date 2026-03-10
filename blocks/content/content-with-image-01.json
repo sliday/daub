@@ -1,0 +1,125 @@
+{
+  "root": "content-image-section",
+  "elements": {
+    "content-image-section": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 6,
+      "align": "center",
+      "container": "wide",
+      "children": ["image-column", "text-column"]
+    },
+    "image-column": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/product-launch-headphones/520/600",
+      "alt": "Arc Pro wireless headphones in midnight blue finish"
+    },
+    "text-column": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["launch-badge", "launch-title", "launch-lead", "launch-details", "launch-specs", "launch-cta-group"]
+    },
+    "launch-badge": {
+      "type": "Badge",
+      "text": "New Release",
+      "variant": "new"
+    },
+    "launch-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Introducing Arc Pro",
+      "weight": "bold"
+    },
+    "launch-lead": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Four years of acoustic engineering distilled into our most ambitious headphones yet. Arc Pro delivers studio-grade spatial audio with 60 hours of battery life and adaptive noise cancellation that adjusts 400 times per second."
+    },
+    "launch-details": {
+      "type": "Text",
+      "tag": "p",
+      "content": "The custom 50mm planar magnetic drivers reproduce frequencies from 4Hz to 44kHz, revealing details you have never heard in your favorite tracks. Bluetooth 5.4 with LC3plus codec ensures lossless wireless audio up to 990kbps.",
+      "variant": "muted"
+    },
+    "launch-specs": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "children": ["spec-battery", "spec-weight", "spec-price"]
+    },
+    "spec-battery": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "align": "center",
+      "children": ["spec-battery-val", "spec-battery-label"]
+    },
+    "spec-battery-val": {
+      "type": "Text",
+      "tag": "span",
+      "content": "60h",
+      "weight": "bold"
+    },
+    "spec-battery-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Battery",
+      "variant": "muted"
+    },
+    "spec-weight": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "align": "center",
+      "children": ["spec-weight-val", "spec-weight-label"]
+    },
+    "spec-weight-val": {
+      "type": "Text",
+      "tag": "span",
+      "content": "254g",
+      "weight": "bold"
+    },
+    "spec-weight-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Weight",
+      "variant": "muted"
+    },
+    "spec-price": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "align": "center",
+      "children": ["spec-price-val", "spec-price-label"]
+    },
+    "spec-price-val": {
+      "type": "Text",
+      "tag": "span",
+      "content": "$349",
+      "weight": "bold"
+    },
+    "spec-price-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "MSRP",
+      "variant": "muted"
+    },
+    "launch-cta-group": {
+      "type": "ButtonGroup",
+      "children": ["cta-preorder", "cta-learn"]
+    },
+    "cta-preorder": {
+      "type": "Button",
+      "label": "Pre-Order Now",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "cta-learn": {
+      "type": "Button",
+      "label": "See Full Specs",
+      "variant": "outline",
+      "size": "lg"
+    }
+  }
+}

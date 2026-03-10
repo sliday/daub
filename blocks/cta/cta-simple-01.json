@@ -1,0 +1,42 @@
+{
+  "root": "cta-simple",
+  "elements": {
+    "cta-simple": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "align": "center",
+      "container": "narrow",
+      "children": ["cta-heading", "cta-subheading", "cta-buttons"]
+    },
+    "cta-heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Ready to ship faster?",
+      "align": "center"
+    },
+    "cta-subheading": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Join 8,000+ engineering teams already deploying with confidence. Get started in under 5 minutes.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "cta-buttons": {
+      "type": "ButtonGroup",
+      "children": ["btn-primary", "btn-secondary"]
+    },
+    "btn-primary": {
+      "type": "Button",
+      "label": "Start free trial",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "btn-secondary": {
+      "type": "Button",
+      "label": "Schedule a demo",
+      "variant": "outline",
+      "size": "lg"
+    }
+  }
+}

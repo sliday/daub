@@ -1,0 +1,68 @@
+{
+  "root": "testimonial-single",
+  "elements": {
+    "testimonial-single": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "align": "center",
+      "container": "narrow",
+      "children": ["quote-icon", "quote-text", "divider", "author-row"]
+    },
+    "quote-icon": {
+      "type": "Text",
+      "tag": "span",
+      "content": "\u201C",
+      "align": "center",
+      "weight": "bold"
+    },
+    "quote-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Switching to Vercel from our legacy deployment pipeline cut our release cycle from two weeks to under 20 minutes. The preview deployments alone saved our QA team 15 hours a week. It's the single best infrastructure decision we've made in five years.",
+      "align": "center"
+    },
+    "divider": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "author-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "justify": "center",
+      "children": ["author-avatar", "author-info"]
+    },
+    "author-avatar": {
+      "type": "Avatar",
+      "initials": "SR",
+      "size": "lg",
+      "src": "https://i.pravatar.cc/128?u=sarah-reynolds"
+    },
+    "author-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["author-name", "author-role", "author-company"]
+    },
+    "author-name": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Sarah Reynolds",
+      "weight": "semibold"
+    },
+    "author-role": {
+      "type": "Text",
+      "tag": "p",
+      "content": "VP of Engineering",
+      "variant": "muted"
+    },
+    "author-company": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Lattice",
+      "variant": "muted"
+    }
+  }
+}

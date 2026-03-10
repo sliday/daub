@@ -1,0 +1,112 @@
+{
+  "root": "social-proof-bar",
+  "elements": {
+    "social-proof-bar": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["bar-inner"]
+    },
+    "bar-inner": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 5,
+      "align": "center",
+      "justify": "center",
+      "container": "wide",
+      "children": ["stat-customers", "sep-1", "stat-rating", "sep-2", "stat-uptime", "sep-3", "stat-countries"]
+    },
+    "stat-customers": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["customers-number", "customers-label"]
+    },
+    "customers-number": {
+      "type": "Text",
+      "tag": "span",
+      "content": "12,400+",
+      "weight": "bold"
+    },
+    "customers-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "companies trust us",
+      "variant": "muted"
+    },
+    "sep-1": {
+      "type": "Separator",
+      "orientation": "vertical"
+    },
+    "stat-rating": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["rating-stars", "rating-number", "rating-label"]
+    },
+    "rating-stars": {
+      "type": "Text",
+      "tag": "span",
+      "content": "\u2605\u2605\u2605\u2605\u2605"
+    },
+    "rating-number": {
+      "type": "Text",
+      "tag": "span",
+      "content": "4.9/5",
+      "weight": "bold"
+    },
+    "rating-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "on G2",
+      "variant": "muted"
+    },
+    "sep-2": {
+      "type": "Separator",
+      "orientation": "vertical"
+    },
+    "stat-uptime": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["uptime-number", "uptime-label"]
+    },
+    "uptime-number": {
+      "type": "Text",
+      "tag": "span",
+      "content": "99.99%",
+      "weight": "bold"
+    },
+    "uptime-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "uptime SLA",
+      "variant": "muted"
+    },
+    "sep-3": {
+      "type": "Separator",
+      "orientation": "vertical"
+    },
+    "stat-countries": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["countries-number", "countries-label"]
+    },
+    "countries-number": {
+      "type": "Text",
+      "tag": "span",
+      "content": "84",
+      "weight": "bold"
+    },
+    "countries-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "countries served",
+      "variant": "muted"
+    }
+  }
+}

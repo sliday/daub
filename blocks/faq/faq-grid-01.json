@@ -1,0 +1,62 @@
+{
+  "root": "faq-grid",
+  "elements": {
+    "faq-grid": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["faq-grid-header", "faq-grid-sub", "faq-grid-cards"]
+    },
+    "faq-grid-header": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Common Questions",
+      "weight": "bold",
+      "align": "center"
+    },
+    "faq-grid-sub": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Quick answers to help you get started faster.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "faq-grid-cards": {
+      "type": "Grid",
+      "columns": 3,
+      "gap": 3,
+      "children": ["faq-card-1", "faq-card-2", "faq-card-3", "faq-card-4", "faq-card-5", "faq-card-6"]
+    },
+    "faq-card-1": {
+      "type": "Card",
+      "title": "How do I reset my password?",
+      "description": "Click 'Forgot password' on the login page. Enter your email and follow the link sent to your inbox. The reset link expires after 24 hours."
+    },
+    "faq-card-2": {
+      "type": "Card",
+      "title": "What payment methods do you accept?",
+      "description": "We accept Visa, Mastercard, American Express, and PayPal. Annual plans can also be paid via wire transfer or ACH."
+    },
+    "faq-card-3": {
+      "type": "Card",
+      "title": "Can I export my data?",
+      "description": "Yes. Go to Settings > Data Export to download your data in CSV, JSON, or PDF format. Exports are available on all plans."
+    },
+    "faq-card-4": {
+      "type": "Card",
+      "title": "Do you have a mobile app?",
+      "description": "Our iOS and Android apps are available on their respective app stores. They sync with your web account in real time."
+    },
+    "faq-card-5": {
+      "type": "Card",
+      "title": "How do I invite team members?",
+      "description": "Open your workspace settings and click 'Invite Members.' Enter their email addresses and assign roles. They'll receive an invitation link instantly."
+    },
+    "faq-card-6": {
+      "type": "Card",
+      "title": "What's your uptime guarantee?",
+      "description": "We maintain 99.95% uptime across all services. Our status page at status.example.com provides real-time monitoring and incident history."
+    }
+  }
+}

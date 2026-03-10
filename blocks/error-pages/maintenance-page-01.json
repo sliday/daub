@@ -1,0 +1,172 @@
+{
+  "root": "maintenance-page",
+  "elements": {
+    "maintenance-page": {
+      "type": "Stack",
+      "direction": "vertical",
+      "align": "center",
+      "justify": "center",
+      "gap": 4,
+      "container": true,
+      "children": ["maintenance-icon", "maintenance-heading", "maintenance-description", "countdown-section", "separator", "progress-section", "notification-section", "social-links"]
+    },
+    "maintenance-icon": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/wrench42/400/250",
+      "alt": "Maintenance illustration"
+    },
+    "maintenance-heading": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "We're Under Maintenance",
+      "weight": "bold",
+      "align": "center"
+    },
+    "maintenance-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "We're performing scheduled maintenance to improve performance and add new features. We'll be back online shortly.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "countdown-section": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "justify": "center",
+      "children": ["countdown-hours", "countdown-sep-1", "countdown-minutes", "countdown-sep-2", "countdown-seconds"]
+    },
+    "countdown-hours": {
+      "type": "Stack",
+      "direction": "vertical",
+      "align": "center",
+      "gap": 1,
+      "children": ["hours-value", "hours-label"]
+    },
+    "hours-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "02",
+      "weight": "bold"
+    },
+    "hours-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Hours",
+      "variant": "muted"
+    },
+    "countdown-sep-1": {
+      "type": "Text",
+      "tag": "span",
+      "content": ":",
+      "weight": "bold"
+    },
+    "countdown-minutes": {
+      "type": "Stack",
+      "direction": "vertical",
+      "align": "center",
+      "gap": 1,
+      "children": ["minutes-value", "minutes-label"]
+    },
+    "minutes-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "45",
+      "weight": "bold"
+    },
+    "minutes-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Minutes",
+      "variant": "muted"
+    },
+    "countdown-sep-2": {
+      "type": "Text",
+      "tag": "span",
+      "content": ":",
+      "weight": "bold"
+    },
+    "countdown-seconds": {
+      "type": "Stack",
+      "direction": "vertical",
+      "align": "center",
+      "gap": 1,
+      "children": ["seconds-value", "seconds-label"]
+    },
+    "seconds-value": {
+      "type": "Text",
+      "tag": "span",
+      "content": "30",
+      "weight": "bold"
+    },
+    "seconds-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Seconds",
+      "variant": "muted"
+    },
+    "separator": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "progress-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["progress-label", "maintenance-progress"]
+    },
+    "progress-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Maintenance Progress",
+      "weight": "bold"
+    },
+    "maintenance-progress": {
+      "type": "Progress",
+      "value": 65,
+      "max": 100,
+      "label": "65% complete"
+    },
+    "notification-section": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["notify-input", "notify-button"]
+    },
+    "notify-input": {
+      "type": "Input",
+      "placeholder": "Enter your email for updates",
+      "type": "email"
+    },
+    "notify-button": {
+      "type": "Button",
+      "label": "Notify Me",
+      "variant": "primary",
+      "icon": "bell"
+    },
+    "social-links": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["twitter-button", "status-button"]
+    },
+    "twitter-button": {
+      "type": "Button",
+      "label": "Follow @status",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "twitter"
+    },
+    "status-button": {
+      "type": "Button",
+      "label": "Status Page",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "external-link"
+    }
+  }
+}

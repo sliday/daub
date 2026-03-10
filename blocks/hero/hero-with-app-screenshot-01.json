@@ -1,0 +1,107 @@
+{
+  "root": "hero-screenshot",
+  "elements": {
+    "hero-screenshot": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 6,
+      "align": "center",
+      "children": ["hero-ss-content", "hero-ss-image-wrapper"]
+    },
+    "hero-ss-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "align": "center",
+      "container": "narrow",
+      "children": ["hero-ss-heading", "hero-ss-subheading", "hero-ss-cta-group"]
+    },
+    "hero-ss-heading": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "Project management that actually gets out of your way",
+      "weight": "bold",
+      "align": "center"
+    },
+    "hero-ss-subheading": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Trackline replaces your spreadsheets, sticky notes, and status meetings with one calm workspace. Built for teams that ship, not teams that manage.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "hero-ss-cta-group": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "justify": "center",
+      "children": ["hero-ss-cta", "hero-ss-pricing-link"]
+    },
+    "hero-ss-cta": {
+      "type": "Button",
+      "label": "Start Free — No Card Required",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "hero-ss-pricing-link": {
+      "type": "Button",
+      "label": "See Pricing",
+      "variant": "outline",
+      "size": "lg"
+    },
+    "hero-ss-image-wrapper": {
+      "type": "Surface",
+      "variant": "raised",
+      "children": ["hero-ss-app-image"]
+    },
+    "hero-ss-app-image": {
+      "type": "Image",
+      "src": "/images/trackline-dashboard.webp",
+      "alt": "Trackline dashboard showing sprint board with tasks organized by status columns"
+    },
+    "hero-ss-logos": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 5,
+      "align": "center",
+      "justify": "center",
+      "children": ["hero-ss-logos-label", "hero-ss-logo-1", "hero-ss-logo-2", "hero-ss-logo-3", "hero-ss-logo-4", "hero-ss-logo-5"]
+    },
+    "hero-ss-logos-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Trusted by teams at",
+      "variant": "muted"
+    },
+    "hero-ss-logo-1": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Stripe",
+      "weight": "semibold"
+    },
+    "hero-ss-logo-2": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Vercel",
+      "weight": "semibold"
+    },
+    "hero-ss-logo-3": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Linear",
+      "weight": "semibold"
+    },
+    "hero-ss-logo-4": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Notion",
+      "weight": "semibold"
+    },
+    "hero-ss-logo-5": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Raycast",
+      "weight": "semibold"
+    }
+  }
+}

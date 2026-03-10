@@ -1,0 +1,177 @@
+{
+  "root": "steps-vertical",
+  "elements": {
+    "steps-vertical": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["steps-v-header", "steps-v-list"]
+    },
+    "steps-v-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["steps-v-title", "steps-v-subtitle"]
+    },
+    "steps-v-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Getting Started Guide",
+      "weight": "bold"
+    },
+    "steps-v-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Follow these four steps to deploy your first project.",
+      "variant": "muted"
+    },
+    "steps-v-list": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["step-v-1", "step-v-2", "step-v-3", "step-v-4"]
+    },
+    "step-v-1": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "start",
+      "children": ["step-v-1-indicator", "step-v-1-body"]
+    },
+    "step-v-1-indicator": {
+      "type": "Avatar",
+      "initials": "1",
+      "size": "md"
+    },
+    "step-v-1-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["step-v-1-title", "step-v-1-desc", "step-v-1-chip"]
+    },
+    "step-v-1-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Install the CLI",
+      "weight": "bold"
+    },
+    "step-v-1-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Run a single command to install the CLI globally on your machine. Supports macOS, Linux, and Windows via WSL.",
+      "variant": "muted"
+    },
+    "step-v-1-chip": {
+      "type": "Chip",
+      "label": "~30 seconds",
+      "variant": "secondary"
+    },
+    "step-v-2": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "start",
+      "children": ["step-v-2-indicator", "step-v-2-body"]
+    },
+    "step-v-2-indicator": {
+      "type": "Avatar",
+      "initials": "2",
+      "size": "md"
+    },
+    "step-v-2-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["step-v-2-title", "step-v-2-desc", "step-v-2-chip"]
+    },
+    "step-v-2-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Initialize Your Project",
+      "weight": "bold"
+    },
+    "step-v-2-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Navigate to your project directory and run the init command. The wizard walks you through selecting a framework, language, and deployment target.",
+      "variant": "muted"
+    },
+    "step-v-2-chip": {
+      "type": "Chip",
+      "label": "~2 minutes",
+      "variant": "secondary"
+    },
+    "step-v-3": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "start",
+      "children": ["step-v-3-indicator", "step-v-3-body"]
+    },
+    "step-v-3-indicator": {
+      "type": "Avatar",
+      "initials": "3",
+      "size": "md"
+    },
+    "step-v-3-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["step-v-3-title", "step-v-3-desc", "step-v-3-chip"]
+    },
+    "step-v-3-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Configure Environment",
+      "weight": "bold"
+    },
+    "step-v-3-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Add your API keys and environment variables through the dashboard or the .env file. Secrets are encrypted at rest and never logged.",
+      "variant": "muted"
+    },
+    "step-v-3-chip": {
+      "type": "Chip",
+      "label": "~1 minute",
+      "variant": "secondary"
+    },
+    "step-v-4": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "start",
+      "children": ["step-v-4-indicator", "step-v-4-body"]
+    },
+    "step-v-4-indicator": {
+      "type": "Avatar",
+      "initials": "4",
+      "size": "md"
+    },
+    "step-v-4-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["step-v-4-title", "step-v-4-desc", "step-v-4-btn"]
+    },
+    "step-v-4-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Deploy to Production",
+      "weight": "bold"
+    },
+    "step-v-4-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Push to your main branch or run the deploy command. Your app goes live on a global CDN with automatic SSL in under 60 seconds.",
+      "variant": "muted"
+    },
+    "step-v-4-btn": {
+      "type": "Button",
+      "label": "Read Full Docs",
+      "variant": "outline",
+      "icon": "arrow-right"
+    }
+  }
+}

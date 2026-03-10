@@ -1,0 +1,121 @@
+{
+  "root": "hero-split",
+  "elements": {
+    "hero-split": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 6,
+      "children": ["hero-split-content", "hero-split-image"]
+    },
+    "hero-split-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "justify": "center",
+      "children": ["hero-split-chip", "hero-split-heading", "hero-split-text", "hero-split-features", "hero-split-actions"]
+    },
+    "hero-split-chip": {
+      "type": "Chip",
+      "label": "Design Tool",
+      "variant": "outline"
+    },
+    "hero-split-heading": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "Design interfaces 10x faster with AI-powered components",
+      "weight": "bold"
+    },
+    "hero-split-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Figma and Sketch are yesterday's tools. Quill generates production-ready designs from natural language, with pixel-perfect responsive layouts out of the box.",
+      "variant": "muted"
+    },
+    "hero-split-features": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["hero-split-feat-1", "hero-split-feat-2", "hero-split-feat-3"]
+    },
+    "hero-split-feat-1": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["hero-feat-check-1", "hero-feat-text-1"]
+    },
+    "hero-feat-check-1": {
+      "type": "Badge",
+      "text": "check",
+      "variant": "success"
+    },
+    "hero-feat-text-1": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Export to React, Vue, or Svelte"
+    },
+    "hero-split-feat-2": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["hero-feat-check-2", "hero-feat-text-2"]
+    },
+    "hero-feat-check-2": {
+      "type": "Badge",
+      "text": "check",
+      "variant": "success"
+    },
+    "hero-feat-text-2": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Built-in design system tokens"
+    },
+    "hero-split-feat-3": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["hero-feat-check-3", "hero-feat-text-3"]
+    },
+    "hero-feat-check-3": {
+      "type": "Badge",
+      "text": "check",
+      "variant": "success"
+    },
+    "hero-feat-text-3": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Real-time collaboration for teams"
+    },
+    "hero-split-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "children": ["hero-split-cta", "hero-split-demo"]
+    },
+    "hero-split-cta": {
+      "type": "Button",
+      "label": "Try Quill Free",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "hero-split-demo": {
+      "type": "Button",
+      "label": "Watch Demo",
+      "variant": "ghost",
+      "size": "lg",
+      "icon": "play"
+    },
+    "hero-split-image": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["hero-split-screenshot"]
+    },
+    "hero-split-screenshot": {
+      "type": "Image",
+      "src": "/images/hero-app-screenshot.webp",
+      "alt": "Quill design editor showing AI component generation in action"
+    }
+  }
+}

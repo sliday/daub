@@ -1,0 +1,247 @@
+{
+  "root": "portfolio-carousel",
+  "elements": {
+    "portfolio-carousel": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["pc-header-row", "pc-slider", "pc-dots"]
+    },
+    "pc-header-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "justify": "space-between",
+      "children": ["pc-header-text", "pc-nav-btns"]
+    },
+    "pc-header-text": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["pc-heading", "pc-subheading"]
+    },
+    "pc-heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Featured Projects",
+      "weight": "bold"
+    },
+    "pc-subheading": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Swipe through our latest case studies and client work.",
+      "variant": "muted"
+    },
+    "pc-nav-btns": {
+      "type": "ButtonGroup",
+      "children": ["pc-prev", "pc-next"]
+    },
+    "pc-prev": {
+      "type": "Button",
+      "label": "Previous",
+      "variant": "outline",
+      "icon": "chevron-left"
+    },
+    "pc-next": {
+      "type": "Button",
+      "label": "Next",
+      "variant": "outline",
+      "icon": "chevron-right"
+    },
+    "pc-slider": {
+      "type": "Carousel",
+      "children": ["pc-slide-1", "pc-slide-2", "pc-slide-3", "pc-slide-4"]
+    },
+    "pc-slide-1": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["pc-s1-inner"]
+    },
+    "pc-s1-inner": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "children": ["pc-s1-img", "pc-s1-info"]
+    },
+    "pc-s1-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/carousel-atlas/700/450",
+      "alt": "Atlas CRM Dashboard"
+    },
+    "pc-s1-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["pc-s1-client", "pc-s1-title", "pc-s1-desc", "pc-s1-link"]
+    },
+    "pc-s1-client": {
+      "type": "Chip",
+      "label": "Atlas Corp",
+      "variant": "primary"
+    },
+    "pc-s1-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Enterprise CRM Redesign",
+      "weight": "bold"
+    },
+    "pc-s1-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Redesigned the entire CRM experience for 25,000 sales reps. Reduced average task completion time by 34% and boosted user adoption from 62% to 91%.",
+      "variant": "muted"
+    },
+    "pc-s1-link": {
+      "type": "Button",
+      "label": "View Case Study",
+      "variant": "outline",
+      "icon": "arrow-right"
+    },
+    "pc-slide-2": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["pc-s2-inner"]
+    },
+    "pc-s2-inner": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "children": ["pc-s2-img", "pc-s2-info"]
+    },
+    "pc-s2-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/carousel-bloom/700/450",
+      "alt": "Bloom Marketplace"
+    },
+    "pc-s2-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["pc-s2-client", "pc-s2-title", "pc-s2-desc", "pc-s2-link"]
+    },
+    "pc-s2-client": {
+      "type": "Chip",
+      "label": "Bloom",
+      "variant": "primary"
+    },
+    "pc-s2-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Artisan Marketplace Platform",
+      "weight": "bold"
+    },
+    "pc-s2-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Built a two-sided marketplace connecting 3,000 artisans with buyers. Processed $8.2M in transactions in the first year with a 4.8-star seller rating.",
+      "variant": "muted"
+    },
+    "pc-s2-link": {
+      "type": "Button",
+      "label": "View Case Study",
+      "variant": "outline",
+      "icon": "arrow-right"
+    },
+    "pc-slide-3": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["pc-s3-inner"]
+    },
+    "pc-s3-inner": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "children": ["pc-s3-img", "pc-s3-info"]
+    },
+    "pc-s3-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/carousel-nova/700/450",
+      "alt": "Nova Streaming"
+    },
+    "pc-s3-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["pc-s3-client", "pc-s3-title", "pc-s3-desc", "pc-s3-link"]
+    },
+    "pc-s3-client": {
+      "type": "Chip",
+      "label": "Nova Media",
+      "variant": "primary"
+    },
+    "pc-s3-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Live Streaming Platform",
+      "weight": "bold"
+    },
+    "pc-s3-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Engineered a low-latency streaming platform supporting 200K concurrent viewers. Sub-2-second glass-to-glass latency with adaptive bitrate streaming.",
+      "variant": "muted"
+    },
+    "pc-s3-link": {
+      "type": "Button",
+      "label": "View Case Study",
+      "variant": "outline",
+      "icon": "arrow-right"
+    },
+    "pc-slide-4": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["pc-s4-inner"]
+    },
+    "pc-s4-inner": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "children": ["pc-s4-img", "pc-s4-info"]
+    },
+    "pc-s4-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/carousel-verde/700/450",
+      "alt": "Verde Sustainability"
+    },
+    "pc-s4-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["pc-s4-client", "pc-s4-title", "pc-s4-desc", "pc-s4-link"]
+    },
+    "pc-s4-client": {
+      "type": "Chip",
+      "label": "Verde",
+      "variant": "primary"
+    },
+    "pc-s4-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Carbon Tracking Dashboard",
+      "weight": "bold"
+    },
+    "pc-s4-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Built a real-time carbon footprint tracker for enterprises. Helped 120 companies reduce emissions by an average of 23% in the first year of use.",
+      "variant": "muted"
+    },
+    "pc-s4-link": {
+      "type": "Button",
+      "label": "View Case Study",
+      "variant": "outline",
+      "icon": "arrow-right"
+    },
+    "pc-dots": {
+      "type": "Pagination",
+      "total": 4,
+      "current": 1
+    }
+  }
+}

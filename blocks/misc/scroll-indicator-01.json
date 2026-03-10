@@ -1,0 +1,17 @@
+{
+  "root": "scroll-indicator-root",
+  "elements": {
+    "scroll-indicator-root": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["scroll-progress-bar"]
+    },
+    "scroll-progress-bar": {
+      "type": "Progress",
+      "value": 35,
+      "max": 100,
+      "label": "Reading progress"
+    }
+  }
+}

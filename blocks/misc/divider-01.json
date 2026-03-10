@@ -1,0 +1,26 @@
+{
+  "root": "divider-root",
+  "elements": {
+    "divider-root": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["divider-line-left", "divider-text", "divider-line-right"]
+    },
+    "divider-line-left": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "divider-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "or",
+      "variant": "muted"
+    },
+    "divider-line-right": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    }
+  }
+}

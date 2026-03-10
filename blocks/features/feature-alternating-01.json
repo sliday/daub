@@ -1,0 +1,153 @@
+{
+  "root": "feature-alternating-section",
+  "elements": {
+    "feature-alternating-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 6,
+      "container": "wide",
+      "children": ["alt-header", "row-1", "row-2", "row-3"]
+    },
+    "alt-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["alt-title", "alt-desc"]
+    },
+    "alt-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Build deeper relationships at every touchpoint",
+      "weight": "bold",
+      "align": "center"
+    },
+    "alt-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "From first contact to closed deal, Meridian CRM gives your team the context they need to close faster.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "row-1": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 5,
+      "align": "center",
+      "children": ["row-1-image", "row-1-content"]
+    },
+    "row-1-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/crm-pipeline/560/380",
+      "alt": "Visual deal pipeline with drag-and-drop stages"
+    },
+    "row-1-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["row-1-chip", "row-1-title", "row-1-desc", "row-1-cta"]
+    },
+    "row-1-chip": {
+      "type": "Chip",
+      "label": "Pipeline Management"
+    },
+    "row-1-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "See every deal at a glance",
+      "weight": "bold"
+    },
+    "row-1-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Drag deals across custom stages, set weighted probabilities, and forecast revenue with 94% accuracy. Automated alerts flag stalled opportunities before they slip through.",
+      "variant": "muted"
+    },
+    "row-1-cta": {
+      "type": "Button",
+      "label": "Explore Pipelines",
+      "variant": "outline",
+      "size": "sm"
+    },
+    "row-2": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 5,
+      "align": "center",
+      "children": ["row-2-content", "row-2-image"]
+    },
+    "row-2-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["row-2-chip", "row-2-title", "row-2-desc", "row-2-cta"]
+    },
+    "row-2-chip": {
+      "type": "Chip",
+      "label": "Contact Intelligence"
+    },
+    "row-2-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Know your buyers before the call",
+      "weight": "bold"
+    },
+    "row-2-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Enrich contacts automatically with firmographic data, social profiles, and interaction history. AI-generated summaries surface the signals that matter most.",
+      "variant": "muted"
+    },
+    "row-2-cta": {
+      "type": "Button",
+      "label": "See Contact Profiles",
+      "variant": "outline",
+      "size": "sm"
+    },
+    "row-2-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/crm-contacts/560/380",
+      "alt": "Enriched contact profile with activity timeline"
+    },
+    "row-3": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 5,
+      "align": "center",
+      "children": ["row-3-image", "row-3-content"]
+    },
+    "row-3-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/crm-automation/560/380",
+      "alt": "Email sequence builder with branching logic"
+    },
+    "row-3-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["row-3-chip", "row-3-title", "row-3-desc", "row-3-cta"]
+    },
+    "row-3-chip": {
+      "type": "Chip",
+      "label": "Sales Automation"
+    },
+    "row-3-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Automate the follow-up, keep the human touch",
+      "weight": "bold"
+    },
+    "row-3-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Build multi-step email sequences with conditional branching. Personalize at scale using merge fields, and let the system pause automatically when a prospect replies.",
+      "variant": "muted"
+    },
+    "row-3-cta": {
+      "type": "Button",
+      "label": "View Automations",
+      "variant": "outline",
+      "size": "sm"
+    }
+  }
+}

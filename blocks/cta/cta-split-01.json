@@ -1,0 +1,121 @@
+{
+  "root": "cta-split",
+  "elements": {
+    "cta-split": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 6,
+      "align": "center",
+      "container": "wide",
+      "children": ["split-text", "split-action"]
+    },
+    "split-text": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["split-badge", "split-heading", "split-description", "split-stats"]
+    },
+    "split-badge": {
+      "type": "Badge",
+      "text": "New in v4.0",
+      "variant": "new"
+    },
+    "split-heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Build your next project with the platform teams love"
+    },
+    "split-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "From prototype to production in hours, not weeks. Our developer platform handles infrastructure, scaling, and monitoring so your team can focus on what matters.",
+      "variant": "muted"
+    },
+    "split-stats": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "children": ["stat-deploy", "stat-uptime"]
+    },
+    "stat-deploy": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["stat-deploy-num", "stat-deploy-label"]
+    },
+    "stat-deploy-num": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "2.4M"
+    },
+    "stat-deploy-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "deployments this month",
+      "variant": "muted"
+    },
+    "stat-uptime": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["stat-uptime-num", "stat-uptime-label"]
+    },
+    "stat-uptime-num": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "99.99%"
+    },
+    "stat-uptime-label": {
+      "type": "Text",
+      "tag": "span",
+      "content": "guaranteed uptime",
+      "variant": "muted"
+    },
+    "split-action": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["action-inner"]
+    },
+    "action-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["action-title", "action-email", "action-name", "action-btn", "action-note"]
+    },
+    "action-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Get early access"
+    },
+    "action-email": {
+      "type": "Field",
+      "label": "Work email",
+      "children": ["action-email-input"]
+    },
+    "action-email-input": {
+      "type": "Input",
+      "placeholder": "you@company.com",
+      "type": "email"
+    },
+    "action-name": {
+      "type": "Field",
+      "label": "Company name",
+      "children": ["action-name-input"]
+    },
+    "action-name-input": {
+      "type": "Input",
+      "placeholder": "Acme Inc."
+    },
+    "action-btn": {
+      "type": "Button",
+      "label": "Request access",
+      "variant": "primary"
+    },
+    "action-note": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Free 14-day trial. No credit card required.",
+      "variant": "muted"
+    }
+  }
+}

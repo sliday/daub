@@ -1,0 +1,126 @@
+{
+  "root": "video-section",
+  "elements": {
+    "video-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["video-header", "video-content"]
+    },
+    "video-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["video-title", "video-subtitle"]
+    },
+    "video-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "See It in Action",
+      "weight": "bold",
+      "align": "center"
+    },
+    "video-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Watch a 3-minute walkthrough of the platform's core features.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "video-content": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 4,
+      "children": ["video-player", "video-details"]
+    },
+    "video-player": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["video-player-inner"]
+    },
+    "video-player-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["video-thumbnail", "video-controls"]
+    },
+    "video-thumbnail": {
+      "type": "AspectRatio",
+      "ratio": "16/9",
+      "children": ["video-thumb-img"]
+    },
+    "video-thumb-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/video-demo/800/450",
+      "alt": "Video thumbnail showing the platform dashboard"
+    },
+    "video-controls": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "justify": "center",
+      "children": ["video-play-btn", "video-duration"]
+    },
+    "video-play-btn": {
+      "type": "Button",
+      "label": "Play Video",
+      "variant": "default",
+      "icon": "play"
+    },
+    "video-duration": {
+      "type": "Text",
+      "tag": "span",
+      "content": "3:24",
+      "variant": "muted"
+    },
+    "video-details": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "justify": "center",
+      "children": ["video-details-title", "video-details-desc", "video-features", "video-cta"]
+    },
+    "video-details-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Platform Overview Demo",
+      "weight": "bold"
+    },
+    "video-details-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "In this walkthrough, product lead Jamie Nguyen demonstrates real-time collaboration, the AI assistant, and the new analytics dashboard. Perfect for teams evaluating the platform.",
+      "variant": "muted"
+    },
+    "video-features": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "children": ["video-feat-1", "video-feat-2", "video-feat-3"]
+    },
+    "video-feat-1": {
+      "type": "Chip",
+      "label": "Real-time Collab",
+      "variant": "secondary"
+    },
+    "video-feat-2": {
+      "type": "Chip",
+      "label": "AI Assistant",
+      "variant": "secondary"
+    },
+    "video-feat-3": {
+      "type": "Chip",
+      "label": "Analytics",
+      "variant": "secondary"
+    },
+    "video-cta": {
+      "type": "Button",
+      "label": "Start Free Trial",
+      "variant": "default",
+      "icon": "arrow-right"
+    }
+  }
+}

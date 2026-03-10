@@ -1,0 +1,99 @@
+{
+  "root": "gallery-grid",
+  "elements": {
+    "gallery-grid": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["gallery-header", "gallery-images"]
+    },
+    "gallery-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["gallery-title", "gallery-subtitle"]
+    },
+    "gallery-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Gallery",
+      "weight": "bold",
+      "align": "center"
+    },
+    "gallery-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Highlights from our latest projects and team events.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "gallery-images": {
+      "type": "Grid",
+      "columns": 3,
+      "gap": 2,
+      "children": ["gallery-item-1", "gallery-item-2", "gallery-item-3", "gallery-item-4", "gallery-item-5", "gallery-item-6"]
+    },
+    "gallery-item-1": {
+      "type": "AspectRatio",
+      "ratio": "4/3",
+      "children": ["gallery-img-1"]
+    },
+    "gallery-img-1": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/gallery-office/600/450",
+      "alt": "Modern open-plan office with collaborative workspaces"
+    },
+    "gallery-item-2": {
+      "type": "AspectRatio",
+      "ratio": "4/3",
+      "children": ["gallery-img-2"]
+    },
+    "gallery-img-2": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/gallery-workshop/600/450",
+      "alt": "Team workshop with sticky notes on a whiteboard"
+    },
+    "gallery-item-3": {
+      "type": "AspectRatio",
+      "ratio": "4/3",
+      "children": ["gallery-img-3"]
+    },
+    "gallery-img-3": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/gallery-launch/600/450",
+      "alt": "Product launch event with audience and stage"
+    },
+    "gallery-item-4": {
+      "type": "AspectRatio",
+      "ratio": "4/3",
+      "children": ["gallery-img-4"]
+    },
+    "gallery-img-4": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/gallery-retreat/600/450",
+      "alt": "Team retreat in nature with group hiking"
+    },
+    "gallery-item-5": {
+      "type": "AspectRatio",
+      "ratio": "4/3",
+      "children": ["gallery-img-5"]
+    },
+    "gallery-img-5": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/gallery-hackathon/600/450",
+      "alt": "Hackathon participants coding late at night"
+    },
+    "gallery-item-6": {
+      "type": "AspectRatio",
+      "ratio": "4/3",
+      "children": ["gallery-img-6"]
+    },
+    "gallery-img-6": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/gallery-award/600/450",
+      "alt": "Team celebrating a product design award"
+    }
+  }
+}

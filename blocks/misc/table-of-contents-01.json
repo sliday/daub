@@ -1,0 +1,29 @@
+{
+  "root": "toc-root",
+  "elements": {
+    "toc-root": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["toc-heading", "toc-nav"]
+    },
+    "toc-heading": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "On this page",
+      "weight": "semibold"
+    },
+    "toc-nav": {
+      "type": "NavMenu",
+      "direction": "vertical",
+      "items": [
+        { "label": "Introduction", "href": "#introduction", "icon": "hash" },
+        { "label": "Getting Started", "href": "#getting-started", "icon": "hash" },
+        { "label": "Configuration", "href": "#configuration", "icon": "hash" },
+        { "label": "API Reference", "href": "#api-reference", "icon": "hash" },
+        { "label": "Examples", "href": "#examples", "icon": "hash" },
+        { "label": "Troubleshooting", "href": "#troubleshooting", "icon": "hash" }
+      ]
+    }
+  }
+}

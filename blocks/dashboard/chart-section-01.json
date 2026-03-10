@@ -1,0 +1,36 @@
+{
+  "root": "chart-section",
+  "elements": {
+    "chart-section": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 4,
+      "children": ["chart-revenue", "chart-traffic"]
+    },
+    "chart-revenue": {
+      "type": "ChartCard",
+      "title": "Revenue Over Time",
+      "type_chart": "area",
+      "data": [
+        { "label": "Jan", "value": 18200 },
+        { "label": "Feb", "value": 22400 },
+        { "label": "Mar", "value": 19800 },
+        { "label": "Apr", "value": 24100 },
+        { "label": "May", "value": 27600 },
+        { "label": "Jun", "value": 31200 }
+      ]
+    },
+    "chart-traffic": {
+      "type": "ChartCard",
+      "title": "Traffic by Source",
+      "type_chart": "pie",
+      "data": [
+        { "label": "Organic Search", "value": 4215 },
+        { "label": "Direct", "value": 2870 },
+        { "label": "Social Media", "value": 1940 },
+        { "label": "Referral", "value": 1320 },
+        { "label": "Email", "value": 890 }
+      ]
+    }
+  }
+}

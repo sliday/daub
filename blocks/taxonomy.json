@@ -1,84 +1,343 @@
 {
-  "version": "1.0.0",
-  "description": "148-block taxonomy for DAUB UI generation. Reference data for block categorization and future generation.",
+  "$schema": "blocks-taxonomy/v1",
+  "description": "Exhaustive UI section/block taxonomy for page composition. Each block is a self-contained UI section — NOT a full page.",
+  "total_blocks": 148,
   "categories": {
-    "landing": {
-      "description": "Marketing and conversion pages",
-      "subcategories": {
-        "hero": ["hero-centered", "hero-split", "hero-video", "hero-gradient", "hero-animated", "hero-product", "hero-saas", "hero-app"],
-        "features": ["features-grid-3col", "features-grid-4col", "features-alternating", "features-tabs", "features-accordion", "features-bento"],
-        "pricing": ["pricing-3tier", "pricing-2tier", "pricing-toggle", "pricing-comparison", "pricing-single", "pricing-enterprise"],
-        "testimonials": ["testimonials-cards", "testimonials-carousel", "testimonials-quotes", "testimonials-logo-wall", "testimonials-video", "testimonials-mini"],
-        "cta": ["cta-banner", "cta-split", "cta-minimal", "cta-gradient", "cta-with-form"],
-        "footer": ["footer-4col", "footer-3col", "footer-minimal", "footer-mega", "footer-centered"],
-        "faq": ["faq-accordion", "faq-2col", "faq-categorized"],
-        "how-it-works": ["how-it-works-steps", "how-it-works-timeline", "how-it-works-visual"],
-        "social-proof": ["logos-bar", "logos-marquee", "stats-row", "press-mentions"]
+    "navigation": {
+      "description": "Top-of-page and persistent navigation patterns",
+      "blocks": {
+        "navbar-simple": { "description": "Logo + horizontal links + CTA button", "variants": ["centered", "left-aligned", "transparent", "sticky"] },
+        "navbar-mega-menu": { "description": "Navbar with dropdown mega-menu panels", "variants": ["columns", "featured-image", "tabbed"] },
+        "navbar-with-search": { "description": "Navbar incorporating search input", "variants": ["inline", "expandable", "command-palette"] },
+        "navbar-with-auth": { "description": "Navbar with login/signup or avatar/dropdown", "variants": ["buttons", "avatar-menu", "split"] },
+        "navbar-mobile-drawer": { "description": "Hamburger menu with slide-out drawer for mobile", "variants": ["left", "right", "fullscreen"] },
+        "topbar-announcement": { "description": "Thin bar above navbar for announcements/promos", "variants": ["dismissible", "countdown", "scrolling"] },
+        "breadcrumbs": { "description": "Hierarchical path indicator", "variants": ["chevron", "slash", "with-icon"] },
+        "sidebar-nav": { "description": "Vertical sidebar navigation for apps/dashboards", "variants": ["collapsible", "icon-only", "grouped", "with-badges"] },
+        "tab-nav": { "description": "Horizontal tab-based navigation within a page section", "variants": ["underline", "pills", "boxed", "with-icons"] },
+        "pagination": { "description": "Page navigation for lists/tables", "variants": ["numbered", "prev-next", "load-more"] },
+        "bottom-nav": { "description": "Mobile bottom tab bar", "variants": ["3-tab", "4-tab", "5-tab", "with-fab"] }
       }
     },
-    "dashboard": {
-      "description": "Analytics, admin panels, and data-heavy interfaces",
-      "subcategories": {
-        "layout": ["sidebar-layout", "topnav-layout", "dual-sidebar", "minimal-layout"],
-        "header": ["header-breadcrumb", "header-tabs", "header-search", "header-actions"],
-        "stats": ["stats-row-4", "stats-row-3", "stats-compact", "stats-detailed", "stats-comparison"],
-        "charts": ["chart-panel", "chart-area", "chart-donut", "chart-line", "chart-mixed"],
-        "tables": ["data-table-basic", "data-table-selectable", "data-table-expandable", "data-table-sortable"],
-        "feeds": ["activity-feed", "notification-feed", "timeline", "log-viewer"],
-        "widgets": ["calendar-widget", "task-widget", "progress-widget", "quota-widget"]
+    "hero": {
+      "description": "Above-the-fold primary landing sections",
+      "blocks": {
+        "hero-centered": { "description": "Centered headline + subheadline + CTA", "variants": ["with-image-below", "gradient-bg", "pattern-bg"] },
+        "hero-split": { "description": "Text left / image right (or reversed)", "variants": ["image-right", "image-left", "with-form", "with-video"] },
+        "hero-with-app-screenshot": { "description": "Product screenshot or mockup as focal point", "variants": ["browser-frame", "phone-mockup", "floating-ui"] },
+        "hero-video-background": { "description": "Full-width video or animated background", "variants": ["autoplay-muted", "with-overlay", "parallax"] },
+        "hero-fullscreen": { "description": "Full viewport height hero", "variants": ["image-bg", "gradient", "animated-particles"] },
+        "hero-with-form": { "description": "Hero incorporating lead capture form", "variants": ["email-only", "multi-field", "with-social-login"] },
+        "hero-minimal": { "description": "Text-only typographic hero", "variants": ["large-heading", "animated-text", "typewriter"] },
+        "hero-with-stats": { "description": "Hero with key metrics/numbers", "variants": ["inline-stats", "counter-animation", "badge-style"] }
       }
     },
-    "forms": {
-      "description": "Input forms for data collection",
-      "subcategories": {
-        "auth": ["login-simple", "login-social", "login-split", "signup-simple", "signup-stepped", "forgot-password", "verify-email"],
-        "settings": ["settings-profile", "settings-notifications", "settings-security", "settings-billing", "settings-team"],
-        "checkout": ["checkout-2col", "checkout-stepped", "checkout-single"],
-        "contact": ["contact-simple", "contact-split", "contact-with-map"],
-        "survey": ["survey-single", "survey-multi-step", "survey-conversational"]
+    "logo-bar": {
+      "description": "Client/partner/press logo displays",
+      "blocks": {
+        "logo-cloud-simple": { "description": "Static grid of logos", "variants": ["grayscale", "color", "with-border"] },
+        "logo-cloud-scrolling": { "description": "Infinite horizontal scroll of logos", "variants": ["single-row", "double-row", "alternating-direction"] },
+        "logo-cloud-with-heading": { "description": "Logos with contextual heading (Trusted by...)", "variants": ["centered", "left-aligned", "with-count"] }
       }
     },
-    "data-display": {
-      "description": "Content presentation and data visualization",
-      "subcategories": {
-        "profiles": ["profile-card", "profile-page", "profile-header", "team-grid"],
-        "lists": ["notification-list", "activity-list", "task-list", "file-list"],
-        "empty": ["empty-state-simple", "empty-state-illustration", "empty-state-action"],
-        "detail": ["detail-page", "detail-split", "detail-tabs"]
+    "features": {
+      "description": "Product/service feature showcases",
+      "blocks": {
+        "feature-grid": { "description": "Grid of feature cards with icons", "variants": ["2-col", "3-col", "4-col", "with-images"] },
+        "feature-list": { "description": "Vertical list of features with descriptions", "variants": ["with-icons", "with-checkmarks", "alternating"] },
+        "feature-alternating": { "description": "Alternating image+text rows (zigzag)", "variants": ["image-left-first", "image-right-first", "with-bg-color"] },
+        "feature-centered": { "description": "Single prominent feature with centered layout", "variants": ["with-screenshot", "with-video", "with-animation"] },
+        "feature-tabs": { "description": "Tabbed feature showcase", "variants": ["horizontal-tabs", "vertical-tabs", "icon-tabs"] },
+        "feature-comparison": { "description": "Side-by-side feature comparison", "variants": ["2-column", "3-column", "with-highlight"] },
+        "feature-bento": { "description": "Bento grid layout mixing feature cards of different sizes", "variants": ["asymmetric", "with-images", "interactive"] },
+        "feature-with-code": { "description": "Feature explanation with code snippet", "variants": ["side-by-side", "tabbed-languages", "with-terminal"] },
+        "feature-icon-grid": { "description": "Dense grid of icon+label feature items", "variants": ["small-icons", "large-icons", "colored-bg"] }
       }
     },
-    "ecommerce": {
-      "description": "Shopping and product pages",
-      "subcategories": {
-        "product": ["product-grid", "product-list", "product-detail", "product-comparison"],
-        "cart": ["cart-sidebar", "cart-page", "cart-mini"],
-        "order": ["order-summary", "order-confirmation", "order-tracking"]
+    "content": {
+      "description": "General content/text sections",
+      "blocks": {
+        "content-section": { "description": "Heading + body text + optional image", "variants": ["centered", "left-aligned", "with-sidebar"] },
+        "content-split": { "description": "Two-column content layout", "variants": ["text-text", "text-image", "text-list"] },
+        "content-with-image": { "description": "Rich content block with embedded image", "variants": ["floating", "full-width", "captioned"] },
+        "content-numbered-steps": { "description": "Numbered step-by-step content", "variants": ["vertical", "horizontal", "with-connecting-line"] },
+        "content-quote-highlight": { "description": "Content section with pull-quote emphasis", "variants": ["centered", "sidebar", "with-avatar"] },
+        "content-video-embed": { "description": "Content section with embedded video", "variants": ["youtube", "vimeo", "self-hosted"] }
       }
     },
-    "mobile": {
-      "description": "Mobile-first layouts",
-      "subcategories": {
-        "shell": ["app-shell-tabs", "app-shell-drawer", "app-shell-bottom-nav"],
-        "screens": ["onboarding", "home-feed", "search-results", "chat-interface"]
+    "social-proof": {
+      "description": "Trust signals, testimonials, reviews",
+      "blocks": {
+        "testimonial-single": { "description": "Single prominent testimonial", "variants": ["with-photo", "with-company-logo", "large-quote"] },
+        "testimonial-grid": { "description": "Grid of testimonial cards", "variants": ["2-col", "3-col", "masonry"] },
+        "testimonial-carousel": { "description": "Sliding testimonial carousel", "variants": ["single-slide", "multi-slide", "with-dots"] },
+        "testimonial-wall": { "description": "Social-style wall of short testimonials", "variants": ["masonry", "columns", "scrolling"] },
+        "review-stars": { "description": "Star rating display with review text", "variants": ["inline", "card", "with-histogram"] },
+        "case-study-card": { "description": "Brief case study result showcase", "variants": ["with-metrics", "with-logo", "with-image"] },
+        "social-proof-bar": { "description": "Inline trust bar (5000+ customers...)", "variants": ["with-avatars", "with-count", "with-rating"] },
+        "press-mentions": { "description": "As seen in / press logos with quotes", "variants": ["logo-row", "with-quotes", "with-links"] }
+      }
+    },
+    "pricing": {
+      "description": "Pricing tables and plan comparisons",
+      "blocks": {
+        "pricing-tiers": { "description": "Side-by-side pricing cards", "variants": ["2-tier", "3-tier", "4-tier", "with-highlight"] },
+        "pricing-comparison-table": { "description": "Feature comparison matrix across plans", "variants": ["checkmarks", "detailed", "with-tooltips"] },
+        "pricing-toggle": { "description": "Monthly/annual toggle pricing", "variants": ["switch", "tabs", "with-savings-badge"] },
+        "pricing-single": { "description": "Single plan/product pricing card", "variants": ["simple", "with-features-list", "with-guarantee"] },
+        "pricing-calculator": { "description": "Interactive usage-based pricing calculator", "variants": ["slider", "input", "tiered-breakdown"] },
+        "pricing-faq": { "description": "Pricing section with integrated FAQ", "variants": ["below-table", "sidebar", "expandable"] }
+      }
+    },
+    "cta": {
+      "description": "Call-to-action sections",
+      "blocks": {
+        "cta-simple": { "description": "Heading + button(s) call-to-action", "variants": ["centered", "left-aligned", "with-bg-color"] },
+        "cta-split": { "description": "Text on one side, action on other", "variants": ["with-image", "with-form", "with-illustration"] },
+        "cta-banner": { "description": "Full-width colored banner CTA", "variants": ["gradient", "solid", "with-pattern"] },
+        "cta-with-form": { "description": "CTA incorporating email/signup form", "variants": ["inline-input", "stacked", "with-privacy-note"] },
+        "cta-floating": { "description": "Sticky/floating CTA bar", "variants": ["bottom", "top", "side"] },
+        "cta-download": { "description": "App download CTA with store badges", "variants": ["centered", "split", "with-qr-code"] }
+      }
+    },
+    "newsletter": {
+      "description": "Email subscription blocks",
+      "blocks": {
+        "newsletter-inline": { "description": "Inline email input + subscribe button", "variants": ["horizontal", "stacked", "with-icon"] },
+        "newsletter-card": { "description": "Card-style newsletter signup", "variants": ["centered", "with-image", "with-preview"] },
+        "newsletter-popup": { "description": "Modal/popup newsletter form", "variants": ["exit-intent", "timed", "scroll-triggered"] },
+        "newsletter-footer": { "description": "Newsletter signup integrated into footer area", "variants": ["simple", "with-categories", "with-frequency"] }
+      }
+    },
+    "faq": {
+      "description": "Frequently asked questions",
+      "blocks": {
+        "faq-accordion": { "description": "Expandable Q&A list", "variants": ["single-open", "multi-open", "with-icons"] },
+        "faq-grid": { "description": "Grid of Q&A cards", "variants": ["2-col", "3-col", "with-categories"] },
+        "faq-with-sidebar": { "description": "FAQ with category sidebar navigation", "variants": ["sticky-sidebar", "tabbed", "searchable"] },
+        "faq-simple": { "description": "Static Q&A list (no collapse)", "variants": ["numbered", "categorized", "with-links"] }
+      }
+    },
+    "team": {
+      "description": "Team member showcases",
+      "blocks": {
+        "team-grid": { "description": "Grid of team member cards with photos and roles", "variants": ["3-col", "4-col", "with-social-links"] },
+        "team-list": { "description": "List-style team display", "variants": ["horizontal", "with-bio", "compact"] },
+        "team-carousel": { "description": "Sliding team member showcase", "variants": ["single", "multi", "with-bio"] },
+        "team-featured": { "description": "Single featured team member/founder", "variants": ["with-quote", "with-story", "split-layout"] }
+      }
+    },
+    "stats": {
+      "description": "Key metrics and statistics displays",
+      "blocks": {
+        "stats-row": { "description": "Horizontal row of key numbers", "variants": ["3-stat", "4-stat", "with-labels", "with-icons"] },
+        "stats-grid": { "description": "Grid of metric cards", "variants": ["2x2", "with-trends", "with-charts"] },
+        "stats-counter": { "description": "Animated counting numbers", "variants": ["on-scroll", "on-load", "with-suffix"] },
+        "stats-with-description": { "description": "Stats with supporting descriptive text", "variants": ["inline", "card", "split"] }
+      }
+    },
+    "blog": {
+      "description": "Blog/article listing and preview sections",
+      "blocks": {
+        "blog-grid": { "description": "Grid of blog post cards", "variants": ["2-col", "3-col", "with-featured"] },
+        "blog-list": { "description": "Vertical list of blog entries", "variants": ["with-thumbnails", "text-only", "with-excerpt"] },
+        "blog-featured": { "description": "Large featured article card", "variants": ["hero-style", "split", "with-overlay"] },
+        "blog-sidebar": { "description": "Blog layout with sidebar (categories/tags/recent)", "variants": ["right-sidebar", "left-sidebar"] },
+        "blog-post-header": { "description": "Single post header with title/meta/image", "variants": ["full-width-image", "split", "minimal"] },
+        "blog-newsletter": { "description": "Blog section with integrated newsletter CTA", "variants": ["above-posts", "below-posts", "inline"] }
+      }
+    },
+    "portfolio": {
+      "description": "Work/project showcases",
+      "blocks": {
+        "portfolio-grid": { "description": "Filterable grid of project cards", "variants": ["masonry", "uniform", "with-overlay"] },
+        "portfolio-carousel": { "description": "Sliding project showcase", "variants": ["fullscreen", "cards", "with-details"] },
+        "portfolio-case-study": { "description": "Detailed case study layout", "variants": ["timeline", "split", "with-metrics"] }
+      }
+    },
+    "contact": {
+      "description": "Contact forms and information",
+      "blocks": {
+        "contact-form-simple": { "description": "Basic contact form", "variants": ["centered", "card", "with-map"] },
+        "contact-split": { "description": "Contact form + contact info side by side", "variants": ["form-left", "form-right", "with-image"] },
+        "contact-info": { "description": "Contact details display (address, phone, email)", "variants": ["cards", "inline", "with-icons"] },
+        "contact-with-map": { "description": "Contact section with embedded map placeholder", "variants": ["below-form", "side-by-side", "fullscreen-map"] },
+        "contact-offices": { "description": "Multiple office/location display", "variants": ["grid", "list", "with-maps"] }
+      }
+    },
+    "footer": {
+      "description": "Page footer sections",
+      "blocks": {
+        "footer-simple": { "description": "Minimal footer with copyright + links", "variants": ["centered", "left-aligned", "with-social"] },
+        "footer-columns": { "description": "Multi-column link footer", "variants": ["3-col", "4-col", "5-col", "with-newsletter"] },
+        "footer-mega": { "description": "Large footer with multiple sections", "variants": ["with-logo", "with-newsletter", "with-app-badges"] },
+        "footer-minimal": { "description": "Single-line footer", "variants": ["centered", "split", "with-theme-toggle"] },
+        "footer-with-cta": { "description": "Footer incorporating final CTA", "variants": ["banner-above", "integrated", "with-form"] }
       }
     },
     "auth": {
-      "description": "Authentication and onboarding flows",
-      "subcategories": {
-        "pages": ["auth-split", "auth-centered", "auth-minimal"],
-        "flows": ["onboarding-wizard", "invite-accept", "password-reset"]
+      "description": "Authentication forms and flows",
+      "blocks": {
+        "login-form": { "description": "Email/password login form", "variants": ["centered-card", "split-image", "with-social"] },
+        "register-form": { "description": "Account creation form", "variants": ["simple", "multi-step", "with-social"] },
+        "forgot-password": { "description": "Password recovery form", "variants": ["email-input", "with-instructions", "verification-code"] },
+        "reset-password": { "description": "New password form", "variants": ["simple", "with-requirements", "with-strength-meter"] },
+        "two-factor": { "description": "2FA verification form", "variants": ["sms-code", "authenticator", "with-backup-codes"] },
+        "social-login": { "description": "OAuth provider buttons", "variants": ["icon-buttons", "full-width", "with-divider"] }
+      }
+    },
+    "error-pages": {
+      "description": "Error and status pages",
+      "blocks": {
+        "404-page": { "description": "Not found page", "variants": ["with-illustration", "minimal", "with-search"] },
+        "500-page": { "description": "Server error page", "variants": ["with-illustration", "with-retry", "minimal"] },
+        "maintenance-page": { "description": "Under maintenance notice", "variants": ["with-countdown", "with-email-signup", "minimal"] },
+        "coming-soon": { "description": "Pre-launch page", "variants": ["with-countdown", "with-email", "with-progress"] }
+      }
+    },
+    "ecommerce": {
+      "description": "E-commerce specific sections",
+      "blocks": {
+        "product-card": { "description": "Individual product display card", "variants": ["with-image", "with-rating", "with-quick-add", "with-variants"] },
+        "product-grid": { "description": "Product listing grid", "variants": ["3-col", "4-col", "with-filters-sidebar", "with-sorting"] },
+        "product-detail": { "description": "Single product detail layout", "variants": ["gallery-left", "gallery-top", "with-tabs"] },
+        "shopping-cart": { "description": "Cart summary/management", "variants": ["sidebar-drawer", "full-page", "mini-cart"] },
+        "checkout-form": { "description": "Checkout flow form", "variants": ["single-page", "multi-step", "with-summary-sidebar"] },
+        "product-carousel": { "description": "Product slider/carousel section", "variants": ["featured", "related", "recently-viewed"] },
+        "category-grid": { "description": "Product category browsing grid", "variants": ["image-cards", "text-links", "with-count"] },
+        "order-summary": { "description": "Order confirmation/receipt", "variants": ["card", "full-page", "with-tracking"] },
+        "wishlist": { "description": "Saved items display", "variants": ["grid", "list", "with-availability"] }
+      }
+    },
+    "dashboard": {
+      "description": "Application dashboard sections",
+      "blocks": {
+        "stats-cards-row": { "description": "Top-of-dashboard KPI cards row", "variants": ["3-card", "4-card", "with-sparklines", "with-trends"] },
+        "chart-section": { "description": "Data visualization area", "variants": ["line-chart", "bar-chart", "area-chart", "multi-chart"] },
+        "data-table": { "description": "Tabular data display with actions", "variants": ["simple", "with-filters", "with-bulk-actions", "sortable"] },
+        "activity-feed": { "description": "Recent activity/event log", "variants": ["timeline", "list", "with-avatars"] },
+        "dashboard-header": { "description": "Page header with title/actions/filters", "variants": ["with-breadcrumb", "with-date-picker", "with-tabs"] },
+        "empty-state": { "description": "No-data placeholder", "variants": ["with-illustration", "with-action", "minimal"] },
+        "kanban-board": { "description": "Card-based column board", "variants": ["draggable", "with-filters", "compact"] },
+        "notification-panel": { "description": "Notification list/dropdown panel", "variants": ["dropdown", "sidebar", "toast-stack"] }
+      }
+    },
+    "forms": {
+      "description": "General form patterns",
+      "blocks": {
+        "form-stacked": { "description": "Vertically stacked form fields", "variants": ["simple", "with-sections", "with-help-text"] },
+        "form-inline": { "description": "Horizontal/inline form layout", "variants": ["single-row", "with-button", "compact"] },
+        "form-multi-step": { "description": "Wizard/stepper form", "variants": ["progress-bar", "numbered-steps", "with-validation"] },
+        "form-with-sidebar": { "description": "Form with contextual sidebar info", "variants": ["help-text", "preview", "summary"] },
+        "search-bar": { "description": "Search input patterns", "variants": ["simple", "with-filters", "with-suggestions", "command-palette"] },
+        "file-upload": { "description": "File upload area", "variants": ["drag-drop", "button", "with-preview", "multi-file"] },
+        "settings-form": { "description": "Settings/preferences form", "variants": ["grouped", "tabbed", "with-toggle-sections"] }
+      }
+    },
+    "modals-overlays": {
+      "description": "Modal dialogs, drawers, popovers",
+      "blocks": {
+        "modal-dialog": { "description": "Centered modal overlay", "variants": ["small", "medium", "large", "fullscreen"] },
+        "modal-confirm": { "description": "Confirmation/destructive action dialog", "variants": ["danger", "warning", "info"] },
+        "drawer": { "description": "Slide-in panel", "variants": ["left", "right", "bottom", "with-form"] },
+        "lightbox": { "description": "Image/media viewer overlay", "variants": ["single-image", "gallery", "with-zoom"] },
+        "command-palette": { "description": "Spotlight-style search/action dialog", "variants": ["search-only", "with-actions", "with-recent"] },
+        "cookie-consent": { "description": "Cookie/privacy consent banner", "variants": ["bottom-bar", "modal", "floating-corner"] },
+        "toast-notification": { "description": "Non-blocking notification", "variants": ["success", "error", "info", "with-action"] }
+      }
+    },
+    "timeline": {
+      "description": "Chronological/sequential displays",
+      "blocks": {
+        "timeline-vertical": { "description": "Vertical timeline with events", "variants": ["alternating", "left-aligned", "with-icons"] },
+        "timeline-horizontal": { "description": "Horizontal scrolling timeline", "variants": ["with-cards", "minimal", "with-images"] },
+        "changelog": { "description": "Product update/release log", "variants": ["by-date", "by-version", "with-tags"] },
+        "roadmap": { "description": "Future plans/roadmap display", "variants": ["timeline", "kanban-style", "with-voting"] }
+      }
+    },
+    "how-it-works": {
+      "description": "Process/step explanation sections",
+      "blocks": {
+        "steps-horizontal": { "description": "Horizontal numbered steps", "variants": ["with-icons", "with-arrows", "with-images"] },
+        "steps-vertical": { "description": "Vertical step-by-step guide", "variants": ["with-numbers", "with-icons", "with-connecting-line"] },
+        "process-alternating": { "description": "Alternating step explanation (zigzag)", "variants": ["with-images", "with-illustrations", "numbered"] }
+      }
+    },
+    "integrations": {
+      "description": "Third-party integration/ecosystem displays",
+      "blocks": {
+        "integration-grid": { "description": "Grid of integration/app logos with names", "variants": ["with-categories", "searchable", "with-status"] },
+        "integration-showcase": { "description": "Featured integration detail", "variants": ["split-layout", "with-code", "with-screenshot"] },
+        "api-reference": { "description": "API endpoint showcase", "variants": ["with-code-examples", "tabbed-languages", "interactive"] }
+      }
+    },
+    "banners": {
+      "description": "Announcement and promotional banners",
+      "blocks": {
+        "banner-top": { "description": "Site-wide top banner", "variants": ["dismissible", "with-cta", "countdown"] },
+        "banner-inline": { "description": "In-content promotional banner", "variants": ["card-style", "full-width", "with-image"] },
+        "banner-bottom-sticky": { "description": "Sticky bottom bar", "variants": ["cookie-consent", "promo", "notification"] }
+      }
+    },
+    "event-schedule": {
+      "description": "Event/conference schedule displays",
+      "blocks": {
+        "schedule-tabs": { "description": "Day-tabbed event schedule", "variants": ["timeline", "grid", "with-tracks"] },
+        "speaker-grid": { "description": "Event speaker showcase grid", "variants": ["with-topics", "with-social", "with-session-links"] },
+        "event-countdown": { "description": "Event countdown with registration", "variants": ["hero-style", "minimal", "with-details"] }
+      }
+    },
+    "media": {
+      "description": "Image/video gallery and media sections",
+      "blocks": {
+        "gallery-grid": { "description": "Image gallery grid", "variants": ["masonry", "uniform", "with-lightbox"] },
+        "gallery-carousel": { "description": "Image slider/carousel", "variants": ["fullscreen", "thumbnails", "with-captions"] },
+        "video-section": { "description": "Video showcase section", "variants": ["single-featured", "grid", "with-playlist"] },
+        "media-with-text": { "description": "Media + descriptive text section", "variants": ["split", "overlay", "below"] }
+      }
+    },
+    "comparison": {
+      "description": "Product/plan/option comparison sections",
+      "blocks": {
+        "comparison-table": { "description": "Feature-by-feature comparison matrix", "variants": ["2-col", "3-col", "with-sticky-header"] },
+        "before-after": { "description": "Before/after comparison", "variants": ["horizontal-slider", "side-by-side", "toggle"] },
+        "vs-layout": { "description": "X vs Y comparison layout", "variants": ["split-screen", "cards", "with-verdict"] }
+      }
+    },
+    "app-specific": {
+      "description": "Application UI patterns",
+      "blocks": {
+        "onboarding-tour": { "description": "First-time user onboarding flow", "variants": ["tooltip-steps", "modal-wizard", "checklist"] },
+        "settings-page": { "description": "Settings page layout", "variants": ["sidebar-nav", "tabbed", "grouped-sections"] },
+        "profile-page": { "description": "User profile display page", "variants": ["with-cover-photo", "minimal", "with-activity"] },
+        "billing-page": { "description": "Subscription/billing management page", "variants": ["with-invoices", "with-plan-upgrade", "with-payment-methods"] },
+        "api-keys-page": { "description": "API key management interface", "variants": ["with-permissions", "with-usage", "with-rotation"] },
+        "changelog-page": { "description": "Product changelog/release notes page", "variants": ["by-date", "by-version", "filterable"] }
+      }
+    },
+    "misc": {
+      "description": "Miscellaneous section types",
+      "blocks": {
+        "divider": { "description": "Section divider/separator", "variants": ["line", "with-text", "decorative", "wave-svg"] },
+        "back-to-top": { "description": "Scroll to top button", "variants": ["floating", "in-footer", "with-progress"] },
+        "social-links": { "description": "Social media links row", "variants": ["icons-only", "with-labels", "colored"] },
+        "language-switcher": { "description": "Locale/language selector", "variants": ["dropdown", "flags", "text-links"] },
+        "theme-toggle": { "description": "Dark/light mode switch", "variants": ["icon-button", "switch", "dropdown"] },
+        "scroll-indicator": { "description": "Reading/scroll progress bar", "variants": ["top-bar", "side-dot-nav", "percentage"] },
+        "table-of-contents": { "description": "Sticky TOC for long content", "variants": ["sidebar", "dropdown", "numbered"] },
+        "skip-link": { "description": "Accessibility skip navigation link", "variants": ["hidden-until-focus"] }
       }
     }
   },
   "page_formulas": {
-    "saas_landing": ["hero", "how-it-works", "features", "testimonials", "pricing", "faq", "cta", "footer"],
-    "physical_product": ["hero", "features", "social-proof", "features", "testimonials", "pricing", "footer"],
-    "mobile_app_new": ["hero", "features", "testimonials", "social-proof", "cta", "footer"],
-    "mobile_app_known": ["hero"],
-    "desktop_app": ["hero", "features", "testimonials", "social-proof", "cta", "footer"],
-    "book_info": ["hero", "features", "testimonials", "pricing", "footer"],
-    "dashboard_full": ["sidebar-layout", "header", "stats", "charts", "tables"],
-    "settings_page": ["header", "settings-profile", "settings-notifications", "settings-security"],
-    "ecommerce_catalog": ["header", "product-grid", "pagination", "footer"]
+    "saas_landing": ["navbar-simple", "hero-split", "logo-cloud-scrolling", "feature-grid", "feature-alternating", "stats-row", "testimonial-carousel", "pricing-tiers", "faq-accordion", "cta-banner", "footer-columns"],
+    "startup_landing": ["topbar-announcement", "navbar-simple", "hero-centered", "logo-cloud-simple", "feature-bento", "steps-horizontal", "testimonial-grid", "pricing-toggle", "faq-accordion", "cta-with-form", "footer-columns"],
+    "agency_portfolio": ["navbar-simple", "hero-fullscreen", "portfolio-grid", "stats-row", "testimonial-wall", "team-grid", "contact-split", "footer-mega"],
+    "mobile_app_landing": ["navbar-with-auth", "hero-with-app-screenshot", "feature-tabs", "stats-counter", "testimonial-single", "cta-download", "faq-simple", "footer-simple"],
+    "ecommerce_home": ["topbar-announcement", "navbar-mega-menu", "hero-centered", "category-grid", "product-carousel", "banner-inline", "product-grid", "testimonial-grid", "newsletter-inline", "footer-mega"],
+    "blog_home": ["navbar-with-search", "blog-featured", "blog-grid", "newsletter-card", "blog-sidebar", "footer-columns"],
+    "documentation": ["navbar-with-search", "breadcrumbs", "sidebar-nav", "content-section", "table-of-contents", "pagination", "footer-simple"],
+    "event_landing": ["navbar-simple", "hero-fullscreen", "event-countdown", "schedule-tabs", "speaker-grid", "stats-row", "testimonial-carousel", "pricing-tiers", "faq-accordion", "cta-banner", "footer-columns"],
+    "dashboard_app": ["sidebar-nav", "dashboard-header", "stats-cards-row", "chart-section", "data-table", "activity-feed", "notification-panel"]
   }
 }

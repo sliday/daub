@@ -1,0 +1,245 @@
+{
+  "root": "checkout-form",
+  "elements": {
+    "checkout-form": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "container": true,
+      "children": ["checkout-heading", "checkout-stepper", "checkout-content"]
+    },
+    "checkout-heading": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "Checkout",
+      "weight": "bold"
+    },
+    "checkout-stepper": {
+      "type": "Stepper",
+      "steps": [
+        { "label": "Shipping", "description": "Delivery address" },
+        { "label": "Payment", "description": "Payment method" },
+        { "label": "Review", "description": "Confirm order" }
+      ],
+      "current": 0
+    },
+    "checkout-content": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 5,
+      "children": ["form-section", "order-sidebar"]
+    },
+    "form-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["shipping-section", "separator-1", "payment-section"]
+    },
+    "shipping-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["shipping-heading", "name-row", "email-field", "address-field", "address-row-2", "city-state-row"]
+    },
+    "shipping-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Shipping Address",
+      "weight": "bold"
+    },
+    "name-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "children": ["first-name-field", "last-name-field"]
+    },
+    "first-name-field": {
+      "type": "Field",
+      "label": "First Name",
+      "children": ["first-name-input"]
+    },
+    "first-name-input": {
+      "type": "Input",
+      "placeholder": "John"
+    },
+    "last-name-field": {
+      "type": "Field",
+      "label": "Last Name",
+      "children": ["last-name-input"]
+    },
+    "last-name-input": {
+      "type": "Input",
+      "placeholder": "Doe"
+    },
+    "email-field": {
+      "type": "Field",
+      "label": "Email Address",
+      "children": ["email-input"]
+    },
+    "email-input": {
+      "type": "Input",
+      "placeholder": "john@example.com",
+      "type": "email"
+    },
+    "address-field": {
+      "type": "Field",
+      "label": "Street Address",
+      "children": ["address-input"]
+    },
+    "address-input": {
+      "type": "Input",
+      "placeholder": "123 Main Street"
+    },
+    "address-row-2": {
+      "type": "Field",
+      "label": "Apt, Suite, Unit (optional)",
+      "children": ["address-2-input"]
+    },
+    "address-2-input": {
+      "type": "Input",
+      "placeholder": "Apt 4B"
+    },
+    "city-state-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "children": ["city-field", "state-select", "zip-field"]
+    },
+    "city-field": {
+      "type": "Field",
+      "label": "City",
+      "children": ["city-input"]
+    },
+    "city-input": {
+      "type": "Input",
+      "placeholder": "New York"
+    },
+    "state-select": {
+      "type": "Select",
+      "label": "State",
+      "options": [
+        { "label": "California", "value": "CA" },
+        { "label": "New York", "value": "NY" },
+        { "label": "Texas", "value": "TX" },
+        { "label": "Florida", "value": "FL" },
+        { "label": "Washington", "value": "WA" }
+      ]
+    },
+    "zip-field": {
+      "type": "Field",
+      "label": "ZIP Code",
+      "children": ["zip-input"]
+    },
+    "zip-input": {
+      "type": "Input",
+      "placeholder": "10001"
+    },
+    "separator-1": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "payment-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["payment-heading", "card-number-field", "card-details-row", "save-card-check"]
+    },
+    "payment-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Payment Method",
+      "weight": "bold"
+    },
+    "card-number-field": {
+      "type": "Field",
+      "label": "Card Number",
+      "children": ["card-number-input"]
+    },
+    "card-number-input": {
+      "type": "Input",
+      "placeholder": "4242 4242 4242 4242"
+    },
+    "card-details-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "children": ["expiry-field", "cvc-field"]
+    },
+    "expiry-field": {
+      "type": "Field",
+      "label": "Expiry Date",
+      "children": ["expiry-input"]
+    },
+    "expiry-input": {
+      "type": "Input",
+      "placeholder": "MM / YY"
+    },
+    "cvc-field": {
+      "type": "Field",
+      "label": "CVC",
+      "children": ["cvc-input"]
+    },
+    "cvc-input": {
+      "type": "Input",
+      "placeholder": "123"
+    },
+    "save-card-check": {
+      "type": "Checkbox",
+      "label": "Save card for future purchases"
+    },
+    "order-sidebar": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["sidebar-stack"]
+    },
+    "sidebar-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["sidebar-title", "sidebar-items", "sidebar-separator", "sidebar-total", "place-order-btn"]
+    },
+    "sidebar-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Order Summary",
+      "weight": "bold"
+    },
+    "sidebar-items": {
+      "type": "List",
+      "items": [
+        { "title": "Sony WH-1000XM5 x1", "secondary": "$328.00" },
+        { "title": "AirPods Pro 2 x1", "secondary": "$249.00" },
+        { "title": "USB-C Cable 3-Pack x1", "secondary": "$15.99" }
+      ]
+    },
+    "sidebar-separator": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "sidebar-total": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "children": ["sidebar-total-label", "sidebar-total-value"]
+    },
+    "sidebar-total-label": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Total",
+      "weight": "bold"
+    },
+    "sidebar-total-value": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "$641.91",
+      "weight": "bold"
+    },
+    "place-order-btn": {
+      "type": "Button",
+      "label": "Place Order",
+      "variant": "primary",
+      "size": "lg",
+      "icon": "lock"
+    }
+  }
+}

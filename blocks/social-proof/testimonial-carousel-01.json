@@ -1,0 +1,198 @@
+{
+  "root": "testimonial-carousel",
+  "elements": {
+    "testimonial-carousel": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "align": "center",
+      "container": "wide",
+      "children": ["carousel-header", "carousel-container", "carousel-nav"]
+    },
+    "carousel-header": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "What our customers say",
+      "align": "center"
+    },
+    "carousel-container": {
+      "type": "Carousel",
+      "children": ["slide-1", "slide-2", "slide-3"]
+    },
+    "slide-1": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["slide-1-inner"]
+    },
+    "slide-1-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "align": "center",
+      "children": ["slide-1-stars", "slide-1-quote", "slide-1-author"]
+    },
+    "slide-1-stars": {
+      "type": "Text",
+      "tag": "span",
+      "content": "\u2605\u2605\u2605\u2605\u2605"
+    },
+    "slide-1-quote": {
+      "type": "Text",
+      "tag": "p",
+      "content": "We replaced four separate tools with this single platform. Our team onboarding went from two weeks to two days, and our monthly tooling costs dropped by $18,000.",
+      "align": "center"
+    },
+    "slide-1-author": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["slide-1-avatar", "slide-1-info"]
+    },
+    "slide-1-avatar": {
+      "type": "Avatar",
+      "initials": "AV",
+      "src": "https://i.pravatar.cc/96?u=anna-volkov"
+    },
+    "slide-1-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["slide-1-name", "slide-1-role"]
+    },
+    "slide-1-name": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Anna Volkov",
+      "weight": "semibold"
+    },
+    "slide-1-role": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Director of Ops, Notion",
+      "variant": "muted"
+    },
+    "slide-2": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["slide-2-inner"]
+    },
+    "slide-2-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "align": "center",
+      "children": ["slide-2-stars", "slide-2-quote", "slide-2-author"]
+    },
+    "slide-2-stars": {
+      "type": "Text",
+      "tag": "span",
+      "content": "\u2605\u2605\u2605\u2605\u2605"
+    },
+    "slide-2-quote": {
+      "type": "Text",
+      "tag": "p",
+      "content": "After three years on the platform, our API response times are 40% faster and we've had zero unplanned outages. The reliability is unmatched in our industry.",
+      "align": "center"
+    },
+    "slide-2-author": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["slide-2-avatar", "slide-2-info"]
+    },
+    "slide-2-avatar": {
+      "type": "Avatar",
+      "initials": "DM",
+      "src": "https://i.pravatar.cc/96?u=david-morales"
+    },
+    "slide-2-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["slide-2-name", "slide-2-role"]
+    },
+    "slide-2-name": {
+      "type": "Text",
+      "tag": "p",
+      "content": "David Morales",
+      "weight": "semibold"
+    },
+    "slide-2-role": {
+      "type": "Text",
+      "tag": "span",
+      "content": "SRE Manager, Stripe",
+      "variant": "muted"
+    },
+    "slide-3": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["slide-3-inner"]
+    },
+    "slide-3-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "align": "center",
+      "children": ["slide-3-stars", "slide-3-quote", "slide-3-author"]
+    },
+    "slide-3-stars": {
+      "type": "Text",
+      "tag": "span",
+      "content": "\u2605\u2605\u2605\u2605\u2605"
+    },
+    "slide-3-quote": {
+      "type": "Text",
+      "tag": "p",
+      "content": "The collaboration features transformed how our distributed team works. We shipped our biggest product launch ever with half the coordination overhead.",
+      "align": "center"
+    },
+    "slide-3-author": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["slide-3-avatar", "slide-3-info"]
+    },
+    "slide-3-avatar": {
+      "type": "Avatar",
+      "initials": "RN",
+      "src": "https://i.pravatar.cc/96?u=rachel-nguyen"
+    },
+    "slide-3-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["slide-3-name", "slide-3-role"]
+    },
+    "slide-3-name": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Rachel Nguyen",
+      "weight": "semibold"
+    },
+    "slide-3-role": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Product VP, Linear",
+      "variant": "muted"
+    },
+    "carousel-nav": {
+      "type": "ButtonGroup",
+      "children": ["nav-prev", "nav-next"]
+    },
+    "nav-prev": {
+      "type": "Button",
+      "label": "Previous",
+      "variant": "outline",
+      "icon": "arrow-left"
+    },
+    "nav-next": {
+      "type": "Button",
+      "label": "Next",
+      "variant": "outline",
+      "icon": "arrow-right"
+    }
+  }
+}

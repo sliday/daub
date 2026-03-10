@@ -1,0 +1,114 @@
+{
+  "root": "stats-counter",
+  "elements": {
+    "stats-counter": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["sc-inner"]
+    },
+    "sc-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "align": "center",
+      "children": ["sc-header", "sc-sub", "sc-numbers"]
+    },
+    "sc-header": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Trusted by Teams Worldwide",
+      "weight": "bold",
+      "align": "center"
+    },
+    "sc-sub": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Numbers that speak for themselves.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "sc-numbers": {
+      "type": "Grid",
+      "columns": 4,
+      "gap": 4,
+      "children": ["sc-num-1", "sc-num-2", "sc-num-3", "sc-num-4"]
+    },
+    "sc-num-1": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["sc-val-1", "sc-lbl-1"]
+    },
+    "sc-val-1": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "500K+",
+      "weight": "bold"
+    },
+    "sc-lbl-1": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Projects Created",
+      "variant": "muted"
+    },
+    "sc-num-2": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["sc-val-2", "sc-lbl-2"]
+    },
+    "sc-val-2": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "12B",
+      "weight": "bold"
+    },
+    "sc-lbl-2": {
+      "type": "Text",
+      "tag": "p",
+      "content": "API Calls Processed",
+      "variant": "muted"
+    },
+    "sc-num-3": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["sc-val-3", "sc-lbl-3"]
+    },
+    "sc-val-3": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "190+",
+      "weight": "bold"
+    },
+    "sc-lbl-3": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Integrations",
+      "variant": "muted"
+    },
+    "sc-num-4": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["sc-val-4", "sc-lbl-4"]
+    },
+    "sc-val-4": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "35",
+      "weight": "bold"
+    },
+    "sc-lbl-4": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Industry Awards",
+      "variant": "muted"
+    }
+  }
+}

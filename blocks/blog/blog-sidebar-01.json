@@ -1,0 +1,215 @@
+{
+  "root": "blog-sidebar",
+  "elements": {
+    "blog-sidebar": {
+      "type": "Grid",
+      "columns": 4,
+      "gap": 4,
+      "children": ["bs-main", "bs-side"]
+    },
+    "bs-main": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["bs-main-header", "bs-post-1", "bs-post-2", "bs-post-3"]
+    },
+    "bs-main-header": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "All Posts",
+      "weight": "bold"
+    },
+    "bs-post-1": {
+      "type": "Card",
+      "children": ["bs-p1-inner"]
+    },
+    "bs-p1-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["bs-p1-img", "bs-p1-title", "bs-p1-excerpt", "bs-p1-meta"]
+    },
+    "bs-p1-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/sb-post1/600/300",
+      "alt": "GraphQL at Scale"
+    },
+    "bs-p1-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Lessons from Running GraphQL at Scale for 3 Years",
+      "weight": "bold"
+    },
+    "bs-p1-excerpt": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Schema federation, query cost analysis, and caching strategies that kept our API fast as we grew 10x.",
+      "variant": "muted"
+    },
+    "bs-p1-meta": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Mar 6, 2026 · Engineering · 13 min",
+      "variant": "muted"
+    },
+    "bs-post-2": {
+      "type": "Card",
+      "children": ["bs-p2-inner"]
+    },
+    "bs-p2-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["bs-p2-img", "bs-p2-title", "bs-p2-excerpt", "bs-p2-meta"]
+    },
+    "bs-p2-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/sb-post2/600/300",
+      "alt": "Accessibility Audit"
+    },
+    "bs-p2-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Our Accessibility Journey: From Score 42 to 98",
+      "weight": "bold"
+    },
+    "bs-p2-excerpt": {
+      "type": "Text",
+      "tag": "p",
+      "content": "How we systematically audited and fixed 340 accessibility issues across our entire platform.",
+      "variant": "muted"
+    },
+    "bs-p2-meta": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Feb 27, 2026 · Design · 8 min",
+      "variant": "muted"
+    },
+    "bs-post-3": {
+      "type": "Card",
+      "children": ["bs-p3-inner"]
+    },
+    "bs-p3-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["bs-p3-img", "bs-p3-title", "bs-p3-excerpt", "bs-p3-meta"]
+    },
+    "bs-p3-img": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/sb-post3/600/300",
+      "alt": "Hiring Engineers"
+    },
+    "bs-p3-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "What We Look for When Hiring Senior Engineers",
+      "weight": "bold"
+    },
+    "bs-p3-excerpt": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Our interview process, evaluation criteria, and why we value systems thinking over algorithm puzzles.",
+      "variant": "muted"
+    },
+    "bs-p3-meta": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Feb 19, 2026 · Culture · 6 min",
+      "variant": "muted"
+    },
+    "bs-side": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["bs-search", "bs-categories", "bs-tags", "bs-recent"]
+    },
+    "bs-search": {
+      "type": "Search",
+      "placeholder": "Search articles..."
+    },
+    "bs-categories": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["bs-cat-label", "bs-cat-list"]
+    },
+    "bs-cat-label": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Categories",
+      "weight": "bold"
+    },
+    "bs-cat-list": {
+      "type": "NavMenu",
+      "items": [
+        { "label": "Engineering (24)" },
+        { "label": "Design (18)" },
+        { "label": "Product (12)" },
+        { "label": "Culture (9)" },
+        { "label": "Security (7)" },
+        { "label": "Business (5)" }
+      ]
+    },
+    "bs-tags": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["bs-tags-label", "bs-tags-chips"]
+    },
+    "bs-tags-label": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Popular Tags",
+      "weight": "bold"
+    },
+    "bs-tags-chips": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 1,
+      "children": ["bs-tag-1", "bs-tag-2", "bs-tag-3", "bs-tag-4", "bs-tag-5"]
+    },
+    "bs-tag-1": {
+      "type": "Chip",
+      "label": "React"
+    },
+    "bs-tag-2": {
+      "type": "Chip",
+      "label": "TypeScript"
+    },
+    "bs-tag-3": {
+      "type": "Chip",
+      "label": "AI/ML"
+    },
+    "bs-tag-4": {
+      "type": "Chip",
+      "label": "DevOps"
+    },
+    "bs-tag-5": {
+      "type": "Chip",
+      "label": "UX"
+    },
+    "bs-recent": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["bs-recent-label", "bs-recent-list"]
+    },
+    "bs-recent-label": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Recent Posts",
+      "weight": "bold"
+    },
+    "bs-recent-list": {
+      "type": "List",
+      "items": [
+        "Migrating to React Server Components",
+        "Design Token Pipeline That Scales",
+        "AI-Powered Code Review in Production",
+        "Sub-100ms Page Loads at Scale",
+        "Building Culture Across 12 Time Zones"
+      ]
+    }
+  }
+}

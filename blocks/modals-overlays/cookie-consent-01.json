@@ -1,0 +1,61 @@
+{
+  "root": "cookie-banner",
+  "elements": {
+    "cookie-banner": {
+      "type": "Surface",
+      "variant": "raised",
+      "children": ["cookie-content"]
+    },
+    "cookie-content": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "justify": "space-between",
+      "children": ["cookie-text-group", "cookie-actions"]
+    },
+    "cookie-text-group": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["cookie-title", "cookie-description"]
+    },
+    "cookie-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "We value your privacy",
+      "weight": "semibold"
+    },
+    "cookie-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking \"Accept All\", you consent to our use of cookies.",
+      "variant": "muted"
+    },
+    "cookie-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["btn-manage", "btn-reject", "btn-accept"]
+    },
+    "btn-manage": {
+      "type": "Button",
+      "label": "Manage Preferences",
+      "variant": "ghost",
+      "size": "sm"
+    },
+    "btn-reject": {
+      "type": "Button",
+      "label": "Reject All",
+      "variant": "outline",
+      "size": "sm"
+    },
+    "btn-accept": {
+      "type": "Button",
+      "label": "Accept All",
+      "variant": "default",
+      "size": "sm"
+    }
+  }
+}

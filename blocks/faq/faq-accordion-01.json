@@ -1,0 +1,63 @@
+{
+  "root": "faq-accordion",
+  "elements": {
+    "faq-accordion": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["faq-header", "faq-subtext", "faq-list"]
+    },
+    "faq-header": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Frequently Asked Questions",
+      "weight": "bold",
+      "align": "center"
+    },
+    "faq-subtext": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Everything you need to know about our platform. Can't find the answer you're looking for? Reach out to our support team.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "faq-list": {
+      "type": "Accordion",
+      "items": [
+        {
+          "title": "What is included in the free plan?",
+          "content": "The free plan includes up to 3 projects, 1 GB of storage, community support, and access to all core features. No credit card required to get started."
+        },
+        {
+          "title": "How do I upgrade my subscription?",
+          "content": "Navigate to Settings > Billing in your dashboard. Select your desired plan and enter payment details. Your new features activate immediately, and we prorate the cost."
+        },
+        {
+          "title": "Can I cancel my subscription at any time?",
+          "content": "Yes. You can cancel from your billing settings at any time. Your access continues until the end of the current billing period. We don't charge cancellation fees."
+        },
+        {
+          "title": "Do you offer team or enterprise pricing?",
+          "content": "Absolutely. Teams of 5+ get 20% off per seat. Enterprise plans include SSO, dedicated support, custom SLAs, and volume discounts. Contact sales@example.com for a quote."
+        },
+        {
+          "title": "Is my data secure?",
+          "content": "We use AES-256 encryption at rest and TLS 1.3 in transit. Our infrastructure is SOC 2 Type II certified, and we conduct annual third-party penetration tests."
+        },
+        {
+          "title": "What integrations do you support?",
+          "content": "We integrate with Slack, GitHub, Jira, Figma, Linear, Notion, and 40+ other tools via our REST API and native connectors. Custom webhooks are available on Pro plans."
+        },
+        {
+          "title": "How does the 14-day trial work?",
+          "content": "Start your trial with full access to Pro features. No credit card needed. At the end of 14 days, choose a paid plan or continue on the free tier with no data loss."
+        },
+        {
+          "title": "What happens to my data if I downgrade?",
+          "content": "Your data is preserved for 90 days after downgrade. Projects exceeding free-tier limits become read-only. You can export everything at any time from Settings > Data Export."
+        }
+      ]
+    }
+  }
+}

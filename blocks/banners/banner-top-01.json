@@ -1,0 +1,43 @@
+{
+  "root": "banner-top",
+  "elements": {
+    "banner-top": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["banner-top-inner"]
+    },
+    "banner-top-inner": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "justify": "center",
+      "container": true,
+      "children": ["banner-top-badge", "banner-top-text", "banner-top-cta", "banner-top-dismiss"]
+    },
+    "banner-top-badge": {
+      "type": "Badge",
+      "text": "New",
+      "variant": "default"
+    },
+    "banner-top-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "We just launched AI-powered analytics. Understand your data 10x faster with natural language queries."
+    },
+    "banner-top-cta": {
+      "type": "Button",
+      "label": "Learn More",
+      "variant": "outline",
+      "size": "sm",
+      "icon": "arrow-right"
+    },
+    "banner-top-dismiss": {
+      "type": "Button",
+      "label": "",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "x"
+    }
+  }
+}

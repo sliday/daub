@@ -1,0 +1,134 @@
+{
+  "root": "pricing-single",
+  "elements": {
+    "pricing-single": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "align": "center",
+      "container": "narrow",
+      "children": ["single-card"]
+    },
+    "single-card": {
+      "type": "Surface",
+      "variant": "raised",
+      "children": ["single-inner"]
+    },
+    "single-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["single-header", "single-price-row", "single-desc", "single-sep-1", "single-features", "single-sep-2", "single-cta-row", "single-guarantee"]
+    },
+    "single-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["single-name", "single-badge"]
+    },
+    "single-name": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Lifetime Access"
+    },
+    "single-badge": {
+      "type": "Badge",
+      "text": "Limited Offer",
+      "variant": "warning"
+    },
+    "single-price-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "end",
+      "children": ["single-price", "single-original"]
+    },
+    "single-price": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "$249"
+    },
+    "single-original": {
+      "type": "Text",
+      "tag": "span",
+      "content": "$499 one-time",
+      "variant": "muted"
+    },
+    "single-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Get permanent access to the complete Tailwind UI component library. Over 500 components, all future updates, and unlimited projects.",
+      "variant": "muted"
+    },
+    "single-sep-1": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "single-features": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 2,
+      "children": ["feat-1", "feat-2", "feat-3", "feat-4", "feat-5", "feat-6"]
+    },
+    "feat-1": {
+      "type": "Text",
+      "tag": "p",
+      "content": "500+ production components"
+    },
+    "feat-2": {
+      "type": "Text",
+      "tag": "p",
+      "content": "React, Vue & HTML"
+    },
+    "feat-3": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Free lifetime updates"
+    },
+    "feat-4": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Unlimited projects"
+    },
+    "feat-5": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Figma design files"
+    },
+    "feat-6": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Priority Discord access"
+    },
+    "single-sep-2": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "single-cta-row": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["single-buy-btn", "single-trial-link"]
+    },
+    "single-buy-btn": {
+      "type": "Button",
+      "label": "Buy now \u2014 Save $250",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "single-trial-link": {
+      "type": "Button",
+      "label": "Preview components first",
+      "variant": "ghost"
+    },
+    "single-guarantee": {
+      "type": "Text",
+      "tag": "p",
+      "content": "30-day money-back guarantee. No questions asked.",
+      "variant": "muted",
+      "align": "center"
+    }
+  }
+}

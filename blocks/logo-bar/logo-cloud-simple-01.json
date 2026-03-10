@@ -1,0 +1,145 @@
+{
+  "root": "logo-grid-section",
+  "elements": {
+    "logo-grid-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "align": "center",
+      "children": ["section-heading", "logo-grid"]
+    },
+    "section-heading": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Powering teams at the world's leading companies",
+      "variant": "muted",
+      "align": "center"
+    },
+    "logo-grid": {
+      "type": "Grid",
+      "columns": 5,
+      "gap": 4,
+      "children": ["logo-stripe", "logo-shopify", "logo-notion", "logo-linear", "logo-vercel", "logo-github", "logo-figma", "logo-slack", "logo-datadog", "logo-twilio"]
+    },
+    "logo-stripe": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["logo-stripe-text"]
+    },
+    "logo-stripe-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Stripe",
+      "weight": "bold",
+      "align": "center"
+    },
+    "logo-shopify": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["logo-shopify-text"]
+    },
+    "logo-shopify-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Shopify",
+      "weight": "bold",
+      "align": "center"
+    },
+    "logo-notion": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["logo-notion-text"]
+    },
+    "logo-notion-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Notion",
+      "weight": "bold",
+      "align": "center"
+    },
+    "logo-linear": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["logo-linear-text"]
+    },
+    "logo-linear-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Linear",
+      "weight": "bold",
+      "align": "center"
+    },
+    "logo-vercel": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["logo-vercel-text"]
+    },
+    "logo-vercel-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Vercel",
+      "weight": "bold",
+      "align": "center"
+    },
+    "logo-github": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["logo-github-text"]
+    },
+    "logo-github-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "GitHub",
+      "weight": "bold",
+      "align": "center"
+    },
+    "logo-figma": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["logo-figma-text"]
+    },
+    "logo-figma-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Figma",
+      "weight": "bold",
+      "align": "center"
+    },
+    "logo-slack": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["logo-slack-text"]
+    },
+    "logo-slack-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Slack",
+      "weight": "bold",
+      "align": "center"
+    },
+    "logo-datadog": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["logo-datadog-text"]
+    },
+    "logo-datadog-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Datadog",
+      "weight": "bold",
+      "align": "center"
+    },
+    "logo-twilio": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["logo-twilio-text"]
+    },
+    "logo-twilio-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "Twilio",
+      "weight": "bold",
+      "align": "center"
+    }
+  }
+}

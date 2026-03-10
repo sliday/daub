@@ -1,0 +1,139 @@
+{
+  "root": "feature-comparison-section",
+  "elements": {
+    "feature-comparison-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "align": "center",
+      "container": "wide",
+      "children": ["comparison-header", "comparison-columns"]
+    },
+    "comparison-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["comparison-title", "comparison-desc"]
+    },
+    "comparison-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Why teams switch from legacy tools to Relay",
+      "weight": "bold",
+      "align": "center"
+    },
+    "comparison-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "See how Relay stacks up against fragmented email, chat, and video solutions.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "comparison-columns": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 4,
+      "children": ["col-legacy", "col-relay"]
+    },
+    "col-legacy": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["legacy-stack"]
+    },
+    "legacy-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["legacy-header", "legacy-sep", "legacy-list"]
+    },
+    "legacy-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["legacy-title", "legacy-subtitle"]
+    },
+    "legacy-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Traditional Stack",
+      "weight": "bold",
+      "align": "center"
+    },
+    "legacy-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "3-5 separate tools stitched together",
+      "variant": "muted",
+      "align": "center"
+    },
+    "legacy-sep": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "legacy-list": {
+      "type": "List",
+      "items": [
+        { "primary": "Separate apps for chat, email, video", "icon": "x-circle" },
+        { "primary": "Context lost switching between tools", "icon": "x-circle" },
+        { "primary": "Per-seat pricing across each vendor", "icon": "x-circle" },
+        { "primary": "No shared search across channels", "icon": "x-circle" },
+        { "primary": "Manual meeting note transcription", "icon": "x-circle" },
+        { "primary": "Limited mobile experience", "icon": "x-circle" }
+      ]
+    },
+    "col-relay": {
+      "type": "Surface",
+      "variant": "raised",
+      "children": ["relay-stack"]
+    },
+    "relay-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["relay-header", "relay-sep", "relay-list"]
+    },
+    "relay-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["relay-badge", "relay-title", "relay-subtitle"]
+    },
+    "relay-badge": {
+      "type": "Badge",
+      "text": "Recommended",
+      "variant": "success"
+    },
+    "relay-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Relay Unified",
+      "weight": "bold",
+      "align": "center"
+    },
+    "relay-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "One platform for all team communication",
+      "variant": "muted",
+      "align": "center"
+    },
+    "relay-sep": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "relay-list": {
+      "type": "List",
+      "items": [
+        { "primary": "Chat, email, and video in one app", "icon": "check-circle" },
+        { "primary": "Threaded conversations with full context", "icon": "check-circle" },
+        { "primary": "Single subscription, unlimited channels", "icon": "check-circle" },
+        { "primary": "Universal search across all messages", "icon": "check-circle" },
+        { "primary": "AI-generated meeting summaries and action items", "icon": "check-circle" },
+        { "primary": "Native apps for iOS, Android, and desktop", "icon": "check-circle" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "root": "contact-info",
+  "elements": {
+    "contact-info": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "container": "wide",
+      "children": ["header-group", "info-grid"]
+    },
+    "header-group": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["heading", "subheading"]
+    },
+    "heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "How to Reach Us",
+      "weight": "bold",
+      "align": "center"
+    },
+    "subheading": {
+      "type": "Text",
+      "tag": "p",
+      "content": "We'd love to hear from you. Choose the method that works best.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "info-grid": {
+      "type": "Grid",
+      "columns": 3,
+      "gap": 4,
+      "children": ["email-card", "phone-card", "address-card"]
+    },
+    "email-card": {
+      "type": "Card",
+      "title": "Email Us",
+      "description": "For general inquiries and support",
+      "children": ["email-card-body"]
+    },
+    "email-card-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "align": "center",
+      "children": ["email-icon", "email-address", "email-response"]
+    },
+    "email-icon": {
+      "type": "Button",
+      "icon": "mail",
+      "variant": "ghost",
+      "size": "lg"
+    },
+    "email-address": {
+      "type": "Text",
+      "tag": "p",
+      "content": "support@acmestudio.com",
+      "weight": "semibold",
+      "align": "center"
+    },
+    "email-response": {
+      "type": "Text",
+      "tag": "p",
+      "content": "We respond within 24 hours",
+      "variant": "muted",
+      "align": "center"
+    },
+    "phone-card": {
+      "type": "Card",
+      "title": "Call Us",
+      "description": "Speak directly with our team",
+      "children": ["phone-card-body"]
+    },
+    "phone-card-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "align": "center",
+      "children": ["phone-icon", "phone-number", "phone-hours"]
+    },
+    "phone-icon": {
+      "type": "Button",
+      "icon": "phone",
+      "variant": "ghost",
+      "size": "lg"
+    },
+    "phone-number": {
+      "type": "Text",
+      "tag": "p",
+      "content": "+1 (415) 555-0198",
+      "weight": "semibold",
+      "align": "center"
+    },
+    "phone-hours": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Mon-Fri, 9 AM - 6 PM PST",
+      "variant": "muted",
+      "align": "center"
+    },
+    "address-card": {
+      "type": "Card",
+      "title": "Visit Us",
+      "description": "Come by our office",
+      "children": ["address-card-body"]
+    },
+    "address-card-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "align": "center",
+      "children": ["address-icon", "address-text", "address-city"]
+    },
+    "address-icon": {
+      "type": "Button",
+      "icon": "map-pin",
+      "variant": "ghost",
+      "size": "lg"
+    },
+    "address-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "350 Mission St, Suite 200",
+      "weight": "semibold",
+      "align": "center"
+    },
+    "address-city": {
+      "type": "Text",
+      "tag": "p",
+      "content": "San Francisco, CA 94105",
+      "variant": "muted",
+      "align": "center"
+    }
+  }
+}

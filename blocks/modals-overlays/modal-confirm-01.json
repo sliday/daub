@@ -1,0 +1,54 @@
+{
+  "root": "delete-confirm",
+  "elements": {
+    "delete-confirm": {
+      "type": "AlertDialog",
+      "title": "Delete Project",
+      "description": "Are you sure you want to delete \"Q2 Marketing Campaign\"? This action cannot be undone and will permanently remove all associated data, files, and team assignments.",
+      "children": ["confirm-details", "confirm-actions"]
+    },
+    "confirm-details": {
+      "type": "Surface",
+      "variant": "flat",
+      "children": ["confirm-details-list"]
+    },
+    "confirm-details-list": {
+      "type": "List",
+      "items": [
+        {
+          "primary": "47 tasks will be deleted",
+          "icon": "check-square",
+          "meta": "12 completed"
+        },
+        {
+          "primary": "23 files will be removed",
+          "icon": "file",
+          "meta": "148 MB"
+        },
+        {
+          "primary": "6 team members will lose access",
+          "icon": "users",
+          "meta": "Notified"
+        }
+      ]
+    },
+    "confirm-actions": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "justify": "flex-end",
+      "children": ["btn-keep", "btn-delete"]
+    },
+    "btn-keep": {
+      "type": "Button",
+      "label": "Keep Project",
+      "variant": "outline"
+    },
+    "btn-delete": {
+      "type": "Button",
+      "label": "Delete Permanently",
+      "variant": "destructive",
+      "icon": "trash-2"
+    }
+  }
+}

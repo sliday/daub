@@ -1,0 +1,46 @@
+{
+  "root": "newsletter-inline",
+  "elements": {
+    "newsletter-inline": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "justify": "center",
+      "container": true,
+      "children": ["nl-text-group", "nl-form"]
+    },
+    "nl-text-group": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["nl-heading", "nl-subtext"]
+    },
+    "nl-heading": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Stay in the loop",
+      "weight": "bold"
+    },
+    "nl-subtext": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Get weekly insights on design, development, and product strategy.",
+      "variant": "muted"
+    },
+    "nl-form": {
+      "type": "InputGroup",
+      "children": ["nl-input", "nl-submit"]
+    },
+    "nl-input": {
+      "type": "Input",
+      "placeholder": "you@company.com",
+      "type": "email"
+    },
+    "nl-submit": {
+      "type": "Button",
+      "label": "Subscribe",
+      "variant": "primary"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "root": "footer-simple",
+  "elements": {
+    "footer-simple": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": "wide",
+      "children": ["top-divider", "footer-row"]
+    },
+    "top-divider": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "footer-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "align": "center",
+      "justify": "between",
+      "children": ["copyright", "nav-links", "social-links"]
+    },
+    "copyright": {
+      "type": "Text",
+      "tag": "p",
+      "content": "2026 Acme Studio. All rights reserved.",
+      "variant": "muted"
+    },
+    "nav-links": {
+      "type": "NavMenu",
+      "direction": "horizontal",
+      "items": [
+        { "label": "Privacy", "href": "/privacy" },
+        { "label": "Terms", "href": "/terms" },
+        { "label": "Sitemap", "href": "/sitemap" }
+      ]
+    },
+    "social-links": {
+      "type": "ButtonGroup",
+      "children": ["social-x", "social-github", "social-linkedin"]
+    },
+    "social-x": {
+      "type": "Button",
+      "icon": "twitter",
+      "variant": "ghost",
+      "size": "sm"
+    },
+    "social-github": {
+      "type": "Button",
+      "icon": "github",
+      "variant": "ghost",
+      "size": "sm"
+    },
+    "social-linkedin": {
+      "type": "Button",
+      "icon": "linkedin",
+      "variant": "ghost",
+      "size": "sm"
+    }
+  }
+}

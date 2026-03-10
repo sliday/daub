@@ -1,0 +1,117 @@
+{
+  "root": "social-login",
+  "elements": {
+    "social-login": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "align": "center",
+      "justify": "center",
+      "container": "narrow",
+      "children": ["social-card"]
+    },
+    "social-card": {
+      "type": "Card",
+      "title": "Sign in to your account",
+      "description": "Choose your preferred sign-in method",
+      "children": ["card-body"]
+    },
+    "card-body": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["google-btn", "github-btn", "apple-btn", "microsoft-btn", "divider-row", "or-text", "email-section"]
+    },
+    "google-btn": {
+      "type": "Button",
+      "label": "Continue with Google",
+      "icon": "chrome",
+      "variant": "outline",
+      "size": "lg"
+    },
+    "github-btn": {
+      "type": "Button",
+      "label": "Continue with GitHub",
+      "icon": "github",
+      "variant": "outline",
+      "size": "lg"
+    },
+    "apple-btn": {
+      "type": "Button",
+      "label": "Continue with Apple",
+      "icon": "apple",
+      "variant": "outline",
+      "size": "lg"
+    },
+    "microsoft-btn": {
+      "type": "Button",
+      "label": "Continue with Microsoft",
+      "icon": "monitor",
+      "variant": "outline",
+      "size": "lg"
+    },
+    "divider-row": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "or-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Or continue with email",
+      "variant": "muted",
+      "align": "center"
+    },
+    "email-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["email-field", "password-field", "signin-btn"]
+    },
+    "email-field": {
+      "type": "Field",
+      "label": "Email",
+      "children": ["email-input"]
+    },
+    "email-input": {
+      "type": "Input",
+      "type": "email",
+      "placeholder": "you@example.com"
+    },
+    "password-field": {
+      "type": "Field",
+      "label": "Password",
+      "children": ["password-input"]
+    },
+    "password-input": {
+      "type": "Input",
+      "type": "password",
+      "placeholder": "Your password"
+    },
+    "signin-btn": {
+      "type": "Button",
+      "label": "Sign In",
+      "variant": "primary",
+      "size": "lg"
+    },
+    "signup-prompt": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 1,
+      "align": "center",
+      "justify": "center",
+      "children": ["signup-text", "signup-link"]
+    },
+    "signup-text": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Don't have an account?",
+      "variant": "muted"
+    },
+    "signup-link": {
+      "type": "Button",
+      "label": "Create one",
+      "variant": "ghost",
+      "size": "sm"
+    }
+  }
+}

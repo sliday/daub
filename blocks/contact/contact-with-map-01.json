@@ -1,0 +1,153 @@
+{
+  "root": "contact-with-map",
+  "elements": {
+    "contact-with-map": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "container": "wide",
+      "children": ["header-group", "content-grid"]
+    },
+    "header-group": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["heading", "subheading"]
+    },
+    "heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Find Us",
+      "weight": "bold",
+      "align": "center"
+    },
+    "subheading": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Visit our office or send us a message — we're always happy to connect.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "content-grid": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 5,
+      "children": ["map-container", "form-container"]
+    },
+    "map-container": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["map-image", "address-row"]
+    },
+    "map-image": {
+      "type": "Image",
+      "src": "https://placehold.co/600x400/e2e8f0/475569?text=Map+%E2%80%94+350+Mission+St,+SF",
+      "alt": "Map showing office location at 350 Mission Street, San Francisco"
+    },
+    "address-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 4,
+      "children": ["address-block", "hours-block"]
+    },
+    "address-block": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["address-label", "address-line-1", "address-line-2"]
+    },
+    "address-label": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Address",
+      "weight": "semibold"
+    },
+    "address-line-1": {
+      "type": "Text",
+      "tag": "p",
+      "content": "350 Mission St, Suite 200",
+      "variant": "muted"
+    },
+    "address-line-2": {
+      "type": "Text",
+      "tag": "p",
+      "content": "San Francisco, CA 94105",
+      "variant": "muted"
+    },
+    "hours-block": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["hours-label", "hours-weekday", "hours-weekend"]
+    },
+    "hours-label": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Hours",
+      "weight": "semibold"
+    },
+    "hours-weekday": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Mon-Fri: 9 AM - 6 PM",
+      "variant": "muted"
+    },
+    "hours-weekend": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Sat-Sun: Closed",
+      "variant": "muted"
+    },
+    "form-container": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["form-stack"]
+    },
+    "form-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["form-title", "name-field", "email-field", "message-field", "submit-btn"]
+    },
+    "form-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Send Us a Message",
+      "weight": "semibold"
+    },
+    "name-field": {
+      "type": "Field",
+      "label": "Name",
+      "children": ["name-input"]
+    },
+    "name-input": {
+      "type": "Input",
+      "placeholder": "Your name"
+    },
+    "email-field": {
+      "type": "Field",
+      "label": "Email",
+      "children": ["email-input"]
+    },
+    "email-input": {
+      "type": "Input",
+      "placeholder": "you@example.com"
+    },
+    "message-field": {
+      "type": "Field",
+      "label": "Message",
+      "children": ["message-input"]
+    },
+    "message-input": {
+      "type": "Textarea",
+      "placeholder": "What would you like to discuss?"
+    },
+    "submit-btn": {
+      "type": "Button",
+      "label": "Send Message",
+      "variant": "primary"
+    }
+  }
+}

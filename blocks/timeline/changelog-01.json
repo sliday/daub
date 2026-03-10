@@ -1,0 +1,212 @@
+{
+  "root": "changelog",
+  "elements": {
+    "changelog": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["changelog-header", "changelog-entries"]
+    },
+    "changelog-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "children": ["changelog-title", "changelog-desc"]
+    },
+    "changelog-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Changelog",
+      "weight": "bold"
+    },
+    "changelog-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "New updates and improvements to the platform.",
+      "variant": "muted"
+    },
+    "changelog-entries": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["entry-1", "sep-1", "entry-2", "sep-2", "entry-3", "sep-3", "entry-4", "sep-4", "entry-5"]
+    },
+    "entry-1": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["entry-1-header", "entry-1-body"]
+    },
+    "entry-1-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["entry-1-version", "entry-1-date", "entry-1-badge"]
+    },
+    "entry-1-version": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "v4.2.0",
+      "weight": "bold"
+    },
+    "entry-1-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "March 5, 2026",
+      "variant": "muted"
+    },
+    "entry-1-badge": {
+      "type": "Badge",
+      "text": "Latest",
+      "variant": "default"
+    },
+    "entry-1-body": {
+      "type": "Prose",
+      "content": "**New:** Real-time cursors now show collaborator names and avatars directly on the canvas. **Improved:** Dashboard load time reduced by 40% through lazy-loading and query optimization. **Fixed:** Resolved an issue where exported PDFs occasionally dropped embedded fonts."
+    },
+    "entry-2": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["entry-2-header", "entry-2-body"]
+    },
+    "entry-2-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["entry-2-version", "entry-2-date", "entry-2-badge"]
+    },
+    "entry-2-version": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "v4.1.0",
+      "weight": "bold"
+    },
+    "entry-2-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "February 12, 2026",
+      "variant": "muted"
+    },
+    "entry-2-badge": {
+      "type": "Badge",
+      "text": "Feature",
+      "variant": "secondary"
+    },
+    "entry-2-body": {
+      "type": "Prose",
+      "content": "**New:** Added Kanban board view for project management. Drag-and-drop cards between columns with automatic status updates. **New:** Webhook delivery logs now available in the developer console. **Fixed:** Corrected timezone handling for scheduled publishing in non-UTC regions."
+    },
+    "entry-3": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["entry-3-header", "entry-3-body"]
+    },
+    "entry-3-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["entry-3-version", "entry-3-date", "entry-3-badge"]
+    },
+    "entry-3-version": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "v4.0.0",
+      "weight": "bold"
+    },
+    "entry-3-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "January 8, 2026",
+      "variant": "muted"
+    },
+    "entry-3-badge": {
+      "type": "Badge",
+      "text": "Major",
+      "variant": "destructive"
+    },
+    "entry-3-body": {
+      "type": "Prose",
+      "content": "**Breaking:** API v3 endpoints deprecated; all integrations must migrate to v4 by April 2026. **New:** Completely redesigned editor with block-based content model. **New:** Custom themes engine allowing brand-specific styling across all exports. **Improved:** File upload limit increased from 25MB to 100MB."
+    },
+    "entry-4": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["entry-4-header", "entry-4-body"]
+    },
+    "entry-4-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["entry-4-version", "entry-4-date"]
+    },
+    "entry-4-version": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "v3.8.0",
+      "weight": "bold"
+    },
+    "entry-4-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "November 20, 2025",
+      "variant": "muted"
+    },
+    "entry-4-body": {
+      "type": "Prose",
+      "content": "**New:** Two-factor authentication via hardware security keys (FIDO2/WebAuthn). **Improved:** Search now indexes content inside attached files including PDFs and spreadsheets. **Fixed:** Resolved intermittent 502 errors during peak traffic on the collaboration server."
+    },
+    "entry-5": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "children": ["entry-5-header", "entry-5-body"]
+    },
+    "entry-5-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["entry-5-version", "entry-5-date"]
+    },
+    "entry-5-version": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "v3.7.0",
+      "weight": "bold"
+    },
+    "entry-5-date": {
+      "type": "Text",
+      "tag": "span",
+      "content": "October 3, 2025",
+      "variant": "muted"
+    },
+    "entry-5-body": {
+      "type": "Prose",
+      "content": "**New:** Granular permission templates for workspace roles (viewer, editor, admin, billing). **Improved:** Email notification digest option — daily or weekly summary instead of per-event alerts. **Fixed:** Copy-paste from Google Docs now preserves heading hierarchy and inline formatting."
+    },
+    "sep-1": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "sep-2": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "sep-3": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    },
+    "sep-4": {
+      "type": "Separator",
+      "orientation": "horizontal"
+    }
+  }
+}

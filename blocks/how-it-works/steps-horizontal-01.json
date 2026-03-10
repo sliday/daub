@@ -1,0 +1,141 @@
+{
+  "root": "steps-horizontal",
+  "elements": {
+    "steps-horizontal": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["steps-header", "steps-stepper", "steps-cards"]
+    },
+    "steps-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 1,
+      "align": "center",
+      "children": ["steps-title", "steps-subtitle"]
+    },
+    "steps-title": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "How It Works",
+      "weight": "bold",
+      "align": "center"
+    },
+    "steps-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Get started in three simple steps. No credit card required.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "steps-stepper": {
+      "type": "Stepper",
+      "steps": [
+        { "label": "Create Account", "description": "Sign up free" },
+        { "label": "Connect Data", "description": "Import sources" },
+        { "label": "Launch", "description": "Go live" }
+      ],
+      "current": 0
+    },
+    "steps-cards": {
+      "type": "Grid",
+      "columns": 3,
+      "gap": 3,
+      "children": ["step-card-1", "step-card-2", "step-card-3"]
+    },
+    "step-card-1": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["step-1-content"]
+    },
+    "step-1-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["step-1-number", "step-1-title", "step-1-desc"]
+    },
+    "step-1-number": {
+      "type": "Avatar",
+      "initials": "1",
+      "size": "lg"
+    },
+    "step-1-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Create Your Account",
+      "weight": "bold",
+      "align": "center"
+    },
+    "step-1-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Sign up with your email or SSO provider. Your workspace is ready in under 30 seconds with no setup required.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "step-card-2": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["step-2-content"]
+    },
+    "step-2-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["step-2-number", "step-2-title", "step-2-desc"]
+    },
+    "step-2-number": {
+      "type": "Avatar",
+      "initials": "2",
+      "size": "lg"
+    },
+    "step-2-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Connect Your Data",
+      "weight": "bold",
+      "align": "center"
+    },
+    "step-2-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Import from CSV, connect your database, or use one of 50+ native integrations to pull in live data automatically.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "step-card-3": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["step-3-content"]
+    },
+    "step-3-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["step-3-number", "step-3-title", "step-3-desc"]
+    },
+    "step-3-number": {
+      "type": "Avatar",
+      "initials": "3",
+      "size": "lg"
+    },
+    "step-3-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Launch & Share",
+      "weight": "bold",
+      "align": "center"
+    },
+    "step-3-desc": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Publish your dashboard, invite your team, and start making data-driven decisions from day one.",
+      "variant": "muted",
+      "align": "center"
+    }
+  }
+}

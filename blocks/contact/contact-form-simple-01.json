@@ -1,0 +1,103 @@
+{
+  "root": "contact-form-simple",
+  "elements": {
+    "contact-form-simple": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 5,
+      "align": "center",
+      "container": "narrow",
+      "children": ["heading-group", "form-card"]
+    },
+    "heading-group": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["heading", "subheading"]
+    },
+    "heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Get in Touch",
+      "weight": "bold",
+      "align": "center"
+    },
+    "subheading": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Have a question or want to work together? Fill out the form below and we'll get back to you within 24 hours.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "form-card": {
+      "type": "Surface",
+      "variant": "bordered",
+      "children": ["form-stack"]
+    },
+    "form-stack": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["name-row", "email-field", "subject-field", "message-field", "submit-btn"]
+    },
+    "name-row": {
+      "type": "Grid",
+      "columns": 2,
+      "gap": 4,
+      "children": ["first-name-field", "last-name-field"]
+    },
+    "first-name-field": {
+      "type": "Field",
+      "label": "First Name",
+      "children": ["first-name-input"]
+    },
+    "first-name-input": {
+      "type": "Input",
+      "placeholder": "Jane"
+    },
+    "last-name-field": {
+      "type": "Field",
+      "label": "Last Name",
+      "children": ["last-name-input"]
+    },
+    "last-name-input": {
+      "type": "Input",
+      "placeholder": "Smith"
+    },
+    "email-field": {
+      "type": "Field",
+      "label": "Email Address",
+      "children": ["email-input"]
+    },
+    "email-input": {
+      "type": "Input",
+      "type": "email",
+      "placeholder": "jane@example.com"
+    },
+    "subject-field": {
+      "type": "Field",
+      "label": "Subject",
+      "children": ["subject-input"]
+    },
+    "subject-input": {
+      "type": "Input",
+      "placeholder": "How can we help?"
+    },
+    "message-field": {
+      "type": "Field",
+      "label": "Message",
+      "children": ["message-input"]
+    },
+    "message-input": {
+      "type": "Textarea",
+      "placeholder": "Tell us more about your project, goals, or questions..."
+    },
+    "submit-btn": {
+      "type": "Button",
+      "label": "Send Message",
+      "variant": "primary",
+      "size": "lg"
+    }
+  }
+}

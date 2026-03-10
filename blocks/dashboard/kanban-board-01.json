@@ -1,0 +1,118 @@
+{
+  "root": "kanban-board",
+  "elements": {
+    "kanban-board": {
+      "type": "Grid",
+      "columns": 3,
+      "gap": 4,
+      "children": ["col-todo", "col-progress", "col-done"]
+    },
+    "col-todo": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["col-todo-header", "card-task-1", "card-task-2", "card-task-3"]
+    },
+    "col-todo-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "align": "center",
+      "children": ["col-todo-title", "badge-todo-count"]
+    },
+    "col-todo-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "To Do",
+      "weight": "semibold"
+    },
+    "badge-todo-count": {
+      "type": "Badge",
+      "text": "3",
+      "variant": "secondary"
+    },
+    "card-task-1": {
+      "type": "Card",
+      "title": "Redesign user onboarding flow",
+      "description": "Simplify the 5-step wizard into a 3-step process with progressive disclosure."
+    },
+    "card-task-2": {
+      "type": "Card",
+      "title": "Add export to PDF feature",
+      "description": "Allow users to export reports and invoices as formatted PDF documents."
+    },
+    "card-task-3": {
+      "type": "Card",
+      "title": "Integrate Stripe billing portal",
+      "description": "Connect Stripe Customer Portal for self-service subscription management."
+    },
+    "col-progress": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["col-progress-header", "card-task-4", "card-task-5"]
+    },
+    "col-progress-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "align": "center",
+      "children": ["col-progress-title", "badge-progress-count"]
+    },
+    "col-progress-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "In Progress",
+      "weight": "semibold"
+    },
+    "badge-progress-count": {
+      "type": "Badge",
+      "text": "2",
+      "variant": "default"
+    },
+    "card-task-4": {
+      "type": "Card",
+      "title": "API rate limiting middleware",
+      "description": "Implement token bucket algorithm with Redis for per-user rate limits."
+    },
+    "card-task-5": {
+      "type": "Card",
+      "title": "Dark mode color tokens",
+      "description": "Define semantic color tokens and map them to dark mode equivalents."
+    },
+    "col-done": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["col-done-header", "card-task-6", "card-task-7"]
+    },
+    "col-done-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "align": "center",
+      "children": ["col-done-title", "badge-done-count"]
+    },
+    "col-done-title": {
+      "type": "Text",
+      "tag": "h4",
+      "content": "Done",
+      "weight": "semibold"
+    },
+    "badge-done-count": {
+      "type": "Badge",
+      "text": "2",
+      "variant": "outline"
+    },
+    "card-task-6": {
+      "type": "Card",
+      "title": "Fix duplicate email notifications",
+      "description": "Resolved race condition in the notification queue causing duplicate sends."
+    },
+    "card-task-7": {
+      "type": "Card",
+      "title": "Migrate to PostgreSQL 16",
+      "description": "Upgraded from PG 14 with zero-downtime migration using logical replication."
+    }
+  }
+}

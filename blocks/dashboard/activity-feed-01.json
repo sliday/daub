@@ -1,0 +1,84 @@
+{
+  "root": "activity-section",
+  "elements": {
+    "activity-section": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "children": ["activity-header", "activity-list"]
+    },
+    "activity-header": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "justify": "space-between",
+      "align": "center",
+      "children": ["activity-title", "btn-view-all"]
+    },
+    "activity-title": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Recent Activity",
+      "weight": "semibold"
+    },
+    "btn-view-all": {
+      "type": "Button",
+      "label": "View All",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "arrow-right"
+    },
+    "activity-list": {
+      "type": "List",
+      "items": [
+        {
+          "primary": "Sarah Mitchell completed order #ORD-7291",
+          "secondary": "Pro Plan (Annual) - $599.00",
+          "icon": "check-circle",
+          "meta": "2 min ago"
+        },
+        {
+          "primary": "James Chen submitted a new order",
+          "secondary": "Starter Kit - $49.99",
+          "icon": "shopping-bag",
+          "meta": "18 min ago"
+        },
+        {
+          "primary": "System backup completed successfully",
+          "secondary": "Database snapshot saved to S3",
+          "icon": "database",
+          "meta": "45 min ago"
+        },
+        {
+          "primary": "Emily Rodriguez's order shipped via FedEx",
+          "secondary": "Tracking: 7942 0812 3456",
+          "icon": "truck",
+          "meta": "1 hr ago"
+        },
+        {
+          "primary": "New user registration: Alex Thompson",
+          "secondary": "alex.thompson@acme.co - Team Plan",
+          "icon": "user-plus",
+          "meta": "2 hrs ago"
+        },
+        {
+          "primary": "Payment failed for invoice #INV-4820",
+          "secondary": "David Kim - Card ending 4242 declined",
+          "icon": "alert-triangle",
+          "meta": "3 hrs ago"
+        },
+        {
+          "primary": "Lisa Park upgraded to Pro Plan",
+          "secondary": "Monthly billing - $59.00/mo",
+          "icon": "arrow-up-circle",
+          "meta": "4 hrs ago"
+        },
+        {
+          "primary": "Support ticket #1847 resolved",
+          "secondary": "Category: Billing - Avg response: 2.4 hrs",
+          "icon": "message-circle",
+          "meta": "5 hrs ago"
+        }
+      ]
+    }
+  }
+}

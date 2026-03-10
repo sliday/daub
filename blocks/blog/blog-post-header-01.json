@@ -1,0 +1,109 @@
+{
+  "root": "blog-post-header",
+  "elements": {
+    "blog-post-header": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["bph-breadcrumbs", "bph-meta-top", "bph-title", "bph-subtitle", "bph-author-row", "bph-hero-image"]
+    },
+    "bph-breadcrumbs": {
+      "type": "Breadcrumbs",
+      "items": [
+        { "label": "Blog" },
+        { "label": "Engineering" },
+        { "label": "Current Article" }
+      ]
+    },
+    "bph-meta-top": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "children": ["bph-category", "bph-read-time"]
+    },
+    "bph-category": {
+      "type": "Chip",
+      "label": "Engineering",
+      "variant": "primary"
+    },
+    "bph-read-time": {
+      "type": "Chip",
+      "label": "11 min read",
+      "variant": "secondary"
+    },
+    "bph-title": {
+      "type": "Text",
+      "tag": "h1",
+      "content": "How We Rebuilt Our Entire Database Layer in 6 Weeks",
+      "weight": "bold"
+    },
+    "bph-subtitle": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Migrating from a monolithic PostgreSQL instance to a distributed CockroachDB cluster while serving 2 million daily active users with zero downtime.",
+      "variant": "muted"
+    },
+    "bph-author-row": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "align": "center",
+      "children": ["bph-avatar", "bph-author-details", "bph-share-btns"]
+    },
+    "bph-avatar": {
+      "type": "Avatar",
+      "src": "https://picsum.photos/seed/raj-author/80/80",
+      "initials": "RK",
+      "size": "lg"
+    },
+    "bph-author-details": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 0,
+      "children": ["bph-author-name", "bph-pub-date"]
+    },
+    "bph-author-name": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Raj Kumar, CTO",
+      "weight": "bold"
+    },
+    "bph-pub-date": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Published March 10, 2026",
+      "variant": "muted"
+    },
+    "bph-share-btns": {
+      "type": "ButtonGroup",
+      "children": ["bph-share-x", "bph-share-li", "bph-share-copy"]
+    },
+    "bph-share-x": {
+      "type": "Button",
+      "label": "Share",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "twitter"
+    },
+    "bph-share-li": {
+      "type": "Button",
+      "label": "Share",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "linkedin"
+    },
+    "bph-share-copy": {
+      "type": "Button",
+      "label": "Copy Link",
+      "variant": "ghost",
+      "size": "sm",
+      "icon": "link"
+    },
+    "bph-hero-image": {
+      "type": "Image",
+      "src": "https://picsum.photos/seed/db-migration/1200/500",
+      "alt": "Database migration architecture diagram"
+    }
+  }
+}

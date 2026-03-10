@@ -1,0 +1,221 @@
+{
+  "root": "team-carousel",
+  "elements": {
+    "team-carousel": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "container": true,
+      "children": ["tc-header", "tc-sub", "tc-slider", "tc-nav"]
+    },
+    "tc-header": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "The People Behind the Product",
+      "weight": "bold",
+      "align": "center"
+    },
+    "tc-sub": {
+      "type": "Text",
+      "tag": "p",
+      "content": "A world-class team passionate about building tools developers love.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "tc-slider": {
+      "type": "Carousel",
+      "children": ["tc-slide-1", "tc-slide-2", "tc-slide-3", "tc-slide-4", "tc-slide-5"]
+    },
+    "tc-slide-1": {
+      "type": "Card",
+      "children": ["tc-s1-inner"]
+    },
+    "tc-s1-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["tc-s1-img", "tc-s1-name", "tc-s1-role", "tc-s1-bio"]
+    },
+    "tc-s1-img": {
+      "type": "Avatar",
+      "src": "https://picsum.photos/seed/mia-torres/200/200",
+      "initials": "MT",
+      "size": "xl"
+    },
+    "tc-s1-name": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Mia Torres",
+      "weight": "bold"
+    },
+    "tc-s1-role": {
+      "type": "Chip",
+      "label": "Frontend Lead",
+      "variant": "secondary"
+    },
+    "tc-s1-bio": {
+      "type": "Text",
+      "tag": "p",
+      "content": "React and TypeScript specialist. Built design systems used by Fortune 500 companies.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "tc-slide-2": {
+      "type": "Card",
+      "children": ["tc-s2-inner"]
+    },
+    "tc-s2-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["tc-s2-img", "tc-s2-name", "tc-s2-role", "tc-s2-bio"]
+    },
+    "tc-s2-img": {
+      "type": "Avatar",
+      "src": "https://picsum.photos/seed/alex-novak/200/200",
+      "initials": "AN",
+      "size": "xl"
+    },
+    "tc-s2-name": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Alex Novak",
+      "weight": "bold"
+    },
+    "tc-s2-role": {
+      "type": "Chip",
+      "label": "Backend Lead",
+      "variant": "secondary"
+    },
+    "tc-s2-bio": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Distributed systems expert. Previously scaled APIs to 100M+ requests/day at Uber.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "tc-slide-3": {
+      "type": "Card",
+      "children": ["tc-s3-inner"]
+    },
+    "tc-s3-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["tc-s3-img", "tc-s3-name", "tc-s3-role", "tc-s3-bio"]
+    },
+    "tc-s3-img": {
+      "type": "Avatar",
+      "src": "https://picsum.photos/seed/zara-williams/200/200",
+      "initials": "ZW",
+      "size": "xl"
+    },
+    "tc-s3-name": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Zara Williams",
+      "weight": "bold"
+    },
+    "tc-s3-role": {
+      "type": "Chip",
+      "label": "Design Director",
+      "variant": "secondary"
+    },
+    "tc-s3-bio": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Award-winning designer. Led brand and product design at Spotify for 6 years.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "tc-slide-4": {
+      "type": "Card",
+      "children": ["tc-s4-inner"]
+    },
+    "tc-s4-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["tc-s4-img", "tc-s4-name", "tc-s4-role", "tc-s4-bio"]
+    },
+    "tc-s4-img": {
+      "type": "Avatar",
+      "src": "https://picsum.photos/seed/ben-okafor/200/200",
+      "initials": "BO",
+      "size": "xl"
+    },
+    "tc-s4-name": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Ben Okafor",
+      "weight": "bold"
+    },
+    "tc-s4-role": {
+      "type": "Chip",
+      "label": "DevOps Lead",
+      "variant": "secondary"
+    },
+    "tc-s4-bio": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Kubernetes and cloud infrastructure specialist. Maintains 99.99% uptime SLA.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "tc-slide-5": {
+      "type": "Card",
+      "children": ["tc-s5-inner"]
+    },
+    "tc-s5-inner": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 2,
+      "align": "center",
+      "children": ["tc-s5-img", "tc-s5-name", "tc-s5-role", "tc-s5-bio"]
+    },
+    "tc-s5-img": {
+      "type": "Avatar",
+      "src": "https://picsum.photos/seed/nina-sato/200/200",
+      "initials": "NS",
+      "size": "xl"
+    },
+    "tc-s5-name": {
+      "type": "Text",
+      "tag": "h3",
+      "content": "Nina Sato",
+      "weight": "bold"
+    },
+    "tc-s5-role": {
+      "type": "Chip",
+      "label": "Data Science Lead",
+      "variant": "secondary"
+    },
+    "tc-s5-bio": {
+      "type": "Text",
+      "tag": "p",
+      "content": "ML and analytics expert. Built recommendation engines serving 50M+ users at Netflix.",
+      "variant": "muted",
+      "align": "center"
+    },
+    "tc-nav": {
+      "type": "ButtonGroup",
+      "children": ["tc-prev", "tc-next"]
+    },
+    "tc-prev": {
+      "type": "Button",
+      "label": "Previous",
+      "variant": "outline",
+      "icon": "chevron-left"
+    },
+    "tc-next": {
+      "type": "Button",
+      "label": "Next",
+      "variant": "outline",
+      "icon": "chevron-right"
+    }
+  }
+}

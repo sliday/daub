@@ -1,5 +1,147 @@
 [
   {
+    "id": "api-keys-page-01",
+    "category": "app-specific",
+    "subcategory": "api-keys-page",
+    "file": "app-specific/api-keys-page-01.json",
+    "element_count": 11,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "Alert",
+      "DataTable"
+    ],
+    "name": "Api Keys Page",
+    "description": "Api Keys Page block for app-specific",
+    "tags": [
+      "app-specific",
+      "api",
+      "keys",
+      "page"
+    ],
+    "screenshot": "app-specific/api-keys-page-01.png"
+  },
+  {
+    "id": "billing-page-01",
+    "category": "app-specific",
+    "subcategory": "billing-page",
+    "file": "app-specific/billing-page-01.json",
+    "element_count": 21,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "Surface",
+      "Badge",
+      "Separator",
+      "DataTable"
+    ],
+    "name": "Billing Page",
+    "description": "Billing Page block for app-specific",
+    "tags": [
+      "app-specific",
+      "billing",
+      "page"
+    ],
+    "screenshot": "app-specific/billing-page-01.png"
+  },
+  {
+    "id": "changelog-page-01",
+    "category": "app-specific",
+    "subcategory": "changelog-page",
+    "file": "app-specific/changelog-page-01.json",
+    "element_count": 38,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Badge",
+      "Prose",
+      "Separator"
+    ],
+    "name": "Changelog Page",
+    "description": "Changelog Page block for app-specific",
+    "tags": [
+      "app-specific",
+      "changelog",
+      "page"
+    ],
+    "screenshot": "app-specific/changelog-page-01.png"
+  },
+  {
+    "id": "onboarding-tour-01",
+    "category": "app-specific",
+    "subcategory": "onboarding-tour",
+    "file": "app-specific/onboarding-tour-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Progress",
+      "List",
+      "Button"
+    ],
+    "name": "Onboarding Tour",
+    "description": "Onboarding Tour block for app-specific",
+    "tags": [
+      "app-specific",
+      "onboarding",
+      "tour"
+    ],
+    "screenshot": "app-specific/onboarding-tour-01.png"
+  },
+  {
+    "id": "profile-page-01",
+    "category": "app-specific",
+    "subcategory": "profile-page",
+    "file": "app-specific/profile-page-01.json",
+    "element_count": 21,
+    "components_used": [
+      "Stack",
+      "Avatar",
+      "Text",
+      "Badge",
+      "Button",
+      "Grid",
+      "StatCard",
+      "Separator",
+      "List"
+    ],
+    "name": "Profile Page",
+    "description": "Profile Page block for app-specific",
+    "tags": [
+      "app-specific",
+      "profile",
+      "page"
+    ],
+    "screenshot": "app-specific/profile-page-01.png"
+  },
+  {
+    "id": "settings-page-01",
+    "category": "app-specific",
+    "subcategory": "settings-page",
+    "file": "app-specific/settings-page-01.json",
+    "element_count": 22,
+    "components_used": [
+      "Grid",
+      "Sidebar",
+      "Stack",
+      "Text",
+      "Select",
+      "Separator",
+      "Switch",
+      "Button"
+    ],
+    "name": "Settings Page",
+    "description": "Settings Page block for app-specific",
+    "tags": [
+      "app-specific",
+      "settings",
+      "page"
+    ],
+    "screenshot": "app-specific/settings-page-01.png"
+  },
+  {
     "id": "auth-page-01",
     "name": "Auth Page",
     "category": "auth",
@@ -25,6 +167,867 @@
       "Switch"
     ],
     "screenshot": "auth/auth-page-01.png"
+  },
+  {
+    "id": "forgot-password-01",
+    "category": "auth",
+    "subcategory": "forgot-password",
+    "file": "auth/forgot-password-01.json",
+    "element_count": 11,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Alert",
+      "Field",
+      "email",
+      "Button",
+      "Separator",
+      "Text"
+    ],
+    "name": "Forgot Password",
+    "description": "Forgot Password block for auth",
+    "tags": [
+      "auth",
+      "forgot",
+      "password"
+    ],
+    "screenshot": "auth/forgot-password-01.png"
+  },
+  {
+    "id": "login-form-01",
+    "category": "auth",
+    "subcategory": "login-form",
+    "file": "auth/login-form-01.json",
+    "element_count": 15,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Field",
+      "email",
+      "password",
+      "Checkbox",
+      "Button",
+      "Separator",
+      "Text"
+    ],
+    "name": "Login Form",
+    "description": "Login Form block for auth",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "screenshot": "auth/login-form-01.png"
+  },
+  {
+    "id": "register-form-01",
+    "category": "auth",
+    "subcategory": "register-form",
+    "file": "auth/register-form-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Grid",
+      "Field",
+      "Input",
+      "email",
+      "password",
+      "Checkbox",
+      "Button",
+      "Separator",
+      "Text"
+    ],
+    "name": "Register Form",
+    "description": "Register Form block for auth",
+    "tags": [
+      "auth",
+      "register",
+      "form"
+    ],
+    "screenshot": "auth/register-form-01.png"
+  },
+  {
+    "id": "reset-password-01",
+    "category": "auth",
+    "subcategory": "reset-password",
+    "file": "auth/reset-password-01.json",
+    "element_count": 15,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Field",
+      "password",
+      "Progress",
+      "Text",
+      "Button",
+      "Separator"
+    ],
+    "name": "Reset Password",
+    "description": "Reset Password block for auth",
+    "tags": [
+      "auth",
+      "reset",
+      "password"
+    ],
+    "screenshot": "auth/reset-password-01.png"
+  },
+  {
+    "id": "social-login-01",
+    "category": "auth",
+    "subcategory": "social-login",
+    "file": "auth/social-login-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Button",
+      "Separator",
+      "Text",
+      "Field",
+      "email",
+      "password"
+    ],
+    "name": "Social Login",
+    "description": "Social Login block for auth",
+    "tags": [
+      "auth",
+      "social",
+      "login"
+    ],
+    "screenshot": "auth/social-login-01.png"
+  },
+  {
+    "id": "two-factor-01",
+    "category": "auth",
+    "subcategory": "two-factor",
+    "file": "auth/two-factor-01.json",
+    "element_count": 14,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Button",
+      "Label",
+      "InputOTP",
+      "Separator",
+      "Text"
+    ],
+    "name": "Two Factor",
+    "description": "Two Factor block for auth",
+    "tags": [
+      "auth",
+      "two",
+      "factor"
+    ],
+    "screenshot": "auth/two-factor-01.png"
+  },
+  {
+    "id": "banner-bottom-sticky-01",
+    "category": "banners",
+    "subcategory": "banner-bottom-sticky",
+    "file": "banners/banner-bottom-sticky-01.json",
+    "element_count": 9,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Banner Bottom Sticky",
+    "description": "Banner Bottom Sticky block for banners",
+    "tags": [
+      "banners",
+      "banner",
+      "bottom",
+      "sticky"
+    ],
+    "screenshot": "banners/banner-bottom-sticky-01.png"
+  },
+  {
+    "id": "banner-inline-01",
+    "category": "banners",
+    "subcategory": "banner-inline",
+    "file": "banners/banner-inline-01.json",
+    "element_count": 11,
+    "components_used": [
+      "Stack",
+      "Surface",
+      "Grid",
+      "Chip",
+      "Text",
+      "Button",
+      "Image"
+    ],
+    "name": "Banner Inline",
+    "description": "Banner Inline block for banners",
+    "tags": [
+      "banners",
+      "banner",
+      "inline"
+    ],
+    "screenshot": "banners/banner-inline-01.png"
+  },
+  {
+    "id": "banner-top-01",
+    "category": "banners",
+    "subcategory": "banner-top",
+    "file": "banners/banner-top-01.json",
+    "element_count": 6,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Badge",
+      "Text",
+      "Button"
+    ],
+    "name": "Banner Top",
+    "description": "Banner Top block for banners",
+    "tags": [
+      "banners",
+      "banner",
+      "top"
+    ],
+    "screenshot": "banners/banner-top-01.png"
+  },
+  {
+    "id": "blog-featured-01",
+    "category": "blog",
+    "subcategory": "blog-featured",
+    "file": "blog/blog-featured-01.json",
+    "element_count": 13,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Image",
+      "Badge",
+      "Text",
+      "Avatar",
+      "Button"
+    ],
+    "name": "Blog Featured",
+    "description": "Blog Featured block for blog",
+    "tags": [
+      "blog",
+      "blog",
+      "featured"
+    ],
+    "screenshot": "blog/blog-featured-01.png"
+  },
+  {
+    "id": "blog-grid-01",
+    "category": "blog",
+    "subcategory": "blog-grid",
+    "file": "blog/blog-grid-01.json",
+    "element_count": 46,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card",
+      "Image",
+      "Chip"
+    ],
+    "name": "Blog Grid",
+    "description": "Blog Grid block for blog",
+    "tags": [
+      "blog",
+      "blog",
+      "grid"
+    ],
+    "screenshot": "blog/blog-grid-01.png"
+  },
+  {
+    "id": "blog-list-01",
+    "category": "blog",
+    "subcategory": "blog-list",
+    "file": "blog/blog-list-01.json",
+    "element_count": 34,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Image",
+      "Chip",
+      "Separator"
+    ],
+    "name": "Blog List",
+    "description": "Blog List block for blog",
+    "tags": [
+      "blog",
+      "blog",
+      "list"
+    ],
+    "screenshot": "blog/blog-list-01.png"
+  },
+  {
+    "id": "blog-newsletter-01",
+    "category": "blog",
+    "subcategory": "blog-newsletter",
+    "file": "blog/blog-newsletter-01.json",
+    "element_count": 26,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card",
+      "Image",
+      "Surface",
+      "InputGroup",
+      "email",
+      "Button"
+    ],
+    "name": "Blog Newsletter",
+    "description": "Blog Newsletter block for blog",
+    "tags": [
+      "blog",
+      "blog",
+      "newsletter"
+    ],
+    "screenshot": "blog/blog-newsletter-01.png"
+  },
+  {
+    "id": "blog-post-header-01",
+    "category": "blog",
+    "subcategory": "blog-post-header",
+    "file": "blog/blog-post-header-01.json",
+    "element_count": 17,
+    "components_used": [
+      "Stack",
+      "Breadcrumbs",
+      "Chip",
+      "Text",
+      "Avatar",
+      "ButtonGroup",
+      "Button",
+      "Image"
+    ],
+    "name": "Blog Post Header",
+    "description": "Blog Post Header block for blog",
+    "tags": [
+      "blog",
+      "blog",
+      "post",
+      "header"
+    ],
+    "screenshot": "blog/blog-post-header-01.png"
+  },
+  {
+    "id": "blog-sidebar-01",
+    "category": "blog",
+    "subcategory": "blog-sidebar",
+    "file": "blog/blog-sidebar-01.json",
+    "element_count": 37,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "Card",
+      "Image",
+      "Search",
+      "NavMenu",
+      "Chip",
+      "List"
+    ],
+    "name": "Blog Sidebar",
+    "description": "Blog Sidebar block for blog",
+    "tags": [
+      "blog",
+      "blog",
+      "sidebar"
+    ],
+    "screenshot": "blog/blog-sidebar-01.png"
+  },
+  {
+    "id": "before-after-01",
+    "category": "comparison",
+    "subcategory": "before-after",
+    "file": "comparison/before-after-01.json",
+    "element_count": 16,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card",
+      "Badge",
+      "AspectRatio",
+      "Image"
+    ],
+    "name": "Before After",
+    "description": "Before After block for comparison",
+    "tags": [
+      "comparison",
+      "before",
+      "after"
+    ],
+    "screenshot": "comparison/before-after-01.png"
+  },
+  {
+    "id": "comparison-table-01",
+    "category": "comparison",
+    "subcategory": "comparison-table",
+    "file": "comparison/comparison-table-01.json",
+    "element_count": 4,
+    "components_used": [
+      "Stack",
+      "Text",
+      "DataTable"
+    ],
+    "name": "Comparison Table",
+    "description": "Comparison Table block for comparison",
+    "tags": [
+      "comparison",
+      "comparison",
+      "table"
+    ],
+    "screenshot": "comparison/comparison-table-01.png"
+  },
+  {
+    "id": "vs-layout-01",
+    "category": "comparison",
+    "subcategory": "vs-layout",
+    "file": "comparison/vs-layout-01.json",
+    "element_count": 13,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card",
+      "List",
+      "Separator",
+      "Surface",
+      "Badge"
+    ],
+    "name": "Vs Layout",
+    "description": "Vs Layout block for comparison",
+    "tags": [
+      "comparison",
+      "vs",
+      "layout"
+    ],
+    "screenshot": "comparison/vs-layout-01.png"
+  },
+  {
+    "id": "contact-form-simple-01",
+    "category": "contact",
+    "subcategory": "contact-form-simple",
+    "file": "contact/contact-form-simple-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Surface",
+      "Grid",
+      "Field",
+      "Input",
+      "email",
+      "Textarea",
+      "Button"
+    ],
+    "name": "Contact Form Simple",
+    "description": "Contact Form Simple block for contact",
+    "tags": [
+      "contact",
+      "contact",
+      "form",
+      "simple"
+    ],
+    "screenshot": "contact/contact-form-simple-01.png"
+  },
+  {
+    "id": "contact-info-01",
+    "category": "contact",
+    "subcategory": "contact-info",
+    "file": "contact/contact-info-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card",
+      "Button"
+    ],
+    "name": "Contact Info",
+    "description": "Contact Info block for contact",
+    "tags": [
+      "contact",
+      "contact",
+      "info"
+    ],
+    "screenshot": "contact/contact-info-01.png"
+  },
+  {
+    "id": "contact-offices-01",
+    "category": "contact",
+    "subcategory": "contact-offices",
+    "file": "contact/contact-offices-01.json",
+    "element_count": 26,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card",
+      "Badge"
+    ],
+    "name": "Contact Offices",
+    "description": "Contact Offices block for contact",
+    "tags": [
+      "contact",
+      "contact",
+      "offices"
+    ],
+    "screenshot": "contact/contact-offices-01.png"
+  },
+  {
+    "id": "contact-split-01",
+    "category": "contact",
+    "subcategory": "contact-split",
+    "file": "contact/contact-split-01.json",
+    "element_count": 35,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Surface",
+      "Field",
+      "Input",
+      "Textarea",
+      "Button",
+      "Separator"
+    ],
+    "name": "Contact Split",
+    "description": "Contact Split block for contact",
+    "tags": [
+      "contact",
+      "contact",
+      "split"
+    ],
+    "screenshot": "contact/contact-split-01.png"
+  },
+  {
+    "id": "contact-with-map-01",
+    "category": "contact",
+    "subcategory": "contact-with-map",
+    "file": "contact/contact-with-map-01.json",
+    "element_count": 26,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Image",
+      "Surface",
+      "Field",
+      "Input",
+      "Textarea",
+      "Button"
+    ],
+    "name": "Contact With Map",
+    "description": "Contact With Map block for contact",
+    "tags": [
+      "contact",
+      "contact",
+      "with",
+      "map"
+    ],
+    "screenshot": "contact/contact-with-map-01.png"
+  },
+  {
+    "id": "content-numbered-steps-01",
+    "category": "content",
+    "subcategory": "content-numbered-steps",
+    "file": "content/content-numbered-steps-01.json",
+    "element_count": 35,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Avatar",
+      "Separator",
+      "Button"
+    ],
+    "name": "Content Numbered Steps",
+    "description": "Content Numbered Steps block for content",
+    "tags": [
+      "content",
+      "content",
+      "numbered",
+      "steps"
+    ],
+    "screenshot": "content/content-numbered-steps-01.png"
+  },
+  {
+    "id": "content-quote-highlight-01",
+    "category": "content",
+    "subcategory": "content-quote-highlight",
+    "file": "content/content-quote-highlight-01.json",
+    "element_count": 19,
+    "components_used": [
+      "Stack",
+      "Chip",
+      "Text",
+      "Surface",
+      "Avatar",
+      "StatCard"
+    ],
+    "name": "Content Quote Highlight",
+    "description": "Content Quote Highlight block for content",
+    "tags": [
+      "content",
+      "content",
+      "quote",
+      "highlight"
+    ],
+    "screenshot": "content/content-quote-highlight-01.png"
+  },
+  {
+    "id": "content-section-01",
+    "category": "content",
+    "subcategory": "content-section",
+    "file": "content/content-section-01.json",
+    "element_count": 12,
+    "components_used": [
+      "Stack",
+      "Chip",
+      "Text",
+      "Image",
+      "Button"
+    ],
+    "name": "Content Section",
+    "description": "Content Section block for content",
+    "tags": [
+      "content",
+      "content",
+      "section"
+    ],
+    "screenshot": "content/content-section-01.png"
+  },
+  {
+    "id": "content-split-01",
+    "category": "content",
+    "subcategory": "content-split",
+    "file": "content/content-split-01.json",
+    "element_count": 13,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Badge",
+      "List"
+    ],
+    "name": "Content Split",
+    "description": "Content Split block for content",
+    "tags": [
+      "content",
+      "content",
+      "split"
+    ],
+    "screenshot": "content/content-split-01.png"
+  },
+  {
+    "id": "content-video-embed-01",
+    "category": "content",
+    "subcategory": "content-video-embed",
+    "file": "content/content-video-embed-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "AspectRatio",
+      "Surface",
+      "Image",
+      "List",
+      "Separator"
+    ],
+    "name": "Content Video Embed",
+    "description": "Content Video Embed block for content",
+    "tags": [
+      "content",
+      "content",
+      "video",
+      "embed"
+    ],
+    "screenshot": "content/content-video-embed-01.png"
+  },
+  {
+    "id": "content-with-image-01",
+    "category": "content",
+    "subcategory": "content-with-image",
+    "file": "content/content-with-image-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Image",
+      "Badge",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Content With Image",
+    "description": "Content With Image block for content",
+    "tags": [
+      "content",
+      "content",
+      "with",
+      "image"
+    ],
+    "screenshot": "content/content-with-image-01.png"
+  },
+  {
+    "id": "cta-banner-01",
+    "category": "cta",
+    "subcategory": "cta-banner",
+    "file": "cta/cta-banner-01.json",
+    "element_count": 8,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Text",
+      "Button"
+    ],
+    "name": "Cta Banner",
+    "description": "Cta Banner block for cta",
+    "tags": [
+      "cta",
+      "cta",
+      "banner"
+    ],
+    "screenshot": "cta/cta-banner-01.png"
+  },
+  {
+    "id": "cta-download-01",
+    "category": "cta",
+    "subcategory": "cta-download",
+    "file": "cta/cta-download-01.json",
+    "element_count": 17,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Button",
+      "Image",
+      "Chip"
+    ],
+    "name": "Cta Download",
+    "description": "Cta Download block for cta",
+    "tags": [
+      "cta",
+      "cta",
+      "download"
+    ],
+    "screenshot": "cta/cta-download-01.png"
+  },
+  {
+    "id": "cta-floating-01",
+    "category": "cta",
+    "subcategory": "cta-floating",
+    "file": "cta/cta-floating-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Badge",
+      "Text",
+      "Button"
+    ],
+    "name": "Cta Floating",
+    "description": "Cta Floating block for cta",
+    "tags": [
+      "cta",
+      "cta",
+      "floating"
+    ],
+    "screenshot": "cta/cta-floating-01.png"
+  },
+  {
+    "id": "cta-simple-01",
+    "category": "cta",
+    "subcategory": "cta-simple",
+    "file": "cta/cta-simple-01.json",
+    "element_count": 6,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Cta Simple",
+    "description": "Cta Simple block for cta",
+    "tags": [
+      "cta",
+      "cta",
+      "simple"
+    ],
+    "screenshot": "cta/cta-simple-01.png"
+  },
+  {
+    "id": "cta-split-01",
+    "category": "cta",
+    "subcategory": "cta-split",
+    "file": "cta/cta-split-01.json",
+    "element_count": 21,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Surface",
+      "Field",
+      "email",
+      "Input",
+      "Button"
+    ],
+    "name": "Cta Split",
+    "description": "Cta Split block for cta",
+    "tags": [
+      "cta",
+      "cta",
+      "split"
+    ],
+    "screenshot": "cta/cta-split-01.png"
+  },
+  {
+    "id": "cta-with-form-01",
+    "category": "cta",
+    "subcategory": "cta-with-form",
+    "file": "cta/cta-with-form-01.json",
+    "element_count": 15,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Field",
+      "email",
+      "Button",
+      "AvatarGroup",
+      "Avatar"
+    ],
+    "name": "Cta With Form",
+    "description": "Cta With Form block for cta",
+    "tags": [
+      "cta",
+      "cta",
+      "with",
+      "form"
+    ],
+    "screenshot": "cta/cta-with-form-01.png"
+  },
+  {
+    "id": "activity-feed-01",
+    "category": "dashboard",
+    "subcategory": "activity-feed",
+    "file": "dashboard/activity-feed-01.json",
+    "element_count": 5,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "List"
+    ],
+    "name": "Activity Feed",
+    "description": "Activity Feed block for dashboard",
+    "tags": [
+      "dashboard",
+      "activity",
+      "feed"
+    ],
+    "screenshot": "dashboard/activity-feed-01.png"
   },
   {
     "id": "chart-panel-01",
@@ -55,6 +1058,46 @@
     "screenshot": "dashboard/chart-panel-01.png"
   },
   {
+    "id": "chart-section-01",
+    "category": "dashboard",
+    "subcategory": "chart-section",
+    "file": "dashboard/chart-section-01.json",
+    "element_count": 3,
+    "components_used": [
+      "Grid",
+      "ChartCard"
+    ],
+    "name": "Chart Section",
+    "description": "Chart Section block for dashboard",
+    "tags": [
+      "dashboard",
+      "chart",
+      "section"
+    ],
+    "screenshot": "dashboard/chart-section-01.png"
+  },
+  {
+    "id": "dashboard-header-01",
+    "category": "dashboard",
+    "subcategory": "dashboard-header",
+    "file": "dashboard/dashboard-header-01.json",
+    "element_count": 8,
+    "components_used": [
+      "Stack",
+      "Text",
+      "DatePicker",
+      "Button"
+    ],
+    "name": "Dashboard Header",
+    "description": "Dashboard Header block for dashboard",
+    "tags": [
+      "dashboard",
+      "dashboard",
+      "header"
+    ],
+    "screenshot": "dashboard/dashboard-header-01.png"
+  },
+  {
     "id": "data-table-01",
     "name": "Data Table Section",
     "category": "dashboard",
@@ -66,13 +1109,15 @@
       "pagination"
     ],
     "file": "dashboard/data-table-01.json",
-    "element_count": 12,
+    "element_count": 11,
     "components_used": [
       "Stack",
-      "Text",
-      "Button",
       "Search",
-      "DataTable"
+      "Select",
+      "ButtonGroup",
+      "Button",
+      "DataTable",
+      "Pagination"
     ],
     "screenshot": "dashboard/data-table-01.png"
   },
@@ -101,6 +1146,50 @@
       "header"
     ],
     "screenshot": "dashboard/header-01.png"
+  },
+  {
+    "id": "kanban-board-01",
+    "category": "dashboard",
+    "subcategory": "kanban-board",
+    "file": "dashboard/kanban-board-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "Badge",
+      "Card"
+    ],
+    "name": "Kanban Board",
+    "description": "Kanban Board block for dashboard",
+    "tags": [
+      "dashboard",
+      "kanban",
+      "board"
+    ],
+    "screenshot": "dashboard/kanban-board-01.png"
+  },
+  {
+    "id": "notification-panel-01",
+    "category": "dashboard",
+    "subcategory": "notification-panel",
+    "file": "dashboard/notification-panel-01.json",
+    "element_count": 8,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Badge",
+      "Button",
+      "List"
+    ],
+    "name": "Notification Panel",
+    "description": "Notification Panel block for dashboard",
+    "tags": [
+      "dashboard",
+      "notification",
+      "panel"
+    ],
+    "screenshot": "dashboard/notification-panel-01.png"
   },
   {
     "id": "sidebar-layout-01",
@@ -133,6 +1222,26 @@
     "screenshot": "dashboard/sidebar-layout-01.png"
   },
   {
+    "id": "stats-cards-row-01",
+    "category": "dashboard",
+    "subcategory": "stats-cards-row",
+    "file": "dashboard/stats-cards-row-01.json",
+    "element_count": 5,
+    "components_used": [
+      "Grid",
+      "StatCard"
+    ],
+    "name": "Stats Cards Row",
+    "description": "Stats Cards Row block for dashboard",
+    "tags": [
+      "dashboard",
+      "stats",
+      "cards",
+      "row"
+    ],
+    "screenshot": "dashboard/stats-cards-row-01.png"
+  },
+  {
     "id": "stats-row-01",
     "name": "Stats Row",
     "category": "dashboard",
@@ -150,6 +1259,47 @@
       "StatCard"
     ],
     "screenshot": "dashboard/stats-row-01.png"
+  },
+  {
+    "id": "stats-row-01",
+    "name": "Stats Row",
+    "category": "dashboard",
+    "description": "4-column KPI stat cards row (Revenue, Users, Conversion, Avg Order) with trends",
+    "tags": [
+      "dashboard",
+      "stats",
+      "kpi",
+      "metrics"
+    ],
+    "file": "stats/stats-row-01.json",
+    "element_count": 16,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Separator"
+    ],
+    "screenshot": "dashboard/stats-row-01.png"
+  },
+  {
+    "id": "empty-state-01",
+    "name": "Empty State",
+    "category": "data-display",
+    "description": "Centered empty state with icon, title, message, and action button",
+    "tags": [
+      "empty",
+      "placeholder",
+      "no-data",
+      "cta"
+    ],
+    "file": "dashboard/empty-state-01.json",
+    "element_count": 6,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "EmptyState",
+      "Button"
+    ],
+    "screenshot": "data-display/empty-state-01.png"
   },
   {
     "id": "empty-state-01",
@@ -218,6 +1368,58 @@
     "screenshot": "data-display/profile-01.png"
   },
   {
+    "id": "category-grid-01",
+    "category": "ecommerce",
+    "subcategory": "category-grid",
+    "file": "ecommerce/category-grid-01.json",
+    "element_count": 29,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card",
+      "Image",
+      "Badge"
+    ],
+    "name": "Category Grid",
+    "description": "Category Grid block for ecommerce",
+    "tags": [
+      "ecommerce",
+      "category",
+      "grid"
+    ],
+    "screenshot": "ecommerce/category-grid-01.png"
+  },
+  {
+    "id": "checkout-form-01",
+    "category": "ecommerce",
+    "subcategory": "checkout-form",
+    "file": "ecommerce/checkout-form-01.json",
+    "element_count": 44,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Stepper",
+      "Field",
+      "Input",
+      "email",
+      "Select",
+      "Separator",
+      "Checkbox",
+      "Surface",
+      "List",
+      "Button"
+    ],
+    "name": "Checkout Form",
+    "description": "Checkout Form block for ecommerce",
+    "tags": [
+      "ecommerce",
+      "checkout",
+      "form"
+    ],
+    "screenshot": "ecommerce/checkout-form-01.png"
+  },
+  {
     "id": "order-summary-01",
     "name": "Order Summary",
     "category": "ecommerce",
@@ -230,16 +1432,100 @@
       "checkout"
     ],
     "file": "ecommerce/order-summary-01.json",
-    "element_count": 21,
+    "element_count": 51,
     "components_used": [
       "Stack",
+      "Badge",
       "Text",
-      "List",
+      "Grid",
+      "Surface",
       "Separator",
-      "Input",
+      "DataTable",
       "Button"
     ],
     "screenshot": "ecommerce/order-summary-01.png"
+  },
+  {
+    "id": "product-card-01",
+    "category": "ecommerce",
+    "subcategory": "product-card",
+    "file": "ecommerce/product-card-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Card",
+      "Stack",
+      "AspectRatio",
+      "Image",
+      "Badge",
+      "Text",
+      "ToggleGroup",
+      "Toggle",
+      "Button"
+    ],
+    "name": "Product Card",
+    "description": "Product Card block for ecommerce",
+    "tags": [
+      "ecommerce",
+      "product",
+      "card"
+    ],
+    "screenshot": "ecommerce/product-card-01.png"
+  },
+  {
+    "id": "product-carousel-01",
+    "category": "ecommerce",
+    "subcategory": "product-carousel",
+    "file": "ecommerce/product-carousel-01.json",
+    "element_count": 30,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button",
+      "Carousel",
+      "Card",
+      "Image",
+      "Badge",
+      "Pagination"
+    ],
+    "name": "Product Carousel",
+    "description": "Product Carousel block for ecommerce",
+    "tags": [
+      "ecommerce",
+      "product",
+      "carousel"
+    ],
+    "screenshot": "ecommerce/product-carousel-01.png"
+  },
+  {
+    "id": "product-detail-01",
+    "category": "ecommerce",
+    "subcategory": "product-detail",
+    "file": "ecommerce/product-detail-01.json",
+    "element_count": 35,
+    "components_used": [
+      "Stack",
+      "AspectRatio",
+      "Image",
+      "Breadcrumbs",
+      "Text",
+      "Button",
+      "Badge",
+      "Separator",
+      "ToggleGroup",
+      "Toggle",
+      "Select",
+      "Alert",
+      "List"
+    ],
+    "name": "Product Detail",
+    "description": "Product Detail block for ecommerce",
+    "tags": [
+      "ecommerce",
+      "product",
+      "detail"
+    ],
+    "screenshot": "ecommerce/product-detail-01.png"
   },
   {
     "id": "product-grid-01",
@@ -254,17 +1540,640 @@
       "shopping"
     ],
     "file": "ecommerce/product-grid-01.json",
-    "element_count": 27,
+    "element_count": 22,
     "components_used": [
       "Stack",
       "Text",
+      "Select",
       "Chip",
       "Grid",
       "Card",
-      "Badge",
       "Button"
     ],
     "screenshot": "ecommerce/product-grid-01.png"
+  },
+  {
+    "id": "shopping-cart-01",
+    "category": "ecommerce",
+    "subcategory": "shopping-cart",
+    "file": "ecommerce/shopping-cart-01.json",
+    "element_count": 56,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Badge",
+      "Image",
+      "Select",
+      "Button",
+      "Separator",
+      "Surface",
+      "Input"
+    ],
+    "name": "Shopping Cart",
+    "description": "Shopping Cart block for ecommerce",
+    "tags": [
+      "ecommerce",
+      "shopping",
+      "cart"
+    ],
+    "screenshot": "ecommerce/shopping-cart-01.png"
+  },
+  {
+    "id": "wishlist-01",
+    "category": "ecommerce",
+    "subcategory": "wishlist",
+    "file": "ecommerce/wishlist-01.json",
+    "element_count": 39,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Badge",
+      "Button",
+      "Grid",
+      "Card",
+      "Image",
+      "Alert"
+    ],
+    "name": "Wishlist",
+    "description": "Wishlist block for ecommerce",
+    "tags": [
+      "ecommerce",
+      "wishlist"
+    ],
+    "screenshot": "ecommerce/wishlist-01.png"
+  },
+  {
+    "id": "404-page-01",
+    "category": "error-pages",
+    "subcategory": "404-page",
+    "file": "error-pages/404-page-01.json",
+    "element_count": 16,
+    "components_used": [
+      "Stack",
+      "Image",
+      "Text",
+      "Search",
+      "Button",
+      "ButtonGroup"
+    ],
+    "name": "404 Page",
+    "description": "404 Page block for error-pages",
+    "tags": [
+      "error-pages",
+      "404",
+      "page"
+    ],
+    "screenshot": "error-pages/404-page-01.png"
+  },
+  {
+    "id": "500-page-01",
+    "category": "error-pages",
+    "subcategory": "500-page",
+    "file": "error-pages/500-page-01.json",
+    "element_count": 15,
+    "components_used": [
+      "Stack",
+      "Image",
+      "Text",
+      "Surface",
+      "ButtonGroup",
+      "Button",
+      "Alert"
+    ],
+    "name": "500 Page",
+    "description": "500 Page block for error-pages",
+    "tags": [
+      "error-pages",
+      "500",
+      "page"
+    ],
+    "screenshot": "error-pages/500-page-01.png"
+  },
+  {
+    "id": "coming-soon-01",
+    "category": "error-pages",
+    "subcategory": "coming-soon",
+    "file": "error-pages/coming-soon-01.json",
+    "element_count": 27,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Progress",
+      "Chip",
+      "Surface",
+      "email",
+      "Button",
+      "Grid",
+      "Card"
+    ],
+    "name": "Coming Soon",
+    "description": "Coming Soon block for error-pages",
+    "tags": [
+      "error-pages",
+      "coming",
+      "soon"
+    ],
+    "screenshot": "error-pages/coming-soon-01.png"
+  },
+  {
+    "id": "maintenance-page-01",
+    "category": "error-pages",
+    "subcategory": "maintenance-page",
+    "file": "error-pages/maintenance-page-01.json",
+    "element_count": 26,
+    "components_used": [
+      "Stack",
+      "Image",
+      "Text",
+      "Separator",
+      "Progress",
+      "email",
+      "Button"
+    ],
+    "name": "Maintenance Page",
+    "description": "Maintenance Page block for error-pages",
+    "tags": [
+      "error-pages",
+      "maintenance",
+      "page"
+    ],
+    "screenshot": "error-pages/maintenance-page-01.png"
+  },
+  {
+    "id": "event-countdown-01",
+    "category": "event-schedule",
+    "subcategory": "event-countdown",
+    "file": "event-schedule/event-countdown-01.json",
+    "element_count": 28,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Badge",
+      "Text",
+      "Chip",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Event Countdown",
+    "description": "Event Countdown block for event-schedule",
+    "tags": [
+      "event-schedule",
+      "event",
+      "countdown"
+    ],
+    "screenshot": "event-schedule/event-countdown-01.png"
+  },
+  {
+    "id": "schedule-tabs-01",
+    "category": "event-schedule",
+    "subcategory": "schedule-tabs",
+    "file": "event-schedule/schedule-tabs-01.json",
+    "element_count": 7,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Tabs",
+      "List"
+    ],
+    "name": "Schedule Tabs",
+    "description": "Schedule Tabs block for event-schedule",
+    "tags": [
+      "event-schedule",
+      "schedule",
+      "tabs"
+    ],
+    "screenshot": "event-schedule/schedule-tabs-01.png"
+  },
+  {
+    "id": "speaker-grid-01",
+    "category": "event-schedule",
+    "subcategory": "speaker-grid",
+    "file": "event-schedule/speaker-grid-01.json",
+    "element_count": 41,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card",
+      "Image",
+      "Chip"
+    ],
+    "name": "Speaker Grid",
+    "description": "Speaker Grid block for event-schedule",
+    "tags": [
+      "event-schedule",
+      "speaker",
+      "grid"
+    ],
+    "screenshot": "event-schedule/speaker-grid-01.png"
+  },
+  {
+    "id": "faq-accordion-01",
+    "category": "faq",
+    "subcategory": "faq-accordion",
+    "file": "faq/faq-accordion-01.json",
+    "element_count": 4,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Accordion"
+    ],
+    "name": "Faq Accordion",
+    "description": "Faq Accordion block for faq",
+    "tags": [
+      "faq",
+      "faq",
+      "accordion"
+    ],
+    "screenshot": "faq/faq-accordion-01.png"
+  },
+  {
+    "id": "faq-grid-01",
+    "category": "faq",
+    "subcategory": "faq-grid",
+    "file": "faq/faq-grid-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card"
+    ],
+    "name": "Faq Grid",
+    "description": "Faq Grid block for faq",
+    "tags": [
+      "faq",
+      "faq",
+      "grid"
+    ],
+    "screenshot": "faq/faq-grid-01.png"
+  },
+  {
+    "id": "faq-simple-01",
+    "category": "faq",
+    "subcategory": "faq-simple",
+    "file": "faq/faq-simple-01.json",
+    "element_count": 22,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Separator"
+    ],
+    "name": "Faq Simple",
+    "description": "Faq Simple block for faq",
+    "tags": [
+      "faq",
+      "faq",
+      "simple"
+    ],
+    "screenshot": "faq/faq-simple-01.png"
+  },
+  {
+    "id": "faq-with-sidebar-01",
+    "category": "faq",
+    "subcategory": "faq-with-sidebar",
+    "file": "faq/faq-with-sidebar-01.json",
+    "element_count": 13,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "NavMenu",
+      "Accordion",
+      "Surface",
+      "Button"
+    ],
+    "name": "Faq With Sidebar",
+    "description": "Faq With Sidebar block for faq",
+    "tags": [
+      "faq",
+      "faq",
+      "with",
+      "sidebar"
+    ],
+    "screenshot": "faq/faq-with-sidebar-01.png"
+  },
+  {
+    "id": "feature-alternating-01",
+    "category": "features",
+    "subcategory": "feature-alternating",
+    "file": "features/feature-alternating-01.json",
+    "element_count": 25,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Image",
+      "Chip",
+      "Button"
+    ],
+    "name": "Feature Alternating",
+    "description": "Feature Alternating block for features",
+    "tags": [
+      "features",
+      "feature",
+      "alternating"
+    ],
+    "screenshot": "features/feature-alternating-01.png"
+  },
+  {
+    "id": "feature-bento-01",
+    "category": "features",
+    "subcategory": "feature-bento",
+    "file": "features/feature-bento-01.json",
+    "element_count": 33,
+    "components_used": [
+      "Stack",
+      "Chip",
+      "Text",
+      "Grid",
+      "Surface",
+      "Image"
+    ],
+    "name": "Feature Bento",
+    "description": "Feature Bento block for features",
+    "tags": [
+      "features",
+      "feature",
+      "bento"
+    ],
+    "screenshot": "features/feature-bento-01.png"
+  },
+  {
+    "id": "feature-centered-01",
+    "category": "features",
+    "subcategory": "feature-centered",
+    "file": "features/feature-centered-01.json",
+    "element_count": 17,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Image",
+      "Separator"
+    ],
+    "name": "Feature Centered",
+    "description": "Feature Centered block for features",
+    "tags": [
+      "features",
+      "feature",
+      "centered"
+    ],
+    "screenshot": "features/feature-centered-01.png"
+  },
+  {
+    "id": "feature-comparison-01",
+    "category": "features",
+    "subcategory": "feature-comparison",
+    "file": "features/feature-comparison-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Surface",
+      "Separator",
+      "List",
+      "Badge"
+    ],
+    "name": "Feature Comparison",
+    "description": "Feature Comparison block for features",
+    "tags": [
+      "features",
+      "feature",
+      "comparison"
+    ],
+    "screenshot": "features/feature-comparison-01.png"
+  },
+  {
+    "id": "feature-grid-01",
+    "category": "features",
+    "subcategory": "feature-grid",
+    "file": "features/feature-grid-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Grid",
+      "Card"
+    ],
+    "name": "Feature Grid",
+    "description": "Feature Grid block for features",
+    "tags": [
+      "features",
+      "feature",
+      "grid"
+    ],
+    "screenshot": "features/feature-grid-01.png"
+  },
+  {
+    "id": "feature-icon-grid-01",
+    "category": "features",
+    "subcategory": "feature-icon-grid",
+    "file": "features/feature-icon-grid-01.json",
+    "element_count": 41,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid"
+    ],
+    "name": "Feature Icon Grid",
+    "description": "Feature Icon Grid block for features",
+    "tags": [
+      "features",
+      "feature",
+      "icon",
+      "grid"
+    ],
+    "screenshot": "features/feature-icon-grid-01.png"
+  },
+  {
+    "id": "feature-list-01",
+    "category": "features",
+    "subcategory": "feature-list",
+    "file": "features/feature-list-01.json",
+    "element_count": 34,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Separator"
+    ],
+    "name": "Feature List",
+    "description": "Feature List block for features",
+    "tags": [
+      "features",
+      "feature",
+      "list"
+    ],
+    "screenshot": "features/feature-list-01.png"
+  },
+  {
+    "id": "feature-tabs-01",
+    "category": "features",
+    "subcategory": "feature-tabs",
+    "file": "features/feature-tabs-01.json",
+    "element_count": 29,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Tabs",
+      "List",
+      "Image"
+    ],
+    "name": "Feature Tabs",
+    "description": "Feature Tabs block for features",
+    "tags": [
+      "features",
+      "feature",
+      "tabs"
+    ],
+    "screenshot": "features/feature-tabs-01.png"
+  },
+  {
+    "id": "feature-with-code-01",
+    "category": "features",
+    "subcategory": "feature-with-code",
+    "file": "features/feature-with-code-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Separator",
+      "Surface",
+      "CustomHTML",
+      "Button"
+    ],
+    "name": "Feature With Code",
+    "description": "Feature With Code block for features",
+    "tags": [
+      "features",
+      "feature",
+      "with",
+      "code"
+    ],
+    "screenshot": "features/feature-with-code-01.png"
+  },
+  {
+    "id": "footer-columns-01",
+    "category": "footer",
+    "subcategory": "footer-columns",
+    "file": "footer/footer-columns-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Stack",
+      "Separator",
+      "Grid",
+      "Text",
+      "NavMenu",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Footer Columns",
+    "description": "Footer Columns block for footer",
+    "tags": [
+      "footer",
+      "footer",
+      "columns"
+    ],
+    "screenshot": "footer/footer-columns-01.png"
+  },
+  {
+    "id": "footer-mega-01",
+    "category": "footer",
+    "subcategory": "footer-mega",
+    "file": "footer/footer-mega-01.json",
+    "element_count": 33,
+    "components_used": [
+      "Stack",
+      "Separator",
+      "Grid",
+      "Text",
+      "NavMenu",
+      "Surface",
+      "Input",
+      "Button",
+      "ButtonGroup"
+    ],
+    "name": "Footer Mega",
+    "description": "Footer Mega block for footer",
+    "tags": [
+      "footer",
+      "footer",
+      "mega"
+    ],
+    "screenshot": "footer/footer-mega-01.png"
+  },
+  {
+    "id": "footer-minimal-01",
+    "category": "footer",
+    "subcategory": "footer-minimal",
+    "file": "footer/footer-minimal-01.json",
+    "element_count": 5,
+    "components_used": [
+      "Stack",
+      "Separator",
+      "Text",
+      "NavMenu"
+    ],
+    "name": "Footer Minimal",
+    "description": "Footer Minimal block for footer",
+    "tags": [
+      "footer",
+      "footer",
+      "minimal"
+    ],
+    "screenshot": "footer/footer-minimal-01.png"
+  },
+  {
+    "id": "footer-simple-01",
+    "category": "footer",
+    "subcategory": "footer-simple",
+    "file": "footer/footer-simple-01.json",
+    "element_count": 9,
+    "components_used": [
+      "Stack",
+      "Separator",
+      "Text",
+      "NavMenu",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Footer Simple",
+    "description": "Footer Simple block for footer",
+    "tags": [
+      "footer",
+      "footer",
+      "simple"
+    ],
+    "screenshot": "footer/footer-simple-01.png"
+  },
+  {
+    "id": "footer-with-cta-01",
+    "category": "footer",
+    "subcategory": "footer-with-cta",
+    "file": "footer/footer-with-cta-01.json",
+    "element_count": 30,
+    "components_used": [
+      "Stack",
+      "Surface",
+      "Text",
+      "ButtonGroup",
+      "Button",
+      "Separator",
+      "Grid",
+      "NavMenu"
+    ],
+    "name": "Footer With Cta",
+    "description": "Footer With Cta block for footer",
+    "tags": [
+      "footer",
+      "footer",
+      "with",
+      "cta"
+    ],
+    "screenshot": "footer/footer-with-cta-01.png"
   },
   {
     "id": "checkout-01",
@@ -314,6 +2223,134 @@
     "screenshot": "forms/contact-01.png"
   },
   {
+    "id": "file-upload-01",
+    "category": "forms",
+    "subcategory": "file-upload",
+    "file": "forms/file-upload-01.json",
+    "element_count": 29,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Surface",
+      "Button",
+      "Badge",
+      "Progress"
+    ],
+    "name": "File Upload",
+    "description": "File Upload block for forms",
+    "tags": [
+      "forms",
+      "file",
+      "upload"
+    ],
+    "screenshot": "forms/file-upload-01.png"
+  },
+  {
+    "id": "form-inline-01",
+    "category": "forms",
+    "subcategory": "form-inline",
+    "file": "forms/form-inline-01.json",
+    "element_count": 11,
+    "components_used": [
+      "Stack",
+      "Field",
+      "Search",
+      "Select",
+      "Button"
+    ],
+    "name": "Form Inline",
+    "description": "Form Inline block for forms",
+    "tags": [
+      "forms",
+      "form",
+      "inline"
+    ],
+    "screenshot": "forms/form-inline-01.png"
+  },
+  {
+    "id": "form-multi-step-01",
+    "category": "forms",
+    "subcategory": "form-multi-step",
+    "file": "forms/form-multi-step-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Stack",
+      "Stepper",
+      "Surface",
+      "Text",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Button"
+    ],
+    "name": "Form Multi Step",
+    "description": "Form Multi Step block for forms",
+    "tags": [
+      "forms",
+      "form",
+      "multi",
+      "step"
+    ],
+    "screenshot": "forms/form-multi-step-01.png"
+  },
+  {
+    "id": "form-stacked-01",
+    "category": "forms",
+    "subcategory": "form-stacked",
+    "file": "forms/form-stacked-01.json",
+    "element_count": 33,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Field",
+      "Input",
+      "Separator",
+      "Select",
+      "Textarea",
+      "Button"
+    ],
+    "name": "Form Stacked",
+    "description": "Form Stacked block for forms",
+    "tags": [
+      "forms",
+      "form",
+      "stacked"
+    ],
+    "screenshot": "forms/form-stacked-01.png"
+  },
+  {
+    "id": "form-with-sidebar-01",
+    "category": "forms",
+    "subcategory": "form-with-sidebar",
+    "file": "forms/form-with-sidebar-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "Field",
+      "Input",
+      "Textarea",
+      "Select",
+      "RadioGroup",
+      "DatePicker",
+      "Button",
+      "Separator",
+      "List",
+      "Alert"
+    ],
+    "name": "Form With Sidebar",
+    "description": "Form With Sidebar block for forms",
+    "tags": [
+      "forms",
+      "form",
+      "with",
+      "sidebar"
+    ],
+    "screenshot": "forms/form-with-sidebar-01.png"
+  },
+  {
     "id": "login-01",
     "category": "forms",
     "subcategory": "login",
@@ -335,6 +2372,29 @@
       "login"
     ],
     "screenshot": "forms/login-01.png"
+  },
+  {
+    "id": "search-bar-01",
+    "category": "forms",
+    "subcategory": "search-bar",
+    "file": "forms/search-bar-01.json",
+    "element_count": 13,
+    "components_used": [
+      "Stack",
+      "Search",
+      "Button",
+      "Chip",
+      "Surface",
+      "List"
+    ],
+    "name": "Search Bar",
+    "description": "Search Bar block for forms",
+    "tags": [
+      "forms",
+      "search",
+      "bar"
+    ],
+    "screenshot": "forms/search-bar-01.png"
   },
   {
     "id": "settings-01",
@@ -361,6 +2421,30 @@
     "screenshot": "forms/settings-01.png"
   },
   {
+    "id": "settings-form-01",
+    "category": "forms",
+    "subcategory": "settings-form",
+    "file": "forms/settings-form-01.json",
+    "element_count": 24,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Switch",
+      "Select",
+      "Separator",
+      "ToggleGroup",
+      "Button"
+    ],
+    "name": "Settings Form",
+    "description": "Settings Form block for forms",
+    "tags": [
+      "forms",
+      "settings",
+      "form"
+    ],
+    "screenshot": "forms/settings-form-01.png"
+  },
+  {
     "id": "signup-01",
     "category": "forms",
     "subcategory": "signup",
@@ -382,6 +2466,335 @@
       "signup"
     ],
     "screenshot": "forms/signup-01.png"
+  },
+  {
+    "id": "hero-centered-01",
+    "category": "hero",
+    "subcategory": "hero-centered",
+    "file": "hero/hero-centered-01.json",
+    "element_count": 14,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Button",
+      "AvatarGroup",
+      "Avatar"
+    ],
+    "name": "Hero Centered",
+    "description": "Hero Centered block for hero",
+    "tags": [
+      "hero",
+      "hero",
+      "centered"
+    ],
+    "screenshot": "hero/hero-centered-01.png"
+  },
+  {
+    "id": "hero-fullscreen-01",
+    "category": "hero",
+    "subcategory": "hero-fullscreen",
+    "file": "hero/hero-fullscreen-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Avatar",
+      "Text",
+      "Button"
+    ],
+    "name": "Hero Fullscreen",
+    "description": "Hero Fullscreen block for hero",
+    "tags": [
+      "hero",
+      "hero",
+      "fullscreen"
+    ],
+    "screenshot": "hero/hero-fullscreen-01.png"
+  },
+  {
+    "id": "hero-minimal-01",
+    "category": "hero",
+    "subcategory": "hero-minimal",
+    "file": "hero/hero-minimal-01.json",
+    "element_count": 7,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Separator",
+      "Button"
+    ],
+    "name": "Hero Minimal",
+    "description": "Hero Minimal block for hero",
+    "tags": [
+      "hero",
+      "hero",
+      "minimal"
+    ],
+    "screenshot": "hero/hero-minimal-01.png"
+  },
+  {
+    "id": "hero-split-01",
+    "category": "hero",
+    "subcategory": "hero-split",
+    "file": "hero/hero-split-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Chip",
+      "Text",
+      "Badge",
+      "Button",
+      "Surface",
+      "Image"
+    ],
+    "name": "Hero Split",
+    "description": "Hero Split block for hero",
+    "tags": [
+      "hero",
+      "hero",
+      "split"
+    ],
+    "screenshot": "hero/hero-split-01.png"
+  },
+  {
+    "id": "hero-video-background-01",
+    "category": "hero",
+    "subcategory": "hero-video-background",
+    "file": "hero/hero-video-background-01.json",
+    "element_count": 9,
+    "components_used": [
+      "Stack",
+      "CustomHTML",
+      "Text",
+      "Button"
+    ],
+    "name": "Hero Video Background",
+    "description": "Hero Video Background block for hero",
+    "tags": [
+      "hero",
+      "hero",
+      "video",
+      "background"
+    ],
+    "screenshot": "hero/hero-video-background-01.png"
+  },
+  {
+    "id": "hero-with-app-screenshot-01",
+    "category": "hero",
+    "subcategory": "hero-with-app-screenshot",
+    "file": "hero/hero-with-app-screenshot-01.json",
+    "element_count": 16,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "Surface",
+      "Image"
+    ],
+    "name": "Hero With App Screenshot",
+    "description": "Hero With App Screenshot block for hero",
+    "tags": [
+      "hero",
+      "hero",
+      "with",
+      "app",
+      "screenshot"
+    ],
+    "screenshot": "hero/hero-with-app-screenshot-01.png"
+  },
+  {
+    "id": "hero-with-form-01",
+    "category": "hero",
+    "subcategory": "hero-with-form",
+    "file": "hero/hero-with-form-01.json",
+    "element_count": 13,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "List",
+      "Card",
+      "Field",
+      "email",
+      "Select",
+      "Button"
+    ],
+    "name": "Hero With Form",
+    "description": "Hero With Form block for hero",
+    "tags": [
+      "hero",
+      "hero",
+      "with",
+      "form"
+    ],
+    "screenshot": "hero/hero-with-form-01.png"
+  },
+  {
+    "id": "hero-with-stats-01",
+    "category": "hero",
+    "subcategory": "hero-with-stats",
+    "file": "hero/hero-with-stats-01.json",
+    "element_count": 13,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Button",
+      "Grid",
+      "StatCard"
+    ],
+    "name": "Hero With Stats",
+    "description": "Hero With Stats block for hero",
+    "tags": [
+      "hero",
+      "hero",
+      "with",
+      "stats"
+    ],
+    "screenshot": "hero/hero-with-stats-01.png"
+  },
+  {
+    "id": "process-alternating-01",
+    "category": "how-it-works",
+    "subcategory": "process-alternating",
+    "file": "how-it-works/process-alternating-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Chip",
+      "Image",
+      "Button"
+    ],
+    "name": "Process Alternating",
+    "description": "Process Alternating block for how-it-works",
+    "tags": [
+      "how-it-works",
+      "process",
+      "alternating"
+    ],
+    "screenshot": "how-it-works/process-alternating-01.png"
+  },
+  {
+    "id": "steps-horizontal-01",
+    "category": "how-it-works",
+    "subcategory": "steps-horizontal",
+    "file": "how-it-works/steps-horizontal-01.json",
+    "element_count": 21,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Stepper",
+      "Grid",
+      "Surface",
+      "Avatar"
+    ],
+    "name": "Steps Horizontal",
+    "description": "Steps Horizontal block for how-it-works",
+    "tags": [
+      "how-it-works",
+      "steps",
+      "horizontal"
+    ],
+    "screenshot": "how-it-works/steps-horizontal-01.png"
+  },
+  {
+    "id": "steps-vertical-01",
+    "category": "how-it-works",
+    "subcategory": "steps-vertical",
+    "file": "how-it-works/steps-vertical-01.json",
+    "element_count": 29,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Avatar",
+      "Chip",
+      "Button"
+    ],
+    "name": "Steps Vertical",
+    "description": "Steps Vertical block for how-it-works",
+    "tags": [
+      "how-it-works",
+      "steps",
+      "vertical"
+    ],
+    "screenshot": "how-it-works/steps-vertical-01.png"
+  },
+  {
+    "id": "api-reference-01",
+    "category": "integrations",
+    "subcategory": "api-reference",
+    "file": "integrations/api-reference-01.json",
+    "element_count": 37,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Surface",
+      "Badge",
+      "Chip",
+      "Separator",
+      "Button"
+    ],
+    "name": "Api Reference",
+    "description": "Api Reference block for integrations",
+    "tags": [
+      "integrations",
+      "api",
+      "reference"
+    ],
+    "screenshot": "integrations/api-reference-01.png"
+  },
+  {
+    "id": "integration-grid-01",
+    "category": "integrations",
+    "subcategory": "integration-grid",
+    "file": "integrations/integration-grid-01.json",
+    "element_count": 55,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Surface",
+      "Avatar",
+      "Button"
+    ],
+    "name": "Integration Grid",
+    "description": "Integration Grid block for integrations",
+    "tags": [
+      "integrations",
+      "integration",
+      "grid"
+    ],
+    "screenshot": "integrations/integration-grid-01.png"
+  },
+  {
+    "id": "integration-showcase-01",
+    "category": "integrations",
+    "subcategory": "integration-showcase",
+    "file": "integrations/integration-showcase-01.json",
+    "element_count": 24,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Grid",
+      "Surface",
+      "Image",
+      "List",
+      "Separator",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Integration Showcase",
+    "description": "Integration Showcase block for integrations",
+    "tags": [
+      "integrations",
+      "integration",
+      "showcase"
+    ],
+    "screenshot": "integrations/integration-showcase-01.png"
   },
   {
     "id": "features-grid-01",
@@ -497,6 +2910,330 @@
     "screenshot": "landing/testimonials-01.png"
   },
   {
+    "id": "logo-cloud-scrolling-01",
+    "category": "logo-bar",
+    "subcategory": "logo-cloud-scrolling",
+    "file": "logo-bar/logo-cloud-scrolling-01.json",
+    "element_count": 16,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ScrollArea"
+    ],
+    "name": "Logo Cloud Scrolling",
+    "description": "Logo Cloud Scrolling block for logo-bar",
+    "tags": [
+      "logo-bar",
+      "logo",
+      "cloud",
+      "scrolling"
+    ],
+    "screenshot": "logo-bar/logo-cloud-scrolling-01.png"
+  },
+  {
+    "id": "logo-cloud-simple-01",
+    "category": "logo-bar",
+    "subcategory": "logo-cloud-simple",
+    "file": "logo-bar/logo-cloud-simple-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Surface"
+    ],
+    "name": "Logo Cloud Simple",
+    "description": "Logo Cloud Simple block for logo-bar",
+    "tags": [
+      "logo-bar",
+      "logo",
+      "cloud",
+      "simple"
+    ],
+    "screenshot": "logo-bar/logo-cloud-simple-01.png"
+  },
+  {
+    "id": "logo-cloud-with-heading-01",
+    "category": "logo-bar",
+    "subcategory": "logo-cloud-with-heading",
+    "file": "logo-bar/logo-cloud-with-heading-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Separator",
+      "Grid",
+      "Surface"
+    ],
+    "name": "Logo Cloud With Heading",
+    "description": "Logo Cloud With Heading block for logo-bar",
+    "tags": [
+      "logo-bar",
+      "logo",
+      "cloud",
+      "with",
+      "heading"
+    ],
+    "screenshot": "logo-bar/logo-cloud-with-heading-01.png"
+  },
+  {
+    "id": "gallery-carousel-01",
+    "category": "media",
+    "subcategory": "gallery-carousel",
+    "file": "media/gallery-carousel-01.json",
+    "element_count": 29,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Carousel",
+      "AspectRatio",
+      "Image"
+    ],
+    "name": "Gallery Carousel",
+    "description": "Gallery Carousel block for media",
+    "tags": [
+      "media",
+      "gallery",
+      "carousel"
+    ],
+    "screenshot": "media/gallery-carousel-01.png"
+  },
+  {
+    "id": "gallery-grid-01",
+    "category": "media",
+    "subcategory": "gallery-grid",
+    "file": "media/gallery-grid-01.json",
+    "element_count": 17,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "AspectRatio",
+      "Image"
+    ],
+    "name": "Gallery Grid",
+    "description": "Gallery Grid block for media",
+    "tags": [
+      "media",
+      "gallery",
+      "grid"
+    ],
+    "screenshot": "media/gallery-grid-01.png"
+  },
+  {
+    "id": "media-with-text-01",
+    "category": "media",
+    "subcategory": "media-with-text",
+    "file": "media/media-with-text-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Grid",
+      "Surface",
+      "AspectRatio",
+      "Image",
+      "Stack",
+      "Badge",
+      "Text",
+      "Separator",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Media With Text",
+    "description": "Media With Text block for media",
+    "tags": [
+      "media",
+      "media",
+      "with",
+      "text"
+    ],
+    "screenshot": "media/media-with-text-01.png"
+  },
+  {
+    "id": "video-section-01",
+    "category": "media",
+    "subcategory": "video-section",
+    "file": "media/video-section-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Surface",
+      "AspectRatio",
+      "Image",
+      "Button",
+      "Chip"
+    ],
+    "name": "Video Section",
+    "description": "Video Section block for media",
+    "tags": [
+      "media",
+      "video",
+      "section"
+    ],
+    "screenshot": "media/video-section-01.png"
+  },
+  {
+    "id": "back-to-top-01",
+    "category": "misc",
+    "subcategory": "back-to-top",
+    "file": "misc/back-to-top-01.json",
+    "element_count": 2,
+    "components_used": [
+      "Stack",
+      "Button"
+    ],
+    "name": "Back To Top",
+    "description": "Back To Top block for misc",
+    "tags": [
+      "misc",
+      "back",
+      "to",
+      "top"
+    ],
+    "screenshot": "misc/back-to-top-01.png"
+  },
+  {
+    "id": "divider-01",
+    "category": "misc",
+    "subcategory": "divider",
+    "file": "misc/divider-01.json",
+    "element_count": 4,
+    "components_used": [
+      "Stack",
+      "Separator",
+      "Text"
+    ],
+    "name": "Divider",
+    "description": "Divider block for misc",
+    "tags": [
+      "misc",
+      "divider"
+    ],
+    "screenshot": "misc/divider-01.png"
+  },
+  {
+    "id": "language-switcher-01",
+    "category": "misc",
+    "subcategory": "language-switcher",
+    "file": "misc/language-switcher-01.json",
+    "element_count": 3,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Select"
+    ],
+    "name": "Language Switcher",
+    "description": "Language Switcher block for misc",
+    "tags": [
+      "misc",
+      "language",
+      "switcher"
+    ],
+    "screenshot": "misc/language-switcher-01.png"
+  },
+  {
+    "id": "scroll-indicator-01",
+    "category": "misc",
+    "subcategory": "scroll-indicator",
+    "file": "misc/scroll-indicator-01.json",
+    "element_count": 2,
+    "components_used": [
+      "Stack",
+      "Progress"
+    ],
+    "name": "Scroll Indicator",
+    "description": "Scroll Indicator block for misc",
+    "tags": [
+      "misc",
+      "scroll",
+      "indicator"
+    ],
+    "screenshot": "misc/scroll-indicator-01.png"
+  },
+  {
+    "id": "skip-link-01",
+    "category": "misc",
+    "subcategory": "skip-link",
+    "file": "misc/skip-link-01.json",
+    "element_count": 2,
+    "components_used": [
+      "Stack",
+      "Button"
+    ],
+    "name": "Skip Link",
+    "description": "Skip Link block for misc",
+    "tags": [
+      "misc",
+      "skip",
+      "link"
+    ],
+    "screenshot": "misc/skip-link-01.png"
+  },
+  {
+    "id": "social-links-01",
+    "category": "misc",
+    "subcategory": "social-links",
+    "file": "misc/social-links-01.json",
+    "element_count": 9,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Social Links",
+    "description": "Social Links block for misc",
+    "tags": [
+      "misc",
+      "social",
+      "links"
+    ],
+    "screenshot": "misc/social-links-01.png"
+  },
+  {
+    "id": "table-of-contents-01",
+    "category": "misc",
+    "subcategory": "table-of-contents",
+    "file": "misc/table-of-contents-01.json",
+    "element_count": 3,
+    "components_used": [
+      "Stack",
+      "Text",
+      "NavMenu"
+    ],
+    "name": "Table Of Contents",
+    "description": "Table Of Contents block for misc",
+    "tags": [
+      "misc",
+      "table",
+      "of",
+      "contents"
+    ],
+    "screenshot": "misc/table-of-contents-01.png"
+  },
+  {
+    "id": "theme-toggle-01",
+    "category": "misc",
+    "subcategory": "theme-toggle",
+    "file": "misc/theme-toggle-01.json",
+    "element_count": 4,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Toggle"
+    ],
+    "name": "Theme Toggle",
+    "description": "Theme Toggle block for misc",
+    "tags": [
+      "misc",
+      "theme",
+      "toggle"
+    ],
+    "screenshot": "misc/theme-toggle-01.png"
+  },
+  {
     "id": "app-shell-01",
     "name": "Mobile App Shell",
     "category": "mobile",
@@ -524,5 +3261,1130 @@
       "BottomNav"
     ],
     "screenshot": "mobile/app-shell-01.png"
+  },
+  {
+    "id": "command-palette-01",
+    "category": "modals-overlays",
+    "subcategory": "command-palette",
+    "file": "modals-overlays/command-palette-01.json",
+    "element_count": 1,
+    "components_used": [
+      "CommandPalette"
+    ],
+    "name": "Command Palette",
+    "description": "Command Palette block for modals-overlays",
+    "tags": [
+      "modals-overlays",
+      "command",
+      "palette"
+    ]
+  },
+  {
+    "id": "cookie-consent-01",
+    "category": "modals-overlays",
+    "subcategory": "cookie-consent",
+    "file": "modals-overlays/cookie-consent-01.json",
+    "element_count": 9,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Text",
+      "Button"
+    ],
+    "name": "Cookie Consent",
+    "description": "Cookie Consent block for modals-overlays",
+    "tags": [
+      "modals-overlays",
+      "cookie",
+      "consent"
+    ],
+    "screenshot": "modals-overlays/cookie-consent-01.png"
+  },
+  {
+    "id": "drawer-01",
+    "category": "modals-overlays",
+    "subcategory": "drawer",
+    "file": "modals-overlays/drawer-01.json",
+    "element_count": 17,
+    "components_used": [
+      "Drawer",
+      "Stack",
+      "Text",
+      "Field",
+      "Input",
+      "Select",
+      "Checkbox",
+      "Button"
+    ],
+    "name": "Drawer",
+    "description": "Drawer block for modals-overlays",
+    "tags": [
+      "modals-overlays",
+      "drawer"
+    ],
+    "screenshot": "modals-overlays/drawer-01.png"
+  },
+  {
+    "id": "lightbox-01",
+    "category": "modals-overlays",
+    "subcategory": "lightbox",
+    "file": "modals-overlays/lightbox-01.json",
+    "element_count": 15,
+    "components_used": [
+      "Modal",
+      "Stack",
+      "AspectRatio",
+      "Image",
+      "Button",
+      "Text"
+    ],
+    "name": "Lightbox",
+    "description": "Lightbox block for modals-overlays",
+    "tags": [
+      "modals-overlays",
+      "lightbox"
+    ]
+  },
+  {
+    "id": "modal-confirm-01",
+    "category": "modals-overlays",
+    "subcategory": "modal-confirm",
+    "file": "modals-overlays/modal-confirm-01.json",
+    "element_count": 6,
+    "components_used": [
+      "AlertDialog",
+      "Surface",
+      "List",
+      "Stack",
+      "Button"
+    ],
+    "name": "Modal Confirm",
+    "description": "Modal Confirm block for modals-overlays",
+    "tags": [
+      "modals-overlays",
+      "modal",
+      "confirm"
+    ]
+  },
+  {
+    "id": "modal-dialog-01",
+    "category": "modals-overlays",
+    "subcategory": "modal-dialog",
+    "file": "modals-overlays/modal-dialog-01.json",
+    "element_count": 19,
+    "components_used": [
+      "Modal",
+      "Stack",
+      "Avatar",
+      "Button",
+      "Field",
+      "Input",
+      "Textarea",
+      "Grid",
+      "DatePicker"
+    ],
+    "name": "Modal Dialog",
+    "description": "Modal Dialog block for modals-overlays",
+    "tags": [
+      "modals-overlays",
+      "modal",
+      "dialog"
+    ],
+    "screenshot": "modals-overlays/modal-dialog-01.png"
+  },
+  {
+    "id": "toast-notification-01",
+    "category": "modals-overlays",
+    "subcategory": "toast-notification",
+    "file": "modals-overlays/toast-notification-01.json",
+    "element_count": 5,
+    "components_used": [
+      "Stack",
+      "Alert"
+    ],
+    "name": "Toast Notification",
+    "description": "Toast Notification block for modals-overlays",
+    "tags": [
+      "modals-overlays",
+      "toast",
+      "notification"
+    ],
+    "screenshot": "modals-overlays/toast-notification-01.png"
+  },
+  {
+    "id": "bottom-nav-01",
+    "category": "navigation",
+    "subcategory": "bottom-nav",
+    "file": "navigation/bottom-nav-01.json",
+    "element_count": 1,
+    "components_used": [
+      "BottomNav"
+    ],
+    "name": "Bottom Nav",
+    "description": "Bottom Nav block for navigation",
+    "tags": [
+      "navigation",
+      "bottom",
+      "nav"
+    ]
+  },
+  {
+    "id": "breadcrumbs-01",
+    "category": "navigation",
+    "subcategory": "breadcrumbs",
+    "file": "navigation/breadcrumbs-01.json",
+    "element_count": 3,
+    "components_used": [
+      "Stack",
+      "Breadcrumbs",
+      "Text"
+    ],
+    "name": "Breadcrumbs",
+    "description": "Breadcrumbs block for navigation",
+    "tags": [
+      "navigation",
+      "breadcrumbs"
+    ],
+    "screenshot": "navigation/breadcrumbs-01.png"
+  },
+  {
+    "id": "navbar-mega-menu-01",
+    "category": "navigation",
+    "subcategory": "navbar-mega-menu",
+    "file": "navigation/navbar-mega-menu-01.json",
+    "element_count": 21,
+    "components_used": [
+      "Navbar",
+      "Stack",
+      "Button",
+      "Surface",
+      "Grid",
+      "Text"
+    ],
+    "name": "Navbar Mega Menu",
+    "description": "Navbar Mega Menu block for navigation",
+    "tags": [
+      "navigation",
+      "navbar",
+      "mega",
+      "menu"
+    ],
+    "screenshot": "navigation/navbar-mega-menu-01.png"
+  },
+  {
+    "id": "navbar-mobile-drawer-01",
+    "category": "navigation",
+    "subcategory": "navbar-mobile-drawer",
+    "file": "navigation/navbar-mobile-drawer-01.json",
+    "element_count": 12,
+    "components_used": [
+      "Stack",
+      "Navbar",
+      "Button",
+      "Sheet",
+      "Text",
+      "Separator",
+      "NavMenu"
+    ],
+    "name": "Navbar Mobile Drawer",
+    "description": "Navbar Mobile Drawer block for navigation",
+    "tags": [
+      "navigation",
+      "navbar",
+      "mobile",
+      "drawer"
+    ],
+    "screenshot": "navigation/navbar-mobile-drawer-01.png"
+  },
+  {
+    "id": "navbar-simple-01",
+    "category": "navigation",
+    "subcategory": "navbar-simple",
+    "file": "navigation/navbar-simple-01.json",
+    "element_count": 2,
+    "components_used": [
+      "Navbar",
+      "Button"
+    ],
+    "name": "Navbar Simple",
+    "description": "Navbar Simple block for navigation",
+    "tags": [
+      "navigation",
+      "navbar",
+      "simple"
+    ],
+    "screenshot": "navigation/navbar-simple-01.png"
+  },
+  {
+    "id": "navbar-with-auth-01",
+    "category": "navigation",
+    "subcategory": "navbar-with-auth",
+    "file": "navigation/navbar-with-auth-01.json",
+    "element_count": 4,
+    "components_used": [
+      "Navbar",
+      "Stack",
+      "Button"
+    ],
+    "name": "Navbar With Auth",
+    "description": "Navbar With Auth block for navigation",
+    "tags": [
+      "navigation",
+      "navbar",
+      "with",
+      "auth"
+    ],
+    "screenshot": "navigation/navbar-with-auth-01.png"
+  },
+  {
+    "id": "navbar-with-search-01",
+    "category": "navigation",
+    "subcategory": "navbar-with-search",
+    "file": "navigation/navbar-with-search-01.json",
+    "element_count": 5,
+    "components_used": [
+      "Navbar",
+      "Stack",
+      "Search",
+      "Button",
+      "Avatar"
+    ],
+    "name": "Navbar With Search",
+    "description": "Navbar With Search block for navigation",
+    "tags": [
+      "navigation",
+      "navbar",
+      "with",
+      "search"
+    ],
+    "screenshot": "navigation/navbar-with-search-01.png"
+  },
+  {
+    "id": "pagination-01",
+    "category": "navigation",
+    "subcategory": "pagination",
+    "file": "navigation/pagination-01.json",
+    "element_count": 5,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Select",
+      "Pagination"
+    ],
+    "name": "Pagination",
+    "description": "Pagination block for navigation",
+    "tags": [
+      "navigation",
+      "pagination"
+    ],
+    "screenshot": "navigation/pagination-01.png"
+  },
+  {
+    "id": "sidebar-nav-01",
+    "category": "navigation",
+    "subcategory": "sidebar-nav",
+    "file": "navigation/sidebar-nav-01.json",
+    "element_count": 1,
+    "components_used": [
+      "Sidebar"
+    ],
+    "name": "Sidebar Nav",
+    "description": "Sidebar Nav block for navigation",
+    "tags": [
+      "navigation",
+      "sidebar",
+      "nav"
+    ],
+    "screenshot": "navigation/sidebar-nav-01.png"
+  },
+  {
+    "id": "tab-nav-01",
+    "category": "navigation",
+    "subcategory": "tab-nav",
+    "file": "navigation/tab-nav-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "Tabs",
+      "Field",
+      "email",
+      "Select",
+      "password",
+      "Switch"
+    ],
+    "name": "Tab Nav",
+    "description": "Tab Nav block for navigation",
+    "tags": [
+      "navigation",
+      "tab",
+      "nav"
+    ],
+    "screenshot": "navigation/tab-nav-01.png"
+  },
+  {
+    "id": "topbar-announcement-01",
+    "category": "navigation",
+    "subcategory": "topbar-announcement",
+    "file": "navigation/topbar-announcement-01.json",
+    "element_count": 5,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Badge",
+      "Text",
+      "Button"
+    ],
+    "name": "Topbar Announcement",
+    "description": "Topbar Announcement block for navigation",
+    "tags": [
+      "navigation",
+      "topbar",
+      "announcement"
+    ],
+    "screenshot": "navigation/topbar-announcement-01.png"
+  },
+  {
+    "id": "newsletter-card-01",
+    "category": "newsletter",
+    "subcategory": "newsletter-card",
+    "file": "newsletter/newsletter-card-01.json",
+    "element_count": 12,
+    "components_used": [
+      "Card",
+      "Stack",
+      "Badge",
+      "Field",
+      "email",
+      "Input",
+      "Button",
+      "Text"
+    ],
+    "name": "Newsletter Card",
+    "description": "Newsletter Card block for newsletter",
+    "tags": [
+      "newsletter",
+      "newsletter",
+      "card"
+    ],
+    "screenshot": "newsletter/newsletter-card-01.png"
+  },
+  {
+    "id": "newsletter-footer-01",
+    "category": "newsletter",
+    "subcategory": "newsletter-footer",
+    "file": "newsletter/newsletter-footer-01.json",
+    "element_count": 15,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Text",
+      "Button",
+      "InputGroup",
+      "email"
+    ],
+    "name": "Newsletter Footer",
+    "description": "Newsletter Footer block for newsletter",
+    "tags": [
+      "newsletter",
+      "newsletter",
+      "footer"
+    ],
+    "screenshot": "newsletter/newsletter-footer-01.png"
+  },
+  {
+    "id": "newsletter-inline-01",
+    "category": "newsletter",
+    "subcategory": "newsletter-inline",
+    "file": "newsletter/newsletter-inline-01.json",
+    "element_count": 7,
+    "components_used": [
+      "Stack",
+      "Text",
+      "InputGroup",
+      "email",
+      "Button"
+    ],
+    "name": "Newsletter Inline",
+    "description": "Newsletter Inline block for newsletter",
+    "tags": [
+      "newsletter",
+      "newsletter",
+      "inline"
+    ],
+    "screenshot": "newsletter/newsletter-inline-01.png"
+  },
+  {
+    "id": "newsletter-popup-01",
+    "category": "newsletter",
+    "subcategory": "newsletter-popup",
+    "file": "newsletter/newsletter-popup-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Modal",
+      "Stack",
+      "Text",
+      "email",
+      "Button"
+    ],
+    "name": "Newsletter Popup",
+    "description": "Newsletter Popup block for newsletter",
+    "tags": [
+      "newsletter",
+      "newsletter",
+      "popup"
+    ],
+    "screenshot": "newsletter/newsletter-popup-01.png"
+  },
+  {
+    "id": "portfolio-carousel-01",
+    "category": "portfolio",
+    "subcategory": "portfolio-carousel",
+    "file": "portfolio/portfolio-carousel-01.json",
+    "element_count": 42,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button",
+      "Carousel",
+      "Surface",
+      "Image",
+      "Chip",
+      "Pagination"
+    ],
+    "name": "Portfolio Carousel",
+    "description": "Portfolio Carousel block for portfolio",
+    "tags": [
+      "portfolio",
+      "portfolio",
+      "carousel"
+    ],
+    "screenshot": "portfolio/portfolio-carousel-01.png"
+  },
+  {
+    "id": "portfolio-case-study-01",
+    "category": "portfolio",
+    "subcategory": "portfolio-case-study",
+    "file": "portfolio/portfolio-case-study-01.json",
+    "element_count": 33,
+    "components_used": [
+      "Stack",
+      "Breadcrumbs",
+      "Badge",
+      "Text",
+      "Image",
+      "Grid",
+      "StatCard",
+      "Prose",
+      "List",
+      "Surface",
+      "Avatar",
+      "Button"
+    ],
+    "name": "Portfolio Case Study",
+    "description": "Portfolio Case Study block for portfolio",
+    "tags": [
+      "portfolio",
+      "portfolio",
+      "case",
+      "study"
+    ],
+    "screenshot": "portfolio/portfolio-case-study-01.png"
+  },
+  {
+    "id": "portfolio-grid-01",
+    "category": "portfolio",
+    "subcategory": "portfolio-grid",
+    "file": "portfolio/portfolio-grid-01.json",
+    "element_count": 53,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ToggleGroup",
+      "Grid",
+      "Card",
+      "Image",
+      "Chip"
+    ],
+    "name": "Portfolio Grid",
+    "description": "Portfolio Grid block for portfolio",
+    "tags": [
+      "portfolio",
+      "portfolio",
+      "grid"
+    ],
+    "screenshot": "portfolio/portfolio-grid-01.png"
+  },
+  {
+    "id": "pricing-calculator-01",
+    "category": "pricing",
+    "subcategory": "pricing-calculator",
+    "file": "pricing/pricing-calculator-01.json",
+    "element_count": 36,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Surface",
+      "Slider",
+      "Separator",
+      "Button"
+    ],
+    "name": "Pricing Calculator",
+    "description": "Pricing Calculator block for pricing",
+    "tags": [
+      "pricing",
+      "pricing",
+      "calculator"
+    ],
+    "screenshot": "pricing/pricing-calculator-01.png"
+  },
+  {
+    "id": "pricing-comparison-table-01",
+    "category": "pricing",
+    "subcategory": "pricing-comparison-table",
+    "file": "pricing/pricing-comparison-table-01.json",
+    "element_count": 8,
+    "components_used": [
+      "Stack",
+      "Text",
+      "DataTable",
+      "Button"
+    ],
+    "name": "Pricing Comparison Table",
+    "description": "Pricing Comparison Table block for pricing",
+    "tags": [
+      "pricing",
+      "pricing",
+      "comparison",
+      "table"
+    ],
+    "screenshot": "pricing/pricing-comparison-table-01.png"
+  },
+  {
+    "id": "pricing-faq-01",
+    "category": "pricing",
+    "subcategory": "pricing-faq",
+    "file": "pricing/pricing-faq-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Accordion",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Pricing Faq",
+    "description": "Pricing Faq block for pricing",
+    "tags": [
+      "pricing",
+      "pricing",
+      "faq"
+    ],
+    "screenshot": "pricing/pricing-faq-01.png"
+  },
+  {
+    "id": "pricing-single-01",
+    "category": "pricing",
+    "subcategory": "pricing-single",
+    "file": "pricing/pricing-single-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Stack",
+      "Surface",
+      "Text",
+      "Badge",
+      "Separator",
+      "Grid",
+      "Button"
+    ],
+    "name": "Pricing Single",
+    "description": "Pricing Single block for pricing",
+    "tags": [
+      "pricing",
+      "pricing",
+      "single"
+    ],
+    "screenshot": "pricing/pricing-single-01.png"
+  },
+  {
+    "id": "pricing-tiers-01",
+    "category": "pricing",
+    "subcategory": "pricing-tiers",
+    "file": "pricing/pricing-tiers-01.json",
+    "element_count": 35,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Surface",
+      "Button",
+      "Separator",
+      "List",
+      "Badge"
+    ],
+    "name": "Pricing Tiers",
+    "description": "Pricing Tiers block for pricing",
+    "tags": [
+      "pricing",
+      "pricing",
+      "tiers"
+    ],
+    "screenshot": "pricing/pricing-tiers-01.png"
+  },
+  {
+    "id": "pricing-toggle-01",
+    "category": "pricing",
+    "subcategory": "pricing-toggle",
+    "file": "pricing/pricing-toggle-01.json",
+    "element_count": 38,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ToggleGroup",
+      "Grid",
+      "Surface",
+      "Button",
+      "Separator",
+      "List",
+      "Badge"
+    ],
+    "name": "Pricing Toggle",
+    "description": "Pricing Toggle block for pricing",
+    "tags": [
+      "pricing",
+      "pricing",
+      "toggle"
+    ],
+    "screenshot": "pricing/pricing-toggle-01.png"
+  },
+  {
+    "id": "case-study-card-01",
+    "category": "social-proof",
+    "subcategory": "case-study-card",
+    "file": "social-proof/case-study-card-01.json",
+    "element_count": 25,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Surface",
+      "Grid",
+      "StatCard",
+      "Separator",
+      "Avatar"
+    ],
+    "name": "Case Study Card",
+    "description": "Case Study Card block for social-proof",
+    "tags": [
+      "social-proof",
+      "case",
+      "study",
+      "card"
+    ],
+    "screenshot": "social-proof/case-study-card-01.png"
+  },
+  {
+    "id": "press-mentions-01",
+    "category": "social-proof",
+    "subcategory": "press-mentions",
+    "file": "social-proof/press-mentions-01.json",
+    "element_count": 22,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Separator",
+      "Grid",
+      "Surface"
+    ],
+    "name": "Press Mentions",
+    "description": "Press Mentions block for social-proof",
+    "tags": [
+      "social-proof",
+      "press",
+      "mentions"
+    ],
+    "screenshot": "social-proof/press-mentions-01.png"
+  },
+  {
+    "id": "review-stars-01",
+    "category": "social-proof",
+    "subcategory": "review-stars",
+    "file": "social-proof/review-stars-01.json",
+    "element_count": 42,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Progress",
+      "Separator"
+    ],
+    "name": "Review Stars",
+    "description": "Review Stars block for social-proof",
+    "tags": [
+      "social-proof",
+      "review",
+      "stars"
+    ],
+    "screenshot": "social-proof/review-stars-01.png"
+  },
+  {
+    "id": "social-proof-bar-01",
+    "category": "social-proof",
+    "subcategory": "social-proof-bar",
+    "file": "social-proof/social-proof-bar-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Text",
+      "Separator"
+    ],
+    "name": "Social Proof Bar",
+    "description": "Social Proof Bar block for social-proof",
+    "tags": [
+      "social-proof",
+      "social",
+      "proof",
+      "bar"
+    ],
+    "screenshot": "social-proof/social-proof-bar-01.png"
+  },
+  {
+    "id": "testimonial-carousel-01",
+    "category": "social-proof",
+    "subcategory": "testimonial-carousel",
+    "file": "social-proof/testimonial-carousel-01.json",
+    "element_count": 33,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Carousel",
+      "Surface",
+      "Avatar",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Testimonial Carousel",
+    "description": "Testimonial Carousel block for social-proof",
+    "tags": [
+      "social-proof",
+      "testimonial",
+      "carousel"
+    ],
+    "screenshot": "social-proof/testimonial-carousel-01.png"
+  },
+  {
+    "id": "testimonial-grid-01",
+    "category": "social-proof",
+    "subcategory": "testimonial-grid",
+    "file": "social-proof/testimonial-grid-01.json",
+    "element_count": 30,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Grid",
+      "Surface",
+      "Avatar"
+    ],
+    "name": "Testimonial Grid",
+    "description": "Testimonial Grid block for social-proof",
+    "tags": [
+      "social-proof",
+      "testimonial",
+      "grid"
+    ],
+    "screenshot": "social-proof/testimonial-grid-01.png"
+  },
+  {
+    "id": "testimonial-single-01",
+    "category": "social-proof",
+    "subcategory": "testimonial-single",
+    "file": "social-proof/testimonial-single-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Separator",
+      "Avatar"
+    ],
+    "name": "Testimonial Single",
+    "description": "Testimonial Single block for social-proof",
+    "tags": [
+      "social-proof",
+      "testimonial",
+      "single"
+    ],
+    "screenshot": "social-proof/testimonial-single-01.png"
+  },
+  {
+    "id": "testimonial-wall-01",
+    "category": "social-proof",
+    "subcategory": "testimonial-wall",
+    "file": "social-proof/testimonial-wall-01.json",
+    "element_count": 39,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Surface",
+      "Avatar"
+    ],
+    "name": "Testimonial Wall",
+    "description": "Testimonial Wall block for social-proof",
+    "tags": [
+      "social-proof",
+      "testimonial",
+      "wall"
+    ],
+    "screenshot": "social-proof/testimonial-wall-01.png"
+  },
+  {
+    "id": "stats-counter-01",
+    "category": "stats",
+    "subcategory": "stats-counter",
+    "file": "stats/stats-counter-01.json",
+    "element_count": 17,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Text",
+      "Grid"
+    ],
+    "name": "Stats Counter",
+    "description": "Stats Counter block for stats",
+    "tags": [
+      "stats",
+      "stats",
+      "counter"
+    ],
+    "screenshot": "stats/stats-counter-01.png"
+  },
+  {
+    "id": "stats-grid-01",
+    "category": "stats",
+    "subcategory": "stats-grid",
+    "file": "stats/stats-grid-01.json",
+    "element_count": 8,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "StatCard"
+    ],
+    "name": "Stats Grid",
+    "description": "Stats Grid block for stats",
+    "tags": [
+      "stats",
+      "stats",
+      "grid"
+    ],
+    "screenshot": "stats/stats-grid-01.png"
+  },
+  {
+    "id": "stats-with-description-01",
+    "category": "stats",
+    "subcategory": "stats-with-description",
+    "file": "stats/stats-with-description-01.json",
+    "element_count": 27,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Button",
+      "Grid",
+      "Surface",
+      "Chip"
+    ],
+    "name": "Stats With Description",
+    "description": "Stats With Description block for stats",
+    "tags": [
+      "stats",
+      "stats",
+      "with",
+      "description"
+    ],
+    "screenshot": "stats/stats-with-description-01.png"
+  },
+  {
+    "id": "team-carousel-01",
+    "category": "team",
+    "subcategory": "team-carousel",
+    "file": "team/team-carousel-01.json",
+    "element_count": 37,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Carousel",
+      "Card",
+      "Avatar",
+      "Chip",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "Team Carousel",
+    "description": "Team Carousel block for team",
+    "tags": [
+      "team",
+      "team",
+      "carousel"
+    ],
+    "screenshot": "team/team-carousel-01.png"
+  },
+  {
+    "id": "team-featured-01",
+    "category": "team",
+    "subcategory": "team-featured",
+    "file": "team/team-featured-01.json",
+    "element_count": 12,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Image",
+      "Badge",
+      "Text",
+      "Prose",
+      "Button"
+    ],
+    "name": "Team Featured",
+    "description": "Team Featured block for team",
+    "tags": [
+      "team",
+      "team",
+      "featured"
+    ],
+    "screenshot": "team/team-featured-01.png"
+  },
+  {
+    "id": "team-grid-01",
+    "category": "team",
+    "subcategory": "team-grid",
+    "file": "team/team-grid-01.json",
+    "element_count": 34,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card",
+      "Avatar"
+    ],
+    "name": "Team Grid",
+    "description": "Team Grid block for team",
+    "tags": [
+      "team",
+      "team",
+      "grid"
+    ],
+    "screenshot": "team/team-grid-01.png"
+  },
+  {
+    "id": "team-list-01",
+    "category": "team",
+    "subcategory": "team-list",
+    "file": "team/team-list-01.json",
+    "element_count": 31,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Avatar",
+      "Badge",
+      "Separator"
+    ],
+    "name": "Team List",
+    "description": "Team List block for team",
+    "tags": [
+      "team",
+      "team",
+      "list"
+    ],
+    "screenshot": "team/team-list-01.png"
+  },
+  {
+    "id": "changelog-01",
+    "category": "timeline",
+    "subcategory": "changelog",
+    "file": "timeline/changelog-01.json",
+    "element_count": 37,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Badge",
+      "Prose",
+      "Separator"
+    ],
+    "name": "Changelog",
+    "description": "Changelog block for timeline",
+    "tags": [
+      "timeline",
+      "changelog"
+    ],
+    "screenshot": "timeline/changelog-01.png"
+  },
+  {
+    "id": "roadmap-01",
+    "category": "timeline",
+    "subcategory": "roadmap",
+    "file": "timeline/roadmap-01.json",
+    "element_count": 22,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Stepper",
+      "Grid",
+      "Surface",
+      "Badge",
+      "List",
+      "Progress"
+    ],
+    "name": "Roadmap",
+    "description": "Roadmap block for timeline",
+    "tags": [
+      "timeline",
+      "roadmap"
+    ],
+    "screenshot": "timeline/roadmap-01.png"
+  },
+  {
+    "id": "timeline-horizontal-01",
+    "category": "timeline",
+    "subcategory": "timeline-horizontal",
+    "file": "timeline/timeline-horizontal-01.json",
+    "element_count": 24,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ScrollArea",
+      "Card",
+      "Badge"
+    ],
+    "name": "Timeline Horizontal",
+    "description": "Timeline Horizontal block for timeline",
+    "tags": [
+      "timeline",
+      "timeline",
+      "horizontal"
+    ],
+    "screenshot": "timeline/timeline-horizontal-01.png"
+  },
+  {
+    "id": "timeline-vertical-01",
+    "category": "timeline",
+    "subcategory": "timeline-vertical",
+    "file": "timeline/timeline-vertical-01.json",
+    "element_count": 4,
+    "components_used": [
+      "Stack",
+      "Text",
+      "List"
+    ],
+    "name": "Timeline Vertical",
+    "description": "Timeline Vertical block for timeline",
+    "tags": [
+      "timeline",
+      "timeline",
+      "vertical"
+    ],
+    "screenshot": "timeline/timeline-vertical-01.png"
   }
 ]

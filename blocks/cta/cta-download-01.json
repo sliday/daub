@@ -1,0 +1,104 @@
+{
+  "root": "cta-download",
+  "elements": {
+    "cta-download": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 6,
+      "align": "center",
+      "container": "wide",
+      "children": ["download-content", "download-visual"]
+    },
+    "download-content": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 4,
+      "children": ["download-badge", "download-heading", "download-description", "download-buttons", "download-rating"]
+    },
+    "download-badge": {
+      "type": "Badge",
+      "text": "Mobile App",
+      "variant": "info"
+    },
+    "download-heading": {
+      "type": "Text",
+      "tag": "h2",
+      "content": "Take Mercury with you everywhere"
+    },
+    "download-description": {
+      "type": "Text",
+      "tag": "p",
+      "content": "Send payments, check balances, and manage your business banking from your phone. Available on iOS and Android with Face ID, Touch ID, and biometric security.",
+      "variant": "muted"
+    },
+    "download-buttons": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 3,
+      "children": ["btn-appstore", "btn-playstore"]
+    },
+    "btn-appstore": {
+      "type": "Button",
+      "label": "Download on the App Store",
+      "variant": "primary",
+      "icon": "apple"
+    },
+    "btn-playstore": {
+      "type": "Button",
+      "label": "Get it on Google Play",
+      "variant": "outline",
+      "icon": "play"
+    },
+    "download-rating": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "align": "center",
+      "children": ["rating-stars", "rating-text"]
+    },
+    "rating-stars": {
+      "type": "Text",
+      "tag": "span",
+      "content": "\u2605\u2605\u2605\u2605\u2605"
+    },
+    "rating-text": {
+      "type": "Text",
+      "tag": "span",
+      "content": "4.9 rating from 28,400+ reviews",
+      "variant": "muted"
+    },
+    "download-visual": {
+      "type": "Stack",
+      "direction": "vertical",
+      "gap": 3,
+      "align": "center",
+      "children": ["phone-mockup", "feature-chips"]
+    },
+    "phone-mockup": {
+      "type": "Image",
+      "src": "https://placehold.co/280x560/1a1a2e/eaeaea?text=Mercury+App",
+      "alt": "Mercury mobile app showing the dashboard with account balances and recent transactions"
+    },
+    "feature-chips": {
+      "type": "Stack",
+      "direction": "horizontal",
+      "gap": 2,
+      "children": ["chip-faceid", "chip-instant", "chip-offline"]
+    },
+    "chip-faceid": {
+      "type": "Chip",
+      "label": "Face ID",
+      "variant": "outline"
+    },
+    "chip-instant": {
+      "type": "Chip",
+      "label": "Instant notifications",
+      "variant": "outline"
+    },
+    "chip-offline": {
+      "type": "Chip",
+      "label": "Offline mode",
+      "variant": "outline"
+    }
+  }
+}
