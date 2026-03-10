@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.11.0
+
+**189 blocks across 34 categories — full taxonomy coverage with multimodal RAG.**
+
+- Feature: expanded block library from 22 to 189 pre-made layout patterns across 34 categories
+- Feature: 170-block taxonomy with variants covering navigation, hero, features, social proof, pricing, CTA, content, newsletter, FAQ, team, stats, blog, portfolio, contact, footer, auth, error pages, ecommerce, dashboard, forms, modals/overlays, timeline, how-it-works, integrations, banners, event schedule, media, comparison, app-specific, and misc
+- Feature: 183 Playwright screenshots and 187 Gemini multimodal embeddings for RAG retrieval
+- Feature: batch block generation toolchain (`block-batch-generate.js`) for taxonomy-driven generation
+- Enhancement: all blocks are self-contained sections with realistic data — no cross-contamination
+- Enhancement: updated MCP edge function BLOCK_INDEX with full 189-block catalog
+
 ## v3.10.0
 
 **Block library with RAG-powered generation and design knowledge integration.**

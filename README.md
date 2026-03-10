@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.10.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.11.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -305,17 +305,27 @@ For **json-render** (Vercel Generative UI): see the [integration recipe in llms.
 
 ## Block Library
 
-DAUB includes 22 pre-made layout patterns across 7 categories. Blocks are proven DAUB specs that serve as structural templates during AI generation.
+DAUB includes **189 pre-made layout patterns** across **34 categories**, generated from a 170-block taxonomy. Every block is a self-contained UI section with realistic data.
 
-| Category | Count | Examples |
-|----------|-------|----------|
-| Landing | 5 | Hero, Features Grid, Pricing, Testimonials, Footer |
-| Dashboard | 5 | Sidebar Layout, Stats Row, Chart Panel, Data Table, Header |
-| Forms | 5 | Login, Signup, Contact, Checkout, Settings |
-| Ecommerce | 2 | Product Grid, Order Summary |
-| Data Display | 3 | Profile, Notification Center, Empty State |
-| Auth | 1 | Split-screen Auth Page |
-| Mobile | 1 | App Shell with Bottom Nav |
+| Category | Count | Category | Count |
+|----------|-------|----------|-------|
+| Navigation | 11 | Newsletter | 4 |
+| Hero | 8 | FAQ | 4 |
+| Features | 9 | Team | 4 |
+| Social Proof | 8 | Stats | 4 |
+| Pricing | 6 | Blog | 6 |
+| CTA | 6 | Portfolio | 3 |
+| Content | 6 | Contact | 5 |
+| Footer | 5 | Error Pages | 4 |
+| Auth | 7 | Ecommerce | 9 |
+| Dashboard | 12 | Forms | 12 |
+| Modals/Overlays | 7 | Timeline | 4 |
+| How It Works | 3 | Integrations | 3 |
+| Banners | 3 | Event Schedule | 3 |
+| Media | 4 | Comparison | 3 |
+| App Specific | 6 | Misc | 8 |
+| Logo Bar | 3 | Landing (legacy) | 5 |
+| + Mobile, Data Display | 4 | | |
 
 Blocks are automatically retrieved via **RAG** (Retrieval-Augmented Generation) during `generate_ui` calls. The system embeds user prompts with Gemini, finds the top-5 matching blocks by cosine similarity, and injects their full specs as few-shot examples.
 
@@ -498,7 +508,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.10.0** — Block library with RAG-powered generation, design knowledge integration, 22 pre-made layout patterns. 76 components, 20 theme families.
+**Latest: v3.11.0** — 189 blocks across 34 categories with multimodal RAG retrieval. 76 components, 20 theme families.
 
 ## Star History
 
