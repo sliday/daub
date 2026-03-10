@@ -1,0 +1,149 @@
+{
+  "root": "pricing-root",
+  "elements": {
+    "pricing-root": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6, "align": "center", "container": "wide" },
+      "children": ["pricing-heading", "pricing-subheading", "pricing-grid"]
+    },
+    "pricing-heading": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Simple, transparent pricing" }
+    },
+    "pricing-subheading": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Start free and scale as you grow. No hidden fees, cancel anytime." }
+    },
+    "pricing-grid": {
+      "type": "Grid",
+      "props": { "columns": 3, "gap": 5 },
+      "children": ["pricing-card-free", "pricing-card-pro", "pricing-card-enterprise"]
+    },
+    "pricing-card-free": {
+      "type": "Surface",
+      "props": { "variant": "raised" },
+      "children": ["pricing-free-inner"]
+    },
+    "pricing-free-inner": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["pricing-free-title", "pricing-free-price", "pricing-free-sep", "pricing-free-f1", "pricing-free-f2", "pricing-free-f3", "pricing-free-cta"]
+    },
+    "pricing-free-title": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Free" }
+    },
+    "pricing-free-price": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "$0/mo" }
+    },
+    "pricing-free-sep": {
+      "type": "Separator",
+      "props": {}
+    },
+    "pricing-free-f1": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Up to 3 projects" }
+    },
+    "pricing-free-f2": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Basic analytics" }
+    },
+    "pricing-free-f3": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Community support" }
+    },
+    "pricing-free-cta": {
+      "type": "Button",
+      "props": { "label": "Get Started", "variant": "secondary" }
+    },
+    "pricing-card-pro": {
+      "type": "Surface",
+      "props": { "variant": "raised" },
+      "children": ["pricing-pro-inner"]
+    },
+    "pricing-pro-inner": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["pricing-pro-badge", "pricing-pro-title", "pricing-pro-price", "pricing-pro-sep", "pricing-pro-f1", "pricing-pro-f2", "pricing-pro-f3", "pricing-pro-f4", "pricing-pro-cta"]
+    },
+    "pricing-pro-badge": {
+      "type": "Badge",
+      "props": { "text": "Most Popular", "variant": "new" }
+    },
+    "pricing-pro-title": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Pro" }
+    },
+    "pricing-pro-price": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "$29/mo" }
+    },
+    "pricing-pro-sep": {
+      "type": "Separator",
+      "props": {}
+    },
+    "pricing-pro-f1": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Unlimited projects" }
+    },
+    "pricing-pro-f2": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Advanced analytics" }
+    },
+    "pricing-pro-f3": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Priority email support" }
+    },
+    "pricing-pro-f4": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Custom integrations" }
+    },
+    "pricing-pro-cta": {
+      "type": "Button",
+      "props": { "label": "Start Free Trial", "variant": "primary" }
+    },
+    "pricing-card-enterprise": {
+      "type": "Surface",
+      "props": { "variant": "raised" },
+      "children": ["pricing-ent-inner"]
+    },
+    "pricing-ent-inner": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["pricing-ent-title", "pricing-ent-price", "pricing-ent-sep", "pricing-ent-f1", "pricing-ent-f2", "pricing-ent-f3", "pricing-ent-f4", "pricing-ent-cta"]
+    },
+    "pricing-ent-title": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Enterprise" }
+    },
+    "pricing-ent-price": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Custom" }
+    },
+    "pricing-ent-sep": {
+      "type": "Separator",
+      "props": {}
+    },
+    "pricing-ent-f1": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Everything in Pro" }
+    },
+    "pricing-ent-f2": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "SSO & SAML authentication" }
+    },
+    "pricing-ent-f3": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Dedicated account manager" }
+    },
+    "pricing-ent-f4": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "99.99% uptime SLA" }
+    },
+    "pricing-ent-cta": {
+      "type": "Button",
+      "props": { "label": "Contact Sales", "variant": "secondary" }
+    }
+  }
+}

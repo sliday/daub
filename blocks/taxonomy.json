@@ -1,0 +1,84 @@
+{
+  "version": "1.0.0",
+  "description": "148-block taxonomy for DAUB UI generation. Reference data for block categorization and future generation.",
+  "categories": {
+    "landing": {
+      "description": "Marketing and conversion pages",
+      "subcategories": {
+        "hero": ["hero-centered", "hero-split", "hero-video", "hero-gradient", "hero-animated", "hero-product", "hero-saas", "hero-app"],
+        "features": ["features-grid-3col", "features-grid-4col", "features-alternating", "features-tabs", "features-accordion", "features-bento"],
+        "pricing": ["pricing-3tier", "pricing-2tier", "pricing-toggle", "pricing-comparison", "pricing-single", "pricing-enterprise"],
+        "testimonials": ["testimonials-cards", "testimonials-carousel", "testimonials-quotes", "testimonials-logo-wall", "testimonials-video", "testimonials-mini"],
+        "cta": ["cta-banner", "cta-split", "cta-minimal", "cta-gradient", "cta-with-form"],
+        "footer": ["footer-4col", "footer-3col", "footer-minimal", "footer-mega", "footer-centered"],
+        "faq": ["faq-accordion", "faq-2col", "faq-categorized"],
+        "how-it-works": ["how-it-works-steps", "how-it-works-timeline", "how-it-works-visual"],
+        "social-proof": ["logos-bar", "logos-marquee", "stats-row", "press-mentions"]
+      }
+    },
+    "dashboard": {
+      "description": "Analytics, admin panels, and data-heavy interfaces",
+      "subcategories": {
+        "layout": ["sidebar-layout", "topnav-layout", "dual-sidebar", "minimal-layout"],
+        "header": ["header-breadcrumb", "header-tabs", "header-search", "header-actions"],
+        "stats": ["stats-row-4", "stats-row-3", "stats-compact", "stats-detailed", "stats-comparison"],
+        "charts": ["chart-panel", "chart-area", "chart-donut", "chart-line", "chart-mixed"],
+        "tables": ["data-table-basic", "data-table-selectable", "data-table-expandable", "data-table-sortable"],
+        "feeds": ["activity-feed", "notification-feed", "timeline", "log-viewer"],
+        "widgets": ["calendar-widget", "task-widget", "progress-widget", "quota-widget"]
+      }
+    },
+    "forms": {
+      "description": "Input forms for data collection",
+      "subcategories": {
+        "auth": ["login-simple", "login-social", "login-split", "signup-simple", "signup-stepped", "forgot-password", "verify-email"],
+        "settings": ["settings-profile", "settings-notifications", "settings-security", "settings-billing", "settings-team"],
+        "checkout": ["checkout-2col", "checkout-stepped", "checkout-single"],
+        "contact": ["contact-simple", "contact-split", "contact-with-map"],
+        "survey": ["survey-single", "survey-multi-step", "survey-conversational"]
+      }
+    },
+    "data-display": {
+      "description": "Content presentation and data visualization",
+      "subcategories": {
+        "profiles": ["profile-card", "profile-page", "profile-header", "team-grid"],
+        "lists": ["notification-list", "activity-list", "task-list", "file-list"],
+        "empty": ["empty-state-simple", "empty-state-illustration", "empty-state-action"],
+        "detail": ["detail-page", "detail-split", "detail-tabs"]
+      }
+    },
+    "ecommerce": {
+      "description": "Shopping and product pages",
+      "subcategories": {
+        "product": ["product-grid", "product-list", "product-detail", "product-comparison"],
+        "cart": ["cart-sidebar", "cart-page", "cart-mini"],
+        "order": ["order-summary", "order-confirmation", "order-tracking"]
+      }
+    },
+    "mobile": {
+      "description": "Mobile-first layouts",
+      "subcategories": {
+        "shell": ["app-shell-tabs", "app-shell-drawer", "app-shell-bottom-nav"],
+        "screens": ["onboarding", "home-feed", "search-results", "chat-interface"]
+      }
+    },
+    "auth": {
+      "description": "Authentication and onboarding flows",
+      "subcategories": {
+        "pages": ["auth-split", "auth-centered", "auth-minimal"],
+        "flows": ["onboarding-wizard", "invite-accept", "password-reset"]
+      }
+    }
+  },
+  "page_formulas": {
+    "saas_landing": ["hero", "how-it-works", "features", "testimonials", "pricing", "faq", "cta", "footer"],
+    "physical_product": ["hero", "features", "social-proof", "features", "testimonials", "pricing", "footer"],
+    "mobile_app_new": ["hero", "features", "testimonials", "social-proof", "cta", "footer"],
+    "mobile_app_known": ["hero"],
+    "desktop_app": ["hero", "features", "testimonials", "social-proof", "cta", "footer"],
+    "book_info": ["hero", "features", "testimonials", "pricing", "footer"],
+    "dashboard_full": ["sidebar-layout", "header", "stats", "charts", "tables"],
+    "settings_page": ["header", "settings-profile", "settings-notifications", "settings-security"],
+    "ecommerce_catalog": ["header", "product-grid", "pagination", "footer"]
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "root": "table-section",
+  "elements": {
+    "table-section": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["table-header", "orders-table", "table-footer"]
+    },
+    "table-header": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "justify": "between", "align": "center", "gap": 3 },
+      "children": ["table-title", "table-actions"]
+    },
+    "table-title": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Recent Orders" }
+    },
+    "table-actions": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2 },
+      "children": ["filter-btn", "table-search"]
+    },
+    "filter-btn": {
+      "type": "Button",
+      "props": { "label": "Filter", "variant": "secondary", "icon": "SlidersHorizontal", "size": "sm" }
+    },
+    "table-search": {
+      "type": "Search",
+      "props": { "placeholder": "Search orders..." }
+    },
+    "orders-table": {
+      "type": "DataTable",
+      "props": {
+        "columns": [
+          { "key": "id", "label": "Order ID" },
+          { "key": "customer", "label": "Customer" },
+          { "key": "status", "label": "Status" },
+          { "key": "amount", "label": "Amount" },
+          { "key": "date", "label": "Date" }
+        ],
+        "rows": [
+          { "id": "#ORD-7291", "customer": "Sarah Chen", "status": "Completed", "amount": "$124.00", "date": "Mar 9, 2026" },
+          { "id": "#ORD-7290", "customer": "Marcus Johnson", "status": "Processing", "amount": "$89.50", "date": "Mar 9, 2026" },
+          { "id": "#ORD-7289", "customer": "Elena Vasquez", "status": "Completed", "amount": "$215.00", "date": "Mar 8, 2026" },
+          { "id": "#ORD-7288", "customer": "David Park", "status": "Shipped", "amount": "$67.25", "date": "Mar 8, 2026" },
+          { "id": "#ORD-7287", "customer": "Aisha Patel", "status": "Completed", "amount": "$342.00", "date": "Mar 7, 2026" },
+          { "id": "#ORD-7286", "customer": "Tom Wright", "status": "Cancelled", "amount": "$56.80", "date": "Mar 7, 2026" }
+        ],
+        "selectable": true
+      }
+    },
+    "table-footer": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "justify": "between", "align": "center" },
+      "children": ["page-info", "page-buttons"]
+    },
+    "page-info": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Showing 1-6 of 48 orders" }
+    },
+    "page-buttons": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2 },
+      "children": ["prev-btn", "next-btn"]
+    },
+    "prev-btn": {
+      "type": "Button",
+      "props": { "label": "Previous", "variant": "secondary", "size": "sm" }
+    },
+    "next-btn": {
+      "type": "Button",
+      "props": { "label": "Next", "variant": "secondary", "size": "sm" }
+    }
+  }
+}

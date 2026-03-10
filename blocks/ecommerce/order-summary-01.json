@@ -1,0 +1,101 @@
+{
+  "root": "order-summary",
+  "elements": {
+    "order-summary": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["summary-title", "items-list", "sep-1", "subtotal-row", "shipping-row", "tax-row", "sep-2", "total-row", "promo-row", "checkout-btn"]
+    },
+    "summary-title": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Order Summary" }
+    },
+    "items-list": {
+      "type": "List",
+      "props": {
+        "items": [
+          { "title": "Wireless Headphones x1", "secondary": "$79.99", "icon": "headphones" },
+          { "title": "Leather Backpack x1", "secondary": "$124.00", "icon": "shopping-bag" },
+          { "title": "Ceramic Mug Set x2", "secondary": "$69.00", "icon": "coffee" }
+        ]
+      }
+    },
+    "sep-1": {
+      "type": "Separator",
+      "props": {}
+    },
+    "subtotal-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 0, "justify": "between" },
+      "children": ["subtotal-label", "subtotal-value"]
+    },
+    "subtotal-label": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Subtotal" }
+    },
+    "subtotal-value": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "$272.99" }
+    },
+    "shipping-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 0, "justify": "between" },
+      "children": ["shipping-label", "shipping-value"]
+    },
+    "shipping-label": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Shipping" }
+    },
+    "shipping-value": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "$9.99" }
+    },
+    "tax-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 0, "justify": "between" },
+      "children": ["tax-label", "tax-value"]
+    },
+    "tax-label": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Tax" }
+    },
+    "tax-value": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "$22.64" }
+    },
+    "sep-2": {
+      "type": "Separator",
+      "props": {}
+    },
+    "total-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 0, "justify": "between" },
+      "children": ["total-label", "total-value"]
+    },
+    "total-label": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Total" }
+    },
+    "total-value": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "$305.62" }
+    },
+    "promo-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2 },
+      "children": ["promo-input", "promo-btn"]
+    },
+    "promo-input": {
+      "type": "Input",
+      "props": { "placeholder": "Promo code", "type": "text" }
+    },
+    "promo-btn": {
+      "type": "Button",
+      "props": { "label": "Apply", "variant": "secondary", "size": "sm" }
+    },
+    "checkout-btn": {
+      "type": "Button",
+      "props": { "label": "Proceed to Checkout", "variant": "primary", "size": "lg" }
+    }
+  }
+}

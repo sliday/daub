@@ -1,0 +1,76 @@
+{
+  "root": "profile-page",
+  "elements": {
+    "profile-page": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 5 },
+      "children": ["profile-header", "stats-row", "profile-tabs", "activity-list"]
+    },
+    "profile-header": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 4, "align": "center" },
+      "children": ["user-avatar", "user-info", "edit-btn"]
+    },
+    "user-avatar": {
+      "type": "Avatar",
+      "props": { "initials": "JD", "size": "lg" }
+    },
+    "user-info": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["user-name", "user-role"]
+    },
+    "user-name": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Jane Doe" }
+    },
+    "user-role": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Senior Product Designer" }
+    },
+    "edit-btn": {
+      "type": "Button",
+      "props": { "label": "Edit Profile", "variant": "secondary", "size": "sm" }
+    },
+    "stats-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 4 },
+      "children": ["stat-projects", "stat-followers", "stat-following"]
+    },
+    "stat-projects": {
+      "type": "StatCard",
+      "props": { "label": "Projects", "value": "48", "trend": "up", "trendValue": "+6" }
+    },
+    "stat-followers": {
+      "type": "StatCard",
+      "props": { "label": "Followers", "value": "2,340", "trend": "up", "trendValue": "+128" }
+    },
+    "stat-following": {
+      "type": "StatCard",
+      "props": { "label": "Following", "value": "186", "trend": "up", "trendValue": "+12" }
+    },
+    "profile-tabs": {
+      "type": "Tabs",
+      "props": {
+        "tabs": [
+          { "label": "Activity", "id": "activity" },
+          { "label": "Projects", "id": "projects" },
+          { "label": "Settings", "id": "settings" }
+        ],
+        "active": "activity"
+      }
+    },
+    "activity-list": {
+      "type": "List",
+      "props": {
+        "items": [
+          { "title": "Published \"Design System v3\"", "secondary": "2 hours ago", "icon": "rocket" },
+          { "title": "Commented on Brand Guidelines", "secondary": "5 hours ago", "icon": "message-circle" },
+          { "title": "Updated project \"Mobile App Redesign\"", "secondary": "Yesterday", "icon": "edit" },
+          { "title": "Followed Sarah Chen", "secondary": "2 days ago", "icon": "user-plus" },
+          { "title": "Created new project \"Dashboard Analytics\"", "secondary": "3 days ago", "icon": "folder-plus" }
+        ]
+      }
+    }
+  }
+}

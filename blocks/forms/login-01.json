@@ -1,0 +1,83 @@
+{
+  "root": "login-wrapper",
+  "elements": {
+    "login-wrapper": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 5, "align": "center", "justify": "center" },
+      "children": ["login-card"]
+    },
+    "login-card": {
+      "type": "Card",
+      "props": { "title": "", "description": "" },
+      "children": ["login-form"]
+    },
+    "login-form": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["login-header", "login-email", "login-password", "login-options", "login-submit", "login-separator", "login-social"]
+    },
+    "login-header": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1, "align": "center" },
+      "children": ["login-logo", "login-title", "login-subtitle"]
+    },
+    "login-logo": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Acme" }
+    },
+    "login-title": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Welcome back" }
+    },
+    "login-subtitle": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Sign in to your account to continue" }
+    },
+    "login-email": {
+      "type": "Field",
+      "props": { "label": "Email", "placeholder": "you@example.com", "type": "email" }
+    },
+    "login-password": {
+      "type": "Field",
+      "props": { "label": "Password", "placeholder": "Enter your password", "type": "password" }
+    },
+    "login-options": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "justify": "between", "align": "center" },
+      "children": ["login-remember", "login-forgot"]
+    },
+    "login-remember": {
+      "type": "Checkbox",
+      "props": { "label": "Remember me", "checked": false }
+    },
+    "login-forgot": {
+      "type": "Button",
+      "props": { "label": "Forgot password?", "variant": "ghost", "size": "sm" }
+    },
+    "login-submit": {
+      "type": "Button",
+      "props": { "label": "Sign in", "variant": "primary" }
+    },
+    "login-separator": {
+      "type": "Separator",
+      "props": { "label": "or" }
+    },
+    "login-social": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 3, "justify": "center" },
+      "children": ["login-google", "login-github", "login-apple"]
+    },
+    "login-google": {
+      "type": "Button",
+      "props": { "label": "Google", "variant": "secondary" }
+    },
+    "login-github": {
+      "type": "Button",
+      "props": { "label": "GitHub", "variant": "secondary" }
+    },
+    "login-apple": {
+      "type": "Button",
+      "props": { "label": "Apple", "variant": "secondary" }
+    }
+  }
+}

@@ -1,0 +1,494 @@
+{
+  "root": "shell",
+  "elements": {
+    "shell": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 0
+      },
+      "children": [
+        "sidebar",
+        "main"
+      ]
+    },
+    "sidebar": {
+      "type": "Sidebar",
+      "props": {
+        "sections": [
+          {
+            "title": "Menu",
+            "items": [
+              {
+                "label": "Overview",
+                "icon": "LayoutDashboard",
+                "active": true,
+                "href": "#overview"
+              },
+              {
+                "label": "Analytics",
+                "icon": "BarChart3",
+                "href": "#analytics"
+              },
+              {
+                "label": "Users",
+                "icon": "Users",
+                "href": "#users"
+              },
+              {
+                "label": "Products",
+                "icon": "Package",
+                "href": "#products"
+              },
+              {
+                "label": "Orders",
+                "icon": "ShoppingCart",
+                "href": "#orders"
+              }
+            ]
+          },
+          {
+            "title": "System",
+            "items": [
+              {
+                "label": "Settings",
+                "icon": "Settings",
+                "href": "#settings"
+              },
+              {
+                "label": "Help",
+                "icon": "HelpCircle",
+                "href": "#help"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "main": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "style": {
+          "flex": 1,
+          "padding": "24px",
+          "overflow": "auto"
+        }
+      },
+      "children": [
+        "header-bar",
+        "page-content"
+      ]
+    },
+    "header-bar": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "justify": "between",
+        "align": "center",
+        "gap": 4
+      },
+      "children": [
+        "header-left",
+        "header-actions"
+      ]
+    },
+    "header-left": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "header-title",
+        "header-subtitle"
+      ]
+    },
+    "header-title": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Dashboard"
+      }
+    },
+    "header-subtitle": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Monday, March 10, 2026",
+        "variant": "muted"
+      }
+    },
+    "header-actions": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "align": "center",
+        "gap": 3
+      },
+      "children": [
+        "header-search",
+        "header-notif-btn",
+        "header-avatar"
+      ]
+    },
+    "header-search": {
+      "type": "Search",
+      "props": {
+        "placeholder": "Search orders, users, products..."
+      }
+    },
+    "header-notif-btn": {
+      "type": "Button",
+      "props": {
+        "variant": "ghost",
+        "icon": "Bell",
+        "size": "sm"
+      }
+    },
+    "header-avatar": {
+      "type": "Avatar",
+      "props": {
+        "initials": "JD",
+        "size": "md"
+      }
+    },
+    "page-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "kpi-row",
+        "sep-1",
+        "table-section",
+        "sep-2",
+        "bottom-row"
+      ]
+    },
+    "kpi-row": {
+      "type": "Grid",
+      "props": {
+        "columns": 4,
+        "gap": 4
+      },
+      "children": [
+        "kpi-revenue",
+        "kpi-orders",
+        "kpi-users",
+        "kpi-conversion"
+      ]
+    },
+    "kpi-revenue": {
+      "type": "StatCard",
+      "props": {
+        "value": "$48,239",
+        "icon": "DollarSign",
+        "label": "Total Revenue",
+        "trend": "up",
+        "trendValue": "12.5% from last month"
+      }
+    },
+    "kpi-orders": {
+      "type": "StatCard",
+      "props": {
+        "value": "1,284",
+        "icon": "ShoppingCart",
+        "label": "Orders",
+        "trend": "up",
+        "trendValue": "8.2% from last month"
+      }
+    },
+    "kpi-users": {
+      "type": "StatCard",
+      "props": {
+        "value": "3,472",
+        "icon": "Users",
+        "label": "Active Users",
+        "trend": "up",
+        "trendValue": "18.7% from last month"
+      }
+    },
+    "kpi-conversion": {
+      "type": "StatCard",
+      "props": {
+        "value": "3.6%",
+        "icon": "TrendingUp",
+        "label": "Conversion Rate",
+        "trend": "up",
+        "trendValue": "0.4% from last month"
+      }
+    },
+    "sep-1": {
+      "type": "Separator",
+      "props": {
+        "orientation": "horizontal"
+      }
+    },
+    "table-section": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "table-header",
+        "orders-table"
+      ]
+    },
+    "table-header": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "justify": "between",
+        "align": "center"
+      },
+      "children": [
+        "table-title",
+        "table-actions"
+      ]
+    },
+    "table-title": {
+      "type": "Text",
+      "props": {
+        "tag": "h3",
+        "content": "Recent Orders"
+      }
+    },
+    "table-actions": {
+      "type": "ButtonGroup",
+      "props": {},
+      "children": [
+        "btn-export",
+        "btn-filter"
+      ]
+    },
+    "btn-export": {
+      "type": "Button",
+      "props": {
+        "label": "Export",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "Download"
+      }
+    },
+    "btn-filter": {
+      "type": "Button",
+      "props": {
+        "label": "Filter",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "SlidersHorizontal"
+      }
+    },
+    "orders-table": {
+      "type": "DataTable",
+      "props": {
+        "columns": [
+          {
+            "key": "id",
+            "label": "Order ID",
+            "sortable": true
+          },
+          {
+            "key": "customer",
+            "label": "Customer",
+            "sortable": true
+          },
+          {
+            "key": "product",
+            "label": "Product",
+            "sortable": true
+          },
+          {
+            "key": "amount",
+            "label": "Amount",
+            "sortable": true
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "sortable": true
+          },
+          {
+            "key": "date",
+            "label": "Date",
+            "sortable": true
+          }
+        ],
+        "rows": [
+          {
+            "id": "#ORD-7291",
+            "customer": "Sarah Chen",
+            "product": "Pro Plan (Annual)",
+            "amount": "$599.00",
+            "status": "Completed",
+            "date": "Mar 10, 2026"
+          },
+          {
+            "id": "#ORD-7290",
+            "customer": "Marcus Rivera",
+            "product": "Team License x5",
+            "amount": "$1,245.00",
+            "status": "Processing",
+            "date": "Mar 9, 2026"
+          },
+          {
+            "id": "#ORD-7289",
+            "customer": "Emily Watson",
+            "product": "Enterprise Add-on",
+            "amount": "$349.00",
+            "status": "Completed",
+            "date": "Mar 9, 2026"
+          },
+          {
+            "id": "#ORD-7288",
+            "customer": "James Okafor",
+            "product": "Pro Plan (Monthly)",
+            "amount": "$59.00",
+            "status": "Completed",
+            "date": "Mar 8, 2026"
+          },
+          {
+            "id": "#ORD-7287",
+            "customer": "Lisa Andersson",
+            "product": "Storage Upgrade",
+            "amount": "$129.00",
+            "status": "Refunded",
+            "date": "Mar 8, 2026"
+          },
+          {
+            "id": "#ORD-7286",
+            "customer": "David Kim",
+            "product": "Team License x10",
+            "amount": "$2,390.00",
+            "status": "Completed",
+            "date": "Mar 7, 2026"
+          },
+          {
+            "id": "#ORD-7285",
+            "customer": "Rachel Nguyen",
+            "product": "Pro Plan (Annual)",
+            "amount": "$599.00",
+            "status": "Processing",
+            "date": "Mar 7, 2026"
+          }
+        ],
+        "striped": true,
+        "hoverable": true
+      }
+    },
+    "sep-2": {
+      "type": "Separator",
+      "props": {
+        "orientation": "horizontal"
+      }
+    },
+    "bottom-row": {
+      "type": "Grid",
+      "props": {
+        "columns": 2,
+        "gap": 4
+      },
+      "children": [
+        "activity-card",
+        "performance-card"
+      ]
+    },
+    "activity-card": {
+      "type": "Card",
+      "props": {
+        "title": "Recent Activity"
+      },
+      "children": [
+        "activity-list"
+      ]
+    },
+    "activity-list": {
+      "type": "List",
+      "props": {
+        "items": [
+          {
+            "primary": "Sarah Chen upgraded to Pro Plan",
+            "secondary": "Annual subscription activated",
+            "icon": "ArrowUpCircle",
+            "meta": "2 min ago"
+          },
+          {
+            "primary": "Marcus Rivera placed a bulk order",
+            "secondary": "5 team licenses purchased",
+            "icon": "ShoppingCart",
+            "meta": "18 min ago"
+          },
+          {
+            "primary": "New user registered: Priya Sharma",
+            "secondary": "Signed up via referral link",
+            "icon": "UserPlus",
+            "meta": "1 hr ago"
+          },
+          {
+            "primary": "Lisa Andersson requested a refund",
+            "secondary": "Storage Upgrade - duplicate purchase",
+            "icon": "RotateCcw",
+            "meta": "3 hrs ago"
+          },
+          {
+            "primary": "System backup completed",
+            "secondary": "All databases backed up successfully",
+            "icon": "CheckCircle",
+            "meta": "5 hrs ago"
+          },
+          {
+            "primary": "Payment received from Acme Corp",
+            "secondary": "Enterprise invoice #INV-2041 settled",
+            "icon": "CreditCard",
+            "meta": "6 hrs ago"
+          }
+        ]
+      }
+    },
+    "performance-card": {
+      "type": "Card",
+      "props": {
+        "title": "Performance"
+      },
+      "children": [
+        "performance-list"
+      ]
+    },
+    "performance-list": {
+      "type": "List",
+      "props": {
+        "items": [
+          {
+            "primary": "Server Uptime",
+            "secondary": "Last 30 days",
+            "meta": "99.98%"
+          },
+          {
+            "primary": "Avg. Response Time",
+            "secondary": "API endpoints",
+            "meta": "142ms"
+          },
+          {
+            "primary": "Support Tickets Open",
+            "secondary": "3 high priority",
+            "meta": "17"
+          },
+          {
+            "primary": "NPS Score",
+            "secondary": "Q1 2026 survey",
+            "meta": "72"
+          },
+          {
+            "primary": "Monthly Churn",
+            "secondary": "Down from 4.1%",
+            "meta": "2.8%"
+          }
+        ]
+      }
+    }
+  }
+}

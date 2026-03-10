@@ -1,0 +1,47 @@
+{
+  "root": "features-root",
+  "elements": {
+    "features-root": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6, "align": "center", "container": "wide" },
+      "children": ["features-heading", "features-subheading", "features-grid"]
+    },
+    "features-heading": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Everything you need to ship faster" }
+    },
+    "features-subheading": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Powerful features designed to streamline your workflow from idea to production." }
+    },
+    "features-grid": {
+      "type": "Grid",
+      "props": { "columns": 3, "gap": 5 },
+      "children": ["feature-1", "feature-2", "feature-3", "feature-4", "feature-5", "feature-6"]
+    },
+    "feature-1": {
+      "type": "Card",
+      "props": { "title": "Lightning Fast", "description": "Sub-second build times with incremental compilation and smart caching across your entire project.", "icon": "zap" }
+    },
+    "feature-2": {
+      "type": "Card",
+      "props": { "title": "Team Collaboration", "description": "Real-time multiplayer editing with conflict resolution, comments, and change tracking built in.", "icon": "users" }
+    },
+    "feature-3": {
+      "type": "Card",
+      "props": { "title": "Enterprise Security", "description": "SOC 2 compliant with end-to-end encryption, role-based access control, and audit logging.", "icon": "shield" }
+    },
+    "feature-4": {
+      "type": "Card",
+      "props": { "title": "Smart Analytics", "description": "Actionable insights with custom dashboards, funnel analysis, and automated anomaly detection.", "icon": "bar-chart" }
+    },
+    "feature-5": {
+      "type": "Card",
+      "props": { "title": "Global CDN", "description": "Deploy to 200+ edge locations worldwide. Your users get blazing speed no matter where they are.", "icon": "globe" }
+    },
+    "feature-6": {
+      "type": "Card",
+      "props": { "title": "API First", "description": "Comprehensive REST and GraphQL APIs with SDKs for JavaScript, Python, Go, and Ruby.", "icon": "code" }
+    }
+  }
+}

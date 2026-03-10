@@ -1,0 +1,136 @@
+{
+  "root": "footer-root",
+  "elements": {
+    "footer-root": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6, "container": "wide" },
+      "children": ["footer-links", "footer-sep", "footer-bottom"]
+    },
+    "footer-links": {
+      "type": "Grid",
+      "props": { "columns": 4, "gap": 5 },
+      "children": ["footer-col-product", "footer-col-company", "footer-col-resources", "footer-col-legal"]
+    },
+    "footer-col-product": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3 },
+      "children": ["footer-product-heading", "footer-product-nav"]
+    },
+    "footer-product-heading": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Product", "weight": "bold" }
+    },
+    "footer-product-nav": {
+      "type": "NavMenu",
+      "props": {
+        "direction": "vertical",
+        "items": [
+          { "label": "Features", "href": "/features" },
+          { "label": "Pricing", "href": "/pricing" },
+          { "label": "Integrations", "href": "/integrations" },
+          { "label": "Changelog", "href": "/changelog" },
+          { "label": "API", "href": "/api" }
+        ]
+      }
+    },
+    "footer-col-company": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3 },
+      "children": ["footer-company-heading", "footer-company-nav"]
+    },
+    "footer-company-heading": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Company", "weight": "bold" }
+    },
+    "footer-company-nav": {
+      "type": "NavMenu",
+      "props": {
+        "direction": "vertical",
+        "items": [
+          { "label": "About", "href": "/about" },
+          { "label": "Blog", "href": "/blog" },
+          { "label": "Careers", "href": "/careers" },
+          { "label": "Press", "href": "/press" },
+          { "label": "Contact", "href": "/contact" }
+        ]
+      }
+    },
+    "footer-col-resources": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3 },
+      "children": ["footer-resources-heading", "footer-resources-nav"]
+    },
+    "footer-resources-heading": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Resources", "weight": "bold" }
+    },
+    "footer-resources-nav": {
+      "type": "NavMenu",
+      "props": {
+        "direction": "vertical",
+        "items": [
+          { "label": "Documentation", "href": "/docs" },
+          { "label": "Guides", "href": "/guides" },
+          { "label": "API Reference", "href": "/api-reference" },
+          { "label": "Community", "href": "/community" },
+          { "label": "Status", "href": "/status" }
+        ]
+      }
+    },
+    "footer-col-legal": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3 },
+      "children": ["footer-legal-heading", "footer-legal-nav"]
+    },
+    "footer-legal-heading": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Legal", "weight": "bold" }
+    },
+    "footer-legal-nav": {
+      "type": "NavMenu",
+      "props": {
+        "direction": "vertical",
+        "items": [
+          { "label": "Privacy Policy", "href": "/privacy" },
+          { "label": "Terms of Service", "href": "/terms" },
+          { "label": "Cookie Policy", "href": "/cookies" },
+          { "label": "GDPR", "href": "/gdpr" }
+        ]
+      }
+    },
+    "footer-sep": {
+      "type": "Separator",
+      "props": {}
+    },
+    "footer-bottom": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 4, "justify": "between", "align": "center" },
+      "children": ["footer-copyright", "footer-social"]
+    },
+    "footer-copyright": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "\u00a9 2026 Acme Inc. All rights reserved." }
+    },
+    "footer-social": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2 },
+      "children": ["footer-social-twitter", "footer-social-github", "footer-social-linkedin", "footer-social-discord"]
+    },
+    "footer-social-twitter": {
+      "type": "Button",
+      "props": { "label": "Twitter", "variant": "ghost", "size": "sm" }
+    },
+    "footer-social-github": {
+      "type": "Button",
+      "props": { "label": "GitHub", "variant": "ghost", "size": "sm" }
+    },
+    "footer-social-linkedin": {
+      "type": "Button",
+      "props": { "label": "LinkedIn", "variant": "ghost", "size": "sm" }
+    },
+    "footer-social-discord": {
+      "type": "Button",
+      "props": { "label": "Discord", "variant": "ghost", "size": "sm" }
+    }
+  }
+}

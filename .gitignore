@@ -11,3 +11,4 @@ node_modules/
 tools/visual-qa/results/
 tools/visual-qa/node_modules/
 *.pdf
+CLAUDE.local.md

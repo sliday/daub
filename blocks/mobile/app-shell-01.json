@@ -1,0 +1,339 @@
+{
+  "root": "app-shell",
+  "elements": {
+    "app-shell": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "justify": "between"
+      },
+      "children": [
+        "top-navbar",
+        "main-content",
+        "bottom-nav"
+      ]
+    },
+    "top-navbar": {
+      "type": "Navbar",
+      "props": {
+        "brand": "Acme App",
+        "brandHref": "/",
+        "sticky": true,
+        "actions": [
+          {
+            "icon": "bell",
+            "badge": "3",
+            "href": "/notifications"
+          }
+        ]
+      }
+    },
+    "main-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "greeting-section",
+        "quick-actions-section",
+        "stats-section",
+        "separator-1",
+        "activity-section"
+      ]
+    },
+    "greeting-section": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "greeting-avatar",
+        "greeting-text-group"
+      ]
+    },
+    "greeting-avatar": {
+      "type": "Avatar",
+      "props": {
+        "initials": "AJ",
+        "size": "lg"
+      }
+    },
+    "greeting-text-group": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "greeting-heading",
+        "greeting-sub"
+      ]
+    },
+    "greeting-heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Good morning, Alex"
+      }
+    },
+    "greeting-sub": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "You have 3 new notifications and 2 pending tasks."
+      }
+    },
+    "quick-actions-section": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "quick-actions-label",
+        "quick-actions-grid"
+      ]
+    },
+    "quick-actions-label": {
+      "type": "Text",
+      "props": {
+        "tag": "h6",
+        "content": "Quick Actions"
+      }
+    },
+    "quick-actions-grid": {
+      "type": "Grid",
+      "props": {
+        "columns": 4,
+        "gap": 2
+      },
+      "children": [
+        "qa-scan",
+        "qa-transfer",
+        "qa-pay",
+        "qa-more"
+      ]
+    },
+    "qa-scan": {
+      "type": "Button",
+      "props": {
+        "label": "Scan",
+        "icon": "camera",
+        "variant": "outline",
+        "size": "sm"
+      }
+    },
+    "qa-transfer": {
+      "type": "Button",
+      "props": {
+        "label": "Transfer",
+        "icon": "arrow-right",
+        "variant": "outline",
+        "size": "sm"
+      }
+    },
+    "qa-pay": {
+      "type": "Button",
+      "props": {
+        "label": "Pay",
+        "icon": "credit-card",
+        "variant": "outline",
+        "size": "sm"
+      }
+    },
+    "qa-more": {
+      "type": "Button",
+      "props": {
+        "label": "More",
+        "icon": "grid",
+        "variant": "outline",
+        "size": "sm"
+      }
+    },
+    "stats-section": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "stats-label",
+        "stats-grid"
+      ]
+    },
+    "stats-label": {
+      "type": "Text",
+      "props": {
+        "tag": "h6",
+        "content": "Today's Summary"
+      }
+    },
+    "stats-grid": {
+      "type": "Grid",
+      "props": {
+        "columns": 3,
+        "gap": 2
+      },
+      "children": [
+        "stat-tasks",
+        "stat-messages",
+        "stat-progress"
+      ]
+    },
+    "stat-tasks": {
+      "type": "StatCard",
+      "props": {
+        "value": "12/15",
+        "icon": "check-circle",
+        "label": "Tasks Done",
+        "trend": "up",
+        "trendValue": "3 today"
+      }
+    },
+    "stat-messages": {
+      "type": "StatCard",
+      "props": {
+        "value": "28",
+        "icon": "mail",
+        "label": "Messages",
+        "trend": "up",
+        "trendValue": "5 unread"
+      }
+    },
+    "stat-progress": {
+      "type": "StatCard",
+      "props": {
+        "value": "74%",
+        "icon": "trending-up",
+        "label": "Sprint",
+        "trend": "up",
+        "trendValue": "On track"
+      }
+    },
+    "separator-1": {
+      "type": "Separator",
+      "props": {}
+    },
+    "activity-section": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "activity-header",
+        "activity-list"
+      ]
+    },
+    "activity-header": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "activity-label",
+        "activity-chip"
+      ]
+    },
+    "activity-label": {
+      "type": "Text",
+      "props": {
+        "tag": "h6",
+        "content": "Recent Activity"
+      }
+    },
+    "activity-chip": {
+      "type": "Chip",
+      "props": {
+        "label": "Today"
+      }
+    },
+    "activity-list": {
+      "type": "List",
+      "props": {
+        "items": [
+          {
+            "primary": "Design review completed",
+            "secondary": "Sarah approved the homepage mockup",
+            "icon": "check-circle",
+            "meta": "2m ago"
+          },
+          {
+            "primary": "New comment on Sprint Board",
+            "secondary": "Mike: 'Looks great, ship it'",
+            "icon": "message-circle",
+            "meta": "15m ago"
+          },
+          {
+            "primary": "Deployment succeeded",
+            "secondary": "v2.4.1 pushed to production",
+            "icon": "cloud",
+            "meta": "1h ago"
+          },
+          {
+            "primary": "Pull request merged",
+            "secondary": "#482 Fix authentication timeout",
+            "icon": "git-merge",
+            "meta": "2h ago"
+          },
+          {
+            "primary": "Meeting scheduled",
+            "secondary": "Product sync at 3:00 PM with 4 attendees",
+            "icon": "calendar",
+            "meta": "3h ago"
+          },
+          {
+            "primary": "Invoice paid",
+            "secondary": "Client ABC Corp - $4,200.00",
+            "icon": "dollar-sign",
+            "meta": "5h ago"
+          }
+        ]
+      }
+    },
+    "bottom-nav": {
+      "type": "BottomNav",
+      "props": {
+        "items": [
+          {
+            "label": "Home",
+            "icon": "home",
+            "active": true,
+            "href": "/"
+          },
+          {
+            "label": "Search",
+            "icon": "search",
+            "active": false,
+            "href": "/search"
+          },
+          {
+            "label": "Add",
+            "icon": "plus-circle",
+            "active": false,
+            "href": "/create"
+          },
+          {
+            "label": "Messages",
+            "icon": "message-square",
+            "active": false,
+            "href": "/messages"
+          },
+          {
+            "label": "Profile",
+            "icon": "user",
+            "active": false,
+            "href": "/profile"
+          }
+        ]
+      }
+    }
+  }
+}

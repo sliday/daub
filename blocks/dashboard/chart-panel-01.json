@@ -1,0 +1,135 @@
+{
+  "root": "page",
+  "elements": {
+    "page": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6 },
+      "children": ["header-row", "revenue-chart", "stats-grid", "separator-1", "breakdown-section"]
+    },
+    "header-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 3, "align": "center", "justify": "between" },
+      "children": ["header-left", "header-right"]
+    },
+    "header-left": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "align": "center" },
+      "children": ["page-title", "live-badge"]
+    },
+    "page-title": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Revenue Analytics" }
+    },
+    "live-badge": {
+      "type": "Badge",
+      "props": { "text": "Live", "variant": "new" }
+    },
+    "header-right": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "align": "center" },
+      "children": ["date-range-select", "export-btn"]
+    },
+    "date-range-select": {
+      "type": "Select",
+      "props": {
+        "placeholder": "Date range",
+        "size": "sm",
+        "options": [
+          { "label": "Last 6 months", "value": "6m" },
+          { "label": "Last 12 months", "value": "12m" },
+          { "label": "Year to date", "value": "ytd" }
+        ]
+      }
+    },
+    "export-btn": {
+      "type": "Button",
+      "props": { "label": "Export", "variant": "outline", "size": "sm", "icon": "download" }
+    },
+    "revenue-chart": {
+      "type": "ChartCard",
+      "props": { "title": "Monthly Revenue" },
+      "children": ["bar-chart"]
+    },
+    "bar-chart": {
+      "type": "Chart",
+      "props": {
+        "bars": [
+          { "label": "Oct", "value": 32400 },
+          { "label": "Nov", "value": 28900 },
+          { "label": "Dec", "value": 41200 },
+          { "label": "Jan", "value": 37800 },
+          { "label": "Feb", "value": 44600 },
+          { "label": "Mar", "value": 48350 }
+        ]
+      }
+    },
+    "stats-grid": {
+      "type": "Grid",
+      "props": { "columns": 4, "gap": 3 },
+      "children": ["stat-total", "stat-avg", "stat-best", "stat-growth"]
+    },
+    "stat-total": {
+      "type": "StatCard",
+      "props": { "label": "6-Month Total", "value": "$233,250", "trend": "up", "trendValue": "12.3%", "icon": "dollar-sign" }
+    },
+    "stat-avg": {
+      "type": "StatCard",
+      "props": { "label": "Monthly Average", "value": "$38,875", "icon": "bar-chart-2" }
+    },
+    "stat-best": {
+      "type": "StatCard",
+      "props": { "label": "Best Month", "value": "$48,350", "trend": "up", "trendValue": "March", "icon": "trophy" }
+    },
+    "stat-growth": {
+      "type": "StatCard",
+      "props": { "label": "MoM Growth", "value": "+8.4%", "trend": "up", "trendValue": "Feb→Mar", "icon": "trending-up" }
+    },
+    "separator-1": {
+      "type": "Separator",
+      "props": {}
+    },
+    "breakdown-section": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["breakdown-header", "breakdown-content"]
+    },
+    "breakdown-header": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Revenue by Category" }
+    },
+    "breakdown-content": {
+      "type": "Grid",
+      "props": { "columns": 2, "gap": 4 },
+      "children": ["category-chart", "category-list"]
+    },
+    "category-chart": {
+      "type": "ChartCard",
+      "props": { "title": "Distribution" },
+      "children": ["donut-chart"]
+    },
+    "donut-chart": {
+      "type": "Chart",
+      "props": {
+        "bars": [
+          { "label": "Subscriptions", "value": 98200 },
+          { "label": "One-time Sales", "value": 61500 },
+          { "label": "Enterprise", "value": 42800 },
+          { "label": "Add-ons", "value": 19750 },
+          { "label": "Services", "value": 11000 }
+        ]
+      }
+    },
+    "category-list": {
+      "type": "List",
+      "props": {
+        "items": [
+          { "primary": "Subscriptions", "secondary": "42.1% of total", "meta": "$98,200" },
+          { "primary": "One-time Sales", "secondary": "26.4% of total", "meta": "$61,500" },
+          { "primary": "Enterprise", "secondary": "18.4% of total", "meta": "$42,800" },
+          { "primary": "Add-ons", "secondary": "8.5% of total", "meta": "$19,750" },
+          { "primary": "Services", "secondary": "4.7% of total", "meta": "$11,000" }
+        ]
+      }
+    }
+  }
+}

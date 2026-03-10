@@ -1,0 +1,116 @@
+{
+  "root": "product-listing",
+  "elements": {
+    "product-listing": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 5 },
+      "children": ["header-row", "filter-row", "products-grid"]
+    },
+    "header-row": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Shop All Products" }
+    },
+    "filter-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2 },
+      "children": ["chip-all", "chip-new", "chip-sale", "chip-popular", "chip-rated"]
+    },
+    "chip-all": {
+      "type": "Chip",
+      "props": { "label": "All", "color": "blue", "active": true }
+    },
+    "chip-new": {
+      "type": "Chip",
+      "props": { "label": "New Arrivals", "color": "green", "active": false }
+    },
+    "chip-sale": {
+      "type": "Chip",
+      "props": { "label": "On Sale", "color": "red", "active": false }
+    },
+    "chip-popular": {
+      "type": "Chip",
+      "props": { "label": "Popular", "color": "purple", "active": false }
+    },
+    "chip-rated": {
+      "type": "Chip",
+      "props": { "label": "Top Rated", "color": "amber", "active": false }
+    },
+    "products-grid": {
+      "type": "Grid",
+      "props": { "columns": 3, "gap": 4 },
+      "children": ["product-1", "product-2", "product-3", "product-4", "product-5", "product-6"]
+    },
+    "product-1": {
+      "type": "Card",
+      "props": { "title": "Wireless Headphones", "description": "$79.99", "media": "https://picsum.photos/seed/headphones/400/300", "interactive": true, "footer": ["p1-rating", "p1-cart"] }
+    },
+    "p1-rating": {
+      "type": "Badge",
+      "props": { "text": "4.8 ★", "variant": "new" }
+    },
+    "p1-cart": {
+      "type": "Button",
+      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+    },
+    "product-2": {
+      "type": "Card",
+      "props": { "title": "Leather Backpack", "description": "$124.00", "media": "https://picsum.photos/seed/backpack/400/300", "interactive": true, "footer": ["p2-rating", "p2-cart"] }
+    },
+    "p2-rating": {
+      "type": "Badge",
+      "props": { "text": "4.5 ★", "variant": "updated" }
+    },
+    "p2-cart": {
+      "type": "Button",
+      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+    },
+    "product-3": {
+      "type": "Card",
+      "props": { "title": "Smart Watch Pro", "description": "$249.99", "media": "https://picsum.photos/seed/watch/400/300", "interactive": true, "footer": ["p3-rating", "p3-cart"] }
+    },
+    "p3-rating": {
+      "type": "Badge",
+      "props": { "text": "4.9 ★", "variant": "new" }
+    },
+    "p3-cart": {
+      "type": "Button",
+      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+    },
+    "product-4": {
+      "type": "Card",
+      "props": { "title": "Running Shoes", "description": "$89.95", "media": "https://picsum.photos/seed/shoes/400/300", "interactive": true, "footer": ["p4-rating", "p4-cart"] }
+    },
+    "p4-rating": {
+      "type": "Badge",
+      "props": { "text": "4.3 ★", "variant": "updated" }
+    },
+    "p4-cart": {
+      "type": "Button",
+      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+    },
+    "product-5": {
+      "type": "Card",
+      "props": { "title": "Ceramic Mug Set", "description": "$34.50", "media": "https://picsum.photos/seed/mugs/400/300", "interactive": true, "footer": ["p5-rating", "p5-cart"] }
+    },
+    "p5-rating": {
+      "type": "Badge",
+      "props": { "text": "4.7 ★", "variant": "new" }
+    },
+    "p5-cart": {
+      "type": "Button",
+      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+    },
+    "product-6": {
+      "type": "Card",
+      "props": { "title": "Desk Lamp", "description": "$56.00", "media": "https://picsum.photos/seed/lamp/400/300", "interactive": true, "footer": ["p6-rating", "p6-cart"] }
+    },
+    "p6-rating": {
+      "type": "Badge",
+      "props": { "text": "4.6 ★", "variant": "updated" }
+    },
+    "p6-cart": {
+      "type": "Button",
+      "props": { "label": "Add to Cart", "variant": "primary", "size": "sm" }
+    }
+  }
+}

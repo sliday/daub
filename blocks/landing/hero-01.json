@@ -1,0 +1,90 @@
+{
+  "root": "hero-root",
+  "elements": {
+    "hero-root": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6, "align": "center", "container": "narrow" },
+      "children": ["hero-badge", "hero-heading", "hero-subheading", "hero-actions", "hero-image", "hero-trusted", "hero-stats"]
+    },
+    "hero-badge": {
+      "type": "Badge",
+      "props": { "text": "Now in Public Beta", "variant": "new" }
+    },
+    "hero-heading": {
+      "type": "Text",
+      "props": { "tag": "h1", "content": "Build beautiful interfaces in minutes, not months" }
+    },
+    "hero-subheading": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "A modern toolkit that helps teams design, prototype, and ship polished products faster. No compromises on quality." }
+    },
+    "hero-actions": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 4, "justify": "center", "align": "center" },
+      "children": ["hero-cta-primary", "hero-cta-secondary"]
+    },
+    "hero-cta-primary": {
+      "type": "Button",
+      "props": { "label": "Get Started Free", "variant": "primary", "size": "lg" }
+    },
+    "hero-cta-secondary": {
+      "type": "Button",
+      "props": { "label": "See How It Works", "variant": "secondary", "size": "lg" }
+    },
+    "hero-image": {
+      "type": "Image",
+      "props": { "src": "https://picsum.photos/seed/daub-hero/960/540", "alt": "Platform preview" }
+    },
+    "hero-trusted": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3, "align": "center" },
+      "children": ["hero-trusted-label", "hero-trusted-logos"]
+    },
+    "hero-trusted-label": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Trusted by 10,000+ teams worldwide", "variant": "muted", "align": "center" }
+    },
+    "hero-trusted-logos": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 6, "justify": "center", "align": "center" },
+      "children": ["logo-stripe", "logo-vercel", "logo-linear", "logo-notion", "logo-figma"]
+    },
+    "logo-stripe": {
+      "type": "Text",
+      "props": { "content": "Stripe", "variant": "muted", "weight": "semibold" }
+    },
+    "logo-vercel": {
+      "type": "Text",
+      "props": { "content": "Vercel", "variant": "muted", "weight": "semibold" }
+    },
+    "logo-linear": {
+      "type": "Text",
+      "props": { "content": "Linear", "variant": "muted", "weight": "semibold" }
+    },
+    "logo-notion": {
+      "type": "Text",
+      "props": { "content": "Notion", "variant": "muted", "weight": "semibold" }
+    },
+    "logo-figma": {
+      "type": "Text",
+      "props": { "content": "Figma", "variant": "muted", "weight": "semibold" }
+    },
+    "hero-stats": {
+      "type": "Grid",
+      "props": { "columns": 3, "gap": 4 },
+      "children": ["stat-users", "stat-uptime", "stat-components"]
+    },
+    "stat-users": {
+      "type": "StatCard",
+      "props": { "value": "10K+", "label": "Users" }
+    },
+    "stat-uptime": {
+      "type": "StatCard",
+      "props": { "value": "99.9%", "label": "Uptime" }
+    },
+    "stat-components": {
+      "type": "StatCard",
+      "props": { "value": "50M+", "label": "Components Rendered" }
+    }
+  }
+}

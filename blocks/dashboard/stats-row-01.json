@@ -1,0 +1,50 @@
+{
+  "root": "stats-grid",
+  "elements": {
+    "stats-grid": {
+      "type": "Grid",
+      "props": { "columns": 4, "gap": 4 },
+      "children": ["stat-revenue", "stat-users", "stat-conversion", "stat-aov"]
+    },
+    "stat-revenue": {
+      "type": "StatCard",
+      "props": {
+        "label": "Total Revenue",
+        "value": "$48,352",
+        "trend": "up",
+        "trendValue": "+12.5%",
+        "icon": "DollarSign"
+      }
+    },
+    "stat-users": {
+      "type": "StatCard",
+      "props": {
+        "label": "Active Users",
+        "value": "2,847",
+        "trend": "up",
+        "trendValue": "+8.2%",
+        "icon": "Users"
+      }
+    },
+    "stat-conversion": {
+      "type": "StatCard",
+      "props": {
+        "label": "Conversion Rate",
+        "value": "3.24%",
+        "trend": "down",
+        "trendValue": "-0.4%",
+        "icon": "TrendingUp"
+      }
+    },
+    "stat-aov": {
+      "type": "StatCard",
+      "props": {
+        "label": "Avg Order Value",
+        "value": "$67.40",
+        "trend": "up",
+        "trendValue": "+3.1%",
+        "icon": "ShoppingBag"
+      }
+    }
+  }
+}

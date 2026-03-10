@@ -1,0 +1,528 @@
+[
+  {
+    "id": "auth-page-01",
+    "name": "Auth Page",
+    "category": "auth",
+    "description": "Split-screen auth: branding panel (left) + login form (right) in 2-column grid",
+    "tags": [
+      "auth",
+      "login",
+      "split-screen",
+      "branding"
+    ],
+    "file": "auth/auth-page-01.json",
+    "element_count": 33,
+    "components_used": [
+      "Grid",
+      "Surface",
+      "Stack",
+      "Text",
+      "List",
+      "Avatar",
+      "Button",
+      "Separator",
+      "Field",
+      "Switch"
+    ],
+    "screenshot": "auth/auth-page-01.png"
+  },
+  {
+    "id": "chart-panel-01",
+    "name": "Chart Panel",
+    "category": "dashboard",
+    "description": "Chart card with bar chart (6 months revenue) and summary stats row",
+    "tags": [
+      "dashboard",
+      "chart",
+      "analytics",
+      "visualization"
+    ],
+    "file": "dashboard/chart-panel-01.json",
+    "element_count": 22,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Badge",
+      "Select",
+      "Button",
+      "ChartCard",
+      "Chart",
+      "Grid",
+      "StatCard",
+      "Separator",
+      "List"
+    ],
+    "screenshot": "dashboard/chart-panel-01.png"
+  },
+  {
+    "id": "data-table-01",
+    "name": "Data Table Section",
+    "category": "dashboard",
+    "description": "Data table with header bar (title + search + filter), 6 rows, and pagination",
+    "tags": [
+      "dashboard",
+      "table",
+      "data",
+      "pagination"
+    ],
+    "file": "dashboard/data-table-01.json",
+    "element_count": 12,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "Search",
+      "DataTable"
+    ],
+    "screenshot": "dashboard/data-table-01.png"
+  },
+  {
+    "id": "header-01",
+    "category": "dashboard",
+    "subcategory": "header",
+    "file": "dashboard/header-01.json",
+    "element_count": 28,
+    "components_used": [
+      "Stack",
+      "Navbar",
+      "Avatar",
+      "Text",
+      "Search",
+      "Button",
+      "Badge",
+      "Separator",
+      "Breadcrumbs",
+      "Tabs"
+    ],
+    "name": "Header",
+    "description": "Header block for dashboard",
+    "tags": [
+      "dashboard",
+      "header"
+    ],
+    "screenshot": "dashboard/header-01.png"
+  },
+  {
+    "id": "sidebar-layout-01",
+    "category": "dashboard",
+    "subcategory": "sidebar-layout",
+    "file": "dashboard/sidebar-layout-01.json",
+    "element_count": 31,
+    "components_used": [
+      "Stack",
+      "Sidebar",
+      "Text",
+      "Search",
+      "Button",
+      "Avatar",
+      "Grid",
+      "StatCard",
+      "Separator",
+      "ButtonGroup",
+      "DataTable",
+      "Card",
+      "List"
+    ],
+    "name": "Sidebar Layout",
+    "description": "Sidebar Layout block for dashboard",
+    "tags": [
+      "dashboard",
+      "sidebar",
+      "layout"
+    ],
+    "screenshot": "dashboard/sidebar-layout-01.png"
+  },
+  {
+    "id": "stats-row-01",
+    "name": "Stats Row",
+    "category": "dashboard",
+    "description": "4-column KPI stat cards row (Revenue, Users, Conversion, Avg Order) with trends",
+    "tags": [
+      "dashboard",
+      "stats",
+      "kpi",
+      "metrics"
+    ],
+    "file": "dashboard/stats-row-01.json",
+    "element_count": 5,
+    "components_used": [
+      "Grid",
+      "StatCard"
+    ],
+    "screenshot": "dashboard/stats-row-01.png"
+  },
+  {
+    "id": "empty-state-01",
+    "name": "Empty State",
+    "category": "data-display",
+    "description": "Centered empty state with icon, title, message, and action button",
+    "tags": [
+      "empty",
+      "placeholder",
+      "no-data",
+      "cta"
+    ],
+    "file": "data-display/empty-state-01.json",
+    "element_count": 3,
+    "components_used": [
+      "Stack",
+      "EmptyState",
+      "Button"
+    ],
+    "screenshot": "data-display/empty-state-01.png"
+  },
+  {
+    "id": "notification-center-01",
+    "name": "Notification Center",
+    "category": "data-display",
+    "description": "Notification list with header, mark-all-read button, and 6 notification items",
+    "tags": [
+      "notifications",
+      "list",
+      "alerts",
+      "inbox"
+    ],
+    "file": "data-display/notification-center-01.json",
+    "element_count": 5,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "List"
+    ],
+    "screenshot": "data-display/notification-center-01.png"
+  },
+  {
+    "id": "profile-01",
+    "name": "User Profile",
+    "category": "data-display",
+    "description": "Profile page with avatar header, 3 stat cards, tabbed content, activity list",
+    "tags": [
+      "profile",
+      "user",
+      "stats",
+      "tabs",
+      "activity"
+    ],
+    "file": "data-display/profile-01.json",
+    "element_count": 13,
+    "components_used": [
+      "Stack",
+      "Avatar",
+      "Text",
+      "Button",
+      "StatCard",
+      "Tabs",
+      "List"
+    ],
+    "screenshot": "data-display/profile-01.png"
+  },
+  {
+    "id": "order-summary-01",
+    "name": "Order Summary",
+    "category": "ecommerce",
+    "description": "Order summary card with line items, subtotal/shipping/tax/total, promo code, checkout",
+    "tags": [
+      "ecommerce",
+      "order",
+      "cart",
+      "summary",
+      "checkout"
+    ],
+    "file": "ecommerce/order-summary-01.json",
+    "element_count": 21,
+    "components_used": [
+      "Stack",
+      "Text",
+      "List",
+      "Separator",
+      "Input",
+      "Button"
+    ],
+    "screenshot": "ecommerce/order-summary-01.png"
+  },
+  {
+    "id": "product-grid-01",
+    "name": "Product Grid",
+    "category": "ecommerce",
+    "description": "Product listing with filter chips and 3-column grid of 6 product cards",
+    "tags": [
+      "ecommerce",
+      "products",
+      "grid",
+      "cards",
+      "shopping"
+    ],
+    "file": "ecommerce/product-grid-01.json",
+    "element_count": 27,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Chip",
+      "Grid",
+      "Card",
+      "Badge",
+      "Button"
+    ],
+    "screenshot": "ecommerce/product-grid-01.png"
+  },
+  {
+    "id": "checkout-01",
+    "category": "forms",
+    "subcategory": "checkout",
+    "file": "forms/checkout-01.json",
+    "element_count": 35,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Field",
+      "Select",
+      "Card",
+      "Separator",
+      "Button"
+    ],
+    "name": "Checkout",
+    "description": "Checkout block for forms",
+    "tags": [
+      "forms",
+      "checkout"
+    ],
+    "screenshot": "forms/checkout-01.png"
+  },
+  {
+    "id": "contact-01",
+    "category": "forms",
+    "subcategory": "contact",
+    "file": "forms/contact-01.json",
+    "element_count": 13,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Field",
+      "Select",
+      "Label",
+      "Textarea",
+      "Button"
+    ],
+    "name": "Contact",
+    "description": "Contact block for forms",
+    "tags": [
+      "forms",
+      "contact"
+    ],
+    "screenshot": "forms/contact-01.png"
+  },
+  {
+    "id": "login-01",
+    "category": "forms",
+    "subcategory": "login",
+    "file": "forms/login-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Text",
+      "Field",
+      "Checkbox",
+      "Button",
+      "Separator"
+    ],
+    "name": "Login",
+    "description": "Login block for forms",
+    "tags": [
+      "forms",
+      "login"
+    ],
+    "screenshot": "forms/login-01.png"
+  },
+  {
+    "id": "settings-01",
+    "category": "forms",
+    "subcategory": "settings",
+    "file": "forms/settings-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Field",
+      "Label",
+      "Textarea",
+      "Separator",
+      "Switch",
+      "Button"
+    ],
+    "name": "Settings",
+    "description": "Settings block for forms",
+    "tags": [
+      "forms",
+      "settings"
+    ],
+    "screenshot": "forms/settings-01.png"
+  },
+  {
+    "id": "signup-01",
+    "category": "forms",
+    "subcategory": "signup",
+    "file": "forms/signup-01.json",
+    "element_count": 16,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Text",
+      "Grid",
+      "Field",
+      "Checkbox",
+      "Button"
+    ],
+    "name": "Signup",
+    "description": "Signup block for forms",
+    "tags": [
+      "forms",
+      "signup"
+    ],
+    "screenshot": "forms/signup-01.png"
+  },
+  {
+    "id": "features-grid-01",
+    "name": "Features Grid",
+    "category": "landing",
+    "description": "6-item feature grid with icons, titles, and descriptions in 3 columns",
+    "tags": [
+      "landing",
+      "features",
+      "grid",
+      "marketing"
+    ],
+    "file": "landing/features-grid-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Card"
+    ],
+    "screenshot": "landing/features-grid-01.png"
+  },
+  {
+    "id": "footer-01",
+    "name": "Footer",
+    "category": "landing",
+    "description": "4-column link footer (Product/Company/Resources/Legal) with copyright",
+    "tags": [
+      "landing",
+      "footer",
+      "navigation"
+    ],
+    "file": "landing/footer-01.json",
+    "element_count": 22,
+    "components_used": [
+      "Stack",
+      "Grid",
+      "Text",
+      "NavMenu",
+      "Separator",
+      "Button"
+    ],
+    "screenshot": "landing/footer-01.png"
+  },
+  {
+    "id": "hero-01",
+    "name": "Hero Section",
+    "category": "landing",
+    "description": "Centered hero with heading, subheading, CTA button, and decorative image",
+    "tags": [
+      "landing",
+      "hero",
+      "cta",
+      "marketing"
+    ],
+    "file": "landing/hero-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Badge",
+      "Text",
+      "Button",
+      "Image",
+      "Grid",
+      "StatCard"
+    ],
+    "screenshot": "landing/hero-01.png"
+  },
+  {
+    "id": "pricing-01",
+    "name": "Pricing Table",
+    "category": "landing",
+    "description": "3-tier pricing cards (Free/Pro/Enterprise) with features and CTA buttons",
+    "tags": [
+      "landing",
+      "pricing",
+      "cards",
+      "marketing"
+    ],
+    "file": "landing/pricing-01.json",
+    "element_count": 34,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Surface",
+      "Separator",
+      "Button",
+      "Badge"
+    ],
+    "screenshot": "landing/pricing-01.png"
+  },
+  {
+    "id": "testimonials-01",
+    "name": "Testimonials",
+    "category": "landing",
+    "description": "3 testimonial cards with quotes, avatars, names, and roles",
+    "tags": [
+      "landing",
+      "testimonials",
+      "social-proof"
+    ],
+    "file": "landing/testimonials-01.json",
+    "element_count": 31,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Grid",
+      "Surface",
+      "Separator",
+      "Avatar"
+    ],
+    "screenshot": "landing/testimonials-01.png"
+  },
+  {
+    "id": "app-shell-01",
+    "name": "Mobile App Shell",
+    "category": "mobile",
+    "description": "Mobile layout with top navbar, content area, and bottom navigation (5 tabs)",
+    "tags": [
+      "mobile",
+      "app",
+      "navigation",
+      "bottom-nav",
+      "shell"
+    ],
+    "file": "mobile/app-shell-01.json",
+    "element_count": 28,
+    "components_used": [
+      "Stack",
+      "Navbar",
+      "Avatar",
+      "Text",
+      "Grid",
+      "Button",
+      "StatCard",
+      "Separator",
+      "Chip",
+      "List",
+      "BottomNav"
+    ],
+    "screenshot": "mobile/app-shell-01.png"
+  }
+]

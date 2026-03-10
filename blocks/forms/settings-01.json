@@ -1,0 +1,103 @@
+{
+  "root": "settings-wrapper",
+  "elements": {
+    "settings-wrapper": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 5 },
+      "children": ["settings-title", "settings-profile-section", "settings-sep-1", "settings-notifications-section", "settings-sep-2", "settings-danger-section", "settings-actions"]
+    },
+    "settings-title": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Account Settings" }
+    },
+    "settings-profile-section": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3 },
+      "children": ["settings-profile-heading", "settings-name", "settings-email", "settings-bio"]
+    },
+    "settings-profile-heading": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Profile Information" }
+    },
+    "settings-name": {
+      "type": "Field",
+      "props": { "label": "Full name", "placeholder": "Jane Doe", "type": "text" }
+    },
+    "settings-email": {
+      "type": "Field",
+      "props": { "label": "Email address", "placeholder": "jane@example.com", "type": "email" }
+    },
+    "settings-bio": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["settings-bio-label", "settings-bio-input"]
+    },
+    "settings-bio-label": {
+      "type": "Label",
+      "props": { "text": "Bio", "required": false }
+    },
+    "settings-bio-input": {
+      "type": "Textarea",
+      "props": { "placeholder": "Tell us a little about yourself", "rows": 3 }
+    },
+    "settings-sep-1": {
+      "type": "Separator",
+      "props": {}
+    },
+    "settings-notifications-section": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3 },
+      "children": ["settings-notif-heading", "settings-notif-email", "settings-notif-push", "settings-notif-marketing"]
+    },
+    "settings-notif-heading": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Notifications" }
+    },
+    "settings-notif-email": {
+      "type": "Switch",
+      "props": { "label": "Email notifications", "checked": true }
+    },
+    "settings-notif-push": {
+      "type": "Switch",
+      "props": { "label": "Push notifications", "checked": true }
+    },
+    "settings-notif-marketing": {
+      "type": "Switch",
+      "props": { "label": "Marketing emails", "checked": false }
+    },
+    "settings-sep-2": {
+      "type": "Separator",
+      "props": {}
+    },
+    "settings-danger-section": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3 },
+      "children": ["settings-danger-heading", "settings-danger-desc", "settings-delete-btn"]
+    },
+    "settings-danger-heading": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Danger Zone" }
+    },
+    "settings-danger-desc": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Permanently delete your account and all associated data. This action cannot be undone." }
+    },
+    "settings-delete-btn": {
+      "type": "Button",
+      "props": { "label": "Delete Account", "variant": "secondary" }
+    },
+    "settings-actions": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 3, "justify": "end" },
+      "children": ["settings-cancel-btn", "settings-save-btn"]
+    },
+    "settings-cancel-btn": {
+      "type": "Button",
+      "props": { "label": "Cancel", "variant": "ghost" }
+    },
+    "settings-save-btn": {
+      "type": "Button",
+      "props": { "label": "Save Changes", "variant": "primary" }
+    }
+  }
+}

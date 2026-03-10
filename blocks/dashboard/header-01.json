@@ -1,0 +1,145 @@
+{
+  "root": "header-wrapper",
+  "elements": {
+    "header-wrapper": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 0 },
+      "children": ["top-bar", "sep-1", "nav-row", "sep-2", "page-title-area"]
+    },
+
+    "top-bar": {
+      "type": "Navbar",
+      "props": { "title": "", "sticky": true },
+      "children": ["top-bar-inner"]
+    },
+    "top-bar-inner": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "justify": "between", "align": "center", "gap": 4 },
+      "children": ["brand-group", "header-search", "header-right"]
+    },
+    "brand-group": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "align": "center", "gap": 2 },
+      "children": ["brand-logo", "brand-name"]
+    },
+    "brand-logo": {
+      "type": "Avatar",
+      "props": { "initials": "A", "size": "sm" }
+    },
+    "brand-name": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Acme Inc" }
+    },
+    "header-search": {
+      "type": "Search",
+      "props": { "placeholder": "Search anything..." }
+    },
+    "header-right": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "align": "center", "gap": 3 },
+      "children": ["notif-btn", "notif-badge", "settings-btn", "right-sep", "user-group"]
+    },
+    "notif-btn": {
+      "type": "Button",
+      "props": { "label": "Notifications", "variant": "ghost", "size": "icon", "icon": "Bell" }
+    },
+    "notif-badge": {
+      "type": "Badge",
+      "props": { "text": "3", "variant": "warning" }
+    },
+    "settings-btn": {
+      "type": "Button",
+      "props": { "label": "Settings", "variant": "ghost", "size": "icon", "icon": "Settings" }
+    },
+    "right-sep": {
+      "type": "Separator",
+      "props": { "vertical": true }
+    },
+    "user-group": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "align": "center", "gap": 2 },
+      "children": ["user-avatar", "user-name"]
+    },
+    "user-avatar": {
+      "type": "Avatar",
+      "props": { "initials": "JD", "size": "md" }
+    },
+    "user-name": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Jane Doe" }
+    },
+
+    "sep-1": {
+      "type": "Separator",
+      "props": {}
+    },
+
+    "nav-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "justify": "between", "align": "center", "gap": 4 },
+      "children": ["breadcrumbs", "nav-tabs"]
+    },
+    "breadcrumbs": {
+      "type": "Breadcrumbs",
+      "props": {
+        "items": [
+          { "label": "Home", "href": "/" },
+          { "label": "Dashboards", "href": "/dashboards" },
+          { "label": "Overview", "href": "/dashboards/overview" }
+        ]
+      }
+    },
+    "nav-tabs": {
+      "type": "Tabs",
+      "props": {
+        "items": [
+          { "label": "Overview", "value": "overview", "active": true },
+          { "label": "Analytics", "value": "analytics" },
+          { "label": "Reports", "value": "reports" },
+          { "label": "Settings", "value": "settings" }
+        ]
+      }
+    },
+
+    "sep-2": {
+      "type": "Separator",
+      "props": {}
+    },
+
+    "page-title-area": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "justify": "between", "align": "center", "gap": 4 },
+      "children": ["title-group", "action-buttons"]
+    },
+    "title-group": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["page-title", "page-subtitle"]
+    },
+    "page-title": {
+      "type": "Text",
+      "props": { "tag": "h1", "content": "Dashboard Overview" }
+    },
+    "page-subtitle": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Monitor key metrics and recent activity across your workspace." }
+    },
+    "action-buttons": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "align": "center", "gap": 2 },
+      "children": ["btn-export", "btn-filter", "btn-new"]
+    },
+    "btn-export": {
+      "type": "Button",
+      "props": { "label": "Export", "variant": "outline", "size": "sm", "icon": "Download" }
+    },
+    "btn-filter": {
+      "type": "Button",
+      "props": { "label": "Filter", "variant": "secondary", "size": "sm", "icon": "Filter" }
+    },
+    "btn-new": {
+      "type": "Button",
+      "props": { "label": "New Item", "variant": "primary", "size": "sm", "icon": "Plus" }
+    }
+  }
+}

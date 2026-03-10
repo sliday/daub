@@ -1,0 +1,70 @@
+{
+  "root": "contact-wrapper",
+  "elements": {
+    "contact-wrapper": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 5 },
+      "children": ["contact-header", "contact-form"]
+    },
+    "contact-header": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["contact-title", "contact-description"]
+    },
+    "contact-title": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Get in Touch" }
+    },
+    "contact-description": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Have a question or feedback? Fill out the form below and we'll get back to you within 24 hours." }
+    },
+    "contact-form": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["contact-name", "contact-email", "contact-subject", "contact-message", "contact-upload-note", "contact-submit"]
+    },
+    "contact-name": {
+      "type": "Field",
+      "props": { "label": "Name", "placeholder": "Your full name", "type": "text" }
+    },
+    "contact-email": {
+      "type": "Field",
+      "props": { "label": "Email", "placeholder": "you@example.com", "type": "email" }
+    },
+    "contact-subject": {
+      "type": "Select",
+      "props": {
+        "label": "Subject",
+        "options": [
+          { "label": "General Inquiry", "value": "general" },
+          { "label": "Technical Support", "value": "support" },
+          { "label": "Billing Question", "value": "billing" },
+          { "label": "Partnership", "value": "partnership" },
+          { "label": "Other", "value": "other" }
+        ]
+      }
+    },
+    "contact-message": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["contact-message-label", "contact-message-input"]
+    },
+    "contact-message-label": {
+      "type": "Label",
+      "props": { "text": "Message", "required": true }
+    },
+    "contact-message-input": {
+      "type": "Textarea",
+      "props": { "placeholder": "Describe your question or issue in detail...", "rows": 5 }
+    },
+    "contact-upload-note": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "You can attach files up to 10MB after submitting the form." }
+    },
+    "contact-submit": {
+      "type": "Button",
+      "props": { "label": "Send Message", "variant": "primary" }
+    }
+  }
+}

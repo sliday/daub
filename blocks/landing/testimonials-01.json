@@ -1,0 +1,143 @@
+{
+  "root": "testimonials-root",
+  "elements": {
+    "testimonials-root": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6, "align": "center", "container": "wide" },
+      "children": ["testimonials-heading", "testimonials-subheading", "testimonials-grid"]
+    },
+    "testimonials-heading": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Loved by teams everywhere" }
+    },
+    "testimonials-subheading": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "See what our customers have to say about their experience." }
+    },
+    "testimonials-grid": {
+      "type": "Grid",
+      "props": { "columns": 3, "gap": 5 },
+      "children": ["testimonial-1", "testimonial-2", "testimonial-3"]
+    },
+    "testimonial-1": {
+      "type": "Surface",
+      "props": { "variant": "raised" },
+      "children": ["testimonial-1-inner"]
+    },
+    "testimonial-1-inner": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["testimonial-1-quote", "testimonial-1-sep", "testimonial-1-author"]
+    },
+    "testimonial-1-quote": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "\"We cut our development cycle in half after switching. The collaboration features alone justified the move for our 40-person engineering team.\"" }
+    },
+    "testimonial-1-sep": {
+      "type": "Separator",
+      "props": {}
+    },
+    "testimonial-1-author": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 3, "align": "center" },
+      "children": ["testimonial-1-avatar", "testimonial-1-info"]
+    },
+    "testimonial-1-avatar": {
+      "type": "Avatar",
+      "props": { "initials": "SR", "size": "md" }
+    },
+    "testimonial-1-info": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 0 },
+      "children": ["testimonial-1-name", "testimonial-1-role"]
+    },
+    "testimonial-1-name": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Sarah Rodriguez" }
+    },
+    "testimonial-1-role": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "VP of Engineering, Streamline" }
+    },
+    "testimonial-2": {
+      "type": "Surface",
+      "props": { "variant": "raised" },
+      "children": ["testimonial-2-inner"]
+    },
+    "testimonial-2-inner": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["testimonial-2-quote", "testimonial-2-sep", "testimonial-2-author"]
+    },
+    "testimonial-2-quote": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "\"The analytics dashboard gives us visibility we never had before. We identified and fixed a critical conversion issue within hours of onboarding.\"" }
+    },
+    "testimonial-2-sep": {
+      "type": "Separator",
+      "props": {}
+    },
+    "testimonial-2-author": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 3, "align": "center" },
+      "children": ["testimonial-2-avatar", "testimonial-2-info"]
+    },
+    "testimonial-2-avatar": {
+      "type": "Avatar",
+      "props": { "initials": "MK", "size": "md" }
+    },
+    "testimonial-2-info": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 0 },
+      "children": ["testimonial-2-name", "testimonial-2-role"]
+    },
+    "testimonial-2-name": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Marcus Kim" }
+    },
+    "testimonial-2-role": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Head of Product, Novexa" }
+    },
+    "testimonial-3": {
+      "type": "Surface",
+      "props": { "variant": "raised" },
+      "children": ["testimonial-3-inner"]
+    },
+    "testimonial-3-inner": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["testimonial-3-quote", "testimonial-3-sep", "testimonial-3-author"]
+    },
+    "testimonial-3-quote": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "\"Best developer experience I've encountered in 15 years. The API-first approach means we integrated it into our stack in a single afternoon.\"" }
+    },
+    "testimonial-3-sep": {
+      "type": "Separator",
+      "props": {}
+    },
+    "testimonial-3-author": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 3, "align": "center" },
+      "children": ["testimonial-3-avatar", "testimonial-3-info"]
+    },
+    "testimonial-3-avatar": {
+      "type": "Avatar",
+      "props": { "initials": "JT", "size": "md" }
+    },
+    "testimonial-3-info": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 0 },
+      "children": ["testimonial-3-name", "testimonial-3-role"]
+    },
+    "testimonial-3-name": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "James Thornton" }
+    },
+    "testimonial-3-role": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "CTO, Basecraft Labs" }
+    }
+  }
+}

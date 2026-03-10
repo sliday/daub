@@ -1,0 +1,22 @@
+{
+  "root": "empty-state-wrapper",
+  "elements": {
+    "empty-state-wrapper": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 5, "justify": "center", "align": "center" },
+      "children": ["empty", "action-btn"]
+    },
+    "empty": {
+      "type": "EmptyState",
+      "props": {
+        "icon": "inbox",
+        "title": "No results found",
+        "message": "We couldn't find anything matching your search. Try adjusting your filters or create a new item to get started."
+      }
+    },
+    "action-btn": {
+      "type": "Button",
+      "props": { "label": "Create New Item", "variant": "primary", "size": "lg" }
+    }
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "root": "checkout-wrapper",
+  "elements": {
+    "checkout-wrapper": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["checkout-title", "checkout-layout"]
+    },
+    "checkout-title": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Checkout" }
+    },
+    "checkout-layout": {
+      "type": "Grid",
+      "props": { "columns": 2, "gap": 5 },
+      "children": ["checkout-shipping", "checkout-summary"]
+    },
+    "checkout-shipping": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["checkout-shipping-heading", "checkout-name", "checkout-address", "checkout-city-state", "checkout-zip", "checkout-country"]
+    },
+    "checkout-shipping-heading": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Shipping Information" }
+    },
+    "checkout-name": {
+      "type": "Field",
+      "props": { "label": "Full name", "placeholder": "Jane Doe", "type": "text" }
+    },
+    "checkout-address": {
+      "type": "Field",
+      "props": { "label": "Street address", "placeholder": "123 Main St, Apt 4B", "type": "text" }
+    },
+    "checkout-city-state": {
+      "type": "Grid",
+      "props": { "columns": 2, "gap": 3 },
+      "children": ["checkout-city", "checkout-state"]
+    },
+    "checkout-city": {
+      "type": "Field",
+      "props": { "label": "City", "placeholder": "San Francisco", "type": "text" }
+    },
+    "checkout-state": {
+      "type": "Field",
+      "props": { "label": "State", "placeholder": "CA", "type": "text" }
+    },
+    "checkout-zip": {
+      "type": "Field",
+      "props": { "label": "ZIP code", "placeholder": "94102", "type": "text" }
+    },
+    "checkout-country": {
+      "type": "Select",
+      "props": {
+        "label": "Country",
+        "options": [
+          { "label": "United States", "value": "us" },
+          { "label": "Canada", "value": "ca" },
+          { "label": "United Kingdom", "value": "uk" },
+          { "label": "Germany", "value": "de" },
+          { "label": "Australia", "value": "au" }
+        ],
+        "selected": "us"
+      }
+    },
+    "checkout-summary": {
+      "type": "Card",
+      "props": { "title": "Order Summary", "description": "" },
+      "children": ["checkout-summary-content"]
+    },
+    "checkout-summary-content": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3 },
+      "children": ["checkout-item-1", "checkout-item-2", "checkout-item-3", "checkout-summary-sep", "checkout-subtotal", "checkout-shipping-cost", "checkout-total-sep", "checkout-total", "checkout-place-order"]
+    },
+    "checkout-item-1": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "justify": "between" },
+      "children": ["checkout-item-1-name", "checkout-item-1-price"]
+    },
+    "checkout-item-1-name": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Wireless Headphones x1" }
+    },
+    "checkout-item-1-price": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "$79.99" }
+    },
+    "checkout-item-2": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "justify": "between" },
+      "children": ["checkout-item-2-name", "checkout-item-2-price"]
+    },
+    "checkout-item-2-name": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "USB-C Cable x2" }
+    },
+    "checkout-item-2-price": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "$19.98" }
+    },
+    "checkout-item-3": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "justify": "between" },
+      "children": ["checkout-item-3-name", "checkout-item-3-price"]
+    },
+    "checkout-item-3-name": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Phone Case x1" }
+    },
+    "checkout-item-3-price": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "$24.99" }
+    },
+    "checkout-summary-sep": {
+      "type": "Separator",
+      "props": {}
+    },
+    "checkout-subtotal": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "justify": "between" },
+      "children": ["checkout-subtotal-label", "checkout-subtotal-value"]
+    },
+    "checkout-subtotal-label": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Subtotal" }
+    },
+    "checkout-subtotal-value": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "$124.96" }
+    },
+    "checkout-shipping-cost": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "justify": "between" },
+      "children": ["checkout-shipping-label", "checkout-shipping-value"]
+    },
+    "checkout-shipping-label": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Shipping" }
+    },
+    "checkout-shipping-value": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Free" }
+    },
+    "checkout-total-sep": {
+      "type": "Separator",
+      "props": {}
+    },
+    "checkout-total": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "justify": "between" },
+      "children": ["checkout-total-label", "checkout-total-value"]
+    },
+    "checkout-total-label": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Total" }
+    },
+    "checkout-total-value": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "$124.96" }
+    },
+    "checkout-place-order": {
+      "type": "Button",
+      "props": { "label": "Place Order", "variant": "primary" }
+    }
+  }
+}
