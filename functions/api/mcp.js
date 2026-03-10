@@ -186,24 +186,101 @@ function cleanJSON(raw) {
   return s;
 }
 
-// ---- Generate Spec via OpenRouter ----
+// ---- Prompt Complexity Scoring ----
 
-async function generateSpec(prompt, options, apiKey) {
-  const model = 'google/gemini-2.5-flash';
-  const messages = [{ role: 'system', content: buildSystemPrompt() }];
+const COMPLEXITY_WEIGHTS = {
+  length: 0.15,
+  specificity: 0.20,
+  interactivity: 0.25,
+  multiComponent: 0.20,
+  constraintDensity: 0.10,
+  creativity: 0.10,
+};
 
-  if (options.existing_spec) {
-    messages.push({
-      role: 'assistant',
-      content: typeof options.existing_spec === 'string' ? options.existing_spec : JSON.stringify(options.existing_spec),
-    });
-    messages.push({ role: 'user', content: `Modify the existing spec above according to these instructions: ${prompt}` });
-  } else {
-    let userContent = prompt;
-    if (options.theme) userContent += `\n\nUse the "${options.theme}" theme.`;
-    messages.push({ role: 'user', content: userContent });
-  }
+function scorePromptComplexity(prompt) {
+  const p = prompt.toLowerCase();
 
+  // Length: token count proxy
+  const words = p.split(/\s+/).length;
+  const length = words <= 5 ? 10 : words <= 15 ? 30 : words <= 40 ? 55 : words <= 80 ? 75 : 95;
+
+  // Specificity: named components, theme refs, layout keywords
+  const specificityTerms = [
+    /sidebar/g, /navbar/g, /header/g, /footer/g, /dashboard/g, /table/g, /chart/g,
+    /modal/g, /drawer/g, /tab[s]?\b/g, /card/g, /form/g, /stepper/g, /calendar/g,
+    /breadcrumb/g, /pagination/g, /menu/g, /accordion/g, /carousel/g,
+    /theme/g, /dracula/g, /nord/g, /github/g, /solarized/g, /synthwave/g, /tokyo/g,
+    /catppuccin/g, /gruvbox/g, /material/g, /bone/g,
+  ];
+  const specHits = specificityTerms.reduce((n, rx) => n + (p.match(rx) || []).length, 0);
+  const specificity = Math.min(specHits * 15, 100);
+
+  // Interactivity: state, events, dynamic behavior
+  const interactTerms = [
+    /drag.?and.?drop/g, /real.?time/g, /live\s/g, /interactive/g, /animation/g, /transition/g,
+    /hover/g, /click/g, /toggle/g, /collaps/g, /expand/g, /filter/g, /sort/g, /search/g,
+    /state/g, /dynamic/g, /update/g, /editable/g, /inline.?edit/g, /websocket/g,
+  ];
+  const interactHits = interactTerms.reduce((n, rx) => n + (p.match(rx) || []).length, 0);
+  const interactivity = Math.min(interactHits * 20, 100);
+
+  // Multi-component: distinct UI component mentions
+  const componentTerms = [
+    /button/g, /input/g, /field/g, /select/g, /checkbox/g, /radio/g, /switch/g,
+    /slider/g, /table/g, /list/g, /card/g, /badge/g, /avatar/g, /chart/g,
+    /alert/g, /progress/g, /spinner/g, /tooltip/g, /modal/g, /sheet/g,
+    /sidebar/g, /navbar/g, /tab[s]?\b/g, /breadcrumb/g, /stepper/g, /image/g,
+  ];
+  const compHits = new Set(componentTerms.filter(rx => rx.test(p)).map(rx => rx.source)).size;
+  const multiComponent = Math.min(compHits * 12, 100);
+
+  // Constraint density: specific sizing, spacing, color constraints
+  const constraintTerms = [
+    /\d+px/g, /\d+rem/g, /\d+%/g, /#[0-9a-f]{3,8}/gi, /rgb/g, /gap.?\d/g,
+    /width/g, /height/g, /padding/g, /margin/g, /border/g, /radius/g,
+    /columns?:\s*\d/g, /rows?:\s*\d/g, /max.?width/g, /min.?height/g,
+    /spacing/g, /align/g, /justify/g, /grid/g, /flex/g,
+  ];
+  const constraintHits = constraintTerms.reduce((n, rx) => n + (p.match(rx) || []).length, 0);
+  const constraintDensity = Math.min(constraintHits * 12, 100);
+
+  // Creativity: open-ended vs prescriptive
+  const creativeTerms = [
+    /creative/g, /beautiful/g, /stunning/g, /unique/g, /innovative/g, /elegant/g,
+    /surprise/g, /wow/g, /impressive/g, /professional/g, /modern/g, /sleek/g,
+    /minimal/g, /futuristic/g, /retro/g, /playful/g, /bold/g, /artistic/g,
+  ];
+  const creativeHits = creativeTerms.reduce((n, rx) => n + (p.match(rx) || []).length, 0);
+  const creativity = Math.min(creativeHits * 20, 100);
+
+  const dimensions = { length, specificity, interactivity, multiComponent, constraintDensity, creativity };
+
+  const score = Math.round(
+    Object.entries(COMPLEXITY_WEIGHTS).reduce((sum, [k, w]) => sum + dimensions[k] * w, 0)
+  );
+
+  const tier = score <= 15 ? 'SIMPLE' : score <= 35 ? 'MEDIUM' : score <= 60 ? 'COMPLEX' : 'PREMIUM';
+
+  return { tier, score, dimensions };
+}
+
+// ---- Model Tier Configuration ----
+
+const MODEL_TIERS = {
+  SIMPLE:  { primary: 'google/gemini-3.1-flash-lite-preview', fallbacks: ['deepseek/deepseek-v3.2-20251201', 'x-ai/grok-4.1-fast'] },
+  MEDIUM:  { primary: 'google/gemini-3-flash-preview-20251217', fallbacks: ['minimax/minimax-m2.5-20260211', 'moonshotai/kimi-k2.5-0127'] },
+  COMPLEX: { primary: 'google/gemini-3.1-pro-preview', fallbacks: ['anthropic/claude-haiku-4-5', 'openai/gpt-5.4'] },
+  PREMIUM: { primary: 'anthropic/claude-sonnet-4-6', fallbacks: ['anthropic/claude-opus-4-6', 'openai/gpt-5.4-pro'] },
+};
+
+const RETRYABLE_STATUSES = new Set([429, 502, 503, 504]);
+const MAX_RETRIES_PER_MODEL = 3;
+const MAX_FALLBACK_MODELS = 2;
+const BASE_BACKOFF_MS = 500;
+
+// ---- Generate Spec via OpenRouter (with routing + fallback) ----
+
+async function callOpenRouter(model, messages, apiKey) {
   const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -217,23 +294,99 @@ async function generateSpec(prompt, options, apiKey) {
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`OpenRouter API ${res.status}: ${err.slice(0, 300)}`);
+    const retryable = RETRYABLE_STATUSES.has(res.status);
+    const error = new Error(`OpenRouter API ${res.status}: ${err.slice(0, 300)}`);
+    error.status = res.status;
+    error.retryable = retryable;
+    throw error;
   }
 
   const data = await res.json();
   const rawContent = data.choices?.[0]?.message?.content;
   if (!rawContent) throw new Error('No content in OpenRouter response');
 
-  let spec;
-  try {
-    spec = JSON.parse(cleanJSON(rawContent));
-  } catch (e) {
-    throw new Error(`Failed to parse JSON: ${e.message}`);
+  return { rawContent, usage: data.usage || null };
+}
+
+async function generateSpecWithRouting(prompt, options, apiKey) {
+  const complexity = scorePromptComplexity(prompt);
+  const tierConfig = MODEL_TIERS[complexity.tier];
+  const modelsToTry = [tierConfig.primary, ...tierConfig.fallbacks.slice(0, MAX_FALLBACK_MODELS)];
+
+  const messages = [{ role: 'system', content: buildSystemPrompt() }];
+  if (options.existing_spec) {
+    messages.push({
+      role: 'assistant',
+      content: typeof options.existing_spec === 'string' ? options.existing_spec : JSON.stringify(options.existing_spec),
+    });
+    messages.push({ role: 'user', content: `Modify the existing spec above according to these instructions: ${prompt}` });
+  } else {
+    let userContent = prompt;
+    if (options.theme) userContent += `\n\nUse the "${options.theme}" theme.`;
+    messages.push({ role: 'user', content: userContent });
   }
 
-  spec = autoFixSpec(spec);
-  const validation = validateSpec(spec);
-  return { spec, validation };
+  let totalAttempts = 0;
+  let lastError = null;
+  let lastRawContent = null;
+
+  for (const model of modelsToTry) {
+    for (let retry = 0; retry < MAX_RETRIES_PER_MODEL; retry++) {
+      totalAttempts++;
+      try {
+        if (retry > 0) {
+          await new Promise(r => setTimeout(r, BASE_BACKOFF_MS * Math.pow(2, retry - 1)));
+        }
+
+        const { rawContent, usage } = await callOpenRouter(model, messages, apiKey);
+        lastRawContent = rawContent;
+
+        let spec;
+        try {
+          spec = JSON.parse(cleanJSON(rawContent));
+        } catch (e) {
+          const parseError = new Error(`Failed to parse JSON: ${e.message}`);
+          parseError.retryable = true;
+          throw parseError;
+        }
+
+        spec = autoFixSpec(spec);
+        const validation = validateSpec(spec);
+
+        return {
+          spec,
+          validation,
+          routing: {
+            tier: complexity.tier,
+            score: complexity.score,
+            dimensions: complexity.dimensions,
+            model_used: model,
+            attempts: totalAttempts,
+          },
+          usage,
+        };
+      } catch (e) {
+        lastError = e;
+        if (!e.retryable) break;
+      }
+    }
+  }
+
+  // Graceful degradation: return partial result with error context
+  return {
+    spec: null,
+    validation: { valid: false, issues: [lastError?.message || 'All models failed'] },
+    routing: {
+      tier: complexity.tier,
+      score: complexity.score,
+      dimensions: complexity.dimensions,
+      model_used: null,
+      attempts: totalAttempts,
+    },
+    usage: null,
+    parse_error: true,
+    raw_text: lastRawContent ? lastRawContent.slice(0, 1000) : null,
+  };
 }
 
 // ---- Spec Summary ----
@@ -359,10 +512,25 @@ async function handleToolCall(name, args, env) {
       if (args.existing_spec) {
         try { options.existing_spec = JSON.parse(args.existing_spec); } catch { options.existing_spec = args.existing_spec; }
       }
-      const { spec, validation } = await generateSpec(args.prompt, options, apiKey);
-      const summary = specSummary(spec);
-      const html = renderToHTML(spec);
-      return JSON.stringify({ spec, html, summary, validation: { valid: validation.valid, issues: validation.issues } }, null, 2);
+      const result = await generateSpecWithRouting(args.prompt, options, apiKey);
+      if (result.parse_error || !result.spec) {
+        return JSON.stringify({
+          error: 'Generation failed after all retries',
+          validation: result.validation,
+          routing: result.routing,
+          raw_text: result.raw_text,
+        }, null, 2);
+      }
+      const summary = specSummary(result.spec);
+      const html = renderToHTML(result.spec);
+      return JSON.stringify({
+        spec: result.spec,
+        html,
+        summary,
+        validation: { valid: result.validation.valid, issues: result.validation.issues },
+        routing: result.routing,
+        usage: result.usage,
+      }, null, 2);
     }
 
     case 'get_component_catalog': {
