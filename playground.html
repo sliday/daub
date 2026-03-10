@@ -2322,6 +2322,31 @@ function parseSseResponse(res) {
   });
 }
 
+// ---- Content integrity guard: reject specs that lose text ----
+function measureTextContent(spec) {
+  if (!spec || !spec.elements) return 0;
+  var total = 0;
+  var els = Array.isArray(spec.elements) ? spec.elements : Object.values(spec.elements);
+  els.forEach(function(el) {
+    var p = el.props || el;
+    if (p.content) total += String(p.content).length;
+    if (p.title) total += String(p.title).length;
+    if (p.description) total += String(p.description).length;
+    if (p.label) total += String(p.label).length;
+    if (p.text) total += String(p.text).length;
+    if (p.message) total += String(p.message).length;
+    if (Array.isArray(p.items)) {
+      p.items.forEach(function(it) {
+        if (typeof it === 'string') total += it.length;
+        else if (it && it.title) total += String(it.title).length;
+        else if (it && it.label) total += String(it.label).length;
+        else if (it && it.content) total += String(it.content).length;
+      });
+    }
+  });
+  return total;
+}
+
 // ---- Self-check: verify rendered output and fix issues ----
 function selfCheck(spec, screenshotDataUrl, signal) {
   var checkPrompt = 'You are a UI design reviewer. Below is the JSON spec and a screenshot of how it rendered.\n\n'
@@ -2372,6 +2397,13 @@ function selfCheck(spec, screenshotDataUrl, signal) {
     var fixedCount = Object.keys(fixed.elements).length;
     if (fixedCount < origCount * 0.8) {
       console.warn('[selfCheck] Rejected fix: dropped too many elements (' + origCount + ' → ' + fixedCount + ')');
+      return null;
+    }
+    // Guard: reject fixes that lose more than 30% of text content
+    var origText = measureTextContent(spec);
+    var fixedText = measureTextContent(fixed);
+    if (origText > 0 && fixedText < origText * 0.7) {
+      console.warn('[selfCheck] Rejected fix: lost text content (' + origText + ' → ' + fixedText + ' chars)');
       return null;
     }
     return fixed;
@@ -2636,35 +2668,32 @@ function generateInteractiveCode(spec, analysis, onProgress) {
 function verifyGeneratedCode(spec) {
   var errors = [];
   if (!spec || !spec.elements) return errors;
+  // Normalize: elements can be object (json-render) or array (LLM artifact)
+  var elEntries = Array.isArray(spec.elements)
+    ? spec.elements.map(function(el, i) { return [el.id || el._id || ('element-' + i), el]; })
+    : Object.entries(spec.elements);
   var allIds = {};
-  (function collectIds(els) {
-    for (var i = 0; i < els.length; i++) {
-      if (els[i].id) allIds[els[i].id] = true;
-      if (els[i].children) collectIds(els[i].children);
-    }
-  })(spec.elements);
+  elEntries.forEach(function(pair) { allIds[pair[0]] = true; });
 
-  (function check(els) {
-    for (var i = 0; i < els.length; i++) {
-      var el = els[i];
-      if (el.type === 'CustomHTML' && el.js) {
-        // Syntax-only check: new Function parses but never executes the code
-        try { new Function(el.js); } catch(e) {
-          errors.push({ id: el.id || ('element-' + i), error: 'Syntax: ' + e.message });
-        }
-        var refs = el.js.match(/data-spec-id="([^"]+)"/g);
-        if (refs) {
-          for (var r = 0; r < refs.length; r++) {
-            var refId = refs[r].match(/data-spec-id="([^"]+)"/)[1];
-            if (!allIds[refId]) {
-              errors.push({ id: el.id || ('element-' + i), error: 'Missing ref: ' + refId });
-            }
+  elEntries.forEach(function(pair) {
+    var id = pair[0];
+    var el = pair[1];
+    if (el.type === 'CustomHTML' && (el.js || (el.props && el.props.js))) {
+      var js = el.js || el.props.js;
+      try { new Function(js); } catch(e) { // eslint-disable-line no-new-func -- syntax check only, never executed
+        errors.push({ id: id, error: 'Syntax: ' + e.message });
+      }
+      var refs = js.match(/data-spec-id="([^"]+)"/g);
+      if (refs) {
+        for (var r = 0; r < refs.length; r++) {
+          var refId = refs[r].match(/data-spec-id="([^"]+)"/)[1];
+          if (!allIds[refId]) {
+            errors.push({ id: id, error: 'Missing ref: ' + refId });
           }
         }
       }
-      if (el.children) check(el.children);
     }
-  })(spec.elements);
+  });
   return errors;
 }
 
@@ -2705,6 +2734,13 @@ function retryCodeGeneration(spec, analysis, errors, onProgress) {
         var updated;
         try { updated = JSON.parse(clean); } catch(e) { updated = repairJSON(clean); }
         if (!updated || !updated.root || !updated.elements) { resolve(null); return; }
+        // Guard: reject fixes that lose text content
+        var origText = measureTextContent(spec);
+        var fixedText = measureTextContent(updated);
+        if (origText > 0 && fixedText < origText * 0.7) {
+          console.warn('[retryCodeGeneration] Rejected fix: lost text content (' + origText + ' → ' + fixedText + ' chars)');
+          resolve(null); return;
+        }
         resolve(updated);
       },
       function onError() { resolve(null); }
