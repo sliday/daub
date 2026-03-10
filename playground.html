@@ -2614,6 +2614,8 @@ function generateInteractiveCode(spec, analysis, onProgress) {
     + '- Wire buttons, inputs, and controls to your logic via event listeners\n'
     + '- DAUB classes available: db-btn, db-card, db-badge, db-progress, etc.\n'
     + '- Keep the existing DAUB component structure. Add/modify CustomHTML nodes for code\n'
+    + '- NEVER create a CustomHTML that duplicates an existing component (e.g. do NOT add a custom nav when BottomNav already exists)\n'
+    + '- Wire interactivity INTO existing components via data-spec-id selectors, not by creating parallel HTML\n'
     + '- Make it fully functional \u2014 not a stub or placeholder\n\n'
     + 'TARGET ELEMENTS: ' + JSON.stringify(analysis.elements) + '\n\n'
     + 'Return the COMPLETE updated JSON spec with your CustomHTML additions.\n\n'
@@ -2866,6 +2868,7 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
     + '- For cross-chunk events: preview.dispatchEvent(new CustomEvent("daub:stateChange", {detail:{key:val}}))\n'
     + '- Listen for cross-chunk events: preview.addEventListener("daub:stateChange", function(e) {...})\n'
     + '- Use vanilla JS only. No frameworks, no imports, no fetch\n'
+    + '- NEVER create CustomHTML that duplicates an existing component — wire into existing elements via data-spec-id\n'
     + '- Make it fully functional, not a stub\n\n'
     + 'DESIGN QUICK-REF (avoid these mistakes):\n'
     + '| Mistake | Fix |\n'
@@ -3563,6 +3566,16 @@ function generate() {
   _currentStream.streamBubble = addChatBubble('ai', '');
   _currentStream.streamBubble.classList.add('pg-chat__msg--streaming');
   var streamBubble = _currentStream.streamBubble;
+
+  // Auto-switch to mobile viewport for mobile app prompts
+  var _promptLower = prompt.toLowerCase();
+  var _isMobilePrompt = /\bmobile\s*app\b|\bmobile\s*application\b|\bios\s*app\b|\bandroid\s*app\b|\bphone\s*app\b|\bsmartphone\b|\biphone\b|\bmobile\s*screen\b|\bmobile\s*ui\b|\bmobile\s*layout\b|\bmobile\s*view\b|\bnative\s*app\b/.test(_promptLower);
+  if (_isMobilePrompt) {
+    $panelPreviewBody.classList.add('pg-panel__body--mobile');
+    document.querySelectorAll('.pg-viewport-btn').forEach(function(b) { b.classList.remove('pg-viewport-btn--active'); });
+    var mobileBtn = document.querySelector('.pg-viewport-btn[data-viewport="mobile"]');
+    if (mobileBtn) mobileBtn.classList.add('pg-viewport-btn--active');
+  }
 
   saveSettings();
   setLoading(true);
@@ -4515,6 +4528,38 @@ function autoFixSpec(spec) {
     var def = spec.elements[id];
     if (def.children) {
       def.children = def.children.filter(function(cid) { return !!spec.elements[cid]; });
+    }
+  });
+  // Dedup: remove CustomHTML elements that shadow an existing component of the same role
+  var componentById = {};
+  Object.keys(spec.elements).forEach(function(id) {
+    var el = spec.elements[id];
+    var type = el.type || (el.props && el.props.type);
+    if (type && type !== 'CustomHTML') componentById[id] = type;
+  });
+  Object.keys(spec.elements).forEach(function(id) {
+    var el = spec.elements[id];
+    var type = el.type || (el.props && el.props.type);
+    if (type !== 'CustomHTML') return;
+    // Check if this CustomHTML id is a "-container"/"-wrapper"/"-script" suffix of an existing component
+    var baseId = id.replace(/[-_](container|wrapper|script|handler|logic|code)$/i, '');
+    if (baseId !== id && componentById[baseId]) {
+      // Merge js/css into the existing component as props, then remove the duplicate
+      var customProps = el.props || el;
+      var target = spec.elements[baseId];
+      var targetProps = target.props || target;
+      if (customProps.js && !targetProps.js) targetProps.js = customProps.js;
+      if (customProps.css && !targetProps.css) targetProps.css = customProps.css;
+      delete spec.elements[id];
+      // Remove from parent's children
+      Object.keys(spec.elements).forEach(function(pid) {
+        var p = spec.elements[pid];
+        if (p.children) {
+          var idx = p.children.indexOf(id);
+          if (idx !== -1) p.children.splice(idx, 1);
+        }
+      });
+      console.log('[autoFixSpec] Merged duplicate CustomHTML "' + id + '" into "' + baseId + '"');
     }
   });
   // Fix missing root: use first element
