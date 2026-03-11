@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.13.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.13.1-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -16,7 +16,7 @@
 
 A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 76 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
-New in v3.0: **Classless CSS** — plain HTML looks good with zero classes. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed.
+Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 189-block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
 
 ## Playground Model Taxonomy
 
@@ -508,7 +508,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.13.0** — Removed Verify toggle from Playground chat UI. Case studies page. 76 components, 20 theme families.
+**Latest: v3.13.1** — Roadmap refresh: "What Makes This Different" section, updated architecture layers and release timeline to reflect v3.13.0 shipped state. 76 components, 20 theme families, 189 blocks.
 
 ## Star History
 

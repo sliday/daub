@@ -2,6 +2,19 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.13.1
+
+**Roadmap refresh — positioning, architecture, and timeline update.**
+
+- Feature: "What Makes This Different" section in ROADMAP.md and roadmap.html — zero ceremony, opinionated beauty, AI-native architecture, structured specs, rendering layer positioning
+- Update: "Where We Are" bumped from v3.9 to v3.13.0 with shipped capabilities (189 blocks, QA audit, case studies, mergeSpecFixes, theme nudge)
+- Update: Architecture stack in roadmap.html — added AI Playground and MCP Server as shipped layers (4 and 5), renumbered to 9 layers
+- Update: Release timeline replaced fictional v3.1-v3.4 with actual shipped versions (v3.5, v3.8, v3.9, v3.11, v3.13)
+- Update: Near-term roadmap refreshed — Action Bindings → v3.14, Persistence → v3.15
+- Update: Resolved "MCP streaming" and "Multi-modal input" open questions
+- Update: README "What is DAUB?" section now highlights AI-native positioning
+- Update: Intent Engine status corrected to "In Progress" on roadmap.html
+
 ## v3.13.0
 
 **Playground UI simplification and case studies.**

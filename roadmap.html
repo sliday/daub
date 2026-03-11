@@ -225,6 +225,40 @@
     <p>Every menu, every settings page, every app you have to learn — that's friction between what you want and what you get. DAUB is a rendering layer built for a world where interfaces are generated, not installed.</p>
   </section>
 
+  <!-- What Makes This Different -->
+  <section class="rm-place" style="padding-bottom: 48px;">
+    <h2>What Makes This Different</h2>
+    <p>Not a comparison. Just the design decisions that led somewhere no one else went.</p>
+
+    <div class="rm-place__grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+      <div class="rm-place__item">
+        <span class="rm-place__icon"><i data-lucide="zap" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
+        <div class="rm-place__label">Zero Ceremony</div>
+        <p class="rm-place__desc">Two files, CDN link, done. No bundler, no framework, no config. Classless CSS means even raw HTML looks considered.</p>
+      </div>
+      <div class="rm-place__item">
+        <span class="rm-place__icon"><i data-lucide="palette" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
+        <div class="rm-place__label">Opinionated About Beauty</div>
+        <p class="rm-place__desc">Tactile surfaces, letterpress typography, real textures. 20 theme families, each with character. "Considered" is the design constraint.</p>
+      </div>
+      <div class="rm-place__item">
+        <span class="rm-place__icon"><i data-lucide="cpu" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
+        <div class="rm-place__label">AI-Native Architecture</div>
+        <p class="rm-place__desc">JSON-Render spec, MCP server, complexity-routed pipeline, 189-block RAG library, and llms.txt — designed together. Built for AI to use.</p>
+      </div>
+      <div class="rm-place__item">
+        <span class="rm-place__icon"><i data-lucide="file-json" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
+        <div class="rm-place__label">Structured Specs, Not Throwaway Code</div>
+        <p class="rm-place__desc">JSON specs that AI can iterate on, validate, visually diff, and render — without a compile step. The spec is the UI.</p>
+      </div>
+      <div class="rm-place__item">
+        <span class="rm-place__icon"><i data-lucide="layers" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
+        <div class="rm-place__label">Rendering Layer, Not the Whole Stack</div>
+        <p class="rm-place__desc">Plug it into any stack — vanilla HTML, React, an MCP client, an AI agent. Infrastructure for intent-to-interface.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- Architecture Stack -->
   <section class="rm-stack">
     <h2>Architecture Layers</h2>
@@ -247,25 +281,37 @@
       <span class="rm-layer__status rm-layer__status--done">Shipped</span>
     </div>
 
-    <div class="rm-layer" data-num="4" data-status="wip">
+    <div class="rm-layer" data-num="4" data-status="done">
+      <span class="rm-layer__name">AI Playground</span>
+      <span class="rm-layer__desc">7-stage pipeline: analyze, scaffold, generate, selfCheck, verify, repair, visual diff. 189 pre-made blocks across 34 categories. Complexity-routed model selection.</span>
+      <span class="rm-layer__status rm-layer__status--done">Shipped</span>
+    </div>
+
+    <div class="rm-layer" data-num="5" data-status="done">
+      <span class="rm-layer__name">MCP Server</span>
+      <span class="rm-layer__desc">Remote edge server on Cloudflare. generate_ui, render_spec, validate_spec, get_component_catalog — any MCP client can generate DAUB interfaces.</span>
+      <span class="rm-layer__status rm-layer__status--done">Shipped</span>
+    </div>
+
+    <div class="rm-layer" data-num="6" data-status="">
       <span class="rm-layer__name">React / JSX Wrappers</span>
       <span class="rm-layer__desc">Typed JSX components that wrap DAUB's CSS classes. Full TypeScript, IDE autocomplete. Framework-native without losing the zero-build soul.</span>
       <span class="rm-layer__status rm-layer__status--planned">Planned</span>
     </div>
 
-    <div class="rm-layer" data-num="5" data-status="">
+    <div class="rm-layer" data-num="7" data-status="wip">
       <span class="rm-layer__name">Intent Engine</span>
       <span class="rm-layer__desc">Natural language in, UI specification out, live render. Say what you need and a considered interface materializes — with correct layout, proper hierarchy, and real data.</span>
-      <span class="rm-layer__status rm-layer__status--future">Future</span>
+      <span class="rm-layer__status rm-layer__status--wip">In Progress</span>
     </div>
 
-    <div class="rm-layer" data-num="6" data-status="">
+    <div class="rm-layer" data-num="8" data-status="">
       <span class="rm-layer__name">Agent Runtime</span>
       <span class="rm-layer__desc">Coordinated agents fetch data, choose layout, and handle actions. The interface is a byproduct of understanding — not a thing you build, but a thing that emerges.</span>
       <span class="rm-layer__status rm-layer__status--future">Future</span>
     </div>
 
-    <div class="rm-layer" data-num="7" data-status="">
+    <div class="rm-layer" data-num="9" data-status="">
       <span class="rm-layer__name">Daub Place</span>
       <span class="rm-layer__desc">Where thought and interface converge. Your device becomes a surface for intent — quiet, anticipatory, always ready. No chrome, no navigation. Just the thing you needed.</span>
       <span class="rm-layer__status rm-layer__status--future">Vision</span>
@@ -286,34 +332,50 @@
     </div>
 
     <div class="rm-version">
-      <div class="rm-version__tag">v3.1</div>
+      <div class="rm-version__tag">v3.5</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">React Wrappers</div>
-        <p class="rm-version__desc">Typed JSX components wrapping DAUB's CSS classes. Full TypeScript support, proper prop validation, IDE autocomplete. Framework-native without losing the zero-build soul.</p>
+        <div class="rm-version__title">JSON-Render Spec + AI Playground</div>
+        <p class="rm-version__desc">AI outputs structured JSON, DAUB renders live UI. The Playground — describe what you need, see it appear. Multi-LLM pipeline with complexity routing across 6 dimensions.</p>
       </div>
     </div>
 
     <div class="rm-version">
-      <div class="rm-version__tag">v3.2</div>
+      <div class="rm-version__tag">v3.8</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Streaming Render</div>
-        <p class="rm-version__desc">Progressive UI construction during LLM streaming. Partial JSON arrives, partial UI appears. Components materialize as the model thinks — no waiting for the full response.</p>
+        <div class="rm-version__title">MCP Server on Cloudflare Edge</div>
+        <p class="rm-version__desc">Remote MCP server: generate_ui, render_spec, validate_spec, get_component_catalog. Any MCP client — Claude, Cursor, custom agents — can generate DAUB interfaces.</p>
       </div>
     </div>
 
     <div class="rm-version">
-      <div class="rm-version__tag">v3.3</div>
+      <div class="rm-version__tag">v3.9</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Layout Intelligence</div>
-        <p class="rm-version__desc">AI picks the right layout based on data shape. List of restaurants? Grid of cards. Single article? Reader view. Comparison? Side-by-side. The data decides the form.</p>
+        <div class="rm-version__title">Complexity Routing + Figma Import</div>
+        <p class="rm-version__desc">Prompts scored across 6 dimensions, routed to tiered models with exponential backoff. Figma OAuth import — screenshot capture and layout analysis feed into generation.</p>
       </div>
     </div>
 
     <div class="rm-version">
-      <div class="rm-version__tag">v3.4</div>
+      <div class="rm-version__tag">v3.11</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Action Bindings</div>
-        <p class="rm-version__desc">Components that do things. Buttons that POST. Forms that submit. Cards that link to real endpoints. Generated UI isn't decoration — it's functional.</p>
+        <div class="rm-version__title">Block Library</div>
+        <p class="rm-version__desc">189 pre-made blocks across 34 categories with multimodal RAG retrieval. Full QA audit — every block validated and screenshots regenerated.</p>
+      </div>
+    </div>
+
+    <div class="rm-version">
+      <div class="rm-version__tag">v3.13</div>
+      <div class="rm-version__body">
+        <div class="rm-version__title">Production Validation</div>
+        <p class="rm-version__desc">Dashrock case study — first production deployment documented. Content integrity guards (mergeSpecFixes, measureTextContent). Theme switcher nudge for new visitors.</p>
+      </div>
+    </div>
+
+    <div class="rm-version">
+      <div class="rm-version__tag rm-version__tag--future">v3.14+</div>
+      <div class="rm-version__body">
+        <div class="rm-version__title">Action Bindings + Persistence</div>
+        <p class="rm-version__desc">Buttons that POST to real endpoints. Forms with submit handlers. Shareable URLs, version history, standalone HTML export. Generated UI becomes functional and outlives the session.</p>
       </div>
     </div>
 

@@ -12,6 +12,20 @@ DAUB is the rendering layer for this future.
 
 ---
 
+## What Makes This Different
+
+**Zero ceremony.** Two files, CDN link, done. No bundler, no framework, no config. Classless CSS means even raw HTML looks considered. In a world of build pipelines, DAUB is refreshingly immediate.
+
+**Opinionated about beauty.** Most component libraries are deliberately neutral — gray surfaces, utilitarian defaults. DAUB has a point of view: tactile surfaces, letterpress typography, real textures. 20 theme families, each with character. "Considered" isn't marketing — it's the design constraint.
+
+**AI-native architecture.** Not a CSS framework with AI bolted on. The JSON-Render spec, MCP server, complexity-routed pipeline, 189-block RAG library, and `llms.txt` documentation were designed together. AI doesn't just *use* DAUB — DAUB was built for AI to use.
+
+**Structured specs, not throwaway code.** v0 generates one-off Tailwind/React. Cursor produces code you maintain. DAUB generates structured JSON specs that AI can iterate on, validate, visually diff, and render — without a compile step. The spec *is* the UI.
+
+**The rendering layer, not the whole stack.** DAUB doesn't replace your backend, your data layer, or your framework. It renders interfaces. Plug it into any stack — vanilla HTML, React, an MCP client, an AI agent. It's infrastructure for the intent-to-interface future.
+
+---
+
 ## Architecture
 
 The stack builds progressively. Each layer enables the next.
@@ -31,17 +45,21 @@ The bottom layers are infrastructure. The top layers are where it gets interesti
 
 ---
 
-## Where We Are (v3.9)
+## Where We Are (v3.13.0)
 
 - **76 components** — buttons, cards, modals, tabs, drawers, data tables, and more
 - **20 theme families** with 40 variants — from clean corporate to tactile grunge
+- **189 pre-made blocks** across 34 categories with multimodal RAG retrieval
+- **Block library QA audit** — all 189 blocks validated, screenshots regenerated
 - **AI Playground** with full 7-stage pipeline — analyze, scaffold, generate, selfCheck, verify, repair loop, visual diff
 - **Complexity-based model routing** — prompts scored across 6 dimensions, routed to tiered models with exponential backoff fallbacks
 - **MCP server** on Cloudflare's edge — `generate_ui`, `render_spec`, `validate_spec`, `get_component_catalog` tools
 - **Figma design import** — OAuth flow, screenshot capture, layout analysis fed into generation
 - **Visual diff** — compare rendered output against uploaded target images for iterative refinement
 - **Mobile-responsive generation** — auto-detects mobile app prompts and switches layout strategy
-- **Content integrity guards** — `measureTextContent`, element-count guards, CustomHTML dedup
+- **Content integrity guards** — `mergeSpecFixes`, `measureTextContent`, element-count guards, CustomHTML dedup
+- **Case studies** — Dashrock, the first production deployment, documented
+- **Theme switcher nudge** for first-time visitors
 - **`llms.txt` + `llms-compact.txt`** — documentation formatted for AI agent consumption
 - **Zero build step** — CDN-first, no bundler, no compile step, no config files
 
@@ -49,13 +67,10 @@ The bottom layers are infrastructure. The top layers are where it gets interesti
 
 ## Near-Term
 
-### v3.10 — Playground Resilience
-Per-tier fallback chains in the playground, matching the MCP server's retry pattern. Exponential backoff for streaming retries. Unified model routing config shared between playground and MCP server so both environments behave identically.
-
-### v3.11 — Action Bindings
+### v3.14 — Action Bindings
 Generated buttons that POST to real endpoints. Forms with submit handlers. Cards that link to live URLs. The gap between "pretty mockup" and "functional UI" — this is where it closes.
 
-### v3.12 — Persistence & Sharing
+### v3.15 — Persistence & Sharing
 Save generated UIs to shareable URLs. Version history for iterative refinement. Export to standalone HTML file. The generated interface outlives the session that created it.
 
 ### v4.0 — React Wrappers (if demand warrants)
@@ -110,10 +125,10 @@ These carry through from handcrafted components to AI-generated UI.
 - **Offline** — Can the intent engine run with local models? WebLLM? ONNX in the browser?
 - **Trust** — When the system generates a "buy" button, how does the user know it's safe? What's the verification layer?
 - **Stateful UIs** — How to handle forms, wizards, and multi-step flows? The current pipeline generates static snapshots. What's the model for state transitions?
-- **MCP streaming** — Should the MCP server support streaming responses for progressive rendering in connected clients?
 - **Automated quality testing** — How to test generated UI quality at scale? Automated visual regression across prompt categories?
 
 ### Resolved
 
-- **Persistence** — Moved to near-term roadmap (v3.12).
-- **Multi-modal input** — Partially resolved. Figma screenshots and image upload feed into the generation pipeline (v3.6-3.7).
+- **Persistence** — Moved to near-term roadmap (v3.15).
+- **Multi-modal input** — Resolved. Figma screenshots and image upload feed into the generation pipeline (v3.6-3.7).
+- **MCP streaming** — Deprioritized. Stateless JSON-RPC responses work well for current use cases; streaming can be revisited when progressive rendering demands it.

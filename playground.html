@@ -2345,6 +2345,48 @@ function measureTextContent(spec) {
   return total;
 }
 
+function mergeSpecFixes(original, fixed) {
+  if (!fixed || !fixed.elements) return original;
+  var WHITELIST = [
+    'gap', 'padding', 'margin', 'cols', 'direction', 'justify', 'align', 'wrap',
+    'variant', 'container', 'maxWidth', 'minHeight', 'height', 'width', 'rounded',
+    'shadow', 'border', 'opacity', 'overflow', 'gridCols', 'gridRows', 'colSpan',
+    'rowSpan', 'aspectRatio'
+  ];
+  var merged = JSON.parse(JSON.stringify(original));
+  var fixedEls = fixed.elements;
+  var origEls = merged.elements;
+  var mergedCount = 0;
+  Object.keys(origEls).forEach(function(id) {
+    if (!fixedEls[id]) return;
+    var orig = origEls[id];
+    var fix = fixedEls[id];
+    WHITELIST.forEach(function(prop) {
+      if (fix[prop] !== undefined) { orig[prop] = fix[prop]; mergedCount++; }
+      if (fix.props && fix.props[prop] !== undefined) {
+        if (!orig.props) orig.props = {};
+        orig.props[prop] = fix.props[prop];
+        mergedCount++;
+      }
+    });
+    if (fix.style && typeof fix.style === 'object') {
+      if (!orig.style) orig.style = {};
+      Object.assign(orig.style, fix.style);
+      mergedCount++;
+    }
+    if (fix.props && fix.props.style && typeof fix.props.style === 'object') {
+      if (!orig.props) orig.props = {};
+      if (!orig.props.style) orig.props.style = {};
+      Object.assign(orig.props.style, fix.props.style);
+      mergedCount++;
+    }
+  });
+  if (fixed.theme && fixed.theme !== original.theme) { merged.theme = fixed.theme; mergedCount++; }
+  if (fixed.scheme && fixed.scheme !== original.scheme) { merged.scheme = fixed.scheme; mergedCount++; }
+  console.log('[mergeSpecFixes] Merged ' + mergedCount + ' cosmetic props across ' + Object.keys(origEls).length + ' elements');
+  return merged;
+}
+
 // ---- Self-check: verify rendered output and fix issues ----
 function selfCheck(spec, screenshotDataUrl, signal) {
   var checkPrompt = 'You are a UI design reviewer. Below is the JSON spec and a screenshot of how it rendered.\n\n'
@@ -2358,7 +2400,8 @@ function selfCheck(spec, screenshotDataUrl, signal) {
     + '- NEVER reduce the number of elements — only adjust properties (gap, padding, style, variant)\n'
     + '- NEVER simplify or consolidate sections\n'
     + '- Keep ALL existing element IDs, types, children, and content text intact\n'
-    + '- Only fix: gap values, padding, style props, variant, cols — cosmetic tweaks\n'
+    + '- Only fix: gap values, padding, margin, style props, variant, cols, rounded, shadow, border, opacity — cosmetic tweaks\n'
+    + '- You may return ONLY the changed elements — omit unchanged elements from the output\n'
     + '- If the UI looks good overall, return the spec JSON UNCHANGED\n'
     + '- When in doubt, do NOT change it\n\n'
     + VALID_TYPES_HINT + '\n'
@@ -3757,8 +3800,9 @@ function generate() {
                 : selfCheck(finalSpec, screenshot, _pipeSignal);
               return checkPromise.then(function(fixedSpec) {
                 if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(finalSpec)) {
+                  var merged = mergeSpecFixes(finalSpec, fixedSpec);
                   _pipeDone(stepCheck, hasOriginalImage ? 'Matched to target' : 'Applied fixes');
-                  _applySpec(fixedSpec, hasOriginalImage ? 'visual-diff' : 'auto-fixed');
+                  _applySpec(merged, hasOriginalImage ? 'visual-diff' : 'auto-fixed');
                 } else {
                   _pipeDone(stepCheck, hasOriginalImage ? 'Close match' : 'Looks good');
                 }
