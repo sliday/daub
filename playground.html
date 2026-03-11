@@ -836,10 +836,6 @@
               <span class="pg-zap-icon"><i data-lucide="zap" style="width:10px;height:10px;"></i></span>
               Fast
             </label>
-            <label class="pg-pill-toggle" id="pg-verify-pill">
-              <input type="checkbox" id="pg-verify-loop" checked>
-              Verify
-            </label>
             <span style="flex:1"></span>
             <a href="#" id="pg-byok-link" class="pg-byok-link">Own Key</a>
           </div>
@@ -2668,89 +2664,6 @@ function generateInteractiveCode(spec, analysis, onProgress) {
   });
 }
 
-// ---- Verify generated code: syntax + element references ----
-function verifyGeneratedCode(spec) {
-  var errors = [];
-  if (!spec || !spec.elements) return errors;
-  // Normalize: elements can be object (json-render) or array (LLM artifact)
-  var elEntries = Array.isArray(spec.elements)
-    ? spec.elements.map(function(el, i) { return [el.id || el._id || ('element-' + i), el]; })
-    : Object.entries(spec.elements);
-  var allIds = {};
-  elEntries.forEach(function(pair) { allIds[pair[0]] = true; });
-
-  elEntries.forEach(function(pair) {
-    var id = pair[0];
-    var el = pair[1];
-    if (el.type === 'CustomHTML' && (el.js || (el.props && el.props.js))) {
-      var js = el.js || el.props.js;
-      try { new Function(js); } catch(e) { // eslint-disable-line no-new-func -- syntax check only, never executed
-        errors.push({ id: id, error: 'Syntax: ' + e.message });
-      }
-      var refs = js.match(/data-spec-id="([^"]+)"/g);
-      if (refs) {
-        for (var r = 0; r < refs.length; r++) {
-          var refId = refs[r].match(/data-spec-id="([^"]+)"/)[1];
-          if (!allIds[refId]) {
-            errors.push({ id: id, error: 'Missing ref: ' + refId });
-          }
-        }
-      }
-    }
-  });
-  return errors;
-}
-
-function retryCodeGeneration(spec, analysis, errors, onProgress) {
-  var prompt = 'You are fixing a broken DAUB UI spec. The code has these errors:\n\n'
-    + errors.map(function(e) { return '- Element "' + e.id + '": ' + e.error; }).join('\n') + '\n\n'
-    + 'Original task: ' + analysis.description + '\n'
-    + 'Fix the errors and return the COMPLETE updated JSON spec.\n'
-    + 'Return ONLY JSON, no explanation.';
-
-  return new Promise(function(resolve) {
-    var accumulated = '';
-    var startTime = Date.now();
-    streamFetch('/api/generate', { 'Content-Type': 'application/json' },
-      {
-        model: 'google/gemini-3.1-pro-preview',
-        messages: [
-          { role: 'system', content: prompt },
-          { role: 'user', content: JSON.stringify(spec) }
-        ],
-        reasoning: { effort: 'medium' },
-        response_format: false,
-        max_tokens: 32768
-      },
-      function onChunk(chunk) {
-        var c = chunk.choices && chunk.choices[0];
-        if (c && c.delta && c.delta.content) {
-          accumulated += c.delta.content;
-          if (onProgress) {
-            var elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
-            onProgress(accumulated.length, accumulated.split('\n').length, elapsed);
-          }
-        }
-      },
-      function onDone() {
-        var clean = cleanJSON(accumulated);
-        if (!clean) { resolve(null); return; }
-        var updated;
-        try { updated = JSON.parse(clean); } catch(e) { updated = repairJSON(clean); }
-        if (!updated || !updated.root || !updated.elements) { resolve(null); return; }
-        // Guard: reject fixes that lose text content
-        var origText = measureTextContent(spec);
-        var fixedText = measureTextContent(updated);
-        if (origText > 0 && fixedText < origText * 0.7) {
-          console.warn('[retryCodeGeneration] Rejected fix: lost text content (' + origText + ' → ' + fixedText + ' chars)');
-          resolve(null); return;
-        }
-        resolve(updated);
-      },
-      function onError() { resolve(null); }
-    );
-  });
-}
 
 // ---- Map-reduce pipeline: plan → execute chunks → review ----
 
@@ -3733,8 +3646,6 @@ function generate() {
           var _svgTest = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="13" y2="11"/></svg>';
           var stepTest = _mkStep(_svgTest, 'Running tests\u2026');
           var stepReview = _mkStep(_svgDoc, 'Reviewing assembly\u2026');
-          var _svgVerify = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>';
-          var stepVerify = _mkStep(_svgVerify, 'Verify code\u2026');
           stepAnalyze.classList.add('pg-pipeline__step--active');
           streamBubble.appendChild(pipeDetails);
           function _pipeDone(step, label, statsText) {
@@ -3864,51 +3775,13 @@ function generate() {
               _pipeSkip(stepExecute, 'Skipped');
               _pipeSkip(stepTest, 'Skipped');
               _pipeSkip(stepReview, 'Skipped');
-              _pipeSkip(stepVerify, 'Skipped');
               _pipeFinish();
               $status.textContent = '';
               setLoading(false);
               return;
             }
 
-            // -- Verify & retry helper (reused by both paths) --
-            function _runVerifyLoop(theSpec) {
-              var verifyEnabled = document.getElementById('pg-verify-loop').checked;
-              if (!verifyEnabled) {
-                _pipeSkip(stepVerify, 'Disabled');
-                return Promise.resolve();
-              }
-              stepVerify.classList.add('pg-pipeline__step--active');
-              $status.textContent = 'Verifying code\u2026';
-              var verifyErrors = verifyGeneratedCode(theSpec);
-              if (!verifyErrors.length) {
-                _pipeDone(stepVerify, 'Passed');
-                return Promise.resolve();
-              }
-              stepVerify.querySelector('.pg-pipeline__label').textContent = 'Fixing ' + verifyErrors.length + ' issue' + (verifyErrors.length > 1 ? 's' : '') + '\u2026';
-              $status.textContent = 'Fixing ' + verifyErrors.length + ' issue' + (verifyErrors.length > 1 ? 's' : '') + '\u2026';
-              var retryCount = 0;
-              var maxRetries = 2;
-              return (function retryLoop() {
-                return retryCodeGeneration(finalSpec, _analysis, verifyErrors, function(bytes, lines, secs) {
-                  codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's (retry)';
-                }).then(function(fixedSpec) {
-                  retryCount++;
-                  if (fixedSpec) {
-                    _applySpec(fixedSpec, 'code fixed');
-                    verifyErrors = verifyGeneratedCode(fixedSpec);
-                    if (!verifyErrors.length) {
-                      _pipeDone(stepVerify, 'Fixed (' + retryCount + ' retr' + (retryCount > 1 ? 'ies' : 'y') + ')');
-                      return;
-                    }
-                  }
-                  if (retryCount < maxRetries && verifyErrors.length) {
-                    return retryLoop();
-                  }
-                  _pipeDone(stepVerify, verifyErrors.length ? verifyErrors.length + ' issue' + (verifyErrors.length > 1 ? 's' : '') + ' remain' : 'Fixed');
-                });
-              })();
-            }
+            function _runVerifyLoop() { return Promise.resolve(); }
 
             // -- Single-shot fallback (existing generateInteractiveCode) --
             function _singleShotPath() {
@@ -3924,12 +3797,11 @@ function generate() {
                   _pipeSkip(stepTest, 'Skipped');
                   _pipeSkip(stepReview, 'Skipped');
                   _applySpec(updatedSpec, 'interactive');
-                  return _runVerifyLoop(finalSpec);
+                  return _runVerifyLoop();
                 } else {
                   _pipeSkip(stepExecute, 'Code generation failed');
                   _pipeSkip(stepTest, 'Skipped');
                   _pipeSkip(stepReview, 'Skipped');
-                  _pipeSkip(stepVerify, 'Skipped');
                 }
               });
             }
@@ -3972,7 +3844,7 @@ function generate() {
                   _pipeSkip(stepReview, 'Simple');
                   var assembled = assembleChunkResults(finalSpec, plan, chunkResults);
                   _applySpec(assembled.spec, 'interactive');
-                  return _runVerifyLoop(finalSpec);
+                  return _runVerifyLoop();
                 });
               }).then(function() {
                 _pipeFinish(); $status.textContent = ''; setLoading(false);
@@ -4099,13 +3971,11 @@ function generate() {
                     _applySpec(assembled.spec, 'interactive (raw)');
                   }
 
-                  // ---- Step: Verify ----
-                  return _runVerifyLoop(finalSpec);
+                  return _runVerifyLoop();
                 }).catch(function(revErr) {
                   console.error('[pipeline:review] error:', revErr);
                   _pipeDone(stepReview, 'Review errored');
                   _applySpec(assembled.spec, 'interactive (raw)');
-                  _pipeSkip(stepVerify, 'Skipped');
                 });
                 }); // runChunkTests.then
               }); // retryPromise.then
@@ -6685,7 +6555,6 @@ function syncPillToggle(checkbox, pillEl) {
   checkbox.addEventListener('change', update);
 }
 syncPillToggle($fastMode, document.getElementById('pg-fast-pill'));
-syncPillToggle(document.getElementById('pg-verify-loop'), document.getElementById('pg-verify-pill'));
 
 // ---- Examples trigger ----
 (function() {

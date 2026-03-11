@@ -2,6 +2,14 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.13.0
+
+**Playground UI simplification and case studies.**
+
+- Removed: Verify toggle from Playground chat toolbar — pipeline already makes per-step quality decisions
+- Removed: `verifyGeneratedCode()`, `retryCodeGeneration()`, and `_runVerifyLoop()` verify/retry logic
+- Feature: case studies page featuring Dashrock (first production use case)
+
 ## v3.12.0
 
 **QA audit — fixed block rendering across all 189 blocks.**

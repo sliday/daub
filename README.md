@@ -508,7 +508,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.12.0** — QA audit: fixed block rendering across 189 blocks (format conversion, input types, List/Field renderer). 76 components, 20 theme families.
+**Latest: v3.13.0** — Removed Verify toggle from Playground chat UI. Case studies page. 76 components, 20 theme families.
 
 ## Star History
 
