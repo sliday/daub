@@ -249,42 +249,43 @@
 
     /* Testimonial */
     .db-testimonial {
-      max-width: 640px;
-      margin: 0 auto 48px;
+      max-width: 600px;
+      margin: 0 auto 40px;
       padding: 0 24px;
-      text-align: center;
     }
     .db-testimonial__card {
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       gap: 16px;
-      padding: 28px 32px;
-      border-radius: var(--db-radius-3);
+      padding: 16px 20px;
+      border-radius: var(--db-radius-2);
       background: var(--db-cream-dark);
       border: 1px solid var(--db-sand);
     }
     .db-testimonial__avatar {
-      width: 56px;
-      height: 56px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid var(--db-sand);
+      border: 1.5px solid var(--db-sand);
+      flex-shrink: 0;
+      margin-top: 2px;
     }
+    .db-testimonial__body { min-width: 0; }
     .db-testimonial__quote {
       font-family: var(--db-font-body);
-      font-size: 1rem;
-      line-height: 1.65;
+      font-size: 0.875rem;
+      line-height: 1.55;
       color: var(--db-charcoal);
       font-style: italic;
-      margin: 0;
+      margin: 0 0 6px;
     }
     .db-testimonial__footer {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       font-family: var(--db-font-ui);
-      font-size: 0.8125rem;
+      font-size: 0.75rem;
       color: var(--db-warm-gray);
     }
     .db-testimonial__name {
@@ -981,12 +982,14 @@
   <!-- Testimonial -->
   <section class="db-testimonial">
     <div class="db-testimonial__card">
-      <img class="db-testimonial__avatar" src="case-studies/marat-avatar.jpg" alt="Marat from Dashrock" width="56" height="56">
-      <blockquote class="db-testimonial__quote">"Daub gives you the speed of a utility framework with the polish of a design system. Built two production apps with it and would reach for it again without hesitation."</blockquote>
-      <div class="db-testimonial__footer">
-        <span class="db-testimonial__name">Marat, Dashrock</span>
-        <span>&middot;</span>
-        <a class="db-testimonial__link" href="case-studies.html">Read Case Study</a>
+      <img class="db-testimonial__avatar" src="case-studies/marat-avatar.jpg" alt="Marat from Dashrock" width="40" height="40">
+      <div class="db-testimonial__body">
+        <blockquote class="db-testimonial__quote">"Daub gives you the speed of a utility framework with the polish of a design system. Built two production apps with it and would reach for it again without hesitation."</blockquote>
+        <div class="db-testimonial__footer">
+          <span class="db-testimonial__name">Marat, Dashrock</span>
+          <span>&middot;</span>
+          <a class="db-testimonial__link" href="case-studies.html">Read Case Study</a>
+        </div>
       </div>
     </div>
   </section>
