@@ -375,6 +375,25 @@
       transition: color var(--db-transition);
     }
     .db-quick-install__copy:hover { color: var(--db-terracotta); }
+    .db-quick-install__ai-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      padding: 3px 10px;
+      border-radius: var(--db-radius-full);
+      background: rgba(var(--db-accent-rgb),0.08);
+      border: 1px solid rgba(var(--db-accent-rgb),0.18);
+      font-family: var(--db-font-ui);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--db-terracotta);
+      text-decoration: none;
+      transition: background var(--db-transition);
+    }
+    .db-quick-install__ai-link:hover {
+      background: rgba(var(--db-accent-rgb),0.15);
+    }
 
     /* Showcase */
     .db-showcase {
@@ -1182,15 +1201,17 @@
       <div class="db-quick-install__option" onclick="navigator.clipboard.writeText(this.querySelector('.db-quick-install__code').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
         <button class="db-quick-install__copy" aria-label="Copy"><i data-lucide="copy" style="width:13px;height:13px;"></i></button>
         <div class="db-quick-install__label">Classless <span class="db-badge db-badge--new">1 line</span></div>
-        <div class="db-quick-install__desc">Drop-in styling, no classes needed. AI docs: <a href="/llms-compact.txt" style="color:var(--db-terracotta);text-decoration:none;">llms-compact.txt</a></div>
+        <div class="db-quick-install__desc">Drop-in styling, no classes needed</div>
         <div class="db-quick-install__code">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub-classless.css"&gt;</div>
+        <a class="db-quick-install__ai-link" href="/llms-compact.txt" onclick="event.stopPropagation()"><i data-lucide="bot" style="width:11px;height:11px;"></i> llms-compact.txt</a>
       </div>
       <div class="db-quick-install__option" onclick="navigator.clipboard.writeText(this.querySelector('.db-quick-install__code').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
         <button class="db-quick-install__copy" aria-label="Copy"><i data-lucide="copy" style="width:13px;height:13px;"></i></button>
         <div class="db-quick-install__label">Full <span class="db-badge db-badge--updated">2 lines</span></div>
-        <div class="db-quick-install__desc">All 76 components + JS interactivity. AI docs: <a href="/llms.txt" style="color:var(--db-terracotta);text-decoration:none;">llms.txt</a></div>
+        <div class="db-quick-install__desc">All 76 components + JS interactivity</div>
         <div class="db-quick-install__code">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.css"&gt;
 &lt;script src="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js"&gt;&lt;/script&gt;</div>
+        <a class="db-quick-install__ai-link" href="/llms.txt" onclick="event.stopPropagation()"><i data-lucide="bot" style="width:11px;height:11px;"></i> llms.txt</a>
       </div>
     </div>
   </section>
