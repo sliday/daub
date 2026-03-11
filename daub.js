@@ -530,6 +530,7 @@
   function initTabs(root) {
     root.querySelectorAll('.db-tabs').forEach(function(tabs) {
       if (tabs._dbInit) return;
+      if (tabs.classList.contains('db-tabs--static')) return;
       tabs._dbInit = true;
 
       var tabList = tabs.querySelector('.db-tabs__list');

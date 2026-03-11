@@ -296,6 +296,20 @@ Sizes: `db-spinner--sm`, `db-spinner--lg`, `db-spinner--xl`.
   <div class="db-tabs__panel" hidden>Content 2</div>
 </div>
 ```
+CSS-only mode: add `db-tabs--static`. Uses radio inputs — no JS required.
+Ideal for React Server Components, Astro, or SSR contexts.
+```html
+<div class="db-tabs db-tabs--static">
+  <div class="db-tabs__list">
+    <input type="radio" name="tabs-1" id="t1" checked>
+    <label class="db-tabs__tab" for="t1">Tab 1</label>
+    <input type="radio" name="tabs-1" id="t2">
+    <label class="db-tabs__tab" for="t2">Tab 2</label>
+  </div>
+  <div class="db-tabs__panel">Content 1</div>
+  <div class="db-tabs__panel">Content 2</div>
+</div>
+```
 
 ### 20. Card — `.db-card`
 Media variant: `db-card--media` removes padding for edge-to-edge images.
@@ -409,8 +423,8 @@ Variants: `--info`, `--warning`, `--error`, `--success`.
 ```html
 <span class="db-badge db-badge--new">New</span>
 ```
-Variants: `--new`, `--updated`, `--warning`, `--error`.
-Colour variants: `db-badge--green`, `db-badge--blue`, `db-badge--purple`, `db-badge--amber`, `db-badge--red`, `db-badge--gray`.
+Variants: `--new`, `--updated` / `--success`, `--warning`, `--error` / `--danger`.
+Colour variants: `db-badge--green`, `db-badge--blue` / `--info`, `db-badge--purple`, `db-badge--amber`, `db-badge--red`, `db-badge--gray`.
 
 > Badges = static status indicators. Chips = interactive/removable/filterable tags.
 
@@ -531,6 +545,10 @@ JS: `DAUB.toggleNavbar(el)`. Mobile auto-close on outside click.
   </button>
 </nav>
 ```
+**Responsive (built-in):** At ≤640px the `__toggle` button appears and `__nav` collapses.
+Clicking toggle adds `db-navbar--open` to show the mobile menu (vertical dropdown).
+Auto-closes on outside click. No framework code needed — `daub.js` auto-initializes.
+React/Next.js: include `<script src="daub.js">` — no useState required for mobile nav.
 
 ### 37. Menubar — `.db-menubar`
 ```html
@@ -755,14 +773,18 @@ Wraps Calendar in a trigger/dropdown.
 
 ### 53. Stat Card — `.db-stat`
 KPI/metric card with label, value, and change indicator.
+Slots: `__label`, `__value`, `__change` (`--up` green / `--down` red), `__icon` (40px).
+Layout: `--horizontal` for row layout with icon.
 ```html
-<div class="db-stat">
-  <span class="db-stat__label">Total Users</span>
-  <span class="db-stat__value">12,847</span>
-  <span class="db-stat__change db-stat__change--up">↑ 12.5%</span>
+<div class="db-stat db-stat--horizontal">
+  <div class="db-stat__icon"><i data-lucide="trending-up"></i></div>
+  <div>
+    <span class="db-stat__label">Revenue</span>
+    <span class="db-stat__value">$48,290</span>
+    <span class="db-stat__change db-stat__change--up">↑ 12.5%</span>
+  </div>
 </div>
 ```
-Horizontal layout: add `db-stat--horizontal`. Optional icon slot: `.db-stat__icon`.
 
 ### 54. Chart Card — `.db-chart-card`
 Card wrapper for any chart (Chart.js canvas, db-chart, etc.) with title/actions header.

@@ -55,6 +55,7 @@ Sizes: `db-input--sm`, `db-input--lg`. Error: `db-input--error`.
   <div class="db-tabs__panel" hidden>Content 2</div>
 </div>
 ```
+CSS-only: add `db-tabs--static` with radio inputs. No JS needed. Responsive built-in at ≤640px for navbar.
 
 ### Modal — `.db-modal-overlay`
 ```html
@@ -70,8 +71,8 @@ JS: `DAUB.openModal('my-modal')`, `DAUB.closeModal('my-modal')`
 Dynamic: `DAUB.openModal('my-modal', { title: '...', body: '...', footer: '...' })`
 
 ### Badge — `.db-badge`
-Semantic: `db-badge--new`, `db-badge--updated`, `db-badge--warning`, `db-badge--error`
-Colors: `db-badge--green`, `db-badge--blue`, `db-badge--purple`, `db-badge--amber`, `db-badge--red`, `db-badge--gray`
+Semantic: `db-badge--new`, `db-badge--updated` / `--success`, `db-badge--warning`, `db-badge--error` / `--danger`
+Colors: `db-badge--green`, `db-badge--blue` / `--info`, `db-badge--purple`, `db-badge--amber`, `db-badge--red`, `db-badge--gray`
 ```html
 <span class="db-badge db-badge--new">New</span>
 ```

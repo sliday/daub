@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.14.0
+
+**Developer feedback batch — badge aliases, CSS-only tabs, docs, testimonial.**
+
+- Feature: badge semantic aliases `--success` (= `--updated`), `--danger` (= `--error`), `--info` (= `--blue`) for consistency with alert naming
+- Feature: `db-tabs--static` CSS-only tab variant using radio inputs — no JS required, ideal for React Server Components / Astro / SSR
+- Docs: navbar responsive toggle mechanism explained in llms.txt (built-in at ≤640px, auto-initializes)
+- Docs: stat card docs expanded with all slots (`__icon`, `__change--up/--down`, `--horizontal`)
+- Docs: llms-compact.txt and components.json updated with new badge/tab variants
+- Feature: testimonial section on landing page (Marat / Dashrock case study)
+
 ## v3.13.2
 
 **Theme switcher nudge cleanup.**

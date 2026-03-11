@@ -437,7 +437,7 @@
       "class": "db-badge",
       "category": "data-display",
       "element": "span",
-      "modifiers": ["--new", "--updated", "--warning", "--error"],
+      "modifiers": ["--new", "--updated", "--success", "--warning", "--error", "--danger", "--info"],
       "children": [],
       "js": false,
       "html": "<span class=\"db-badge db-badge--new\">New</span>",

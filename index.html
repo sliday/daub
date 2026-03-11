@@ -51,7 +51,7 @@
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "license": "https://opensource.org/licenses/MIT",
-    "version": "3.12.0",
+    "version": "3.14.0",
     "dateCreated": "2026-02-01",
     "dateModified": "2026-03-11",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
@@ -245,6 +245,59 @@
       .db-hero { padding: 72px 16px 40px; }
       .db-hero__actions { flex-direction: column; align-items: center; }
       .demo-row { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* Testimonial */
+    .db-testimonial {
+      max-width: 640px;
+      margin: 0 auto 48px;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .db-testimonial__card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 28px 32px;
+      border-radius: var(--db-radius-3);
+      background: var(--db-cream-dark);
+      border: 1px solid var(--db-sand);
+    }
+    .db-testimonial__avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--db-sand);
+    }
+    .db-testimonial__quote {
+      font-family: var(--db-font-body);
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--db-charcoal);
+      font-style: italic;
+      margin: 0;
+    }
+    .db-testimonial__footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+      color: var(--db-warm-gray);
+    }
+    .db-testimonial__name {
+      font-weight: 600;
+      color: var(--db-ink);
+    }
+    .db-testimonial__link {
+      color: var(--db-terracotta);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .db-testimonial__link:hover {
+      text-decoration: underline;
     }
 
     /* Showcase */
@@ -905,7 +958,7 @@
   <!-- Hero -->
   <section class="db-hero">
     <a class="db-hero__announce" href="https://github.com/sliday/daub" target="_blank" rel="noopener">
-      <span class="db-badge db-badge--new">v3.13.0</span>
+      <span class="db-badge db-badge--new">v3.14.0</span>
       Case studies: see Dashrock, built with DAUB — Star on GitHub
       <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
     </a>
@@ -922,6 +975,19 @@
       <button class="db-hero__copy" aria-label="Copy to clipboard" onclick="navigator.clipboard.writeText('<link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.css&quot;>\n<script src=&quot;https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js&quot;><\/script>').then(function(){DAUB.toast({type:'success',title:'Copied!',message:'Both files copied to clipboard.',duration:2000})})">
         <i data-lucide="copy" style="width:16px;height:16px;"></i>
       </button>
+    </div>
+  </section>
+
+  <!-- Testimonial -->
+  <section class="db-testimonial">
+    <div class="db-testimonial__card">
+      <img class="db-testimonial__avatar" src="case-studies/marat-avatar.jpg" alt="Marat from Dashrock" width="56" height="56">
+      <blockquote class="db-testimonial__quote">"Daub gives you the speed of a utility framework with the polish of a design system. Built two production apps with it and would reach for it again without hesitation."</blockquote>
+      <div class="db-testimonial__footer">
+        <span class="db-testimonial__name">Marat, Dashrock</span>
+        <span>&middot;</span>
+        <a class="db-testimonial__link" href="case-studies.html">Read Case Study</a>
+      </div>
     </div>
   </section>
 

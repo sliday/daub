@@ -2502,6 +2502,29 @@ textarea.db-field__input {
   display: none;
 }
 
+/* CSS-only tabs — no JS required */
+.db-tabs--static input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.db-tabs--static input[type="radio"]:checked + .db-tabs__tab {
+  color: var(--db-terracotta);
+  border-bottom-color: var(--db-terracotta);
+  font-weight: 600;
+}
+.db-tabs--static .db-tabs__panel { display: none; }
+.db-tabs--static:has(.db-tabs__list > input:nth-of-type(1):checked) > .db-tabs__panel:nth-of-type(1),
+.db-tabs--static:has(.db-tabs__list > input:nth-of-type(2):checked) > .db-tabs__panel:nth-of-type(2),
+.db-tabs--static:has(.db-tabs__list > input:nth-of-type(3):checked) > .db-tabs__panel:nth-of-type(3),
+.db-tabs--static:has(.db-tabs__list > input:nth-of-type(4):checked) > .db-tabs__panel:nth-of-type(4),
+.db-tabs--static:has(.db-tabs__list > input:nth-of-type(5):checked) > .db-tabs__panel:nth-of-type(5),
+.db-tabs--static:has(.db-tabs__list > input:nth-of-type(6):checked) > .db-tabs__panel:nth-of-type(6),
+.db-tabs--static:has(.db-tabs__list > input:nth-of-type(7):checked) > .db-tabs__panel:nth-of-type(7),
+.db-tabs--static:has(.db-tabs__list > input:nth-of-type(8):checked) > .db-tabs__panel:nth-of-type(8) {
+  display: block;
+}
+
 /* ------------------------------------------------------------
    6b. NAVIGATION — Breadcrumbs
    ------------------------------------------------------------ */
@@ -2867,7 +2890,7 @@ textarea.db-field__input {
   border: 1px solid rgba(var(--db-accent-rgb),0.25);
 }
 
-.db-badge--updated {
+.db-badge--updated, .db-badge--success {
   background: rgba(var(--db-success-rgb),0.15);
   color: var(--db-success);
   border: 1px solid rgba(var(--db-success-rgb),0.25);
@@ -2879,7 +2902,7 @@ textarea.db-field__input {
   border: 1px solid rgba(var(--db-warning-rgb),0.25);
 }
 
-.db-badge--error {
+.db-badge--error, .db-badge--danger {
   background: rgba(var(--db-error-rgb),0.12);
   color: var(--db-error);
   border: 1px solid rgba(var(--db-error-rgb),0.2);
@@ -2891,7 +2914,7 @@ textarea.db-field__input {
   color: var(--db-success);
   border: 1px solid rgba(var(--db-success-rgb),0.25);
 }
-.db-badge--blue {
+.db-badge--blue, .db-badge--info {
   background: hsla(210, 60%, 50%, 0.15);
   color: hsl(210, 60%, 40%);
   border: 1px solid hsla(210, 60%, 50%, 0.25);
