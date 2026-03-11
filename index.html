@@ -2923,5 +2923,118 @@
       setTimeout(updateCode, 200);
     })();
   </script>
+
+  <!-- Theme switcher nudge (first visit only) -->
+  <style>
+    .db-nudge {
+      position: fixed;
+      bottom: calc(var(--db-space-5) + 48px);
+      left: var(--db-space-5);
+      z-index: 1049;
+      display: flex;
+      align-items: flex-end;
+      gap: 0;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .db-nudge--visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .db-nudge__arrow {
+      width: 20px;
+      height: 24px;
+      margin-left: 12px;
+      margin-bottom: -4px;
+      color: var(--db-terracotta);
+      animation: db-nudge-bounce 1.2s ease-in-out infinite;
+    }
+    .db-nudge__bubble {
+      background: var(--db-color-surface);
+      border: 1px solid var(--db-terracotta);
+      border-radius: var(--db-radius-3);
+      padding: 8px 14px;
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+      color: var(--db-color-text);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      white-space: nowrap;
+      cursor: pointer;
+      position: relative;
+    }
+    .db-nudge__bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 16px;
+      width: 10px;
+      height: 10px;
+      background: var(--db-color-surface);
+      border-right: 1px solid var(--db-terracotta);
+      border-bottom: 1px solid var(--db-terracotta);
+      transform: rotate(45deg);
+    }
+    .db-nudge__close {
+      background: none;
+      border: none;
+      color: var(--db-color-text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0 0 0 8px;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .db-nudge__close:hover { opacity: 1; }
+    @keyframes db-nudge-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
+    }
+    @media (max-width: 480px) {
+      .db-nudge__bubble { font-size: 0.75rem; padding: 6px 10px; }
+    }
+  </style>
+  <div class="db-nudge" id="db-nudge" role="tooltip">
+    <div class="db-nudge__bubble" onclick="document.querySelector('.db-theme-switcher__toggle').click(); this.parentElement.remove();">
+      <span>Psst... try me. Every surface changes.</span>
+      <button class="db-nudge__close" onclick="event.stopPropagation(); document.getElementById('db-nudge').remove();" aria-label="Dismiss">&times;</button>
+    </div>
+    <svg class="db-nudge__arrow" viewBox="0 0 20 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 2 L10 18"/>
+      <path d="M4 13 L10 19 L16 13"/>
+    </svg>
+  </div>
+  <script>
+    (function() {
+      var KEY = 'db-nudge-seen';
+      if (localStorage.getItem(KEY)) return;
+      var delay = Math.floor(Math.random() * 3001) + 8000; // 8-11s
+      var timer = setTimeout(function() {
+        var el = document.getElementById('db-nudge');
+        if (!el) return;
+        el.classList.add('db-nudge--visible');
+        localStorage.setItem(KEY, '1');
+        // Auto-dismiss after 12s if not interacted
+        setTimeout(function() {
+          if (el && el.parentElement) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(8px)';
+            setTimeout(function() { if (el.parentElement) el.remove(); }, 400);
+          }
+        }, 12000);
+      }, delay);
+      // Cancel if user opens theme switcher before nudge
+      var toggle = document.querySelector('.db-theme-switcher__toggle');
+      if (toggle) toggle.addEventListener('click', function() {
+        clearTimeout(timer);
+        var el = document.getElementById('db-nudge');
+        if (el) el.remove();
+        localStorage.setItem(KEY, '1');
+      }, { once: true });
+    })();
+  </script>
 </body>
 </html>
