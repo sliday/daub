@@ -3903,15 +3903,26 @@ textarea.db-field__input {
 .db-accordion__item--open .db-accordion__icon { transform: rotate(180deg); }
 
 .db-accordion__content {
-  display: none;
-  padding: 0 var(--db-space-5) var(--db-space-4);
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms ease;
+  overflow: hidden;
   font-family: var(--db-font-body);
   font-size: 0.875rem;
   color: var(--db-warm-gray);
   line-height: 1.6;
 }
 
-.db-accordion__item--open .db-accordion__content { display: block; }
+.db-accordion__content > * {
+  overflow: hidden;
+  padding: 0 var(--db-space-5);
+}
+
+.db-accordion__item--open .db-accordion__content { grid-template-rows: 1fr; }
+
+.db-accordion__item--open .db-accordion__content > * {
+  padding: 0 var(--db-space-5) var(--db-space-4);
+}
 
 /* ------------------------------------------------------------
    Collapsible
@@ -4696,7 +4707,7 @@ textarea.db-field__input {
   transition: all var(--db-transition);
 }
 
-.db-nav-menu__item:hover { color: var(--db-charcoal); background: var(--db-cream-dark); }
+.db-nav-menu__item:hover { color: var(--db-ink); background: var(--db-cream-dark); }
 
 .db-nav-menu__item--active {
   color: var(--db-terracotta);
