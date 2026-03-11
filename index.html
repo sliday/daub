@@ -301,6 +301,80 @@
       text-decoration: underline;
     }
 
+    /* Quick Install */
+    .db-quick-install {
+      max-width: 680px;
+      margin: 0 auto 56px;
+      padding: 0 24px;
+    }
+    .db-quick-install__heading {
+      font-family: var(--db-font-ui);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--db-warm-gray);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .db-quick-install__grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 640px) {
+      .db-quick-install__grid { grid-template-columns: 1fr; }
+    }
+    .db-quick-install__option {
+      padding: 12px 14px;
+      border-radius: var(--db-radius-2);
+      background: var(--db-cream-dark);
+      border: 1px solid var(--db-sand);
+      position: relative;
+      cursor: pointer;
+      transition: border-color var(--db-transition);
+    }
+    .db-quick-install__option:hover {
+      border-color: var(--db-terracotta);
+    }
+    .db-quick-install__label {
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--db-ink);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .db-quick-install__label .db-badge { font-size: 0.5625rem; padding: 1px 6px; }
+    .db-quick-install__desc {
+      font-family: var(--db-font-ui);
+      font-size: 0.6875rem;
+      color: var(--db-warm-gray);
+      margin-bottom: 8px;
+    }
+    .db-quick-install__code {
+      font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.6875rem;
+      color: var(--db-charcoal);
+      white-space: pre;
+      line-height: 1.5;
+    }
+    .db-quick-install__copy {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--db-warm-gray);
+      padding: 2px;
+      border-radius: var(--db-radius-1);
+      transition: color var(--db-transition);
+    }
+    .db-quick-install__copy:hover { color: var(--db-terracotta); }
+
     /* Showcase */
     .db-showcase {
       max-width: 960px;
@@ -970,13 +1044,6 @@
       <a href="#configurator" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
       <a href="#controls" class="db-btn db-btn--secondary db-btn--lg">View Components</a>
     </div>
-    <div class="db-hero__install">
-      <code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.css"&gt;
-&lt;script src="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js"&gt;&lt;/script&gt;</code>
-      <button class="db-hero__copy" aria-label="Copy to clipboard" onclick="navigator.clipboard.writeText('<link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.css&quot;>\n<script src=&quot;https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js&quot;><\/script>').then(function(){DAUB.toast({type:'success',title:'Copied!',message:'Both files copied to clipboard.',duration:2000})})">
-        <i data-lucide="copy" style="width:16px;height:16px;"></i>
-      </button>
-    </div>
   </section>
 
   <!-- Testimonial -->
@@ -1103,6 +1170,26 @@
             Copy Config Code
           </button>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Install Options -->
+  <section class="db-quick-install">
+    <div class="db-quick-install__heading">Or grab a quick snippet</div>
+    <div class="db-quick-install__grid">
+      <div class="db-quick-install__option" onclick="navigator.clipboard.writeText(this.querySelector('.db-quick-install__code').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
+        <button class="db-quick-install__copy" aria-label="Copy"><i data-lucide="copy" style="width:13px;height:13px;"></i></button>
+        <div class="db-quick-install__label">Classless <span class="db-badge db-badge--new">1 line</span></div>
+        <div class="db-quick-install__desc">Drop-in styling, no classes needed. AI docs: <a href="/llms-compact.txt" style="color:var(--db-terracotta);text-decoration:none;">llms-compact.txt</a></div>
+        <div class="db-quick-install__code">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub-classless.css"&gt;</div>
+      </div>
+      <div class="db-quick-install__option" onclick="navigator.clipboard.writeText(this.querySelector('.db-quick-install__code').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
+        <button class="db-quick-install__copy" aria-label="Copy"><i data-lucide="copy" style="width:13px;height:13px;"></i></button>
+        <div class="db-quick-install__label">Full <span class="db-badge db-badge--updated">2 lines</span></div>
+        <div class="db-quick-install__desc">All 76 components + JS interactivity. AI docs: <a href="/llms.txt" style="color:var(--db-terracotta);text-decoration:none;">llms.txt</a></div>
+        <div class="db-quick-install__code">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js"&gt;&lt;/script&gt;</div>
       </div>
     </div>
   </section>
