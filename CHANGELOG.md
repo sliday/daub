@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.14.2
+
+**UX polish — navbar hover contrast, smooth accordion animation.**
+
+- Fix: navbar hover text now uses `--db-ink` instead of `--db-charcoal` for visibility across all themes
+- Fix: accordion open/close animates smoothly via CSS grid `grid-template-rows` transition (300ms ease) instead of abrupt `display` toggle
+- Fix: separate AI docs into clickable pill links in quick-install
+- Fix: wrap long URLs in quick-install code blocks
+
 ## v3.14.1
 
 **Landing page polish — testimonial, install options, case study quote.**
