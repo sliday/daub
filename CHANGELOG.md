@@ -2,6 +2,19 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.12.0
+
+**QA audit — fixed block rendering across all 189 blocks.**
+
+- Fix: converted 170 blocks from flat property format to props wrapper — text was invisible in all flat-format blocks
+- Fix: repaired 24 input elements in 18 blocks where duplicate JSON `type` key caused `Input` to parse as `email`/`password` component types
+- Fix: List renderer now accepts plain string items (previously required `{title, icon, secondary}` objects)
+- Fix: Field renderer now renders child elements (Input) instead of ignoring them and creating an internal-only input
+- Enhancement: all 184 screenshots regenerated with corrected rendering
+- Tool: `block-format-convert.js` — batch flat→props conversion
+- Tool: `block-fix-input-types.js` — batch input type key repair
+- Audit: `blocks/qa-results.json` with full QA trail across 189 blocks (108 PASS, 62 FLAG, 19 FAIL pre-fix)
+
 ## v3.11.0
 
 **189 blocks across 34 categories — full taxonomy coverage with multimodal RAG.**

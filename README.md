@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.11.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.12.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -508,7 +508,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.11.0** — 189 blocks across 34 categories with multimodal RAG retrieval. 76 components, 20 theme families.
+**Latest: v3.12.0** — QA audit: fixed block rendering across 189 blocks (format conversion, input types, List/Field renderer). 76 components, 20 theme families.
 
 ## Star History
 

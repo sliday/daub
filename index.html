@@ -51,9 +51,9 @@
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "license": "https://opensource.org/licenses/MIT",
-    "version": "3.9.0",
+    "version": "3.12.0",
     "dateCreated": "2026-02-01",
-    "dateModified": "2026-03-09",
+    "dateModified": "2026-03-11",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "keywords": ["CSS components", "UI kit", "design system", "neo-skeuomorphic", "themes", "dark mode", "accessible", "AI-friendly", "llms.txt", "drop-in CSS", "no build step"],
@@ -891,6 +891,7 @@
       <li><a href="demo.html">Layouts</a></li>
       <li><a href="playground.html">Playground</a></li>
       <li><a href="roadmap.html">Roadmap</a></li>
+      <li><a href="case-studies.html">Case Studies</a></li>
       <li><a href="llms.txt">AI Docs</a></li>
       <li>
         <a href="https://github.com/sliday/daub" class="db-nav__github" target="_blank" rel="noopener">
@@ -904,8 +905,8 @@
   <!-- Hero -->
   <section class="db-hero">
     <a class="db-hero__announce" href="https://github.com/sliday/daub" target="_blank" rel="noopener">
-      <span class="db-badge db-badge--new">v3.11.0</span>
-      189 blocks across 34 categories — Star on GitHub
+      <span class="db-badge db-badge--new">v3.12.0</span>
+      QA audit: all 189 blocks now render correctly — Star on GitHub
       <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
     </a>
     <h1 class="db-hero__headline">Design you can almost touch.</h1>
@@ -1411,6 +1412,41 @@
         </p>
         <a href="playground.html" class="db-btn db-btn--primary">
           <i data-lucide="sparkles" style="width:16px;height:16px;"></i> Try the Playground — It's Free
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Built with DAUB -->
+  <section style="max-width:800px;margin:0 auto;padding:64px 24px 48px;">
+    <h2 style="font-family:var(--db-font-heading);text-align:center;font-size:clamp(1.6rem,3vw,2.2rem);margin:0 0 8px;color:var(--db-color-text);">Built with DAUB</h2>
+    <p style="text-align:center;color:var(--db-color-text-secondary);font-size:1rem;margin:0 0 32px;font-family:var(--db-font-ui);">Real products shipping with DAUB in production</p>
+
+    <div style="background:var(--db-color-surface);border:1px solid var(--db-color-border);border-radius:var(--db-radius-3);overflow:hidden;">
+      <div style="padding:0;">
+        <img src="case-studies/dashrock-overview.png" alt="Dashrock — AWS Bedrock analytics dashboard built with DAUB" style="width:100%;display:block;border-bottom:1px solid var(--db-color-border);" loading="lazy">
+      </div>
+      <div style="padding:24px 28px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <h3 style="font-family:var(--db-font-heading);font-size:1.25rem;margin:0;color:var(--db-color-text);">Dashrock</h3>
+          <span style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding:3px 10px;border-radius:20px;background:color-mix(in srgb, var(--db-color-success) 15%, transparent);color:var(--db-color-success);">Production</span>
+        </div>
+        <p style="font-family:var(--db-font-ui);color:var(--db-color-text-secondary);font-size:0.95rem;line-height:1.6;margin:0 0 16px;">
+          Open-source AWS Bedrock analytics dashboard. Track usage, cost, and performance by team and app. Deploys in ~3 minutes via SST.
+        </p>
+        <blockquote style="margin:0 0 16px;padding:12px 16px;background:color-mix(in srgb, var(--db-terracotta) 8%, transparent);border-left:3px solid var(--db-terracotta);border-radius:0 var(--db-radius-2) var(--db-radius-2) 0;font-style:italic;font-size:0.9rem;color:var(--db-color-text);line-height:1.55;">
+          "Built dashrock.app, needed to beautifully collect stats on Bedrock, separate respect to @staskulesh for the UI tool."
+          <cite style="display:block;margin-top:8px;font-style:normal;font-size:0.8rem;color:var(--db-color-text-muted);">— <a href="https://x.com/Marat_Galiev" target="_blank" rel="noopener" style="color:var(--db-terracotta);text-decoration:none;">@Marat_Galiev</a>, Mar 9, 2026</cite>
+        </blockquote>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">
+          <span style="font-size:0.75rem;padding:3px 10px;border-radius:20px;background:var(--db-color-bg);border:1px solid var(--db-color-border);color:var(--db-color-text-secondary);font-family:var(--db-font-ui);">Next.js</span>
+          <span style="font-size:0.75rem;padding:3px 10px;border-radius:20px;background:var(--db-color-bg);border:1px solid var(--db-color-border);color:var(--db-color-text-secondary);font-family:var(--db-font-ui);">SST</span>
+          <span style="font-size:0.75rem;padding:3px 10px;border-radius:20px;background:var(--db-color-bg);border:1px solid var(--db-color-border);color:var(--db-color-text-secondary);font-family:var(--db-font-ui);">Chart.js</span>
+          <span style="font-size:0.75rem;padding:3px 10px;border-radius:20px;background:color-mix(in srgb, var(--db-terracotta) 12%, transparent);border:1px solid color-mix(in srgb, var(--db-terracotta) 30%, transparent);color:var(--db-terracotta);font-weight:600;font-family:var(--db-font-ui);">DAUB</span>
+          <span style="font-size:0.75rem;padding:3px 10px;border-radius:20px;background:var(--db-color-bg);border:1px solid var(--db-color-border);color:var(--db-color-text-secondary);font-family:var(--db-font-ui);">AWS</span>
+        </div>
+        <a href="case-studies.html" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--db-font-ui);font-size:0.875rem;font-weight:600;color:var(--db-terracotta);text-decoration:none;">
+          Read case study <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
         </a>
       </div>
     </div>
