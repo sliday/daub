@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.14.1
+
+**Landing page polish — testimonial, install options, case study quote.**
+
+- Fix: compact horizontal testimonial layout on landing page (avatar left, quote right)
+- Feature: Marat testimonial quote added to case studies page
+- Feature: replaced hero install snippet with quick-install grid after configurator (classless 1-line + full 2-line options with AI docs links)
+- Removed: redundant code snippet from hero section
+
 ## v3.14.0
 
 **Developer feedback batch — badge aliases, CSS-only tabs, docs, testimonial.**
