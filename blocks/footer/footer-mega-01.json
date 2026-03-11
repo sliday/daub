@@ -3,218 +3,384 @@
   "elements": {
     "footer-mega": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "container": "wide",
-      "children": ["top-divider", "main-grid", "newsletter-section", "bottom-divider", "bottom-row"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "container": "wide"
+      },
+      "children": [
+        "top-divider",
+        "main-grid",
+        "newsletter-section",
+        "bottom-divider",
+        "bottom-row"
+      ]
     },
     "top-divider": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "main-grid": {
       "type": "Grid",
-      "columns": 5,
-      "gap": 5,
-      "children": ["brand-col", "col-product", "col-solutions", "col-company", "col-support"]
+      "props": {
+        "columns": 5,
+        "gap": 5
+      },
+      "children": [
+        "brand-col",
+        "col-product",
+        "col-solutions",
+        "col-company",
+        "col-support"
+      ]
     },
     "brand-col": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["brand-name", "brand-tagline"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "brand-name",
+        "brand-tagline"
+      ]
     },
     "brand-name": {
       "type": "Text",
-      "tag": "p",
-      "content": "Acme Studio",
-      "weight": "bold"
+      "props": {
+        "tag": "p",
+        "content": "Acme Studio",
+        "weight": "bold"
+      }
     },
     "brand-tagline": {
       "type": "Text",
-      "tag": "p",
-      "content": "Build faster. Ship smarter. Grow without limits.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Build faster. Ship smarter. Grow without limits.",
+        "variant": "muted"
+      }
     },
     "col-product": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["product-heading", "product-nav"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "product-heading",
+        "product-nav"
+      ]
     },
     "product-heading": {
       "type": "Text",
-      "tag": "p",
-      "content": "Product",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Product",
+        "weight": "semibold"
+      }
     },
     "product-nav": {
       "type": "NavMenu",
-      "direction": "vertical",
-      "items": [
-        { "label": "Features", "href": "/features" },
-        { "label": "Pricing", "href": "/pricing" },
-        { "label": "Integrations", "href": "/integrations" },
-        { "label": "Changelog", "href": "/changelog" }
-      ]
+      "props": {
+        "direction": "vertical",
+        "items": [
+          {
+            "label": "Features",
+            "href": "/features"
+          },
+          {
+            "label": "Pricing",
+            "href": "/pricing"
+          },
+          {
+            "label": "Integrations",
+            "href": "/integrations"
+          },
+          {
+            "label": "Changelog",
+            "href": "/changelog"
+          }
+        ]
+      }
     },
     "col-solutions": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["solutions-heading", "solutions-nav"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "solutions-heading",
+        "solutions-nav"
+      ]
     },
     "solutions-heading": {
       "type": "Text",
-      "tag": "p",
-      "content": "Solutions",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Solutions",
+        "weight": "semibold"
+      }
     },
     "solutions-nav": {
       "type": "NavMenu",
-      "direction": "vertical",
-      "items": [
-        { "label": "Startups", "href": "/solutions/startups" },
-        { "label": "Enterprise", "href": "/solutions/enterprise" },
-        { "label": "Agencies", "href": "/solutions/agencies" },
-        { "label": "E-commerce", "href": "/solutions/ecommerce" }
-      ]
+      "props": {
+        "direction": "vertical",
+        "items": [
+          {
+            "label": "Startups",
+            "href": "/solutions/startups"
+          },
+          {
+            "label": "Enterprise",
+            "href": "/solutions/enterprise"
+          },
+          {
+            "label": "Agencies",
+            "href": "/solutions/agencies"
+          },
+          {
+            "label": "E-commerce",
+            "href": "/solutions/ecommerce"
+          }
+        ]
+      }
     },
     "col-company": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["company-heading", "company-nav"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "company-heading",
+        "company-nav"
+      ]
     },
     "company-heading": {
       "type": "Text",
-      "tag": "p",
-      "content": "Company",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Company",
+        "weight": "semibold"
+      }
     },
     "company-nav": {
       "type": "NavMenu",
-      "direction": "vertical",
-      "items": [
-        { "label": "About", "href": "/about" },
-        { "label": "Blog", "href": "/blog" },
-        { "label": "Careers", "href": "/careers" },
-        { "label": "Press", "href": "/press" }
-      ]
+      "props": {
+        "direction": "vertical",
+        "items": [
+          {
+            "label": "About",
+            "href": "/about"
+          },
+          {
+            "label": "Blog",
+            "href": "/blog"
+          },
+          {
+            "label": "Careers",
+            "href": "/careers"
+          },
+          {
+            "label": "Press",
+            "href": "/press"
+          }
+        ]
+      }
     },
     "col-support": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["support-heading", "support-nav"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "support-heading",
+        "support-nav"
+      ]
     },
     "support-heading": {
       "type": "Text",
-      "tag": "p",
-      "content": "Support",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Support",
+        "weight": "semibold"
+      }
     },
     "support-nav": {
       "type": "NavMenu",
-      "direction": "vertical",
-      "items": [
-        { "label": "Help Center", "href": "/help" },
-        { "label": "Documentation", "href": "/docs" },
-        { "label": "API Status", "href": "/status" },
-        { "label": "Contact Us", "href": "/contact" }
-      ]
+      "props": {
+        "direction": "vertical",
+        "items": [
+          {
+            "label": "Help Center",
+            "href": "/help"
+          },
+          {
+            "label": "Documentation",
+            "href": "/docs"
+          },
+          {
+            "label": "API Status",
+            "href": "/status"
+          },
+          {
+            "label": "Contact Us",
+            "href": "/contact"
+          }
+        ]
+      }
     },
     "newsletter-section": {
       "type": "Surface",
-      "variant": "flat",
-      "children": ["newsletter-row"]
+      "props": {
+        "variant": "flat"
+      },
+      "children": [
+        "newsletter-row"
+      ]
     },
     "newsletter-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "center",
-      "justify": "between",
-      "children": ["newsletter-text-group", "newsletter-form"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "newsletter-text-group",
+        "newsletter-form"
+      ]
     },
     "newsletter-text-group": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["newsletter-title", "newsletter-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "newsletter-title",
+        "newsletter-desc"
+      ]
     },
     "newsletter-title": {
       "type": "Text",
-      "tag": "p",
-      "content": "Subscribe to our newsletter",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Subscribe to our newsletter",
+        "weight": "semibold"
+      }
     },
     "newsletter-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Get product updates, company news, and more.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Get product updates, company news, and more.",
+        "variant": "muted"
+      }
     },
     "newsletter-form": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["newsletter-input", "newsletter-btn"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "newsletter-input",
+        "newsletter-btn"
+      ]
     },
     "newsletter-input": {
       "type": "Input",
-      "placeholder": "you@example.com"
+      "props": {
+        "placeholder": "you@example.com"
+      }
     },
     "newsletter-btn": {
       "type": "Button",
-      "label": "Subscribe",
-      "variant": "primary"
+      "props": {
+        "label": "Subscribe",
+        "variant": "primary"
+      }
     },
     "bottom-divider": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "bottom-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "center",
-      "justify": "between",
-      "children": ["copyright", "bottom-links", "app-badges"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "copyright",
+        "bottom-links",
+        "app-badges"
+      ]
     },
     "copyright": {
       "type": "Text",
-      "tag": "p",
-      "content": "2026 Acme Studio, Inc. All rights reserved.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "2026 Acme Studio, Inc. All rights reserved.",
+        "variant": "muted"
+      }
     },
     "bottom-links": {
       "type": "NavMenu",
-      "direction": "horizontal",
-      "items": [
-        { "label": "Privacy", "href": "/privacy" },
-        { "label": "Terms", "href": "/terms" },
-        { "label": "Cookies", "href": "/cookies" }
-      ]
+      "props": {
+        "direction": "horizontal",
+        "items": [
+          {
+            "label": "Privacy",
+            "href": "/privacy"
+          },
+          {
+            "label": "Terms",
+            "href": "/terms"
+          },
+          {
+            "label": "Cookies",
+            "href": "/cookies"
+          }
+        ]
+      }
     },
     "app-badges": {
       "type": "ButtonGroup",
-      "children": ["app-store-btn", "play-store-btn"]
+      "children": [
+        "app-store-btn",
+        "play-store-btn"
+      ]
     },
     "app-store-btn": {
       "type": "Button",
-      "label": "App Store",
-      "icon": "apple",
-      "variant": "outline",
-      "size": "sm"
+      "props": {
+        "label": "App Store",
+        "icon": "apple",
+        "variant": "outline",
+        "size": "sm"
+      }
     },
     "play-store-btn": {
       "type": "Button",
-      "label": "Google Play",
-      "icon": "play",
-      "variant": "outline",
-      "size": "sm"
+      "props": {
+        "label": "Google Play",
+        "icon": "play",
+        "variant": "outline",
+        "size": "sm"
+      }
     }
   }
 }

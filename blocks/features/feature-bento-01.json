@@ -3,195 +3,308 @@
   "elements": {
     "feature-bento-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "align": "center",
-      "container": "wide",
-      "children": ["bento-header", "bento-grid"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "container": "wide"
+      },
+      "children": [
+        "bento-header",
+        "bento-grid"
+      ]
     },
     "bento-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["bento-chip", "bento-title", "bento-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "bento-chip",
+        "bento-title",
+        "bento-desc"
+      ]
     },
     "bento-chip": {
       "type": "Chip",
-      "label": "Cortex AI Platform"
+      "props": {
+        "label": "Cortex AI Platform"
+      }
     },
     "bento-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "The AI toolkit built for production",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "The AI toolkit built for production",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "bento-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "From prompt engineering to model deployment, Cortex covers every stage of the AI lifecycle.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "From prompt engineering to model deployment, Cortex covers every stage of the AI lifecycle.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "bento-grid": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 3,
-      "children": ["bento-card-models", "bento-card-playground", "bento-card-evals", "bento-card-deploy", "bento-card-observability", "bento-card-guardrails"]
+      "props": {
+        "columns": 3,
+        "gap": 3
+      },
+      "children": [
+        "bento-card-models",
+        "bento-card-playground",
+        "bento-card-evals",
+        "bento-card-deploy",
+        "bento-card-observability",
+        "bento-card-guardrails"
+      ]
     },
     "bento-card-models": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["models-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "models-inner"
+      ]
     },
     "models-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["models-title", "models-desc", "models-image"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "models-title",
+        "models-desc",
+        "models-image"
+      ]
     },
     "models-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Model Hub",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Model Hub",
+        "weight": "semibold"
+      }
     },
     "models-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Access 200+ pre-trained models including GPT-4o, Claude 3.5, Llama 3, and Gemini Pro through a single API endpoint.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Access 200+ pre-trained models including GPT-4o, Claude 3.5, Llama 3, and Gemini Pro through a single API endpoint.",
+        "variant": "muted"
+      }
     },
     "models-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/ai-models/400/200",
-      "alt": "Model catalog showing available foundation models"
+      "props": {
+        "src": "https://picsum.photos/seed/ai-models/400/200",
+        "alt": "Model catalog showing available foundation models"
+      }
     },
     "bento-card-playground": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["playground-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "playground-inner"
+      ]
     },
     "playground-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["playground-title", "playground-desc", "playground-image"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "playground-title",
+        "playground-desc",
+        "playground-image"
+      ]
     },
     "playground-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Prompt Playground",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Prompt Playground",
+        "weight": "semibold"
+      }
     },
     "playground-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Compare outputs across models side-by-side. Iterate on system prompts with version history and A/B test results.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Compare outputs across models side-by-side. Iterate on system prompts with version history and A/B test results.",
+        "variant": "muted"
+      }
     },
     "playground-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/ai-playground/400/200",
-      "alt": "Side-by-side prompt comparison interface"
+      "props": {
+        "src": "https://picsum.photos/seed/ai-playground/400/200",
+        "alt": "Side-by-side prompt comparison interface"
+      }
     },
     "bento-card-evals": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["evals-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "evals-inner"
+      ]
     },
     "evals-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["evals-title", "evals-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "evals-title",
+        "evals-desc"
+      ]
     },
     "evals-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Automated Evals",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Automated Evals",
+        "weight": "semibold"
+      }
     },
     "evals-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Run evaluation suites against golden datasets. Track accuracy, latency, and cost regressions across prompt versions with CI/CD integration.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Run evaluation suites against golden datasets. Track accuracy, latency, and cost regressions across prompt versions with CI/CD integration.",
+        "variant": "muted"
+      }
     },
     "bento-card-deploy": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["deploy-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "deploy-inner"
+      ]
     },
     "deploy-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["deploy-title", "deploy-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "deploy-title",
+        "deploy-desc"
+      ]
     },
     "deploy-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "One-Click Deploy",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "One-Click Deploy",
+        "weight": "semibold"
+      }
     },
     "deploy-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Ship fine-tuned models as serverless endpoints with auto-scaling. Average cold start under 800ms across all regions.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Ship fine-tuned models as serverless endpoints with auto-scaling. Average cold start under 800ms across all regions.",
+        "variant": "muted"
+      }
     },
     "bento-card-observability": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["observability-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "observability-inner"
+      ]
     },
     "observability-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["observability-title", "observability-desc", "observability-image"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "observability-title",
+        "observability-desc",
+        "observability-image"
+      ]
     },
     "observability-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "LLM Observability",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "LLM Observability",
+        "weight": "semibold"
+      }
     },
     "observability-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Trace every request from prompt to response. Monitor token usage, hallucination rates, and user satisfaction scores in real time.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Trace every request from prompt to response. Monitor token usage, hallucination rates, and user satisfaction scores in real time.",
+        "variant": "muted"
+      }
     },
     "observability-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/ai-observability/400/200",
-      "alt": "Observability dashboard with request traces"
+      "props": {
+        "src": "https://picsum.photos/seed/ai-observability/400/200",
+        "alt": "Observability dashboard with request traces"
+      }
     },
     "bento-card-guardrails": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["guardrails-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "guardrails-inner"
+      ]
     },
     "guardrails-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["guardrails-title", "guardrails-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "guardrails-title",
+        "guardrails-desc"
+      ]
     },
     "guardrails-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Safety Guardrails",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Safety Guardrails",
+        "weight": "semibold"
+      }
     },
     "guardrails-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Apply content filters, PII redaction, and topic restrictions at the API level. Audit logs capture every policy decision for compliance.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Apply content filters, PII redaction, and topic restrictions at the API level. Audit logs capture every policy decision for compliance.",
+        "variant": "muted"
+      }
     }
   }
 }

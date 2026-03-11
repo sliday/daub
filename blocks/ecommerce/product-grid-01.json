@@ -3,132 +3,218 @@
   "elements": {
     "product-grid-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["grid-header", "grid-toolbar", "products-grid", "load-more-row"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "grid-header",
+        "grid-toolbar",
+        "products-grid",
+        "load-more-row"
+      ]
     },
     "grid-header": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "space-between",
-      "align": "center",
-      "children": ["grid-title", "results-count"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "space-between",
+        "align": "center"
+      },
+      "children": [
+        "grid-title",
+        "results-count"
+      ]
     },
     "grid-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Wireless Headphones",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Wireless Headphones",
+        "weight": "bold"
+      }
     },
     "results-count": {
       "type": "Text",
-      "tag": "span",
-      "content": "Showing 8 of 124 products",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Showing 8 of 124 products",
+        "variant": "muted"
+      }
     },
     "grid-toolbar": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "space-between",
-      "align": "center",
-      "gap": 2,
-      "children": ["sort-select", "filter-chips"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "space-between",
+        "align": "center",
+        "gap": 2
+      },
+      "children": [
+        "sort-select",
+        "filter-chips"
+      ]
     },
     "sort-select": {
       "type": "Select",
-      "label": "Sort by",
-      "options": [
-        { "label": "Most Popular", "value": "popular" },
-        { "label": "Price: Low to High", "value": "price-asc" },
-        { "label": "Price: High to Low", "value": "price-desc" },
-        { "label": "Highest Rated", "value": "rating" },
-        { "label": "Newest", "value": "newest" }
-      ]
+      "props": {
+        "label": "Sort by",
+        "options": [
+          {
+            "label": "Most Popular",
+            "value": "popular"
+          },
+          {
+            "label": "Price: Low to High",
+            "value": "price-asc"
+          },
+          {
+            "label": "Price: High to Low",
+            "value": "price-desc"
+          },
+          {
+            "label": "Highest Rated",
+            "value": "rating"
+          },
+          {
+            "label": "Newest",
+            "value": "newest"
+          }
+        ]
+      }
     },
     "filter-chips": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "children": ["chip-all", "chip-on-sale", "chip-in-stock", "chip-top-rated"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "chip-all",
+        "chip-on-sale",
+        "chip-in-stock",
+        "chip-top-rated"
+      ]
     },
     "chip-all": {
       "type": "Chip",
-      "label": "All",
-      "variant": "primary"
+      "props": {
+        "label": "All",
+        "variant": "primary"
+      }
     },
     "chip-on-sale": {
       "type": "Chip",
-      "label": "On Sale",
-      "variant": "default"
+      "props": {
+        "label": "On Sale",
+        "variant": "default"
+      }
     },
     "chip-in-stock": {
       "type": "Chip",
-      "label": "In Stock",
-      "variant": "default"
+      "props": {
+        "label": "In Stock",
+        "variant": "default"
+      }
     },
     "chip-top-rated": {
       "type": "Chip",
-      "label": "Top Rated",
-      "variant": "default"
+      "props": {
+        "label": "Top Rated",
+        "variant": "default"
+      }
     },
     "products-grid": {
       "type": "Grid",
-      "columns": 4,
-      "gap": 3,
-      "children": ["product-1", "product-2", "product-3", "product-4", "product-5", "product-6", "product-7", "product-8"]
+      "props": {
+        "columns": 4,
+        "gap": 3
+      },
+      "children": [
+        "product-1",
+        "product-2",
+        "product-3",
+        "product-4",
+        "product-5",
+        "product-6",
+        "product-7",
+        "product-8"
+      ]
     },
     "product-1": {
       "type": "Card",
-      "title": "Sony WH-1000XM5",
-      "description": "$328.00 — ★★★★★ (2,847)"
+      "props": {
+        "title": "Sony WH-1000XM5",
+        "description": "$328.00 — ★★★★★ (2,847)"
+      }
     },
     "product-2": {
       "type": "Card",
-      "title": "Apple AirPods Max",
-      "description": "$449.00 — ★★★★☆ (1,923)"
+      "props": {
+        "title": "Apple AirPods Max",
+        "description": "$449.00 — ★★★★☆ (1,923)"
+      }
     },
     "product-3": {
       "type": "Card",
-      "title": "Bose QuietComfort Ultra",
-      "description": "$379.00 — ★★★★★ (3,102)"
+      "props": {
+        "title": "Bose QuietComfort Ultra",
+        "description": "$379.00 — ★★★★★ (3,102)"
+      }
     },
     "product-4": {
       "type": "Card",
-      "title": "Sennheiser Momentum 4",
-      "description": "$299.95 — ★★★★☆ (1,456)"
+      "props": {
+        "title": "Sennheiser Momentum 4",
+        "description": "$299.95 — ★★★★☆ (1,456)"
+      }
     },
     "product-5": {
       "type": "Card",
-      "title": "Beats Studio Pro",
-      "description": "$249.99 — ★★★★☆ (2,108)"
+      "props": {
+        "title": "Beats Studio Pro",
+        "description": "$249.99 — ★★★★☆ (2,108)"
+      }
     },
     "product-6": {
       "type": "Card",
-      "title": "Jabra Elite 85h",
-      "description": "$199.99 — ★★★★☆ (987)"
+      "props": {
+        "title": "Jabra Elite 85h",
+        "description": "$199.99 — ★★★★☆ (987)"
+      }
     },
     "product-7": {
       "type": "Card",
-      "title": "Bang & Olufsen Beoplay HX",
-      "description": "$499.00 — ★★★★★ (642)"
+      "props": {
+        "title": "Bang & Olufsen Beoplay HX",
+        "description": "$499.00 — ★★★★★ (642)"
+      }
     },
     "product-8": {
       "type": "Card",
-      "title": "Marshall Monitor II ANC",
-      "description": "$279.99 — ★★★★☆ (1,234)"
+      "props": {
+        "title": "Marshall Monitor II ANC",
+        "description": "$279.99 — ★★★★☆ (1,234)"
+      }
     },
     "load-more-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "center",
-      "children": ["load-more-button"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "center"
+      },
+      "children": [
+        "load-more-button"
+      ]
     },
     "load-more-button": {
       "type": "Button",
-      "label": "Load More Products",
-      "variant": "outline",
-      "icon": "chevron-down"
+      "props": {
+        "label": "Load More Products",
+        "variant": "outline",
+        "icon": "chevron-down"
+      }
     }
   }
 }

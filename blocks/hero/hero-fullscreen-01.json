@@ -3,71 +3,103 @@
   "elements": {
     "hero-full": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 6,
-      "align": "center",
-      "justify": "center",
-      "children": ["hero-full-content", "hero-full-scroll-indicator"]
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "hero-full-content",
+        "hero-full-scroll-indicator"
+      ]
     },
     "hero-full-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "align": "center",
-      "container": "narrow",
-      "children": ["hero-full-logo", "hero-full-heading", "hero-full-description", "hero-full-cta-row", "hero-full-note"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "hero-full-logo",
+        "hero-full-heading",
+        "hero-full-description",
+        "hero-full-cta-row",
+        "hero-full-note"
+      ]
     },
     "hero-full-logo": {
       "type": "Avatar",
-      "initials": "SY",
-      "size": "lg"
+      "props": {
+        "initials": "SY",
+        "size": "lg"
+      }
     },
     "hero-full-heading": {
       "type": "Text",
-      "tag": "h1",
-      "content": "Synthesize. Understand. Decide.",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h1",
+        "content": "Synthesize. Understand. Decide.",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "hero-full-description": {
       "type": "Text",
-      "tag": "p",
-      "content": "Synaptic connects to your company's data sources and surfaces the insights that matter. Stop drowning in dashboards. Ask questions in plain English, get answers backed by your actual data.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Synaptic connects to your company's data sources and surfaces the insights that matter. Stop drowning in dashboards. Ask questions in plain English, get answers backed by your actual data.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "hero-full-cta-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "justify": "center",
-      "children": ["hero-full-cta-primary", "hero-full-cta-ghost"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "justify": "center"
+      },
+      "children": [
+        "hero-full-cta-primary",
+        "hero-full-cta-ghost"
+      ]
     },
     "hero-full-cta-primary": {
       "type": "Button",
-      "label": "Get Early Access",
-      "variant": "primary",
-      "size": "lg"
+      "props": {
+        "label": "Get Early Access",
+        "variant": "primary",
+        "size": "lg"
+      }
     },
     "hero-full-cta-ghost": {
       "type": "Button",
-      "label": "Read the Docs",
-      "variant": "ghost",
-      "size": "lg"
+      "props": {
+        "label": "Read the Docs",
+        "variant": "ghost",
+        "size": "lg"
+      }
     },
     "hero-full-note": {
       "type": "Text",
-      "tag": "p",
-      "content": "SOC 2 Type II certified. Your data never leaves your infrastructure.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "SOC 2 Type II certified. Your data never leaves your infrastructure.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "hero-full-scroll-indicator": {
       "type": "Text",
-      "tag": "span",
-      "content": "Scroll to explore",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Scroll to explore",
+        "variant": "muted",
+        "align": "center"
+      }
     }
   }
 }

@@ -3,184 +3,286 @@
   "elements": {
     "team-list": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["tl-header", "tl-sub", "tl-members"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "tl-header",
+        "tl-sub",
+        "tl-members"
+      ]
     },
     "tl-header": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Our Leadership",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Our Leadership",
+        "weight": "bold"
+      }
     },
     "tl-sub": {
       "type": "Text",
-      "tag": "p",
-      "content": "Experienced leaders driving our mission to make software development accessible to everyone.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Experienced leaders driving our mission to make software development accessible to everyone.",
+        "variant": "muted"
+      }
     },
     "tl-members": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["tl-person-1", "tl-sep-1", "tl-person-2", "tl-sep-2", "tl-person-3", "tl-sep-3", "tl-person-4"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "tl-person-1",
+        "tl-sep-1",
+        "tl-person-2",
+        "tl-sep-2",
+        "tl-person-3",
+        "tl-sep-3",
+        "tl-person-4"
+      ]
     },
     "tl-person-1": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "children": ["tl-av-1", "tl-info-1"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "tl-av-1",
+        "tl-info-1"
+      ]
     },
     "tl-av-1": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/anna-berg/120/120",
-      "initials": "AB",
-      "size": "xl"
+      "props": {
+        "src": "https://picsum.photos/seed/anna-berg/120/120",
+        "initials": "AB",
+        "size": "xl"
+      }
     },
     "tl-info-1": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["tl-name-1", "tl-role-1", "tl-bio-1"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "tl-name-1",
+        "tl-role-1",
+        "tl-bio-1"
+      ]
     },
     "tl-name-1": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Anna Bergstrom",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Anna Bergstrom",
+        "weight": "bold"
+      }
     },
     "tl-role-1": {
       "type": "Badge",
-      "text": "CEO & Co-founder",
-      "variant": "primary"
+      "props": {
+        "text": "CEO & Co-founder",
+        "variant": "primary"
+      }
     },
     "tl-bio-1": {
       "type": "Text",
-      "tag": "p",
-      "content": "Former VP of Engineering at Stripe. 15 years building developer tools. Anna leads company strategy and fundraising, having raised $42M to date.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Former VP of Engineering at Stripe. 15 years building developer tools. Anna leads company strategy and fundraising, having raised $42M to date.",
+        "variant": "muted"
+      }
     },
     "tl-sep-1": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "tl-person-2": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "children": ["tl-av-2", "tl-info-2"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "tl-av-2",
+        "tl-info-2"
+      ]
     },
     "tl-av-2": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/raj-kumar/120/120",
-      "initials": "RK",
-      "size": "xl"
+      "props": {
+        "src": "https://picsum.photos/seed/raj-kumar/120/120",
+        "initials": "RK",
+        "size": "xl"
+      }
     },
     "tl-info-2": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["tl-name-2", "tl-role-2", "tl-bio-2"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "tl-name-2",
+        "tl-role-2",
+        "tl-bio-2"
+      ]
     },
     "tl-name-2": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Raj Kumar",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Raj Kumar",
+        "weight": "bold"
+      }
     },
     "tl-role-2": {
       "type": "Badge",
-      "text": "CTO & Co-founder",
-      "variant": "primary"
+      "props": {
+        "text": "CTO & Co-founder",
+        "variant": "primary"
+      }
     },
     "tl-bio-2": {
       "type": "Text",
-      "tag": "p",
-      "content": "PhD in distributed systems from MIT. Previously led infrastructure at Cloudflare. Raj oversees our platform architecture serving 2M+ API requests daily.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "PhD in distributed systems from MIT. Previously led infrastructure at Cloudflare. Raj oversees our platform architecture serving 2M+ API requests daily.",
+        "variant": "muted"
+      }
     },
     "tl-sep-2": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "tl-person-3": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "children": ["tl-av-3", "tl-info-3"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "tl-av-3",
+        "tl-info-3"
+      ]
     },
     "tl-av-3": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/lisa-park/120/120",
-      "initials": "LP",
-      "size": "xl"
+      "props": {
+        "src": "https://picsum.photos/seed/lisa-park/120/120",
+        "initials": "LP",
+        "size": "xl"
+      }
     },
     "tl-info-3": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["tl-name-3", "tl-role-3", "tl-bio-3"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "tl-name-3",
+        "tl-role-3",
+        "tl-bio-3"
+      ]
     },
     "tl-name-3": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Lisa Park",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Lisa Park",
+        "weight": "bold"
+      }
     },
     "tl-role-3": {
       "type": "Badge",
-      "text": "VP of Product",
-      "variant": "secondary"
+      "props": {
+        "text": "VP of Product",
+        "variant": "secondary"
+      }
     },
     "tl-bio-3": {
       "type": "Text",
-      "tag": "p",
-      "content": "10 years in product at Figma and Notion. Lisa drives our product roadmap, user research program, and design system that powers 500+ component variants.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "10 years in product at Figma and Notion. Lisa drives our product roadmap, user research program, and design system that powers 500+ component variants.",
+        "variant": "muted"
+      }
     },
     "tl-sep-3": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "tl-person-4": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "children": ["tl-av-4", "tl-info-4"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "tl-av-4",
+        "tl-info-4"
+      ]
     },
     "tl-av-4": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/omar-hassan/120/120",
-      "initials": "OH",
-      "size": "xl"
+      "props": {
+        "src": "https://picsum.photos/seed/omar-hassan/120/120",
+        "initials": "OH",
+        "size": "xl"
+      }
     },
     "tl-info-4": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["tl-name-4", "tl-role-4", "tl-bio-4"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "tl-name-4",
+        "tl-role-4",
+        "tl-bio-4"
+      ]
     },
     "tl-name-4": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Omar Hassan",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Omar Hassan",
+        "weight": "bold"
+      }
     },
     "tl-role-4": {
       "type": "Badge",
-      "text": "VP of Engineering",
-      "variant": "secondary"
+      "props": {
+        "text": "VP of Engineering",
+        "variant": "secondary"
+      }
     },
     "tl-bio-4": {
       "type": "Text",
-      "tag": "p",
-      "content": "Former tech lead at Google Cloud. Omar manages our 28-person engineering org across frontend, backend, and infrastructure teams shipping on a 2-week cadence.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Former tech lead at Google Cloud. Omar manages our 28-person engineering org across frontend, backend, and infrastructure teams shipping on a 2-week cadence.",
+        "variant": "muted"
+      }
     }
   }
 }

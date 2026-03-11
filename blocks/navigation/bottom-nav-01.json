@@ -3,13 +3,31 @@
   "elements": {
     "bottom-nav": {
       "type": "BottomNav",
-      "items": [
-        { "label": "Home", "icon": "home", "active": true },
-        { "label": "Search", "icon": "search" },
-        { "label": "Orders", "icon": "package" },
-        { "label": "Favorites", "icon": "heart" },
-        { "label": "Account", "icon": "user" }
-      ]
+      "props": {
+        "items": [
+          {
+            "label": "Home",
+            "icon": "home",
+            "active": true
+          },
+          {
+            "label": "Search",
+            "icon": "search"
+          },
+          {
+            "label": "Orders",
+            "icon": "package"
+          },
+          {
+            "label": "Favorites",
+            "icon": "heart"
+          },
+          {
+            "label": "Account",
+            "icon": "user"
+          }
+        ]
+      }
     }
   }
 }

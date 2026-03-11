@@ -3,140 +3,214 @@
   "elements": {
     "press-mentions": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "align": "center",
-      "container": "wide",
-      "children": ["press-header", "press-logos", "press-sep", "press-quotes"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "container": "wide"
+      },
+      "children": [
+        "press-header",
+        "press-logos",
+        "press-sep",
+        "press-quotes"
+      ]
     },
     "press-header": {
       "type": "Text",
-      "tag": "h3",
-      "content": "As featured in",
-      "align": "center",
-      "variant": "muted"
+      "props": {
+        "tag": "h3",
+        "content": "As featured in",
+        "align": "center",
+        "variant": "muted"
+      }
     },
     "press-logos": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 6,
-      "align": "center",
-      "justify": "center",
-      "children": ["logo-tc", "logo-wired", "logo-forbes", "logo-bloomberg", "logo-wsj"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 6,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "logo-tc",
+        "logo-wired",
+        "logo-forbes",
+        "logo-bloomberg",
+        "logo-wsj"
+      ]
     },
     "logo-tc": {
       "type": "Text",
-      "tag": "span",
-      "content": "TechCrunch",
-      "weight": "bold",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "TechCrunch",
+        "weight": "bold",
+        "variant": "muted"
+      }
     },
     "logo-wired": {
       "type": "Text",
-      "tag": "span",
-      "content": "WIRED",
-      "weight": "bold",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "WIRED",
+        "weight": "bold",
+        "variant": "muted"
+      }
     },
     "logo-forbes": {
       "type": "Text",
-      "tag": "span",
-      "content": "Forbes",
-      "weight": "bold",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Forbes",
+        "weight": "bold",
+        "variant": "muted"
+      }
     },
     "logo-bloomberg": {
       "type": "Text",
-      "tag": "span",
-      "content": "Bloomberg",
-      "weight": "bold",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Bloomberg",
+        "weight": "bold",
+        "variant": "muted"
+      }
     },
     "logo-wsj": {
       "type": "Text",
-      "tag": "span",
-      "content": "Wall Street Journal",
-      "weight": "bold",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Wall Street Journal",
+        "weight": "bold",
+        "variant": "muted"
+      }
     },
     "press-sep": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "press-quotes": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 4,
-      "children": ["quote-1", "quote-2", "quote-3"]
+      "props": {
+        "columns": 3,
+        "gap": 4
+      },
+      "children": [
+        "quote-1",
+        "quote-2",
+        "quote-3"
+      ]
     },
     "quote-1": {
       "type": "Surface",
-      "variant": "flat",
-      "children": ["quote-1-inner"]
+      "props": {
+        "variant": "flat"
+      },
+      "children": [
+        "quote-1-inner"
+      ]
     },
     "quote-1-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["quote-1-source", "quote-1-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "quote-1-source",
+        "quote-1-text"
+      ]
     },
     "quote-1-source": {
       "type": "Text",
-      "tag": "span",
-      "content": "TechCrunch",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "TechCrunch",
+        "weight": "bold"
+      }
     },
     "quote-1-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "\u201CThe most significant infrastructure product launch of 2025. It fundamentally changes how companies think about scaling.\u201D",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "“The most significant infrastructure product launch of 2025. It fundamentally changes how companies think about scaling.”",
+        "variant": "muted"
+      }
     },
     "quote-2": {
       "type": "Surface",
-      "variant": "flat",
-      "children": ["quote-2-inner"]
+      "props": {
+        "variant": "flat"
+      },
+      "children": [
+        "quote-2-inner"
+      ]
     },
     "quote-2-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["quote-2-source", "quote-2-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "quote-2-source",
+        "quote-2-text"
+      ]
     },
     "quote-2-source": {
       "type": "Text",
-      "tag": "span",
-      "content": "Forbes",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "Forbes",
+        "weight": "bold"
+      }
     },
     "quote-2-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "\u201CA rare unicorn that actually lives up to the hype. Their enterprise customers report ROI within the first 90 days.\u201D",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "“A rare unicorn that actually lives up to the hype. Their enterprise customers report ROI within the first 90 days.”",
+        "variant": "muted"
+      }
     },
     "quote-3": {
       "type": "Surface",
-      "variant": "flat",
-      "children": ["quote-3-inner"]
+      "props": {
+        "variant": "flat"
+      },
+      "children": [
+        "quote-3-inner"
+      ]
     },
     "quote-3-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["quote-3-source", "quote-3-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "quote-3-source",
+        "quote-3-text"
+      ]
     },
     "quote-3-source": {
       "type": "Text",
-      "tag": "span",
-      "content": "WIRED",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "WIRED",
+        "weight": "bold"
+      }
     },
     "quote-3-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "\u201CIf AWS is the cloud's foundation, this is its nervous system \u2014 intelligent, adaptive, and surprisingly easy to adopt.\u201D",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "“If AWS is the cloud's foundation, this is its nervous system — intelligent, adaptive, and surprisingly easy to adopt.”",
+        "variant": "muted"
+      }
     }
   }
 }

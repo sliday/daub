@@ -3,81 +3,124 @@
   "elements": {
     "blog-featured": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["bf-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "bf-inner"
+      ]
     },
     "bf-inner": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "container": true,
-      "align": "center",
-      "children": ["bf-image", "bf-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "container": true,
+        "align": "center"
+      },
+      "children": [
+        "bf-image",
+        "bf-content"
+      ]
     },
     "bf-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/featured-post/700/450",
-      "alt": "The Future of Developer Tools"
+      "props": {
+        "src": "https://picsum.photos/seed/featured-post/700/450",
+        "alt": "The Future of Developer Tools"
+      }
     },
     "bf-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["bf-label", "bf-title", "bf-excerpt", "bf-author-row", "bf-cta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "bf-label",
+        "bf-title",
+        "bf-excerpt",
+        "bf-author-row",
+        "bf-cta"
+      ]
     },
     "bf-label": {
       "type": "Badge",
-      "text": "Featured",
-      "variant": "primary"
+      "props": {
+        "text": "Featured",
+        "variant": "primary"
+      }
     },
     "bf-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "The Developer Tools Renaissance: What's Coming in 2026",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "The Developer Tools Renaissance: What's Coming in 2026",
+        "weight": "bold"
+      }
     },
     "bf-excerpt": {
       "type": "Text",
-      "tag": "p",
-      "content": "From AI-assisted coding to instant deployment pipelines, the way we build software is undergoing its biggest transformation since the cloud revolution. We explore the five trends reshaping the developer experience landscape and what they mean for engineering teams of every size.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "From AI-assisted coding to instant deployment pipelines, the way we build software is undergoing its biggest transformation since the cloud revolution. We explore the five trends reshaping the developer experience landscape and what they mean for engineering teams of every size.",
+        "variant": "muted"
+      }
     },
     "bf-author-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["bf-avatar", "bf-author-info"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "bf-avatar",
+        "bf-author-info"
+      ]
     },
     "bf-avatar": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/kate-author/80/80",
-      "initials": "KM",
-      "size": "md"
+      "props": {
+        "src": "https://picsum.photos/seed/kate-author/80/80",
+        "initials": "KM",
+        "size": "md"
+      }
     },
     "bf-author-info": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "children": ["bf-author-name", "bf-author-date"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "bf-author-name",
+        "bf-author-date"
+      ]
     },
     "bf-author-name": {
       "type": "Text",
-      "tag": "p",
-      "content": "Kate Morrison",
-      "weight": "bold"
+      "props": {
+        "tag": "p",
+        "content": "Kate Morrison",
+        "weight": "bold"
+      }
     },
     "bf-author-date": {
       "type": "Text",
-      "tag": "p",
-      "content": "March 9, 2026 · 15 min read",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "March 9, 2026 · 15 min read",
+        "variant": "muted"
+      }
     },
     "bf-cta": {
       "type": "Button",
-      "label": "Read Article",
-      "variant": "primary",
-      "icon": "arrow-right"
+      "props": {
+        "label": "Read Article",
+        "variant": "primary",
+        "icon": "arrow-right"
+      }
     }
   }
 }

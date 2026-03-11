@@ -3,208 +3,320 @@
   "elements": {
     "numbered-steps-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "container": "narrow",
-      "children": ["steps-header", "steps-list", "steps-cta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "container": "narrow"
+      },
+      "children": [
+        "steps-header",
+        "steps-list",
+        "steps-cta"
+      ]
     },
     "steps-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["steps-title", "steps-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "steps-title",
+        "steps-desc"
+      ]
     },
     "steps-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Get started in under 5 minutes",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Get started in under 5 minutes",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "steps-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Follow these four steps to connect your first data source and start querying.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Follow these four steps to connect your first data source and start querying.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "steps-list": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["step-1", "step-sep-1", "step-2", "step-sep-2", "step-3", "step-sep-3", "step-4"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "step-1",
+        "step-sep-1",
+        "step-2",
+        "step-sep-2",
+        "step-3",
+        "step-sep-3",
+        "step-4"
+      ]
     },
     "step-1": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "start",
-      "children": ["step-1-number", "step-1-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "start"
+      },
+      "children": [
+        "step-1-number",
+        "step-1-content"
+      ]
     },
     "step-1-number": {
       "type": "Avatar",
-      "children": ["step-1-num-text"]
+      "children": [
+        "step-1-num-text"
+      ]
     },
     "step-1-num-text": {
       "type": "Text",
-      "tag": "span",
-      "content": "1",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "1",
+        "weight": "bold"
+      }
     },
     "step-1-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["step-1-title", "step-1-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "step-1-title",
+        "step-1-desc"
+      ]
     },
     "step-1-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Create your workspace",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Create your workspace",
+        "weight": "semibold"
+      }
     },
     "step-1-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Sign up with your work email and name your workspace. You will get a dedicated subdomain (e.g., acme.querybase.io) and an API key within seconds.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Sign up with your work email and name your workspace. You will get a dedicated subdomain (e.g., acme.querybase.io) and an API key within seconds.",
+        "variant": "muted"
+      }
     },
     "step-sep-1": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "step-2": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "start",
-      "children": ["step-2-number", "step-2-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "start"
+      },
+      "children": [
+        "step-2-number",
+        "step-2-content"
+      ]
     },
     "step-2-number": {
       "type": "Avatar",
-      "children": ["step-2-num-text"]
+      "children": [
+        "step-2-num-text"
+      ]
     },
     "step-2-num-text": {
       "type": "Text",
-      "tag": "span",
-      "content": "2",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "2",
+        "weight": "bold"
+      }
     },
     "step-2-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["step-2-title", "step-2-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "step-2-title",
+        "step-2-desc"
+      ]
     },
     "step-2-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Connect a data source",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Connect a data source",
+        "weight": "semibold"
+      }
     },
     "step-2-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Choose from 50+ native connectors including PostgreSQL, Snowflake, BigQuery, and S3. Credentials are encrypted with AES-256 and stored in a dedicated vault.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Choose from 50+ native connectors including PostgreSQL, Snowflake, BigQuery, and S3. Credentials are encrypted with AES-256 and stored in a dedicated vault.",
+        "variant": "muted"
+      }
     },
     "step-sep-2": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "step-3": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "start",
-      "children": ["step-3-number", "step-3-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "start"
+      },
+      "children": [
+        "step-3-number",
+        "step-3-content"
+      ]
     },
     "step-3-number": {
       "type": "Avatar",
-      "children": ["step-3-num-text"]
+      "children": [
+        "step-3-num-text"
+      ]
     },
     "step-3-num-text": {
       "type": "Text",
-      "tag": "span",
-      "content": "3",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "3",
+        "weight": "bold"
+      }
     },
     "step-3-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["step-3-title", "step-3-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "step-3-title",
+        "step-3-desc"
+      ]
     },
     "step-3-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Define your schema",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Define your schema",
+        "weight": "semibold"
+      }
     },
     "step-3-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Our auto-discovery scans your tables and suggests a semantic layer. Review column descriptions, set access policies, and publish the schema for your team to use.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Our auto-discovery scans your tables and suggests a semantic layer. Review column descriptions, set access policies, and publish the schema for your team to use.",
+        "variant": "muted"
+      }
     },
     "step-sep-3": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "step-4": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "start",
-      "children": ["step-4-number", "step-4-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "start"
+      },
+      "children": [
+        "step-4-number",
+        "step-4-content"
+      ]
     },
     "step-4-number": {
       "type": "Avatar",
-      "children": ["step-4-num-text"]
+      "children": [
+        "step-4-num-text"
+      ]
     },
     "step-4-num-text": {
       "type": "Text",
-      "tag": "span",
-      "content": "4",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "4",
+        "weight": "bold"
+      }
     },
     "step-4-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["step-4-title", "step-4-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "step-4-title",
+        "step-4-desc"
+      ]
     },
     "step-4-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Run your first query",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Run your first query",
+        "weight": "semibold"
+      }
     },
     "step-4-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Open the query editor, write SQL or use the visual builder, and hit Run. Results stream back in real time. Save queries as reusable reports and share them with your team.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Open the query editor, write SQL or use the visual builder, and hit Run. Results stream back in real time. Save queries as reusable reports and share them with your team.",
+        "variant": "muted"
+      }
     },
     "steps-cta": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "justify": "center",
-      "children": ["cta-start", "cta-docs"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "justify": "center"
+      },
+      "children": [
+        "cta-start",
+        "cta-docs"
+      ]
     },
     "cta-start": {
       "type": "Button",
-      "label": "Start Free Trial",
-      "variant": "primary",
-      "size": "lg"
+      "props": {
+        "label": "Start Free Trial",
+        "variant": "primary",
+        "size": "lg"
+      }
     },
     "cta-docs": {
       "type": "Button",
-      "label": "Read the Docs",
-      "variant": "ghost",
-      "size": "lg"
+      "props": {
+        "label": "Read the Docs",
+        "variant": "ghost",
+        "size": "lg"
+      }
     }
   }
 }

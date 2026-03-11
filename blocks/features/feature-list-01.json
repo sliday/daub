@@ -3,205 +3,319 @@
   "elements": {
     "feature-list-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "container": "narrow",
-      "children": ["feature-list-header", "feature-items"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "container": "narrow"
+      },
+      "children": [
+        "feature-list-header",
+        "feature-items"
+      ]
     },
     "feature-list-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["feature-list-title", "feature-list-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "feature-list-title",
+        "feature-list-desc"
+      ]
     },
     "feature-list-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Design tools that adapt to your creative flow",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Design tools that adapt to your creative flow",
+        "weight": "bold"
+      }
     },
     "feature-list-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "From wireframes to production-ready assets, every feature is crafted to keep you in the zone.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "From wireframes to production-ready assets, every feature is crafted to keep you in the zone.",
+        "variant": "muted"
+      }
     },
     "feature-items": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["item-vector", "sep-1", "item-proto", "sep-2", "item-collab", "sep-3", "item-tokens", "sep-4", "item-handoff"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "item-vector",
+        "sep-1",
+        "item-proto",
+        "sep-2",
+        "item-collab",
+        "sep-3",
+        "item-tokens",
+        "sep-4",
+        "item-handoff"
+      ]
     },
     "item-vector": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "start",
-      "children": ["vector-icon", "vector-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "start"
+      },
+      "children": [
+        "vector-icon",
+        "vector-content"
+      ]
     },
     "vector-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "pen-tool",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "pen-tool",
+        "variant": "muted"
+      }
     },
     "vector-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["vector-title", "vector-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "vector-title",
+        "vector-desc"
+      ]
     },
     "vector-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Vector Editing Engine",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Vector Editing Engine",
+        "weight": "semibold"
+      }
     },
     "vector-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Sub-pixel precision with boolean operations, variable-width strokes, and GPU-accelerated rendering that handles canvases with 10,000+ objects.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Sub-pixel precision with boolean operations, variable-width strokes, and GPU-accelerated rendering that handles canvases with 10,000+ objects.",
+        "variant": "muted"
+      }
     },
     "sep-1": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "item-proto": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "start",
-      "children": ["proto-icon", "proto-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "start"
+      },
+      "children": [
+        "proto-icon",
+        "proto-content"
+      ]
     },
     "proto-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "play-circle",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "play-circle",
+        "variant": "muted"
+      }
     },
     "proto-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["proto-title", "proto-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "proto-title",
+        "proto-desc"
+      ]
     },
     "proto-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Interactive Prototyping",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Interactive Prototyping",
+        "weight": "semibold"
+      }
     },
     "proto-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Connect frames with smart transitions, micro-interactions, and conditional logic. Test flows on any device with a shareable link.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Connect frames with smart transitions, micro-interactions, and conditional logic. Test flows on any device with a shareable link.",
+        "variant": "muted"
+      }
     },
     "sep-2": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "item-collab": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "start",
-      "children": ["collab-icon", "collab-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "start"
+      },
+      "children": [
+        "collab-icon",
+        "collab-content"
+      ]
     },
     "collab-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "users",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "users",
+        "variant": "muted"
+      }
     },
     "collab-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["collab-title", "collab-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "collab-title",
+        "collab-desc"
+      ]
     },
     "collab-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Real-Time Collaboration",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Real-Time Collaboration",
+        "weight": "semibold"
+      }
     },
     "collab-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "See cursors, selections, and edits live. Leave contextual comments pinned to specific layers, and resolve feedback threads without leaving the canvas.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "See cursors, selections, and edits live. Leave contextual comments pinned to specific layers, and resolve feedback threads without leaving the canvas.",
+        "variant": "muted"
+      }
     },
     "sep-3": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "item-tokens": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "start",
-      "children": ["tokens-icon", "tokens-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "start"
+      },
+      "children": [
+        "tokens-icon",
+        "tokens-content"
+      ]
     },
     "tokens-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "palette",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "palette",
+        "variant": "muted"
+      }
     },
     "tokens-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["tokens-title", "tokens-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "tokens-title",
+        "tokens-desc"
+      ]
     },
     "tokens-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Design Tokens",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Design Tokens",
+        "weight": "semibold"
+      }
     },
     "tokens-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Define colors, spacing, and typography as tokens that sync across files. Push changes once and every component updates automatically.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Define colors, spacing, and typography as tokens that sync across files. Push changes once and every component updates automatically.",
+        "variant": "muted"
+      }
     },
     "sep-4": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "item-handoff": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "start",
-      "children": ["handoff-icon", "handoff-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "start"
+      },
+      "children": [
+        "handoff-icon",
+        "handoff-content"
+      ]
     },
     "handoff-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "code",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "code",
+        "variant": "muted"
+      }
     },
     "handoff-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["handoff-title", "handoff-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "handoff-title",
+        "handoff-desc"
+      ]
     },
     "handoff-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Developer Handoff",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Developer Handoff",
+        "weight": "semibold"
+      }
     },
     "handoff-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Auto-generate CSS, Swift, and Kotlin snippets from any selection. Developers inspect spacing, export assets, and copy tokens without designer assistance.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Auto-generate CSS, Swift, and Kotlin snippets from any selection. Developers inspect spacing, export assets, and copy tokens without designer assistance.",
+        "variant": "muted"
+      }
     }
   }
 }

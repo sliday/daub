@@ -3,107 +3,164 @@
   "elements": {
     "faq-with-sidebar": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["faq-sb-header", "faq-sb-layout"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "faq-sb-header",
+        "faq-sb-layout"
+      ]
     },
     "faq-sb-header": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Help Center",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Help Center",
+        "weight": "bold"
+      }
     },
     "faq-sb-layout": {
       "type": "Grid",
-      "columns": 4,
-      "gap": 4,
-      "children": ["faq-sb-nav", "faq-sb-content"]
+      "props": {
+        "columns": 4,
+        "gap": 4
+      },
+      "children": [
+        "faq-sb-nav",
+        "faq-sb-content"
+      ]
     },
     "faq-sb-nav": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["faq-nav-label", "faq-nav-menu"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "faq-nav-label",
+        "faq-nav-menu"
+      ]
     },
     "faq-nav-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "Categories",
-      "weight": "bold",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Categories",
+        "weight": "bold",
+        "variant": "muted"
+      }
     },
     "faq-nav-menu": {
       "type": "NavMenu",
-      "items": [
-        { "label": "Getting Started", "active": true },
-        { "label": "Account & Billing" },
-        { "label": "Features" },
-        { "label": "Integrations" },
-        { "label": "Security" },
-        { "label": "Troubleshooting" }
-      ]
+      "props": {
+        "items": [
+          {
+            "label": "Getting Started",
+            "active": true
+          },
+          {
+            "label": "Account & Billing"
+          },
+          {
+            "label": "Features"
+          },
+          {
+            "label": "Integrations"
+          },
+          {
+            "label": "Security"
+          },
+          {
+            "label": "Troubleshooting"
+          }
+        ]
+      }
     },
     "faq-sb-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["faq-sb-cat-title", "faq-sb-accordion", "faq-sb-contact"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "faq-sb-cat-title",
+        "faq-sb-accordion",
+        "faq-sb-contact"
+      ]
     },
     "faq-sb-cat-title": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Getting Started",
-      "weight": "bold"
+      "props": {
+        "tag": "h3",
+        "content": "Getting Started",
+        "weight": "bold"
+      }
     },
     "faq-sb-accordion": {
       "type": "Accordion",
-      "items": [
-        {
-          "title": "How do I create my first project?",
-          "content": "After signing up, click 'New Project' on your dashboard. Choose a template or start from scratch. Name your project and invite collaborators."
-        },
-        {
-          "title": "What are workspaces?",
-          "content": "Workspaces are shared environments where your team collaborates. Each workspace has its own settings, members, and billing. You can belong to multiple workspaces."
-        },
-        {
-          "title": "How do I import existing data?",
-          "content": "Use the import wizard in Settings > Import. We support CSV, JSON, and direct imports from Trello, Asana, and Notion. Large imports are processed in the background."
-        },
-        {
-          "title": "Is there a quick-start guide?",
-          "content": "Yes! Visit docs.example.com/quickstart for a 5-minute walkthrough. We also offer live onboarding sessions every Tuesday at 2 PM EST."
-        },
-        {
-          "title": "Can I use keyboard shortcuts?",
-          "content": "Press Cmd+K (or Ctrl+K) to open the command palette. From there you can navigate, create, and manage resources without touching your mouse."
-        }
-      ]
+      "props": {
+        "items": [
+          {
+            "title": "How do I create my first project?",
+            "content": "After signing up, click 'New Project' on your dashboard. Choose a template or start from scratch. Name your project and invite collaborators."
+          },
+          {
+            "title": "What are workspaces?",
+            "content": "Workspaces are shared environments where your team collaborates. Each workspace has its own settings, members, and billing. You can belong to multiple workspaces."
+          },
+          {
+            "title": "How do I import existing data?",
+            "content": "Use the import wizard in Settings > Import. We support CSV, JSON, and direct imports from Trello, Asana, and Notion. Large imports are processed in the background."
+          },
+          {
+            "title": "Is there a quick-start guide?",
+            "content": "Yes! Visit docs.example.com/quickstart for a 5-minute walkthrough. We also offer live onboarding sessions every Tuesday at 2 PM EST."
+          },
+          {
+            "title": "Can I use keyboard shortcuts?",
+            "content": "Press Cmd+K (or Ctrl+K) to open the command palette. From there you can navigate, create, and manage resources without touching your mouse."
+          }
+        ]
+      }
     },
     "faq-sb-contact": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["faq-sb-contact-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "faq-sb-contact-inner"
+      ]
     },
     "faq-sb-contact-inner": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "justify": "space-between",
-      "children": ["faq-sb-contact-text", "faq-sb-contact-btn"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center",
+        "justify": "space-between"
+      },
+      "children": [
+        "faq-sb-contact-text",
+        "faq-sb-contact-btn"
+      ]
     },
     "faq-sb-contact-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "Still have questions? Our support team responds within 2 hours.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Still have questions? Our support team responds within 2 hours.",
+        "variant": "muted"
+      }
     },
     "faq-sb-contact-btn": {
       "type": "Button",
-      "label": "Contact Support",
-      "variant": "outline"
+      "props": {
+        "label": "Contact Support",
+        "variant": "outline"
+      }
     }
   }
 }

@@ -3,16 +3,22 @@
   "elements": {
     "skip-link-root": {
       "type": "Stack",
-      "direction": "horizontal",
-      "align": "center",
-      "justify": "center",
-      "children": ["skip-link-btn"]
+      "props": {
+        "direction": "horizontal",
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "skip-link-btn"
+      ]
     },
     "skip-link-btn": {
       "type": "Button",
-      "label": "Skip to main content",
-      "variant": "outline",
-      "size": "sm"
+      "props": {
+        "label": "Skip to main content",
+        "variant": "outline",
+        "size": "sm"
+      }
     }
   }
 }

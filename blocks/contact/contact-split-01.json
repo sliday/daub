@@ -3,196 +3,315 @@
   "elements": {
     "contact-split": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "container": "wide",
-      "children": ["section-heading", "split-grid"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "container": "wide"
+      },
+      "children": [
+        "section-heading",
+        "split-grid"
+      ]
     },
     "section-heading": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["title", "subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "title",
+        "subtitle"
+      ]
     },
     "title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Contact Us",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Contact Us",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Reach out through the form or connect with us directly using the details below.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Reach out through the form or connect with us directly using the details below.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "split-grid": {
       "type": "Grid",
-      "columns": 2,
-      "gap": 6,
-      "children": ["form-surface", "info-surface"]
+      "props": {
+        "columns": 2,
+        "gap": 6
+      },
+      "children": [
+        "form-surface",
+        "info-surface"
+      ]
     },
     "form-surface": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["form-stack"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "form-stack"
+      ]
     },
     "form-stack": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["form-title", "name-field", "email-field", "phone-field", "message-field", "send-btn"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "form-title",
+        "name-field",
+        "email-field",
+        "phone-field",
+        "message-field",
+        "send-btn"
+      ]
     },
     "form-title": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Send a Message",
-      "weight": "semibold"
+      "props": {
+        "tag": "h3",
+        "content": "Send a Message",
+        "weight": "semibold"
+      }
     },
     "name-field": {
       "type": "Field",
-      "label": "Full Name",
-      "children": ["name-input"]
+      "props": {
+        "label": "Full Name"
+      },
+      "children": [
+        "name-input"
+      ]
     },
     "name-input": {
       "type": "Input",
-      "placeholder": "Your full name"
+      "props": {
+        "placeholder": "Your full name"
+      }
     },
     "email-field": {
       "type": "Field",
-      "label": "Email",
-      "children": ["email-input"]
+      "props": {
+        "label": "Email"
+      },
+      "children": [
+        "email-input"
+      ]
     },
     "email-input": {
       "type": "Input",
-      "placeholder": "you@company.com"
+      "props": {
+        "placeholder": "you@company.com"
+      }
     },
     "phone-field": {
       "type": "Field",
-      "label": "Phone (optional)",
-      "children": ["phone-input"]
+      "props": {
+        "label": "Phone (optional)"
+      },
+      "children": [
+        "phone-input"
+      ]
     },
     "phone-input": {
       "type": "Input",
-      "placeholder": "+1 (555) 000-0000"
+      "props": {
+        "placeholder": "+1 (555) 000-0000"
+      }
     },
     "message-field": {
       "type": "Field",
-      "label": "Message",
-      "children": ["message-input"]
+      "props": {
+        "label": "Message"
+      },
+      "children": [
+        "message-input"
+      ]
     },
     "message-input": {
       "type": "Textarea",
-      "placeholder": "How can we help you?"
+      "props": {
+        "placeholder": "How can we help you?"
+      }
     },
     "send-btn": {
       "type": "Button",
-      "label": "Send Message",
-      "variant": "primary"
+      "props": {
+        "label": "Send Message",
+        "variant": "primary"
+      }
     },
     "info-surface": {
       "type": "Surface",
-      "variant": "flat",
-      "children": ["info-stack"]
+      "props": {
+        "variant": "flat"
+      },
+      "children": [
+        "info-stack"
+      ]
     },
     "info-stack": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "children": ["info-title", "email-info", "divider-1", "phone-info", "divider-2", "address-info", "divider-3", "hours-info"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "info-title",
+        "email-info",
+        "divider-1",
+        "phone-info",
+        "divider-2",
+        "address-info",
+        "divider-3",
+        "hours-info"
+      ]
     },
     "info-title": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Contact Information",
-      "weight": "semibold"
+      "props": {
+        "tag": "h3",
+        "content": "Contact Information",
+        "weight": "semibold"
+      }
     },
     "email-info": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["email-label", "email-value"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "email-label",
+        "email-value"
+      ]
     },
     "email-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "Email",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Email",
+        "weight": "semibold"
+      }
     },
     "email-value": {
       "type": "Text",
-      "tag": "p",
-      "content": "hello@acmestudio.com",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "hello@acmestudio.com",
+        "variant": "muted"
+      }
     },
     "divider-1": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "phone-info": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["phone-label", "phone-value"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "phone-label",
+        "phone-value"
+      ]
     },
     "phone-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "Phone",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Phone",
+        "weight": "semibold"
+      }
     },
     "phone-value": {
       "type": "Text",
-      "tag": "p",
-      "content": "+1 (415) 555-0198",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "+1 (415) 555-0198",
+        "variant": "muted"
+      }
     },
     "divider-2": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "address-info": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["address-label", "address-value"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "address-label",
+        "address-value"
+      ]
     },
     "address-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "Office",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Office",
+        "weight": "semibold"
+      }
     },
     "address-value": {
       "type": "Text",
-      "tag": "p",
-      "content": "350 Mission St, Suite 200\nSan Francisco, CA 94105",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "350 Mission St, Suite 200\nSan Francisco, CA 94105",
+        "variant": "muted"
+      }
     },
     "divider-3": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "hours-info": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["hours-label", "hours-value"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "hours-label",
+        "hours-value"
+      ]
     },
     "hours-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "Business Hours",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Business Hours",
+        "weight": "semibold"
+      }
     },
     "hours-value": {
       "type": "Text",
-      "tag": "p",
-      "content": "Monday - Friday, 9:00 AM - 6:00 PM PST",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Monday - Friday, 9:00 AM - 6:00 PM PST",
+        "variant": "muted"
+      }
     }
   }
 }

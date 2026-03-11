@@ -3,93 +3,148 @@
   "elements": {
     "before-after-root": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["ba-heading", "ba-description", "ba-grid"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "ba-heading",
+        "ba-description",
+        "ba-grid"
+      ]
     },
     "ba-heading": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Before & After",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Before & After",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "ba-description": {
       "type": "Text",
-      "tag": "p",
-      "content": "See the difference our platform makes in real workflows",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "See the difference our platform makes in real workflows",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "ba-grid": {
       "type": "Grid",
-      "columns": 2,
-      "gap": 4,
-      "children": ["ba-before-card", "ba-after-card"]
+      "props": {
+        "columns": 2,
+        "gap": 4
+      },
+      "children": [
+        "ba-before-card",
+        "ba-after-card"
+      ]
     },
     "ba-before-card": {
       "type": "Card",
-      "title": "Before",
-      "children": ["ba-before-stack"]
+      "props": {
+        "title": "Before"
+      },
+      "children": [
+        "ba-before-stack"
+      ]
     },
     "ba-before-stack": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["ba-before-badge", "ba-before-image", "ba-before-caption"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "ba-before-badge",
+        "ba-before-image",
+        "ba-before-caption"
+      ]
     },
     "ba-before-badge": {
       "type": "Badge",
-      "text": "Before",
-      "variant": "destructive"
+      "props": {
+        "text": "Before",
+        "variant": "destructive"
+      }
     },
     "ba-before-image": {
       "type": "AspectRatio",
-      "ratio": "16/9",
-      "children": ["ba-before-img"]
+      "props": {
+        "ratio": "16/9"
+      },
+      "children": [
+        "ba-before-img"
+      ]
     },
     "ba-before-img": {
       "type": "Image",
-      "src": "https://placehold.co/800x450/e2e8f0/64748b?text=Before",
-      "alt": "Dashboard before redesign showing cluttered interface"
+      "props": {
+        "src": "https://placehold.co/800x450/e2e8f0/64748b?text=Before",
+        "alt": "Dashboard before redesign showing cluttered interface"
+      }
     },
     "ba-before-caption": {
       "type": "Text",
-      "tag": "p",
-      "content": "Cluttered layout with poor information hierarchy and inconsistent spacing",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Cluttered layout with poor information hierarchy and inconsistent spacing",
+        "variant": "muted"
+      }
     },
     "ba-after-card": {
       "type": "Card",
-      "title": "After",
-      "children": ["ba-after-stack"]
+      "props": {
+        "title": "After"
+      },
+      "children": [
+        "ba-after-stack"
+      ]
     },
     "ba-after-stack": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["ba-after-badge", "ba-after-image", "ba-after-caption"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "ba-after-badge",
+        "ba-after-image",
+        "ba-after-caption"
+      ]
     },
     "ba-after-badge": {
       "type": "Badge",
-      "text": "After",
-      "variant": "success"
+      "props": {
+        "text": "After",
+        "variant": "success"
+      }
     },
     "ba-after-image": {
       "type": "AspectRatio",
-      "ratio": "16/9",
-      "children": ["ba-after-img"]
+      "props": {
+        "ratio": "16/9"
+      },
+      "children": [
+        "ba-after-img"
+      ]
     },
     "ba-after-img": {
       "type": "Image",
-      "src": "https://placehold.co/800x450/f0fdf4/16a34a?text=After",
-      "alt": "Dashboard after redesign showing clean modern interface"
+      "props": {
+        "src": "https://placehold.co/800x450/f0fdf4/16a34a?text=After",
+        "alt": "Dashboard after redesign showing clean modern interface"
+      }
     },
     "ba-after-caption": {
       "type": "Text",
-      "tag": "p",
-      "content": "Clean, organized layout with clear visual hierarchy and streamlined navigation",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Clean, organized layout with clear visual hierarchy and streamlined navigation",
+        "variant": "muted"
+      }
     }
   }
 }

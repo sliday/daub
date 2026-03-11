@@ -3,286 +3,463 @@
   "elements": {
     "portfolio-grid": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["pg-header", "pg-sub", "pg-filters", "pg-projects"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "pg-header",
+        "pg-sub",
+        "pg-filters",
+        "pg-projects"
+      ]
     },
     "pg-header": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Our Work",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Our Work",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "pg-sub": {
       "type": "Text",
-      "tag": "p",
-      "content": "Selected projects from our portfolio spanning brand, product, and platform design.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Selected projects from our portfolio spanning brand, product, and platform design.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "pg-filters": {
       "type": "ToggleGroup",
-      "items": [
-        { "label": "All", "active": true },
-        { "label": "Web Apps" },
-        { "label": "Mobile" },
-        { "label": "Branding" },
-        { "label": "E-Commerce" }
-      ]
+      "props": {
+        "items": [
+          {
+            "label": "All",
+            "active": true
+          },
+          {
+            "label": "Web Apps"
+          },
+          {
+            "label": "Mobile"
+          },
+          {
+            "label": "Branding"
+          },
+          {
+            "label": "E-Commerce"
+          }
+        ]
+      }
     },
     "pg-projects": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 3,
-      "children": ["pg-proj-1", "pg-proj-2", "pg-proj-3", "pg-proj-4", "pg-proj-5", "pg-proj-6"]
+      "props": {
+        "columns": 3,
+        "gap": 3
+      },
+      "children": [
+        "pg-proj-1",
+        "pg-proj-2",
+        "pg-proj-3",
+        "pg-proj-4",
+        "pg-proj-5",
+        "pg-proj-6"
+      ]
     },
     "pg-proj-1": {
       "type": "Card",
-      "children": ["pg-p1-inner"]
+      "children": [
+        "pg-p1-inner"
+      ]
     },
     "pg-p1-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["pg-p1-img", "pg-p1-title", "pg-p1-desc", "pg-p1-tags"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "pg-p1-img",
+        "pg-p1-title",
+        "pg-p1-desc",
+        "pg-p1-tags"
+      ]
     },
     "pg-p1-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/proj-fintech/600/400",
-      "alt": "Meridian Finance Dashboard"
+      "props": {
+        "src": "https://picsum.photos/seed/proj-fintech/600/400",
+        "alt": "Meridian Finance Dashboard"
+      }
     },
     "pg-p1-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Meridian Finance",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Meridian Finance",
+        "weight": "bold"
+      }
     },
     "pg-p1-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Real-time trading dashboard for a fintech startup. Handles 50K concurrent users.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Real-time trading dashboard for a fintech startup. Handles 50K concurrent users.",
+        "variant": "muted"
+      }
     },
     "pg-p1-tags": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "children": ["pg-p1-t1", "pg-p1-t2"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "pg-p1-t1",
+        "pg-p1-t2"
+      ]
     },
     "pg-p1-t1": {
       "type": "Chip",
-      "label": "Web App"
+      "props": {
+        "label": "Web App"
+      }
     },
     "pg-p1-t2": {
       "type": "Chip",
-      "label": "React"
+      "props": {
+        "label": "React"
+      }
     },
     "pg-proj-2": {
       "type": "Card",
-      "children": ["pg-p2-inner"]
+      "children": [
+        "pg-p2-inner"
+      ]
     },
     "pg-p2-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["pg-p2-img", "pg-p2-title", "pg-p2-desc", "pg-p2-tags"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "pg-p2-img",
+        "pg-p2-title",
+        "pg-p2-desc",
+        "pg-p2-tags"
+      ]
     },
     "pg-p2-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/proj-health/600/400",
-      "alt": "Vitality Health App"
+      "props": {
+        "src": "https://picsum.photos/seed/proj-health/600/400",
+        "alt": "Vitality Health App"
+      }
     },
     "pg-p2-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Vitality Health",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Vitality Health",
+        "weight": "bold"
+      }
     },
     "pg-p2-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Mobile health tracking app with AI-powered insights. 2M+ downloads on App Store.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Mobile health tracking app with AI-powered insights. 2M+ downloads on App Store.",
+        "variant": "muted"
+      }
     },
     "pg-p2-tags": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "children": ["pg-p2-t1", "pg-p2-t2"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "pg-p2-t1",
+        "pg-p2-t2"
+      ]
     },
     "pg-p2-t1": {
       "type": "Chip",
-      "label": "Mobile"
+      "props": {
+        "label": "Mobile"
+      }
     },
     "pg-p2-t2": {
       "type": "Chip",
-      "label": "Swift"
+      "props": {
+        "label": "Swift"
+      }
     },
     "pg-proj-3": {
       "type": "Card",
-      "children": ["pg-p3-inner"]
+      "children": [
+        "pg-p3-inner"
+      ]
     },
     "pg-p3-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["pg-p3-img", "pg-p3-title", "pg-p3-desc", "pg-p3-tags"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "pg-p3-img",
+        "pg-p3-title",
+        "pg-p3-desc",
+        "pg-p3-tags"
+      ]
     },
     "pg-p3-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/proj-brand/600/400",
-      "alt": "Ember Coffee Branding"
+      "props": {
+        "src": "https://picsum.photos/seed/proj-brand/600/400",
+        "alt": "Ember Coffee Branding"
+      }
     },
     "pg-p3-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Ember Coffee Co.",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Ember Coffee Co.",
+        "weight": "bold"
+      }
     },
     "pg-p3-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Complete brand identity and e-commerce platform for a specialty coffee roaster.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Complete brand identity and e-commerce platform for a specialty coffee roaster.",
+        "variant": "muted"
+      }
     },
     "pg-p3-tags": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "children": ["pg-p3-t1", "pg-p3-t2"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "pg-p3-t1",
+        "pg-p3-t2"
+      ]
     },
     "pg-p3-t1": {
       "type": "Chip",
-      "label": "Branding"
+      "props": {
+        "label": "Branding"
+      }
     },
     "pg-p3-t2": {
       "type": "Chip",
-      "label": "E-Commerce"
+      "props": {
+        "label": "E-Commerce"
+      }
     },
     "pg-proj-4": {
       "type": "Card",
-      "children": ["pg-p4-inner"]
+      "children": [
+        "pg-p4-inner"
+      ]
     },
     "pg-p4-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["pg-p4-img", "pg-p4-title", "pg-p4-desc", "pg-p4-tags"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "pg-p4-img",
+        "pg-p4-title",
+        "pg-p4-desc",
+        "pg-p4-tags"
+      ]
     },
     "pg-p4-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/proj-saas/600/400",
-      "alt": "Orbit Analytics Platform"
+      "props": {
+        "src": "https://picsum.photos/seed/proj-saas/600/400",
+        "alt": "Orbit Analytics Platform"
+      }
     },
     "pg-p4-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Orbit Analytics",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Orbit Analytics",
+        "weight": "bold"
+      }
     },
     "pg-p4-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Product analytics platform with real-time dashboards, funnel analysis, and cohort tracking.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Product analytics platform with real-time dashboards, funnel analysis, and cohort tracking.",
+        "variant": "muted"
+      }
     },
     "pg-p4-tags": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "children": ["pg-p4-t1", "pg-p4-t2"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "pg-p4-t1",
+        "pg-p4-t2"
+      ]
     },
     "pg-p4-t1": {
       "type": "Chip",
-      "label": "Web App"
+      "props": {
+        "label": "Web App"
+      }
     },
     "pg-p4-t2": {
       "type": "Chip",
-      "label": "Vue"
+      "props": {
+        "label": "Vue"
+      }
     },
     "pg-proj-5": {
       "type": "Card",
-      "children": ["pg-p5-inner"]
+      "children": [
+        "pg-p5-inner"
+      ]
     },
     "pg-p5-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["pg-p5-img", "pg-p5-title", "pg-p5-desc", "pg-p5-tags"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "pg-p5-img",
+        "pg-p5-title",
+        "pg-p5-desc",
+        "pg-p5-tags"
+      ]
     },
     "pg-p5-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/proj-edu/600/400",
-      "alt": "LearnPath Education"
+      "props": {
+        "src": "https://picsum.photos/seed/proj-edu/600/400",
+        "alt": "LearnPath Education"
+      }
     },
     "pg-p5-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "LearnPath",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "LearnPath",
+        "weight": "bold"
+      }
     },
     "pg-p5-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Adaptive learning platform serving 500K+ students with personalized curricula.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Adaptive learning platform serving 500K+ students with personalized curricula.",
+        "variant": "muted"
+      }
     },
     "pg-p5-tags": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "children": ["pg-p5-t1", "pg-p5-t2"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "pg-p5-t1",
+        "pg-p5-t2"
+      ]
     },
     "pg-p5-t1": {
       "type": "Chip",
-      "label": "Web App"
+      "props": {
+        "label": "Web App"
+      }
     },
     "pg-p5-t2": {
       "type": "Chip",
-      "label": "Mobile"
+      "props": {
+        "label": "Mobile"
+      }
     },
     "pg-proj-6": {
       "type": "Card",
-      "children": ["pg-p6-inner"]
+      "children": [
+        "pg-p6-inner"
+      ]
     },
     "pg-p6-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["pg-p6-img", "pg-p6-title", "pg-p6-desc", "pg-p6-tags"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "pg-p6-img",
+        "pg-p6-title",
+        "pg-p6-desc",
+        "pg-p6-tags"
+      ]
     },
     "pg-p6-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/proj-retail/600/400",
-      "alt": "Luxe Boutique"
+      "props": {
+        "src": "https://picsum.photos/seed/proj-retail/600/400",
+        "alt": "Luxe Boutique"
+      }
     },
     "pg-p6-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Luxe Boutique",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Luxe Boutique",
+        "weight": "bold"
+      }
     },
     "pg-p6-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "High-end fashion e-commerce with AR try-on, size prediction, and curated collections.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "High-end fashion e-commerce with AR try-on, size prediction, and curated collections.",
+        "variant": "muted"
+      }
     },
     "pg-p6-tags": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "children": ["pg-p6-t1", "pg-p6-t2"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "pg-p6-t1",
+        "pg-p6-t2"
+      ]
     },
     "pg-p6-t1": {
       "type": "Chip",
-      "label": "E-Commerce"
+      "props": {
+        "label": "E-Commerce"
+      }
     },
     "pg-p6-t2": {
       "type": "Chip",
-      "label": "AR"
+      "props": {
+        "label": "AR"
+      }
     }
   }
 }

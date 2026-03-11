@@ -3,247 +3,372 @@
   "elements": {
     "speaker-grid": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["speakers-header", "speakers-grid"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "speakers-header",
+        "speakers-grid"
+      ]
     },
     "speakers-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["speakers-title", "speakers-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "speakers-title",
+        "speakers-subtitle"
+      ]
     },
     "speakers-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Meet the Speakers",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Meet the Speakers",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "speakers-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Industry leaders sharing insights from the frontlines of engineering and design.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Industry leaders sharing insights from the frontlines of engineering and design.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "speakers-grid": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 3,
-      "children": ["speaker-1", "speaker-2", "speaker-3", "speaker-4", "speaker-5", "speaker-6"]
+      "props": {
+        "columns": 3,
+        "gap": 3
+      },
+      "children": [
+        "speaker-1",
+        "speaker-2",
+        "speaker-3",
+        "speaker-4",
+        "speaker-5",
+        "speaker-6"
+      ]
     },
     "speaker-1": {
       "type": "Card",
-      "children": ["speaker-1-inner"]
+      "children": [
+        "speaker-1-inner"
+      ]
     },
     "speaker-1-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["speaker-1-photo", "speaker-1-name", "speaker-1-role", "speaker-1-topic"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "speaker-1-photo",
+        "speaker-1-name",
+        "speaker-1-role",
+        "speaker-1-topic"
+      ]
     },
     "speaker-1-photo": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/speaker-sarah/200/200",
-      "alt": "Sarah Chen"
+      "props": {
+        "src": "https://picsum.photos/seed/speaker-sarah/200/200",
+        "alt": "Sarah Chen"
+      }
     },
     "speaker-1-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Sarah Chen",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h4",
+        "content": "Sarah Chen",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "speaker-1-role": {
       "type": "Text",
-      "tag": "span",
-      "content": "CEO, Nimbus Platform",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "CEO, Nimbus Platform",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "speaker-1-topic": {
       "type": "Chip",
-      "label": "Keynote",
-      "variant": "default"
+      "props": {
+        "label": "Keynote",
+        "variant": "default"
+      }
     },
     "speaker-2": {
       "type": "Card",
-      "children": ["speaker-2-inner"]
+      "children": [
+        "speaker-2-inner"
+      ]
     },
     "speaker-2-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["speaker-2-photo", "speaker-2-name", "speaker-2-role", "speaker-2-topic"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "speaker-2-photo",
+        "speaker-2-name",
+        "speaker-2-role",
+        "speaker-2-topic"
+      ]
     },
     "speaker-2-photo": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/speaker-marcus/200/200",
-      "alt": "Marcus Rivera"
+      "props": {
+        "src": "https://picsum.photos/seed/speaker-marcus/200/200",
+        "alt": "Marcus Rivera"
+      }
     },
     "speaker-2-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Marcus Rivera",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h4",
+        "content": "Marcus Rivera",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "speaker-2-role": {
       "type": "Text",
-      "tag": "span",
-      "content": "Staff Engineer, Vercel",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Staff Engineer, Vercel",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "speaker-2-topic": {
       "type": "Chip",
-      "label": "Workshop: APIs",
-      "variant": "secondary"
+      "props": {
+        "label": "Workshop: APIs",
+        "variant": "secondary"
+      }
     },
     "speaker-3": {
       "type": "Card",
-      "children": ["speaker-3-inner"]
+      "children": [
+        "speaker-3-inner"
+      ]
     },
     "speaker-3-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["speaker-3-photo", "speaker-3-name", "speaker-3-role", "speaker-3-topic"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "speaker-3-photo",
+        "speaker-3-name",
+        "speaker-3-role",
+        "speaker-3-topic"
+      ]
     },
     "speaker-3-photo": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/speaker-priya/200/200",
-      "alt": "Priya Sharma"
+      "props": {
+        "src": "https://picsum.photos/seed/speaker-priya/200/200",
+        "alt": "Priya Sharma"
+      }
     },
     "speaker-3-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Priya Sharma",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h4",
+        "content": "Priya Sharma",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "speaker-3-role": {
       "type": "Text",
-      "tag": "span",
-      "content": "Design Director, Figma",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Design Director, Figma",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "speaker-3-topic": {
       "type": "Chip",
-      "label": "Accessibility",
-      "variant": "secondary"
+      "props": {
+        "label": "Accessibility",
+        "variant": "secondary"
+      }
     },
     "speaker-4": {
       "type": "Card",
-      "children": ["speaker-4-inner"]
+      "children": [
+        "speaker-4-inner"
+      ]
     },
     "speaker-4-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["speaker-4-photo", "speaker-4-name", "speaker-4-role", "speaker-4-topic"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "speaker-4-photo",
+        "speaker-4-name",
+        "speaker-4-role",
+        "speaker-4-topic"
+      ]
     },
     "speaker-4-photo": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/speaker-james/200/200",
-      "alt": "James Okonkwo"
+      "props": {
+        "src": "https://picsum.photos/seed/speaker-james/200/200",
+        "alt": "James Okonkwo"
+      }
     },
     "speaker-4-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "James Okonkwo",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h4",
+        "content": "James Okonkwo",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "speaker-4-role": {
       "type": "Text",
-      "tag": "span",
-      "content": "Platform Lead, Stripe",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Platform Lead, Stripe",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "speaker-4-topic": {
       "type": "Chip",
-      "label": "Migrations",
-      "variant": "secondary"
+      "props": {
+        "label": "Migrations",
+        "variant": "secondary"
+      }
     },
     "speaker-5": {
       "type": "Card",
-      "children": ["speaker-5-inner"]
+      "children": [
+        "speaker-5-inner"
+      ]
     },
     "speaker-5-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["speaker-5-photo", "speaker-5-name", "speaker-5-role", "speaker-5-topic"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "speaker-5-photo",
+        "speaker-5-name",
+        "speaker-5-role",
+        "speaker-5-topic"
+      ]
     },
     "speaker-5-photo": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/speaker-aiko/200/200",
-      "alt": "Aiko Tanaka"
+      "props": {
+        "src": "https://picsum.photos/seed/speaker-aiko/200/200",
+        "alt": "Aiko Tanaka"
+      }
     },
     "speaker-5-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Aiko Tanaka",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h4",
+        "content": "Aiko Tanaka",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "speaker-5-role": {
       "type": "Text",
-      "tag": "span",
-      "content": "ML Engineer, Anthropic",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "ML Engineer, Anthropic",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "speaker-5-topic": {
       "type": "Chip",
-      "label": "AI Code Review",
-      "variant": "secondary"
+      "props": {
+        "label": "AI Code Review",
+        "variant": "secondary"
+      }
     },
     "speaker-6": {
       "type": "Card",
-      "children": ["speaker-6-inner"]
+      "children": [
+        "speaker-6-inner"
+      ]
     },
     "speaker-6-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["speaker-6-photo", "speaker-6-name", "speaker-6-role", "speaker-6-topic"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "speaker-6-photo",
+        "speaker-6-name",
+        "speaker-6-role",
+        "speaker-6-topic"
+      ]
     },
     "speaker-6-photo": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/speaker-tom/200/200",
-      "alt": "Tom Barrett"
+      "props": {
+        "src": "https://picsum.photos/seed/speaker-tom/200/200",
+        "alt": "Tom Barrett"
+      }
     },
     "speaker-6-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Tom Barrett",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h4",
+        "content": "Tom Barrett",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "speaker-6-role": {
       "type": "Text",
-      "tag": "span",
-      "content": "QA Lead, Microsoft",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "QA Lead, Microsoft",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "speaker-6-topic": {
       "type": "Chip",
-      "label": "Workshop: Testing",
-      "variant": "secondary"
+      "props": {
+        "label": "Workshop: Testing",
+        "variant": "secondary"
+      }
     }
   }
 }

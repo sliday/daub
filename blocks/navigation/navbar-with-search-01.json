@@ -3,36 +3,61 @@
   "elements": {
     "navbar-search": {
       "type": "Navbar",
-      "brand": "Coppice",
-      "items": [
-        { "label": "Explore", "href": "/explore" },
-        { "label": "Collections", "href": "/collections" },
-        { "label": "Trending", "href": "/trending" }
-      ],
-      "actions": ["search-actions"]
+      "props": {
+        "brand": "Coppice",
+        "items": [
+          {
+            "label": "Explore",
+            "href": "/explore"
+          },
+          {
+            "label": "Collections",
+            "href": "/collections"
+          },
+          {
+            "label": "Trending",
+            "href": "/trending"
+          }
+        ],
+        "actions": [
+          "search-actions"
+        ]
+      }
     },
     "search-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "children": ["nav-search-input", "nav-search-cart", "nav-search-avatar"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "nav-search-input",
+        "nav-search-cart",
+        "nav-search-avatar"
+      ]
     },
     "nav-search-input": {
       "type": "Search",
-      "placeholder": "Search products, brands, categories..."
+      "props": {
+        "placeholder": "Search products, brands, categories..."
+      }
     },
     "nav-search-cart": {
       "type": "Button",
-      "label": "Cart",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "shopping-cart"
+      "props": {
+        "label": "Cart",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "shopping-cart"
+      }
     },
     "nav-search-avatar": {
       "type": "Avatar",
-      "initials": "KW",
-      "size": "sm"
+      "props": {
+        "initials": "KW",
+        "size": "sm"
+      }
     }
   }
 }

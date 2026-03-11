@@ -3,169 +3,257 @@
   "elements": {
     "coming-soon-page": {
       "type": "Stack",
-      "direction": "vertical",
-      "align": "center",
-      "justify": "center",
-      "gap": 4,
-      "container": true,
-      "children": ["brand-badge", "coming-heading", "coming-subheading", "coming-description", "progress-section", "signup-section", "features-preview", "social-row"]
+      "props": {
+        "direction": "vertical",
+        "align": "center",
+        "justify": "center",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "brand-badge",
+        "coming-heading",
+        "coming-subheading",
+        "coming-description",
+        "progress-section",
+        "signup-section",
+        "features-preview",
+        "social-row"
+      ]
     },
     "brand-badge": {
       "type": "Badge",
-      "text": "Coming Soon",
-      "variant": "new"
+      "props": {
+        "text": "Coming Soon",
+        "variant": "new"
+      }
     },
     "coming-heading": {
       "type": "Text",
-      "tag": "h1",
-      "content": "Something Amazing is Brewing",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h1",
+        "content": "Something Amazing is Brewing",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "coming-subheading": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Launching April 2026",
-      "align": "center"
+      "props": {
+        "tag": "h3",
+        "content": "Launching April 2026",
+        "align": "center"
+      }
     },
     "coming-description": {
       "type": "Text",
-      "tag": "p",
-      "content": "We're building the next generation of collaborative design tools. Be the first to know when we launch and get early access to exclusive features.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "We're building the next generation of collaborative design tools. Be the first to know when we launch and get early access to exclusive features.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "progress-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["progress-bar", "progress-details"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "progress-bar",
+        "progress-details"
+      ]
     },
     "progress-bar": {
       "type": "Progress",
-      "value": 78,
-      "max": 100,
-      "label": "78% complete"
+      "props": {
+        "value": 78,
+        "max": 100,
+        "label": "78% complete"
+      }
     },
     "progress-details": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "justify": "space-between",
-      "children": ["milestone-design", "milestone-dev", "milestone-beta", "milestone-launch"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "justify": "space-between"
+      },
+      "children": [
+        "milestone-design",
+        "milestone-dev",
+        "milestone-beta",
+        "milestone-launch"
+      ]
     },
     "milestone-design": {
       "type": "Chip",
-      "label": "Design",
-      "variant": "success"
+      "props": {
+        "label": "Design",
+        "variant": "success"
+      }
     },
     "milestone-dev": {
       "type": "Chip",
-      "label": "Development",
-      "variant": "success"
+      "props": {
+        "label": "Development",
+        "variant": "success"
+      }
     },
     "milestone-beta": {
       "type": "Chip",
-      "label": "Beta Testing",
-      "variant": "warning"
+      "props": {
+        "label": "Beta Testing",
+        "variant": "warning"
+      }
     },
     "milestone-launch": {
       "type": "Chip",
-      "label": "Launch",
-      "variant": "default"
+      "props": {
+        "label": "Launch",
+        "variant": "default"
+      }
     },
     "signup-section": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["signup-stack"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "signup-stack"
+      ]
     },
     "signup-stack": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "align": "center",
-      "children": ["signup-heading", "signup-form", "signup-note"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "signup-heading",
+        "signup-form",
+        "signup-note"
+      ]
     },
     "signup-heading": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Get Early Access",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h3",
+        "content": "Get Early Access",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "signup-form": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "children": ["email-input", "signup-button"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2
+      },
+      "children": [
+        "email-input",
+        "signup-button"
+      ]
     },
     "email-input": {
       "type": "Input",
-      "placeholder": "you@company.com",
-      "type": "email",
-      "label": "Email address"
+      "props": {
+        "placeholder": "you@company.com",
+        "label": "Email address",
+        "type": "email"
+      }
     },
     "signup-button": {
       "type": "Button",
-      "label": "Join Waitlist",
-      "variant": "primary",
-      "icon": "mail"
+      "props": {
+        "label": "Join Waitlist",
+        "variant": "primary",
+        "icon": "mail"
+      }
     },
     "signup-note": {
       "type": "Text",
-      "tag": "span",
-      "content": "2,847 people already on the waitlist. No spam, ever.",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "2,847 people already on the waitlist. No spam, ever.",
+        "variant": "muted"
+      }
     },
     "features-preview": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 3,
-      "children": ["feature-realtime", "feature-ai", "feature-collab"]
+      "props": {
+        "columns": 3,
+        "gap": 3
+      },
+      "children": [
+        "feature-realtime",
+        "feature-ai",
+        "feature-collab"
+      ]
     },
     "feature-realtime": {
       "type": "Card",
-      "title": "Real-time Sync",
-      "description": "Changes appear instantly across all connected devices and team members."
+      "props": {
+        "title": "Real-time Sync",
+        "description": "Changes appear instantly across all connected devices and team members."
+      }
     },
     "feature-ai": {
       "type": "Card",
-      "title": "AI-Powered",
-      "description": "Smart suggestions and automated workflows powered by machine learning."
+      "props": {
+        "title": "AI-Powered",
+        "description": "Smart suggestions and automated workflows powered by machine learning."
+      }
     },
     "feature-collab": {
       "type": "Card",
-      "title": "Team Collaboration",
-      "description": "Built-in comments, approvals, and version history for seamless teamwork."
+      "props": {
+        "title": "Team Collaboration",
+        "description": "Built-in comments, approvals, and version history for seamless teamwork."
+      }
     },
     "social-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "justify": "center",
-      "children": ["twitter-link", "linkedin-link", "discord-link"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "twitter-link",
+        "linkedin-link",
+        "discord-link"
+      ]
     },
     "twitter-link": {
       "type": "Button",
-      "label": "Twitter",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "twitter"
+      "props": {
+        "label": "Twitter",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "twitter"
+      }
     },
     "linkedin-link": {
       "type": "Button",
-      "label": "LinkedIn",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "linkedin"
+      "props": {
+        "label": "LinkedIn",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "linkedin"
+      }
     },
     "discord-link": {
       "type": "Button",
-      "label": "Discord",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "message-circle"
+      "props": {
+        "label": "Discord",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "message-circle"
+      }
     }
   }
 }

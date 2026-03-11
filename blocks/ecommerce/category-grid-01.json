@@ -3,169 +3,270 @@
   "elements": {
     "category-grid-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["category-header", "categories-grid"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "category-header",
+        "categories-grid"
+      ]
     },
     "category-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["category-heading", "category-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "category-heading",
+        "category-subtitle"
+      ]
     },
     "category-heading": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Shop by Category",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Shop by Category",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "category-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Browse our most popular departments and find exactly what you need",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Browse our most popular departments and find exactly what you need",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "categories-grid": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 4,
-      "children": ["cat-electronics", "cat-clothing", "cat-home", "cat-sports", "cat-beauty", "cat-books"]
+      "props": {
+        "columns": 3,
+        "gap": 4
+      },
+      "children": [
+        "cat-electronics",
+        "cat-clothing",
+        "cat-home",
+        "cat-sports",
+        "cat-beauty",
+        "cat-books"
+      ]
     },
     "cat-electronics": {
       "type": "Card",
-      "title": "Electronics",
-      "description": "Laptops, phones, audio & more",
-      "children": ["cat-electronics-content"]
+      "props": {
+        "title": "Electronics",
+        "description": "Laptops, phones, audio & more"
+      },
+      "children": [
+        "cat-electronics-content"
+      ]
     },
     "cat-electronics-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["cat-electronics-image", "cat-electronics-count"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "cat-electronics-image",
+        "cat-electronics-count"
+      ]
     },
     "cat-electronics-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/electronics99/400/250",
-      "alt": "Electronics category"
+      "props": {
+        "src": "https://picsum.photos/seed/electronics99/400/250",
+        "alt": "Electronics category"
+      }
     },
     "cat-electronics-count": {
       "type": "Badge",
-      "text": "2,450 products",
-      "variant": "info"
+      "props": {
+        "text": "2,450 products",
+        "variant": "info"
+      }
     },
     "cat-clothing": {
       "type": "Card",
-      "title": "Clothing & Fashion",
-      "description": "Apparel, shoes, accessories",
-      "children": ["cat-clothing-content"]
+      "props": {
+        "title": "Clothing & Fashion",
+        "description": "Apparel, shoes, accessories"
+      },
+      "children": [
+        "cat-clothing-content"
+      ]
     },
     "cat-clothing-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["cat-clothing-image", "cat-clothing-count"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "cat-clothing-image",
+        "cat-clothing-count"
+      ]
     },
     "cat-clothing-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/fashion88/400/250",
-      "alt": "Clothing and fashion category"
+      "props": {
+        "src": "https://picsum.photos/seed/fashion88/400/250",
+        "alt": "Clothing and fashion category"
+      }
     },
     "cat-clothing-count": {
       "type": "Badge",
-      "text": "3,820 products",
-      "variant": "info"
+      "props": {
+        "text": "3,820 products",
+        "variant": "info"
+      }
     },
     "cat-home": {
       "type": "Card",
-      "title": "Home & Garden",
-      "description": "Furniture, decor, kitchen",
-      "children": ["cat-home-content"]
+      "props": {
+        "title": "Home & Garden",
+        "description": "Furniture, decor, kitchen"
+      },
+      "children": [
+        "cat-home-content"
+      ]
     },
     "cat-home-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["cat-home-image", "cat-home-count"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "cat-home-image",
+        "cat-home-count"
+      ]
     },
     "cat-home-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/homegarden/400/250",
-      "alt": "Home and garden category"
+      "props": {
+        "src": "https://picsum.photos/seed/homegarden/400/250",
+        "alt": "Home and garden category"
+      }
     },
     "cat-home-count": {
       "type": "Badge",
-      "text": "1,780 products",
-      "variant": "info"
+      "props": {
+        "text": "1,780 products",
+        "variant": "info"
+      }
     },
     "cat-sports": {
       "type": "Card",
-      "title": "Sports & Outdoors",
-      "description": "Gear, equipment, activewear",
-      "children": ["cat-sports-content"]
+      "props": {
+        "title": "Sports & Outdoors",
+        "description": "Gear, equipment, activewear"
+      },
+      "children": [
+        "cat-sports-content"
+      ]
     },
     "cat-sports-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["cat-sports-image", "cat-sports-count"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "cat-sports-image",
+        "cat-sports-count"
+      ]
     },
     "cat-sports-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/sports77/400/250",
-      "alt": "Sports and outdoors category"
+      "props": {
+        "src": "https://picsum.photos/seed/sports77/400/250",
+        "alt": "Sports and outdoors category"
+      }
     },
     "cat-sports-count": {
       "type": "Badge",
-      "text": "1,240 products",
-      "variant": "info"
+      "props": {
+        "text": "1,240 products",
+        "variant": "info"
+      }
     },
     "cat-beauty": {
       "type": "Card",
-      "title": "Beauty & Personal Care",
-      "description": "Skincare, makeup, fragrance",
-      "children": ["cat-beauty-content"]
+      "props": {
+        "title": "Beauty & Personal Care",
+        "description": "Skincare, makeup, fragrance"
+      },
+      "children": [
+        "cat-beauty-content"
+      ]
     },
     "cat-beauty-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["cat-beauty-image", "cat-beauty-count"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "cat-beauty-image",
+        "cat-beauty-count"
+      ]
     },
     "cat-beauty-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/beauty66/400/250",
-      "alt": "Beauty and personal care category"
+      "props": {
+        "src": "https://picsum.photos/seed/beauty66/400/250",
+        "alt": "Beauty and personal care category"
+      }
     },
     "cat-beauty-count": {
       "type": "Badge",
-      "text": "2,100 products",
-      "variant": "info"
+      "props": {
+        "text": "2,100 products",
+        "variant": "info"
+      }
     },
     "cat-books": {
       "type": "Card",
-      "title": "Books & Media",
-      "description": "Fiction, non-fiction, audiobooks",
-      "children": ["cat-books-content"]
+      "props": {
+        "title": "Books & Media",
+        "description": "Fiction, non-fiction, audiobooks"
+      },
+      "children": [
+        "cat-books-content"
+      ]
     },
     "cat-books-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["cat-books-image", "cat-books-count"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "cat-books-image",
+        "cat-books-count"
+      ]
     },
     "cat-books-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/books55/400/250",
-      "alt": "Books and media category"
+      "props": {
+        "src": "https://picsum.photos/seed/books55/400/250",
+        "alt": "Books and media category"
+      }
     },
     "cat-books-count": {
       "type": "Badge",
-      "text": "5,600 products",
-      "variant": "info"
+      "props": {
+        "text": "5,600 products",
+        "variant": "info"
+      }
     }
   }
 }

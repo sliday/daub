@@ -3,338 +3,530 @@
   "elements": {
     "integration-grid": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["integrations-header", "integrations-grid", "integrations-cta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "integrations-header",
+        "integrations-grid",
+        "integrations-cta"
+      ]
     },
     "integrations-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["integrations-title", "integrations-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "integrations-title",
+        "integrations-subtitle"
+      ]
     },
     "integrations-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Works With Your Stack",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Works With Your Stack",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "integrations-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Connect to the tools you already use. Set up in minutes, not days.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Connect to the tools you already use. Set up in minutes, not days.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "integrations-grid": {
       "type": "Grid",
-      "columns": 4,
-      "gap": 3,
-      "children": ["int-slack", "int-github", "int-jira", "int-figma", "int-notion", "int-stripe", "int-zapier", "int-salesforce", "int-hubspot", "int-postgres", "int-gsheets", "int-aws"]
+      "props": {
+        "columns": 4,
+        "gap": 3
+      },
+      "children": [
+        "int-slack",
+        "int-github",
+        "int-jira",
+        "int-figma",
+        "int-notion",
+        "int-stripe",
+        "int-zapier",
+        "int-salesforce",
+        "int-hubspot",
+        "int-postgres",
+        "int-gsheets",
+        "int-aws"
+      ]
     },
     "int-slack": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-slack-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-slack-inner"
+      ]
     },
     "int-slack-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-slack-avatar", "int-slack-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-slack-avatar",
+        "int-slack-name"
+      ]
     },
     "int-slack-avatar": {
       "type": "Avatar",
-      "initials": "SL",
-      "size": "lg"
+      "props": {
+        "initials": "SL",
+        "size": "lg"
+      }
     },
     "int-slack-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "Slack",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Slack",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-github": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-github-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-github-inner"
+      ]
     },
     "int-github-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-github-avatar", "int-github-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-github-avatar",
+        "int-github-name"
+      ]
     },
     "int-github-avatar": {
       "type": "Avatar",
-      "initials": "GH",
-      "size": "lg"
+      "props": {
+        "initials": "GH",
+        "size": "lg"
+      }
     },
     "int-github-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "GitHub",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "GitHub",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-jira": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-jira-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-jira-inner"
+      ]
     },
     "int-jira-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-jira-avatar", "int-jira-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-jira-avatar",
+        "int-jira-name"
+      ]
     },
     "int-jira-avatar": {
       "type": "Avatar",
-      "initials": "JR",
-      "size": "lg"
+      "props": {
+        "initials": "JR",
+        "size": "lg"
+      }
     },
     "int-jira-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "Jira",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Jira",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-figma": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-figma-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-figma-inner"
+      ]
     },
     "int-figma-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-figma-avatar", "int-figma-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-figma-avatar",
+        "int-figma-name"
+      ]
     },
     "int-figma-avatar": {
       "type": "Avatar",
-      "initials": "FG",
-      "size": "lg"
+      "props": {
+        "initials": "FG",
+        "size": "lg"
+      }
     },
     "int-figma-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "Figma",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Figma",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-notion": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-notion-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-notion-inner"
+      ]
     },
     "int-notion-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-notion-avatar", "int-notion-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-notion-avatar",
+        "int-notion-name"
+      ]
     },
     "int-notion-avatar": {
       "type": "Avatar",
-      "initials": "NT",
-      "size": "lg"
+      "props": {
+        "initials": "NT",
+        "size": "lg"
+      }
     },
     "int-notion-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "Notion",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Notion",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-stripe": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-stripe-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-stripe-inner"
+      ]
     },
     "int-stripe-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-stripe-avatar", "int-stripe-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-stripe-avatar",
+        "int-stripe-name"
+      ]
     },
     "int-stripe-avatar": {
       "type": "Avatar",
-      "initials": "ST",
-      "size": "lg"
+      "props": {
+        "initials": "ST",
+        "size": "lg"
+      }
     },
     "int-stripe-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "Stripe",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Stripe",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-zapier": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-zapier-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-zapier-inner"
+      ]
     },
     "int-zapier-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-zapier-avatar", "int-zapier-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-zapier-avatar",
+        "int-zapier-name"
+      ]
     },
     "int-zapier-avatar": {
       "type": "Avatar",
-      "initials": "ZP",
-      "size": "lg"
+      "props": {
+        "initials": "ZP",
+        "size": "lg"
+      }
     },
     "int-zapier-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "Zapier",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Zapier",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-salesforce": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-salesforce-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-salesforce-inner"
+      ]
     },
     "int-salesforce-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-salesforce-avatar", "int-salesforce-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-salesforce-avatar",
+        "int-salesforce-name"
+      ]
     },
     "int-salesforce-avatar": {
       "type": "Avatar",
-      "initials": "SF",
-      "size": "lg"
+      "props": {
+        "initials": "SF",
+        "size": "lg"
+      }
     },
     "int-salesforce-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "Salesforce",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Salesforce",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-hubspot": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-hubspot-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-hubspot-inner"
+      ]
     },
     "int-hubspot-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-hubspot-avatar", "int-hubspot-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-hubspot-avatar",
+        "int-hubspot-name"
+      ]
     },
     "int-hubspot-avatar": {
       "type": "Avatar",
-      "initials": "HS",
-      "size": "lg"
+      "props": {
+        "initials": "HS",
+        "size": "lg"
+      }
     },
     "int-hubspot-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "HubSpot",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "HubSpot",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-postgres": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-postgres-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-postgres-inner"
+      ]
     },
     "int-postgres-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-postgres-avatar", "int-postgres-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-postgres-avatar",
+        "int-postgres-name"
+      ]
     },
     "int-postgres-avatar": {
       "type": "Avatar",
-      "initials": "PG",
-      "size": "lg"
+      "props": {
+        "initials": "PG",
+        "size": "lg"
+      }
     },
     "int-postgres-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "PostgreSQL",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "PostgreSQL",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-gsheets": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-gsheets-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-gsheets-inner"
+      ]
     },
     "int-gsheets-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-gsheets-avatar", "int-gsheets-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-gsheets-avatar",
+        "int-gsheets-name"
+      ]
     },
     "int-gsheets-avatar": {
       "type": "Avatar",
-      "initials": "GS",
-      "size": "lg"
+      "props": {
+        "initials": "GS",
+        "size": "lg"
+      }
     },
     "int-gsheets-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "Google Sheets",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Google Sheets",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "int-aws": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["int-aws-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "int-aws-inner"
+      ]
     },
     "int-aws-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["int-aws-avatar", "int-aws-name"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "int-aws-avatar",
+        "int-aws-name"
+      ]
     },
     "int-aws-avatar": {
       "type": "Avatar",
-      "initials": "AW",
-      "size": "lg"
+      "props": {
+        "initials": "AW",
+        "size": "lg"
+      }
     },
     "int-aws-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "AWS S3",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "AWS S3",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "integrations-cta": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "justify": "center",
-      "children": ["integrations-browse-btn"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "justify": "center"
+      },
+      "children": [
+        "integrations-browse-btn"
+      ]
     },
     "integrations-browse-btn": {
       "type": "Button",
-      "label": "Browse All Integrations",
-      "variant": "outline",
-      "icon": "arrow-right"
+      "props": {
+        "label": "Browse All Integrations",
+        "variant": "outline",
+        "icon": "arrow-right"
+      }
     }
   }
 }

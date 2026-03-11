@@ -3,86 +3,117 @@
   "elements": {
     "pricing-faq": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "container": "narrow",
-      "children": ["faq-header", "faq-accordion", "faq-cta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "container": "narrow"
+      },
+      "children": [
+        "faq-header",
+        "faq-accordion",
+        "faq-cta"
+      ]
     },
     "faq-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["faq-title", "faq-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "faq-title",
+        "faq-subtitle"
+      ]
     },
     "faq-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Frequently asked questions",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Frequently asked questions",
+        "align": "center"
+      }
     },
     "faq-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Everything you need to know about pricing and billing.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Everything you need to know about pricing and billing.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "faq-accordion": {
       "type": "Accordion",
-      "items": [
-        {
-          "title": "Can I switch plans at any time?",
-          "content": "Yes. You can upgrade or downgrade your plan at any time from your account settings. When upgrading, you'll be charged the prorated difference for the rest of your billing cycle. When downgrading, the credit will be applied to your next invoice."
-        },
-        {
-          "title": "What happens when my trial ends?",
-          "content": "Your 14-day free trial includes full access to all Pro features. When it ends, you'll be prompted to choose a plan. If you don't select one, your account will revert to the free Starter plan with limited features. No data is deleted."
-        },
-        {
-          "title": "Do you offer refunds?",
-          "content": "We offer a full refund within the first 30 days of any paid subscription, no questions asked. After 30 days, you can cancel at any time and your plan will remain active until the end of your billing period."
-        },
-        {
-          "title": "What payment methods do you accept?",
-          "content": "We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and bank transfers for annual Enterprise plans. All payments are processed securely through Stripe."
-        },
-        {
-          "title": "Is there a discount for nonprofits or education?",
-          "content": "Yes. We offer 50% off all plans for registered nonprofits, educational institutions, and open-source projects. Contact our sales team with your organization details to apply."
-        },
-        {
-          "title": "What counts as a team member?",
-          "content": "Any user with an active account in your workspace counts as a team member. This includes admins, editors, and viewers. Guest users with view-only access to specific projects do not count toward your limit."
-        }
-      ]
+      "props": {
+        "items": [
+          {
+            "title": "Can I switch plans at any time?",
+            "content": "Yes. You can upgrade or downgrade your plan at any time from your account settings. When upgrading, you'll be charged the prorated difference for the rest of your billing cycle. When downgrading, the credit will be applied to your next invoice."
+          },
+          {
+            "title": "What happens when my trial ends?",
+            "content": "Your 14-day free trial includes full access to all Pro features. When it ends, you'll be prompted to choose a plan. If you don't select one, your account will revert to the free Starter plan with limited features. No data is deleted."
+          },
+          {
+            "title": "Do you offer refunds?",
+            "content": "We offer a full refund within the first 30 days of any paid subscription, no questions asked. After 30 days, you can cancel at any time and your plan will remain active until the end of your billing period."
+          },
+          {
+            "title": "What payment methods do you accept?",
+            "content": "We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and bank transfers for annual Enterprise plans. All payments are processed securely through Stripe."
+          },
+          {
+            "title": "Is there a discount for nonprofits or education?",
+            "content": "Yes. We offer 50% off all plans for registered nonprofits, educational institutions, and open-source projects. Contact our sales team with your organization details to apply."
+          },
+          {
+            "title": "What counts as a team member?",
+            "content": "Any user with an active account in your workspace counts as a team member. This includes admins, editors, and viewers. Guest users with view-only access to specific projects do not count toward your limit."
+          }
+        ]
+      }
     },
     "faq-cta": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["faq-cta-text", "faq-cta-buttons"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "faq-cta-text",
+        "faq-cta-buttons"
+      ]
     },
     "faq-cta-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "Still have questions?",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Still have questions?",
+        "align": "center"
+      }
     },
     "faq-cta-buttons": {
       "type": "ButtonGroup",
-      "children": ["faq-btn-contact", "faq-btn-docs"]
+      "children": [
+        "faq-btn-contact",
+        "faq-btn-docs"
+      ]
     },
     "faq-btn-contact": {
       "type": "Button",
-      "label": "Contact support",
-      "variant": "primary"
+      "props": {
+        "label": "Contact support",
+        "variant": "primary"
+      }
     },
     "faq-btn-docs": {
       "type": "Button",
-      "label": "Read the docs",
-      "variant": "outline"
+      "props": {
+        "label": "Read the docs",
+        "variant": "outline"
+      }
     }
   }
 }

@@ -3,130 +3,216 @@
   "elements": {
     "form-sidebar-layout": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 5,
-      "children": ["form-main", "form-main-spacer", "form-sidebar"]
+      "props": {
+        "columns": 3,
+        "gap": 5
+      },
+      "children": [
+        "form-main",
+        "form-main-spacer",
+        "form-sidebar"
+      ]
     },
     "form-main": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["form-title", "field-project-name", "field-description", "field-category", "field-visibility", "field-deadline", "form-submit-row"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "form-title",
+        "field-project-name",
+        "field-description",
+        "field-category",
+        "field-visibility",
+        "field-deadline",
+        "form-submit-row"
+      ]
     },
     "form-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Create New Project",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Create New Project",
+        "weight": "bold"
+      }
     },
     "field-project-name": {
       "type": "Field",
-      "label": "Project Name",
-      "children": ["input-project-name"]
+      "props": {
+        "label": "Project Name"
+      },
+      "children": [
+        "input-project-name"
+      ]
     },
     "input-project-name": {
       "type": "Input",
-      "placeholder": "Q2 Marketing Campaign",
-      "type_input": "text"
+      "props": {
+        "placeholder": "Q2 Marketing Campaign",
+        "type_input": "text"
+      }
     },
     "field-description": {
       "type": "Field",
-      "label": "Description",
-      "children": ["textarea-description"]
+      "props": {
+        "label": "Description"
+      },
+      "children": [
+        "textarea-description"
+      ]
     },
     "textarea-description": {
       "type": "Textarea",
-      "placeholder": "Describe the project goals, scope, and expected outcomes...",
-      "rows": 5
+      "props": {
+        "placeholder": "Describe the project goals, scope, and expected outcomes...",
+        "rows": 5
+      }
     },
     "field-category": {
       "type": "Field",
-      "label": "Category",
-      "children": ["select-category"]
+      "props": {
+        "label": "Category"
+      },
+      "children": [
+        "select-category"
+      ]
     },
     "select-category": {
       "type": "Select",
-      "options": [
-        { "label": "Marketing", "value": "marketing" },
-        { "label": "Engineering", "value": "engineering" },
-        { "label": "Design", "value": "design" },
-        { "label": "Operations", "value": "operations" }
-      ]
+      "props": {
+        "options": [
+          {
+            "label": "Marketing",
+            "value": "marketing"
+          },
+          {
+            "label": "Engineering",
+            "value": "engineering"
+          },
+          {
+            "label": "Design",
+            "value": "design"
+          },
+          {
+            "label": "Operations",
+            "value": "operations"
+          }
+        ]
+      }
     },
     "field-visibility": {
       "type": "RadioGroup",
-      "label": "Visibility",
-      "options": [
-        { "label": "Public - Visible to all team members", "value": "public" },
-        { "label": "Private - Invite only", "value": "private" },
-        { "label": "Confidential - Admins and owners only", "value": "confidential" }
-      ]
+      "props": {
+        "label": "Visibility",
+        "options": [
+          {
+            "label": "Public - Visible to all team members",
+            "value": "public"
+          },
+          {
+            "label": "Private - Invite only",
+            "value": "private"
+          },
+          {
+            "label": "Confidential - Admins and owners only",
+            "value": "confidential"
+          }
+        ]
+      }
     },
     "field-deadline": {
       "type": "Field",
-      "label": "Target Deadline",
-      "children": ["input-deadline"]
+      "props": {
+        "label": "Target Deadline"
+      },
+      "children": [
+        "input-deadline"
+      ]
     },
     "input-deadline": {
       "type": "DatePicker",
-      "placeholder": "Select a date"
+      "props": {
+        "placeholder": "Select a date"
+      }
     },
     "form-submit-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "children": ["btn-save-draft", "btn-create"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2
+      },
+      "children": [
+        "btn-save-draft",
+        "btn-create"
+      ]
     },
     "btn-save-draft": {
       "type": "Button",
-      "label": "Save Draft",
-      "variant": "outline"
+      "props": {
+        "label": "Save Draft",
+        "variant": "outline"
+      }
     },
     "btn-create": {
       "type": "Button",
-      "label": "Create Project",
-      "variant": "default"
+      "props": {
+        "label": "Create Project",
+        "variant": "default"
+      }
     },
     "form-main-spacer": {
       "type": "Separator"
     },
     "form-sidebar": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["sidebar-title", "sidebar-tips", "sidebar-help"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "sidebar-title",
+        "sidebar-tips",
+        "sidebar-help"
+      ]
     },
     "sidebar-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Quick Tips",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Quick Tips",
+        "weight": "semibold"
+      }
     },
     "sidebar-tips": {
       "type": "List",
-      "items": [
-        {
-          "primary": "Choose a descriptive name",
-          "secondary": "Good names help teammates find and understand projects quickly.",
-          "icon": "lightbulb"
-        },
-        {
-          "primary": "Set realistic deadlines",
-          "secondary": "Break large projects into milestones for better tracking.",
-          "icon": "calendar"
-        },
-        {
-          "primary": "Use the right visibility",
-          "secondary": "Public projects encourage collaboration. Private is best for sensitive work.",
-          "icon": "eye"
-        }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "Choose a descriptive name",
+            "secondary": "Good names help teammates find and understand projects quickly.",
+            "icon": "lightbulb"
+          },
+          {
+            "primary": "Set realistic deadlines",
+            "secondary": "Break large projects into milestones for better tracking.",
+            "icon": "calendar"
+          },
+          {
+            "primary": "Use the right visibility",
+            "secondary": "Public projects encourage collaboration. Private is best for sensitive work.",
+            "icon": "eye"
+          }
+        ]
+      }
     },
     "sidebar-help": {
       "type": "Alert",
-      "title": "Need help?",
-      "description": "Check our project management guide or reach out to your team lead.",
-      "icon": "info"
+      "props": {
+        "title": "Need help?",
+        "description": "Check our project management guide or reach out to your team lead.",
+        "icon": "info"
+      }
     }
   }
 }

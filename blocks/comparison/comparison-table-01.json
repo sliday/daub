@@ -3,46 +3,120 @@
   "elements": {
     "comparison-table-root": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["comparison-heading", "comparison-subtext", "comparison-data-table"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "comparison-heading",
+        "comparison-subtext",
+        "comparison-data-table"
+      ]
     },
     "comparison-heading": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Compare Plans",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Compare Plans",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "comparison-subtext": {
       "type": "Text",
-      "tag": "p",
-      "content": "See which plan is right for your team",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "See which plan is right for your team",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "comparison-data-table": {
       "type": "DataTable",
-      "striped": true,
-      "hoverable": true,
-      "columns": [
-        { "key": "feature", "label": "Feature" },
-        { "key": "starter", "label": "Starter" },
-        { "key": "pro", "label": "Pro" },
-        { "key": "enterprise", "label": "Enterprise" }
-      ],
-      "rows": [
-        { "feature": "Users", "starter": "Up to 5", "pro": "Up to 50", "enterprise": "Unlimited" },
-        { "feature": "Storage", "starter": "10 GB", "pro": "100 GB", "enterprise": "1 TB" },
-        { "feature": "Custom domains", "starter": "-", "pro": "3", "enterprise": "Unlimited" },
-        { "feature": "API access", "starter": "-", "pro": "checkmark", "enterprise": "checkmark" },
-        { "feature": "SSO / SAML", "starter": "-", "pro": "-", "enterprise": "checkmark" },
-        { "feature": "Priority support", "starter": "-", "pro": "checkmark", "enterprise": "checkmark" },
-        { "feature": "Audit logs", "starter": "-", "pro": "-", "enterprise": "checkmark" },
-        { "feature": "Uptime SLA", "starter": "99%", "pro": "99.9%", "enterprise": "99.99%" },
-        { "feature": "Dedicated account manager", "starter": "-", "pro": "-", "enterprise": "checkmark" },
-        { "feature": "Analytics", "starter": "Basic", "pro": "Advanced", "enterprise": "Custom" }
-      ]
+      "props": {
+        "striped": true,
+        "hoverable": true,
+        "columns": [
+          {
+            "key": "feature",
+            "label": "Feature"
+          },
+          {
+            "key": "starter",
+            "label": "Starter"
+          },
+          {
+            "key": "pro",
+            "label": "Pro"
+          },
+          {
+            "key": "enterprise",
+            "label": "Enterprise"
+          }
+        ],
+        "rows": [
+          {
+            "feature": "Users",
+            "starter": "Up to 5",
+            "pro": "Up to 50",
+            "enterprise": "Unlimited"
+          },
+          {
+            "feature": "Storage",
+            "starter": "10 GB",
+            "pro": "100 GB",
+            "enterprise": "1 TB"
+          },
+          {
+            "feature": "Custom domains",
+            "starter": "-",
+            "pro": "3",
+            "enterprise": "Unlimited"
+          },
+          {
+            "feature": "API access",
+            "starter": "-",
+            "pro": "checkmark",
+            "enterprise": "checkmark"
+          },
+          {
+            "feature": "SSO / SAML",
+            "starter": "-",
+            "pro": "-",
+            "enterprise": "checkmark"
+          },
+          {
+            "feature": "Priority support",
+            "starter": "-",
+            "pro": "checkmark",
+            "enterprise": "checkmark"
+          },
+          {
+            "feature": "Audit logs",
+            "starter": "-",
+            "pro": "-",
+            "enterprise": "checkmark"
+          },
+          {
+            "feature": "Uptime SLA",
+            "starter": "99%",
+            "pro": "99.9%",
+            "enterprise": "99.99%"
+          },
+          {
+            "feature": "Dedicated account manager",
+            "starter": "-",
+            "pro": "-",
+            "enterprise": "checkmark"
+          },
+          {
+            "feature": "Analytics",
+            "starter": "Basic",
+            "pro": "Advanced",
+            "enterprise": "Custom"
+          }
+        ]
+      }
     }
   }
 }

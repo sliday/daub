@@ -3,204 +3,307 @@
   "elements": {
     "team-grid": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["team-grid-header", "team-grid-sub", "team-grid-cards"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "team-grid-header",
+        "team-grid-sub",
+        "team-grid-cards"
+      ]
     },
     "team-grid-header": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Meet Our Team",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Meet Our Team",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "team-grid-sub": {
       "type": "Text",
-      "tag": "p",
-      "content": "The people behind the product. We're a distributed team across 4 time zones, united by a passion for building great software.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "The people behind the product. We're a distributed team across 4 time zones, united by a passion for building great software.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "team-grid-cards": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 3,
-      "children": ["team-member-1", "team-member-2", "team-member-3", "team-member-4", "team-member-5", "team-member-6"]
+      "props": {
+        "columns": 3,
+        "gap": 3
+      },
+      "children": [
+        "team-member-1",
+        "team-member-2",
+        "team-member-3",
+        "team-member-4",
+        "team-member-5",
+        "team-member-6"
+      ]
     },
     "team-member-1": {
       "type": "Card",
-      "children": ["tm-1-inner"]
+      "children": [
+        "tm-1-inner"
+      ]
     },
     "tm-1-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["tm-1-avatar", "tm-1-name", "tm-1-role"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tm-1-avatar",
+        "tm-1-name",
+        "tm-1-role"
+      ]
     },
     "tm-1-avatar": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/sarah-chen/200/200",
-      "initials": "SC",
-      "size": "xl"
+      "props": {
+        "src": "https://picsum.photos/seed/sarah-chen/200/200",
+        "initials": "SC",
+        "size": "xl"
+      }
     },
     "tm-1-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Sarah Chen",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Sarah Chen",
+        "weight": "bold"
+      }
     },
     "tm-1-role": {
       "type": "Text",
-      "tag": "p",
-      "content": "Co-founder & CEO",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Co-founder & CEO",
+        "variant": "muted"
+      }
     },
     "team-member-2": {
       "type": "Card",
-      "children": ["tm-2-inner"]
+      "children": [
+        "tm-2-inner"
+      ]
     },
     "tm-2-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["tm-2-avatar", "tm-2-name", "tm-2-role"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tm-2-avatar",
+        "tm-2-name",
+        "tm-2-role"
+      ]
     },
     "tm-2-avatar": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/marcus-johnson/200/200",
-      "initials": "MJ",
-      "size": "xl"
+      "props": {
+        "src": "https://picsum.photos/seed/marcus-johnson/200/200",
+        "initials": "MJ",
+        "size": "xl"
+      }
     },
     "tm-2-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Marcus Johnson",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Marcus Johnson",
+        "weight": "bold"
+      }
     },
     "tm-2-role": {
       "type": "Text",
-      "tag": "p",
-      "content": "CTO",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "CTO",
+        "variant": "muted"
+      }
     },
     "team-member-3": {
       "type": "Card",
-      "children": ["tm-3-inner"]
+      "children": [
+        "tm-3-inner"
+      ]
     },
     "tm-3-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["tm-3-avatar", "tm-3-name", "tm-3-role"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tm-3-avatar",
+        "tm-3-name",
+        "tm-3-role"
+      ]
     },
     "tm-3-avatar": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/elena-martinez/200/200",
-      "initials": "EM",
-      "size": "xl"
+      "props": {
+        "src": "https://picsum.photos/seed/elena-martinez/200/200",
+        "initials": "EM",
+        "size": "xl"
+      }
     },
     "tm-3-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Elena Martinez",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Elena Martinez",
+        "weight": "bold"
+      }
     },
     "tm-3-role": {
       "type": "Text",
-      "tag": "p",
-      "content": "Head of Design",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Head of Design",
+        "variant": "muted"
+      }
     },
     "team-member-4": {
       "type": "Card",
-      "children": ["tm-4-inner"]
+      "children": [
+        "tm-4-inner"
+      ]
     },
     "tm-4-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["tm-4-avatar", "tm-4-name", "tm-4-role"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tm-4-avatar",
+        "tm-4-name",
+        "tm-4-role"
+      ]
     },
     "tm-4-avatar": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/david-kim/200/200",
-      "initials": "DK",
-      "size": "xl"
+      "props": {
+        "src": "https://picsum.photos/seed/david-kim/200/200",
+        "initials": "DK",
+        "size": "xl"
+      }
     },
     "tm-4-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "David Kim",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "David Kim",
+        "weight": "bold"
+      }
     },
     "tm-4-role": {
       "type": "Text",
-      "tag": "p",
-      "content": "Lead Engineer",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Lead Engineer",
+        "variant": "muted"
+      }
     },
     "team-member-5": {
       "type": "Card",
-      "children": ["tm-5-inner"]
+      "children": [
+        "tm-5-inner"
+      ]
     },
     "tm-5-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["tm-5-avatar", "tm-5-name", "tm-5-role"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tm-5-avatar",
+        "tm-5-name",
+        "tm-5-role"
+      ]
     },
     "tm-5-avatar": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/priya-patel/200/200",
-      "initials": "PP",
-      "size": "xl"
+      "props": {
+        "src": "https://picsum.photos/seed/priya-patel/200/200",
+        "initials": "PP",
+        "size": "xl"
+      }
     },
     "tm-5-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Priya Patel",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Priya Patel",
+        "weight": "bold"
+      }
     },
     "tm-5-role": {
       "type": "Text",
-      "tag": "p",
-      "content": "Product Manager",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Product Manager",
+        "variant": "muted"
+      }
     },
     "team-member-6": {
       "type": "Card",
-      "children": ["tm-6-inner"]
+      "children": [
+        "tm-6-inner"
+      ]
     },
     "tm-6-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["tm-6-avatar", "tm-6-name", "tm-6-role"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tm-6-avatar",
+        "tm-6-name",
+        "tm-6-role"
+      ]
     },
     "tm-6-avatar": {
       "type": "Avatar",
-      "src": "https://picsum.photos/seed/james-wright/200/200",
-      "initials": "JW",
-      "size": "xl"
+      "props": {
+        "src": "https://picsum.photos/seed/james-wright/200/200",
+        "initials": "JW",
+        "size": "xl"
+      }
     },
     "tm-6-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "James Wright",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "James Wright",
+        "weight": "bold"
+      }
     },
     "tm-6-role": {
       "type": "Text",
-      "tag": "p",
-      "content": "Growth Lead",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Growth Lead",
+        "variant": "muted"
+      }
     }
   }
 }

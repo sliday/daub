@@ -3,129 +3,201 @@
   "elements": {
     "product-card": {
       "type": "Card",
-      "title": "Sony WH-1000XM5",
-      "description": "Industry-leading noise canceling headphones",
-      "children": ["card-content"]
+      "props": {
+        "title": "Sony WH-1000XM5",
+        "description": "Industry-leading noise canceling headphones"
+      },
+      "children": [
+        "card-content"
+      ]
     },
     "card-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["product-image", "product-badges", "product-name", "product-description", "rating-row", "price-row", "color-options", "action-buttons"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "product-image",
+        "product-badges",
+        "product-name",
+        "product-description",
+        "rating-row",
+        "price-row",
+        "color-options",
+        "action-buttons"
+      ]
     },
     "product-image": {
       "type": "AspectRatio",
-      "children": ["image"]
+      "children": [
+        "image"
+      ]
     },
     "image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/sonyxm5/400/400",
-      "alt": "Sony WH-1000XM5 wireless headphones in black"
+      "props": {
+        "src": "https://picsum.photos/seed/sonyxm5/400/400",
+        "alt": "Sony WH-1000XM5 wireless headphones in black"
+      }
     },
     "product-badges": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "children": ["badge-bestseller", "badge-free-shipping"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "badge-bestseller",
+        "badge-free-shipping"
+      ]
     },
     "badge-bestseller": {
       "type": "Badge",
-      "text": "Bestseller",
-      "variant": "success"
+      "props": {
+        "text": "Bestseller",
+        "variant": "success"
+      }
     },
     "badge-free-shipping": {
       "type": "Badge",
-      "text": "Free Shipping",
-      "variant": "info"
+      "props": {
+        "text": "Free Shipping",
+        "variant": "info"
+      }
     },
     "product-name": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Sony WH-1000XM5 Wireless Headphones",
-      "weight": "bold"
+      "props": {
+        "tag": "h3",
+        "content": "Sony WH-1000XM5 Wireless Headphones",
+        "weight": "bold"
+      }
     },
     "product-description": {
       "type": "Text",
-      "tag": "p",
-      "content": "Exceptionally comfortable with auto NC optimizer, crystal-clear hands-free calling, and up to 30 hours battery life.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Exceptionally comfortable with auto NC optimizer, crystal-clear hands-free calling, and up to 30 hours battery life.",
+        "variant": "muted"
+      }
     },
     "rating-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["rating-stars", "rating-count"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "rating-stars",
+        "rating-count"
+      ]
     },
     "rating-stars": {
       "type": "Text",
-      "tag": "span",
-      "content": "★★★★★",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "★★★★★",
+        "weight": "bold"
+      }
     },
     "rating-count": {
       "type": "Text",
-      "tag": "span",
-      "content": "(2,847 reviews)",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "(2,847 reviews)",
+        "variant": "muted"
+      }
     },
     "price-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["current-price", "original-price", "discount-badge"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "current-price",
+        "original-price",
+        "discount-badge"
+      ]
     },
     "current-price": {
       "type": "Text",
-      "tag": "span",
-      "content": "$328.00",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "$328.00",
+        "weight": "bold"
+      }
     },
     "original-price": {
       "type": "Text",
-      "tag": "span",
-      "content": "$399.99",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "$399.99",
+        "variant": "muted"
+      }
     },
     "discount-badge": {
       "type": "Badge",
-      "text": "18% off",
-      "variant": "error"
+      "props": {
+        "text": "18% off",
+        "variant": "error"
+      }
     },
     "color-options": {
       "type": "ToggleGroup",
-      "children": ["color-black", "color-silver", "color-blue"]
+      "children": [
+        "color-black",
+        "color-silver",
+        "color-blue"
+      ]
     },
     "color-black": {
       "type": "Toggle",
-      "label": "Black"
+      "props": {
+        "label": "Black"
+      }
     },
     "color-silver": {
       "type": "Toggle",
-      "label": "Silver"
+      "props": {
+        "label": "Silver"
+      }
     },
     "color-blue": {
       "type": "Toggle",
-      "label": "Midnight Blue"
+      "props": {
+        "label": "Midnight Blue"
+      }
     },
     "action-buttons": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "children": ["add-to-cart", "wishlist-button"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2
+      },
+      "children": [
+        "add-to-cart",
+        "wishlist-button"
+      ]
     },
     "add-to-cart": {
       "type": "Button",
-      "label": "Add to Cart",
-      "variant": "primary",
-      "icon": "shopping-cart"
+      "props": {
+        "label": "Add to Cart",
+        "variant": "primary",
+        "icon": "shopping-cart"
+      }
     },
     "wishlist-button": {
       "type": "Button",
-      "label": "",
-      "variant": "outline",
-      "icon": "heart"
+      "props": {
+        "label": "",
+        "variant": "outline",
+        "icon": "heart"
+      }
     }
   }
 }

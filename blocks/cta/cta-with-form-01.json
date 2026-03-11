@@ -3,96 +3,143 @@
   "elements": {
     "cta-with-form": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "align": "center",
-      "container": "narrow",
-      "children": ["form-heading", "form-subheading", "form-row", "form-note", "form-avatars"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "form-heading",
+        "form-subheading",
+        "form-row",
+        "form-note",
+        "form-avatars"
+      ]
     },
     "form-heading": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Get the weekly engineering digest",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Get the weekly engineering digest",
+        "align": "center"
+      }
     },
     "form-subheading": {
       "type": "Text",
-      "tag": "p",
-      "content": "Join 42,000+ developers who get our curated roundup of tools, tutorials, and industry news every Thursday.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Join 42,000+ developers who get our curated roundup of tools, tutorials, and industry news every Thursday.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "form-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "end",
-      "justify": "center",
-      "children": ["form-email-field", "form-submit"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "end",
+        "justify": "center"
+      },
+      "children": [
+        "form-email-field",
+        "form-submit"
+      ]
     },
     "form-email-field": {
       "type": "Field",
-      "label": "Email address",
-      "children": ["form-email-input"]
+      "props": {
+        "label": "Email address"
+      },
+      "children": [
+        "form-email-input"
+      ]
     },
     "form-email-input": {
       "type": "Input",
-      "placeholder": "developer@company.com",
-      "type": "email"
+      "props": {
+        "placeholder": "developer@company.com",
+        "type": "email"
+      }
     },
     "form-submit": {
       "type": "Button",
-      "label": "Subscribe",
-      "variant": "primary"
+      "props": {
+        "label": "Subscribe",
+        "variant": "primary"
+      }
     },
     "form-note": {
       "type": "Text",
-      "tag": "span",
-      "content": "No spam. Unsubscribe in one click.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "No spam. Unsubscribe in one click.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "form-avatars": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "justify": "center",
-      "children": ["avatar-group", "avatar-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "avatar-group",
+        "avatar-label"
+      ]
     },
     "avatar-group": {
       "type": "AvatarGroup",
-      "children": ["av-1", "av-2", "av-3", "av-4"]
+      "children": [
+        "av-1",
+        "av-2",
+        "av-3",
+        "av-4"
+      ]
     },
     "av-1": {
       "type": "Avatar",
-      "initials": "KL",
-      "size": "sm",
-      "src": "https://i.pravatar.cc/48?u=kate-lin"
+      "props": {
+        "initials": "KL",
+        "size": "sm",
+        "src": "https://i.pravatar.cc/48?u=kate-lin"
+      }
     },
     "av-2": {
       "type": "Avatar",
-      "initials": "MR",
-      "size": "sm",
-      "src": "https://i.pravatar.cc/48?u=mike-ross"
+      "props": {
+        "initials": "MR",
+        "size": "sm",
+        "src": "https://i.pravatar.cc/48?u=mike-ross"
+      }
     },
     "av-3": {
       "type": "Avatar",
-      "initials": "TA",
-      "size": "sm",
-      "src": "https://i.pravatar.cc/48?u=tina-ali"
+      "props": {
+        "initials": "TA",
+        "size": "sm",
+        "src": "https://i.pravatar.cc/48?u=tina-ali"
+      }
     },
     "av-4": {
       "type": "Avatar",
-      "initials": "JD",
-      "size": "sm",
-      "src": "https://i.pravatar.cc/48?u=jake-doe"
+      "props": {
+        "initials": "JD",
+        "size": "sm",
+        "src": "https://i.pravatar.cc/48?u=jake-doe"
+      }
     },
     "avatar-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Join engineers from Vercel, Stripe, and Shopify",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Join engineers from Vercel, Stripe, and Shopify",
+        "variant": "muted"
+      }
     }
   }
 }

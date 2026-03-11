@@ -3,83 +3,160 @@
   "elements": {
     "api-keys-root": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["api-keys-header", "api-keys-alert", "api-keys-table", "api-keys-footer"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "api-keys-header",
+        "api-keys-alert",
+        "api-keys-table",
+        "api-keys-footer"
+      ]
     },
     "api-keys-header": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "between",
-      "align": "center",
-      "children": ["api-keys-title-group", "api-keys-create-btn"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "between",
+        "align": "center"
+      },
+      "children": [
+        "api-keys-title-group",
+        "api-keys-create-btn"
+      ]
     },
     "api-keys-title-group": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["api-keys-title", "api-keys-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "api-keys-title",
+        "api-keys-subtitle"
+      ]
     },
     "api-keys-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "API Keys",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "API Keys",
+        "weight": "bold"
+      }
     },
     "api-keys-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Create and manage API keys for programmatic access to your workspace",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Create and manage API keys for programmatic access to your workspace",
+        "variant": "muted"
+      }
     },
     "api-keys-create-btn": {
       "type": "Button",
-      "label": "Create new key",
-      "variant": "default",
-      "icon": "plus"
+      "props": {
+        "label": "Create new key",
+        "variant": "default",
+        "icon": "plus"
+      }
     },
     "api-keys-alert": {
       "type": "Alert",
-      "variant": "warning",
-      "title": "Keep your keys secure",
-      "description": "API keys grant full access to your account. Never share them publicly or commit them to version control."
+      "props": {
+        "variant": "warning",
+        "title": "Keep your keys secure",
+        "description": "API keys grant full access to your account. Never share them publicly or commit them to version control."
+      }
     },
     "api-keys-table": {
       "type": "DataTable",
-      "hoverable": true,
-      "columns": [
-        { "key": "name", "label": "Name" },
-        { "key": "key", "label": "Key" },
-        { "key": "created", "label": "Created", "sortable": true },
-        { "key": "lastUsed", "label": "Last used", "sortable": true },
-        { "key": "status", "label": "Status" }
-      ],
-      "rows": [
-        { "name": "Production API", "key": "sk_live_...a3Bf", "created": "Jan 15, 2026", "lastUsed": "2 min ago", "status": "Active" },
-        { "name": "Staging Environment", "key": "sk_test_...k9Qm", "created": "Feb 3, 2026", "lastUsed": "1 hour ago", "status": "Active" },
-        { "name": "CI/CD Pipeline", "key": "sk_live_...w2Xn", "created": "Nov 20, 2025", "lastUsed": "Yesterday", "status": "Active" },
-        { "name": "Legacy Integration", "key": "sk_live_...p7Yt", "created": "Aug 5, 2025", "lastUsed": "3 months ago", "status": "Revoked" }
-      ]
+      "props": {
+        "hoverable": true,
+        "columns": [
+          {
+            "key": "name",
+            "label": "Name"
+          },
+          {
+            "key": "key",
+            "label": "Key"
+          },
+          {
+            "key": "created",
+            "label": "Created",
+            "sortable": true
+          },
+          {
+            "key": "lastUsed",
+            "label": "Last used",
+            "sortable": true
+          },
+          {
+            "key": "status",
+            "label": "Status"
+          }
+        ],
+        "rows": [
+          {
+            "name": "Production API",
+            "key": "sk_live_...a3Bf",
+            "created": "Jan 15, 2026",
+            "lastUsed": "2 min ago",
+            "status": "Active"
+          },
+          {
+            "name": "Staging Environment",
+            "key": "sk_test_...k9Qm",
+            "created": "Feb 3, 2026",
+            "lastUsed": "1 hour ago",
+            "status": "Active"
+          },
+          {
+            "name": "CI/CD Pipeline",
+            "key": "sk_live_...w2Xn",
+            "created": "Nov 20, 2025",
+            "lastUsed": "Yesterday",
+            "status": "Active"
+          },
+          {
+            "name": "Legacy Integration",
+            "key": "sk_live_...p7Yt",
+            "created": "Aug 5, 2025",
+            "lastUsed": "3 months ago",
+            "status": "Revoked"
+          }
+        ]
+      }
     },
     "api-keys-footer": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "justify": "between",
-      "align": "center",
-      "children": ["api-keys-count", "api-keys-docs-link"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "justify": "between",
+        "align": "center"
+      },
+      "children": [
+        "api-keys-count",
+        "api-keys-docs-link"
+      ]
     },
     "api-keys-count": {
       "type": "Text",
-      "tag": "p",
-      "content": "3 of 10 keys used",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "3 of 10 keys used",
+        "variant": "muted"
+      }
     },
     "api-keys-docs-link": {
       "type": "Button",
-      "label": "View API documentation",
-      "variant": "link",
-      "icon": "external-link"
+      "props": {
+        "label": "View API documentation",
+        "variant": "link",
+        "icon": "external-link"
+      }
     }
   }
 }

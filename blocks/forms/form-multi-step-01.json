@@ -3,105 +3,172 @@
   "elements": {
     "multi-step-form": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "children": ["wizard-stepper", "step-content", "step-actions"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "wizard-stepper",
+        "step-content",
+        "step-actions"
+      ]
     },
     "wizard-stepper": {
       "type": "Stepper",
-      "steps": [
-        { "label": "Account Details" },
-        { "label": "Company Info" },
-        { "label": "Review & Confirm" }
-      ],
-      "current": 1
+      "props": {
+        "steps": [
+          {
+            "label": "Account Details"
+          },
+          {
+            "label": "Company Info"
+          },
+          {
+            "label": "Review & Confirm"
+          }
+        ],
+        "current": 1
+      }
     },
     "step-content": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["step-1-fields"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "step-1-fields"
+      ]
     },
     "step-1-fields": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["step-1-heading", "step-1-description", "field-username", "field-email", "field-password", "field-confirm-password", "field-terms"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "step-1-heading",
+        "step-1-description",
+        "field-username",
+        "field-email",
+        "field-password",
+        "field-confirm-password",
+        "field-terms"
+      ]
     },
     "step-1-heading": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Create Your Account",
-      "weight": "semibold"
+      "props": {
+        "tag": "h3",
+        "content": "Create Your Account",
+        "weight": "semibold"
+      }
     },
     "step-1-description": {
       "type": "Text",
-      "tag": "p",
-      "content": "Enter your credentials to set up your new account. You can always change these later in settings.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Enter your credentials to set up your new account. You can always change these later in settings.",
+        "variant": "muted"
+      }
     },
     "field-username": {
       "type": "Field",
-      "label": "Username",
-      "children": ["input-username"]
+      "props": {
+        "label": "Username"
+      },
+      "children": [
+        "input-username"
+      ]
     },
     "input-username": {
       "type": "Input",
-      "placeholder": "sarahmitchell",
-      "type_input": "text"
+      "props": {
+        "placeholder": "sarahmitchell",
+        "type_input": "text"
+      }
     },
     "field-email": {
       "type": "Field",
-      "label": "Email Address",
-      "children": ["input-email"]
+      "props": {
+        "label": "Email Address"
+      },
+      "children": [
+        "input-email"
+      ]
     },
     "input-email": {
       "type": "Input",
-      "placeholder": "sarah@acmecorp.com",
-      "type_input": "email"
+      "props": {
+        "placeholder": "sarah@acmecorp.com",
+        "type_input": "email"
+      }
     },
     "field-password": {
       "type": "Field",
-      "label": "Password",
-      "children": ["input-password"]
+      "props": {
+        "label": "Password"
+      },
+      "children": [
+        "input-password"
+      ]
     },
     "input-password": {
       "type": "Input",
-      "placeholder": "At least 8 characters",
-      "type_input": "password"
+      "props": {
+        "placeholder": "At least 8 characters",
+        "type_input": "password"
+      }
     },
     "field-confirm-password": {
       "type": "Field",
-      "label": "Confirm Password",
-      "children": ["input-confirm-password"]
+      "props": {
+        "label": "Confirm Password"
+      },
+      "children": [
+        "input-confirm-password"
+      ]
     },
     "input-confirm-password": {
       "type": "Input",
-      "placeholder": "Re-enter your password",
-      "type_input": "password"
+      "props": {
+        "placeholder": "Re-enter your password",
+        "type_input": "password"
+      }
     },
     "field-terms": {
       "type": "Checkbox",
-      "label": "I agree to the Terms of Service and Privacy Policy",
-      "checked": false
+      "props": {
+        "label": "I agree to the Terms of Service and Privacy Policy",
+        "checked": false
+      }
     },
     "step-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "justify": "space-between",
-      "children": ["btn-back", "btn-next"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "justify": "space-between"
+      },
+      "children": [
+        "btn-back",
+        "btn-next"
+      ]
     },
     "btn-back": {
       "type": "Button",
-      "label": "Back",
-      "variant": "outline",
-      "icon": "arrow-left"
+      "props": {
+        "label": "Back",
+        "variant": "outline",
+        "icon": "arrow-left"
+      }
     },
     "btn-next": {
       "type": "Button",
-      "label": "Continue",
-      "variant": "default",
-      "icon": "arrow-right"
+      "props": {
+        "label": "Continue",
+        "variant": "default",
+        "icon": "arrow-right"
+      }
     }
   }
 }

@@ -3,143 +3,262 @@
   "elements": {
     "roadmap": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["roadmap-header", "roadmap-stepper", "roadmap-phases"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "roadmap-header",
+        "roadmap-stepper",
+        "roadmap-phases"
+      ]
     },
     "roadmap-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["roadmap-title", "roadmap-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "roadmap-title",
+        "roadmap-subtitle"
+      ]
     },
     "roadmap-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Product Roadmap",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Product Roadmap",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "roadmap-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Where we've been and where we're headed next.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Where we've been and where we're headed next.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "roadmap-stepper": {
       "type": "Stepper",
-      "steps": [
-        { "label": "Phase 1", "description": "Foundation" },
-        { "label": "Phase 2", "description": "Growth" },
-        { "label": "Phase 3", "description": "Scale" }
-      ],
-      "current": 1
+      "props": {
+        "steps": [
+          {
+            "label": "Phase 1",
+            "description": "Foundation"
+          },
+          {
+            "label": "Phase 2",
+            "description": "Growth"
+          },
+          {
+            "label": "Phase 3",
+            "description": "Scale"
+          }
+        ],
+        "current": 1
+      }
     },
     "roadmap-phases": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 3,
-      "children": ["phase-1", "phase-2", "phase-3"]
+      "props": {
+        "columns": 3,
+        "gap": 3
+      },
+      "children": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
     },
     "phase-1": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["phase-1-content"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "phase-1-content"
+      ]
     },
     "phase-1-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["phase-1-badge", "phase-1-title", "phase-1-list"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "phase-1-badge",
+        "phase-1-title",
+        "phase-1-list"
+      ]
     },
     "phase-1-badge": {
       "type": "Badge",
-      "text": "Completed",
-      "variant": "default"
+      "props": {
+        "text": "Completed",
+        "variant": "default"
+      }
     },
     "phase-1-title": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Phase 1: Foundation",
-      "weight": "bold"
+      "props": {
+        "tag": "h3",
+        "content": "Phase 1: Foundation",
+        "weight": "bold"
+      }
     },
     "phase-1-list": {
       "type": "List",
-      "items": [
-        { "primary": "Core editor with rich text formatting", "icon": "check-circle" },
-        { "primary": "User authentication and team workspaces", "icon": "check-circle" },
-        { "primary": "REST API v1 and webhook support", "icon": "check-circle" },
-        { "primary": "iOS and Android mobile applications", "icon": "check-circle" }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "Core editor with rich text formatting",
+            "icon": "check-circle"
+          },
+          {
+            "primary": "User authentication and team workspaces",
+            "icon": "check-circle"
+          },
+          {
+            "primary": "REST API v1 and webhook support",
+            "icon": "check-circle"
+          },
+          {
+            "primary": "iOS and Android mobile applications",
+            "icon": "check-circle"
+          }
+        ]
+      }
     },
     "phase-2": {
       "type": "Surface",
-      "variant": "raised",
-      "children": ["phase-2-content"]
+      "props": {
+        "variant": "raised"
+      },
+      "children": [
+        "phase-2-content"
+      ]
     },
     "phase-2-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["phase-2-badge", "phase-2-title", "phase-2-list", "phase-2-progress"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "phase-2-badge",
+        "phase-2-title",
+        "phase-2-list",
+        "phase-2-progress"
+      ]
     },
     "phase-2-badge": {
       "type": "Badge",
-      "text": "In Progress",
-      "variant": "secondary"
+      "props": {
+        "text": "In Progress",
+        "variant": "secondary"
+      }
     },
     "phase-2-title": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Phase 2: Growth",
-      "weight": "bold"
+      "props": {
+        "tag": "h3",
+        "content": "Phase 2: Growth",
+        "weight": "bold"
+      }
     },
     "phase-2-list": {
       "type": "List",
-      "items": [
-        { "primary": "AI-powered writing assistant", "icon": "check-circle" },
-        { "primary": "Advanced analytics dashboard", "icon": "check-circle" },
-        { "primary": "Custom branding and white-label support", "icon": "circle" },
-        { "primary": "Marketplace for community templates", "icon": "circle" }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "AI-powered writing assistant",
+            "icon": "check-circle"
+          },
+          {
+            "primary": "Advanced analytics dashboard",
+            "icon": "check-circle"
+          },
+          {
+            "primary": "Custom branding and white-label support",
+            "icon": "circle"
+          },
+          {
+            "primary": "Marketplace for community templates",
+            "icon": "circle"
+          }
+        ]
+      }
     },
     "phase-2-progress": {
       "type": "Progress",
-      "value": 55
+      "props": {
+        "value": 55
+      }
     },
     "phase-3": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["phase-3-content"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "phase-3-content"
+      ]
     },
     "phase-3-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["phase-3-badge", "phase-3-title", "phase-3-list"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "phase-3-badge",
+        "phase-3-title",
+        "phase-3-list"
+      ]
     },
     "phase-3-badge": {
       "type": "Badge",
-      "text": "Planned",
-      "variant": "outline"
+      "props": {
+        "text": "Planned",
+        "variant": "outline"
+      }
     },
     "phase-3-title": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Phase 3: Scale",
-      "weight": "bold"
+      "props": {
+        "tag": "h3",
+        "content": "Phase 3: Scale",
+        "weight": "bold"
+      }
     },
     "phase-3-list": {
       "type": "List",
-      "items": [
-        { "primary": "Multi-region data residency (EU, APAC)", "icon": "circle" },
-        { "primary": "On-premise deployment option", "icon": "circle" },
-        { "primary": "Advanced workflow automation engine", "icon": "circle" },
-        { "primary": "Real-time video collaboration layer", "icon": "circle" }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "Multi-region data residency (EU, APAC)",
+            "icon": "circle"
+          },
+          {
+            "primary": "On-premise deployment option",
+            "icon": "circle"
+          },
+          {
+            "primary": "Advanced workflow automation engine",
+            "icon": "circle"
+          },
+          {
+            "primary": "Real-time video collaboration layer",
+            "icon": "circle"
+          }
+        ]
+      }
     }
   }
 }

@@ -3,27 +3,51 @@
   "elements": {
     "language-switcher-root": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["language-icon-text", "language-select"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "language-icon-text",
+        "language-select"
+      ]
     },
     "language-icon-text": {
       "type": "Text",
-      "tag": "span",
-      "content": "Language",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Language",
+        "variant": "muted"
+      }
     },
     "language-select": {
       "type": "Select",
-      "label": "Language",
-      "options": [
-        { "label": "English", "value": "en" },
-        { "label": "Espanol", "value": "es" },
-        { "label": "Francais", "value": "fr" },
-        { "label": "Deutsch", "value": "de" },
-        { "label": "Japanese", "value": "ja" }
-      ]
+      "props": {
+        "label": "Language",
+        "options": [
+          {
+            "label": "English",
+            "value": "en"
+          },
+          {
+            "label": "Espanol",
+            "value": "es"
+          },
+          {
+            "label": "Francais",
+            "value": "fr"
+          },
+          {
+            "label": "Deutsch",
+            "value": "de"
+          },
+          {
+            "label": "Japanese",
+            "value": "ja"
+          }
+        ]
+      }
     }
   }
 }

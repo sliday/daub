@@ -3,96 +3,139 @@
   "elements": {
     "content-split-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "container": "wide",
-      "children": ["split-header", "split-columns"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "container": "wide"
+      },
+      "children": [
+        "split-header",
+        "split-columns"
+      ]
     },
     "split-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["split-title", "split-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "split-title",
+        "split-subtitle"
+      ]
     },
     "split-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "What drives us forward",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "What drives us forward",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "split-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Our mission and values shape every product decision, every hire, and every partnership we pursue.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Our mission and values shape every product decision, every hire, and every partnership we pursue.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "split-columns": {
       "type": "Grid",
-      "columns": 2,
-      "gap": 6,
-      "children": ["col-mission", "col-values"]
+      "props": {
+        "columns": 2,
+        "gap": 6
+      },
+      "children": [
+        "col-mission",
+        "col-values"
+      ]
     },
     "col-mission": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["mission-label", "mission-heading", "mission-p1", "mission-p2"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "mission-label",
+        "mission-heading",
+        "mission-p1",
+        "mission-p2"
+      ]
     },
     "mission-label": {
       "type": "Badge",
-      "text": "Our Mission",
-      "variant": "info"
+      "props": {
+        "text": "Our Mission",
+        "variant": "info"
+      }
     },
     "mission-heading": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Make expert healthcare accessible to everyone, everywhere",
-      "weight": "bold"
+      "props": {
+        "tag": "h3",
+        "content": "Make expert healthcare accessible to everyone, everywhere",
+        "weight": "bold"
+      }
     },
     "mission-p1": {
       "type": "Text",
-      "tag": "p",
-      "content": "We started Cura Health in 2019 after witnessing the gaps in rural healthcare delivery firsthand. Today, our telehealth platform connects 2.3 million patients across 48 states with board-certified specialists, with an average wait time of 11 minutes."
+      "props": {
+        "tag": "p",
+        "content": "We started Cura Health in 2019 after witnessing the gaps in rural healthcare delivery firsthand. Today, our telehealth platform connects 2.3 million patients across 48 states with board-certified specialists, with an average wait time of 11 minutes."
+      }
     },
     "mission-p2": {
       "type": "Text",
-      "tag": "p",
-      "content": "By 2027, we aim to expand into 15 additional countries and reduce diagnostic delays by 60% for underserved populations through AI-assisted triage and asynchronous consultations."
+      "props": {
+        "tag": "p",
+        "content": "By 2027, we aim to expand into 15 additional countries and reduce diagnostic delays by 60% for underserved populations through AI-assisted triage and asynchronous consultations."
+      }
     },
     "col-values": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["values-label", "values-list"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "values-label",
+        "values-list"
+      ]
     },
     "values-label": {
       "type": "Badge",
-      "text": "Our Values",
-      "variant": "success"
+      "props": {
+        "text": "Our Values",
+        "variant": "success"
+      }
     },
     "values-list": {
       "type": "List",
-      "items": [
-        {
-          "primary": "Patient First, Always",
-          "secondary": "Every feature we build starts with the question: does this improve a patient's outcome or experience?"
-        },
-        {
-          "primary": "Radical Transparency",
-          "secondary": "We publish our clinical outcomes, pricing, and error rates publicly. Trust is earned through openness."
-        },
-        {
-          "primary": "Bias for Action",
-          "secondary": "Healthcare cannot wait for perfect data. We ship, measure, and iterate in weekly cycles."
-        },
-        {
-          "primary": "Inclusive by Design",
-          "secondary": "Our platform supports 22 languages, screen readers, and low-bandwidth connections out of the box."
-        }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "Patient First, Always",
+            "secondary": "Every feature we build starts with the question: does this improve a patient's outcome or experience?"
+          },
+          {
+            "primary": "Radical Transparency",
+            "secondary": "We publish our clinical outcomes, pricing, and error rates publicly. Trust is earned through openness."
+          },
+          {
+            "primary": "Bias for Action",
+            "secondary": "Healthcare cannot wait for perfect data. We ship, measure, and iterate in weekly cycles."
+          },
+          {
+            "primary": "Inclusive by Design",
+            "secondary": "Our platform supports 22 languages, screen readers, and low-bandwidth connections out of the box."
+          }
+        ]
+      }
     }
   }
 }

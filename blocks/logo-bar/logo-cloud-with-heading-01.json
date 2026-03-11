@@ -3,143 +3,222 @@
   "elements": {
     "logo-heading-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "align": "center",
-      "container": "narrow",
-      "children": ["heading-group", "divider", "logo-row"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "heading-group",
+        "divider",
+        "logo-row"
+      ]
     },
     "heading-group": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["trust-badge", "main-heading", "sub-heading"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "trust-badge",
+        "main-heading",
+        "sub-heading"
+      ]
     },
     "trust-badge": {
       "type": "Badge",
-      "text": "Trusted Worldwide",
-      "variant": "info"
+      "props": {
+        "text": "Trusted Worldwide",
+        "variant": "info"
+      }
     },
     "main-heading": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Trusted by 12,000+ teams across 90 countries",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Trusted by 12,000+ teams across 90 countries",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "sub-heading": {
       "type": "Text",
-      "tag": "p",
-      "content": "From Fortune 500 enterprises to fast-growing startups, leading organizations rely on our platform to move faster.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "From Fortune 500 enterprises to fast-growing startups, leading organizations rely on our platform to move faster.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "divider": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "logo-row": {
       "type": "Grid",
-      "columns": 4,
-      "gap": 5,
-      "children": ["logo-spotify", "logo-netflix", "logo-uber", "logo-coinbase", "logo-plaid", "logo-gitlab", "logo-atlassian", "logo-hashicorp"]
+      "props": {
+        "columns": 4,
+        "gap": 5
+      },
+      "children": [
+        "logo-spotify",
+        "logo-netflix",
+        "logo-uber",
+        "logo-coinbase",
+        "logo-plaid",
+        "logo-gitlab",
+        "logo-atlassian",
+        "logo-hashicorp"
+      ]
     },
     "logo-spotify": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["text-spotify"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "text-spotify"
+      ]
     },
     "text-spotify": {
       "type": "Text",
-      "tag": "span",
-      "content": "Spotify",
-      "weight": "semibold",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Spotify",
+        "weight": "semibold",
+        "align": "center"
+      }
     },
     "logo-netflix": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["text-netflix"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "text-netflix"
+      ]
     },
     "text-netflix": {
       "type": "Text",
-      "tag": "span",
-      "content": "Netflix",
-      "weight": "semibold",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Netflix",
+        "weight": "semibold",
+        "align": "center"
+      }
     },
     "logo-uber": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["text-uber"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "text-uber"
+      ]
     },
     "text-uber": {
       "type": "Text",
-      "tag": "span",
-      "content": "Uber",
-      "weight": "semibold",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Uber",
+        "weight": "semibold",
+        "align": "center"
+      }
     },
     "logo-coinbase": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["text-coinbase"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "text-coinbase"
+      ]
     },
     "text-coinbase": {
       "type": "Text",
-      "tag": "span",
-      "content": "Coinbase",
-      "weight": "semibold",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Coinbase",
+        "weight": "semibold",
+        "align": "center"
+      }
     },
     "logo-plaid": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["text-plaid"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "text-plaid"
+      ]
     },
     "text-plaid": {
       "type": "Text",
-      "tag": "span",
-      "content": "Plaid",
-      "weight": "semibold",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Plaid",
+        "weight": "semibold",
+        "align": "center"
+      }
     },
     "logo-gitlab": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["text-gitlab"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "text-gitlab"
+      ]
     },
     "text-gitlab": {
       "type": "Text",
-      "tag": "span",
-      "content": "GitLab",
-      "weight": "semibold",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "GitLab",
+        "weight": "semibold",
+        "align": "center"
+      }
     },
     "logo-atlassian": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["text-atlassian"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "text-atlassian"
+      ]
     },
     "text-atlassian": {
       "type": "Text",
-      "tag": "span",
-      "content": "Atlassian",
-      "weight": "semibold",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "Atlassian",
+        "weight": "semibold",
+        "align": "center"
+      }
     },
     "logo-hashicorp": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["text-hashicorp"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "text-hashicorp"
+      ]
     },
     "text-hashicorp": {
       "type": "Text",
-      "tag": "span",
-      "content": "HashiCorp",
-      "weight": "semibold",
-      "align": "center"
+      "props": {
+        "tag": "span",
+        "content": "HashiCorp",
+        "weight": "semibold",
+        "align": "center"
+      }
     }
   }
 }

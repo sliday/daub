@@ -3,37 +3,52 @@
   "elements": {
     "toast-stack": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["toast-success", "toast-error", "toast-warning", "toast-info"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "toast-success",
+        "toast-error",
+        "toast-warning",
+        "toast-info"
+      ]
     },
     "toast-success": {
       "type": "Alert",
-      "title": "Changes saved successfully",
-      "description": "Your profile has been updated. The changes will be visible to other users within a few minutes.",
-      "variant": "success",
-      "icon": "check-circle"
+      "props": {
+        "title": "Changes saved successfully",
+        "description": "Your profile has been updated. The changes will be visible to other users within a few minutes.",
+        "variant": "success",
+        "icon": "check-circle"
+      }
     },
     "toast-error": {
       "type": "Alert",
-      "title": "Payment failed",
-      "description": "We couldn't process your payment. Please check your card details and try again.",
-      "variant": "destructive",
-      "icon": "x-circle"
+      "props": {
+        "title": "Payment failed",
+        "description": "We couldn't process your payment. Please check your card details and try again.",
+        "variant": "destructive",
+        "icon": "x-circle"
+      }
     },
     "toast-warning": {
       "type": "Alert",
-      "title": "Storage almost full",
-      "description": "You've used 92% of your storage quota. Consider upgrading your plan or removing unused files.",
-      "variant": "warning",
-      "icon": "alert-triangle"
+      "props": {
+        "title": "Storage almost full",
+        "description": "You've used 92% of your storage quota. Consider upgrading your plan or removing unused files.",
+        "variant": "warning",
+        "icon": "alert-triangle"
+      }
     },
     "toast-info": {
       "type": "Alert",
-      "title": "Scheduled maintenance",
-      "description": "A maintenance window is planned for Mar 12, 2026 from 02:00-04:00 UTC. Some services may be briefly unavailable.",
-      "variant": "default",
-      "icon": "info"
+      "props": {
+        "title": "Scheduled maintenance",
+        "description": "A maintenance window is planned for Mar 12, 2026 from 02:00-04:00 UTC. Some services may be briefly unavailable.",
+        "variant": "default",
+        "icon": "info"
+      }
     }
   }
 }

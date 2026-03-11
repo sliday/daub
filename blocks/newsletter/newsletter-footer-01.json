@@ -3,94 +3,142 @@
   "elements": {
     "newsletter-footer": {
       "type": "Surface",
-      "variant": "flat",
-      "children": ["nl-footer-inner"]
+      "props": {
+        "variant": "flat"
+      },
+      "children": [
+        "nl-footer-inner"
+      ]
     },
     "nl-footer-inner": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "center",
-      "justify": "space-between",
-      "container": true,
-      "children": ["nl-footer-left", "nl-footer-right"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "space-between",
+        "container": true
+      },
+      "children": [
+        "nl-footer-left",
+        "nl-footer-right"
+      ]
     },
     "nl-footer-left": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["nl-footer-logo", "nl-footer-tagline", "nl-footer-social"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "nl-footer-logo",
+        "nl-footer-tagline",
+        "nl-footer-social"
+      ]
     },
     "nl-footer-logo": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Acme Studio",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Acme Studio",
+        "weight": "bold"
+      }
     },
     "nl-footer-tagline": {
       "type": "Text",
-      "tag": "p",
-      "content": "Crafting digital experiences since 2018.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Crafting digital experiences since 2018.",
+        "variant": "muted"
+      }
     },
     "nl-footer-social": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "children": ["nl-social-x", "nl-social-gh", "nl-social-li"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "nl-social-x",
+        "nl-social-gh",
+        "nl-social-li"
+      ]
     },
     "nl-social-x": {
       "type": "Button",
-      "label": "Twitter",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "twitter"
+      "props": {
+        "label": "Twitter",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "twitter"
+      }
     },
     "nl-social-gh": {
       "type": "Button",
-      "label": "GitHub",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "github"
+      "props": {
+        "label": "GitHub",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "github"
+      }
     },
     "nl-social-li": {
       "type": "Button",
-      "label": "LinkedIn",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "linkedin"
+      "props": {
+        "label": "LinkedIn",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "linkedin"
+      }
     },
     "nl-footer-right": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["nl-footer-cta", "nl-footer-form", "nl-footer-note"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "nl-footer-cta",
+        "nl-footer-form",
+        "nl-footer-note"
+      ]
     },
     "nl-footer-cta": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Subscribe to our newsletter",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Subscribe to our newsletter",
+        "weight": "bold"
+      }
     },
     "nl-footer-form": {
       "type": "InputGroup",
-      "children": ["nl-footer-input", "nl-footer-btn"]
+      "children": [
+        "nl-footer-input",
+        "nl-footer-btn"
+      ]
     },
     "nl-footer-input": {
       "type": "Input",
-      "placeholder": "your@email.com",
-      "type": "email"
+      "props": {
+        "placeholder": "your@email.com",
+        "type": "email"
+      }
     },
     "nl-footer-btn": {
       "type": "Button",
-      "label": "Subscribe",
-      "variant": "primary"
+      "props": {
+        "label": "Subscribe",
+        "variant": "primary"
+      }
     },
     "nl-footer-note": {
       "type": "Text",
-      "tag": "p",
-      "content": "No spam, ever. We send one email per week.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "No spam, ever. We send one email per week.",
+        "variant": "muted"
+      }
     }
   }
 }

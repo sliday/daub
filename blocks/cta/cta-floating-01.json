@@ -3,65 +3,99 @@
   "elements": {
     "cta-floating": {
       "type": "Surface",
-      "variant": "raised",
-      "children": ["floating-inner"]
+      "props": {
+        "variant": "raised"
+      },
+      "children": [
+        "floating-inner"
+      ]
     },
     "floating-inner": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "center",
-      "justify": "between",
-      "container": "wide",
-      "children": ["floating-left", "floating-right"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "between",
+        "container": "wide"
+      },
+      "children": [
+        "floating-left",
+        "floating-right"
+      ]
     },
     "floating-left": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "children": ["floating-icon", "floating-text"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "floating-icon",
+        "floating-text"
+      ]
     },
     "floating-icon": {
       "type": "Badge",
-      "text": "NEW",
-      "variant": "new"
+      "props": {
+        "text": "NEW",
+        "variant": "new"
+      }
     },
     "floating-text": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "children": ["floating-title", "floating-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "floating-title",
+        "floating-desc"
+      ]
     },
     "floating-title": {
       "type": "Text",
-      "tag": "p",
-      "content": "Announcing Relay 2.0 \u2014 real-time collaboration for every team",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Announcing Relay 2.0 — real-time collaboration for every team",
+        "weight": "semibold"
+      }
     },
     "floating-desc": {
       "type": "Text",
-      "tag": "span",
-      "content": "Multiplayer editing, live cursors, and instant sync across all devices.",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Multiplayer editing, live cursors, and instant sync across all devices.",
+        "variant": "muted"
+      }
     },
     "floating-right": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["floating-btn", "floating-dismiss"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "floating-btn",
+        "floating-dismiss"
+      ]
     },
     "floating-btn": {
       "type": "Button",
-      "label": "Try it free",
-      "variant": "primary"
+      "props": {
+        "label": "Try it free",
+        "variant": "primary"
+      }
     },
     "floating-dismiss": {
       "type": "Button",
-      "label": "Dismiss",
-      "variant": "ghost",
-      "icon": "x"
+      "props": {
+        "label": "Dismiss",
+        "variant": "ghost",
+        "icon": "x"
+      }
     }
   }
 }

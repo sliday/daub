@@ -3,236 +3,368 @@
   "elements": {
     "pricing-toggle": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "align": "center",
-      "container": "wide",
-      "children": ["toggle-header", "billing-toggle", "toggle-grid"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "container": "wide"
+      },
+      "children": [
+        "toggle-header",
+        "billing-toggle",
+        "toggle-grid"
+      ]
     },
     "toggle-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["toggle-title", "toggle-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "toggle-title",
+        "toggle-subtitle"
+      ]
     },
     "toggle-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Choose your plan",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Choose your plan",
+        "align": "center"
+      }
     },
     "toggle-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Save 20% with annual billing.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Save 20% with annual billing.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "billing-toggle": {
       "type": "ToggleGroup",
-      "items": [
-        { "label": "Monthly", "value": "monthly" },
-        { "label": "Annual", "value": "annual" }
-      ],
-      "defaultValue": "annual"
+      "props": {
+        "items": [
+          {
+            "label": "Monthly",
+            "value": "monthly"
+          },
+          {
+            "label": "Annual",
+            "value": "annual"
+          }
+        ],
+        "defaultValue": "annual"
+      }
     },
     "toggle-grid": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 4,
-      "children": ["plan-basic", "plan-team", "plan-business"]
+      "props": {
+        "columns": 3,
+        "gap": 4
+      },
+      "children": [
+        "plan-basic",
+        "plan-team",
+        "plan-business"
+      ]
     },
     "plan-basic": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["basic-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "basic-inner"
+      ]
     },
     "basic-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["basic-name", "basic-price-row", "basic-annual-note", "basic-btn", "basic-sep", "basic-features"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "basic-name",
+        "basic-price-row",
+        "basic-annual-note",
+        "basic-btn",
+        "basic-sep",
+        "basic-features"
+      ]
     },
     "basic-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Basic"
+      "props": {
+        "tag": "h4",
+        "content": "Basic"
+      }
     },
     "basic-price-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 0,
-      "align": "end",
-      "children": ["basic-price", "basic-per"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 0,
+        "align": "end"
+      },
+      "children": [
+        "basic-price",
+        "basic-per"
+      ]
     },
     "basic-price": {
       "type": "Text",
-      "tag": "h2",
-      "content": "$19"
+      "props": {
+        "tag": "h2",
+        "content": "$19"
+      }
     },
     "basic-per": {
       "type": "Text",
-      "tag": "span",
-      "content": "/mo",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "/mo",
+        "variant": "muted"
+      }
     },
     "basic-annual-note": {
       "type": "Text",
-      "tag": "span",
-      "content": "$228 billed annually",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "$228 billed annually",
+        "variant": "muted"
+      }
     },
     "basic-btn": {
       "type": "Button",
-      "label": "Get started",
-      "variant": "outline"
+      "props": {
+        "label": "Get started",
+        "variant": "outline"
+      }
     },
     "basic-sep": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "basic-features": {
       "type": "List",
-      "items": [
-        "3 projects",
-        "5 GB storage",
-        "Email support",
-        "Basic integrations"
-      ]
+      "props": {
+        "items": [
+          "3 projects",
+          "5 GB storage",
+          "Email support",
+          "Basic integrations"
+        ]
+      }
     },
     "plan-team": {
       "type": "Surface",
-      "variant": "raised",
-      "children": ["team-inner"]
+      "props": {
+        "variant": "raised"
+      },
+      "children": [
+        "team-inner"
+      ]
     },
     "team-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["team-header-row", "team-price-row", "team-annual-note", "team-btn", "team-sep", "team-features"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "team-header-row",
+        "team-price-row",
+        "team-annual-note",
+        "team-btn",
+        "team-sep",
+        "team-features"
+      ]
     },
     "team-header-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["team-name", "team-badge"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "team-name",
+        "team-badge"
+      ]
     },
     "team-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Team"
+      "props": {
+        "tag": "h4",
+        "content": "Team"
+      }
     },
     "team-badge": {
       "type": "Badge",
-      "text": "Best Value",
-      "variant": "success"
+      "props": {
+        "text": "Best Value",
+        "variant": "success"
+      }
     },
     "team-price-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 0,
-      "align": "end",
-      "children": ["team-price", "team-per"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 0,
+        "align": "end"
+      },
+      "children": [
+        "team-price",
+        "team-per"
+      ]
     },
     "team-price": {
       "type": "Text",
-      "tag": "h2",
-      "content": "$49"
+      "props": {
+        "tag": "h2",
+        "content": "$49"
+      }
     },
     "team-per": {
       "type": "Text",
-      "tag": "span",
-      "content": "/mo",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "/mo",
+        "variant": "muted"
+      }
     },
     "team-annual-note": {
       "type": "Text",
-      "tag": "span",
-      "content": "$588 billed annually",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "$588 billed annually",
+        "variant": "muted"
+      }
     },
     "team-btn": {
       "type": "Button",
-      "label": "Get started",
-      "variant": "primary"
+      "props": {
+        "label": "Get started",
+        "variant": "primary"
+      }
     },
     "team-sep": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "team-features": {
       "type": "List",
-      "items": [
-        "Unlimited projects",
-        "50 GB storage",
-        "Priority support",
-        "Advanced integrations",
-        "Team permissions",
-        "Custom workflows"
-      ]
+      "props": {
+        "items": [
+          "Unlimited projects",
+          "50 GB storage",
+          "Priority support",
+          "Advanced integrations",
+          "Team permissions",
+          "Custom workflows"
+        ]
+      }
     },
     "plan-business": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["business-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "business-inner"
+      ]
     },
     "business-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["business-name", "business-price-row", "business-annual-note", "business-btn", "business-sep", "business-features"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "business-name",
+        "business-price-row",
+        "business-annual-note",
+        "business-btn",
+        "business-sep",
+        "business-features"
+      ]
     },
     "business-name": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Business"
+      "props": {
+        "tag": "h4",
+        "content": "Business"
+      }
     },
     "business-price-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 0,
-      "align": "end",
-      "children": ["business-price", "business-per"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 0,
+        "align": "end"
+      },
+      "children": [
+        "business-price",
+        "business-per"
+      ]
     },
     "business-price": {
       "type": "Text",
-      "tag": "h2",
-      "content": "$99"
+      "props": {
+        "tag": "h2",
+        "content": "$99"
+      }
     },
     "business-per": {
       "type": "Text",
-      "tag": "span",
-      "content": "/mo",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "/mo",
+        "variant": "muted"
+      }
     },
     "business-annual-note": {
       "type": "Text",
-      "tag": "span",
-      "content": "$1,188 billed annually",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "$1,188 billed annually",
+        "variant": "muted"
+      }
     },
     "business-btn": {
       "type": "Button",
-      "label": "Get started",
-      "variant": "outline"
+      "props": {
+        "label": "Get started",
+        "variant": "outline"
+      }
     },
     "business-sep": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "business-features": {
       "type": "List",
-      "items": [
-        "Everything in Team",
-        "500 GB storage",
-        "Dedicated support",
-        "SSO & SCIM",
-        "Audit trail",
-        "Custom SLA",
-        "Advanced security"
-      ]
+      "props": {
+        "items": [
+          "Everything in Team",
+          "500 GB storage",
+          "Dedicated support",
+          "SSO & SCIM",
+          "Audit trail",
+          "Custom SLA",
+          "Advanced security"
+        ]
+      }
     }
   }
 }

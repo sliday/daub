@@ -3,73 +3,149 @@
   "elements": {
     "inline-form": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "end",
-      "children": ["search-field", "select-category", "select-status", "select-sort", "btn-apply", "btn-reset"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "end"
+      },
+      "children": [
+        "search-field",
+        "select-category",
+        "select-status",
+        "select-sort",
+        "btn-apply",
+        "btn-reset"
+      ]
     },
     "search-field": {
       "type": "Field",
-      "label": "Search",
-      "children": ["search-input"]
+      "props": {
+        "label": "Search"
+      },
+      "children": [
+        "search-input"
+      ]
     },
     "search-input": {
       "type": "Search",
-      "placeholder": "Search products..."
+      "props": {
+        "placeholder": "Search products..."
+      }
     },
     "select-category": {
       "type": "Field",
-      "label": "Category",
-      "children": ["category-select"]
+      "props": {
+        "label": "Category"
+      },
+      "children": [
+        "category-select"
+      ]
     },
     "category-select": {
       "type": "Select",
-      "options": [
-        { "label": "All Categories", "value": "all" },
-        { "label": "Electronics", "value": "electronics" },
-        { "label": "Clothing", "value": "clothing" },
-        { "label": "Home & Garden", "value": "home" },
-        { "label": "Sports", "value": "sports" }
-      ]
+      "props": {
+        "options": [
+          {
+            "label": "All Categories",
+            "value": "all"
+          },
+          {
+            "label": "Electronics",
+            "value": "electronics"
+          },
+          {
+            "label": "Clothing",
+            "value": "clothing"
+          },
+          {
+            "label": "Home & Garden",
+            "value": "home"
+          },
+          {
+            "label": "Sports",
+            "value": "sports"
+          }
+        ]
+      }
     },
     "select-status": {
       "type": "Field",
-      "label": "Status",
-      "children": ["status-select"]
+      "props": {
+        "label": "Status"
+      },
+      "children": [
+        "status-select"
+      ]
     },
     "status-select": {
       "type": "Select",
-      "options": [
-        { "label": "All Statuses", "value": "all" },
-        { "label": "In Stock", "value": "in-stock" },
-        { "label": "Low Stock", "value": "low-stock" },
-        { "label": "Out of Stock", "value": "out-of-stock" }
-      ]
+      "props": {
+        "options": [
+          {
+            "label": "All Statuses",
+            "value": "all"
+          },
+          {
+            "label": "In Stock",
+            "value": "in-stock"
+          },
+          {
+            "label": "Low Stock",
+            "value": "low-stock"
+          },
+          {
+            "label": "Out of Stock",
+            "value": "out-of-stock"
+          }
+        ]
+      }
     },
     "select-sort": {
       "type": "Field",
-      "label": "Sort By",
-      "children": ["sort-select"]
+      "props": {
+        "label": "Sort By"
+      },
+      "children": [
+        "sort-select"
+      ]
     },
     "sort-select": {
       "type": "Select",
-      "options": [
-        { "label": "Newest First", "value": "newest" },
-        { "label": "Price: Low to High", "value": "price-asc" },
-        { "label": "Price: High to Low", "value": "price-desc" },
-        { "label": "Best Selling", "value": "popular" }
-      ]
+      "props": {
+        "options": [
+          {
+            "label": "Newest First",
+            "value": "newest"
+          },
+          {
+            "label": "Price: Low to High",
+            "value": "price-asc"
+          },
+          {
+            "label": "Price: High to Low",
+            "value": "price-desc"
+          },
+          {
+            "label": "Best Selling",
+            "value": "popular"
+          }
+        ]
+      }
     },
     "btn-apply": {
       "type": "Button",
-      "label": "Apply",
-      "variant": "default",
-      "icon": "filter"
+      "props": {
+        "label": "Apply",
+        "variant": "default",
+        "icon": "filter"
+      }
     },
     "btn-reset": {
       "type": "Button",
-      "label": "Reset",
-      "variant": "ghost"
+      "props": {
+        "label": "Reset",
+        "variant": "ghost"
+      }
     }
   }
 }

@@ -3,157 +3,288 @@
   "elements": {
     "footer-columns": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "container": "wide",
-      "children": ["top-divider", "columns-grid", "bottom-divider", "bottom-row"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "container": "wide"
+      },
+      "children": [
+        "top-divider",
+        "columns-grid",
+        "bottom-divider",
+        "bottom-row"
+      ]
     },
     "top-divider": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "columns-grid": {
       "type": "Grid",
-      "columns": 4,
-      "gap": 5,
-      "children": ["col-product", "col-company", "col-resources", "col-legal"]
+      "props": {
+        "columns": 4,
+        "gap": 5
+      },
+      "children": [
+        "col-product",
+        "col-company",
+        "col-resources",
+        "col-legal"
+      ]
     },
     "col-product": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["product-heading", "product-nav"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "product-heading",
+        "product-nav"
+      ]
     },
     "product-heading": {
       "type": "Text",
-      "tag": "p",
-      "content": "Product",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Product",
+        "weight": "semibold"
+      }
     },
     "product-nav": {
       "type": "NavMenu",
-      "direction": "vertical",
-      "items": [
-        { "label": "Features", "href": "/features" },
-        { "label": "Pricing", "href": "/pricing" },
-        { "label": "Integrations", "href": "/integrations" },
-        { "label": "Changelog", "href": "/changelog" },
-        { "label": "Roadmap", "href": "/roadmap" }
-      ]
+      "props": {
+        "direction": "vertical",
+        "items": [
+          {
+            "label": "Features",
+            "href": "/features"
+          },
+          {
+            "label": "Pricing",
+            "href": "/pricing"
+          },
+          {
+            "label": "Integrations",
+            "href": "/integrations"
+          },
+          {
+            "label": "Changelog",
+            "href": "/changelog"
+          },
+          {
+            "label": "Roadmap",
+            "href": "/roadmap"
+          }
+        ]
+      }
     },
     "col-company": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["company-heading", "company-nav"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "company-heading",
+        "company-nav"
+      ]
     },
     "company-heading": {
       "type": "Text",
-      "tag": "p",
-      "content": "Company",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Company",
+        "weight": "semibold"
+      }
     },
     "company-nav": {
       "type": "NavMenu",
-      "direction": "vertical",
-      "items": [
-        { "label": "About", "href": "/about" },
-        { "label": "Blog", "href": "/blog" },
-        { "label": "Careers", "href": "/careers" },
-        { "label": "Press", "href": "/press" },
-        { "label": "Contact", "href": "/contact" }
-      ]
+      "props": {
+        "direction": "vertical",
+        "items": [
+          {
+            "label": "About",
+            "href": "/about"
+          },
+          {
+            "label": "Blog",
+            "href": "/blog"
+          },
+          {
+            "label": "Careers",
+            "href": "/careers"
+          },
+          {
+            "label": "Press",
+            "href": "/press"
+          },
+          {
+            "label": "Contact",
+            "href": "/contact"
+          }
+        ]
+      }
     },
     "col-resources": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["resources-heading", "resources-nav"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "resources-heading",
+        "resources-nav"
+      ]
     },
     "resources-heading": {
       "type": "Text",
-      "tag": "p",
-      "content": "Resources",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Resources",
+        "weight": "semibold"
+      }
     },
     "resources-nav": {
       "type": "NavMenu",
-      "direction": "vertical",
-      "items": [
-        { "label": "Documentation", "href": "/docs" },
-        { "label": "API Reference", "href": "/api" },
-        { "label": "Guides", "href": "/guides" },
-        { "label": "Community", "href": "/community" },
-        { "label": "Status", "href": "/status" }
-      ]
+      "props": {
+        "direction": "vertical",
+        "items": [
+          {
+            "label": "Documentation",
+            "href": "/docs"
+          },
+          {
+            "label": "API Reference",
+            "href": "/api"
+          },
+          {
+            "label": "Guides",
+            "href": "/guides"
+          },
+          {
+            "label": "Community",
+            "href": "/community"
+          },
+          {
+            "label": "Status",
+            "href": "/status"
+          }
+        ]
+      }
     },
     "col-legal": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["legal-heading", "legal-nav"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "legal-heading",
+        "legal-nav"
+      ]
     },
     "legal-heading": {
       "type": "Text",
-      "tag": "p",
-      "content": "Legal",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Legal",
+        "weight": "semibold"
+      }
     },
     "legal-nav": {
       "type": "NavMenu",
-      "direction": "vertical",
-      "items": [
-        { "label": "Privacy Policy", "href": "/privacy" },
-        { "label": "Terms of Service", "href": "/terms" },
-        { "label": "Cookie Policy", "href": "/cookies" },
-        { "label": "GDPR", "href": "/gdpr" }
-      ]
+      "props": {
+        "direction": "vertical",
+        "items": [
+          {
+            "label": "Privacy Policy",
+            "href": "/privacy"
+          },
+          {
+            "label": "Terms of Service",
+            "href": "/terms"
+          },
+          {
+            "label": "Cookie Policy",
+            "href": "/cookies"
+          },
+          {
+            "label": "GDPR",
+            "href": "/gdpr"
+          }
+        ]
+      }
     },
     "bottom-divider": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "bottom-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "center",
-      "justify": "between",
-      "children": ["copyright", "social-group"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "copyright",
+        "social-group"
+      ]
     },
     "copyright": {
       "type": "Text",
-      "tag": "p",
-      "content": "2026 Acme Studio, Inc. All rights reserved.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "2026 Acme Studio, Inc. All rights reserved.",
+        "variant": "muted"
+      }
     },
     "social-group": {
       "type": "ButtonGroup",
-      "children": ["social-x", "social-github", "social-linkedin", "social-youtube"]
+      "children": [
+        "social-x",
+        "social-github",
+        "social-linkedin",
+        "social-youtube"
+      ]
     },
     "social-x": {
       "type": "Button",
-      "icon": "twitter",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "icon": "twitter",
+        "variant": "ghost",
+        "size": "sm"
+      }
     },
     "social-github": {
       "type": "Button",
-      "icon": "github",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "icon": "github",
+        "variant": "ghost",
+        "size": "sm"
+      }
     },
     "social-linkedin": {
       "type": "Button",
-      "icon": "linkedin",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "icon": "linkedin",
+        "variant": "ghost",
+        "size": "sm"
+      }
     },
     "social-youtube": {
       "type": "Button",
-      "icon": "youtube",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "icon": "youtube",
+        "variant": "ghost",
+        "size": "sm"
+      }
     }
   }
 }

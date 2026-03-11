@@ -3,186 +3,283 @@
   "elements": {
     "upload-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["upload-heading", "drop-zone", "file-list", "upload-actions"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "upload-heading",
+        "drop-zone",
+        "file-list",
+        "upload-actions"
+      ]
     },
     "upload-heading": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Upload Files",
-      "weight": "semibold"
+      "props": {
+        "tag": "h3",
+        "content": "Upload Files",
+        "weight": "semibold"
+      }
     },
     "drop-zone": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["drop-zone-content"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "drop-zone-content"
+      ]
     },
     "drop-zone-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["drop-icon-text", "drop-hint", "btn-browse"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "drop-icon-text",
+        "drop-hint",
+        "btn-browse"
+      ]
     },
     "drop-icon-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "Drag and drop files here, or click to browse",
-      "weight": "medium",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Drag and drop files here, or click to browse",
+        "weight": "medium",
+        "align": "center"
+      }
     },
     "drop-hint": {
       "type": "Text",
-      "tag": "p",
-      "content": "Supports PNG, JPG, PDF, and SVG up to 10 MB each",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Supports PNG, JPG, PDF, and SVG up to 10 MB each",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "btn-browse": {
       "type": "Button",
-      "label": "Browse Files",
-      "variant": "outline",
-      "icon": "upload"
+      "props": {
+        "label": "Browse Files",
+        "variant": "outline",
+        "icon": "upload"
+      }
     },
     "file-list": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["file-item-1", "file-item-2", "file-item-3"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "file-item-1",
+        "file-item-2",
+        "file-item-3"
+      ]
     },
     "file-item-1": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "justify": "space-between",
-      "children": ["file-1-info", "file-1-progress", "file-1-actions"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center",
+        "justify": "space-between"
+      },
+      "children": [
+        "file-1-info",
+        "file-1-progress",
+        "file-1-actions"
+      ]
     },
     "file-1-info": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["file-1-name", "file-1-size"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "file-1-name",
+        "file-1-size"
+      ]
     },
     "file-1-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "brand-guidelines-v2.pdf",
-      "weight": "medium"
+      "props": {
+        "tag": "span",
+        "content": "brand-guidelines-v2.pdf",
+        "weight": "medium"
+      }
     },
     "file-1-size": {
       "type": "Badge",
-      "text": "2.4 MB",
-      "variant": "secondary"
+      "props": {
+        "text": "2.4 MB",
+        "variant": "secondary"
+      }
     },
     "file-1-progress": {
       "type": "Progress",
-      "value": 100,
-      "max": 100
+      "props": {
+        "value": 100,
+        "max": 100
+      }
     },
     "file-1-actions": {
       "type": "Button",
-      "label": "Remove",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "x"
+      "props": {
+        "label": "Remove",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "x"
+      }
     },
     "file-item-2": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "justify": "space-between",
-      "children": ["file-2-info", "file-2-progress", "file-2-actions"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center",
+        "justify": "space-between"
+      },
+      "children": [
+        "file-2-info",
+        "file-2-progress",
+        "file-2-actions"
+      ]
     },
     "file-2-info": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["file-2-name", "file-2-size"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "file-2-name",
+        "file-2-size"
+      ]
     },
     "file-2-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "homepage-mockup.png",
-      "weight": "medium"
+      "props": {
+        "tag": "span",
+        "content": "homepage-mockup.png",
+        "weight": "medium"
+      }
     },
     "file-2-size": {
       "type": "Badge",
-      "text": "1.8 MB",
-      "variant": "secondary"
+      "props": {
+        "text": "1.8 MB",
+        "variant": "secondary"
+      }
     },
     "file-2-progress": {
       "type": "Progress",
-      "value": 67,
-      "max": 100,
-      "label": "67%"
+      "props": {
+        "value": 67,
+        "max": 100,
+        "label": "67%"
+      }
     },
     "file-2-actions": {
       "type": "Button",
-      "label": "Cancel",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "x"
+      "props": {
+        "label": "Cancel",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "x"
+      }
     },
     "file-item-3": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "justify": "space-between",
-      "children": ["file-3-info", "file-3-progress", "file-3-actions"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center",
+        "justify": "space-between"
+      },
+      "children": [
+        "file-3-info",
+        "file-3-progress",
+        "file-3-actions"
+      ]
     },
     "file-3-info": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["file-3-name", "file-3-size"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "file-3-name",
+        "file-3-size"
+      ]
     },
     "file-3-name": {
       "type": "Text",
-      "tag": "span",
-      "content": "logo-dark.svg",
-      "weight": "medium"
+      "props": {
+        "tag": "span",
+        "content": "logo-dark.svg",
+        "weight": "medium"
+      }
     },
     "file-3-size": {
       "type": "Badge",
-      "text": "24 KB",
-      "variant": "secondary"
+      "props": {
+        "text": "24 KB",
+        "variant": "secondary"
+      }
     },
     "file-3-progress": {
       "type": "Progress",
-      "value": 100,
-      "max": 100
+      "props": {
+        "value": 100,
+        "max": 100
+      }
     },
     "file-3-actions": {
       "type": "Button",
-      "label": "Remove",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "x"
+      "props": {
+        "label": "Remove",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "x"
+      }
     },
     "upload-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "justify": "flex-end",
-      "children": ["btn-clear-all", "btn-upload-all"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "justify": "flex-end"
+      },
+      "children": [
+        "btn-clear-all",
+        "btn-upload-all"
+      ]
     },
     "btn-clear-all": {
       "type": "Button",
-      "label": "Clear All",
-      "variant": "outline"
+      "props": {
+        "label": "Clear All",
+        "variant": "outline"
+      }
     },
     "btn-upload-all": {
       "type": "Button",
-      "label": "Upload All",
-      "variant": "default",
-      "icon": "upload-cloud"
+      "props": {
+        "label": "Upload All",
+        "variant": "default",
+        "icon": "upload-cloud"
+      }
     }
   }
 }

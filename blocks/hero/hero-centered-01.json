@@ -3,88 +3,131 @@
   "elements": {
     "hero-centered": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "align": "center",
-      "container": "narrow",
-      "children": ["hero-badge", "hero-heading", "hero-subheading", "hero-buttons", "hero-social-proof"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "hero-badge",
+        "hero-heading",
+        "hero-subheading",
+        "hero-buttons",
+        "hero-social-proof"
+      ]
     },
     "hero-badge": {
       "type": "Badge",
-      "text": "Now in 40+ countries",
-      "variant": "info"
+      "props": {
+        "text": "Now in 40+ countries",
+        "variant": "info"
+      }
     },
     "hero-heading": {
       "type": "Text",
-      "tag": "h1",
-      "content": "Accept payments globally without the complexity",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h1",
+        "content": "Accept payments globally without the complexity",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "hero-subheading": {
       "type": "Text",
-      "tag": "p",
-      "content": "Unified payment infrastructure for ambitious businesses. One integration, 135 currencies, every major payment method. Start processing in minutes, scale to millions.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Unified payment infrastructure for ambitious businesses. One integration, 135 currencies, every major payment method. Start processing in minutes, scale to millions.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "hero-buttons": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "justify": "center",
-      "children": ["hero-cta-primary", "hero-cta-secondary"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "hero-cta-primary",
+        "hero-cta-secondary"
+      ]
     },
     "hero-cta-primary": {
       "type": "Button",
-      "label": "Start Integration",
-      "variant": "primary",
-      "size": "lg"
+      "props": {
+        "label": "Start Integration",
+        "variant": "primary",
+        "size": "lg"
+      }
     },
     "hero-cta-secondary": {
       "type": "Button",
-      "label": "Talk to Sales",
-      "variant": "outline",
-      "size": "lg"
+      "props": {
+        "label": "Talk to Sales",
+        "variant": "outline",
+        "size": "lg"
+      }
     },
     "hero-social-proof": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "justify": "center",
-      "children": ["hero-avatars", "hero-proof-text"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "hero-avatars",
+        "hero-proof-text"
+      ]
     },
     "hero-avatars": {
       "type": "AvatarGroup",
-      "children": ["hero-av-1", "hero-av-2", "hero-av-3", "hero-av-4"]
+      "children": [
+        "hero-av-1",
+        "hero-av-2",
+        "hero-av-3",
+        "hero-av-4"
+      ]
     },
     "hero-av-1": {
       "type": "Avatar",
-      "initials": "SK",
-      "size": "sm"
+      "props": {
+        "initials": "SK",
+        "size": "sm"
+      }
     },
     "hero-av-2": {
       "type": "Avatar",
-      "initials": "MR",
-      "size": "sm"
+      "props": {
+        "initials": "MR",
+        "size": "sm"
+      }
     },
     "hero-av-3": {
       "type": "Avatar",
-      "initials": "JL",
-      "size": "sm"
+      "props": {
+        "initials": "JL",
+        "size": "sm"
+      }
     },
     "hero-av-4": {
       "type": "Avatar",
-      "initials": "TP",
-      "size": "sm"
+      "props": {
+        "initials": "TP",
+        "size": "sm"
+      }
     },
     "hero-proof-text": {
       "type": "Text",
-      "tag": "span",
-      "content": "Trusted by 14,000+ businesses worldwide",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Trusted by 14,000+ businesses worldwide",
+        "variant": "muted"
+      }
     }
   }
 }

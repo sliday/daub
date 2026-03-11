@@ -3,57 +3,85 @@
   "elements": {
     "banner-bottom-sticky": {
       "type": "Surface",
-      "variant": "raised",
-      "children": ["banner-bottom-inner"]
+      "props": {
+        "variant": "raised"
+      },
+      "children": [
+        "banner-bottom-inner"
+      ]
     },
     "banner-bottom-inner": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "justify": "space-between",
-      "container": true,
-      "children": ["banner-bottom-text-block", "banner-bottom-actions"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center",
+        "justify": "space-between",
+        "container": true
+      },
+      "children": [
+        "banner-bottom-text-block",
+        "banner-bottom-actions"
+      ]
     },
     "banner-bottom-text-block": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "children": ["banner-bottom-title", "banner-bottom-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "banner-bottom-title",
+        "banner-bottom-desc"
+      ]
     },
     "banner-bottom-title": {
       "type": "Text",
-      "tag": "span",
-      "content": "We value your privacy",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "We value your privacy",
+        "weight": "bold"
+      }
     },
     "banner-bottom-desc": {
       "type": "Text",
-      "tag": "span",
-      "content": "We use cookies to improve your experience, analyze traffic, and personalize content. You can manage your preferences at any time.",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "We use cookies to improve your experience, analyze traffic, and personalize content. You can manage your preferences at any time.",
+        "variant": "muted"
+      }
     },
     "banner-bottom-actions": {
       "type": "ButtonGroup",
-      "children": ["banner-bottom-accept", "banner-bottom-settings", "banner-bottom-reject"]
+      "children": [
+        "banner-bottom-accept",
+        "banner-bottom-settings",
+        "banner-bottom-reject"
+      ]
     },
     "banner-bottom-accept": {
       "type": "Button",
-      "label": "Accept All",
-      "variant": "default",
-      "size": "sm"
+      "props": {
+        "label": "Accept All",
+        "variant": "default",
+        "size": "sm"
+      }
     },
     "banner-bottom-settings": {
       "type": "Button",
-      "label": "Manage Preferences",
-      "variant": "outline",
-      "size": "sm"
+      "props": {
+        "label": "Manage Preferences",
+        "variant": "outline",
+        "size": "sm"
+      }
     },
     "banner-bottom-reject": {
       "type": "Button",
-      "label": "Reject Non-Essential",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "label": "Reject Non-Essential",
+        "variant": "ghost",
+        "size": "sm"
+      }
     }
   }
 }

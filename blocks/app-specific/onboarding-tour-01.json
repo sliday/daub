@@ -3,66 +3,123 @@
   "elements": {
     "onboarding-tour-root": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["onboarding-header", "onboarding-progress", "onboarding-progress-label", "onboarding-checklist", "onboarding-actions"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "onboarding-header",
+        "onboarding-progress",
+        "onboarding-progress-label",
+        "onboarding-checklist",
+        "onboarding-actions"
+      ]
     },
     "onboarding-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["onboarding-greeting", "onboarding-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "onboarding-greeting",
+        "onboarding-subtitle"
+      ]
     },
     "onboarding-greeting": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Welcome to Acme, Sarah!",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Welcome to Acme, Sarah!",
+        "weight": "bold"
+      }
     },
     "onboarding-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Complete these steps to get the most out of your workspace",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Complete these steps to get the most out of your workspace",
+        "variant": "muted"
+      }
     },
     "onboarding-progress": {
       "type": "Progress",
-      "value": 2,
-      "max": 5,
-      "label": "Setup progress"
+      "props": {
+        "value": 2,
+        "max": 5,
+        "label": "Setup progress"
+      }
     },
     "onboarding-progress-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "2 of 5 complete",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "2 of 5 complete",
+        "variant": "muted"
+      }
     },
     "onboarding-checklist": {
       "type": "List",
-      "items": [
-        { "primary": "Create your account", "secondary": "Sign up and verify your email address", "icon": "check-circle", "meta": "Done" },
-        { "primary": "Set up your profile", "secondary": "Add your name, avatar, and job title", "icon": "check-circle", "meta": "Done" },
-        { "primary": "Connect your tools", "secondary": "Integrate Slack, GitHub, or Jira for seamless workflows", "icon": "circle", "meta": "5 min" },
-        { "primary": "Invite your team", "secondary": "Add at least one teammate to start collaborating", "icon": "circle", "meta": "2 min" },
-        { "primary": "Create your first project", "secondary": "Set up a project board and add your first tasks", "icon": "circle", "meta": "3 min" }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "Create your account",
+            "secondary": "Sign up and verify your email address",
+            "icon": "check-circle",
+            "meta": "Done"
+          },
+          {
+            "primary": "Set up your profile",
+            "secondary": "Add your name, avatar, and job title",
+            "icon": "check-circle",
+            "meta": "Done"
+          },
+          {
+            "primary": "Connect your tools",
+            "secondary": "Integrate Slack, GitHub, or Jira for seamless workflows",
+            "icon": "circle",
+            "meta": "5 min"
+          },
+          {
+            "primary": "Invite your team",
+            "secondary": "Add at least one teammate to start collaborating",
+            "icon": "circle",
+            "meta": "2 min"
+          },
+          {
+            "primary": "Create your first project",
+            "secondary": "Set up a project board and add your first tasks",
+            "icon": "circle",
+            "meta": "3 min"
+          }
+        ]
+      }
     },
     "onboarding-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "children": ["onboarding-continue-btn", "onboarding-skip-btn"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2
+      },
+      "children": [
+        "onboarding-continue-btn",
+        "onboarding-skip-btn"
+      ]
     },
     "onboarding-continue-btn": {
       "type": "Button",
-      "label": "Connect your tools",
-      "variant": "default",
-      "icon": "arrow-right"
+      "props": {
+        "label": "Connect your tools",
+        "variant": "default",
+        "icon": "arrow-right"
+      }
     },
     "onboarding-skip-btn": {
       "type": "Button",
-      "label": "Skip for now",
-      "variant": "ghost"
+      "props": {
+        "label": "Skip for now",
+        "variant": "ghost"
+      }
     }
   }
 }

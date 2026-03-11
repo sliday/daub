@@ -3,33 +3,58 @@
   "elements": {
     "navbar-auth": {
       "type": "Navbar",
-      "brand": "Vaultwise",
-      "items": [
-        { "label": "Features", "href": "/features" },
-        { "label": "Security", "href": "/security" },
-        { "label": "Docs", "href": "/docs" },
-        { "label": "Blog", "href": "/blog" }
-      ],
-      "actions": ["auth-actions"]
+      "props": {
+        "brand": "Vaultwise",
+        "items": [
+          {
+            "label": "Features",
+            "href": "/features"
+          },
+          {
+            "label": "Security",
+            "href": "/security"
+          },
+          {
+            "label": "Docs",
+            "href": "/docs"
+          },
+          {
+            "label": "Blog",
+            "href": "/blog"
+          }
+        ],
+        "actions": [
+          "auth-actions"
+        ]
+      }
     },
     "auth-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["auth-login-btn", "auth-signup-btn"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "auth-login-btn",
+        "auth-signup-btn"
+      ]
     },
     "auth-login-btn": {
       "type": "Button",
-      "label": "Log In",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "label": "Log In",
+        "variant": "ghost",
+        "size": "sm"
+      }
     },
     "auth-signup-btn": {
       "type": "Button",
-      "label": "Create Account",
-      "variant": "primary",
-      "size": "sm"
+      "props": {
+        "label": "Create Account",
+        "variant": "primary",
+        "size": "sm"
+      }
     }
   }
 }

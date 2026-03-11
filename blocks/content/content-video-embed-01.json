@@ -3,130 +3,223 @@
   "elements": {
     "video-embed-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "align": "center",
-      "container": "wide",
-      "children": ["video-header", "video-columns"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "container": "wide"
+      },
+      "children": [
+        "video-header",
+        "video-columns"
+      ]
     },
     "video-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["video-badge", "video-title", "video-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "video-badge",
+        "video-title",
+        "video-subtitle"
+      ]
     },
     "video-badge": {
       "type": "Badge",
-      "text": "Product Demo",
-      "variant": "new"
+      "props": {
+        "text": "Product Demo",
+        "variant": "new"
+      }
     },
     "video-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "See Overture in action",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "See Overture in action",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "video-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Watch how Overture helps ops teams automate invoice processing, approval workflows, and vendor payments in a 3-minute walkthrough.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Watch how Overture helps ops teams automate invoice processing, approval workflows, and vendor payments in a 3-minute walkthrough.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "video-columns": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 5,
-      "align": "start",
-      "children": ["video-player", "video-details"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 5,
+        "align": "start"
+      },
+      "children": [
+        "video-player",
+        "video-details"
+      ]
     },
     "video-player": {
       "type": "AspectRatio",
-      "children": ["video-placeholder"]
+      "children": [
+        "video-placeholder"
+      ]
     },
     "video-placeholder": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["video-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "video-inner"
+      ]
     },
     "video-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "justify": "center",
-      "children": ["play-icon", "play-label", "video-thumbnail"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "play-icon",
+        "play-label",
+        "video-thumbnail"
+      ]
     },
     "video-thumbnail": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/overture-demo/640/360",
-      "alt": "Overture dashboard showing invoice processing workflow"
+      "props": {
+        "src": "https://picsum.photos/seed/overture-demo/640/360",
+        "alt": "Overture dashboard showing invoice processing workflow"
+      }
     },
     "play-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "play-circle"
+      "props": {
+        "tag": "span",
+        "content": "play-circle"
+      }
     },
     "play-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "3:12",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "3:12",
+        "variant": "muted"
+      }
     },
     "video-details": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["detail-highlights", "detail-sep", "detail-chapters"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "detail-highlights",
+        "detail-sep",
+        "detail-chapters"
+      ]
     },
     "detail-highlights": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["highlights-title", "highlights-list"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "highlights-title",
+        "highlights-list"
+      ]
     },
     "highlights-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "What you will see",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "What you will see",
+        "weight": "semibold"
+      }
     },
     "highlights-list": {
       "type": "List",
-      "items": [
-        { "primary": "AI-powered invoice data extraction with 99.2% accuracy", "icon": "check" },
-        { "primary": "Multi-level approval chains with Slack notifications", "icon": "check" },
-        { "primary": "One-click batch payments to 140+ countries", "icon": "check" },
-        { "primary": "Real-time spend dashboards by department and vendor", "icon": "check" }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "AI-powered invoice data extraction with 99.2% accuracy",
+            "icon": "check"
+          },
+          {
+            "primary": "Multi-level approval chains with Slack notifications",
+            "icon": "check"
+          },
+          {
+            "primary": "One-click batch payments to 140+ countries",
+            "icon": "check"
+          },
+          {
+            "primary": "Real-time spend dashboards by department and vendor",
+            "icon": "check"
+          }
+        ]
+      }
     },
     "detail-sep": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "detail-chapters": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["chapters-title", "chapters-list"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "chapters-title",
+        "chapters-list"
+      ]
     },
     "chapters-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Chapters",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Chapters",
+        "weight": "semibold"
+      }
     },
     "chapters-list": {
       "type": "List",
-      "items": [
-        { "primary": "Introduction & Dashboard Overview", "meta": "0:00" },
-        { "primary": "Invoice Capture & OCR", "meta": "0:38" },
-        { "primary": "Approval Workflows", "meta": "1:24" },
-        { "primary": "Payment Execution", "meta": "2:15" },
-        { "primary": "Reporting & Analytics", "meta": "2:48" }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "Introduction & Dashboard Overview",
+            "meta": "0:00"
+          },
+          {
+            "primary": "Invoice Capture & OCR",
+            "meta": "0:38"
+          },
+          {
+            "primary": "Approval Workflows",
+            "meta": "1:24"
+          },
+          {
+            "primary": "Payment Execution",
+            "meta": "2:15"
+          },
+          {
+            "primary": "Reporting & Analytics",
+            "meta": "2:48"
+          }
+        ]
+      }
     }
   }
 }

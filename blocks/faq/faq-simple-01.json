@@ -3,129 +3,201 @@
   "elements": {
     "faq-simple": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["faq-s-header", "faq-s-list"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "faq-s-header",
+        "faq-s-list"
+      ]
     },
     "faq-s-header": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Questions & Answers",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Questions & Answers",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "faq-s-list": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["faq-s-item-1", "faq-s-sep-1", "faq-s-item-2", "faq-s-sep-2", "faq-s-item-3", "faq-s-sep-3", "faq-s-item-4", "faq-s-sep-4", "faq-s-item-5"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "faq-s-item-1",
+        "faq-s-sep-1",
+        "faq-s-item-2",
+        "faq-s-sep-2",
+        "faq-s-item-3",
+        "faq-s-sep-3",
+        "faq-s-item-4",
+        "faq-s-sep-4",
+        "faq-s-item-5"
+      ]
     },
     "faq-s-item-1": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["faq-s-q1", "faq-s-a1"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "faq-s-q1",
+        "faq-s-a1"
+      ]
     },
     "faq-s-q1": {
       "type": "Text",
-      "tag": "h4",
-      "content": "What makes your platform different?",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "What makes your platform different?",
+        "weight": "bold"
+      }
     },
     "faq-s-a1": {
       "type": "Text",
-      "tag": "p",
-      "content": "We combine real-time collaboration with AI-powered suggestions, so your team ships faster without sacrificing quality. Unlike other tools, everything runs in the browser with zero setup.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "We combine real-time collaboration with AI-powered suggestions, so your team ships faster without sacrificing quality. Unlike other tools, everything runs in the browser with zero setup.",
+        "variant": "muted"
+      }
     },
     "faq-s-sep-1": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "faq-s-item-2": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["faq-s-q2", "faq-s-a2"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "faq-s-q2",
+        "faq-s-a2"
+      ]
     },
     "faq-s-q2": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Do I need technical experience to use it?",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Do I need technical experience to use it?",
+        "weight": "bold"
+      }
     },
     "faq-s-a2": {
       "type": "Text",
-      "tag": "p",
-      "content": "Not at all. Our drag-and-drop interface is designed for non-technical users. Developers can access the API and CLI for advanced workflows when needed.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Not at all. Our drag-and-drop interface is designed for non-technical users. Developers can access the API and CLI for advanced workflows when needed.",
+        "variant": "muted"
+      }
     },
     "faq-s-sep-2": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "faq-s-item-3": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["faq-s-q3", "faq-s-a3"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "faq-s-q3",
+        "faq-s-a3"
+      ]
     },
     "faq-s-q3": {
       "type": "Text",
-      "tag": "h4",
-      "content": "How long does onboarding take?",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "How long does onboarding take?",
+        "weight": "bold"
+      }
     },
     "faq-s-a3": {
       "type": "Text",
-      "tag": "p",
-      "content": "Most teams are fully onboarded within 48 hours. We provide a dedicated onboarding specialist for Pro and Enterprise plans, along with video tutorials and documentation.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Most teams are fully onboarded within 48 hours. We provide a dedicated onboarding specialist for Pro and Enterprise plans, along with video tutorials and documentation.",
+        "variant": "muted"
+      }
     },
     "faq-s-sep-3": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "faq-s-item-4": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["faq-s-q4", "faq-s-a4"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "faq-s-q4",
+        "faq-s-a4"
+      ]
     },
     "faq-s-q4": {
       "type": "Text",
-      "tag": "h4",
-      "content": "What kind of support do you offer?",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "What kind of support do you offer?",
+        "weight": "bold"
+      }
     },
     "faq-s-a4": {
       "type": "Text",
-      "tag": "p",
-      "content": "Free plans include community support and knowledge base access. Pro plans add live chat with under 30-minute response times. Enterprise gets 24/7 phone support and a dedicated account manager.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Free plans include community support and knowledge base access. Pro plans add live chat with under 30-minute response times. Enterprise gets 24/7 phone support and a dedicated account manager.",
+        "variant": "muted"
+      }
     },
     "faq-s-sep-4": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "faq-s-item-5": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["faq-s-q5", "faq-s-a5"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "faq-s-q5",
+        "faq-s-a5"
+      ]
     },
     "faq-s-q5": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Can I migrate from another tool?",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Can I migrate from another tool?",
+        "weight": "bold"
+      }
     },
     "faq-s-a5": {
       "type": "Text",
-      "tag": "p",
-      "content": "Yes. We offer one-click imports from Notion, Confluence, Google Docs, and Markdown files. Our migration assistant maps your existing structure automatically.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Yes. We offer one-click imports from Notion, Confluence, Google Docs, and Markdown files. Our migration assistant maps your existing structure automatically.",
+        "variant": "muted"
+      }
     }
   }
 }

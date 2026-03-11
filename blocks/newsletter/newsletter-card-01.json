@@ -3,68 +3,108 @@
   "elements": {
     "newsletter-card": {
       "type": "Card",
-      "title": "The Weekly Dispatch",
-      "description": "Join 14,000+ subscribers who get our curated roundup of design trends, engineering deep-dives, and startup lessons every Thursday morning.",
-      "children": ["nl-card-body"]
+      "props": {
+        "title": "The Weekly Dispatch",
+        "description": "Join 14,000+ subscribers who get our curated roundup of design trends, engineering deep-dives, and startup lessons every Thursday morning."
+      },
+      "children": [
+        "nl-card-body"
+      ]
     },
     "nl-card-body": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["nl-features", "nl-email-field", "nl-name-field", "nl-cta", "nl-privacy"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "nl-features",
+        "nl-email-field",
+        "nl-name-field",
+        "nl-cta",
+        "nl-privacy"
+      ]
     },
     "nl-features": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "children": ["nl-feat-1", "nl-feat-2", "nl-feat-3"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2
+      },
+      "children": [
+        "nl-feat-1",
+        "nl-feat-2",
+        "nl-feat-3"
+      ]
     },
     "nl-feat-1": {
       "type": "Badge",
-      "text": "Free forever",
-      "variant": "secondary"
+      "props": {
+        "text": "Free forever",
+        "variant": "secondary"
+      }
     },
     "nl-feat-2": {
       "type": "Badge",
-      "text": "No spam",
-      "variant": "secondary"
+      "props": {
+        "text": "No spam",
+        "variant": "secondary"
+      }
     },
     "nl-feat-3": {
       "type": "Badge",
-      "text": "Unsubscribe anytime",
-      "variant": "secondary"
+      "props": {
+        "text": "Unsubscribe anytime",
+        "variant": "secondary"
+      }
     },
     "nl-email-field": {
       "type": "Field",
-      "label": "Email address",
-      "children": ["nl-email-input"]
+      "props": {
+        "label": "Email address"
+      },
+      "children": [
+        "nl-email-input"
+      ]
     },
     "nl-email-input": {
       "type": "Input",
-      "placeholder": "you@example.com",
-      "type": "email"
+      "props": {
+        "placeholder": "you@example.com",
+        "type": "email"
+      }
     },
     "nl-name-field": {
       "type": "Field",
-      "label": "First name (optional)",
-      "children": ["nl-name-input"]
+      "props": {
+        "label": "First name (optional)"
+      },
+      "children": [
+        "nl-name-input"
+      ]
     },
     "nl-name-input": {
       "type": "Input",
-      "placeholder": "Jane"
+      "props": {
+        "placeholder": "Jane"
+      }
     },
     "nl-cta": {
       "type": "Button",
-      "label": "Subscribe Now",
-      "variant": "primary",
-      "size": "lg"
+      "props": {
+        "label": "Subscribe Now",
+        "variant": "primary",
+        "size": "lg"
+      }
     },
     "nl-privacy": {
       "type": "Text",
-      "tag": "p",
-      "content": "We respect your privacy. Read our privacy policy.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "We respect your privacy. Read our privacy policy.",
+        "variant": "muted",
+        "align": "center"
+      }
     }
   }
 }

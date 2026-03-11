@@ -3,153 +3,244 @@
   "elements": {
     "stats-with-description": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 5,
-      "container": true,
-      "align": "center",
-      "children": ["swd-text", "swd-metrics"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 5,
+        "container": true,
+        "align": "center"
+      },
+      "children": [
+        "swd-text",
+        "swd-metrics"
+      ]
     },
     "swd-text": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["swd-badge", "swd-heading", "swd-desc", "swd-cta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "swd-badge",
+        "swd-heading",
+        "swd-desc",
+        "swd-cta"
+      ]
     },
     "swd-badge": {
       "type": "Badge",
-      "text": "By the Numbers",
-      "variant": "secondary"
+      "props": {
+        "text": "By the Numbers",
+        "variant": "secondary"
+      }
     },
     "swd-heading": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Powering the Next Generation of SaaS",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Powering the Next Generation of SaaS",
+        "weight": "bold"
+      }
     },
     "swd-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Since launching in 2022, we've helped thousands of companies streamline their workflows, reduce operational costs, and ship products faster. Our platform processes millions of events daily with sub-second latency.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Since launching in 2022, we've helped thousands of companies streamline their workflows, reduce operational costs, and ship products faster. Our platform processes millions of events daily with sub-second latency.",
+        "variant": "muted"
+      }
     },
     "swd-cta": {
       "type": "Button",
-      "label": "Read Our Impact Report",
-      "variant": "outline"
+      "props": {
+        "label": "Read Our Impact Report",
+        "variant": "outline"
+      }
     },
     "swd-metrics": {
       "type": "Grid",
-      "columns": 2,
-      "gap": 3,
-      "children": ["swd-stat-1", "swd-stat-2", "swd-stat-3", "swd-stat-4"]
+      "props": {
+        "columns": 2,
+        "gap": 3
+      },
+      "children": [
+        "swd-stat-1",
+        "swd-stat-2",
+        "swd-stat-3",
+        "swd-stat-4"
+      ]
     },
     "swd-stat-1": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["swd-s1-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "swd-s1-inner"
+      ]
     },
     "swd-s1-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["swd-s1-val", "swd-s1-lbl", "swd-s1-trend"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "swd-s1-val",
+        "swd-s1-lbl",
+        "swd-s1-trend"
+      ]
     },
     "swd-s1-val": {
       "type": "Text",
-      "tag": "h2",
-      "content": "68%",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "68%",
+        "weight": "bold"
+      }
     },
     "swd-s1-lbl": {
       "type": "Text",
-      "tag": "p",
-      "content": "Reduction in deployment time"
+      "props": {
+        "tag": "p",
+        "content": "Reduction in deployment time"
+      }
     },
     "swd-s1-trend": {
       "type": "Chip",
-      "label": "vs. industry avg",
-      "variant": "success"
+      "props": {
+        "label": "vs. industry avg",
+        "variant": "success"
+      }
     },
     "swd-stat-2": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["swd-s2-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "swd-s2-inner"
+      ]
     },
     "swd-s2-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["swd-s2-val", "swd-s2-lbl", "swd-s2-trend"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "swd-s2-val",
+        "swd-s2-lbl",
+        "swd-s2-trend"
+      ]
     },
     "swd-s2-val": {
       "type": "Text",
-      "tag": "h2",
-      "content": "$4.7M",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "$4.7M",
+        "weight": "bold"
+      }
     },
     "swd-s2-lbl": {
       "type": "Text",
-      "tag": "p",
-      "content": "Avg. annual savings per customer"
+      "props": {
+        "tag": "p",
+        "content": "Avg. annual savings per customer"
+      }
     },
     "swd-s2-trend": {
       "type": "Chip",
-      "label": "verified by Deloitte",
-      "variant": "success"
+      "props": {
+        "label": "verified by Deloitte",
+        "variant": "success"
+      }
     },
     "swd-stat-3": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["swd-s3-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "swd-s3-inner"
+      ]
     },
     "swd-s3-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["swd-s3-val", "swd-s3-lbl", "swd-s3-trend"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "swd-s3-val",
+        "swd-s3-lbl",
+        "swd-s3-trend"
+      ]
     },
     "swd-s3-val": {
       "type": "Text",
-      "tag": "h2",
-      "content": "3.2x",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "3.2x",
+        "weight": "bold"
+      }
     },
     "swd-s3-lbl": {
       "type": "Text",
-      "tag": "p",
-      "content": "Faster time to market"
+      "props": {
+        "tag": "p",
+        "content": "Faster time to market"
+      }
     },
     "swd-s3-trend": {
       "type": "Chip",
-      "label": "median result",
-      "variant": "success"
+      "props": {
+        "label": "median result",
+        "variant": "success"
+      }
     },
     "swd-stat-4": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["swd-s4-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "swd-s4-inner"
+      ]
     },
     "swd-s4-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["swd-s4-val", "swd-s4-lbl", "swd-s4-trend"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "swd-s4-val",
+        "swd-s4-lbl",
+        "swd-s4-trend"
+      ]
     },
     "swd-s4-val": {
       "type": "Text",
-      "tag": "h2",
-      "content": "92",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "92",
+        "weight": "bold"
+      }
     },
     "swd-s4-lbl": {
       "type": "Text",
-      "tag": "p",
-      "content": "Net Promoter Score"
+      "props": {
+        "tag": "p",
+        "content": "Net Promoter Score"
+      }
     },
     "swd-s4-trend": {
       "type": "Chip",
-      "label": "top 1% in SaaS",
-      "variant": "success"
+      "props": {
+        "label": "top 1% in SaaS",
+        "variant": "success"
+      }
     }
   }
 }

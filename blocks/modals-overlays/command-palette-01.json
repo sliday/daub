@@ -3,21 +3,70 @@
   "elements": {
     "command-palette-section": {
       "type": "CommandPalette",
-      "placeholder": "Type a command or search...",
-      "items": [
-        { "label": "New Project", "icon": "plus", "shortcut": "Ctrl+N" },
-        { "label": "Open File", "icon": "file", "shortcut": "Ctrl+O" },
-        { "label": "Search Documentation", "icon": "search", "shortcut": "Ctrl+K" },
-        { "label": "Toggle Dark Mode", "icon": "moon", "shortcut": "Ctrl+Shift+D" },
-        { "label": "Invite Team Member", "icon": "user-plus", "shortcut": "Ctrl+I" },
-        { "label": "Go to Dashboard", "icon": "layout-dashboard", "shortcut": "G D" },
-        { "label": "Go to Settings", "icon": "settings", "shortcut": "G S" },
-        { "label": "Go to Projects", "icon": "folder", "shortcut": "G P" },
-        { "label": "Export Data", "icon": "download", "shortcut": "Ctrl+E" },
-        { "label": "View Notifications", "icon": "bell", "shortcut": "Ctrl+Shift+N" },
-        { "label": "Open Terminal", "icon": "terminal", "shortcut": "Ctrl+`" },
-        { "label": "Sign Out", "icon": "log-out" }
-      ]
+      "props": {
+        "placeholder": "Type a command or search...",
+        "items": [
+          {
+            "label": "New Project",
+            "icon": "plus",
+            "shortcut": "Ctrl+N"
+          },
+          {
+            "label": "Open File",
+            "icon": "file",
+            "shortcut": "Ctrl+O"
+          },
+          {
+            "label": "Search Documentation",
+            "icon": "search",
+            "shortcut": "Ctrl+K"
+          },
+          {
+            "label": "Toggle Dark Mode",
+            "icon": "moon",
+            "shortcut": "Ctrl+Shift+D"
+          },
+          {
+            "label": "Invite Team Member",
+            "icon": "user-plus",
+            "shortcut": "Ctrl+I"
+          },
+          {
+            "label": "Go to Dashboard",
+            "icon": "layout-dashboard",
+            "shortcut": "G D"
+          },
+          {
+            "label": "Go to Settings",
+            "icon": "settings",
+            "shortcut": "G S"
+          },
+          {
+            "label": "Go to Projects",
+            "icon": "folder",
+            "shortcut": "G P"
+          },
+          {
+            "label": "Export Data",
+            "icon": "download",
+            "shortcut": "Ctrl+E"
+          },
+          {
+            "label": "View Notifications",
+            "icon": "bell",
+            "shortcut": "Ctrl+Shift+N"
+          },
+          {
+            "label": "Open Terminal",
+            "icon": "terminal",
+            "shortcut": "Ctrl+`"
+          },
+          {
+            "label": "Sign Out",
+            "icon": "log-out"
+          }
+        ]
+      }
     }
   }
 }

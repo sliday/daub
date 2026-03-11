@@ -3,72 +3,170 @@
   "elements": {
     "pricing-comparison-table": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "container": "wide",
-      "children": ["comparison-header", "comparison-table", "comparison-cta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "container": "wide"
+      },
+      "children": [
+        "comparison-header",
+        "comparison-table",
+        "comparison-cta"
+      ]
     },
     "comparison-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["comparison-title", "comparison-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "comparison-title",
+        "comparison-subtitle"
+      ]
     },
     "comparison-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Compare plans",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Compare plans",
+        "align": "center"
+      }
     },
     "comparison-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Find the right plan for your team's needs.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Find the right plan for your team's needs.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "comparison-table": {
       "type": "DataTable",
-      "columns": [
-        { "key": "feature", "label": "Feature" },
-        { "key": "starter", "label": "Starter ($29/mo)" },
-        { "key": "pro", "label": "Pro ($79/mo)" },
-        { "key": "enterprise", "label": "Enterprise" }
-      ],
-      "rows": [
-        { "feature": "Team members", "starter": "5", "pro": "20", "enterprise": "Unlimited" },
-        { "feature": "Storage", "starter": "10 GB", "pro": "100 GB", "enterprise": "Unlimited" },
-        { "feature": "API requests/month", "starter": "100K", "pro": "2M", "enterprise": "Unlimited" },
-        { "feature": "Environments", "starter": "1", "pro": "5", "enterprise": "Unlimited" },
-        { "feature": "Custom domains", "starter": "\u2014", "pro": "\u2713", "enterprise": "\u2713" },
-        { "feature": "Analytics", "starter": "Basic", "pro": "Advanced", "enterprise": "Custom + BI" },
-        { "feature": "SSO / SAML", "starter": "\u2014", "pro": "\u2713", "enterprise": "\u2713" },
-        { "feature": "Audit logs", "starter": "\u2014", "pro": "30 days", "enterprise": "1 year" },
-        { "feature": "Support", "starter": "Community", "pro": "Priority email", "enterprise": "Dedicated CSM" },
-        { "feature": "SLA", "starter": "99.9%", "pro": "99.95%", "enterprise": "99.99%" },
-        { "feature": "SOC 2 compliance", "starter": "\u2014", "pro": "\u2014", "enterprise": "\u2713" },
-        { "feature": "HIPAA BAA", "starter": "\u2014", "pro": "\u2014", "enterprise": "\u2713" }
-      ],
-      "striped": true,
-      "hoverable": true
+      "props": {
+        "columns": [
+          {
+            "key": "feature",
+            "label": "Feature"
+          },
+          {
+            "key": "starter",
+            "label": "Starter ($29/mo)"
+          },
+          {
+            "key": "pro",
+            "label": "Pro ($79/mo)"
+          },
+          {
+            "key": "enterprise",
+            "label": "Enterprise"
+          }
+        ],
+        "rows": [
+          {
+            "feature": "Team members",
+            "starter": "5",
+            "pro": "20",
+            "enterprise": "Unlimited"
+          },
+          {
+            "feature": "Storage",
+            "starter": "10 GB",
+            "pro": "100 GB",
+            "enterprise": "Unlimited"
+          },
+          {
+            "feature": "API requests/month",
+            "starter": "100K",
+            "pro": "2M",
+            "enterprise": "Unlimited"
+          },
+          {
+            "feature": "Environments",
+            "starter": "1",
+            "pro": "5",
+            "enterprise": "Unlimited"
+          },
+          {
+            "feature": "Custom domains",
+            "starter": "—",
+            "pro": "✓",
+            "enterprise": "✓"
+          },
+          {
+            "feature": "Analytics",
+            "starter": "Basic",
+            "pro": "Advanced",
+            "enterprise": "Custom + BI"
+          },
+          {
+            "feature": "SSO / SAML",
+            "starter": "—",
+            "pro": "✓",
+            "enterprise": "✓"
+          },
+          {
+            "feature": "Audit logs",
+            "starter": "—",
+            "pro": "30 days",
+            "enterprise": "1 year"
+          },
+          {
+            "feature": "Support",
+            "starter": "Community",
+            "pro": "Priority email",
+            "enterprise": "Dedicated CSM"
+          },
+          {
+            "feature": "SLA",
+            "starter": "99.9%",
+            "pro": "99.95%",
+            "enterprise": "99.99%"
+          },
+          {
+            "feature": "SOC 2 compliance",
+            "starter": "—",
+            "pro": "—",
+            "enterprise": "✓"
+          },
+          {
+            "feature": "HIPAA BAA",
+            "starter": "—",
+            "pro": "—",
+            "enterprise": "✓"
+          }
+        ],
+        "striped": true,
+        "hoverable": true
+      }
     },
     "comparison-cta": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "justify": "center",
-      "children": ["cta-trial", "cta-sales"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "justify": "center"
+      },
+      "children": [
+        "cta-trial",
+        "cta-sales"
+      ]
     },
     "cta-trial": {
       "type": "Button",
-      "label": "Start free trial",
-      "variant": "primary"
+      "props": {
+        "label": "Start free trial",
+        "variant": "primary"
+      }
     },
     "cta-sales": {
       "type": "Button",
-      "label": "Talk to sales",
-      "variant": "outline"
+      "props": {
+        "label": "Talk to sales",
+        "variant": "outline"
+      }
     }
   }
 }

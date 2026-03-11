@@ -3,98 +3,149 @@
   "elements": {
     "image-lightbox": {
       "type": "Modal",
-      "title": "Product Screenshot",
-      "children": ["lightbox-content", "lightbox-footer"]
+      "props": {
+        "title": "Product Screenshot"
+      },
+      "children": [
+        "lightbox-content",
+        "lightbox-footer"
+      ]
     },
     "lightbox-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "align": "center",
-      "children": ["lightbox-image", "lightbox-nav"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "lightbox-image",
+        "lightbox-nav"
+      ]
     },
     "lightbox-image": {
       "type": "AspectRatio",
-      "ratio": "16/9",
-      "children": ["main-image"]
+      "props": {
+        "ratio": "16/9"
+      },
+      "children": [
+        "main-image"
+      ]
     },
     "main-image": {
       "type": "Image",
-      "src": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200",
-      "alt": "Dashboard analytics view showing revenue charts and user engagement metrics"
+      "props": {
+        "src": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200",
+        "alt": "Dashboard analytics view showing revenue charts and user engagement metrics"
+      }
     },
     "lightbox-nav": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["btn-prev", "image-counter", "btn-next"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "btn-prev",
+        "image-counter",
+        "btn-next"
+      ]
     },
     "btn-prev": {
       "type": "Button",
-      "label": "Previous",
-      "variant": "outline",
-      "size": "sm",
-      "icon": "chevron-left"
+      "props": {
+        "label": "Previous",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "chevron-left"
+      }
     },
     "image-counter": {
       "type": "Text",
-      "tag": "span",
-      "content": "3 of 12",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "3 of 12",
+        "variant": "muted"
+      }
     },
     "btn-next": {
       "type": "Button",
-      "label": "Next",
-      "variant": "outline",
-      "size": "sm",
-      "icon": "chevron-right"
+      "props": {
+        "label": "Next",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "chevron-right"
+      }
     },
     "lightbox-footer": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "justify": "space-between",
-      "align": "center",
-      "children": ["caption-info", "lightbox-actions"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "justify": "space-between",
+        "align": "center"
+      },
+      "children": [
+        "caption-info",
+        "lightbox-actions"
+      ]
     },
     "caption-info": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["caption-title", "caption-meta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "caption-title",
+        "caption-meta"
+      ]
     },
     "caption-title": {
       "type": "Text",
-      "tag": "p",
-      "content": "Analytics Dashboard - Revenue Overview",
-      "weight": "medium"
+      "props": {
+        "tag": "p",
+        "content": "Analytics Dashboard - Revenue Overview",
+        "weight": "medium"
+      }
     },
     "caption-meta": {
       "type": "Text",
-      "tag": "p",
-      "content": "Uploaded by Sarah Mitchell on Mar 8, 2026 - 1920 x 1080 - 342 KB",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Uploaded by Sarah Mitchell on Mar 8, 2026 - 1920 x 1080 - 342 KB",
+        "variant": "muted"
+      }
     },
     "lightbox-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "children": ["btn-download", "btn-share"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2
+      },
+      "children": [
+        "btn-download",
+        "btn-share"
+      ]
     },
     "btn-download": {
       "type": "Button",
-      "label": "Download",
-      "variant": "outline",
-      "size": "sm",
-      "icon": "download"
+      "props": {
+        "label": "Download",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "download"
+      }
     },
     "btn-share": {
       "type": "Button",
-      "label": "Share",
-      "variant": "outline",
-      "size": "sm",
-      "icon": "share-2"
+      "props": {
+        "label": "Share",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "share-2"
+      }
     }
   }
 }

@@ -3,125 +3,205 @@
   "elements": {
     "navbar-mega": {
       "type": "Navbar",
-      "brand": "Arcline",
-      "items": [
-        { "label": "Platform", "href": "/platform" },
-        { "label": "Developers", "href": "/developers" },
-        { "label": "Enterprise", "href": "/enterprise" },
-        { "label": "Pricing", "href": "/pricing" }
-      ],
-      "actions": ["mega-actions"]
+      "props": {
+        "brand": "Arcline",
+        "items": [
+          {
+            "label": "Platform",
+            "href": "/platform"
+          },
+          {
+            "label": "Developers",
+            "href": "/developers"
+          },
+          {
+            "label": "Enterprise",
+            "href": "/enterprise"
+          },
+          {
+            "label": "Pricing",
+            "href": "/pricing"
+          }
+        ],
+        "actions": [
+          "mega-actions"
+        ]
+      }
     },
     "mega-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["mega-login", "mega-cta"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "mega-login",
+        "mega-cta"
+      ]
     },
     "mega-login": {
       "type": "Button",
-      "label": "Sign In",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "label": "Sign In",
+        "variant": "ghost",
+        "size": "sm"
+      }
     },
     "mega-cta": {
       "type": "Button",
-      "label": "Start Free Trial",
-      "variant": "primary",
-      "size": "sm"
+      "props": {
+        "label": "Start Free Trial",
+        "variant": "primary",
+        "size": "sm"
+      }
     },
     "mega-platform-panel": {
       "type": "Surface",
-      "variant": "raised",
-      "children": ["mega-platform-grid"]
+      "props": {
+        "variant": "raised"
+      },
+      "children": [
+        "mega-platform-grid"
+      ]
     },
     "mega-platform-grid": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 4,
-      "children": ["mega-col-analytics", "mega-col-automation", "mega-col-integrations"]
+      "props": {
+        "columns": 3,
+        "gap": 4
+      },
+      "children": [
+        "mega-col-analytics",
+        "mega-col-automation",
+        "mega-col-integrations"
+      ]
     },
     "mega-col-analytics": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["mega-col-analytics-title", "mega-link-dashboards", "mega-link-reports", "mega-link-alerts"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "mega-col-analytics-title",
+        "mega-link-dashboards",
+        "mega-link-reports",
+        "mega-link-alerts"
+      ]
     },
     "mega-col-analytics-title": {
       "type": "Text",
-      "tag": "h6",
-      "content": "Analytics",
-      "weight": "semibold"
+      "props": {
+        "tag": "h6",
+        "content": "Analytics",
+        "weight": "semibold"
+      }
     },
     "mega-link-dashboards": {
       "type": "Text",
-      "tag": "p",
-      "content": "Dashboards"
+      "props": {
+        "tag": "p",
+        "content": "Dashboards"
+      }
     },
     "mega-link-reports": {
       "type": "Text",
-      "tag": "p",
-      "content": "Custom Reports"
+      "props": {
+        "tag": "p",
+        "content": "Custom Reports"
+      }
     },
     "mega-link-alerts": {
       "type": "Text",
-      "tag": "p",
-      "content": "Real-time Alerts"
+      "props": {
+        "tag": "p",
+        "content": "Real-time Alerts"
+      }
     },
     "mega-col-automation": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["mega-col-automation-title", "mega-link-workflows", "mega-link-triggers", "mega-link-templates"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "mega-col-automation-title",
+        "mega-link-workflows",
+        "mega-link-triggers",
+        "mega-link-templates"
+      ]
     },
     "mega-col-automation-title": {
       "type": "Text",
-      "tag": "h6",
-      "content": "Automation",
-      "weight": "semibold"
+      "props": {
+        "tag": "h6",
+        "content": "Automation",
+        "weight": "semibold"
+      }
     },
     "mega-link-workflows": {
       "type": "Text",
-      "tag": "p",
-      "content": "Workflow Builder"
+      "props": {
+        "tag": "p",
+        "content": "Workflow Builder"
+      }
     },
     "mega-link-triggers": {
       "type": "Text",
-      "tag": "p",
-      "content": "Event Triggers"
+      "props": {
+        "tag": "p",
+        "content": "Event Triggers"
+      }
     },
     "mega-link-templates": {
       "type": "Text",
-      "tag": "p",
-      "content": "Pre-built Templates"
+      "props": {
+        "tag": "p",
+        "content": "Pre-built Templates"
+      }
     },
     "mega-col-integrations": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["mega-col-integrations-title", "mega-link-api", "mega-link-webhooks", "mega-link-marketplace"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "mega-col-integrations-title",
+        "mega-link-api",
+        "mega-link-webhooks",
+        "mega-link-marketplace"
+      ]
     },
     "mega-col-integrations-title": {
       "type": "Text",
-      "tag": "h6",
-      "content": "Integrations",
-      "weight": "semibold"
+      "props": {
+        "tag": "h6",
+        "content": "Integrations",
+        "weight": "semibold"
+      }
     },
     "mega-link-api": {
       "type": "Text",
-      "tag": "p",
-      "content": "REST & GraphQL APIs"
+      "props": {
+        "tag": "p",
+        "content": "REST & GraphQL APIs"
+      }
     },
     "mega-link-webhooks": {
       "type": "Text",
-      "tag": "p",
-      "content": "Webhooks"
+      "props": {
+        "tag": "p",
+        "content": "Webhooks"
+      }
     },
     "mega-link-marketplace": {
       "type": "Text",
-      "tag": "p",
-      "content": "App Marketplace"
+      "props": {
+        "tag": "p",
+        "content": "App Marketplace"
+      }
     }
   }
 }

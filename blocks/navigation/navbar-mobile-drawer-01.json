@@ -3,74 +3,135 @@
   "elements": {
     "mobile-nav-wrapper": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "children": ["mobile-navbar", "mobile-drawer"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "mobile-navbar",
+        "mobile-drawer"
+      ]
     },
     "mobile-navbar": {
       "type": "Navbar",
-      "brand": "Nomadly",
-      "items": [],
-      "actions": ["hamburger-btn"]
+      "props": {
+        "brand": "Nomadly",
+        "items": [],
+        "actions": [
+          "hamburger-btn"
+        ]
+      }
     },
     "hamburger-btn": {
       "type": "Button",
-      "label": "Menu",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "menu"
+      "props": {
+        "label": "Menu",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "menu"
+      }
     },
     "mobile-drawer": {
       "type": "Sheet",
-      "side": "left",
-      "children": ["drawer-content"]
+      "props": {
+        "side": "left"
+      },
+      "children": [
+        "drawer-content"
+      ]
     },
     "drawer-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["drawer-header", "drawer-sep", "drawer-nav", "drawer-sep-2", "drawer-auth"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "drawer-header",
+        "drawer-sep",
+        "drawer-nav",
+        "drawer-sep-2",
+        "drawer-auth"
+      ]
     },
     "drawer-header": {
       "type": "Text",
-      "tag": "h5",
-      "content": "Nomadly",
-      "weight": "bold"
+      "props": {
+        "tag": "h5",
+        "content": "Nomadly",
+        "weight": "bold"
+      }
     },
     "drawer-sep": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "drawer-nav": {
       "type": "NavMenu",
-      "direction": "vertical",
-      "items": [
-        { "label": "Destinations", "icon": "map-pin", "href": "/destinations" },
-        { "label": "Trips", "icon": "compass", "href": "/trips", "active": true },
-        { "label": "Guides", "icon": "book-open", "href": "/guides" },
-        { "label": "Community", "icon": "users", "href": "/community" },
-        { "label": "Gear Shop", "icon": "shopping-bag", "href": "/shop" }
-      ]
+      "props": {
+        "direction": "vertical",
+        "items": [
+          {
+            "label": "Destinations",
+            "icon": "map-pin",
+            "href": "/destinations"
+          },
+          {
+            "label": "Trips",
+            "icon": "compass",
+            "href": "/trips",
+            "active": true
+          },
+          {
+            "label": "Guides",
+            "icon": "book-open",
+            "href": "/guides"
+          },
+          {
+            "label": "Community",
+            "icon": "users",
+            "href": "/community"
+          },
+          {
+            "label": "Gear Shop",
+            "icon": "shopping-bag",
+            "href": "/shop"
+          }
+        ]
+      }
     },
     "drawer-sep-2": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "drawer-auth": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["drawer-login-btn", "drawer-signup-btn"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "drawer-login-btn",
+        "drawer-signup-btn"
+      ]
     },
     "drawer-login-btn": {
       "type": "Button",
-      "label": "Log In",
-      "variant": "outline"
+      "props": {
+        "label": "Log In",
+        "variant": "outline"
+      }
     },
     "drawer-signup-btn": {
       "type": "Button",
-      "label": "Sign Up Free",
-      "variant": "primary"
+      "props": {
+        "label": "Sign Up Free",
+        "variant": "primary"
+      }
     }
   }
 }

@@ -3,180 +3,302 @@
   "elements": {
     "contact-form": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "children": ["form-heading", "section-personal", "separator-1", "section-address", "separator-2", "section-preferences", "form-actions"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "form-heading",
+        "section-personal",
+        "separator-1",
+        "section-address",
+        "separator-2",
+        "section-preferences",
+        "form-actions"
+      ]
     },
     "form-heading": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Contact Information",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Contact Information",
+        "weight": "bold"
+      }
     },
     "section-personal": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["section-personal-label", "row-name", "field-email", "field-phone"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "section-personal-label",
+        "row-name",
+        "field-email",
+        "field-phone"
+      ]
     },
     "section-personal-label": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Personal Details",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Personal Details",
+        "weight": "semibold"
+      }
     },
     "row-name": {
       "type": "Grid",
-      "columns": 2,
-      "gap": 3,
-      "children": ["field-first-name", "field-last-name"]
+      "props": {
+        "columns": 2,
+        "gap": 3
+      },
+      "children": [
+        "field-first-name",
+        "field-last-name"
+      ]
     },
     "field-first-name": {
       "type": "Field",
-      "label": "First Name",
-      "children": ["input-first-name"]
+      "props": {
+        "label": "First Name"
+      },
+      "children": [
+        "input-first-name"
+      ]
     },
     "input-first-name": {
       "type": "Input",
-      "placeholder": "Sarah",
-      "type_input": "text"
+      "props": {
+        "placeholder": "Sarah",
+        "type_input": "text"
+      }
     },
     "field-last-name": {
       "type": "Field",
-      "label": "Last Name",
-      "children": ["input-last-name"]
+      "props": {
+        "label": "Last Name"
+      },
+      "children": [
+        "input-last-name"
+      ]
     },
     "input-last-name": {
       "type": "Input",
-      "placeholder": "Mitchell",
-      "type_input": "text"
+      "props": {
+        "placeholder": "Mitchell",
+        "type_input": "text"
+      }
     },
     "field-email": {
       "type": "Field",
-      "label": "Email Address",
-      "children": ["input-email"]
+      "props": {
+        "label": "Email Address"
+      },
+      "children": [
+        "input-email"
+      ]
     },
     "input-email": {
       "type": "Input",
-      "placeholder": "sarah.mitchell@example.com",
-      "type_input": "email"
+      "props": {
+        "placeholder": "sarah.mitchell@example.com",
+        "type_input": "email"
+      }
     },
     "field-phone": {
       "type": "Field",
-      "label": "Phone Number",
-      "children": ["input-phone"]
+      "props": {
+        "label": "Phone Number"
+      },
+      "children": [
+        "input-phone"
+      ]
     },
     "input-phone": {
       "type": "Input",
-      "placeholder": "+1 (555) 123-4567",
-      "type_input": "tel"
+      "props": {
+        "placeholder": "+1 (555) 123-4567",
+        "type_input": "tel"
+      }
     },
     "separator-1": {
       "type": "Separator"
     },
     "section-address": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["section-address-label", "field-street", "row-city-state", "field-zip"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "section-address-label",
+        "field-street",
+        "row-city-state",
+        "field-zip"
+      ]
     },
     "section-address-label": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Mailing Address",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Mailing Address",
+        "weight": "semibold"
+      }
     },
     "field-street": {
       "type": "Field",
-      "label": "Street Address",
-      "children": ["input-street"]
+      "props": {
+        "label": "Street Address"
+      },
+      "children": [
+        "input-street"
+      ]
     },
     "input-street": {
       "type": "Input",
-      "placeholder": "742 Evergreen Terrace",
-      "type_input": "text"
+      "props": {
+        "placeholder": "742 Evergreen Terrace",
+        "type_input": "text"
+      }
     },
     "row-city-state": {
       "type": "Grid",
-      "columns": 2,
-      "gap": 3,
-      "children": ["field-city", "field-state"]
+      "props": {
+        "columns": 2,
+        "gap": 3
+      },
+      "children": [
+        "field-city",
+        "field-state"
+      ]
     },
     "field-city": {
       "type": "Field",
-      "label": "City",
-      "children": ["input-city"]
+      "props": {
+        "label": "City"
+      },
+      "children": [
+        "input-city"
+      ]
     },
     "input-city": {
       "type": "Input",
-      "placeholder": "San Francisco",
-      "type_input": "text"
+      "props": {
+        "placeholder": "San Francisco",
+        "type_input": "text"
+      }
     },
     "field-state": {
       "type": "Field",
-      "label": "State",
-      "children": ["select-state"]
+      "props": {
+        "label": "State"
+      },
+      "children": [
+        "select-state"
+      ]
     },
     "select-state": {
       "type": "Select",
-      "options": [
-        { "label": "California", "value": "CA" },
-        { "label": "New York", "value": "NY" },
-        { "label": "Texas", "value": "TX" },
-        { "label": "Washington", "value": "WA" }
-      ]
+      "props": {
+        "options": [
+          {
+            "label": "California",
+            "value": "CA"
+          },
+          {
+            "label": "New York",
+            "value": "NY"
+          },
+          {
+            "label": "Texas",
+            "value": "TX"
+          },
+          {
+            "label": "Washington",
+            "value": "WA"
+          }
+        ]
+      }
     },
     "field-zip": {
       "type": "Field",
-      "label": "ZIP Code",
-      "children": ["input-zip"]
+      "props": {
+        "label": "ZIP Code"
+      },
+      "children": [
+        "input-zip"
+      ]
     },
     "input-zip": {
       "type": "Input",
-      "placeholder": "94102",
-      "type_input": "text"
+      "props": {
+        "placeholder": "94102",
+        "type_input": "text"
+      }
     },
     "separator-2": {
       "type": "Separator"
     },
     "section-preferences": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["section-preferences-label", "field-message"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "section-preferences-label",
+        "field-message"
+      ]
     },
     "section-preferences-label": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Additional Info",
-      "weight": "semibold"
+      "props": {
+        "tag": "h4",
+        "content": "Additional Info",
+        "weight": "semibold"
+      }
     },
     "field-message": {
       "type": "Field",
-      "label": "Message",
-      "children": ["textarea-message"]
+      "props": {
+        "label": "Message"
+      },
+      "children": [
+        "textarea-message"
+      ]
     },
     "textarea-message": {
       "type": "Textarea",
-      "placeholder": "Tell us how we can help you...",
-      "rows": 4
+      "props": {
+        "placeholder": "Tell us how we can help you...",
+        "rows": 4
+      }
     },
     "form-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "justify": "flex-end",
-      "children": ["btn-cancel", "btn-submit"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "justify": "flex-end"
+      },
+      "children": [
+        "btn-cancel",
+        "btn-submit"
+      ]
     },
     "btn-cancel": {
       "type": "Button",
-      "label": "Cancel",
-      "variant": "outline"
+      "props": {
+        "label": "Cancel",
+        "variant": "outline"
+      }
     },
     "btn-submit": {
       "type": "Button",
-      "label": "Submit",
-      "variant": "default"
+      "props": {
+        "label": "Submit",
+        "variant": "default"
+      }
     }
   }
 }

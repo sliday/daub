@@ -3,232 +3,368 @@
   "elements": {
     "testimonial-wall": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "container": "wide",
-      "children": ["wall-header", "wall-grid"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "container": "wide"
+      },
+      "children": [
+        "wall-header",
+        "wall-grid"
+      ]
     },
     "wall-header": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Loved by thousands of teams",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Loved by thousands of teams",
+        "align": "center"
+      }
     },
     "wall-grid": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 3,
-      "children": ["tile-1", "tile-2", "tile-3", "tile-4", "tile-5", "tile-6"]
+      "props": {
+        "columns": 3,
+        "gap": 3
+      },
+      "children": [
+        "tile-1",
+        "tile-2",
+        "tile-3",
+        "tile-4",
+        "tile-5",
+        "tile-6"
+      ]
     },
     "tile-1": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["tile-1-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "tile-1-inner"
+      ]
     },
     "tile-1-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["tile-1-author", "tile-1-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "tile-1-author",
+        "tile-1-text"
+      ]
     },
     "tile-1-author": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["tile-1-avatar", "tile-1-name"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tile-1-avatar",
+        "tile-1-name"
+      ]
     },
     "tile-1-avatar": {
       "type": "Avatar",
-      "initials": "EH",
-      "size": "sm",
-      "src": "https://i.pravatar.cc/64?u=emily-huang"
+      "props": {
+        "initials": "EH",
+        "size": "sm",
+        "src": "https://i.pravatar.cc/64?u=emily-huang"
+      }
     },
     "tile-1-name": {
       "type": "Text",
-      "tag": "p",
-      "content": "Emily Huang",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Emily Huang",
+        "weight": "semibold"
+      }
     },
     "tile-1-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "Deployed to production in under 10 minutes on my first try. No other platform comes close."
+      "props": {
+        "tag": "p",
+        "content": "Deployed to production in under 10 minutes on my first try. No other platform comes close."
+      }
     },
     "tile-2": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["tile-2-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "tile-2-inner"
+      ]
     },
     "tile-2-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["tile-2-author", "tile-2-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "tile-2-author",
+        "tile-2-text"
+      ]
     },
     "tile-2-author": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["tile-2-avatar", "tile-2-name"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tile-2-avatar",
+        "tile-2-name"
+      ]
     },
     "tile-2-avatar": {
       "type": "Avatar",
-      "initials": "CT",
-      "size": "sm",
-      "src": "https://i.pravatar.cc/64?u=carlos-torres"
+      "props": {
+        "initials": "CT",
+        "size": "sm",
+        "src": "https://i.pravatar.cc/64?u=carlos-torres"
+      }
     },
     "tile-2-name": {
       "type": "Text",
-      "tag": "p",
-      "content": "Carlos Torres",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Carlos Torres",
+        "weight": "semibold"
+      }
     },
     "tile-2-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "Our entire frontend team switched over last quarter. Productivity is up 35% across the board."
+      "props": {
+        "tag": "p",
+        "content": "Our entire frontend team switched over last quarter. Productivity is up 35% across the board."
+      }
     },
     "tile-3": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["tile-3-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "tile-3-inner"
+      ]
     },
     "tile-3-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["tile-3-author", "tile-3-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "tile-3-author",
+        "tile-3-text"
+      ]
     },
     "tile-3-author": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["tile-3-avatar", "tile-3-name"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tile-3-avatar",
+        "tile-3-name"
+      ]
     },
     "tile-3-avatar": {
       "type": "Avatar",
-      "initials": "PJ",
-      "size": "sm",
-      "src": "https://i.pravatar.cc/64?u=priya-joshi"
+      "props": {
+        "initials": "PJ",
+        "size": "sm",
+        "src": "https://i.pravatar.cc/64?u=priya-joshi"
+      }
     },
     "tile-3-name": {
       "type": "Text",
-      "tag": "p",
-      "content": "Priya Joshi",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Priya Joshi",
+        "weight": "semibold"
+      }
     },
     "tile-3-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "The docs are incredible. I barely needed to ask support a single question during our migration."
+      "props": {
+        "tag": "p",
+        "content": "The docs are incredible. I barely needed to ask support a single question during our migration."
+      }
     },
     "tile-4": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["tile-4-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "tile-4-inner"
+      ]
     },
     "tile-4-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["tile-4-author", "tile-4-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "tile-4-author",
+        "tile-4-text"
+      ]
     },
     "tile-4-author": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["tile-4-avatar", "tile-4-name"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tile-4-avatar",
+        "tile-4-name"
+      ]
     },
     "tile-4-avatar": {
       "type": "Avatar",
-      "initials": "BL",
-      "size": "sm",
-      "src": "https://i.pravatar.cc/64?u=ben-larsen"
+      "props": {
+        "initials": "BL",
+        "size": "sm",
+        "src": "https://i.pravatar.cc/64?u=ben-larsen"
+      }
     },
     "tile-4-name": {
       "type": "Text",
-      "tag": "p",
-      "content": "Ben Larsen",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Ben Larsen",
+        "weight": "semibold"
+      }
     },
     "tile-4-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "Best developer experience I've used since Rails. Everything just works the way you expect."
+      "props": {
+        "tag": "p",
+        "content": "Best developer experience I've used since Rails. Everything just works the way you expect."
+      }
     },
     "tile-5": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["tile-5-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "tile-5-inner"
+      ]
     },
     "tile-5-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["tile-5-author", "tile-5-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "tile-5-author",
+        "tile-5-text"
+      ]
     },
     "tile-5-author": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["tile-5-avatar", "tile-5-name"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tile-5-avatar",
+        "tile-5-name"
+      ]
     },
     "tile-5-avatar": {
       "type": "Avatar",
-      "initials": "SO",
-      "size": "sm",
-      "src": "https://i.pravatar.cc/64?u=sofia-okafor"
+      "props": {
+        "initials": "SO",
+        "size": "sm",
+        "src": "https://i.pravatar.cc/64?u=sofia-okafor"
+      }
     },
     "tile-5-name": {
       "type": "Text",
-      "tag": "p",
-      "content": "Sofia Okafor",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Sofia Okafor",
+        "weight": "semibold"
+      }
     },
     "tile-5-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "Cut our CI/CD pipeline from 45 minutes to 6. The team actually enjoys deploying now."
+      "props": {
+        "tag": "p",
+        "content": "Cut our CI/CD pipeline from 45 minutes to 6. The team actually enjoys deploying now."
+      }
     },
     "tile-6": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["tile-6-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "tile-6-inner"
+      ]
     },
     "tile-6-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["tile-6-author", "tile-6-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "tile-6-author",
+        "tile-6-text"
+      ]
     },
     "tile-6-author": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["tile-6-avatar", "tile-6-name"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "tile-6-avatar",
+        "tile-6-name"
+      ]
     },
     "tile-6-avatar": {
       "type": "Avatar",
-      "initials": "TM",
-      "size": "sm",
-      "src": "https://i.pravatar.cc/64?u=tom-mueller"
+      "props": {
+        "initials": "TM",
+        "size": "sm",
+        "src": "https://i.pravatar.cc/64?u=tom-mueller"
+      }
     },
     "tile-6-name": {
       "type": "Text",
-      "tag": "p",
-      "content": "Tom Mueller",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Tom Mueller",
+        "weight": "semibold"
+      }
     },
     "tile-6-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "Worth every penny. We're saving $4,200/month compared to our previous stack and getting better uptime."
+      "props": {
+        "tag": "p",
+        "content": "Worth every penny. We're saving $4,200/month compared to our previous stack and getting better uptime."
+      }
     }
   }
 }

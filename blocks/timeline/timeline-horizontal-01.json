@@ -3,144 +3,225 @@
   "elements": {
     "timeline-horizontal": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["section-header", "milestones-scroll"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "section-header",
+        "milestones-scroll"
+      ]
     },
     "section-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["section-title", "section-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "section-title",
+        "section-subtitle"
+      ]
     },
     "section-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Product Milestones",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Product Milestones",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "section-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Key moments that shaped our platform into what it is today.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Key moments that shaped our platform into what it is today.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "milestones-scroll": {
       "type": "ScrollArea",
-      "orientation": "horizontal",
-      "children": ["milestones-row"]
+      "props": {
+        "orientation": "horizontal"
+      },
+      "children": [
+        "milestones-row"
+      ]
     },
     "milestones-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "children": ["milestone-1", "milestone-2", "milestone-3", "milestone-4", "milestone-5", "milestone-6"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3
+      },
+      "children": [
+        "milestone-1",
+        "milestone-2",
+        "milestone-3",
+        "milestone-4",
+        "milestone-5",
+        "milestone-6"
+      ]
     },
     "milestone-1": {
       "type": "Card",
-      "title": "v1.0 Launch",
-      "description": "First public release with core editing tools and real-time collaboration.",
-      "children": ["milestone-1-date", "milestone-1-badge"]
+      "props": {
+        "title": "v1.0 Launch",
+        "description": "First public release with core editing tools and real-time collaboration."
+      },
+      "children": [
+        "milestone-1-date",
+        "milestone-1-badge"
+      ]
     },
     "milestone-1-date": {
       "type": "Text",
-      "tag": "span",
-      "content": "Q1 2019",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Q1 2019",
+        "variant": "muted"
+      }
     },
     "milestone-1-badge": {
       "type": "Badge",
-      "text": "Foundation",
-      "variant": "secondary"
+      "props": {
+        "text": "Foundation",
+        "variant": "secondary"
+      }
     },
     "milestone-2": {
       "type": "Card",
-      "title": "API Released",
-      "description": "Opened REST and WebSocket APIs for third-party integrations and custom workflows.",
-      "children": ["milestone-2-date", "milestone-2-badge"]
+      "props": {
+        "title": "API Released",
+        "description": "Opened REST and WebSocket APIs for third-party integrations and custom workflows."
+      },
+      "children": [
+        "milestone-2-date",
+        "milestone-2-badge"
+      ]
     },
     "milestone-2-date": {
       "type": "Text",
-      "tag": "span",
-      "content": "Q3 2019",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Q3 2019",
+        "variant": "muted"
+      }
     },
     "milestone-2-badge": {
       "type": "Badge",
-      "text": "Platform",
-      "variant": "secondary"
+      "props": {
+        "text": "Platform",
+        "variant": "secondary"
+      }
     },
     "milestone-3": {
       "type": "Card",
-      "title": "Mobile Apps",
-      "description": "Launched native iOS and Android apps with offline editing and push notifications.",
-      "children": ["milestone-3-date", "milestone-3-badge"]
+      "props": {
+        "title": "Mobile Apps",
+        "description": "Launched native iOS and Android apps with offline editing and push notifications."
+      },
+      "children": [
+        "milestone-3-date",
+        "milestone-3-badge"
+      ]
     },
     "milestone-3-date": {
       "type": "Text",
-      "tag": "span",
-      "content": "Q1 2020",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Q1 2020",
+        "variant": "muted"
+      }
     },
     "milestone-3-badge": {
       "type": "Badge",
-      "text": "Mobile",
-      "variant": "secondary"
+      "props": {
+        "text": "Mobile",
+        "variant": "secondary"
+      }
     },
     "milestone-4": {
       "type": "Card",
-      "title": "Enterprise SSO",
-      "description": "Added SAML and OIDC single sign-on, audit logs, and advanced admin controls.",
-      "children": ["milestone-4-date", "milestone-4-badge"]
+      "props": {
+        "title": "Enterprise SSO",
+        "description": "Added SAML and OIDC single sign-on, audit logs, and advanced admin controls."
+      },
+      "children": [
+        "milestone-4-date",
+        "milestone-4-badge"
+      ]
     },
     "milestone-4-date": {
       "type": "Text",
-      "tag": "span",
-      "content": "Q4 2021",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Q4 2021",
+        "variant": "muted"
+      }
     },
     "milestone-4-badge": {
       "type": "Badge",
-      "text": "Enterprise",
-      "variant": "secondary"
+      "props": {
+        "text": "Enterprise",
+        "variant": "secondary"
+      }
     },
     "milestone-5": {
       "type": "Card",
-      "title": "AI Assistant",
-      "description": "Integrated AI-powered writing assistant with smart suggestions and auto-formatting.",
-      "children": ["milestone-5-date", "milestone-5-badge"]
+      "props": {
+        "title": "AI Assistant",
+        "description": "Integrated AI-powered writing assistant with smart suggestions and auto-formatting."
+      },
+      "children": [
+        "milestone-5-date",
+        "milestone-5-badge"
+      ]
     },
     "milestone-5-date": {
       "type": "Text",
-      "tag": "span",
-      "content": "Q2 2023",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Q2 2023",
+        "variant": "muted"
+      }
     },
     "milestone-5-badge": {
       "type": "Badge",
-      "text": "AI",
-      "variant": "default"
+      "props": {
+        "text": "AI",
+        "variant": "default"
+      }
     },
     "milestone-6": {
       "type": "Card",
-      "title": "10M Documents",
-      "description": "Platform crossed 10 million documents created, serving teams in 140 countries.",
-      "children": ["milestone-6-date", "milestone-6-badge"]
+      "props": {
+        "title": "10M Documents",
+        "description": "Platform crossed 10 million documents created, serving teams in 140 countries."
+      },
+      "children": [
+        "milestone-6-date",
+        "milestone-6-badge"
+      ]
     },
     "milestone-6-date": {
       "type": "Text",
-      "tag": "span",
-      "content": "Q1 2024",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Q1 2024",
+        "variant": "muted"
+      }
     },
     "milestone-6-badge": {
       "type": "Badge",
-      "text": "Scale",
-      "variant": "default"
+      "props": {
+        "text": "Scale",
+        "variant": "default"
+      }
     }
   }
 }

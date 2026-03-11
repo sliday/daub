@@ -3,254 +3,391 @@
   "elements": {
     "feature-icon-grid-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "align": "center",
-      "container": "wide",
-      "children": ["icon-grid-header", "icon-grid"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "container": "wide"
+      },
+      "children": [
+        "icon-grid-header",
+        "icon-grid"
+      ]
     },
     "icon-grid-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "align": "center",
-      "children": ["icon-grid-title", "icon-grid-desc"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "icon-grid-title",
+        "icon-grid-desc"
+      ]
     },
     "icon-grid-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Everything you need in one workspace",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Everything you need in one workspace",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "icon-grid-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Flowdesk brings together 24 tools your team already uses into a single productivity suite.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Flowdesk brings together 24 tools your team already uses into a single productivity suite.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "icon-grid": {
       "type": "Grid",
-      "columns": 4,
-      "gap": 3,
-      "children": ["ig-docs", "ig-sheets", "ig-slides", "ig-mail", "ig-calendar", "ig-tasks", "ig-chat", "ig-video", "ig-forms", "ig-notes", "ig-files", "ig-whiteboard"]
+      "props": {
+        "columns": 4,
+        "gap": 3
+      },
+      "children": [
+        "ig-docs",
+        "ig-sheets",
+        "ig-slides",
+        "ig-mail",
+        "ig-calendar",
+        "ig-tasks",
+        "ig-chat",
+        "ig-video",
+        "ig-forms",
+        "ig-notes",
+        "ig-files",
+        "ig-whiteboard"
+      ]
     },
     "ig-docs": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-docs-icon", "ig-docs-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-docs-icon",
+        "ig-docs-label"
+      ]
     },
     "ig-docs-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "file-text"
+      "props": {
+        "tag": "span",
+        "content": "file-text"
+      }
     },
     "ig-docs-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Documents",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Documents",
+        "weight": "semibold"
+      }
     },
     "ig-sheets": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-sheets-icon", "ig-sheets-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-sheets-icon",
+        "ig-sheets-label"
+      ]
     },
     "ig-sheets-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "table"
+      "props": {
+        "tag": "span",
+        "content": "table"
+      }
     },
     "ig-sheets-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Spreadsheets",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Spreadsheets",
+        "weight": "semibold"
+      }
     },
     "ig-slides": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-slides-icon", "ig-slides-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-slides-icon",
+        "ig-slides-label"
+      ]
     },
     "ig-slides-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "presentation"
+      "props": {
+        "tag": "span",
+        "content": "presentation"
+      }
     },
     "ig-slides-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Presentations",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Presentations",
+        "weight": "semibold"
+      }
     },
     "ig-mail": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-mail-icon", "ig-mail-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-mail-icon",
+        "ig-mail-label"
+      ]
     },
     "ig-mail-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "mail"
+      "props": {
+        "tag": "span",
+        "content": "mail"
+      }
     },
     "ig-mail-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Email",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Email",
+        "weight": "semibold"
+      }
     },
     "ig-calendar": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-calendar-icon", "ig-calendar-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-calendar-icon",
+        "ig-calendar-label"
+      ]
     },
     "ig-calendar-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "calendar"
+      "props": {
+        "tag": "span",
+        "content": "calendar"
+      }
     },
     "ig-calendar-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Calendar",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Calendar",
+        "weight": "semibold"
+      }
     },
     "ig-tasks": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-tasks-icon", "ig-tasks-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-tasks-icon",
+        "ig-tasks-label"
+      ]
     },
     "ig-tasks-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "check-square"
+      "props": {
+        "tag": "span",
+        "content": "check-square"
+      }
     },
     "ig-tasks-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Task Manager",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Task Manager",
+        "weight": "semibold"
+      }
     },
     "ig-chat": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-chat-icon", "ig-chat-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-chat-icon",
+        "ig-chat-label"
+      ]
     },
     "ig-chat-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "message-circle"
+      "props": {
+        "tag": "span",
+        "content": "message-circle"
+      }
     },
     "ig-chat-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Team Chat",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Team Chat",
+        "weight": "semibold"
+      }
     },
     "ig-video": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-video-icon", "ig-video-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-video-icon",
+        "ig-video-label"
+      ]
     },
     "ig-video-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "video"
+      "props": {
+        "tag": "span",
+        "content": "video"
+      }
     },
     "ig-video-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Video Calls",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Video Calls",
+        "weight": "semibold"
+      }
     },
     "ig-forms": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-forms-icon", "ig-forms-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-forms-icon",
+        "ig-forms-label"
+      ]
     },
     "ig-forms-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "clipboard-list"
+      "props": {
+        "tag": "span",
+        "content": "clipboard-list"
+      }
     },
     "ig-forms-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Forms",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Forms",
+        "weight": "semibold"
+      }
     },
     "ig-notes": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-notes-icon", "ig-notes-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-notes-icon",
+        "ig-notes-label"
+      ]
     },
     "ig-notes-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "sticky-note"
+      "props": {
+        "tag": "span",
+        "content": "sticky-note"
+      }
     },
     "ig-notes-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Quick Notes",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Quick Notes",
+        "weight": "semibold"
+      }
     },
     "ig-files": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-files-icon", "ig-files-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-files-icon",
+        "ig-files-label"
+      ]
     },
     "ig-files-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "folder"
+      "props": {
+        "tag": "span",
+        "content": "folder"
+      }
     },
     "ig-files-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Cloud Storage",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Cloud Storage",
+        "weight": "semibold"
+      }
     },
     "ig-whiteboard": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["ig-whiteboard-icon", "ig-whiteboard-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "ig-whiteboard-icon",
+        "ig-whiteboard-label"
+      ]
     },
     "ig-whiteboard-icon": {
       "type": "Text",
-      "tag": "span",
-      "content": "layout"
+      "props": {
+        "tag": "span",
+        "content": "layout"
+      }
     },
     "ig-whiteboard-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Whiteboard",
-      "weight": "semibold"
+      "props": {
+        "tag": "span",
+        "content": "Whiteboard",
+        "weight": "semibold"
+      }
     }
   }
 }

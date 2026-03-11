@@ -3,37 +3,62 @@
   "elements": {
     "footer-minimal": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "container": "wide",
-      "children": ["divider", "footer-row"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3,
+        "container": "wide"
+      },
+      "children": [
+        "divider",
+        "footer-row"
+      ]
     },
     "divider": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "footer-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "align": "center",
-      "justify": "between",
-      "children": ["copyright", "links"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "copyright",
+        "links"
+      ]
     },
     "copyright": {
       "type": "Text",
-      "tag": "p",
-      "content": "2026 Acme Studio",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "2026 Acme Studio",
+        "variant": "muted"
+      }
     },
     "links": {
       "type": "NavMenu",
-      "direction": "horizontal",
-      "items": [
-        { "label": "Privacy", "href": "/privacy" },
-        { "label": "Terms", "href": "/terms" },
-        { "label": "Contact", "href": "/contact" }
-      ]
+      "props": {
+        "direction": "horizontal",
+        "items": [
+          {
+            "label": "Privacy",
+            "href": "/privacy"
+          },
+          {
+            "label": "Terms",
+            "href": "/terms"
+          },
+          {
+            "label": "Contact",
+            "href": "/contact"
+          }
+        ]
+      }
     }
   }
 }

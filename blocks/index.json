@@ -179,7 +179,7 @@
       "Card",
       "Alert",
       "Field",
-      "email",
+      "Input",
       "Button",
       "Separator",
       "Text"
@@ -203,8 +203,7 @@
       "Stack",
       "Card",
       "Field",
-      "email",
-      "password",
+      "Input",
       "Checkbox",
       "Button",
       "Separator",
@@ -231,8 +230,6 @@
       "Grid",
       "Field",
       "Input",
-      "email",
-      "password",
       "Checkbox",
       "Button",
       "Separator",
@@ -257,7 +254,7 @@
       "Stack",
       "Card",
       "Field",
-      "password",
+      "Input",
       "Progress",
       "Text",
       "Button",
@@ -285,8 +282,7 @@
       "Separator",
       "Text",
       "Field",
-      "email",
-      "password"
+      "Input"
     ],
     "name": "Social Login",
     "description": "Social Login block for auth",
@@ -473,7 +469,7 @@
       "Image",
       "Surface",
       "InputGroup",
-      "email",
+      "Input",
       "Button"
     ],
     "name": "Blog Newsletter",
@@ -619,7 +615,6 @@
       "Grid",
       "Field",
       "Input",
-      "email",
       "Textarea",
       "Button"
     ],
@@ -970,7 +965,6 @@
       "Text",
       "Surface",
       "Field",
-      "email",
       "Input",
       "Button"
     ],
@@ -993,7 +987,7 @@
       "Stack",
       "Text",
       "Field",
-      "email",
+      "Input",
       "Button",
       "AvatarGroup",
       "Avatar"
@@ -1402,7 +1396,6 @@
       "Stepper",
       "Field",
       "Input",
-      "email",
       "Select",
       "Separator",
       "Checkbox",
@@ -1662,7 +1655,7 @@
       "Progress",
       "Chip",
       "Surface",
-      "email",
+      "Input",
       "Button",
       "Grid",
       "Card"
@@ -1688,7 +1681,7 @@
       "Text",
       "Separator",
       "Progress",
-      "email",
+      "Input",
       "Button"
     ],
     "name": "Maintenance Page",
@@ -2616,7 +2609,7 @@
       "List",
       "Card",
       "Field",
-      "email",
+      "Input",
       "Select",
       "Button"
     ],
@@ -3609,9 +3602,8 @@
       "Button",
       "Tabs",
       "Field",
-      "email",
+      "Input",
       "Select",
-      "password",
       "Switch"
     ],
     "name": "Tab Nav",
@@ -3656,7 +3648,6 @@
       "Stack",
       "Badge",
       "Field",
-      "email",
       "Input",
       "Button",
       "Text"
@@ -3682,7 +3673,7 @@
       "Text",
       "Button",
       "InputGroup",
-      "email"
+      "Input"
     ],
     "name": "Newsletter Footer",
     "description": "Newsletter Footer block for newsletter",
@@ -3703,7 +3694,7 @@
       "Stack",
       "Text",
       "InputGroup",
-      "email",
+      "Input",
       "Button"
     ],
     "name": "Newsletter Inline",
@@ -3725,7 +3716,7 @@
       "Modal",
       "Stack",
       "Text",
-      "email",
+      "Input",
       "Button"
     ],
     "name": "Newsletter Popup",

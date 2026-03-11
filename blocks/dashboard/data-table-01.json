@@ -3,94 +3,225 @@
   "elements": {
     "table-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["table-toolbar", "orders-table", "table-pagination"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "table-toolbar",
+        "orders-table",
+        "table-pagination"
+      ]
     },
     "table-toolbar": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "justify": "space-between",
-      "children": ["toolbar-left", "toolbar-right"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center",
+        "justify": "space-between"
+      },
+      "children": [
+        "toolbar-left",
+        "toolbar-right"
+      ]
     },
     "toolbar-left": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["search-orders", "filter-status", "filter-date"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "search-orders",
+        "filter-status",
+        "filter-date"
+      ]
     },
     "search-orders": {
       "type": "Search",
-      "placeholder": "Search orders..."
+      "props": {
+        "placeholder": "Search orders..."
+      }
     },
     "filter-status": {
       "type": "Select",
-      "label": "Status",
-      "options": [
-        { "label": "All Statuses", "value": "all" },
-        { "label": "Completed", "value": "completed" },
-        { "label": "Processing", "value": "processing" },
-        { "label": "Shipped", "value": "shipped" },
-        { "label": "Cancelled", "value": "cancelled" }
-      ]
+      "props": {
+        "label": "Status",
+        "options": [
+          {
+            "label": "All Statuses",
+            "value": "all"
+          },
+          {
+            "label": "Completed",
+            "value": "completed"
+          },
+          {
+            "label": "Processing",
+            "value": "processing"
+          },
+          {
+            "label": "Shipped",
+            "value": "shipped"
+          },
+          {
+            "label": "Cancelled",
+            "value": "cancelled"
+          }
+        ]
+      }
     },
     "filter-date": {
       "type": "Select",
-      "label": "Period",
-      "options": [
-        { "label": "Last 7 days", "value": "7d" },
-        { "label": "Last 30 days", "value": "30d" },
-        { "label": "Last 90 days", "value": "90d" }
-      ]
+      "props": {
+        "label": "Period",
+        "options": [
+          {
+            "label": "Last 7 days",
+            "value": "7d"
+          },
+          {
+            "label": "Last 30 days",
+            "value": "30d"
+          },
+          {
+            "label": "Last 90 days",
+            "value": "90d"
+          }
+        ]
+      }
     },
     "toolbar-right": {
       "type": "ButtonGroup",
-      "children": ["btn-export", "btn-bulk-delete"]
+      "children": [
+        "btn-export",
+        "btn-bulk-delete"
+      ]
     },
     "btn-export": {
       "type": "Button",
-      "label": "Export CSV",
-      "variant": "outline",
-      "size": "sm",
-      "icon": "download"
+      "props": {
+        "label": "Export CSV",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "download"
+      }
     },
     "btn-bulk-delete": {
       "type": "Button",
-      "label": "Delete Selected",
-      "variant": "destructive",
-      "size": "sm",
-      "icon": "trash-2"
+      "props": {
+        "label": "Delete Selected",
+        "variant": "destructive",
+        "size": "sm",
+        "icon": "trash-2"
+      }
     },
     "orders-table": {
       "type": "DataTable",
-      "striped": true,
-      "hoverable": true,
-      "columns": [
-        { "key": "id", "label": "Order ID", "sortable": true },
-        { "key": "customer", "label": "Customer", "sortable": true },
-        { "key": "product", "label": "Product", "sortable": false },
-        { "key": "amount", "label": "Amount", "sortable": true },
-        { "key": "status", "label": "Status", "sortable": true },
-        { "key": "date", "label": "Date", "sortable": true }
-      ],
-      "rows": [
-        { "id": "#ORD-7291", "customer": "Sarah Mitchell", "product": "Pro Plan (Annual)", "amount": "$599.00", "status": "Completed", "date": "Mar 8, 2026" },
-        { "id": "#ORD-7290", "customer": "James Chen", "product": "Starter Kit", "amount": "$49.99", "status": "Processing", "date": "Mar 8, 2026" },
-        { "id": "#ORD-7289", "customer": "Emily Rodriguez", "product": "Enterprise License", "amount": "$2,400.00", "status": "Shipped", "date": "Mar 7, 2026" },
-        { "id": "#ORD-7288", "customer": "Michael Foster", "product": "Team Plan (Monthly)", "amount": "$199.00", "status": "Completed", "date": "Mar 7, 2026" },
-        { "id": "#ORD-7287", "customer": "Lisa Park", "product": "Add-on: Analytics", "amount": "$79.00", "status": "Completed", "date": "Mar 6, 2026" },
-        { "id": "#ORD-7286", "customer": "David Kim", "product": "Pro Plan (Monthly)", "amount": "$59.00", "status": "Cancelled", "date": "Mar 6, 2026" },
-        { "id": "#ORD-7285", "customer": "Anna Weber", "product": "Starter Kit", "amount": "$49.99", "status": "Processing", "date": "Mar 5, 2026" }
-      ]
+      "props": {
+        "striped": true,
+        "hoverable": true,
+        "columns": [
+          {
+            "key": "id",
+            "label": "Order ID",
+            "sortable": true
+          },
+          {
+            "key": "customer",
+            "label": "Customer",
+            "sortable": true
+          },
+          {
+            "key": "product",
+            "label": "Product",
+            "sortable": false
+          },
+          {
+            "key": "amount",
+            "label": "Amount",
+            "sortable": true
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "sortable": true
+          },
+          {
+            "key": "date",
+            "label": "Date",
+            "sortable": true
+          }
+        ],
+        "rows": [
+          {
+            "id": "#ORD-7291",
+            "customer": "Sarah Mitchell",
+            "product": "Pro Plan (Annual)",
+            "amount": "$599.00",
+            "status": "Completed",
+            "date": "Mar 8, 2026"
+          },
+          {
+            "id": "#ORD-7290",
+            "customer": "James Chen",
+            "product": "Starter Kit",
+            "amount": "$49.99",
+            "status": "Processing",
+            "date": "Mar 8, 2026"
+          },
+          {
+            "id": "#ORD-7289",
+            "customer": "Emily Rodriguez",
+            "product": "Enterprise License",
+            "amount": "$2,400.00",
+            "status": "Shipped",
+            "date": "Mar 7, 2026"
+          },
+          {
+            "id": "#ORD-7288",
+            "customer": "Michael Foster",
+            "product": "Team Plan (Monthly)",
+            "amount": "$199.00",
+            "status": "Completed",
+            "date": "Mar 7, 2026"
+          },
+          {
+            "id": "#ORD-7287",
+            "customer": "Lisa Park",
+            "product": "Add-on: Analytics",
+            "amount": "$79.00",
+            "status": "Completed",
+            "date": "Mar 6, 2026"
+          },
+          {
+            "id": "#ORD-7286",
+            "customer": "David Kim",
+            "product": "Pro Plan (Monthly)",
+            "amount": "$59.00",
+            "status": "Cancelled",
+            "date": "Mar 6, 2026"
+          },
+          {
+            "id": "#ORD-7285",
+            "customer": "Anna Weber",
+            "product": "Starter Kit",
+            "amount": "$49.99",
+            "status": "Processing",
+            "date": "Mar 5, 2026"
+          }
+        ]
+      }
     },
     "table-pagination": {
       "type": "Pagination",
-      "total": 248,
-      "perPage": 7,
-      "current": 1
+      "props": {
+        "total": 248,
+        "perPage": 7,
+        "current": 1
+      }
     }
   }
 }

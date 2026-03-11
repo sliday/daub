@@ -3,99 +3,125 @@
   "elements": {
     "notification-panel": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["notif-header", "notif-list", "notif-footer"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "notif-header",
+        "notif-list",
+        "notif-footer"
+      ]
     },
     "notif-header": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "space-between",
-      "align": "center",
-      "children": ["notif-title-group", "btn-mark-all"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "space-between",
+        "align": "center"
+      },
+      "children": [
+        "notif-title-group",
+        "btn-mark-all"
+      ]
     },
     "notif-title-group": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["notif-title", "badge-unread"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "notif-title",
+        "badge-unread"
+      ]
     },
     "notif-title": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Notifications",
-      "weight": "semibold"
+      "props": {
+        "tag": "h3",
+        "content": "Notifications",
+        "weight": "semibold"
+      }
     },
     "badge-unread": {
       "type": "Badge",
-      "text": "4 new",
-      "variant": "default"
+      "props": {
+        "text": "4 new",
+        "variant": "default"
+      }
     },
     "btn-mark-all": {
       "type": "Button",
-      "label": "Mark all read",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "label": "Mark all read",
+        "variant": "ghost",
+        "size": "sm"
+      }
     },
     "notif-list": {
       "type": "List",
-      "items": [
-        {
-          "primary": "Your deploy to production succeeded",
-          "secondary": "Branch main merged and deployed via GitHub Actions",
-          "icon": "rocket",
-          "meta": "Just now"
-        },
-        {
-          "primary": "Emily Rodriguez commented on PR #142",
-          "secondary": "\"Looks great, but can we add error handling for the edge case?\"",
-          "icon": "message-square",
-          "meta": "5 min ago"
-        },
-        {
-          "primary": "CPU usage exceeded 90% on worker-3",
-          "secondary": "Alert triggered at 14:23 UTC. Auto-scaling initiated.",
-          "icon": "alert-triangle",
-          "meta": "12 min ago"
-        },
-        {
-          "primary": "New team member joined: Alex Thompson",
-          "secondary": "Added to Engineering team with Developer role",
-          "icon": "user-plus",
-          "meta": "1 hr ago"
-        },
-        {
-          "primary": "Weekly analytics report is ready",
-          "secondary": "Traffic up 12%, conversion rate stable at 3.2%",
-          "icon": "bar-chart",
-          "meta": "3 hrs ago"
-        },
-        {
-          "primary": "Scheduled maintenance window tomorrow",
-          "secondary": "Database maintenance from 02:00-04:00 UTC on Mar 11",
-          "icon": "clock",
-          "meta": "5 hrs ago"
-        },
-        {
-          "primary": "Invoice #INV-4819 paid by Acme Corp",
-          "secondary": "$2,400.00 received via bank transfer",
-          "icon": "credit-card",
-          "meta": "Yesterday"
-        },
-        {
-          "primary": "SSL certificate renewal reminder",
-          "secondary": "api.example.com certificate expires in 14 days",
-          "icon": "shield",
-          "meta": "Yesterday"
-        }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "Your deploy to production succeeded",
+            "secondary": "Branch main merged and deployed via GitHub Actions",
+            "icon": "rocket",
+            "meta": "Just now"
+          },
+          {
+            "primary": "Emily Rodriguez commented on PR #142",
+            "secondary": "\"Looks great, but can we add error handling for the edge case?\"",
+            "icon": "message-square",
+            "meta": "5 min ago"
+          },
+          {
+            "primary": "CPU usage exceeded 90% on worker-3",
+            "secondary": "Alert triggered at 14:23 UTC. Auto-scaling initiated.",
+            "icon": "alert-triangle",
+            "meta": "12 min ago"
+          },
+          {
+            "primary": "New team member joined: Alex Thompson",
+            "secondary": "Added to Engineering team with Developer role",
+            "icon": "user-plus",
+            "meta": "1 hr ago"
+          },
+          {
+            "primary": "Weekly analytics report is ready",
+            "secondary": "Traffic up 12%, conversion rate stable at 3.2%",
+            "icon": "bar-chart",
+            "meta": "3 hrs ago"
+          },
+          {
+            "primary": "Scheduled maintenance window tomorrow",
+            "secondary": "Database maintenance from 02:00-04:00 UTC on Mar 11",
+            "icon": "clock",
+            "meta": "5 hrs ago"
+          },
+          {
+            "primary": "Invoice #INV-4819 paid by Acme Corp",
+            "secondary": "$2,400.00 received via bank transfer",
+            "icon": "credit-card",
+            "meta": "Yesterday"
+          },
+          {
+            "primary": "SSL certificate renewal reminder",
+            "secondary": "api.example.com certificate expires in 14 days",
+            "icon": "shield",
+            "meta": "Yesterday"
+          }
+        ]
+      }
     },
     "notif-footer": {
       "type": "Button",
-      "label": "View All Notifications",
-      "variant": "outline",
-      "size": "sm"
+      "props": {
+        "label": "View All Notifications",
+        "variant": "outline",
+        "size": "sm"
+      }
     }
   }
 }

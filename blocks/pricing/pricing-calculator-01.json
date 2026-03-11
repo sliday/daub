@@ -3,223 +3,345 @@
   "elements": {
     "pricing-calculator": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "align": "center",
-      "container": "narrow",
-      "children": ["calc-header", "calc-card"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "calc-header",
+        "calc-card"
+      ]
     },
     "calc-header": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "align": "center",
-      "children": ["calc-title", "calc-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "calc-title",
+        "calc-subtitle"
+      ]
     },
     "calc-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Estimate your cost",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Estimate your cost",
+        "align": "center"
+      }
     },
     "calc-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Pay only for what you use. No minimums, no commitments.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Pay only for what you use. No minimums, no commitments.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "calc-card": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["calc-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "calc-inner"
+      ]
     },
     "calc-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "children": ["slider-requests", "slider-storage", "slider-bandwidth", "calc-sep", "calc-total-row", "calc-breakdown", "calc-cta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "slider-requests",
+        "slider-storage",
+        "slider-bandwidth",
+        "calc-sep",
+        "calc-total-row",
+        "calc-breakdown",
+        "calc-cta"
+      ]
     },
     "slider-requests": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["requests-label-row", "requests-slider"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "requests-label-row",
+        "requests-slider"
+      ]
     },
     "requests-label-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "justify": "between",
-      "children": ["requests-label", "requests-value"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "justify": "between"
+      },
+      "children": [
+        "requests-label",
+        "requests-value"
+      ]
     },
     "requests-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "API Requests / month",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "API Requests / month",
+        "weight": "semibold"
+      }
     },
     "requests-value": {
       "type": "Text",
-      "tag": "p",
-      "content": "5 million"
+      "props": {
+        "tag": "p",
+        "content": "5 million"
+      }
     },
     "requests-slider": {
       "type": "Slider",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "defaultValue": 50
+      "props": {
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "defaultValue": 50
+      }
     },
     "slider-storage": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["storage-label-row", "storage-slider"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "storage-label-row",
+        "storage-slider"
+      ]
     },
     "storage-label-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "justify": "between",
-      "children": ["storage-label", "storage-value"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "justify": "between"
+      },
+      "children": [
+        "storage-label",
+        "storage-value"
+      ]
     },
     "storage-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "Data Storage",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Data Storage",
+        "weight": "semibold"
+      }
     },
     "storage-value": {
       "type": "Text",
-      "tag": "p",
-      "content": "250 GB"
+      "props": {
+        "tag": "p",
+        "content": "250 GB"
+      }
     },
     "storage-slider": {
       "type": "Slider",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "defaultValue": 25
+      "props": {
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "defaultValue": 25
+      }
     },
     "slider-bandwidth": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["bandwidth-label-row", "bandwidth-slider"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "bandwidth-label-row",
+        "bandwidth-slider"
+      ]
     },
     "bandwidth-label-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "justify": "between",
-      "children": ["bandwidth-label", "bandwidth-value"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "justify": "between"
+      },
+      "children": [
+        "bandwidth-label",
+        "bandwidth-value"
+      ]
     },
     "bandwidth-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "Bandwidth",
-      "weight": "semibold"
+      "props": {
+        "tag": "p",
+        "content": "Bandwidth",
+        "weight": "semibold"
+      }
     },
     "bandwidth-value": {
       "type": "Text",
-      "tag": "p",
-      "content": "500 GB"
+      "props": {
+        "tag": "p",
+        "content": "500 GB"
+      }
     },
     "bandwidth-slider": {
       "type": "Slider",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "defaultValue": 50
+      "props": {
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "defaultValue": 50
+      }
     },
     "calc-sep": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "calc-total-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "justify": "between",
-      "align": "center",
-      "children": ["total-label", "total-price"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "justify": "between",
+        "align": "center"
+      },
+      "children": [
+        "total-label",
+        "total-price"
+      ]
     },
     "total-label": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Estimated monthly cost"
+      "props": {
+        "tag": "h4",
+        "content": "Estimated monthly cost"
+      }
     },
     "total-price": {
       "type": "Text",
-      "tag": "h2",
-      "content": "$347"
+      "props": {
+        "tag": "h2",
+        "content": "$347"
+      }
     },
     "calc-breakdown": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["breakdown-requests", "breakdown-storage", "breakdown-bandwidth"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "breakdown-requests",
+        "breakdown-storage",
+        "breakdown-bandwidth"
+      ]
     },
     "breakdown-requests": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "between",
-      "children": ["breakdown-requests-label", "breakdown-requests-price"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "between"
+      },
+      "children": [
+        "breakdown-requests-label",
+        "breakdown-requests-price"
+      ]
     },
     "breakdown-requests-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "5M API requests",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "5M API requests",
+        "variant": "muted"
+      }
     },
     "breakdown-requests-price": {
       "type": "Text",
-      "tag": "span",
-      "content": "$175",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "$175",
+        "variant": "muted"
+      }
     },
     "breakdown-storage": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "between",
-      "children": ["breakdown-storage-label", "breakdown-storage-price"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "between"
+      },
+      "children": [
+        "breakdown-storage-label",
+        "breakdown-storage-price"
+      ]
     },
     "breakdown-storage-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "250 GB storage",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "250 GB storage",
+        "variant": "muted"
+      }
     },
     "breakdown-storage-price": {
       "type": "Text",
-      "tag": "span",
-      "content": "$62",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "$62",
+        "variant": "muted"
+      }
     },
     "breakdown-bandwidth": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "between",
-      "children": ["breakdown-bandwidth-label", "breakdown-bandwidth-price"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "between"
+      },
+      "children": [
+        "breakdown-bandwidth-label",
+        "breakdown-bandwidth-price"
+      ]
     },
     "breakdown-bandwidth-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "500 GB bandwidth",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "500 GB bandwidth",
+        "variant": "muted"
+      }
     },
     "breakdown-bandwidth-price": {
       "type": "Text",
-      "tag": "span",
-      "content": "$110",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "$110",
+        "variant": "muted"
+      }
     },
     "calc-cta": {
       "type": "Button",
-      "label": "Start building for free",
-      "variant": "primary",
-      "size": "lg"
+      "props": {
+        "label": "Start building for free",
+        "variant": "primary",
+        "size": "lg"
+      }
     }
   }
 }

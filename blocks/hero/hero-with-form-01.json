@@ -3,81 +3,135 @@
   "elements": {
     "hero-form": {
       "type": "Grid",
-      "columns": 2,
-      "gap": 6,
-      "children": ["hero-form-content", "hero-form-card"]
+      "props": {
+        "columns": 2,
+        "gap": 6
+      },
+      "children": [
+        "hero-form-content",
+        "hero-form-card"
+      ]
     },
     "hero-form-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "justify": "center",
-      "children": ["hero-form-heading", "hero-form-sub", "hero-form-benefits"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "justify": "center"
+      },
+      "children": [
+        "hero-form-heading",
+        "hero-form-sub",
+        "hero-form-benefits"
+      ]
     },
     "hero-form-heading": {
       "type": "Text",
-      "tag": "h1",
-      "content": "Hire senior engineers in emerging markets — vetted and ready in 48 hours",
-      "weight": "bold"
+      "props": {
+        "tag": "h1",
+        "content": "Hire senior engineers in emerging markets — vetted and ready in 48 hours",
+        "weight": "bold"
+      }
     },
     "hero-form-sub": {
       "type": "Text",
-      "tag": "p",
-      "content": "Topflight matches you with pre-screened developers from Latin America, Eastern Europe, and Southeast Asia. Same timezone overlap, 60% lower cost, zero HR overhead.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Topflight matches you with pre-screened developers from Latin America, Eastern Europe, and Southeast Asia. Same timezone overlap, 60% lower cost, zero HR overhead.",
+        "variant": "muted"
+      }
     },
     "hero-form-benefits": {
       "type": "List",
-      "items": [
-        { "primary": "3-year average retention rate of 94%", "icon": "check" },
-        { "primary": "All engineers pass a 5-stage technical assessment", "icon": "check" },
-        { "primary": "Replace any hire within 2 weeks, no questions asked", "icon": "check" },
-        { "primary": "Compliant payroll in 30+ countries", "icon": "check" }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "3-year average retention rate of 94%",
+            "icon": "check"
+          },
+          {
+            "primary": "All engineers pass a 5-stage technical assessment",
+            "icon": "check"
+          },
+          {
+            "primary": "Replace any hire within 2 weeks, no questions asked",
+            "icon": "check"
+          },
+          {
+            "primary": "Compliant payroll in 30+ countries",
+            "icon": "check"
+          }
+        ]
+      }
     },
     "hero-form-card": {
       "type": "Card",
-      "title": "Get matched with engineers",
-      "description": "Tell us what you need and we'll send curated profiles within one business day.",
-      "children": ["hero-form-fields"]
+      "props": {
+        "title": "Get matched with engineers",
+        "description": "Tell us what you need and we'll send curated profiles within one business day."
+      },
+      "children": [
+        "hero-form-fields"
+      ]
     },
     "hero-form-fields": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["hero-form-name", "hero-form-email", "hero-form-company", "hero-form-role", "hero-form-headcount", "hero-form-submit"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "hero-form-name",
+        "hero-form-email",
+        "hero-form-company",
+        "hero-form-role",
+        "hero-form-headcount",
+        "hero-form-submit"
+      ]
     },
     "hero-form-name": {
       "type": "Field",
-      "label": "Full Name",
-      "placeholder": "Jane Chen"
+      "props": {
+        "label": "Full Name",
+        "placeholder": "Jane Chen"
+      }
     },
     "hero-form-email": {
-      "type": "Field",
-      "label": "Work Email",
-      "placeholder": "jane@company.com",
-      "type": "email"
+      "type": "Input",
+      "props": {
+        "label": "Work Email",
+        "placeholder": "jane@company.com",
+        "type": "email"
+      }
     },
     "hero-form-company": {
       "type": "Field",
-      "label": "Company",
-      "placeholder": "Acme Corp"
+      "props": {
+        "label": "Company",
+        "placeholder": "Acme Corp"
+      }
     },
     "hero-form-role": {
       "type": "Select",
-      "label": "Role Needed",
-      "placeholder": "Select a role"
+      "props": {
+        "label": "Role Needed",
+        "placeholder": "Select a role"
+      }
     },
     "hero-form-headcount": {
       "type": "Select",
-      "label": "How many engineers?",
-      "placeholder": "Select"
+      "props": {
+        "label": "How many engineers?",
+        "placeholder": "Select"
+      }
     },
     "hero-form-submit": {
       "type": "Button",
-      "label": "Get Matched — It's Free",
-      "variant": "primary",
-      "size": "lg"
+      "props": {
+        "label": "Get Matched — It's Free",
+        "variant": "primary",
+        "size": "lg"
+      }
     }
   }
 }

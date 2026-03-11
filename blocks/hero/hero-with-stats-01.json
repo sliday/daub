@@ -3,94 +3,136 @@
   "elements": {
     "hero-stats": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 6,
-      "align": "center",
-      "children": ["hero-stats-content", "hero-stats-grid"]
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "align": "center"
+      },
+      "children": [
+        "hero-stats-content",
+        "hero-stats-grid"
+      ]
     },
     "hero-stats-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "align": "center",
-      "container": "narrow",
-      "children": ["hero-stats-badge", "hero-stats-heading", "hero-stats-sub", "hero-stats-actions"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "hero-stats-badge",
+        "hero-stats-heading",
+        "hero-stats-sub",
+        "hero-stats-actions"
+      ]
     },
     "hero-stats-badge": {
       "type": "Badge",
-      "text": "Series C — $120M raised",
-      "variant": "info"
+      "props": {
+        "text": "Series C — $120M raised",
+        "variant": "info"
+      }
     },
     "hero-stats-heading": {
       "type": "Text",
-      "tag": "h1",
-      "content": "The modern data warehouse for healthcare",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h1",
+        "content": "The modern data warehouse for healthcare",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "hero-stats-sub": {
       "type": "Text",
-      "tag": "p",
-      "content": "MedVault unifies clinical, claims, and operational data into a single HIPAA-compliant warehouse. Query across systems in seconds, not days. Built by engineers who spent a decade inside Epic and Cerner.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "MedVault unifies clinical, claims, and operational data into a single HIPAA-compliant warehouse. Query across systems in seconds, not days. Built by engineers who spent a decade inside Epic and Cerner.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "hero-stats-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "justify": "center",
-      "children": ["hero-stats-cta", "hero-stats-demo"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "justify": "center"
+      },
+      "children": [
+        "hero-stats-cta",
+        "hero-stats-demo"
+      ]
     },
     "hero-stats-cta": {
       "type": "Button",
-      "label": "Schedule a Demo",
-      "variant": "primary",
-      "size": "lg"
+      "props": {
+        "label": "Schedule a Demo",
+        "variant": "primary",
+        "size": "lg"
+      }
     },
     "hero-stats-demo": {
       "type": "Button",
-      "label": "View Case Studies",
-      "variant": "outline",
-      "size": "lg"
+      "props": {
+        "label": "View Case Studies",
+        "variant": "outline",
+        "size": "lg"
+      }
     },
     "hero-stats-grid": {
       "type": "Grid",
-      "columns": 4,
-      "gap": 4,
-      "children": ["hero-stat-1", "hero-stat-2", "hero-stat-3", "hero-stat-4"]
+      "props": {
+        "columns": 4,
+        "gap": 4
+      },
+      "children": [
+        "hero-stat-1",
+        "hero-stat-2",
+        "hero-stat-3",
+        "hero-stat-4"
+      ]
     },
     "hero-stat-1": {
       "type": "StatCard",
-      "value": "340+",
-      "label": "Hospital Systems",
-      "icon": "building-2",
-      "trend": "up",
-      "trendValue": "28% YoY"
+      "props": {
+        "value": "340+",
+        "label": "Hospital Systems",
+        "icon": "building-2",
+        "trend": "up",
+        "trendValue": "28% YoY"
+      }
     },
     "hero-stat-2": {
       "type": "StatCard",
-      "value": "4.2B",
-      "label": "Patient Records Processed",
-      "icon": "database",
-      "trend": "up",
-      "trendValue": "1.1B this quarter"
+      "props": {
+        "value": "4.2B",
+        "label": "Patient Records Processed",
+        "icon": "database",
+        "trend": "up",
+        "trendValue": "1.1B this quarter"
+      }
     },
     "hero-stat-3": {
       "type": "StatCard",
-      "value": "99.97%",
-      "label": "Uptime SLA",
-      "icon": "shield-check",
-      "trend": "up",
-      "trendValue": "Exceeded 36 months"
+      "props": {
+        "value": "99.97%",
+        "label": "Uptime SLA",
+        "icon": "shield-check",
+        "trend": "up",
+        "trendValue": "Exceeded 36 months"
+      }
     },
     "hero-stat-4": {
       "type": "StatCard",
-      "value": "< 200ms",
-      "label": "Median Query Time",
-      "icon": "zap",
-      "trend": "down",
-      "trendValue": "42% faster vs v2"
+      "props": {
+        "value": "< 200ms",
+        "label": "Median Query Time",
+        "icon": "zap",
+        "trend": "down",
+        "trendValue": "42% faster vs v2"
+      }
     }
   }
 }

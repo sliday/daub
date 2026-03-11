@@ -3,113 +3,182 @@
   "elements": {
     "register-form": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "align": "center",
-      "justify": "center",
-      "container": "narrow",
-      "children": ["register-card"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center",
+        "justify": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "register-card"
+      ]
     },
     "register-card": {
       "type": "Card",
-      "title": "Create your account",
-      "description": "Start your 14-day free trial. No credit card required.",
-      "children": ["card-body"]
+      "props": {
+        "title": "Create your account",
+        "description": "Start your 14-day free trial. No credit card required."
+      },
+      "children": [
+        "card-body"
+      ]
     },
     "card-body": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["name-row", "email-field", "password-field", "confirm-password-field", "terms-check", "register-btn", "divider", "login-prompt"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "name-row",
+        "email-field",
+        "password-field",
+        "confirm-password-field",
+        "terms-check",
+        "register-btn",
+        "divider",
+        "login-prompt"
+      ]
     },
     "name-row": {
       "type": "Grid",
-      "columns": 2,
-      "gap": 4,
-      "children": ["first-name-field", "last-name-field"]
+      "props": {
+        "columns": 2,
+        "gap": 4
+      },
+      "children": [
+        "first-name-field",
+        "last-name-field"
+      ]
     },
     "first-name-field": {
       "type": "Field",
-      "label": "First Name",
-      "children": ["first-name-input"]
+      "props": {
+        "label": "First Name"
+      },
+      "children": [
+        "first-name-input"
+      ]
     },
     "first-name-input": {
       "type": "Input",
-      "placeholder": "Jane"
+      "props": {
+        "placeholder": "Jane"
+      }
     },
     "last-name-field": {
       "type": "Field",
-      "label": "Last Name",
-      "children": ["last-name-input"]
+      "props": {
+        "label": "Last Name"
+      },
+      "children": [
+        "last-name-input"
+      ]
     },
     "last-name-input": {
       "type": "Input",
-      "placeholder": "Smith"
+      "props": {
+        "placeholder": "Smith"
+      }
     },
     "email-field": {
       "type": "Field",
-      "label": "Email Address",
-      "children": ["email-input"]
+      "props": {
+        "label": "Email Address"
+      },
+      "children": [
+        "email-input"
+      ]
     },
     "email-input": {
       "type": "Input",
-      "type": "email",
-      "placeholder": "jane@company.com"
+      "props": {
+        "placeholder": "jane@company.com",
+        "type": "email"
+      }
     },
     "password-field": {
       "type": "Field",
-      "label": "Password",
-      "children": ["password-input"]
+      "props": {
+        "label": "Password"
+      },
+      "children": [
+        "password-input"
+      ]
     },
     "password-input": {
       "type": "Input",
-      "type": "password",
-      "placeholder": "Create a strong password"
+      "props": {
+        "placeholder": "Create a strong password",
+        "type": "password"
+      }
     },
     "confirm-password-field": {
       "type": "Field",
-      "label": "Confirm Password",
-      "children": ["confirm-password-input"]
+      "props": {
+        "label": "Confirm Password"
+      },
+      "children": [
+        "confirm-password-input"
+      ]
     },
     "confirm-password-input": {
       "type": "Input",
-      "type": "password",
-      "placeholder": "Re-enter your password"
+      "props": {
+        "placeholder": "Re-enter your password",
+        "type": "password"
+      }
     },
     "terms-check": {
       "type": "Checkbox",
-      "label": "I agree to the Terms of Service and Privacy Policy",
-      "checked": false
+      "props": {
+        "label": "I agree to the Terms of Service and Privacy Policy",
+        "checked": false
+      }
     },
     "register-btn": {
       "type": "Button",
-      "label": "Create Account",
-      "variant": "primary",
-      "size": "lg"
+      "props": {
+        "label": "Create Account",
+        "variant": "primary",
+        "size": "lg"
+      }
     },
     "divider": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "login-prompt": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "align": "center",
-      "justify": "center",
-      "children": ["login-text", "login-link"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "login-text",
+        "login-link"
+      ]
     },
     "login-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "Already have an account?",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Already have an account?",
+        "variant": "muted"
+      }
     },
     "login-link": {
       "type": "Button",
-      "label": "Sign in",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "label": "Sign in",
+        "variant": "ghost",
+        "size": "sm"
+      }
     }
   }
 }

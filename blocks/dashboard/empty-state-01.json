@@ -3,40 +3,60 @@
   "elements": {
     "empty-state-section": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["empty-content"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "empty-content"
+      ]
     },
     "empty-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "align": "center",
-      "children": ["empty-placeholder", "empty-actions"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "align": "center"
+      },
+      "children": [
+        "empty-placeholder",
+        "empty-actions"
+      ]
     },
     "empty-placeholder": {
       "type": "EmptyState",
-      "title": "No reports yet",
-      "description": "Create your first report to start tracking performance metrics and visualizing your data.",
-      "icon": "bar-chart-2"
+      "props": {
+        "title": "No reports yet",
+        "description": "Create your first report to start tracking performance metrics and visualizing your data.",
+        "icon": "bar-chart-2"
+      }
     },
     "empty-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["btn-create-report", "btn-import"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "btn-create-report",
+        "btn-import"
+      ]
     },
     "btn-create-report": {
       "type": "Button",
-      "label": "Create Report",
-      "variant": "default",
-      "icon": "plus"
+      "props": {
+        "label": "Create Report",
+        "variant": "default",
+        "icon": "plus"
+      }
     },
     "btn-import": {
       "type": "Button",
-      "label": "Import Data",
-      "variant": "outline",
-      "icon": "upload"
+      "props": {
+        "label": "Import Data",
+        "variant": "outline",
+        "icon": "upload"
+      }
     }
   }
 }

@@ -3,256 +3,395 @@
   "elements": {
     "blog-grid": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["bg-header", "bg-sub", "bg-cards"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "bg-header",
+        "bg-sub",
+        "bg-cards"
+      ]
     },
     "bg-header": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Latest from the Blog",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Latest from the Blog",
+        "weight": "bold"
+      }
     },
     "bg-sub": {
       "type": "Text",
-      "tag": "p",
-      "content": "Insights on engineering, design, and building products at scale.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Insights on engineering, design, and building products at scale.",
+        "variant": "muted"
+      }
     },
     "bg-cards": {
       "type": "Grid",
-      "columns": 3,
-      "gap": 3,
-      "children": ["bg-post-1", "bg-post-2", "bg-post-3", "bg-post-4", "bg-post-5", "bg-post-6"]
+      "props": {
+        "columns": 3,
+        "gap": 3
+      },
+      "children": [
+        "bg-post-1",
+        "bg-post-2",
+        "bg-post-3",
+        "bg-post-4",
+        "bg-post-5",
+        "bg-post-6"
+      ]
     },
     "bg-post-1": {
       "type": "Card",
-      "children": ["bg-p1-inner"]
+      "children": [
+        "bg-p1-inner"
+      ]
     },
     "bg-p1-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["bg-p1-img", "bg-p1-cat", "bg-p1-title", "bg-p1-excerpt", "bg-p1-meta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "bg-p1-img",
+        "bg-p1-cat",
+        "bg-p1-title",
+        "bg-p1-excerpt",
+        "bg-p1-meta"
+      ]
     },
     "bg-p1-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/blog-react/600/340",
-      "alt": "React Server Components"
+      "props": {
+        "src": "https://picsum.photos/seed/blog-react/600/340",
+        "alt": "React Server Components"
+      }
     },
     "bg-p1-cat": {
       "type": "Chip",
-      "label": "Engineering",
-      "variant": "primary"
+      "props": {
+        "label": "Engineering",
+        "variant": "primary"
+      }
     },
     "bg-p1-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "How We Migrated to React Server Components",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "How We Migrated to React Server Components",
+        "weight": "bold"
+      }
     },
     "bg-p1-excerpt": {
       "type": "Text",
-      "tag": "p",
-      "content": "Our step-by-step journey migrating 200+ components to RSC, cutting bundle size by 40%.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Our step-by-step journey migrating 200+ components to RSC, cutting bundle size by 40%.",
+        "variant": "muted"
+      }
     },
     "bg-p1-meta": {
       "type": "Text",
-      "tag": "p",
-      "content": "Mar 5, 2026 · 8 min read",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Mar 5, 2026 · 8 min read",
+        "variant": "muted"
+      }
     },
     "bg-post-2": {
       "type": "Card",
-      "children": ["bg-p2-inner"]
+      "children": [
+        "bg-p2-inner"
+      ]
     },
     "bg-p2-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["bg-p2-img", "bg-p2-cat", "bg-p2-title", "bg-p2-excerpt", "bg-p2-meta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "bg-p2-img",
+        "bg-p2-cat",
+        "bg-p2-title",
+        "bg-p2-excerpt",
+        "bg-p2-meta"
+      ]
     },
     "bg-p2-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/blog-design/600/340",
-      "alt": "Design System Tokens"
+      "props": {
+        "src": "https://picsum.photos/seed/blog-design/600/340",
+        "alt": "Design System Tokens"
+      }
     },
     "bg-p2-cat": {
       "type": "Chip",
-      "label": "Design",
-      "variant": "secondary"
+      "props": {
+        "label": "Design",
+        "variant": "secondary"
+      }
     },
     "bg-p2-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Building a Design Token Pipeline That Scales",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Building a Design Token Pipeline That Scales",
+        "weight": "bold"
+      }
     },
     "bg-p2-excerpt": {
       "type": "Text",
-      "tag": "p",
-      "content": "How we automated design-to-code token syncing across web, iOS, and Android platforms.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "How we automated design-to-code token syncing across web, iOS, and Android platforms.",
+        "variant": "muted"
+      }
     },
     "bg-p2-meta": {
       "type": "Text",
-      "tag": "p",
-      "content": "Feb 28, 2026 · 6 min read",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Feb 28, 2026 · 6 min read",
+        "variant": "muted"
+      }
     },
     "bg-post-3": {
       "type": "Card",
-      "children": ["bg-p3-inner"]
+      "children": [
+        "bg-p3-inner"
+      ]
     },
     "bg-p3-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["bg-p3-img", "bg-p3-cat", "bg-p3-title", "bg-p3-excerpt", "bg-p3-meta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "bg-p3-img",
+        "bg-p3-cat",
+        "bg-p3-title",
+        "bg-p3-excerpt",
+        "bg-p3-meta"
+      ]
     },
     "bg-p3-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/blog-ai/600/340",
-      "alt": "AI Code Review"
+      "props": {
+        "src": "https://picsum.photos/seed/blog-ai/600/340",
+        "alt": "AI Code Review"
+      }
     },
     "bg-p3-cat": {
       "type": "Chip",
-      "label": "AI",
-      "variant": "primary"
+      "props": {
+        "label": "AI",
+        "variant": "primary"
+      }
     },
     "bg-p3-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "AI-Powered Code Review: Lessons from Production",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "AI-Powered Code Review: Lessons from Production",
+        "weight": "bold"
+      }
     },
     "bg-p3-excerpt": {
       "type": "Text",
-      "tag": "p",
-      "content": "What we learned deploying LLM-based code review to 50,000 pull requests per month.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "What we learned deploying LLM-based code review to 50,000 pull requests per month.",
+        "variant": "muted"
+      }
     },
     "bg-p3-meta": {
       "type": "Text",
-      "tag": "p",
-      "content": "Feb 21, 2026 · 12 min read",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Feb 21, 2026 · 12 min read",
+        "variant": "muted"
+      }
     },
     "bg-post-4": {
       "type": "Card",
-      "children": ["bg-p4-inner"]
+      "children": [
+        "bg-p4-inner"
+      ]
     },
     "bg-p4-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["bg-p4-img", "bg-p4-cat", "bg-p4-title", "bg-p4-excerpt", "bg-p4-meta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "bg-p4-img",
+        "bg-p4-cat",
+        "bg-p4-title",
+        "bg-p4-excerpt",
+        "bg-p4-meta"
+      ]
     },
     "bg-p4-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/blog-perf/600/340",
-      "alt": "Web Performance"
+      "props": {
+        "src": "https://picsum.photos/seed/blog-perf/600/340",
+        "alt": "Web Performance"
+      }
     },
     "bg-p4-cat": {
       "type": "Chip",
-      "label": "Performance",
-      "variant": "secondary"
+      "props": {
+        "label": "Performance",
+        "variant": "secondary"
+      }
     },
     "bg-p4-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Achieving Sub-100ms Page Loads at Scale",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Achieving Sub-100ms Page Loads at Scale",
+        "weight": "bold"
+      }
     },
     "bg-p4-excerpt": {
       "type": "Text",
-      "tag": "p",
-      "content": "Edge caching, streaming SSR, and lazy hydration techniques that cut our P95 latency in half.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Edge caching, streaming SSR, and lazy hydration techniques that cut our P95 latency in half.",
+        "variant": "muted"
+      }
     },
     "bg-p4-meta": {
       "type": "Text",
-      "tag": "p",
-      "content": "Feb 14, 2026 · 10 min read",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Feb 14, 2026 · 10 min read",
+        "variant": "muted"
+      }
     },
     "bg-post-5": {
       "type": "Card",
-      "children": ["bg-p5-inner"]
+      "children": [
+        "bg-p5-inner"
+      ]
     },
     "bg-p5-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["bg-p5-img", "bg-p5-cat", "bg-p5-title", "bg-p5-excerpt", "bg-p5-meta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "bg-p5-img",
+        "bg-p5-cat",
+        "bg-p5-title",
+        "bg-p5-excerpt",
+        "bg-p5-meta"
+      ]
     },
     "bg-p5-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/blog-culture/600/340",
-      "alt": "Remote Team Culture"
+      "props": {
+        "src": "https://picsum.photos/seed/blog-culture/600/340",
+        "alt": "Remote Team Culture"
+      }
     },
     "bg-p5-cat": {
       "type": "Chip",
-      "label": "Culture",
-      "variant": "secondary"
+      "props": {
+        "label": "Culture",
+        "variant": "secondary"
+      }
     },
     "bg-p5-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "How We Build Culture Across 12 Time Zones",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "How We Build Culture Across 12 Time Zones",
+        "weight": "bold"
+      }
     },
     "bg-p5-excerpt": {
       "type": "Text",
-      "tag": "p",
-      "content": "Our async-first rituals, virtual offsites, and documentation practices that keep us connected.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Our async-first rituals, virtual offsites, and documentation practices that keep us connected.",
+        "variant": "muted"
+      }
     },
     "bg-p5-meta": {
       "type": "Text",
-      "tag": "p",
-      "content": "Feb 7, 2026 · 5 min read",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Feb 7, 2026 · 5 min read",
+        "variant": "muted"
+      }
     },
     "bg-post-6": {
       "type": "Card",
-      "children": ["bg-p6-inner"]
+      "children": [
+        "bg-p6-inner"
+      ]
     },
     "bg-p6-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 2,
-      "children": ["bg-p6-img", "bg-p6-cat", "bg-p6-title", "bg-p6-excerpt", "bg-p6-meta"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "bg-p6-img",
+        "bg-p6-cat",
+        "bg-p6-title",
+        "bg-p6-excerpt",
+        "bg-p6-meta"
+      ]
     },
     "bg-p6-img": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/blog-security/600/340",
-      "alt": "Zero Trust Security"
+      "props": {
+        "src": "https://picsum.photos/seed/blog-security/600/340",
+        "alt": "Zero Trust Security"
+      }
     },
     "bg-p6-cat": {
       "type": "Chip",
-      "label": "Security",
-      "variant": "primary"
+      "props": {
+        "label": "Security",
+        "variant": "primary"
+      }
     },
     "bg-p6-title": {
       "type": "Text",
-      "tag": "h4",
-      "content": "Implementing Zero Trust Without Slowing Down Devs",
-      "weight": "bold"
+      "props": {
+        "tag": "h4",
+        "content": "Implementing Zero Trust Without Slowing Down Devs",
+        "weight": "bold"
+      }
     },
     "bg-p6-excerpt": {
       "type": "Text",
-      "tag": "p",
-      "content": "Balancing security requirements with developer experience using policy-as-code and automated compliance.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Balancing security requirements with developer experience using policy-as-code and automated compliance.",
+        "variant": "muted"
+      }
     },
     "bg-p6-meta": {
       "type": "Text",
-      "tag": "p",
-      "content": "Jan 31, 2026 · 9 min read",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Jan 31, 2026 · 9 min read",
+        "variant": "muted"
+      }
     }
   }
 }

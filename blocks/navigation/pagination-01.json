@@ -3,33 +3,49 @@
   "elements": {
     "pagination-wrapper": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["pagination-info", "pagination-controls"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "pagination-info",
+        "pagination-controls"
+      ]
     },
     "pagination-info": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "between",
-      "align": "center",
-      "children": ["pagination-showing", "pagination-per-page"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "between",
+        "align": "center"
+      },
+      "children": [
+        "pagination-showing",
+        "pagination-per-page"
+      ]
     },
     "pagination-showing": {
       "type": "Text",
-      "tag": "p",
-      "content": "Showing 41-60 of 2,847 results",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Showing 41-60 of 2,847 results",
+        "variant": "muted"
+      }
     },
     "pagination-per-page": {
       "type": "Select",
-      "label": "Per page",
-      "placeholder": "20"
+      "props": {
+        "label": "Per page",
+        "placeholder": "20"
+      }
     },
     "pagination-controls": {
       "type": "Pagination",
-      "total": 2847,
-      "current": 3,
-      "pageSize": 20
+      "props": {
+        "total": 2847,
+        "current": 3,
+        "pageSize": 20
+      }
     }
   }
 }

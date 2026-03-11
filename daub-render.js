@@ -389,17 +389,21 @@
     };
     
     // -- Field --
-    RENDERERS.Field = function(p) {
+    RENDERERS.Field = function(p, ch, els, d) {
       var el = mkEl('div', 'db-field' + (p.error ? ' db-field--error' : ''));
       if (p.label) {
         var lbl = mkEl('label', 'db-field__label', p.label);
         el.appendChild(lbl);
       }
-      var inp = document.createElement('input');
-      inp.className = 'db-field__input';
-      inp.type = p.type || 'text';
-      inp.placeholder = p.placeholder || '';
-      el.appendChild(inp);
+      if (ch && ch.length) {
+        el.appendChild(renderChildren(els, ch, d));
+      } else {
+        var inp = document.createElement('input');
+        inp.className = 'db-field__input';
+        inp.type = p.type || 'text';
+        inp.placeholder = p.placeholder || '';
+        el.appendChild(inp);
+      }
       if (p.helper) {
         var help = mkEl('span', 'db-field__helper', p.helper);
         el.appendChild(help);
@@ -1001,18 +1005,19 @@
       var el = mkEl('div', 'db-list');
       (p.items || []).forEach(function(item) {
         var li = mkEl('div', 'db-list__item');
-        if (item.icon) {
+        var obj = typeof item === 'string' ? { title: item } : item;
+        if (obj.icon) {
           var iconWrap = mkEl('div', 'db-list__icon');
           var ico = document.createElement('i');
-          ico.setAttribute('data-lucide', item.icon);
+          ico.setAttribute('data-lucide', obj.icon);
           ico.style.width = '16px';
           ico.style.height = '16px';
           iconWrap.appendChild(ico);
           li.appendChild(iconWrap);
         }
         var content = mkEl('div', 'db-list__content');
-        content.appendChild(mkEl('div', 'db-list__title', item.title || ''));
-        if (item.secondary) content.appendChild(mkEl('div', 'db-list__secondary', item.secondary));
+        content.appendChild(mkEl('div', 'db-list__title', obj.title || ''));
+        if (obj.secondary) content.appendChild(mkEl('div', 'db-list__secondary', obj.secondary));
         li.appendChild(content);
         el.appendChild(li);
       });

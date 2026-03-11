@@ -3,173 +3,263 @@
   "elements": {
     "event-countdown": {
       "type": "Surface",
-      "variant": "raised",
-      "children": ["event-countdown-inner"]
+      "props": {
+        "variant": "raised"
+      },
+      "children": [
+        "event-countdown-inner"
+      ]
     },
     "event-countdown-inner": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "align": "center",
-      "container": true,
-      "children": ["countdown-badge", "countdown-title", "countdown-date", "countdown-timer", "countdown-details", "countdown-actions"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "align": "center",
+        "container": true
+      },
+      "children": [
+        "countdown-badge",
+        "countdown-title",
+        "countdown-date",
+        "countdown-timer",
+        "countdown-details",
+        "countdown-actions"
+      ]
     },
     "countdown-badge": {
       "type": "Badge",
-      "text": "DevConnect 2026",
-      "variant": "default"
+      "props": {
+        "text": "DevConnect 2026",
+        "variant": "default"
+      }
     },
     "countdown-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "The Biggest Developer Conference of the Year",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "The Biggest Developer Conference of the Year",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "countdown-date": {
       "type": "Text",
-      "tag": "p",
-      "content": "June 14-15, 2026 / San Francisco, CA",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "June 14-15, 2026 / San Francisco, CA",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "countdown-timer": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "children": ["timer-days", "timer-sep-1", "timer-hours", "timer-sep-2", "timer-minutes", "timer-sep-3", "timer-seconds"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "timer-days",
+        "timer-sep-1",
+        "timer-hours",
+        "timer-sep-2",
+        "timer-minutes",
+        "timer-sep-3",
+        "timer-seconds"
+      ]
     },
     "timer-days": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "align": "center",
-      "children": ["timer-days-value", "timer-days-label"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center"
+      },
+      "children": [
+        "timer-days-value",
+        "timer-days-label"
+      ]
     },
     "timer-days-value": {
       "type": "Text",
-      "tag": "span",
-      "content": "96",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "96",
+        "weight": "bold"
+      }
     },
     "timer-days-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Days",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Days",
+        "variant": "muted"
+      }
     },
     "timer-sep-1": {
       "type": "Text",
-      "tag": "span",
-      "content": ":",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": ":",
+        "weight": "bold"
+      }
     },
     "timer-hours": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "align": "center",
-      "children": ["timer-hours-value", "timer-hours-label"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center"
+      },
+      "children": [
+        "timer-hours-value",
+        "timer-hours-label"
+      ]
     },
     "timer-hours-value": {
       "type": "Text",
-      "tag": "span",
-      "content": "14",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "14",
+        "weight": "bold"
+      }
     },
     "timer-hours-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Hours",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Hours",
+        "variant": "muted"
+      }
     },
     "timer-sep-2": {
       "type": "Text",
-      "tag": "span",
-      "content": ":",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": ":",
+        "weight": "bold"
+      }
     },
     "timer-minutes": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "align": "center",
-      "children": ["timer-minutes-value", "timer-minutes-label"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center"
+      },
+      "children": [
+        "timer-minutes-value",
+        "timer-minutes-label"
+      ]
     },
     "timer-minutes-value": {
       "type": "Text",
-      "tag": "span",
-      "content": "32",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "32",
+        "weight": "bold"
+      }
     },
     "timer-minutes-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Minutes",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Minutes",
+        "variant": "muted"
+      }
     },
     "timer-sep-3": {
       "type": "Text",
-      "tag": "span",
-      "content": ":",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": ":",
+        "weight": "bold"
+      }
     },
     "timer-seconds": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "align": "center",
-      "children": ["timer-seconds-value", "timer-seconds-label"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center"
+      },
+      "children": [
+        "timer-seconds-value",
+        "timer-seconds-label"
+      ]
     },
     "timer-seconds-value": {
       "type": "Text",
-      "tag": "span",
-      "content": "07",
-      "weight": "bold"
+      "props": {
+        "tag": "span",
+        "content": "07",
+        "weight": "bold"
+      }
     },
     "timer-seconds-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Seconds",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Seconds",
+        "variant": "muted"
+      }
     },
     "countdown-details": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 4,
-      "children": ["detail-speakers", "detail-workshops", "detail-attendees"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 4
+      },
+      "children": [
+        "detail-speakers",
+        "detail-workshops",
+        "detail-attendees"
+      ]
     },
     "detail-speakers": {
       "type": "Chip",
-      "label": "24 Speakers",
-      "variant": "secondary"
+      "props": {
+        "label": "24 Speakers",
+        "variant": "secondary"
+      }
     },
     "detail-workshops": {
       "type": "Chip",
-      "label": "8 Workshops",
-      "variant": "secondary"
+      "props": {
+        "label": "8 Workshops",
+        "variant": "secondary"
+      }
     },
     "detail-attendees": {
       "type": "Chip",
-      "label": "2,000 Attendees",
-      "variant": "secondary"
+      "props": {
+        "label": "2,000 Attendees",
+        "variant": "secondary"
+      }
     },
     "countdown-actions": {
       "type": "ButtonGroup",
-      "children": ["countdown-register-btn", "countdown-agenda-btn"]
+      "children": [
+        "countdown-register-btn",
+        "countdown-agenda-btn"
+      ]
     },
     "countdown-register-btn": {
       "type": "Button",
-      "label": "Register Now",
-      "variant": "default",
-      "size": "lg"
+      "props": {
+        "label": "Register Now",
+        "variant": "default",
+        "size": "lg"
+      }
     },
     "countdown-agenda-btn": {
       "type": "Button",
-      "label": "View Full Agenda",
-      "variant": "outline",
-      "size": "lg"
+      "props": {
+        "label": "View Full Agenda",
+        "variant": "outline",
+        "size": "lg"
+      }
     }
   }
 }

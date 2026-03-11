@@ -3,74 +3,113 @@
   "elements": {
     "team-featured": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["tf-inner"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "tf-inner"
+      ]
     },
     "tf-inner": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 5,
-      "align": "center",
-      "container": true,
-      "children": ["tf-photo", "tf-content"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 5,
+        "align": "center",
+        "container": true
+      },
+      "children": [
+        "tf-photo",
+        "tf-content"
+      ]
     },
     "tf-photo": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/founder-kate/400/500",
-      "alt": "Kate Morrison, Founder"
+      "props": {
+        "src": "https://picsum.photos/seed/founder-kate/400/500",
+        "alt": "Kate Morrison, Founder"
+      }
     },
     "tf-content": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["tf-label", "tf-name", "tf-title", "tf-quote", "tf-bio", "tf-social"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "tf-label",
+        "tf-name",
+        "tf-title",
+        "tf-quote",
+        "tf-bio",
+        "tf-social"
+      ]
     },
     "tf-label": {
       "type": "Badge",
-      "text": "Founder Spotlight",
-      "variant": "primary"
+      "props": {
+        "text": "Founder Spotlight",
+        "variant": "primary"
+      }
     },
     "tf-name": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Kate Morrison",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Kate Morrison",
+        "weight": "bold"
+      }
     },
     "tf-title": {
       "type": "Text",
-      "tag": "p",
-      "content": "Founder & CEO",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Founder & CEO",
+        "variant": "muted"
+      }
     },
     "tf-quote": {
       "type": "Prose",
-      "content": "\"I started this company because I saw brilliant teams wasting hours on repetitive tasks that software should handle. Our mission is to give every team superpowers — regardless of their size or budget.\""
+      "props": {
+        "content": "\"I started this company because I saw brilliant teams wasting hours on repetitive tasks that software should handle. Our mission is to give every team superpowers — regardless of their size or budget.\""
+      }
     },
     "tf-bio": {
       "type": "Text",
-      "tag": "p",
-      "content": "Kate spent 12 years in product engineering at Apple and Shopify before founding the company in 2021. She's been recognized on Forbes 30 Under 30 and was named Product Hunt's Maker of the Year in 2023. Under her leadership, the company has grown to 85 employees and serves over 10,000 teams worldwide.",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Kate spent 12 years in product engineering at Apple and Shopify before founding the company in 2021. She's been recognized on Forbes 30 Under 30 and was named Product Hunt's Maker of the Year in 2023. Under her leadership, the company has grown to 85 employees and serves over 10,000 teams worldwide.",
+        "variant": "muted"
+      }
     },
     "tf-social": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "children": ["tf-btn-twitter", "tf-btn-linkedin"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "tf-btn-twitter",
+        "tf-btn-linkedin"
+      ]
     },
     "tf-btn-twitter": {
       "type": "Button",
-      "label": "Follow on X",
-      "variant": "outline",
-      "size": "sm",
-      "icon": "twitter"
+      "props": {
+        "label": "Follow on X",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "twitter"
+      }
     },
     "tf-btn-linkedin": {
       "type": "Button",
-      "label": "Connect on LinkedIn",
-      "variant": "outline",
-      "size": "sm",
-      "icon": "linkedin"
+      "props": {
+        "label": "Connect on LinkedIn",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "linkedin"
+      }
     }
   }
 }

@@ -3,103 +3,152 @@
   "elements": {
     "not-found-page": {
       "type": "Stack",
-      "direction": "vertical",
-      "align": "center",
-      "justify": "center",
-      "gap": 4,
-      "container": true,
-      "children": ["illustration-area", "error-code", "error-heading", "error-description", "search-section", "nav-buttons", "help-links"]
+      "props": {
+        "direction": "vertical",
+        "align": "center",
+        "justify": "center",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "illustration-area",
+        "error-code",
+        "error-heading",
+        "error-description",
+        "search-section",
+        "nav-buttons",
+        "help-links"
+      ]
     },
     "illustration-area": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/lost404/400/250",
-      "alt": "Lost in space illustration"
+      "props": {
+        "src": "https://picsum.photos/seed/lost404/400/250",
+        "alt": "Lost in space illustration"
+      }
     },
     "error-code": {
       "type": "Text",
-      "tag": "span",
-      "content": "404",
-      "weight": "bold",
-      "align": "center",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "404",
+        "weight": "bold",
+        "align": "center",
+        "variant": "muted"
+      }
     },
     "error-heading": {
       "type": "Text",
-      "tag": "h1",
-      "content": "Page not found",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h1",
+        "content": "Page not found",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "error-description": {
       "type": "Text",
-      "tag": "p",
-      "content": "Sorry, the page you're looking for doesn't exist or has been moved. Try searching for what you need or head back to the homepage.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Sorry, the page you're looking for doesn't exist or has been moved. Try searching for what you need or head back to the homepage.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "search-section": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["search-input", "search-button"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "search-input",
+        "search-button"
+      ]
     },
     "search-input": {
       "type": "Search",
-      "placeholder": "Search for pages, articles, products..."
+      "props": {
+        "placeholder": "Search for pages, articles, products..."
+      }
     },
     "search-button": {
       "type": "Button",
-      "label": "Search",
-      "variant": "primary",
-      "icon": "search"
+      "props": {
+        "label": "Search",
+        "variant": "primary",
+        "icon": "search"
+      }
     },
     "nav-buttons": {
       "type": "ButtonGroup",
-      "children": ["home-button", "back-button"]
+      "children": [
+        "home-button",
+        "back-button"
+      ]
     },
     "home-button": {
       "type": "Button",
-      "label": "Go to Homepage",
-      "variant": "primary",
-      "icon": "home"
+      "props": {
+        "label": "Go to Homepage",
+        "variant": "primary",
+        "icon": "home"
+      }
     },
     "back-button": {
       "type": "Button",
-      "label": "Go Back",
-      "variant": "outline",
-      "icon": "arrow-left"
+      "props": {
+        "label": "Go Back",
+        "variant": "outline",
+        "icon": "arrow-left"
+      }
     },
     "help-links": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 3,
-      "align": "center",
-      "children": ["help-label", "link-docs", "link-support", "link-status"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "help-label",
+        "link-docs",
+        "link-support",
+        "link-status"
+      ]
     },
     "help-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Helpful links:",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Helpful links:",
+        "variant": "muted"
+      }
     },
     "link-docs": {
       "type": "Button",
-      "label": "Documentation",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "label": "Documentation",
+        "variant": "ghost",
+        "size": "sm"
+      }
     },
     "link-support": {
       "type": "Button",
-      "label": "Contact Support",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "label": "Contact Support",
+        "variant": "ghost",
+        "size": "sm"
+      }
     },
     "link-status": {
       "type": "Button",
-      "label": "System Status",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "label": "System Status",
+        "variant": "ghost",
+        "size": "sm"
+      }
     }
   }
 }

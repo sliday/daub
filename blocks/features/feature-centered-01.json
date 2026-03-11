@@ -3,113 +3,168 @@
   "elements": {
     "feature-centered-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "align": "center",
-      "container": "narrow",
-      "children": ["centered-badge", "centered-title", "centered-desc", "centered-image", "centered-stats"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "centered-badge",
+        "centered-title",
+        "centered-desc",
+        "centered-image",
+        "centered-stats"
+      ]
     },
     "centered-badge": {
       "type": "Badge",
-      "text": "Real-Time Analytics",
-      "variant": "new"
+      "props": {
+        "text": "Real-Time Analytics",
+        "variant": "new"
+      }
     },
     "centered-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Understand your data the moment it arrives",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Understand your data the moment it arrives",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "centered-desc": {
       "type": "Text",
-      "tag": "p",
-      "content": "Pulse Analytics ingests billions of events per day and surfaces actionable insights in under 200ms. No batch jobs, no stale dashboards, just answers when you need them.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Pulse Analytics ingests billions of events per day and surfaces actionable insights in under 200ms. No batch jobs, no stale dashboards, just answers when you need them.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "centered-image": {
       "type": "Image",
-      "src": "https://picsum.photos/seed/analytics-dashboard/800/450",
-      "alt": "Real-time analytics dashboard showing live user activity"
+      "props": {
+        "src": "https://picsum.photos/seed/analytics-dashboard/800/450",
+        "alt": "Real-time analytics dashboard showing live user activity"
+      }
     },
     "centered-stats": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 5,
-      "justify": "center",
-      "children": ["stat-events", "stat-sep-1", "stat-latency", "stat-sep-2", "stat-uptime"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 5,
+        "justify": "center"
+      },
+      "children": [
+        "stat-events",
+        "stat-sep-1",
+        "stat-latency",
+        "stat-sep-2",
+        "stat-uptime"
+      ]
     },
     "stat-events": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "align": "center",
-      "children": ["stat-events-value", "stat-events-label"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center"
+      },
+      "children": [
+        "stat-events-value",
+        "stat-events-label"
+      ]
     },
     "stat-events-value": {
       "type": "Text",
-      "tag": "h3",
-      "content": "14B+",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h3",
+        "content": "14B+",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "stat-events-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "Events processed daily",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Events processed daily",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "stat-sep-1": {
       "type": "Separator",
-      "orientation": "vertical"
+      "props": {
+        "orientation": "vertical"
+      }
     },
     "stat-latency": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "align": "center",
-      "children": ["stat-latency-value", "stat-latency-label"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center"
+      },
+      "children": [
+        "stat-latency-value",
+        "stat-latency-label"
+      ]
     },
     "stat-latency-value": {
       "type": "Text",
-      "tag": "h3",
-      "content": "<200ms",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h3",
+        "content": "<200ms",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "stat-latency-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "Query response time",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Query response time",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "stat-sep-2": {
       "type": "Separator",
-      "orientation": "vertical"
+      "props": {
+        "orientation": "vertical"
+      }
     },
     "stat-uptime": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "align": "center",
-      "children": ["stat-uptime-value", "stat-uptime-label"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center"
+      },
+      "children": [
+        "stat-uptime-value",
+        "stat-uptime-label"
+      ]
     },
     "stat-uptime-value": {
       "type": "Text",
-      "tag": "h3",
-      "content": "99.99%",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h3",
+        "content": "99.99%",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "stat-uptime-label": {
       "type": "Text",
-      "tag": "p",
-      "content": "Uptime SLA",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "Uptime SLA",
+        "variant": "muted",
+        "align": "center"
+      }
     }
   }
 }

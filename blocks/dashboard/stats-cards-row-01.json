@@ -3,41 +3,56 @@
   "elements": {
     "stats-row": {
       "type": "Grid",
-      "columns": 4,
-      "gap": 4,
-      "children": ["card-revenue", "card-users", "card-orders", "card-conversion"]
+      "props": {
+        "columns": 4,
+        "gap": 4
+      },
+      "children": [
+        "card-revenue",
+        "card-users",
+        "card-orders",
+        "card-conversion"
+      ]
     },
     "card-revenue": {
       "type": "StatCard",
-      "value": "$128,430",
-      "label": "Total Revenue",
-      "icon": "dollar-sign",
-      "trend": "up",
-      "trendValue": "+12.5%"
+      "props": {
+        "value": "$128,430",
+        "label": "Total Revenue",
+        "icon": "dollar-sign",
+        "trend": "up",
+        "trendValue": "+12.5%"
+      }
     },
     "card-users": {
       "type": "StatCard",
-      "value": "14,209",
-      "label": "Active Users",
-      "icon": "users",
-      "trend": "up",
-      "trendValue": "+8.2%"
+      "props": {
+        "value": "14,209",
+        "label": "Active Users",
+        "icon": "users",
+        "trend": "up",
+        "trendValue": "+8.2%"
+      }
     },
     "card-orders": {
       "type": "StatCard",
-      "value": "1,847",
-      "label": "New Orders",
-      "icon": "shopping-cart",
-      "trend": "down",
-      "trendValue": "-3.1%"
+      "props": {
+        "value": "1,847",
+        "label": "New Orders",
+        "icon": "shopping-cart",
+        "trend": "down",
+        "trendValue": "-3.1%"
+      }
     },
     "card-conversion": {
       "type": "StatCard",
-      "value": "3.24%",
-      "label": "Conversion Rate",
-      "icon": "trending-up",
-      "trend": "up",
-      "trendValue": "+0.8%"
+      "props": {
+        "value": "3.24%",
+        "label": "Conversion Rate",
+        "icon": "trending-up",
+        "trend": "up",
+        "trendValue": "+0.8%"
+      }
     }
   }
 }

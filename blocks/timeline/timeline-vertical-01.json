@@ -3,65 +3,77 @@
   "elements": {
     "timeline-vertical": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "container": true,
-      "children": ["timeline-heading", "timeline-subheading", "timeline-list"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "container": true
+      },
+      "children": [
+        "timeline-heading",
+        "timeline-subheading",
+        "timeline-list"
+      ]
     },
     "timeline-heading": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Our Journey",
-      "weight": "bold",
-      "align": "center"
+      "props": {
+        "tag": "h2",
+        "content": "Our Journey",
+        "weight": "bold",
+        "align": "center"
+      }
     },
     "timeline-subheading": {
       "type": "Text",
-      "tag": "p",
-      "content": "From a small garage startup to a global platform serving millions.",
-      "variant": "muted",
-      "align": "center"
+      "props": {
+        "tag": "p",
+        "content": "From a small garage startup to a global platform serving millions.",
+        "variant": "muted",
+        "align": "center"
+      }
     },
     "timeline-list": {
       "type": "List",
-      "items": [
-        {
-          "primary": "Company Founded",
-          "secondary": "Two engineers quit their day jobs and started building in a shared coworking space in Austin, TX.",
-          "icon": "rocket",
-          "meta": "Jan 2018"
-        },
-        {
-          "primary": "Seed Round Closed",
-          "secondary": "Raised $2.4M from Cascade Ventures to build the first version of the platform.",
-          "icon": "banknote",
-          "meta": "Sep 2018"
-        },
-        {
-          "primary": "Public Beta Launch",
-          "secondary": "Opened the platform to 5,000 early adopters. Reached 1,000 daily active users within the first month.",
-          "icon": "globe",
-          "meta": "Mar 2019"
-        },
-        {
-          "primary": "Series A Funding",
-          "secondary": "Secured $18M led by Horizon Capital. Expanded the team from 8 to 35 employees.",
-          "icon": "trending-up",
-          "meta": "Nov 2020"
-        },
-        {
-          "primary": "1 Million Users",
-          "secondary": "Hit the one-million registered user milestone. Launched enterprise tier and SOC 2 compliance.",
-          "icon": "users",
-          "meta": "Jun 2022"
-        },
-        {
-          "primary": "Global Expansion",
-          "secondary": "Opened offices in London and Tokyo. Rolled out multi-language support for 12 languages.",
-          "icon": "map",
-          "meta": "Feb 2024"
-        }
-      ]
+      "props": {
+        "items": [
+          {
+            "primary": "Company Founded",
+            "secondary": "Two engineers quit their day jobs and started building in a shared coworking space in Austin, TX.",
+            "icon": "rocket",
+            "meta": "Jan 2018"
+          },
+          {
+            "primary": "Seed Round Closed",
+            "secondary": "Raised $2.4M from Cascade Ventures to build the first version of the platform.",
+            "icon": "banknote",
+            "meta": "Sep 2018"
+          },
+          {
+            "primary": "Public Beta Launch",
+            "secondary": "Opened the platform to 5,000 early adopters. Reached 1,000 daily active users within the first month.",
+            "icon": "globe",
+            "meta": "Mar 2019"
+          },
+          {
+            "primary": "Series A Funding",
+            "secondary": "Secured $18M led by Horizon Capital. Expanded the team from 8 to 35 employees.",
+            "icon": "trending-up",
+            "meta": "Nov 2020"
+          },
+          {
+            "primary": "1 Million Users",
+            "secondary": "Hit the one-million registered user milestone. Launched enterprise tier and SOC 2 compliance.",
+            "icon": "users",
+            "meta": "Jun 2022"
+          },
+          {
+            "primary": "Global Expansion",
+            "secondary": "Opened offices in London and Tokyo. Rolled out multi-language support for 12 languages.",
+            "icon": "map",
+            "meta": "Feb 2024"
+          }
+        ]
+      }
     }
   }
 }

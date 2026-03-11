@@ -3,93 +3,144 @@
   "elements": {
     "login-form": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 0,
-      "align": "center",
-      "justify": "center",
-      "container": "narrow",
-      "children": ["login-card"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center",
+        "justify": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "login-card"
+      ]
     },
     "login-card": {
       "type": "Card",
-      "title": "Welcome back",
-      "description": "Sign in to your account to continue",
-      "children": ["card-body"]
+      "props": {
+        "title": "Welcome back",
+        "description": "Sign in to your account to continue"
+      },
+      "children": [
+        "card-body"
+      ]
     },
     "card-body": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 4,
-      "children": ["email-field", "password-field", "options-row", "login-btn", "divider-row", "signup-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "email-field",
+        "password-field",
+        "options-row",
+        "login-btn",
+        "divider-row",
+        "signup-text"
+      ]
     },
     "email-field": {
       "type": "Field",
-      "label": "Email",
-      "children": ["email-input"]
+      "props": {
+        "label": "Email"
+      },
+      "children": [
+        "email-input"
+      ]
     },
     "email-input": {
       "type": "Input",
-      "type": "email",
-      "placeholder": "you@example.com"
+      "props": {
+        "placeholder": "you@example.com",
+        "type": "email"
+      }
     },
     "password-field": {
       "type": "Field",
-      "label": "Password",
-      "children": ["password-input"]
+      "props": {
+        "label": "Password"
+      },
+      "children": [
+        "password-input"
+      ]
     },
     "password-input": {
       "type": "Input",
-      "type": "password",
-      "placeholder": "Enter your password"
+      "props": {
+        "placeholder": "Enter your password",
+        "type": "password"
+      }
     },
     "options-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 0,
-      "align": "center",
-      "justify": "between",
-      "children": ["remember-check", "forgot-link"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 0,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "remember-check",
+        "forgot-link"
+      ]
     },
     "remember-check": {
       "type": "Checkbox",
-      "label": "Remember me",
-      "checked": false
+      "props": {
+        "label": "Remember me",
+        "checked": false
+      }
     },
     "forgot-link": {
       "type": "Button",
-      "label": "Forgot password?",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "label": "Forgot password?",
+        "variant": "ghost",
+        "size": "sm"
+      }
     },
     "login-btn": {
       "type": "Button",
-      "label": "Sign In",
-      "variant": "primary",
-      "size": "lg"
+      "props": {
+        "label": "Sign In",
+        "variant": "primary",
+        "size": "lg"
+      }
     },
     "divider-row": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "signup-text": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 1,
-      "align": "center",
-      "justify": "center",
-      "children": ["no-account-text", "signup-link"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "no-account-text",
+        "signup-link"
+      ]
     },
     "no-account-text": {
       "type": "Text",
-      "tag": "p",
-      "content": "Don't have an account?",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Don't have an account?",
+        "variant": "muted"
+      }
     },
     "signup-link": {
       "type": "Button",
-      "label": "Sign up",
-      "variant": "ghost",
-      "size": "sm"
+      "props": {
+        "label": "Sign up",
+        "variant": "ghost",
+        "size": "sm"
+      }
     }
   }
 }

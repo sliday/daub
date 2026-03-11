@@ -3,26 +3,38 @@
   "elements": {
     "theme-toggle-root": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["theme-sun-label", "theme-toggle-switch", "theme-moon-label"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "theme-sun-label",
+        "theme-toggle-switch",
+        "theme-moon-label"
+      ]
     },
     "theme-sun-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Light"
+      "props": {
+        "tag": "span",
+        "content": "Light"
+      }
     },
     "theme-toggle-switch": {
       "type": "Toggle",
-      "label": "Toggle dark mode",
-      "pressed": false
+      "props": {
+        "label": "Toggle dark mode",
+        "pressed": false
+      }
     },
     "theme-moon-label": {
       "type": "Text",
-      "tag": "span",
-      "content": "Dark",
-      "variant": "muted"
+      "props": {
+        "tag": "span",
+        "content": "Dark",
+        "variant": "muted"
+      }
     }
   }
 }

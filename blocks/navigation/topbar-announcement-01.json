@@ -3,33 +3,49 @@
   "elements": {
     "topbar": {
       "type": "Surface",
-      "variant": "flat",
-      "children": ["topbar-inner"]
+      "props": {
+        "variant": "flat"
+      },
+      "children": [
+        "topbar-inner"
+      ]
     },
     "topbar-inner": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "justify": "center",
-      "children": ["topbar-badge", "topbar-text", "topbar-link"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "topbar-badge",
+        "topbar-text",
+        "topbar-link"
+      ]
     },
     "topbar-badge": {
       "type": "Badge",
-      "text": "New",
-      "variant": "new"
+      "props": {
+        "text": "New",
+        "variant": "new"
+      }
     },
     "topbar-text": {
       "type": "Text",
-      "tag": "span",
-      "content": "We just raised our Series B! Read about our plans for 2026."
+      "props": {
+        "tag": "span",
+        "content": "We just raised our Series B! Read about our plans for 2026."
+      }
     },
     "topbar-link": {
       "type": "Button",
-      "label": "Learn More",
-      "variant": "ghost",
-      "size": "sm",
-      "icon": "arrow-right"
+      "props": {
+        "label": "Learn More",
+        "variant": "ghost",
+        "size": "sm",
+        "icon": "arrow-right"
+      }
     }
   }
 }

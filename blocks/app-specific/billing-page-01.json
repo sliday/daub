@@ -3,138 +3,248 @@
   "elements": {
     "billing-page-root": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 5,
-      "children": ["billing-header", "billing-plan-card", "billing-separator", "billing-invoices-section"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "billing-header",
+        "billing-plan-card",
+        "billing-separator",
+        "billing-invoices-section"
+      ]
     },
     "billing-header": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "between",
-      "align": "center",
-      "children": ["billing-title-group", "billing-manage-btn"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "between",
+        "align": "center"
+      },
+      "children": [
+        "billing-title-group",
+        "billing-manage-btn"
+      ]
     },
     "billing-title-group": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["billing-title", "billing-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "billing-title",
+        "billing-subtitle"
+      ]
     },
     "billing-title": {
       "type": "Text",
-      "tag": "h2",
-      "content": "Billing & Subscription",
-      "weight": "bold"
+      "props": {
+        "tag": "h2",
+        "content": "Billing & Subscription",
+        "weight": "bold"
+      }
     },
     "billing-subtitle": {
       "type": "Text",
-      "tag": "p",
-      "content": "Manage your plan, payment method, and invoices",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Manage your plan, payment method, and invoices",
+        "variant": "muted"
+      }
     },
     "billing-manage-btn": {
       "type": "Button",
-      "label": "Manage payment method",
-      "variant": "outline",
-      "icon": "credit-card"
+      "props": {
+        "label": "Manage payment method",
+        "variant": "outline",
+        "icon": "credit-card"
+      }
     },
     "billing-plan-card": {
       "type": "Surface",
-      "variant": "bordered",
-      "children": ["billing-plan-stack"]
+      "props": {
+        "variant": "bordered"
+      },
+      "children": [
+        "billing-plan-stack"
+      ]
     },
     "billing-plan-stack": {
       "type": "Stack",
-      "direction": "horizontal",
-      "justify": "between",
-      "align": "center",
-      "gap": 4,
-      "children": ["billing-plan-info", "billing-plan-actions"]
+      "props": {
+        "direction": "horizontal",
+        "justify": "between",
+        "align": "center",
+        "gap": 4
+      },
+      "children": [
+        "billing-plan-info",
+        "billing-plan-actions"
+      ]
     },
     "billing-plan-info": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 1,
-      "children": ["billing-plan-name-row", "billing-plan-price", "billing-plan-renew"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "billing-plan-name-row",
+        "billing-plan-price",
+        "billing-plan-renew"
+      ]
     },
     "billing-plan-name-row": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "align": "center",
-      "children": ["billing-plan-name", "billing-plan-badge"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "billing-plan-name",
+        "billing-plan-badge"
+      ]
     },
     "billing-plan-name": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Pro Plan",
-      "weight": "semibold"
+      "props": {
+        "tag": "h3",
+        "content": "Pro Plan",
+        "weight": "semibold"
+      }
     },
     "billing-plan-badge": {
       "type": "Badge",
-      "text": "Active",
-      "variant": "success"
+      "props": {
+        "text": "Active",
+        "variant": "success"
+      }
     },
     "billing-plan-price": {
       "type": "Text",
-      "tag": "p",
-      "content": "$49/month per seat - 8 seats"
+      "props": {
+        "tag": "p",
+        "content": "$49/month per seat - 8 seats"
+      }
     },
     "billing-plan-renew": {
       "type": "Text",
-      "tag": "p",
-      "content": "Next billing date: April 1, 2026",
-      "variant": "muted"
+      "props": {
+        "tag": "p",
+        "content": "Next billing date: April 1, 2026",
+        "variant": "muted"
+      }
     },
     "billing-plan-actions": {
       "type": "Stack",
-      "direction": "horizontal",
-      "gap": 2,
-      "children": ["billing-upgrade-btn", "billing-cancel-btn"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2
+      },
+      "children": [
+        "billing-upgrade-btn",
+        "billing-cancel-btn"
+      ]
     },
     "billing-upgrade-btn": {
       "type": "Button",
-      "label": "Upgrade to Enterprise",
-      "variant": "default"
+      "props": {
+        "label": "Upgrade to Enterprise",
+        "variant": "default"
+      }
     },
     "billing-cancel-btn": {
       "type": "Button",
-      "label": "Cancel plan",
-      "variant": "ghost"
+      "props": {
+        "label": "Cancel plan",
+        "variant": "ghost"
+      }
     },
     "billing-separator": {
       "type": "Separator",
-      "orientation": "horizontal"
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "billing-invoices-section": {
       "type": "Stack",
-      "direction": "vertical",
-      "gap": 3,
-      "children": ["billing-invoices-heading", "billing-invoices-table"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "billing-invoices-heading",
+        "billing-invoices-table"
+      ]
     },
     "billing-invoices-heading": {
       "type": "Text",
-      "tag": "h3",
-      "content": "Invoice History",
-      "weight": "semibold"
+      "props": {
+        "tag": "h3",
+        "content": "Invoice History",
+        "weight": "semibold"
+      }
     },
     "billing-invoices-table": {
       "type": "DataTable",
-      "striped": true,
-      "hoverable": true,
-      "columns": [
-        { "key": "date", "label": "Date", "sortable": true },
-        { "key": "description", "label": "Description" },
-        { "key": "amount", "label": "Amount", "sortable": true },
-        { "key": "status", "label": "Status" }
-      ],
-      "rows": [
-        { "date": "Mar 1, 2026", "description": "Pro Plan - 8 seats", "amount": "$392.00", "status": "Paid" },
-        { "date": "Feb 1, 2026", "description": "Pro Plan - 8 seats", "amount": "$392.00", "status": "Paid" },
-        { "date": "Jan 1, 2026", "description": "Pro Plan - 6 seats", "amount": "$294.00", "status": "Paid" },
-        { "date": "Dec 1, 2025", "description": "Pro Plan - 6 seats", "amount": "$294.00", "status": "Paid" },
-        { "date": "Nov 1, 2025", "description": "Pro Plan - 5 seats", "amount": "$245.00", "status": "Paid" }
-      ]
+      "props": {
+        "striped": true,
+        "hoverable": true,
+        "columns": [
+          {
+            "key": "date",
+            "label": "Date",
+            "sortable": true
+          },
+          {
+            "key": "description",
+            "label": "Description"
+          },
+          {
+            "key": "amount",
+            "label": "Amount",
+            "sortable": true
+          },
+          {
+            "key": "status",
+            "label": "Status"
+          }
+        ],
+        "rows": [
+          {
+            "date": "Mar 1, 2026",
+            "description": "Pro Plan - 8 seats",
+            "amount": "$392.00",
+            "status": "Paid"
+          },
+          {
+            "date": "Feb 1, 2026",
+            "description": "Pro Plan - 8 seats",
+            "amount": "$392.00",
+            "status": "Paid"
+          },
+          {
+            "date": "Jan 1, 2026",
+            "description": "Pro Plan - 6 seats",
+            "amount": "$294.00",
+            "status": "Paid"
+          },
+          {
+            "date": "Dec 1, 2025",
+            "description": "Pro Plan - 6 seats",
+            "amount": "$294.00",
+            "status": "Paid"
+          },
+          {
+            "date": "Nov 1, 2025",
+            "description": "Pro Plan - 5 seats",
+            "amount": "$245.00",
+            "status": "Paid"
+          }
+        ]
+      }
     }
   }
 }
