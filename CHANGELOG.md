@@ -2,6 +2,12 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.13.2
+
+**Theme switcher nudge cleanup.**
+
+- Removed: bouncing arrow SVG from theme switcher nudge tooltip — bubble and close button remain
+
 ## v3.13.1
 
 **Roadmap refresh — positioning, architecture, and timeline update.**

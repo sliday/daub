@@ -2944,14 +2944,6 @@
       transform: translateY(0);
       pointer-events: auto;
     }
-    .db-nudge__arrow {
-      width: 20px;
-      height: 24px;
-      margin-left: 12px;
-      margin-bottom: -4px;
-      color: var(--db-terracotta);
-      animation: db-nudge-bounce 1.2s ease-in-out infinite;
-    }
     .db-nudge__bubble {
       background: var(--db-color-surface);
       border: 1px solid var(--db-terracotta);
@@ -2989,11 +2981,7 @@
       transition: opacity 0.2s;
     }
     .db-nudge__close:hover { opacity: 1; }
-    @keyframes db-nudge-bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(4px); }
-    }
-    @media (max-width: 480px) {
+@media (max-width: 480px) {
       .db-nudge__bubble { font-size: 0.75rem; padding: 6px 10px; }
     }
   </style>
@@ -3002,10 +2990,6 @@
       <span>Psst... try me. Every surface changes.</span>
       <button class="db-nudge__close" onclick="event.stopPropagation(); document.getElementById('db-nudge').remove();" aria-label="Dismiss">&times;</button>
     </div>
-    <svg class="db-nudge__arrow" viewBox="0 0 20 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 2 L10 18"/>
-      <path d="M4 13 L10 19 L16 13"/>
-    </svg>
   </div>
   <script>
     (function() {
