@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAUB — Case Studies</title>
+  <meta name="description" content="Real products built with DAUB. See how teams use DAUB's considered CSS components in production.">
+  <meta name="keywords" content="DAUB case studies, Dashrock, AWS Bedrock analytics, DAUB UI examples, production DAUB">
+  <meta name="theme-color" content="#C67B5C">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://daub.dev/case-studies.html">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM documentation">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DAUB — Case Studies">
+  <meta property="og:description" content="Real products built with DAUB. See how teams use DAUB's considered CSS components in production.">
+  <meta property="og:url" content="https://daub.dev/case-studies.html">
+  <meta property="og:site_name" content="DAUB UI">
+  <meta property="og:image" content="https://daub.dev/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="DAUB Case Studies — Real Products in Production">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DAUB — Case Studies">
+  <meta name="twitter:description" content="Real products built with DAUB. See how teams use DAUB's considered CSS components in production.">
+  <meta name="twitter:image" content="https://daub.dev/og-image.png">
+  <meta name="twitter:site" content="@staskulesh">
+
+  <!-- FOUC prevention -->
+  <script>
+    (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t);var s=localStorage.getItem('db-scheme');if(s)document.documentElement.setAttribute('data-scheme',s);var a=localStorage.getItem('db-accent');if(a)document.documentElement.style.setProperty('--db-terracotta',a)}catch(e){}})();
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
+
+  <!-- DAUB -->
+  <link rel="stylesheet" href="daub.css?v=3.0.20">
+
+  <style>
+    body { margin: 0; overflow-x: hidden; }
+
+    /* Nav (matches index.html) */
+    .db-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--db-cream);
+      border-bottom: 1px solid var(--db-sand);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+      font-family: var(--db-font-ui);
+      backdrop-filter: blur(8px);
+    }
+    .db-nav__brand {
+      font-family: var(--db-font-heading);
+      font-weight: 800;
+      font-size: 1.125rem;
+      color: var(--db-ink);
+      text-decoration: none;
+    }
+    .db-nav__links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .db-nav__links a {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-charcoal);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: var(--db-radius-2);
+      transition: color var(--db-transition), background var(--db-transition);
+    }
+    .db-nav__links a:hover {
+      color: var(--db-terracotta);
+      background: color-mix(in srgb, var(--db-ink) 7%, transparent);
+    }
+    .db-nav__link--active {
+      color: var(--db-terracotta) !important;
+      background: color-mix(in srgb, var(--db-terracotta) 15%, transparent) !important;
+    }
+    .db-nav__github {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-charcoal);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: var(--db-radius-2);
+      border: 1px solid var(--db-sand);
+      transition: border-color var(--db-transition);
+    }
+    .db-nav__github:hover {
+      border-color: var(--db-terracotta);
+    }
+    @media (max-width: 640px) {
+      .db-nav__links { gap: 2px; }
+      .db-nav__links a { font-size: 0.75rem; padding: 4px 8px; }
+      .db-nav__github span { display: none; }
+    }
+
+    /* Hero */
+    .cs-hero { text-align: center; padding: 80px 24px 48px; max-width: 720px; margin: 0 auto; }
+    .cs-hero h1 { font-family: var(--db-font-heading); font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.15; margin: 0 0 12px; color: var(--db-color-text); }
+    .cs-hero p { font-size: 1.1rem; line-height: 1.65; color: var(--db-color-text-secondary); margin: 0; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+    /* Case study container */
+    .cs-article { max-width: 800px; margin: 0 auto; padding: 0 24px 64px; }
+
+    /* Project header */
+    .cs-project-header { margin-bottom: 40px; }
+    .cs-project-header h2 { font-family: var(--db-font-heading); font-size: 2rem; margin: 0 0 8px; color: var(--db-color-text); }
+    .cs-project-header .cs-tagline { font-size: 1.15rem; color: var(--db-color-text-secondary); margin: 0 0 16px; line-height: 1.5; }
+    .cs-project-links { display: flex; flex-wrap: wrap; gap: 12px; }
+    .cs-project-links a {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; font-weight: 600; color: var(--db-terracotta);
+      text-decoration: none; padding: 6px 14px;
+      border: 1px solid color-mix(in srgb, var(--db-terracotta) 30%, transparent);
+      border-radius: var(--db-radius-2);
+      transition: background var(--db-transition);
+    }
+    .cs-project-links a:hover { background: color-mix(in srgb, var(--db-terracotta) 10%, transparent); }
+
+    /* Quote */
+    .cs-quote {
+      margin: 0 0 40px;
+      padding: 20px 24px;
+      background: color-mix(in srgb, var(--db-terracotta) 8%, transparent);
+      border-left: 3px solid var(--db-terracotta);
+      border-radius: 0 var(--db-radius-2) var(--db-radius-2) 0;
+      font-style: italic;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--db-color-text);
+    }
+    .cs-quote cite {
+      display: block; margin-top: 12px;
+      font-style: normal; font-size: 0.85rem;
+      color: var(--db-color-text-muted);
+    }
+    .cs-quote cite a { color: var(--db-terracotta); text-decoration: none; }
+
+    /* Sections */
+    .cs-section { margin-bottom: 40px; }
+    .cs-section h3 {
+      font-family: var(--db-font-heading); font-size: 1.25rem;
+      margin: 0 0 12px; color: var(--db-color-text);
+      padding-bottom: 8px; border-bottom: 1px solid var(--db-color-border);
+    }
+    .cs-section p, .cs-section li {
+      font-size: 0.95rem; line-height: 1.7;
+      color: var(--db-color-text-secondary);
+    }
+    .cs-section ul { padding-left: 20px; margin: 0; }
+    .cs-section li { margin-bottom: 6px; }
+
+    /* Screenshot gallery */
+    .cs-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    .cs-gallery figure { margin: 0; }
+    .cs-gallery img {
+      width: 100%; display: block;
+      border: 1px solid var(--db-color-border);
+      border-radius: var(--db-radius-2);
+    }
+    .cs-gallery figcaption {
+      font-size: 0.8rem; color: var(--db-color-text-muted);
+      text-align: center; margin-top: 8px; font-family: var(--db-font-ui);
+    }
+    @media (max-width: 560px) {
+      .cs-gallery { grid-template-columns: 1fr; }
+    }
+
+    /* Tech stack pills */
+    .cs-stack { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+    .cs-stack-pill {
+      font-size: 0.8rem; padding: 5px 14px;
+      border-radius: 20px; font-family: var(--db-font-ui);
+      background: var(--db-color-bg); border: 1px solid var(--db-color-border);
+      color: var(--db-color-text-secondary);
+    }
+    .cs-stack-pill--highlight {
+      background: color-mix(in srgb, var(--db-terracotta) 12%, transparent);
+      border-color: color-mix(in srgb, var(--db-terracotta) 30%, transparent);
+      color: var(--db-terracotta); font-weight: 600;
+    }
+
+    /* Tweet embed */
+    .cs-tweet-img {
+      width: 100%; max-width: 520px; display: block;
+      border: 1px solid var(--db-color-border);
+      border-radius: var(--db-radius-2);
+      margin: 0 auto 40px;
+    }
+
+    /* CTA */
+    .cs-cta {
+      text-align: center; padding: 48px 24px; margin-top: 24px;
+      border-top: 1px solid var(--db-color-border);
+    }
+    .cs-cta h3 { font-family: var(--db-font-heading); font-size: 1.4rem; margin: 0 0 8px; color: var(--db-color-text); }
+    .cs-cta p { font-size: 0.95rem; color: var(--db-color-text-secondary); margin: 0 0 20px; }
+    .cs-cta a {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--db-font-ui); font-size: 0.9rem; font-weight: 600;
+      color: var(--db-terracotta); text-decoration: none;
+      padding: 10px 20px; border: 1px solid var(--db-terracotta);
+      border-radius: var(--db-radius-2);
+      transition: background var(--db-transition);
+    }
+    .cs-cta a:hover { background: color-mix(in srgb, var(--db-terracotta) 10%, transparent); }
+
+    /* Footer */
+    .cs-footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--db-color-border); color: var(--db-color-text-muted); font-size: 0.85rem; }
+    .cs-footer a { color: var(--db-terracotta); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <!-- Nav -->
+  <nav class="db-nav" role="navigation" aria-label="Main">
+    <a href="/" class="db-nav__brand">DAUB</a>
+    <ul class="db-nav__links">
+      <li><a href="/">Components</a></li>
+      <li><a href="demo.html">Layouts</a></li>
+      <li><a href="playground.html">Playground</a></li>
+      <li><a href="roadmap.html">Roadmap</a></li>
+      <li><a href="case-studies.html" class="db-nav__link--active">Case Studies</a></li>
+      <li><a href="llms.txt">AI Docs</a></li>
+      <li>
+        <a href="https://github.com/sliday/daub" class="db-nav__github" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="cs-hero">
+    <h1>Case Studies</h1>
+    <p>Real products built with DAUB</p>
+  </section>
+
+  <!-- Dashrock Case Study -->
+  <article class="cs-article">
+
+    <div class="cs-project-header">
+      <h2>Dashrock</h2>
+      <p class="cs-tagline">Open-source AWS Bedrock analytics dashboard. Track usage, cost, and performance by team and app. Deploys in ~3 minutes via SST.</p>
+      <div class="cs-project-links">
+        <a href="https://dashrock.app" target="_blank" rel="noopener">
+          <i data-lucide="globe" style="width:14px;height:14px;"></i> dashrock.app
+        </a>
+        <a href="https://github.com/maratgaliev/dashrock" target="_blank" rel="noopener">
+          <i data-lucide="github" style="width:14px;height:14px;"></i> GitHub
+        </a>
+        <a href="https://marat.ca/dashrock-open-source-aws-bedrock-analytics/" target="_blank" rel="noopener">
+          <i data-lucide="file-text" style="width:14px;height:14px;"></i> Blog Post
+        </a>
+      </div>
+    </div>
+
+    <blockquote class="cs-quote">
+      "Built dashrock.app, needed to beautifully collect stats on Bedrock, separate respect to @staskulesh for the UI tool."
+      <cite>
+        <a href="https://x.com/Marat_Galiev" target="_blank" rel="noopener">@Marat_Galiev</a> (Marat Galiev) &middot; Mar 9, 2026 &middot; 3,342 views &middot; 19 likes &middot; 17 bookmarks
+      </cite>
+    </blockquote>
+
+    <div class="cs-section">
+      <h3>What it does</h3>
+      <p>
+        Dashrock is a serverless analytics platform for AWS Bedrock. It collects and visualizes LLM usage data across teams and applications — costs, token counts, model distribution, latency, and trends over time. Teams define apps and members in a simple YAML config, deploy via SST in minutes, and get a full analytics dashboard with no ongoing infrastructure to manage.
+      </p>
+    </div>
+
+    <div class="cs-gallery">
+      <figure>
+        <img src="case-studies/dashrock-overview.jpg" alt="Dashrock overview dashboard showing key metrics" loading="lazy">
+        <figcaption>Overview Dashboard</figcaption>
+      </figure>
+      <figure>
+        <img src="case-studies/dashrock-apps.jpg" alt="Dashrock AI Adoption dashboard" loading="lazy">
+        <figcaption>AI Adoption</figcaption>
+      </figure>
+      <figure>
+        <img src="case-studies/dashrock-usage.jpg" alt="Dashrock token usage breakdown" loading="lazy">
+        <figcaption>Token Usage</figcaption>
+      </figure>
+      <figure>
+        <img src="case-studies/dashrock-trends.jpg" alt="Dashrock usage trends over time" loading="lazy">
+        <figcaption>Usage Trends</figcaption>
+      </figure>
+    </div>
+
+    <div class="cs-section">
+      <h3>Tech Stack</h3>
+    </div>
+    <div class="cs-stack">
+      <span class="cs-stack-pill">Next.js</span>
+      <span class="cs-stack-pill">SST (Ion)</span>
+      <span class="cs-stack-pill">Chart.js</span>
+      <span class="cs-stack-pill cs-stack-pill--highlight">DAUB</span>
+      <span class="cs-stack-pill">AWS Lambda</span>
+      <span class="cs-stack-pill">AWS S3</span>
+      <span class="cs-stack-pill">AWS CloudFront</span>
+      <span class="cs-stack-pill">AWS EventBridge</span>
+    </div>
+
+    <div class="cs-section">
+      <h3>How DAUB is used</h3>
+      <p>
+        Dashrock uses DAUB for the entire dashboard UI — cards, tables, navigation, layout containers, and form elements. The classless CSS approach let Marat build clean, consistent interfaces rapidly with AI code assistance. DAUB's theme variables provide dark/light mode and the tactile, considered aesthetic that makes the analytics feel polished rather than utilitarian.
+      </p>
+      <p>
+        DAUB is credited in the project footer ("UI/UX built with daub.dev") and listed as a key dependency in the README tech stack.
+      </p>
+    </div>
+
+    <div class="cs-section">
+      <h3>Key Features</h3>
+      <ul>
+        <li>7 dashboard views: Overview, Applications, Models, Teams, Token Usage, Usage Trends, Cost Analysis</li>
+        <li>YAML-based team and application configuration</li>
+        <li>CSV export for all data tables</li>
+        <li>Date range filtering with presets</li>
+        <li>Custom domain support via CloudFront</li>
+        <li>HTTP Basic Auth for access control</li>
+        <li>~3 minute deploy via SST</li>
+      </ul>
+    </div>
+
+    <img src="case-studies/dashrock-stack.jpg" alt="Dashrock README showing DAUB in the tech stack" class="cs-tweet-img" loading="lazy">
+
+    <div class="cs-cta">
+      <h3>Built something with DAUB?</h3>
+      <p>We'd love to feature your project. Share it with us.</p>
+      <a href="https://x.com/staskulesh" target="_blank" rel="noopener">
+        <i data-lucide="message-circle" style="width:16px;height:16px;"></i> Tell us on Twitter
+      </a>
+    </div>
+
+  </article>
+
+  <footer class="cs-footer">
+    <p>Made with consideration by <a href="https://github.com/sliday">Sliday</a>. <a href="/">Back to components</a>.</p>
+  </footer>
+
+  <div class="db-theme-switcher"></div>
+  <script src="daub.js?v=3.0.20"></script>
+</body>
+</html>

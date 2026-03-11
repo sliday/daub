@@ -5,6 +5,7 @@ node_modules/
 !og-image.png
 *.jpeg
 *.jpg
+!case-studies/*.jpg
 .playwright-mcp/
 .claude/
 .npmrc
