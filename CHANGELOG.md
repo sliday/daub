@@ -2,6 +2,12 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.14.3
+
+**Hotfix — accordion animation for bare text nodes.**
+
+- Fix: accordion `grid-template-rows: 0fr` technique broke when content was bare text (no wrapper element). Switched to `max-height`/`overflow` approach that works with any content structure.
+
 ## v3.14.2
 
 **UX polish — navbar hover contrast, smooth accordion animation.**
