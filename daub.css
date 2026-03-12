@@ -3910,12 +3910,12 @@ textarea.db-field__input {
   font-size: 0.875rem;
   color: var(--db-warm-gray);
   line-height: 1.6;
-  transition: max-height 300ms ease, padding 300ms ease;
+  transition: max-height 300ms cubic-bezier(0.4, 0, 0.2, 1), padding 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .db-accordion__item--open .db-accordion__content {
-  max-height: 50em;
-  padding: 0 var(--db-space-5) var(--db-space-4);
+  max-height: 20em;
+  padding: var(--db-space-3) var(--db-space-5) var(--db-space-4);
 }
 
 /* ------------------------------------------------------------
