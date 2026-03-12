@@ -3903,24 +3903,18 @@ textarea.db-field__input {
 .db-accordion__item--open .db-accordion__icon { transform: rotate(180deg); }
 
 .db-accordion__content {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 300ms ease;
+  max-height: 0;
   overflow: hidden;
+  padding: 0 var(--db-space-5);
   font-family: var(--db-font-body);
   font-size: 0.875rem;
   color: var(--db-warm-gray);
   line-height: 1.6;
+  transition: max-height 300ms ease, padding 300ms ease;
 }
 
-.db-accordion__content > * {
-  overflow: hidden;
-  padding: 0 var(--db-space-5);
-}
-
-.db-accordion__item--open .db-accordion__content { grid-template-rows: 1fr; }
-
-.db-accordion__item--open .db-accordion__content > * {
+.db-accordion__item--open .db-accordion__content {
+  max-height: 50em;
   padding: 0 var(--db-space-5) var(--db-space-4);
 }
 
