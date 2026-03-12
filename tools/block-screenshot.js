@@ -187,9 +187,35 @@ async function main() {
       });
       await page.waitForTimeout(300);
 
-      // Capture the #app container
+      // Capture the #app container with aspect ratio constraints
       const app = await page.$('#app');
       if (app) {
+        const box = await app.boundingBox();
+        const minH = viewport.width * 0.3;  // minimum ~3.3:1 aspect ratio
+        const maxH = viewport.width * 2.5;  // maximum 1:2.5 aspect ratio
+
+        if (box && box.height < minH) {
+          // Pad short components: center content vertically with min-height
+          await page.evaluate((h) => {
+            const el = document.getElementById('app');
+            el.style.minHeight = h + 'px';
+            el.style.display = 'flex';
+            el.style.flexDirection = 'column';
+            el.style.justifyContent = 'center';
+          }, minH);
+          await page.waitForTimeout(100);
+        }
+
+        if (box && box.height > maxH) {
+          // Clip tall components (carousels): capture only visible portion
+          await page.evaluate((h) => {
+            const el = document.getElementById('app');
+            el.style.maxHeight = h + 'px';
+            el.style.overflow = 'hidden';
+          }, maxH);
+          await page.waitForTimeout(100);
+        }
+
         await app.screenshot({ path: pngPath });
       } else {
         await page.screenshot({ path: pngPath, fullPage: true });
