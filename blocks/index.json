@@ -878,7 +878,7 @@
       "Text",
       "Button"
     ],
-    "name": "Cta Banner",
+    "name": "CTA Banner",
     "description": "Cta Banner block for cta",
     "tags": [
       "cta",
@@ -901,7 +901,7 @@
       "Image",
       "Chip"
     ],
-    "name": "Cta Download",
+    "name": "CTA Download",
     "description": "Cta Download block for cta",
     "tags": [
       "cta",
@@ -923,7 +923,7 @@
       "Text",
       "Button"
     ],
-    "name": "Cta Floating",
+    "name": "CTA Floating",
     "description": "Cta Floating block for cta",
     "tags": [
       "cta",
@@ -944,7 +944,7 @@
       "ButtonGroup",
       "Button"
     ],
-    "name": "Cta Simple",
+    "name": "CTA Simple",
     "description": "Cta Simple block for cta",
     "tags": [
       "cta",
@@ -968,7 +968,7 @@
       "Input",
       "Button"
     ],
-    "name": "Cta Split",
+    "name": "CTA Split",
     "description": "Cta Split block for cta",
     "tags": [
       "cta",
@@ -992,7 +992,7 @@
       "AvatarGroup",
       "Avatar"
     ],
-    "name": "Cta With Form",
+    "name": "CTA With Form",
     "description": "Cta With Form block for cta",
     "tags": [
       "cta",
@@ -2158,7 +2158,7 @@
       "Grid",
       "NavMenu"
     ],
-    "name": "Footer With Cta",
+    "name": "Footer With CTA",
     "description": "Footer With Cta block for footer",
     "tags": [
       "footer",

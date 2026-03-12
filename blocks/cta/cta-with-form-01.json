@@ -85,7 +85,8 @@
         "direction": "horizontal",
         "gap": 2,
         "align": "center",
-        "justify": "center"
+        "justify": "center",
+        "wrap": false
       },
       "children": [
         "avatar-group",
@@ -94,43 +95,13 @@
     },
     "avatar-group": {
       "type": "AvatarGroup",
-      "children": [
-        "av-1",
-        "av-2",
-        "av-3",
-        "av-4"
-      ]
-    },
-    "av-1": {
-      "type": "Avatar",
       "props": {
-        "initials": "KL",
-        "size": "sm",
-        "src": "https://i.pravatar.cc/48?u=kate-lin"
-      }
-    },
-    "av-2": {
-      "type": "Avatar",
-      "props": {
-        "initials": "MR",
-        "size": "sm",
-        "src": "https://i.pravatar.cc/48?u=mike-ross"
-      }
-    },
-    "av-3": {
-      "type": "Avatar",
-      "props": {
-        "initials": "TA",
-        "size": "sm",
-        "src": "https://i.pravatar.cc/48?u=tina-ali"
-      }
-    },
-    "av-4": {
-      "type": "Avatar",
-      "props": {
-        "initials": "JD",
-        "size": "sm",
-        "src": "https://i.pravatar.cc/48?u=jake-doe"
+        "avatars": [
+          { "initials": "KL", "src": "https://i.pravatar.cc/48?u=kate-lin" },
+          { "initials": "MR", "src": "https://i.pravatar.cc/48?u=mike-ross" },
+          { "initials": "TA", "src": "https://i.pravatar.cc/48?u=tina-ali" },
+          { "initials": "JD", "src": "https://i.pravatar.cc/48?u=jake-doe" }
+        ]
       }
     },
     "avatar-label": {

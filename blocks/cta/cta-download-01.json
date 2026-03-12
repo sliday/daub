@@ -2,9 +2,9 @@
   "root": "cta-download",
   "elements": {
     "cta-download": {
-      "type": "Stack",
+      "type": "Grid",
       "props": {
-        "direction": "horizontal",
+        "columns": 2,
         "gap": 6,
         "align": "center",
         "container": "wide"
