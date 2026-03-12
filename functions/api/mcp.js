@@ -277,6 +277,73 @@ function detectLandingIntent(prompt) {
   return /landing\s*page|hero\s*section|marketing|pricing\s*(page|table)|signup\s*page|\bcta\b|conversion|above.?the.?fold|sales\s*page|lead\s*gen/i.test(prompt || '');
 }
 
+const MOBILE_DESIGN_RULES = `MOBILE APP DESIGN PATTERNS:
+Core principle: thumb-driven, single-column, bottom-anchored navigation.
+
+Layout structure:
+- Use BottomNav (5 tabs max) as primary navigation — NOT Sidebar or horizontal Navbar links
+- App Shell pattern: Navbar (title + actions) + scrollable content + BottomNav
+- Single-column layout only. No Grid columns > 1 on mobile
+- Stack direction:"vertical" for all page content, direction:"horizontal" only for inline elements (chips, button rows, avatar + text)
+- Cards go full-width (no side margins except 16px page gutter)
+
+Navigation hierarchy:
+- BottomNav = top-level sections (Home, Search, Create, Activity, Profile)
+- Navbar = contextual title + back arrow + action icons (max 2 right-side icons)
+- Tabs = sub-sections within a screen
+- Sheet (bottom) = contextual actions, filters, sort options
+- Drawer = secondary navigation or settings
+
+Touch targets & spacing:
+- All interactive elements: min 48x48px touch target
+- 8px minimum gap between adjacent touch targets
+- Button height: 48px (primary actions), 40px (secondary)
+- Gap tokens: prefer 3 (12px) for tight lists, 4 (16px) for section spacing, 5 (24px) for major sections
+- Page gutter: 16px (gap 4) on both sides — content never touches screen edges
+
+Content patterns:
+- Lists with db-list for feeds, settings, contacts (icon/avatar + title + secondary + chevron)
+- Cards for content previews (image + text + actions)
+- StatCard row (2 across in horizontal Stack) for dashboard metrics
+- Avatar + name patterns for user references
+- Chip rows for filters/categories (horizontal Stack, wrap:true)
+
+Mobile-specific components to prefer:
+- BottomNav over Sidebar
+- Sheet (bottom) over Modal for actions/filters
+- Drawer for settings/profile menus
+- Carousel for media galleries
+- Tabs for sub-navigation (max 4-5 tabs)
+- Search with db-search component at page top
+
+Screen templates by type:
+- Feed: Navbar + Search + filter Chips + List/Cards + BottomNav
+- Detail: Navbar (back + title + share) + hero image + content Stack + sticky bottom CTA
+- Settings: Navbar (back + "Settings") + grouped Lists with Separators
+- Profile: Navbar + Avatar (lg) + stats row + Tabs + content
+- Dashboard: Navbar + StatCards (2x2 Grid) + Chart + recent List + BottomNav
+- Auth/Login: centered Stack with logo + Fields + primary Button + text links
+
+Typography for mobile:
+- Body: 16px (never smaller for readability)
+- Headings: scale 1.2 ratio (16-20-24-28)
+- Use db-caption (12px) sparingly — only for timestamps, metadata
+- Left-align everything (no center-aligned paragraphs on mobile)
+
+Common mobile mistakes to avoid:
+- Using Sidebar navigation (use BottomNav)
+- Grid with 3+ columns (max 2, prefer 1)
+- Tiny touch targets (< 48px)
+- Modal for simple choices (use Sheet)
+- Desktop-style horizontal navbars with many links
+- Content without page gutters (16px minimum)
+- Floating action buttons overlapping content
+- Deep navigation hierarchies (max 3 levels)`;
+
+function detectMobileIntent(prompt) {
+  return /mobile\s*app|mobile\s*application|ios\s*app|android\s*app|phone\s*app|\bsmartphone\b|\biphone\b|mobile\s*screen|mobile\s*ui|mobile\s*layout|mobile\s*view|native\s*app|bottom.?nav|app\s*shell/i.test(prompt || '');
+}
+
 // ---- System Prompt Builder ----
 
 function buildSystemPrompt(ragBlocks, userPrompt) {
@@ -321,6 +388,10 @@ function buildSystemPrompt(ragBlocks, userPrompt) {
 
   if (detectLandingIntent(userPrompt)) {
     prompt += LANDING_PAGE_RULES + '\n\n';
+  }
+
+  if (detectMobileIntent(userPrompt)) {
+    prompt += MOBILE_DESIGN_RULES + '\n\n';
   }
 
   // RAG-retrieved blocks as few-shot examples (dynamic)

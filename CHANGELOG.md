@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.14.5
+
+**Agent skill, mobile design rules, README refresh.**
+
+- Feature: added Agent Skill install section to README (`npx skills add sliday/daub`)
+- Feature: mobile app design rules in MCP — BottomNav, touch targets, app shell patterns
+- Fix: mobile intent detection expanded with `bottom-nav` and `app shell` triggers
+- Chore: updated version badge and changelog reference in README
+
 ## v3.14.4
 
 **Accordion polish — content padding and easing.**

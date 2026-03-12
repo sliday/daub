@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.14.4-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.14.5-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -303,6 +303,16 @@ Point your AI at `https://daub.dev/llms.txt` for complete component docs with HT
 
 For **json-render** (Vercel Generative UI): see the [integration recipe in llms.txt](https://daub.dev/llms.txt#json-render-integration-vercel-generative-ui).
 
+### Agent Skill
+
+Install the DAUB skill into any AI coding agent ([40+ supported](https://skills.sh)):
+
+```bash
+npx skills add sliday/daub
+```
+
+This gives your agent full knowledge of all 76 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
+
 ## Block Library
 
 DAUB includes **189 pre-made layout patterns** across **34 categories**, generated from a 170-block taxonomy. Every block is a self-contained UI section with realistic data.
@@ -508,7 +518,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.13.2** — Removed bouncing arrow from theme switcher nudge. 76 components, 20 theme families, 189 blocks.
+**Latest: v3.14.5** — Agent skill, mobile design rules, README refresh. 76 components, 20 theme families, 189 blocks.
 
 ## Star History
 

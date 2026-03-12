@@ -3526,7 +3526,7 @@ function generate() {
 
   // Auto-switch to mobile viewport for mobile app prompts
   var _promptLower = prompt.toLowerCase();
-  var _isMobilePrompt = /\bmobile\s*app\b|\bmobile\s*application\b|\bios\s*app\b|\bandroid\s*app\b|\bphone\s*app\b|\bsmartphone\b|\biphone\b|\bmobile\s*screen\b|\bmobile\s*ui\b|\bmobile\s*layout\b|\bmobile\s*view\b|\bnative\s*app\b/.test(_promptLower);
+  var _isMobilePrompt = /\bmobile\s*app\b|\bmobile\s*application\b|\bios\s*app\b|\bandroid\s*app\b|\bphone\s*app\b|\bsmartphone\b|\biphone\b|\bmobile\s*screen\b|\bmobile\s*ui\b|\bmobile\s*layout\b|\bmobile\s*view\b|\bnative\s*app\b|\bbottom.?nav\b|\bapp\s*shell\b/.test(_promptLower);
   if (_isMobilePrompt) {
     $panelPreviewBody.classList.add('pg-panel__body--mobile');
     document.querySelectorAll('.pg-viewport-btn').forEach(function(b) { b.classList.remove('pg-viewport-btn--active'); });
@@ -6501,6 +6501,86 @@ var SYSTEM_PROMPT = (function() {
 
   return preamble + sections + guidelines + themes;
 })();
+
+// ---- OpenUI Lang system prompt (token-efficient alternative to JSON) ----
+var OPENUI_SYSTEM_PROMPT = (function() {
+  var preamble = 'You are a UI generator. Output ONLY valid openui-lang code using DAUB components.\n\n'
+    + 'SYNTAX:\n'
+    + '- One statement per line: identifier = Expression\n'
+    + '- "root = ..." is mandatory (the top-level element)\n'
+    + '- Expressions: ComponentType(arg1, arg2, ...), "string", number, bool, [array], {key: value}\n'
+    + '- References: define name = ..., use name in children arrays\n'
+    + '- Write root first, then define referenced children below\n'
+    + '- Use __theme = "themeName" to set theme (optional, defaults to "light")\n'
+    + '- Use __state = {key: value} to set initial state (optional)\n'
+    + '- Line comments with //\n\n'
+    + 'ARGUMENT STYLES (both work):\n'
+    + '- Positional: Button("Click", "primary", "sm")\n'
+    + '- Named: Button(label: "Click", variant: "primary")\n'
+    + '- Mixed: Stack([child1, child2], direction: "horizontal")\n\n'
+    + 'CHILDREN:\n'
+    + '- Pass as first arg (array) for layout components: Stack([c1, c2], "vertical")\n'
+    + '- Inline components: Stack([Text("Hello", "h1"), Button("Go", "primary")])\n'
+    + '- References: Stack([header, content]) where header/content are defined as separate statements\n\n'
+    + 'CRITICAL RULES:\n'
+    + '- Output ONLY openui-lang code. No markdown fences, no explanation, no text before/after\n'
+    + '- Every referenced name must be defined as a statement\n'
+    + '- Use descriptive names for readability\n\n';
+
+  // Component signatures from schema
+  var sigs = 'COMPONENT SIGNATURES (positional arg order):\n\n';
+  for (var i = 0; i < COMP_CATEGORIES.length; i++) {
+    var cat = COMP_CATEGORIES[i][0];
+    var types = COMP_CATEGORIES[i][1];
+    sigs += cat + ':\n';
+    for (var j = 0; j < types.length; j++) {
+      var t = types[j];
+      if (RENDERERS[t]) {
+        sigs += '- ' + t + '(' + (COMP_PROPS[t] || '') + ')\n';
+      }
+    }
+    sigs += '\n';
+  }
+
+  var guidelines = 'GUIDELINES:\n'
+    + '- Use Stack as root with direction:"vertical" for page layouts\n'
+    + '- Grid for equal-width arrangements\n'
+    + '- Stack direction:"horizontal" justify:"between" for headers/toolbars\n'
+    + '- Gap tokens: 0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px\n'
+    + '- Wrap related content in Card\n'
+    + '- StatCard for KPI metrics\n'
+    + '- Use trigger:"overlay-id" on Button to open overlays\n'
+    + '- Generate 12-25+ elements for non-trivial UIs\n'
+    + '- Use realistic sample data — no placeholders\n'
+    + '- Every page needs header/nav, main content, footer/actions\n\n';
+
+  var themes = (function() {
+    var fams = DAUB.THEME_FAMILIES;
+    var lightThemes = [], darkThemes = [];
+    Object.keys(fams).forEach(function(f) {
+      lightThemes.push('"' + fams[f].light + '"');
+      darkThemes.push('"' + fams[f].dark + '"');
+    });
+    return 'THEMES:\n'
+      + '- Light: ' + lightThemes.join(', ') + '\n'
+      + '- Dark: ' + darkThemes.join(', ') + '\n'
+      + '- Default: "light"\n\n';
+  })();
+
+  var example = 'EXAMPLE:\n'
+    + '__theme = "bone"\n'
+    + 'root = Stack([header, stats, content], "vertical", 4)\n'
+    + 'header = Stack([Text("Dashboard", "h1"), Button("Settings", "ghost")], "horizontal", 2, "between", "center")\n'
+    + 'stats = Grid([s1, s2], 2, 3)\n'
+    + 's1 = StatCard("Revenue", "$12,345", "up", "+12%")\n'
+    + 's2 = StatCard("Users", "1,234", "up", "+5%")\n'
+    + 'content = Card([], "Overview", "Dashboard content goes here")\n';
+
+  return preamble + sigs + guidelines + themes + example;
+})();
+
+// ---- Output format toggle ----
+var OUTPUT_FORMAT = 'openui'; // 'openui' or 'json'
 
 // ---- Panel resize (drag divider) ----
 (function initResizers() {
