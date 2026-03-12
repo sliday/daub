@@ -18,7 +18,7 @@ DAUB is the rendering layer for this future.
 
 **Opinionated about beauty.** Most component libraries are deliberately neutral — gray surfaces, utilitarian defaults. DAUB has a point of view: tactile surfaces, letterpress typography, real textures. 20 theme families, each with character. "Considered" isn't marketing — it's the design constraint.
 
-**AI-native architecture.** Not a CSS framework with AI bolted on. The JSON-Render spec, MCP server, complexity-routed pipeline, 189-block RAG library, and `llms.txt` documentation were designed together. AI doesn't just *use* DAUB — DAUB was built for AI to use.
+**AI-native architecture.** Not a CSS framework with AI bolted on. The JSON-Render spec, MCP server, complexity-routed pipeline, 230+ block RAG library, and `llms.txt` documentation were designed together. AI doesn't just *use* DAUB — DAUB was built for AI to use.
 
 **Structured specs, not throwaway code.** v0 generates one-off Tailwind/React. Cursor produces code you maintain. DAUB generates structured JSON specs that AI can iterate on, validate, visually diff, and render — without a compile step. The spec *is* the UI.
 
@@ -47,10 +47,10 @@ The bottom layers are infrastructure. The top layers are where it gets interesti
 
 ## Where We Are (v3.13.0)
 
-- **76 components** — buttons, cards, modals, tabs, drawers, data tables, and more
+- **73 components** — buttons, cards, modals, tabs, drawers, data tables, and more
 - **20 theme families** with 40 variants — from clean corporate to tactile grunge
-- **189 pre-made blocks** across 34 categories with multimodal RAG retrieval
-- **Block library QA audit** — all 189 blocks validated, screenshots regenerated
+- **230+ pre-made blocks** across 34 categories with multimodal RAG retrieval
+- **Block library QA audit** — all blocks validated, screenshots regenerated
 - **AI Playground** with full 7-stage pipeline — analyze, scaffold, generate, selfCheck, verify, repair loop, visual diff
 - **Complexity-based model routing** — prompts scored across 6 dimensions, routed to tiered models with exponential backoff fallbacks
 - **MCP server** on Cloudflare's edge — `generate_ui`, `render_spec`, `validate_spec`, `get_component_catalog` tools

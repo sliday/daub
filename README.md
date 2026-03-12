@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-3.15.4-3D3832.svg)](https://daub.dev)
-[![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
+[![Components](https://img.shields.io/badge/components-73-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
 
@@ -14,9 +14,9 @@
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 76 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 73 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
-Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 189-block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
+Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 230+ block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
 
 ## Playground Model Taxonomy
 
@@ -39,7 +39,7 @@ Toggle in the Chat toolbar (on by default). Forces `gemini-3.1-flash-lite-previe
 ### CDN (recommended)
 
 ```html
-<!-- Full library: 76 components + themes -->
+<!-- Full library: 73 components + themes -->
 <link rel="stylesheet" href="https://daub.dev/daub.css">
 <script src="https://daub.dev/daub.js"></script>
 
@@ -77,7 +77,7 @@ DAUB uses system font stacks by default. For richer typography:
 <script src="https://unpkg.com/lucide@latest"></script>
 ```
 
-## Components (76)
+## Components (73)
 
 ### Foundations
 | Component | Class | Notes |
@@ -294,7 +294,7 @@ DAUB speaks both human and machine:
 
 - **`/llms.txt`** — Plain-text component reference for LLMs ([spec](https://llmstxt.org))
 - **`/llms-compact.txt`** — Condensed version for token-constrained contexts
-- **`/components.json`** — Machine-readable structured component reference (76 components with HTML examples)
+- **`/components.json`** — Machine-readable structured component reference (73 components with HTML examples)
 - **`/daub.d.ts`** — TypeScript declarations for `window.DAUB` API
 - **`/.well-known/ai-plugin.json`** — AI plugin manifest
 - **`SKILL.md`** — Claude Code skill for DAUB development
@@ -311,31 +311,33 @@ Install the DAUB skill into any AI coding agent ([40+ supported](https://skills.
 npx skills add sliday/daub
 ```
 
-This gives your agent full knowledge of all 76 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
+This gives your agent full knowledge of all 73 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
 
 ## Block Library
 
-DAUB includes **189 pre-made layout patterns** across **34 categories**, generated from a 170-block taxonomy. Every block is a self-contained UI section with realistic data.
+DAUB includes **230+ pre-made layout patterns** across **34 categories**. Every block is a self-contained UI section with realistic data.
 
 | Category | Count | Category | Count |
 |----------|-------|----------|-------|
-| Navigation | 11 | Newsletter | 4 |
-| Hero | 8 | FAQ | 4 |
-| Features | 9 | Team | 4 |
-| Social Proof | 8 | Stats | 4 |
-| Pricing | 6 | Blog | 6 |
-| CTA | 6 | Portfolio | 3 |
-| Content | 6 | Contact | 5 |
-| Footer | 5 | Error Pages | 4 |
-| Auth | 7 | Ecommerce | 9 |
-| Dashboard | 12 | Forms | 12 |
-| Modals/Overlays | 7 | Timeline | 4 |
-| How It Works | 3 | Integrations | 3 |
-| Banners | 3 | Event Schedule | 3 |
-| Media | 4 | Comparison | 3 |
-| App Specific | 6 | Misc | 8 |
-| Logo Bar | 3 | Landing (legacy) | 5 |
-| + Mobile, Data Display | 4 | | |
+| Auth | 48 | Newsletter | 4 |
+| Dashboard | 12 | FAQ | 4 |
+| Forms | 12 | Team | 4 |
+| Navigation | 11 | Timeline | 4 |
+| Ecommerce | 9 | Media | 4 |
+| Features | 9 | Data Display | 4 |
+| Hero | 8 | Banners | 3 |
+| Social Proof | 8 | Comparison | 3 |
+| Misc | 8 | Event Schedule | 3 |
+| Modals/Overlays | 7 | How It Works | 3 |
+| App Specific | 6 | Integrations | 3 |
+| Blog | 6 | Logo Bar | 3 |
+| Content | 6 | Portfolio | 3 |
+| CTA | 6 | Stats | 3 |
+| Pricing | 6 | Mobile | 1 |
+| Contact | 5 | | |
+| Footer | 5 | | |
+| Landing (legacy) | 5 | | |
+| Error Pages | 4 | | |
 
 Blocks are automatically retrieved via **RAG** (Retrieval-Augmented Generation) during `generate_ui` calls. The system embeds user prompts with Gemini, finds the top-5 matching blocks by cosine similarity, and injects their full specs as few-shot examples.
 
@@ -536,7 +538,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.15.3** — Tabbed block gallery on Layouts page, OpenUI Lang integration. 76 components, 20 theme families, 189 blocks.
+**Latest: v3.15.4** — Link component, 48 auth blocks, Icon renderer, aspect ratio fixes. 73 components, 20 theme families, 230+ blocks.
 
 ## Star History
 
