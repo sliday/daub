@@ -2,6 +2,10 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.15.3
+
+- Fix: block card image background changed to neutral #f1f0f0 for consistent tile appearance
+
 ## v3.15.2
 
 - Fix: active tab text contrast in block gallery (white on terracotta)
