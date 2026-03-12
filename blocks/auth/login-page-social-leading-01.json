@@ -1,0 +1,121 @@
+{
+  "root": "login-page-social-leading",
+  "elements": {
+    "login-page-social-leading": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center",
+        "justify": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "main-content"
+      ]
+    },
+    "main-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "align": "center"
+      },
+      "children": [
+        "header",
+        "form-section",
+        "sso-link"
+      ]
+    },
+    "header": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "logo",
+        "heading"
+      ]
+    },
+    "logo": {
+      "type": "Surface",
+      "props": {
+        "variant": "elevated",
+        "padding": 3
+      },
+      "children": [
+        "logo-icon"
+      ]
+    },
+    "logo-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "layers"
+      }
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Log in to your account",
+        "align": "center"
+      }
+    },
+    "form-section": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "align": "stretch"
+      },
+      "children": [
+        "google-btn",
+        "divider",
+        "email-input",
+        "continue-email-btn"
+      ]
+    },
+    "google-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Continue with Google",
+        "variant": "outline",
+        "size": "lg",
+        "icon": "google",
+        "fullWidth": true
+      }
+    },
+    "divider": {
+      "type": "Separator",
+      "props": {
+        "orientation": "horizontal"
+      }
+    },
+    "email-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your email",
+        "type": "email"
+      }
+    },
+    "continue-email-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Continue with email",
+        "variant": "primary",
+        "size": "lg",
+        "fullWidth": true
+      }
+    },
+    "sso-link": {
+      "type": "Button",
+      "props": {
+        "label": "Continue with SAML SSO",
+        "variant": "ghost",
+        "size": "sm"
+      }
+    }
+  }
+}

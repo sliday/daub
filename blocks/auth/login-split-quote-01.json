@@ -1,0 +1,145 @@
+{
+  "root": "login-split-quote",
+  "elements": {
+    "login-split-quote": {
+      "type": "Grid",
+      "props": { "columns": 2, "gap": 0 },
+      "children": ["brand-panel", "form-panel"]
+    },
+
+    "brand-panel": {
+      "type": "Surface",
+      "props": { "variant": "sunken", "padding": 8 },
+      "children": ["brand-inner"]
+    },
+    "brand-inner": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "justify": "between", "fullHeight": true, "gap": 6 },
+      "children": ["brand-logo", "quote-section", "brand-footer"]
+    },
+    "brand-logo": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "align": "center" },
+      "children": ["logo-icon", "logo-text"]
+    },
+    "logo-icon": {
+      "type": "Icon",
+      "props": { "name": "layers" }
+    },
+    "logo-text": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Daub" }
+    },
+    "quote-section": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6 },
+      "children": ["quote-text", "quote-author"]
+    },
+    "quote-text": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "We've been using Daub to kick start every new project and can't imagine working without it.", "italic": true }
+    },
+    "quote-author": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 3, "align": "center" },
+      "children": ["author-avatar", "author-info"]
+    },
+    "author-avatar": {
+      "type": "Avatar",
+      "props": { "initials": "KW", "size": "md" }
+    },
+    "author-info": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 0 },
+      "children": ["author-name", "author-role"]
+    },
+    "author-name": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Kelly Williams" }
+    },
+    "author-role": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Head of Design, Layers", "variant": "secondary" }
+    },
+    "brand-footer": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "© Daub 2026", "variant": "secondary" }
+    },
+
+    "form-panel": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "justify": "center", "padding": 8, "gap": 6 },
+      "children": ["login-header", "login-form", "signup-prompt"]
+    },
+    "login-header": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 2 },
+      "children": ["login-title", "login-subtitle"]
+    },
+    "login-title": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Welcome back" }
+    },
+    "login-subtitle": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Welcome back! Please enter your details.", "variant": "secondary" }
+    },
+    "login-form": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["email-field", "password-field", "options-row", "signin-btn", "google-btn"]
+    },
+    "email-field": {
+      "type": "Field",
+      "props": { "label": "Email" },
+      "children": ["email-input"]
+    },
+    "email-input": {
+      "type": "Input",
+      "props": { "placeholder": "Enter your email", "type": "email" }
+    },
+    "password-field": {
+      "type": "Field",
+      "props": { "label": "Password" },
+      "children": ["password-input"]
+    },
+    "password-input": {
+      "type": "Input",
+      "props": { "placeholder": "••••••••", "type": "password" }
+    },
+    "options-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "justify": "between", "align": "center" },
+      "children": ["remember-check", "forgot-link"]
+    },
+    "remember-check": {
+      "type": "Checkbox",
+      "props": { "label": "Remember for 30 days", "checked": false }
+    },
+    "forgot-link": {
+      "type": "Button",
+      "props": { "label": "Forgot password?", "variant": "ghost", "size": "sm" }
+    },
+    "signin-btn": {
+      "type": "Button",
+      "props": { "label": "Sign in", "variant": "primary", "size": "lg", "fullWidth": true }
+    },
+    "google-btn": {
+      "type": "Button",
+      "props": { "label": "Sign in with Google", "variant": "outline", "size": "lg", "fullWidth": true, "icon": "google" }
+    },
+    "signup-prompt": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 1 },
+      "children": ["signup-text", "signup-link"]
+    },
+    "signup-text": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Don't have an account?", "variant": "secondary" }
+    },
+    "signup-link": {
+      "type": "Button",
+      "props": { "label": "Sign up", "variant": "ghost", "size": "sm" }
+    }
+  }
+}

@@ -1650,6 +1650,18 @@
       return el;
     };
     
+    // -- Icon (Lucide) --
+    RENDERERS.Icon = function(p) {
+      var sizes = { xs: 14, sm: 16, md: 20, lg: 24, xl: 32 };
+      var sz = sizes[p.size] || sizes.md;
+      var el = document.createElement('i');
+      el.setAttribute('data-lucide', p.name || 'circle');
+      el.style.width = sz + 'px';
+      el.style.height = sz + 'px';
+      el.style.display = 'inline-block';
+      return el;
+    };
+
     // -- Image --
     RENDERERS.Image = function(p) {
       var el = document.createElement('img');

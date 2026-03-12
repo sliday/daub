@@ -1,0 +1,133 @@
+{
+  "root": "login-split-geometric",
+  "elements": {
+    "login-split-geometric": {
+      "type": "Grid",
+      "props": { "columns": 2, "gap": 0 },
+      "children": ["form-panel", "art-panel"]
+    },
+
+    "form-panel": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 0 },
+      "children": ["nav-bar", "form-container", "form-footer"]
+    },
+    "nav-bar": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "align": "center", "padding": [3, 4] },
+      "children": ["nav-logo"]
+    },
+    "nav-logo": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 2, "align": "center" },
+      "children": ["logo-icon", "logo-text"]
+    },
+    "logo-icon": {
+      "type": "Icon",
+      "props": { "name": "layers", "size": "md" }
+    },
+    "logo-text": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Daub" }
+    },
+    "form-container": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6, "justify": "center", "padding": [4, 8] },
+      "children": ["form-header", "form-fields", "form-signup"]
+    },
+    "form-header": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 2 },
+      "children": ["form-title", "form-subtitle"]
+    },
+    "form-title": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Log in" }
+    },
+    "form-subtitle": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Welcome back! Please enter your details.", "variant": "secondary" }
+    },
+    "form-fields": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["email-field", "password-field", "options-row", "signin-btn", "google-btn"]
+    },
+    "email-field": {
+      "type": "Field",
+      "props": { "label": "Email" },
+      "children": ["email-input"]
+    },
+    "email-input": {
+      "type": "Input",
+      "props": { "placeholder": "Enter your email", "type": "email" }
+    },
+    "password-field": {
+      "type": "Field",
+      "props": { "label": "Password" },
+      "children": ["password-input"]
+    },
+    "password-input": {
+      "type": "Input",
+      "props": { "placeholder": "••••••••", "type": "password" }
+    },
+    "options-row": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 0, "align": "center", "justify": "between" },
+      "children": ["remember-check", "forgot-link"]
+    },
+    "remember-check": {
+      "type": "Checkbox",
+      "props": { "label": "Remember for 30 days", "checked": false }
+    },
+    "forgot-link": {
+      "type": "Button",
+      "props": { "label": "Forgot password?", "variant": "ghost", "size": "sm" }
+    },
+    "signin-btn": {
+      "type": "Button",
+      "props": { "label": "Sign in", "variant": "primary", "size": "lg", "fullWidth": true }
+    },
+    "google-btn": {
+      "type": "Button",
+      "props": { "label": "Sign in with Google", "variant": "outline", "size": "lg", "icon": "google", "fullWidth": true }
+    },
+    "form-signup": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 1, "align": "center" },
+      "children": ["signup-text", "signup-link"]
+    },
+    "signup-text": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Don't have an account?", "variant": "secondary" }
+    },
+    "signup-link": {
+      "type": "Button",
+      "props": { "label": "Sign up", "variant": "ghost", "size": "sm" }
+    },
+    "form-footer": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "padding": [2, 4] },
+      "children": ["footer-text"]
+    },
+    "footer-text": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "© Daub 2026", "variant": "secondary" }
+    },
+
+    "art-panel": {
+      "type": "Surface",
+      "props": { "variant": "brand", "padding": 0 },
+      "children": ["art-inner"]
+    },
+    "art-inner": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 0, "justify": "center", "align": "center" },
+      "children": ["geometric-pattern"]
+    },
+    "geometric-pattern": {
+      "type": "Image",
+      "props": { "src": "", "alt": "Geometric shapes pattern", "objectFit": "cover", "fullHeight": true }
+    }
+  }
+}

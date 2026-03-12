@@ -4381,5 +4381,368 @@
       "vertical"
     ],
     "screenshot": "timeline/timeline-vertical-01.png"
+  },
+  {
+    "id": "login-split-quote-01",
+    "name": "Login Split Quote",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 31 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-quote-01.json",
+    "element_count": 31,
+    "components_used": [
+      "Avatar",
+      "Button",
+      "Checkbox",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/login-split-quote-01.png"
+  },
+  {
+    "id": "login-page-card-01",
+    "name": "Login Page Card",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 20 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-card-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Button",
+      "Card",
+      "Checkbox",
+      "Field",
+      "Icon",
+      "Input",
+      "Separator",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/login-page-card-01.png"
+  },
+  {
+    "id": "login-page-card-02",
+    "name": "Login Page Card V2",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 18 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-card-02.json",
+    "element_count": 18,
+    "components_used": [
+      "Button",
+      "Card",
+      "Checkbox",
+      "Icon",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/login-page-card-02.png"
+  },
+  {
+    "id": "login-page-illustration-01",
+    "name": "Login Page Illustration",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 19 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-illustration-01.json",
+    "element_count": 19,
+    "components_used": [
+      "Button",
+      "Checkbox",
+      "Field",
+      "Image",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/login-page-illustration-01.png"
+  },
+  {
+    "id": "login-page-minimal-01",
+    "name": "Login Page Minimal",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 18 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-minimal-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Button",
+      "Icon",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/login-page-minimal-01.png"
+  },
+  {
+    "id": "login-page-nav-01",
+    "name": "Login Page Nav",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 23 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-nav-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Button",
+      "Checkbox",
+      "Field",
+      "Icon",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/login-page-nav-01.png"
+  },
+  {
+    "id": "login-page-simple-01",
+    "name": "Login Page Simple",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 19 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-simple-01.json",
+    "element_count": 19,
+    "components_used": [
+      "Button",
+      "Checkbox",
+      "Field",
+      "Icon",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/login-page-simple-01.png"
+  },
+  {
+    "id": "login-page-social-01",
+    "name": "Login Page Social",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 17 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-social-01.json",
+    "element_count": 17,
+    "components_used": [
+      "Button",
+      "Icon",
+      "Input",
+      "Separator",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/login-page-social-01.png"
+  },
+  {
+    "id": "login-page-social-leading-01",
+    "name": "Login Page Social Leading",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 12 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-social-leading-01.json",
+    "element_count": 12,
+    "components_used": [
+      "Button",
+      "Icon",
+      "Input",
+      "Separator",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/login-page-social-leading-01.png"
+  },
+  {
+    "id": "login-split-carousel-01",
+    "name": "Login Split Carousel",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 43 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-carousel-01.json",
+    "element_count": 43,
+    "components_used": [
+      "Badge",
+      "Button",
+      "Checkbox",
+      "Field",
+      "Grid",
+      "Icon",
+      "Image",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/login-split-carousel-01.png"
+  },
+  {
+    "id": "login-split-geometric-01",
+    "name": "Login Split Geometric",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 28 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-geometric-01.json",
+    "element_count": 28,
+    "components_used": [
+      "Button",
+      "Checkbox",
+      "Field",
+      "Grid",
+      "Icon",
+      "Image",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/login-split-geometric-01.png"
+  },
+  {
+    "id": "login-split-image-01",
+    "name": "Login Split Image",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 22 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-image-01.json",
+    "element_count": 22,
+    "components_used": [
+      "Button",
+      "Checkbox",
+      "Field",
+      "Grid",
+      "Image",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/login-split-image-01.png"
+  },
+  {
+    "id": "login-split-image-quote-01",
+    "name": "Login Split Image Quote",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 31 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-image-quote-01.json",
+    "element_count": 31,
+    "components_used": [
+      "Button",
+      "Checkbox",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/login-split-image-quote-01.png"
+  },
+  {
+    "id": "login-split-mockup-01",
+    "name": "Login Split Mockup",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 24 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-mockup-01.json",
+    "element_count": 24,
+    "components_used": [
+      "Button",
+      "Checkbox",
+      "Field",
+      "Grid",
+      "Image",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/login-split-mockup-01.png"
+  },
+  {
+    "id": "login-split-mockup-quote-01",
+    "name": "Login Split Mockup Quote",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 31 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-mockup-quote-01.json",
+    "element_count": 31,
+    "components_used": [
+      "Avatar",
+      "Button",
+      "Checkbox",
+      "Field",
+      "Grid",
+      "Image",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/login-split-mockup-quote-01.png"
   }
 ]
