@@ -2,6 +2,11 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.15.2
+
+- Fix: active tab text contrast in block gallery (white on terracotta)
+- Fix: block card screenshots use contain fitting instead of cover
+
 ## v3.15.1
 
 - Feature: block gallery with category tabs, card previews, and lz-string share links in demo page
