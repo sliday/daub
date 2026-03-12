@@ -2,6 +2,14 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.14.4
+
+**Accordion polish — content padding and easing.**
+
+- Fix: added top padding (`--db-space-3`) between trigger and content text
+- Fix: reduced `max-height` from 50em to 20em for proportional easing feel
+- Fix: switched to `cubic-bezier(0.4, 0, 0.2, 1)` easing for snappy open, gentle settle
+
 ## v3.14.3
 
 **Hotfix — accordion animation for bare text nodes.**
