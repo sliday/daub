@@ -1,0 +1,260 @@
+{
+  "root": "signup-split-app-mockup",
+  "elements": {
+    "signup-split-app-mockup": {
+      "type": "Grid",
+      "props": {
+        "columns": 2,
+        "gap": 0
+      },
+      "children": [
+        "form-panel",
+        "app-mockup-panel"
+      ]
+    },
+    "form-panel": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "nav-bar",
+        "form-container",
+        "form-footer"
+      ]
+    },
+    "nav-bar": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center",
+        "padding": [
+          3,
+          4
+        ]
+      },
+      "children": [
+        "nav-logo"
+      ]
+    },
+    "nav-logo": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "logo-icon",
+        "logo-text"
+      ]
+    },
+    "logo-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "layers",
+        "size": "md"
+      }
+    },
+    "logo-text": {
+      "type": "Text",
+      "props": {
+        "tag": "h4",
+        "content": "Daub"
+      }
+    },
+    "form-container": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "justify": "center",
+        "padding": [
+          4,
+          8
+        ]
+      },
+      "children": [
+        "form-header",
+        "form-fields",
+        "form-login"
+      ]
+    },
+    "form-header": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 2
+      },
+      "children": [
+        "form-title",
+        "form-subtitle"
+      ]
+    },
+    "form-title": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Sign up"
+      }
+    },
+    "form-subtitle": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Start your 30-day free trial.",
+        "variant": "secondary"
+      }
+    },
+    "form-fields": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "name-field",
+        "email-field",
+        "password-field",
+        "signup-btn",
+        "google-btn"
+      ]
+    },
+    "name-field": {
+      "type": "Field",
+      "props": {
+        "label": "Name*"
+      },
+      "children": [
+        "name-input"
+      ]
+    },
+    "name-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your name",
+        "type": "text"
+      }
+    },
+    "email-field": {
+      "type": "Field",
+      "props": {
+        "label": "Email*"
+      },
+      "children": [
+        "email-input"
+      ]
+    },
+    "email-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your email",
+        "type": "email"
+      }
+    },
+    "password-field": {
+      "type": "Field",
+      "props": {
+        "label": "Password*",
+        "hint": "Must be at least 8 characters."
+      },
+      "children": [
+        "password-input"
+      ]
+    },
+    "password-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Create a password",
+        "type": "password"
+      }
+    },
+    "signup-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg",
+        "fullWidth": true
+      }
+    },
+    "google-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Sign up with Google",
+        "variant": "outline",
+        "size": "lg",
+        "icon": "google",
+        "fullWidth": true
+      }
+    },
+    "form-login": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "login-text",
+        "login-link"
+      ]
+    },
+    "login-text": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Already have an account?",
+        "variant": "secondary"
+      }
+    },
+    "login-link": {
+      "type": "Link",
+      "props": {
+        "label": "Log in"
+      }
+    },
+    "form-footer": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "padding": [
+          2,
+          4
+        ]
+      },
+      "children": [
+        "footer-text"
+      ]
+    },
+    "footer-text": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "© Daub 2026",
+        "variant": "secondary"
+      }
+    },
+    "app-mockup-panel": {
+      "type": "Surface",
+      "props": {
+        "variant": "sunken",
+        "padding": 0
+      },
+      "children": [
+        "app-mockup-image"
+      ]
+    },
+    "app-mockup-image": {
+      "type": "Image",
+      "props": {
+        "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22720%22%20height%3D%22960%22%20viewBox%3D%220%200%20720%20960%22%3E%3Crect%20width%3D%22720%22%20height%3D%22960%22%20rx%3D%2212%22%20fill%3D%22%23F9FAFB%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22720%22%20height%3D%2256%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Ccircle%20cx%3D%2236%22%20cy%3D%2228%22%20r%3D%2216%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Ccircle%20cx%3D%22660%22%20cy%3D%2228%22%20r%3D%224%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Ccircle%20cx%3D%22676%22%20cy%3D%2228%22%20r%3D%224%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Ccircle%20cx%3D%22692%22%20cy%3D%2228%22%20r%3D%224%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%2256%22%20width%3D%22180%22%20height%3D%22904%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2280%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%22108%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%22136%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%22164%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%22192%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%22220%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22204%22%20y%3D%2280%22%20width%3D%22492%22%20height%3D%22360%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Crect%20x%3D%22260%22%20y%3D%22340%22%20width%3D%2256%22%20height%3D%2276%22%20rx%3D%224%22%20fill%3D%22%237F56D9%22%2F%3E%3Crect%20x%3D%22336%22%20y%3D%22300%22%20width%3D%2256%22%20height%3D%22116%22%20rx%3D%224%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22412%22%20y%3D%22260%22%20width%3D%2256%22%20height%3D%22156%22%20rx%3D%224%22%20fill%3D%22%237F56D9%22%2F%3E%3Crect%20x%3D%22488%22%20y%3D%22200%22%20width%3D%2256%22%20height%3D%22216%22%20rx%3D%224%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22564%22%20y%3D%22160%22%20width%3D%2256%22%20height%3D%22256%22%20rx%3D%224%22%20fill%3D%22%237F56D9%22%2F%3E%3Crect%20x%3D%22204%22%20y%3D%22464%22%20width%3D%22492%22%20height%3D%22460%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Crect%20x%3D%22228%22%20y%3D%22496%22%20width%3D%22444%22%20height%3D%2216%22%20rx%3D%228%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22228%22%20y%3D%22536%22%20width%3D%22444%22%20height%3D%2216%22%20rx%3D%228%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22228%22%20y%3D%22576%22%20width%3D%22444%22%20height%3D%2216%22%20rx%3D%228%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22228%22%20y%3D%22616%22%20width%3D%22444%22%20height%3D%2216%22%20rx%3D%228%22%20fill%3D%22%23E4E7EC%22%2F%3E%3C%2Fsvg%3E",
+        "alt": "Full app interface mockup",
+        "objectFit": "cover",
+        "fullHeight": true
+      }
+    }
+  }
+}

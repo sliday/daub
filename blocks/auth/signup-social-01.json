@@ -1,7 +1,7 @@
 {
-  "root": "login-page-minimal",
+  "root": "signup-social",
   "elements": {
-    "login-page-minimal": {
+    "signup-social": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
@@ -22,35 +22,19 @@
         "align": "center"
       },
       "children": [
-        "brand-row",
+        "logo-icon",
         "header",
         "form-section",
+        "divider-row",
+        "or-text",
+        "social-section",
         "footer-section"
       ]
     },
-    "brand-row": {
-      "type": "Stack",
-      "props": {
-        "direction": "horizontal",
-        "gap": 2,
-        "align": "center"
-      },
-      "children": [
-        "brand-icon",
-        "brand-name"
-      ]
-    },
-    "brand-icon": {
+    "logo-icon": {
       "type": "Icon",
       "props": {
         "name": "layers"
-      }
-    },
-    "brand-name": {
-      "type": "Text",
-      "props": {
-        "tag": "h4",
-        "content": "Daub"
       }
     },
     "header": {
@@ -69,7 +53,7 @@
       "type": "Text",
       "props": {
         "tag": "h2",
-        "content": "Log in to your account",
+        "content": "Create an account",
         "align": "center"
       }
     },
@@ -77,7 +61,7 @@
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Welcome back! Please enter your details.",
+        "content": "Start your 30-day free trial.",
         "variant": "secondary",
         "align": "center"
       }
@@ -90,10 +74,17 @@
         "align": "stretch"
       },
       "children": [
-        "email-input",
-        "password-input",
-        "signin-btn",
-        "google-btn"
+        "email-field",
+        "continue-email-btn"
+      ]
+    },
+    "email-field": {
+      "type": "Field",
+      "props": {
+        "label": "Email"
+      },
+      "children": [
+        "email-input"
       ]
     },
     "email-input": {
@@ -103,45 +94,74 @@
         "type": "email"
       }
     },
-    "password-input": {
-      "type": "Input",
-      "props": {
-        "placeholder": "••••••••",
-        "type": "password"
-      }
-    },
-    "signin-btn": {
+    "continue-email-btn": {
       "type": "Button",
       "props": {
-        "label": "Sign in",
+        "label": "Continue with email",
         "variant": "primary",
         "size": "lg",
         "fullWidth": true
       }
     },
+    "divider-row": {
+      "type": "Separator",
+      "props": {
+        "orientation": "horizontal"
+      }
+    },
+    "or-text": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "OR",
+        "variant": "muted",
+        "align": "center"
+      }
+    },
+    "social-section": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3,
+        "align": "stretch"
+      },
+      "children": [
+        "google-btn",
+        "facebook-btn",
+        "apple-btn"
+      ]
+    },
     "google-btn": {
       "type": "Button",
       "props": {
-        "label": "Sign in with Google",
+        "label": "Sign up with Google",
         "variant": "outline",
         "size": "lg",
         "icon": "google",
         "fullWidth": true
       }
     },
-    "footer-section": {
-      "type": "Stack",
+    "facebook-btn": {
+      "type": "Button",
       "props": {
-        "direction": "vertical",
-        "gap": 2,
-        "align": "center"
-      },
-      "children": [
-        "signup-prompt",
-        "forgot-link"
-      ]
+        "label": "Sign up with Facebook",
+        "variant": "outline",
+        "size": "lg",
+        "icon": "facebook",
+        "fullWidth": true
+      }
     },
-    "signup-prompt": {
+    "apple-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Sign up with Apple",
+        "variant": "outline",
+        "size": "lg",
+        "icon": "apple",
+        "fullWidth": true
+      }
+    },
+    "footer-section": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
@@ -150,28 +170,22 @@
         "justify": "center"
       },
       "children": [
-        "signup-text",
-        "signup-link"
+        "login-text",
+        "login-link"
       ]
     },
-    "signup-text": {
+    "login-text": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Don't have an account?",
+        "content": "Already have an account?",
         "variant": "secondary"
       }
     },
-    "signup-link": {
+    "login-link": {
       "type": "Link",
       "props": {
-        "label": "Sign up"
-      }
-    },
-    "forgot-link": {
-      "type": "Link",
-      "props": {
-        "label": "Forgot password?"
+        "label": "Log in"
       }
     }
   }

@@ -1,0 +1,352 @@
+{
+  "root": "signup-split-image-bg",
+  "elements": {
+    "signup-split-image-bg": {
+      "type": "Grid",
+      "props": {
+        "columns": 2,
+        "gap": 0
+      },
+      "children": [
+        "brand-panel",
+        "form-panel"
+      ]
+    },
+    "brand-panel": {
+      "type": "Surface",
+      "props": {
+        "variant": "brand",
+        "padding": 8
+      },
+      "children": [
+        "brand-content"
+      ]
+    },
+    "brand-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "justify": "center"
+      },
+      "children": [
+        "brand-icon",
+        "brand-heading",
+        "brand-text",
+        "brand-social-proof"
+      ]
+    },
+    "brand-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "sparkles",
+        "size": "xl",
+        "variant": "inverted"
+      }
+    },
+    "brand-heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h1",
+        "content": "Start turning your ideas into reality.",
+        "variant": "inverted"
+      }
+    },
+    "brand-text": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Create a free account and get full access to all features for 30-days. No credit card needed. Trusted by over 4,000 professionals.",
+        "variant": "inverted-secondary"
+      }
+    },
+    "brand-social-proof": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "avatar-group",
+        "rating"
+      ]
+    },
+    "avatar-group": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": -2
+      },
+      "children": [
+        "avatar-1",
+        "avatar-2",
+        "avatar-3",
+        "avatar-4",
+        "avatar-5"
+      ]
+    },
+    "avatar-1": {
+      "type": "Avatar",
+      "props": {
+        "size": "sm"
+      }
+    },
+    "avatar-2": {
+      "type": "Avatar",
+      "props": {
+        "size": "sm"
+      }
+    },
+    "avatar-3": {
+      "type": "Avatar",
+      "props": {
+        "size": "sm"
+      }
+    },
+    "avatar-4": {
+      "type": "Avatar",
+      "props": {
+        "size": "sm"
+      }
+    },
+    "avatar-5": {
+      "type": "Avatar",
+      "props": {
+        "size": "sm"
+      }
+    },
+    "rating": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "rating-score",
+        "rating-text"
+      ]
+    },
+    "rating-score": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "5.0",
+        "variant": "inverted"
+      }
+    },
+    "rating-text": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "from 200+ reviews",
+        "variant": "inverted-secondary"
+      }
+    },
+    "form-panel": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "form-top",
+        "form-container",
+        "form-bottom"
+      ]
+    },
+    "form-top": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "justify": "end",
+        "padding": [
+          3,
+          4
+        ]
+      },
+      "children": [
+        "logo-icon"
+      ]
+    },
+    "logo-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "circle",
+        "size": "sm",
+        "variant": "branded"
+      }
+    },
+    "form-container": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 8,
+        "justify": "center",
+        "padding": [
+          4,
+          8
+        ]
+      },
+      "children": [
+        "form-header",
+        "form-fields",
+        "form-login"
+      ]
+    },
+    "form-header": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "form-title",
+        "form-subtitle"
+      ]
+    },
+    "form-title": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Sign up"
+      }
+    },
+    "form-subtitle": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Start your 30 day free trial.",
+        "variant": "secondary"
+      }
+    },
+    "form-fields": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "name-field",
+        "email-field",
+        "password-field",
+        "get-started-btn",
+        "google-btn"
+      ]
+    },
+    "name-field": {
+      "type": "Field",
+      "props": {
+        "label": "Name*"
+      },
+      "children": [
+        "name-input"
+      ]
+    },
+    "name-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your name"
+      }
+    },
+    "email-field": {
+      "type": "Field",
+      "props": {
+        "label": "Email*"
+      },
+      "children": [
+        "email-input"
+      ]
+    },
+    "email-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your email",
+        "type": "email"
+      }
+    },
+    "password-field": {
+      "type": "Field",
+      "props": {
+        "label": "Password*",
+        "hint": "Must be at least 8 characters."
+      },
+      "children": [
+        "password-input"
+      ]
+    },
+    "password-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Create a password",
+        "type": "password"
+      }
+    },
+    "get-started-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg",
+        "fullWidth": true
+      }
+    },
+    "google-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Sign up with Google",
+        "variant": "outline",
+        "size": "lg",
+        "icon": "google",
+        "fullWidth": true
+      }
+    },
+    "form-login": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "login-text",
+        "login-link"
+      ]
+    },
+    "login-text": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Already have an account?",
+        "variant": "secondary"
+      }
+    },
+    "login-link": {
+      "type": "Link",
+      "props": {
+        "label": "Log in"
+      }
+    },
+    "form-bottom": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "padding": [
+          2,
+          4
+        ]
+      },
+      "children": [
+        "copyright"
+      ]
+    },
+    "copyright": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "© Daub 2026",
+        "variant": "secondary"
+      }
+    }
+  }
+}

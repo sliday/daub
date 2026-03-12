@@ -3271,7 +3271,7 @@
       "command",
       "palette"
     ],
-    "screenshot": null
+    "screenshot": "modals-overlays/command-palette-01.png"
   },
   {
     "id": "cookie-consent-01",
@@ -3316,7 +3316,7 @@
       "modals-overlays",
       "drawer"
     ],
-    "screenshot": null
+    "screenshot": "modals-overlays/drawer-01.png"
   },
   {
     "id": "lightbox-01",
@@ -3338,7 +3338,7 @@
       "modals-overlays",
       "lightbox"
     ],
-    "screenshot": null
+    "screenshot": "modals-overlays/lightbox-01.png"
   },
   {
     "id": "modal-confirm-01",
@@ -3360,7 +3360,7 @@
       "modal",
       "confirm"
     ],
-    "screenshot": null
+    "screenshot": "modals-overlays/modal-confirm-01.png"
   },
   {
     "id": "modal-dialog-01",
@@ -3423,7 +3423,7 @@
       "bottom",
       "nav"
     ],
-    "screenshot": null
+    "screenshot": "navigation/bottom-nav-01.png"
   },
   {
     "id": "breadcrumbs-01",
@@ -3730,7 +3730,7 @@
       "newsletter",
       "popup"
     ],
-    "screenshot": null
+    "screenshot": "newsletter/newsletter-popup-01.png"
   },
   {
     "id": "portfolio-carousel-01",
@@ -4744,5 +4744,604 @@
       "Text"
     ],
     "screenshot": "auth/login-split-mockup-quote-01.png"
+  },
+  {
+    "id": "forgot-password-check-email-01",
+    "name": "Forgot Password Check Email",
+    "category": "auth",
+    "description": "Forgot Password Check Email screen with 12 elements",
+    "tags": [
+      "auth",
+      "forgot-password",
+      "form"
+    ],
+    "file": "auth/forgot-password-check-email-01.json",
+    "element_count": 12,
+    "components_used": [
+      "Button",
+      "Icon",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/forgot-password-check-email-01.png"
+  },
+  {
+    "id": "forgot-password-form-01",
+    "name": "Forgot Password Form",
+    "category": "auth",
+    "description": "Forgot Password Form screen with 11 elements",
+    "tags": [
+      "auth",
+      "forgot-password",
+      "form"
+    ],
+    "file": "auth/forgot-password-form-01.json",
+    "element_count": 11,
+    "components_used": [
+      "Button",
+      "Field",
+      "Icon",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/forgot-password-form-01.png"
+  },
+  {
+    "id": "forgot-password-new-password-01",
+    "name": "Forgot Password New Password",
+    "category": "auth",
+    "description": "Forgot Password New Password screen with 14 elements",
+    "tags": [
+      "auth",
+      "forgot-password",
+      "form"
+    ],
+    "file": "auth/forgot-password-new-password-01.json",
+    "element_count": 14,
+    "components_used": [
+      "Button",
+      "Field",
+      "Icon",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/forgot-password-new-password-01.png"
+  },
+  {
+    "id": "forgot-password-success-01",
+    "name": "Forgot Password Success",
+    "category": "auth",
+    "description": "Forgot Password Success screen with 9 elements",
+    "tags": [
+      "auth",
+      "forgot-password",
+      "form"
+    ],
+    "file": "auth/forgot-password-success-01.json",
+    "element_count": 9,
+    "components_used": [
+      "Button",
+      "Icon",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/forgot-password-success-01.png"
+  },
+  {
+    "id": "signup-card-01",
+    "name": "Signup Card",
+    "category": "auth",
+    "description": "Signup Card screen with 21 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-card-01.json",
+    "element_count": 21,
+    "components_used": [
+      "Button",
+      "Card",
+      "Field",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-card-01.png"
+  },
+  {
+    "id": "signup-card-02",
+    "name": "Signup Card",
+    "category": "auth",
+    "description": "Signup Card screen with 25 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-card-02.json",
+    "element_count": 25,
+    "components_used": [
+      "Button",
+      "Card",
+      "Field",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-card-02.png"
+  },
+  {
+    "id": "signup-nav-01",
+    "name": "Signup Nav",
+    "category": "auth",
+    "description": "Signup Nav screen with 28 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-nav-01.json",
+    "element_count": 28,
+    "components_used": [
+      "Button",
+      "Field",
+      "Icon",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/signup-nav-01.png"
+  },
+  {
+    "id": "signup-progress-01",
+    "name": "Signup Progress",
+    "category": "auth",
+    "description": "Signup Progress screen with 20 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-progress-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Button",
+      "Field",
+      "Icon",
+      "Input",
+      "Separator",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/signup-progress-01.png"
+  },
+  {
+    "id": "signup-progress-02",
+    "name": "Signup Progress",
+    "category": "auth",
+    "description": "Signup Progress screen with 32 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-progress-02.json",
+    "element_count": 32,
+    "components_used": [
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-progress-02.png"
+  },
+  {
+    "id": "signup-progress-03",
+    "name": "Signup Progress",
+    "category": "auth",
+    "description": "Signup Progress screen with 25 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-progress-03.json",
+    "element_count": 25,
+    "components_used": [
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/signup-progress-03.png"
+  },
+  {
+    "id": "signup-sidebar-progress-01",
+    "name": "Signup Sidebar Progress",
+    "category": "auth",
+    "description": "Signup Sidebar Progress screen with 48 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-sidebar-progress-01.json",
+    "element_count": 48,
+    "components_used": [
+      "Avatar",
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Separator",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/signup-sidebar-progress-01.png"
+  },
+  {
+    "id": "signup-sidebar-progress-02",
+    "name": "Signup Sidebar Progress",
+    "category": "auth",
+    "description": "Signup Sidebar Progress screen with 43 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-sidebar-progress-02.json",
+    "element_count": 43,
+    "components_used": [
+      "Avatar",
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Separator",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/signup-sidebar-progress-02.png"
+  },
+  {
+    "id": "signup-sidebar-progress-03",
+    "name": "Signup Sidebar Progress",
+    "category": "auth",
+    "description": "Signup Sidebar Progress screen with 43 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-sidebar-progress-03.json",
+    "element_count": 43,
+    "components_used": [
+      "Avatar",
+      "Badge",
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Separator",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/signup-sidebar-progress-03.png"
+  },
+  {
+    "id": "signup-simple-01",
+    "name": "Signup Simple",
+    "category": "auth",
+    "description": "Signup Simple screen with 19 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-simple-01.json",
+    "element_count": 19,
+    "components_used": [
+      "Button",
+      "Field",
+      "Icon",
+      "Input",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/signup-simple-01.png"
+  },
+  {
+    "id": "signup-social-01",
+    "name": "Signup Social",
+    "category": "auth",
+    "description": "Signup Social screen with 19 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-social-01.json",
+    "element_count": 19,
+    "components_used": [
+      "Button",
+      "Field",
+      "Icon",
+      "Input",
+      "Separator",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/signup-social-01.png"
+  },
+  {
+    "id": "signup-social-leading-01",
+    "name": "Signup Social Leading",
+    "category": "auth",
+    "description": "Signup Social Leading screen with 18 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-social-leading-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Button",
+      "Field",
+      "Icon",
+      "Input",
+      "Separator",
+      "Stack",
+      "Text"
+    ],
+    "screenshot": "auth/signup-social-leading-01.png"
+  },
+  {
+    "id": "signup-split-app-mockup-01",
+    "name": "Signup Split App Mockup",
+    "category": "auth",
+    "description": "Signup Split App Mockup screen with 26 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-app-mockup-01.json",
+    "element_count": 26,
+    "components_used": [
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Image",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-split-app-mockup-01.png"
+  },
+  {
+    "id": "signup-split-arrow-01",
+    "name": "Signup Split Arrow",
+    "category": "auth",
+    "description": "Signup Split Arrow screen with 37 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-arrow-01.json",
+    "element_count": 37,
+    "components_used": [
+      "Avatar",
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-split-arrow-01.png"
+  },
+  {
+    "id": "signup-split-carousel-01",
+    "name": "Signup Split Carousel",
+    "category": "auth",
+    "description": "Signup Split Carousel screen with 40 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-carousel-01.json",
+    "element_count": 40,
+    "components_used": [
+      "Badge",
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Image",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-split-carousel-01.png"
+  },
+  {
+    "id": "signup-split-gradient-01",
+    "name": "Signup Split Gradient",
+    "category": "auth",
+    "description": "Signup Split Gradient screen with 25 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-gradient-01.json",
+    "element_count": 25,
+    "components_used": [
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-split-gradient-01.png"
+  },
+  {
+    "id": "signup-split-image-bg-01",
+    "name": "Signup Split Image Bg",
+    "category": "auth",
+    "description": "Signup Split Image Bg screen with 37 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-image-bg-01.json",
+    "element_count": 37,
+    "components_used": [
+      "Avatar",
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-split-image-bg-01.png"
+  },
+  {
+    "id": "signup-split-mockup-01",
+    "name": "Signup Split Mockup",
+    "category": "auth",
+    "description": "Signup Split Mockup screen with 27 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-mockup-01.json",
+    "element_count": 27,
+    "components_used": [
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Image",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-split-mockup-01.png"
+  },
+  {
+    "id": "signup-split-mockup-quote-01",
+    "name": "Signup Split Mockup Quote",
+    "category": "auth",
+    "description": "Signup Split Mockup Quote screen with 34 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-mockup-quote-01.json",
+    "element_count": 34,
+    "components_used": [
+      "Avatar",
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Image",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-split-mockup-quote-01.png"
+  },
+  {
+    "id": "signup-split-quote-carousel-01",
+    "name": "Signup Split Quote Carousel",
+    "category": "auth",
+    "description": "Signup Split Quote Carousel screen with 40 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-quote-carousel-01.json",
+    "element_count": 40,
+    "components_used": [
+      "Avatar",
+      "Badge",
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-split-quote-carousel-01.png"
+  },
+  {
+    "id": "signup-split-quote-image-01",
+    "name": "Signup Split Quote Image",
+    "category": "auth",
+    "description": "Signup Split Quote Image screen with 29 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-quote-image-01.json",
+    "element_count": 29,
+    "components_used": [
+      "Avatar",
+      "Button",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-split-quote-image-01.png"
+  },
+  {
+    "id": "signup-split-quote-image-02",
+    "name": "Signup Split Quote Image",
+    "category": "auth",
+    "description": "Signup Split Quote Image screen with 34 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-quote-image-02.json",
+    "element_count": 34,
+    "components_used": [
+      "Avatar",
+      "Button",
+      "Card",
+      "Field",
+      "Grid",
+      "Icon",
+      "Input",
+      "Stack",
+      "Surface",
+      "Text"
+    ],
+    "screenshot": "auth/signup-split-quote-image-02.png"
   }
 ]

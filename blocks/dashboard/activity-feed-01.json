@@ -33,12 +33,9 @@
       }
     },
     "btn-view-all": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "View All",
-        "variant": "ghost",
-        "size": "sm",
-        "icon": "arrow-right"
+        "label": "View All"
       }
     },
     "activity-list": {

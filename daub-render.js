@@ -1650,6 +1650,15 @@
       return el;
     };
     
+    // -- Link (inline text CTA) --
+    RENDERERS.Link = function(p) {
+      var el = document.createElement('a');
+      el.className = 'db-link';
+      el.textContent = p.label || '';
+      if (p.href) el.href = p.href;
+      return el;
+    };
+
     // -- Icon (Lucide) --
     RENDERERS.Icon = function(p) {
       var sizes = { xs: 14, sm: 16, md: 20, lg: 24, xl: 32 };
@@ -1658,7 +1667,10 @@
       el.setAttribute('data-lucide', p.name || 'circle');
       el.style.width = sz + 'px';
       el.style.height = sz + 'px';
-      el.style.display = 'inline-block';
+      el.style.display = 'inline-flex';
+      el.style.alignItems = 'center';
+      el.style.justifyContent = 'center';
+      el.style.flexShrink = '0';
       return el;
     };
 

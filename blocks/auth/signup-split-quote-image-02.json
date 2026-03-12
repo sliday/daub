@@ -1,0 +1,329 @@
+{
+  "root": "signup-split-quote-image-02",
+  "elements": {
+    "signup-split-quote-image-02": {
+      "type": "Grid",
+      "props": {
+        "columns": 2,
+        "gap": 0
+      },
+      "children": [
+        "form-panel",
+        "pattern-panel"
+      ]
+    },
+    "form-panel": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 8,
+        "align": "center",
+        "justify": "center",
+        "padding": [
+          6,
+          8
+        ]
+      },
+      "children": [
+        "logo-mark",
+        "form-header",
+        "form-fields",
+        "form-login"
+      ]
+    },
+    "logo-mark": {
+      "type": "Icon",
+      "props": {
+        "name": "circle",
+        "size": "sm",
+        "variant": "branded"
+      }
+    },
+    "form-header": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "form-title",
+        "form-subtitle"
+      ]
+    },
+    "form-title": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Create an account",
+        "align": "center"
+      }
+    },
+    "form-subtitle": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Start your 30-day free trial.",
+        "variant": "secondary",
+        "align": "center"
+      }
+    },
+    "form-fields": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "name-field",
+        "email-field",
+        "password-field",
+        "get-started-btn",
+        "google-btn"
+      ]
+    },
+    "name-field": {
+      "type": "Field",
+      "props": {
+        "label": "Name*"
+      },
+      "children": [
+        "name-input"
+      ]
+    },
+    "name-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your name"
+      }
+    },
+    "email-field": {
+      "type": "Field",
+      "props": {
+        "label": "Email*"
+      },
+      "children": [
+        "email-input"
+      ]
+    },
+    "email-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your email",
+        "type": "email"
+      }
+    },
+    "password-field": {
+      "type": "Field",
+      "props": {
+        "label": "Password*",
+        "hint": "Must be at least 8 characters."
+      },
+      "children": [
+        "password-input"
+      ]
+    },
+    "password-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Create a password",
+        "type": "password"
+      }
+    },
+    "get-started-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg",
+        "fullWidth": true
+      }
+    },
+    "google-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Sign up with Google",
+        "variant": "outline",
+        "size": "lg",
+        "icon": "google",
+        "fullWidth": true
+      }
+    },
+    "form-login": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "login-text",
+        "login-link"
+      ]
+    },
+    "login-text": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Already have an account?",
+        "variant": "secondary"
+      }
+    },
+    "login-link": {
+      "type": "Link",
+      "props": {
+        "label": "Log in"
+      }
+    },
+    "pattern-panel": {
+      "type": "Surface",
+      "props": {
+        "variant": "pattern",
+        "padding": 0
+      },
+      "children": [
+        "pattern-overlay"
+      ]
+    },
+    "pattern-overlay": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "justify": "center",
+        "align": "center",
+        "padding": 8
+      },
+      "children": [
+        "testimonial-card"
+      ]
+    },
+    "testimonial-card": {
+      "type": "Card",
+      "props": {
+        "variant": "elevated"
+      },
+      "children": [
+        "testimonial-content"
+      ]
+    },
+    "testimonial-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6
+      },
+      "children": [
+        "testimonial-stars",
+        "testimonial-text",
+        "testimonial-author"
+      ]
+    },
+    "testimonial-stars": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 1
+      },
+      "children": [
+        "star-1",
+        "star-2",
+        "star-3",
+        "star-4",
+        "star-5"
+      ]
+    },
+    "star-1": {
+      "type": "Icon",
+      "props": {
+        "name": "star",
+        "size": "sm",
+        "variant": "warning"
+      }
+    },
+    "star-2": {
+      "type": "Icon",
+      "props": {
+        "name": "star",
+        "size": "sm",
+        "variant": "warning"
+      }
+    },
+    "star-3": {
+      "type": "Icon",
+      "props": {
+        "name": "star",
+        "size": "sm",
+        "variant": "warning"
+      }
+    },
+    "star-4": {
+      "type": "Icon",
+      "props": {
+        "name": "star",
+        "size": "sm",
+        "variant": "warning"
+      }
+    },
+    "star-5": {
+      "type": "Icon",
+      "props": {
+        "name": "star",
+        "size": "sm",
+        "variant": "warning"
+      }
+    },
+    "testimonial-text": {
+      "type": "Text",
+      "props": {
+        "tag": "h4",
+        "content": "\"We've been using Daub to kick start every new project and can't imagine working without it.\""
+      }
+    },
+    "testimonial-author": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "t-avatar",
+        "t-info"
+      ]
+    },
+    "t-avatar": {
+      "type": "Avatar",
+      "props": {
+        "size": "md",
+        "initials": "CW"
+      }
+    },
+    "t-info": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "t-name",
+        "t-role"
+      ]
+    },
+    "t-name": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Candice Wu"
+      }
+    },
+    "t-role": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Product Manager, Sisyphus",
+        "variant": "secondary"
+      }
+    }
+  }
+}

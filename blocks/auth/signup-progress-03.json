@@ -1,0 +1,124 @@
+{
+  "root": "signup-progress-03",
+  "elements": {
+    "signup-progress-03": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 0, "align": "center", "justify": "center", "container": "narrow" },
+      "children": ["content-wrapper"]
+    },
+
+    "content-wrapper": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6, "align": "center" },
+      "children": ["header", "form-group", "progress-text-bar"]
+    },
+
+    "header": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3, "align": "center" },
+      "children": ["logo-icon", "header-title", "header-subtitle"]
+    },
+    "logo-icon": {
+      "type": "Icon",
+      "props": { "name": "circle", "size": "sm", "variant": "branded" }
+    },
+    "header-title": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Choose a password", "align": "center" }
+    },
+    "header-subtitle": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Must be at least 8 characters.", "variant": "secondary", "align": "center" }
+    },
+
+    "form-group": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4, "align": "stretch", "fullWidth": true },
+      "children": ["password-field", "confirm-password-field", "continue-btn"]
+    },
+    "password-field": {
+      "type": "Field",
+      "props": { "label": "Choose a password" },
+      "children": ["password-input"]
+    },
+    "password-input": {
+      "type": "Input",
+      "props": { "placeholder": "Create a password", "type": "password" }
+    },
+    "confirm-password-field": {
+      "type": "Field",
+      "props": { "label": "Confirm password" },
+      "children": ["confirm-password-input"]
+    },
+    "confirm-password-input": {
+      "type": "Input",
+      "props": { "placeholder": "Confirm your password", "type": "password" }
+    },
+    "continue-btn": {
+      "type": "Button",
+      "props": { "label": "Continue", "variant": "primary", "size": "lg", "fullWidth": true }
+    },
+
+    "progress-text-bar": {
+      "type": "Grid",
+      "props": { "columns": 4, "gap": 0, "fullWidth": true },
+      "children": ["segment-1", "segment-2", "segment-3", "segment-4"]
+    },
+
+    "segment-1": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 2, "borderTop": "primary", "padding": [2, 2, 0, 0] },
+      "children": ["segment-1-title", "segment-1-subtitle"]
+    },
+    "segment-1-title": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Your details", "size": "sm", "weight": "medium", "variant": "primary" }
+    },
+    "segment-1-subtitle": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Please provide your name and email", "size": "xs", "variant": "secondary" }
+    },
+
+    "segment-2": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 2, "borderTop": "primary", "padding": [2, 2, 0, 0] },
+      "children": ["segment-2-title", "segment-2-subtitle"]
+    },
+    "segment-2-title": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Choose a password", "size": "sm", "weight": "medium", "variant": "primary" }
+    },
+    "segment-2-subtitle": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Choose a secure password", "size": "xs", "variant": "primary" }
+    },
+
+    "segment-3": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 2, "borderTop": "muted", "padding": [2, 2, 0, 0] },
+      "children": ["segment-3-title", "segment-3-subtitle"]
+    },
+    "segment-3-title": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Invite your team", "size": "sm", "weight": "medium", "variant": "muted" }
+    },
+    "segment-3-subtitle": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Start collaborating with your team", "size": "xs", "variant": "muted" }
+    },
+
+    "segment-4": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 2, "borderTop": "muted", "padding": [2, 2, 0, 0] },
+      "children": ["segment-4-title", "segment-4-subtitle"]
+    },
+    "segment-4-title": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Add your socials", "size": "sm", "weight": "medium", "variant": "muted" }
+    },
+    "segment-4-subtitle": {
+      "type": "Text",
+      "props": { "tag": "span", "content": "Share posts to your social accounts", "size": "xs", "variant": "muted" }
+    }
+  }
+}

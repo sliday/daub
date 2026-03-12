@@ -147,11 +147,9 @@
       }
     },
     "review-link": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "Write a review",
-        "variant": "ghost",
-        "size": "sm"
+        "label": "Write a review"
       }
     },
     "price-section": {

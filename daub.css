@@ -2132,6 +2132,21 @@ a:hover { color: var(--db-clay); }
   background: rgba(var(--db-shadow-rgb), 0.1);
 }
 
+/* Link (inline text CTA) */
+.db-link {
+  font-weight: 600;
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--db-terracotta);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color var(--db-transition);
+}
+.db-link:hover {
+  color: var(--db-accent-dark);
+  text-decoration: underline;
+}
+
 /* Icon button color variants */
 .db-btn--icon-danger,
 .db-btn--icon-success,

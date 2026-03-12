@@ -1,48 +1,38 @@
 {
-  "root": "login-split-image-quote",
+  "root": "signup-split-quote-image-01",
   "elements": {
-    "login-split-image-quote": {
+    "signup-split-quote-image-01": {
       "type": "Grid",
       "props": {
         "columns": 2,
         "gap": 0
       },
       "children": [
-        "left-panel",
-        "right-panel"
+        "form-panel",
+        "image-panel"
       ]
     },
-    "left-panel": {
+    "form-panel": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 0
       },
       "children": [
-        "top-bar",
-        "form-area",
-        "footer-bar"
+        "nav-bar",
+        "form-container"
       ]
     },
-    "top-bar": {
-      "type": "Stack",
-      "props": {
-        "direction": "horizontal",
-        "padding": [
-          3,
-          4
-        ]
-      },
-      "children": [
-        "top-logo"
-      ]
-    },
-    "top-logo": {
+    "nav-bar": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
         "gap": 2,
-        "align": "center"
+        "align": "center",
+        "padding": [
+          3,
+          4
+        ]
       },
       "children": [
         "logo-icon",
@@ -52,7 +42,8 @@
     "logo-icon": {
       "type": "Icon",
       "props": {
-        "name": "layers"
+        "name": "layers",
+        "size": "md"
       }
     },
     "logo-text": {
@@ -62,65 +53,82 @@
         "content": "Daub"
       }
     },
-    "form-area": {
+    "form-container": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
+        "gap": 8,
         "justify": "center",
-        "padding": 8,
-        "gap": 6,
-        "grow": true
+        "padding": [
+          4,
+          8
+        ]
       },
       "children": [
-        "login-header",
-        "login-form",
-        "signup-prompt"
+        "form-header",
+        "form-fields",
+        "form-login"
       ]
     },
-    "login-header": {
+    "form-header": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
-        "gap": 2
+        "gap": 3
       },
       "children": [
-        "login-title",
-        "login-subtitle"
+        "form-title",
+        "form-subtitle"
       ]
     },
-    "login-title": {
+    "form-title": {
       "type": "Text",
       "props": {
         "tag": "h2",
-        "content": "Welcome back"
+        "content": "Sign up"
       }
     },
-    "login-subtitle": {
+    "form-subtitle": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Welcome back! Please enter your details.",
+        "content": "Start your 30-day free trial.",
         "variant": "secondary"
       }
     },
-    "login-form": {
+    "form-fields": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
-        "gap": 4
+        "gap": 5
       },
       "children": [
+        "name-field",
         "email-field",
         "password-field",
-        "options-row",
-        "signin-btn",
+        "get-started-btn",
         "google-btn"
       ]
+    },
+    "name-field": {
+      "type": "Field",
+      "props": {
+        "label": "Name*"
+      },
+      "children": [
+        "name-input"
+      ]
+    },
+    "name-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your name"
+      }
     },
     "email-field": {
       "type": "Field",
       "props": {
-        "label": "Email"
+        "label": "Email*"
       },
       "children": [
         "email-input"
@@ -136,7 +144,8 @@
     "password-field": {
       "type": "Field",
       "props": {
-        "label": "Password"
+        "label": "Password*",
+        "hint": "Must be at least 8 characters."
       },
       "children": [
         "password-input"
@@ -145,39 +154,14 @@
     "password-input": {
       "type": "Input",
       "props": {
-        "placeholder": "••••••••",
+        "placeholder": "Create a password",
         "type": "password"
       }
     },
-    "options-row": {
-      "type": "Stack",
-      "props": {
-        "direction": "horizontal",
-        "justify": "between",
-        "align": "center"
-      },
-      "children": [
-        "remember-check",
-        "forgot-link"
-      ]
-    },
-    "remember-check": {
-      "type": "Checkbox",
-      "props": {
-        "label": "Remember for 30 days",
-        "checked": false
-      }
-    },
-    "forgot-link": {
-      "type": "Link",
-      "props": {
-        "label": "Forgot password?"
-      }
-    },
-    "signin-btn": {
+    "get-started-btn": {
       "type": "Button",
       "props": {
-        "label": "Sign in",
+        "label": "Get started",
         "variant": "primary",
         "size": "lg",
         "fullWidth": true
@@ -186,103 +170,104 @@
     "google-btn": {
       "type": "Button",
       "props": {
-        "label": "Sign in with Google",
+        "label": "Sign up with Google",
         "variant": "outline",
         "size": "lg",
-        "fullWidth": true,
-        "icon": "google"
+        "icon": "google",
+        "fullWidth": true
       }
     },
-    "signup-prompt": {
+    "form-login": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
-        "gap": 1
+        "gap": 1,
+        "align": "center"
       },
       "children": [
-        "signup-text",
-        "signup-link"
+        "login-text",
+        "login-link"
       ]
     },
-    "signup-text": {
+    "login-text": {
       "type": "Text",
       "props": {
         "tag": "span",
-        "content": "Don't have an account?",
+        "content": "Already have an account?",
         "variant": "secondary"
       }
     },
-    "signup-link": {
+    "login-link": {
       "type": "Link",
       "props": {
-        "label": "Sign up"
+        "label": "Log in"
       }
     },
-    "footer-bar": {
-      "type": "Stack",
-      "props": {
-        "direction": "horizontal",
-        "padding": [
-          2,
-          4
-        ]
-      },
-      "children": [
-        "footer-text"
-      ]
-    },
-    "footer-text": {
-      "type": "Text",
-      "props": {
-        "tag": "span",
-        "content": "© Daub 2026",
-        "variant": "secondary"
-      }
-    },
-    "right-panel": {
+    "image-panel": {
       "type": "Surface",
       "props": {
-        "variant": "image"
+        "variant": "image",
+        "padding": 0
       },
       "children": [
-        "overlay-content"
+        "image-overlay"
       ]
     },
-    "overlay-content": {
+    "image-overlay": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
+        "gap": 4,
         "justify": "end",
-        "padding": 6,
-        "fullHeight": true,
-        "gap": 4
+        "padding": [
+          6,
+          6
+        ]
       },
       "children": [
-        "overlay-quote",
-        "overlay-author"
+        "quote-text",
+        "quote-attribution"
       ]
     },
-    "overlay-quote": {
+    "quote-text": {
       "type": "Text",
       "props": {
         "tag": "h3",
         "content": "\"We've been using Daub to kick start every new project and can't imagine working without it.\"",
-        "variant": "inverted",
-        "italic": true
+        "variant": "inverted"
       }
     },
-    "overlay-author": {
+    "quote-attribution": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "quote-avatar",
+        "quote-info"
+      ]
+    },
+    "quote-avatar": {
+      "type": "Avatar",
+      "props": {
+        "size": "md",
+        "initials": "OR"
+      }
+    },
+    "quote-info": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 0
       },
       "children": [
-        "overlay-author-name",
-        "overlay-author-role"
+        "quote-name",
+        "quote-role"
       ]
     },
-    "overlay-author-name": {
+    "quote-name": {
       "type": "Text",
       "props": {
         "tag": "span",
@@ -290,7 +275,7 @@
         "variant": "inverted"
       }
     },
-    "overlay-author-role": {
+    "quote-role": {
       "type": "Text",
       "props": {
         "tag": "span",

@@ -3,155 +3,329 @@
   "elements": {
     "auth-page": {
       "type": "Grid",
-      "props": { "columns": 2, "gap": 0 },
-      "children": ["brand-panel", "login-panel"]
+      "props": {
+        "columns": 2,
+        "gap": 0
+      },
+      "children": [
+        "brand-panel",
+        "login-panel"
+      ]
     },
-
     "brand-panel": {
       "type": "Surface",
-      "props": { "variant": "sunken", "padding": 8 },
-      "children": ["brand-inner"]
+      "props": {
+        "variant": "sunken",
+        "padding": 8
+      },
+      "children": [
+        "brand-inner"
+      ]
     },
     "brand-inner": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 6, "justify": "center", "align": "start" },
-      "children": ["brand-heading", "brand-tagline", "features-list", "testimonial-card"]
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "justify": "center",
+        "align": "start"
+      },
+      "children": [
+        "brand-heading",
+        "brand-tagline",
+        "features-list",
+        "testimonial-card"
+      ]
     },
     "brand-heading": {
       "type": "Text",
-      "props": { "tag": "h1", "content": "Daub" }
+      "props": {
+        "tag": "h1",
+        "content": "Daub"
+      }
     },
     "brand-tagline": {
       "type": "Text",
-      "props": { "tag": "h3", "content": "Design. Build. Ship." }
+      "props": {
+        "tag": "h3",
+        "content": "Design. Build. Ship."
+      }
     },
     "features-list": {
       "type": "List",
       "props": {
         "items": [
-          { "primary": "Lightning-fast prototyping", "secondary": "Go from idea to interactive prototype in minutes, not hours", "icon": "zap" },
-          { "primary": "Component-driven workflow", "secondary": "Build with a library of 50+ production-ready UI components", "icon": "layers" },
-          { "primary": "Ship with confidence", "secondary": "Export clean, accessible code that your engineering team will love", "icon": "rocket" }
+          {
+            "primary": "Lightning-fast prototyping",
+            "secondary": "Go from idea to interactive prototype in minutes, not hours",
+            "icon": "zap"
+          },
+          {
+            "primary": "Component-driven workflow",
+            "secondary": "Build with a library of 50+ production-ready UI components",
+            "icon": "layers"
+          },
+          {
+            "primary": "Ship with confidence",
+            "secondary": "Export clean, accessible code that your engineering team will love",
+            "icon": "rocket"
+          }
         ]
       }
     },
     "testimonial-card": {
       "type": "Surface",
-      "props": { "variant": "elevated", "padding": 4 },
-      "children": ["testimonial-inner"]
+      "props": {
+        "variant": "elevated",
+        "padding": 4
+      },
+      "children": [
+        "testimonial-inner"
+      ]
     },
     "testimonial-inner": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 3, "align": "start" },
-      "children": ["testimonial-quote", "testimonial-author"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3,
+        "align": "start"
+      },
+      "children": [
+        "testimonial-quote",
+        "testimonial-author"
+      ]
     },
     "testimonial-quote": {
       "type": "Text",
-      "props": { "tag": "p", "content": "\"Daub cut our design-to-dev handoff time by 60%. The component specs are so precise that our engineers rarely need clarifying questions anymore.\"", "variant": "secondary" }
+      "props": {
+        "tag": "p",
+        "content": "\"Daub cut our design-to-dev handoff time by 60%. The component specs are so precise that our engineers rarely need clarifying questions anymore.\"",
+        "variant": "secondary"
+      }
     },
     "testimonial-author": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 2, "align": "center" },
-      "children": ["author-avatar", "author-info"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "author-avatar",
+        "author-info"
+      ]
     },
     "author-avatar": {
       "type": "Avatar",
-      "props": { "initials": "SC", "size": "sm" }
+      "props": {
+        "initials": "SC",
+        "size": "sm"
+      }
     },
     "author-info": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 0 },
-      "children": ["author-name", "author-role"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "author-name",
+        "author-role"
+      ]
     },
     "author-name": {
       "type": "Text",
-      "props": { "tag": "span", "content": "Sarah Chen" }
+      "props": {
+        "tag": "span",
+        "content": "Sarah Chen"
+      }
     },
     "author-role": {
       "type": "Text",
-      "props": { "tag": "span", "content": "CTO, Streamline", "variant": "secondary" }
+      "props": {
+        "tag": "span",
+        "content": "CTO, Streamline",
+        "variant": "secondary"
+      }
     },
-
     "login-panel": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 4, "justify": "center", "align": "stretch" },
-      "children": ["login-header", "social-buttons", "divider", "email-field", "password-field", "options-row", "signin-btn", "signup-prompt", "terms-text"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "justify": "center",
+        "align": "stretch"
+      },
+      "children": [
+        "login-header",
+        "social-buttons",
+        "divider",
+        "email-field",
+        "password-field",
+        "options-row",
+        "signin-btn",
+        "signup-prompt",
+        "terms-text"
+      ]
     },
     "login-header": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 1, "align": "start" },
-      "children": ["login-title", "login-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "start"
+      },
+      "children": [
+        "login-title",
+        "login-subtitle"
+      ]
     },
     "login-title": {
       "type": "Text",
-      "props": { "tag": "h2", "content": "Welcome back" }
+      "props": {
+        "tag": "h2",
+        "content": "Welcome back"
+      }
     },
     "login-subtitle": {
       "type": "Text",
-      "props": { "tag": "p", "content": "Sign in to your account to continue", "variant": "secondary" }
+      "props": {
+        "tag": "p",
+        "content": "Sign in to your account to continue",
+        "variant": "secondary"
+      }
     },
     "social-buttons": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 2, "align": "stretch" },
-      "children": ["google-btn", "github-btn", "apple-btn"]
+      "props": {
+        "direction": "vertical",
+        "gap": 2,
+        "align": "stretch"
+      },
+      "children": [
+        "google-btn",
+        "github-btn",
+        "apple-btn"
+      ]
     },
     "google-btn": {
       "type": "Button",
-      "props": { "label": "Continue with Google", "variant": "outline", "icon": "globe", "fullWidth": true }
+      "props": {
+        "label": "Continue with Google",
+        "variant": "outline",
+        "icon": "globe",
+        "fullWidth": true
+      }
     },
     "github-btn": {
       "type": "Button",
-      "props": { "label": "Continue with GitHub", "variant": "outline", "icon": "github", "fullWidth": true }
+      "props": {
+        "label": "Continue with GitHub",
+        "variant": "outline",
+        "icon": "github",
+        "fullWidth": true
+      }
     },
     "apple-btn": {
       "type": "Button",
-      "props": { "label": "Continue with Apple", "variant": "outline", "icon": "apple", "fullWidth": true }
+      "props": {
+        "label": "Continue with Apple",
+        "variant": "outline",
+        "icon": "apple",
+        "fullWidth": true
+      }
     },
     "divider": {
       "type": "Separator",
-      "props": { "label": "OR" }
+      "props": {
+        "label": "OR"
+      }
     },
     "email-field": {
       "type": "Field",
-      "props": { "label": "Email address", "placeholder": "you@example.com", "type": "email" }
+      "props": {
+        "label": "Email address",
+        "placeholder": "you@example.com",
+        "type": "email"
+      }
     },
     "password-field": {
       "type": "Field",
-      "props": { "label": "Password", "placeholder": "Enter your password", "type": "password" }
+      "props": {
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "type": "password"
+      }
     },
     "options-row": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 2, "justify": "space-between", "align": "center" },
-      "children": ["remember-switch", "forgot-link"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "justify": "space-between",
+        "align": "center"
+      },
+      "children": [
+        "remember-switch",
+        "forgot-link"
+      ]
     },
     "remember-switch": {
       "type": "Switch",
-      "props": { "label": "Remember me", "checked": false }
+      "props": {
+        "label": "Remember me",
+        "checked": false
+      }
     },
     "forgot-link": {
-      "type": "Button",
-      "props": { "label": "Forgot password?", "variant": "ghost", "size": "sm" }
+      "type": "Link",
+      "props": {
+        "label": "Forgot password?"
+      }
     },
     "signin-btn": {
       "type": "Button",
-      "props": { "label": "Sign In", "variant": "primary", "size": "lg", "fullWidth": true }
+      "props": {
+        "label": "Sign In",
+        "variant": "primary",
+        "size": "lg",
+        "fullWidth": true
+      }
     },
     "signup-prompt": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 1, "justify": "center", "align": "center" },
-      "children": ["signup-text", "signup-link"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1,
+        "justify": "center",
+        "align": "center"
+      },
+      "children": [
+        "signup-text",
+        "signup-link"
+      ]
     },
     "signup-text": {
       "type": "Text",
-      "props": { "tag": "span", "content": "Don't have an account?", "variant": "secondary" }
+      "props": {
+        "tag": "span",
+        "content": "Don't have an account?",
+        "variant": "secondary"
+      }
     },
     "signup-link": {
-      "type": "Button",
-      "props": { "label": "Sign up", "variant": "ghost", "size": "sm" }
+      "type": "Link",
+      "props": {
+        "label": "Sign up"
+      }
     },
     "terms-text": {
       "type": "Text",
-      "props": { "tag": "p", "content": "By continuing, you agree to our Terms of Service and Privacy Policy.", "variant": "secondary" }
+      "props": {
+        "tag": "p",
+        "content": "By continuing, you agree to our Terms of Service and Privacy Policy.",
+        "variant": "secondary"
+      }
     }
   }
 }

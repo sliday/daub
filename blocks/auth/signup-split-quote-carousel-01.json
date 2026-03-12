@@ -1,0 +1,392 @@
+{
+  "root": "signup-split-quote-carousel",
+  "elements": {
+    "signup-split-quote-carousel": {
+      "type": "Grid",
+      "props": {
+        "columns": 2,
+        "gap": 0
+      },
+      "children": [
+        "quote-panel",
+        "form-panel"
+      ]
+    },
+    "quote-panel": {
+      "type": "Surface",
+      "props": {
+        "variant": "default",
+        "padding": 0
+      },
+      "children": [
+        "quote-inner"
+      ]
+    },
+    "quote-inner": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "justify": "between"
+      },
+      "children": [
+        "quote-top",
+        "quote-content",
+        "quote-footer"
+      ]
+    },
+    "quote-top": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center",
+        "padding": [
+          4,
+          6
+        ]
+      },
+      "children": [
+        "q-logo-icon",
+        "q-logo-text"
+      ]
+    },
+    "q-logo-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "layers",
+        "size": "md"
+      }
+    },
+    "q-logo-text": {
+      "type": "Text",
+      "props": {
+        "tag": "h4",
+        "content": "Daub"
+      }
+    },
+    "quote-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 8,
+        "padding": [
+          4,
+          6
+        ]
+      },
+      "children": [
+        "quote-text",
+        "quote-author",
+        "quote-nav"
+      ]
+    },
+    "quote-text": {
+      "type": "Text",
+      "props": {
+        "tag": "h3",
+        "content": "Daub has saved us thousands of hours of work. We're able to spin up projects and features much faster.",
+        "variant": "default"
+      }
+    },
+    "quote-author": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "author-avatar",
+        "author-info"
+      ]
+    },
+    "author-avatar": {
+      "type": "Avatar",
+      "props": {
+        "size": "md",
+        "initials": "LB"
+      }
+    },
+    "author-info": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "author-name",
+        "author-role"
+      ]
+    },
+    "author-name": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Lori Bryson"
+      }
+    },
+    "author-role": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Product Designer, Sisyphus",
+        "variant": "secondary"
+      }
+    },
+    "quote-nav": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "nav-arrows",
+        "nav-dots"
+      ]
+    },
+    "nav-arrows": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 2
+      },
+      "children": [
+        "arrow-left",
+        "arrow-right"
+      ]
+    },
+    "arrow-left": {
+      "type": "Button",
+      "props": {
+        "icon": "arrow-left",
+        "variant": "outline",
+        "size": "sm"
+      }
+    },
+    "arrow-right": {
+      "type": "Button",
+      "props": {
+        "icon": "arrow-right",
+        "variant": "outline",
+        "size": "sm"
+      }
+    },
+    "nav-dots": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 2
+      },
+      "children": [
+        "dot-1",
+        "dot-2",
+        "dot-3"
+      ]
+    },
+    "dot-1": {
+      "type": "Badge",
+      "props": {
+        "variant": "dot",
+        "active": false
+      }
+    },
+    "dot-2": {
+      "type": "Badge",
+      "props": {
+        "variant": "dot",
+        "active": true
+      }
+    },
+    "dot-3": {
+      "type": "Badge",
+      "props": {
+        "variant": "dot",
+        "active": false
+      }
+    },
+    "quote-footer": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "justify": "between",
+        "padding": [
+          2,
+          6
+        ]
+      },
+      "children": [
+        "q-copyright",
+        "q-email"
+      ]
+    },
+    "q-copyright": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "© Daub 2026",
+        "variant": "secondary"
+      }
+    },
+    "q-email": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "help@daub.sh",
+        "variant": "secondary"
+      }
+    },
+    "form-panel": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 8,
+        "justify": "center",
+        "padding": [
+          6,
+          8
+        ]
+      },
+      "children": [
+        "form-header",
+        "form-fields",
+        "form-login"
+      ]
+    },
+    "form-header": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "form-title",
+        "form-subtitle"
+      ]
+    },
+    "form-title": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Sign up"
+      }
+    },
+    "form-subtitle": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Start your 30-day free trial.",
+        "variant": "secondary"
+      }
+    },
+    "form-fields": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "name-field",
+        "email-field",
+        "password-field",
+        "get-started-btn",
+        "google-btn"
+      ]
+    },
+    "name-field": {
+      "type": "Field",
+      "props": {
+        "label": "Name*"
+      },
+      "children": [
+        "name-input"
+      ]
+    },
+    "name-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your name"
+      }
+    },
+    "email-field": {
+      "type": "Field",
+      "props": {
+        "label": "Email*"
+      },
+      "children": [
+        "email-input"
+      ]
+    },
+    "email-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your email",
+        "type": "email"
+      }
+    },
+    "password-field": {
+      "type": "Field",
+      "props": {
+        "label": "Password*",
+        "hint": "Must be at least 8 characters."
+      },
+      "children": [
+        "password-input"
+      ]
+    },
+    "password-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Create a password",
+        "type": "password"
+      }
+    },
+    "get-started-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg",
+        "fullWidth": true
+      }
+    },
+    "google-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Sign up with Google",
+        "variant": "outline",
+        "size": "lg",
+        "icon": "google",
+        "fullWidth": true
+      }
+    },
+    "form-login": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "login-text",
+        "login-link"
+      ]
+    },
+    "login-text": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Already have an account?",
+        "variant": "secondary"
+      }
+    },
+    "login-link": {
+      "type": "Link",
+      "props": {
+        "label": "Log in"
+      }
+    }
+  }
+}

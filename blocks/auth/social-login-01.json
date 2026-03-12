@@ -165,11 +165,9 @@
       }
     },
     "signup-link": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "Create one",
-        "variant": "ghost",
-        "size": "sm"
+        "label": "Create one"
       }
     }
   }

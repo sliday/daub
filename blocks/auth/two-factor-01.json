@@ -118,19 +118,15 @@
       ]
     },
     "recovery-link": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "Use recovery code",
-        "variant": "ghost",
-        "size": "sm"
+        "label": "Use recovery code"
       }
     },
     "resend-link": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "Resend code",
-        "variant": "ghost",
-        "size": "sm"
+        "label": "Resend code"
       }
     }
   }

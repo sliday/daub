@@ -127,27 +127,21 @@
       }
     },
     "link-docs": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "Documentation",
-        "variant": "ghost",
-        "size": "sm"
+        "label": "Documentation"
       }
     },
     "link-support": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "Contact Support",
-        "variant": "ghost",
-        "size": "sm"
+        "label": "Contact Support"
       }
     },
     "link-status": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "System Status",
-        "variant": "ghost",
-        "size": "sm"
+        "label": "System Status"
       }
     }
   }

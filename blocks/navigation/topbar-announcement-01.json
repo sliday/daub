@@ -39,12 +39,9 @@
       }
     },
     "topbar-link": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "Learn More",
-        "variant": "ghost",
-        "size": "sm",
-        "icon": "arrow-right"
+        "label": "Learn More"
       }
     }
   }

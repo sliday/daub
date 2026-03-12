@@ -1,7 +1,7 @@
 {
-  "root": "login-split-carousel",
+  "root": "signup-split-carousel",
   "elements": {
-    "login-split-carousel": {
+    "signup-split-carousel": {
       "type": "Grid",
       "props": {
         "columns": 2,
@@ -79,7 +79,7 @@
       "children": [
         "form-header",
         "form-fields",
-        "form-signup"
+        "form-login"
       ]
     },
     "form-header": {
@@ -97,14 +97,14 @@
       "type": "Text",
       "props": {
         "tag": "h2",
-        "content": "Log in"
+        "content": "Sign up"
       }
     },
     "form-subtitle": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Welcome back! Please enter your details.",
+        "content": "Start your 30-day free trial.",
         "variant": "secondary"
       }
     },
@@ -115,17 +115,33 @@
         "gap": 4
       },
       "children": [
+        "name-field",
         "email-field",
         "password-field",
-        "options-row",
-        "signin-btn",
+        "signup-btn",
         "google-btn"
       ]
+    },
+    "name-field": {
+      "type": "Field",
+      "props": {
+        "label": "Name*"
+      },
+      "children": [
+        "name-input"
+      ]
+    },
+    "name-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your name",
+        "type": "text"
+      }
     },
     "email-field": {
       "type": "Field",
       "props": {
-        "label": "Email"
+        "label": "Email*"
       },
       "children": [
         "email-input"
@@ -141,7 +157,8 @@
     "password-field": {
       "type": "Field",
       "props": {
-        "label": "Password"
+        "label": "Password*",
+        "hint": "Must be at least 8 characters."
       },
       "children": [
         "password-input"
@@ -150,40 +167,14 @@
     "password-input": {
       "type": "Input",
       "props": {
-        "placeholder": "••••••••",
+        "placeholder": "Create a password",
         "type": "password"
       }
     },
-    "options-row": {
-      "type": "Stack",
-      "props": {
-        "direction": "horizontal",
-        "gap": 0,
-        "align": "center",
-        "justify": "between"
-      },
-      "children": [
-        "remember-check",
-        "forgot-link"
-      ]
-    },
-    "remember-check": {
-      "type": "Checkbox",
-      "props": {
-        "label": "Remember for 30 days",
-        "checked": false
-      }
-    },
-    "forgot-link": {
-      "type": "Link",
-      "props": {
-        "label": "Forgot password?"
-      }
-    },
-    "signin-btn": {
+    "signup-btn": {
       "type": "Button",
       "props": {
-        "label": "Sign in",
+        "label": "Get started",
         "variant": "primary",
         "size": "lg",
         "fullWidth": true
@@ -192,14 +183,14 @@
     "google-btn": {
       "type": "Button",
       "props": {
-        "label": "Sign in with Google",
+        "label": "Sign up with Google",
         "variant": "outline",
         "size": "lg",
         "icon": "google",
         "fullWidth": true
       }
     },
-    "form-signup": {
+    "form-login": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
@@ -207,22 +198,22 @@
         "align": "center"
       },
       "children": [
-        "signup-text",
-        "signup-link"
+        "login-text",
+        "login-link"
       ]
     },
-    "signup-text": {
+    "login-text": {
       "type": "Text",
       "props": {
         "tag": "span",
-        "content": "Don't have an account?",
+        "content": "Already have an account?",
         "variant": "secondary"
       }
     },
-    "signup-link": {
+    "login-link": {
       "type": "Link",
       "props": {
-        "label": "Sign up"
+        "label": "Log in"
       }
     },
     "form-footer": {
@@ -267,7 +258,7 @@
       "children": [
         "carousel-slide",
         "carousel-caption",
-        "carousel-dots"
+        "carousel-nav"
       ]
     },
     "carousel-slide": {
@@ -277,66 +268,15 @@
         "padding": 4
       },
       "children": [
-        "slide-content"
+        "slide-image"
       ]
     },
-    "slide-content": {
-      "type": "Stack",
-      "props": {
-        "direction": "vertical",
-        "gap": 4
-      },
-      "children": [
-        "slide-chart",
-        "slide-stats"
-      ]
-    },
-    "slide-chart": {
+    "slide-image": {
       "type": "Image",
       "props": {
         "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22500%22%20height%3D%22350%22%20viewBox%3D%220%200%20500%20350%22%3E%3Crect%20width%3D%22500%22%20height%3D%22350%22%20rx%3D%2212%22%20fill%3D%22%23F2F4F7%22%2F%3E%3Ctext%20x%3D%2240%22%20y%3D%2240%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22600%22%20fill%3D%22%23344054%22%3EUsers%20over%20time%3C%2Ftext%3E%3Cline%20x1%3D%2240%22%20y1%3D%2280%22%20x2%3D%22420%22%20y2%3D%2280%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Cline%20x1%3D%2240%22%20y1%3D%22130%22%20x2%3D%22420%22%20y2%3D%22130%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Cline%20x1%3D%2240%22%20y1%3D%22180%22%20x2%3D%22420%22%20y2%3D%22180%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Cline%20x1%3D%2240%22%20y1%3D%22230%22%20x2%3D%22420%22%20y2%3D%22230%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Cline%20x1%3D%2240%22%20y1%3D%22280%22%20x2%3D%22420%22%20y2%3D%22280%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Cpath%20d%3D%22M55%20250%20C80%20240%2C100%20200%2C130%20190%20C160%20180%2C180%20160%2C210%20140%20C240%20120%2C260%20130%2C290%20110%20C320%2090%2C340%20100%2C365%2095%20C390%2090%2C400%2080%2C410%2085%22%20fill%3D%22none%22%20stroke%3D%22%237F56D9%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M55%20250%20C80%20240%2C100%20200%2C130%20190%20C160%20180%2C180%20160%2C210%20140%20C240%20120%2C260%20130%2C290%20110%20C320%2090%2C340%20100%2C365%2095%20C390%2090%2C400%2080%2C410%2085%20L410%20280%20L55%20280%20Z%22%20fill%3D%22%237F56D920%22%2F%3E%3Ctext%20x%3D%2255%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3EMon%3C%2Ftext%3E%3Ctext%20x%3D%22115%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3ETue%3C%2Ftext%3E%3Ctext%20x%3D%22175%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3EWed%3C%2Ftext%3E%3Ctext%20x%3D%22233%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3EThu%3C%2Ftext%3E%3Ctext%20x%3D%22295%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3EFri%3C%2Ftext%3E%3Ctext%20x%3D%22350%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3ESat%3C%2Ftext%3E%3Ctext%20x%3D%22405%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3ESun%3C%2Ftext%3E%3Crect%20x%3D%22370%22%20y%3D%22310%22%20width%3D%22110%22%20height%3D%2232%22%20rx%3D%2216%22%20fill%3D%22white%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22390%22%20y%3D%22330%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2214%22%20font-weight%3D%22700%22%20fill%3D%22%23344054%22%3E1%2C000%3C%2Ftext%3E%3Ctext%20x%3D%22432%22%20y%3D%22330%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2210%22%20fill%3D%22%23667085%22%3Eactive%3C%2Ftext%3E%3C%2Fsvg%3E",
-        "alt": "Usage analytics chart"
-      }
-    },
-    "slide-stats": {
-      "type": "Stack",
-      "props": {
-        "direction": "horizontal",
-        "gap": 4,
-        "justify": "center",
-        "align": "center"
-      },
-      "children": [
-        "stat-active"
-      ]
-    },
-    "stat-active": {
-      "type": "Stack",
-      "props": {
-        "direction": "vertical",
-        "gap": 1,
-        "align": "center"
-      },
-      "children": [
-        "stat-value",
-        "stat-label"
-      ]
-    },
-    "stat-value": {
-      "type": "Text",
-      "props": {
-        "tag": "h2",
-        "content": "1,000",
-        "align": "center"
-      }
-    },
-    "stat-label": {
-      "type": "Text",
-      "props": {
-        "tag": "span",
-        "content": "Active users",
-        "variant": "secondary",
-        "align": "center"
+        "alt": "Dashboard mockup preview",
+        "objectFit": "contain"
       }
     },
     "carousel-caption": {
@@ -367,6 +307,28 @@
         "content": "Sign in to explore changes since your last visit.",
         "align": "center",
         "variant": "inverted-secondary"
+      }
+    },
+    "carousel-nav": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "justify": "center",
+        "align": "center"
+      },
+      "children": [
+        "nav-arrow-left",
+        "carousel-dots",
+        "nav-arrow-right"
+      ]
+    },
+    "nav-arrow-left": {
+      "type": "Button",
+      "props": {
+        "icon": "arrow-left",
+        "variant": "ghost",
+        "size": "sm"
       }
     },
     "carousel-dots": {
@@ -418,6 +380,14 @@
       "props": {
         "variant": "dot",
         "active": false
+      }
+    },
+    "nav-arrow-right": {
+      "type": "Button",
+      "props": {
+        "icon": "arrow-right",
+        "variant": "ghost",
+        "size": "sm"
       }
     }
   }

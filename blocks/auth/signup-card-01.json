@@ -1,22 +1,31 @@
 {
-  "root": "login-page-card-01",
+  "root": "signup-card-separated",
   "elements": {
-    "login-page-card-01": {
+    "signup-card-separated": {
+      "type": "Surface",
+      "props": {
+        "background": "muted"
+      },
+      "children": [
+        "page-wrapper"
+      ]
+    },
+    "page-wrapper": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
-        "gap": 6,
+        "gap": 0,
         "align": "center",
         "justify": "center",
         "container": "narrow"
       },
       "children": [
-        "header",
-        "login-card",
-        "signup-prompt"
+        "above-card-section",
+        "signup-card",
+        "below-card-section"
       ]
     },
-    "header": {
+    "above-card-section": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
@@ -25,36 +34,46 @@
       },
       "children": [
         "logo-icon",
-        "header-title",
-        "header-subtitle"
+        "header"
       ]
     },
     "logo-icon": {
       "type": "Icon",
       "props": {
-        "name": "circle",
-        "size": "sm",
-        "variant": "branded"
+        "name": "layers"
       }
     },
-    "header-title": {
+    "header": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "heading",
+        "subtitle"
+      ]
+    },
+    "heading": {
       "type": "Text",
       "props": {
         "tag": "h2",
-        "content": "Log in to your account"
+        "content": "Create an account",
+        "align": "center"
       }
     },
-    "header-subtitle": {
+    "subtitle": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Welcome back! Please enter your details.",
-        "variant": "secondary"
+        "content": "Start your 30-day free trial.",
+        "variant": "secondary",
+        "align": "center"
       }
     },
-    "login-card": {
+    "signup-card": {
       "type": "Card",
-      "props": {},
       "children": [
         "card-body"
       ]
@@ -63,16 +82,33 @@
       "type": "Stack",
       "props": {
         "direction": "vertical",
-        "gap": 4
+        "gap": 4,
+        "align": "stretch"
       },
       "children": [
+        "name-field",
         "email-field",
         "password-field",
-        "options-row",
-        "signin-btn",
-        "divider",
+        "password-hint",
+        "get-started-btn",
         "google-btn"
       ]
+    },
+    "name-field": {
+      "type": "Field",
+      "props": {
+        "label": "Name"
+      },
+      "children": [
+        "name-input"
+      ]
+    },
+    "name-input": {
+      "type": "Input",
+      "props": {
+        "placeholder": "Enter your name",
+        "type": "text"
+      }
     },
     "email-field": {
       "type": "Field",
@@ -102,62 +138,38 @@
     "password-input": {
       "type": "Input",
       "props": {
-        "placeholder": "••••••••",
+        "placeholder": "Create a password",
         "type": "password"
       }
     },
-    "options-row": {
-      "type": "Stack",
+    "password-hint": {
+      "type": "Text",
       "props": {
-        "direction": "horizontal",
-        "gap": 0,
-        "justify": "between",
-        "align": "center"
-      },
-      "children": [
-        "remember-check",
-        "forgot-link"
-      ]
-    },
-    "remember-check": {
-      "type": "Checkbox",
-      "props": {
-        "label": "Remember for 30 days",
-        "checked": false
+        "tag": "p",
+        "content": "Must be at least 8 characters.",
+        "variant": "muted"
       }
     },
-    "forgot-link": {
-      "type": "Link",
-      "props": {
-        "label": "Forgot password?"
-      }
-    },
-    "signin-btn": {
+    "get-started-btn": {
       "type": "Button",
       "props": {
-        "label": "Sign in",
+        "label": "Get started",
         "variant": "primary",
         "size": "lg",
         "fullWidth": true
       }
     },
-    "divider": {
-      "type": "Separator",
-      "props": {
-        "orientation": "horizontal"
-      }
-    },
     "google-btn": {
       "type": "Button",
       "props": {
-        "label": "Sign in with Google",
+        "label": "Sign up with Google",
         "variant": "outline",
         "size": "lg",
-        "fullWidth": true,
-        "icon": "google"
+        "icon": "google",
+        "fullWidth": true
       }
     },
-    "signup-prompt": {
+    "below-card-section": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
@@ -166,22 +178,22 @@
         "justify": "center"
       },
       "children": [
-        "signup-text",
-        "signup-link"
+        "login-text",
+        "login-link"
       ]
     },
-    "signup-text": {
+    "login-text": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Don't have an account?",
+        "content": "Already have an account?",
         "variant": "secondary"
       }
     },
-    "signup-link": {
+    "login-link": {
       "type": "Link",
       "props": {
-        "label": "Sign up"
+        "label": "Log in"
       }
     }
   }

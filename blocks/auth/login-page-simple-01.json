@@ -3,91 +3,187 @@
   "elements": {
     "login-page-simple-01": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 0, "align": "center", "justify": "center", "container": "narrow" },
-      "children": ["content-wrapper"]
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center",
+        "justify": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "content-wrapper"
+      ]
     },
-
     "content-wrapper": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 6, "align": "center" },
-      "children": ["header", "form-group", "signup-prompt"]
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "align": "center"
+      },
+      "children": [
+        "header",
+        "form-group",
+        "signup-prompt"
+      ]
     },
-
     "header": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 3, "align": "center" },
-      "children": ["logo-icon", "header-title", "header-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "logo-icon",
+        "header-title",
+        "header-subtitle"
+      ]
     },
     "logo-icon": {
       "type": "Icon",
-      "props": { "name": "circle", "size": "sm", "variant": "branded" }
+      "props": {
+        "name": "circle",
+        "size": "sm",
+        "variant": "branded"
+      }
     },
     "header-title": {
       "type": "Text",
-      "props": { "tag": "h2", "content": "Log in to your account", "align": "center" }
+      "props": {
+        "tag": "h2",
+        "content": "Log in to your account",
+        "align": "center"
+      }
     },
     "header-subtitle": {
       "type": "Text",
-      "props": { "tag": "p", "content": "Welcome back! Please enter your details.", "variant": "secondary", "align": "center" }
+      "props": {
+        "tag": "p",
+        "content": "Welcome back! Please enter your details.",
+        "variant": "secondary",
+        "align": "center"
+      }
     },
-
     "form-group": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 4, "align": "stretch", "fullWidth": true },
-      "children": ["email-field", "password-field", "options-row", "signin-btn", "google-btn"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "align": "stretch",
+        "fullWidth": true
+      },
+      "children": [
+        "email-field",
+        "password-field",
+        "options-row",
+        "signin-btn",
+        "google-btn"
+      ]
     },
     "email-field": {
       "type": "Field",
-      "props": { "label": "Email" },
-      "children": ["email-input"]
+      "props": {
+        "label": "Email"
+      },
+      "children": [
+        "email-input"
+      ]
     },
     "email-input": {
       "type": "Input",
-      "props": { "placeholder": "Enter your email", "type": "email" }
+      "props": {
+        "placeholder": "Enter your email",
+        "type": "email"
+      }
     },
     "password-field": {
       "type": "Field",
-      "props": { "label": "Password" },
-      "children": ["password-input"]
+      "props": {
+        "label": "Password"
+      },
+      "children": [
+        "password-input"
+      ]
     },
     "password-input": {
       "type": "Input",
-      "props": { "placeholder": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022", "type": "password" }
+      "props": {
+        "placeholder": "••••••••",
+        "type": "password"
+      }
     },
     "options-row": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 0, "justify": "between", "align": "center" },
-      "children": ["remember-check", "forgot-link"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 0,
+        "justify": "between",
+        "align": "center"
+      },
+      "children": [
+        "remember-check",
+        "forgot-link"
+      ]
     },
     "remember-check": {
       "type": "Checkbox",
-      "props": { "label": "Remember for 30 days", "checked": false }
+      "props": {
+        "label": "Remember for 30 days",
+        "checked": false
+      }
     },
     "forgot-link": {
-      "type": "Button",
-      "props": { "label": "Forgot password?", "variant": "ghost", "size": "sm" }
+      "type": "Link",
+      "props": {
+        "label": "Forgot password?"
+      }
     },
     "signin-btn": {
       "type": "Button",
-      "props": { "label": "Sign in", "variant": "primary", "size": "lg", "fullWidth": true }
+      "props": {
+        "label": "Sign in",
+        "variant": "primary",
+        "size": "lg",
+        "fullWidth": true
+      }
     },
     "google-btn": {
       "type": "Button",
-      "props": { "label": "Sign in with Google", "variant": "outline", "size": "lg", "fullWidth": true, "icon": "google" }
+      "props": {
+        "label": "Sign in with Google",
+        "variant": "outline",
+        "size": "lg",
+        "fullWidth": true,
+        "icon": "google"
+      }
     },
-
     "signup-prompt": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 1, "align": "center", "justify": "center" },
-      "children": ["signup-text", "signup-link"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "signup-text",
+        "signup-link"
+      ]
     },
     "signup-text": {
       "type": "Text",
-      "props": { "tag": "p", "content": "Don't have an account?", "variant": "secondary" }
+      "props": {
+        "tag": "p",
+        "content": "Don't have an account?",
+        "variant": "secondary"
+      }
     },
     "signup-link": {
-      "type": "Button",
-      "props": { "label": "Sign up", "variant": "ghost", "size": "sm" }
+      "type": "Link",
+      "props": {
+        "label": "Sign up"
+      }
     }
   }
 }

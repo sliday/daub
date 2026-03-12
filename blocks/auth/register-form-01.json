@@ -173,11 +173,9 @@
       }
     },
     "login-link": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "Sign in",
-        "variant": "ghost",
-        "size": "sm"
+        "label": "Sign in"
       }
     }
   }

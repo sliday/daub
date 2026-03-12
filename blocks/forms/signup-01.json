@@ -3,73 +3,151 @@
   "elements": {
     "signup-wrapper": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 5, "align": "center", "justify": "center" },
-      "children": ["signup-card"]
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "signup-card"
+      ]
     },
     "signup-card": {
       "type": "Card",
-      "props": { "title": "", "description": "" },
-      "children": ["signup-form"]
+      "props": {
+        "title": "",
+        "description": ""
+      },
+      "children": [
+        "signup-form"
+      ]
     },
     "signup-form": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 4 },
-      "children": ["signup-header", "signup-name-row", "signup-email", "signup-password", "signup-terms", "signup-submit", "signup-login-link"]
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "signup-header",
+        "signup-name-row",
+        "signup-email",
+        "signup-password",
+        "signup-terms",
+        "signup-submit",
+        "signup-login-link"
+      ]
     },
     "signup-header": {
       "type": "Stack",
-      "props": { "direction": "vertical", "gap": 1, "align": "center" },
-      "children": ["signup-title", "signup-subtitle"]
+      "props": {
+        "direction": "vertical",
+        "gap": 1,
+        "align": "center"
+      },
+      "children": [
+        "signup-title",
+        "signup-subtitle"
+      ]
     },
     "signup-title": {
       "type": "Text",
-      "props": { "tag": "h3", "content": "Create your account" }
+      "props": {
+        "tag": "h3",
+        "content": "Create your account"
+      }
     },
     "signup-subtitle": {
       "type": "Text",
-      "props": { "tag": "p", "content": "Start your 14-day free trial, no credit card required" }
+      "props": {
+        "tag": "p",
+        "content": "Start your 14-day free trial, no credit card required"
+      }
     },
     "signup-name-row": {
       "type": "Grid",
-      "props": { "columns": 2, "gap": 3 },
-      "children": ["signup-first-name", "signup-last-name"]
+      "props": {
+        "columns": 2,
+        "gap": 3
+      },
+      "children": [
+        "signup-first-name",
+        "signup-last-name"
+      ]
     },
     "signup-first-name": {
       "type": "Field",
-      "props": { "label": "First name", "placeholder": "Jane", "type": "text" }
+      "props": {
+        "label": "First name",
+        "placeholder": "Jane",
+        "type": "text"
+      }
     },
     "signup-last-name": {
       "type": "Field",
-      "props": { "label": "Last name", "placeholder": "Doe", "type": "text" }
+      "props": {
+        "label": "Last name",
+        "placeholder": "Doe",
+        "type": "text"
+      }
     },
     "signup-email": {
       "type": "Field",
-      "props": { "label": "Email", "placeholder": "jane@example.com", "type": "email" }
+      "props": {
+        "label": "Email",
+        "placeholder": "jane@example.com",
+        "type": "email"
+      }
     },
     "signup-password": {
       "type": "Field",
-      "props": { "label": "Password", "placeholder": "Create a password", "type": "password", "helper": "Must be at least 8 characters with one number and one symbol" }
+      "props": {
+        "label": "Password",
+        "placeholder": "Create a password",
+        "type": "password",
+        "helper": "Must be at least 8 characters with one number and one symbol"
+      }
     },
     "signup-terms": {
       "type": "Checkbox",
-      "props": { "label": "I agree to the Terms of Service and Privacy Policy", "checked": false }
+      "props": {
+        "label": "I agree to the Terms of Service and Privacy Policy",
+        "checked": false
+      }
     },
     "signup-submit": {
       "type": "Button",
-      "props": { "label": "Create Account", "variant": "primary" }
+      "props": {
+        "label": "Create Account",
+        "variant": "primary"
+      }
     },
     "signup-login-link": {
       "type": "Stack",
-      "props": { "direction": "horizontal", "gap": 1, "justify": "center", "align": "center" },
-      "children": ["signup-login-text", "signup-login-btn"]
+      "props": {
+        "direction": "horizontal",
+        "gap": 1,
+        "justify": "center",
+        "align": "center"
+      },
+      "children": [
+        "signup-login-text",
+        "signup-login-btn"
+      ]
     },
     "signup-login-text": {
       "type": "Text",
-      "props": { "tag": "p", "content": "Already have an account?" }
+      "props": {
+        "tag": "p",
+        "content": "Already have an account?"
+      }
     },
     "signup-login-btn": {
-      "type": "Button",
-      "props": { "label": "Sign in", "variant": "ghost", "size": "sm" }
+      "type": "Link",
+      "props": {
+        "label": "Sign in"
+      }
     }
   }
 }

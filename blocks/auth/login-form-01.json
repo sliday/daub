@@ -92,11 +92,9 @@
       }
     },
     "forgot-link": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "Forgot password?",
-        "variant": "ghost",
-        "size": "sm"
+        "label": "Forgot password?"
       }
     },
     "login-btn": {
@@ -135,11 +133,9 @@
       }
     },
     "signup-link": {
-      "type": "Button",
+      "type": "Link",
       "props": {
-        "label": "Sign up",
-        "variant": "ghost",
-        "size": "sm"
+        "label": "Sign up"
       }
     }
   }

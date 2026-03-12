@@ -1,0 +1,96 @@
+{
+  "root": "signup-progress-01",
+  "elements": {
+    "signup-progress-01": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 0, "align": "center", "justify": "center", "container": "narrow" },
+      "children": ["content-wrapper"]
+    },
+
+    "content-wrapper": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6, "align": "center" },
+      "children": ["header", "form-group", "progress-dots"]
+    },
+
+    "header": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 3, "align": "center" },
+      "children": ["logo-icon", "header-title", "header-subtitle"]
+    },
+    "logo-icon": {
+      "type": "Icon",
+      "props": { "name": "circle", "size": "sm", "variant": "branded" }
+    },
+    "header-title": {
+      "type": "Text",
+      "props": { "tag": "h2", "content": "Choose a password", "align": "center" }
+    },
+    "header-subtitle": {
+      "type": "Text",
+      "props": { "tag": "p", "content": "Must be at least 8 characters.", "variant": "secondary", "align": "center" }
+    },
+
+    "form-group": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4, "align": "stretch", "fullWidth": true },
+      "children": ["password-field", "confirm-password-field", "continue-btn"]
+    },
+    "password-field": {
+      "type": "Field",
+      "props": { "label": "Choose a password" },
+      "children": ["password-input"]
+    },
+    "password-input": {
+      "type": "Input",
+      "props": { "placeholder": "Create a password", "type": "password" }
+    },
+    "confirm-password-field": {
+      "type": "Field",
+      "props": { "label": "Confirm password" },
+      "children": ["confirm-password-input"]
+    },
+    "confirm-password-input": {
+      "type": "Input",
+      "props": { "placeholder": "Confirm your password", "type": "password" }
+    },
+    "continue-btn": {
+      "type": "Button",
+      "props": { "label": "Continue", "variant": "primary", "size": "lg", "fullWidth": true }
+    },
+
+    "progress-dots": {
+      "type": "Stack",
+      "props": { "direction": "horizontal", "gap": 3, "align": "center", "justify": "center" },
+      "children": ["dot-1", "line-1-2", "dot-2", "line-2-3", "dot-3", "line-3-4", "dot-4"]
+    },
+    "dot-1": {
+      "type": "Icon",
+      "props": { "name": "check-circle", "size": "sm", "variant": "primary" }
+    },
+    "line-1-2": {
+      "type": "Separator",
+      "props": { "orientation": "horizontal" }
+    },
+    "dot-2": {
+      "type": "Icon",
+      "props": { "name": "circle-dot", "size": "sm", "variant": "primary" }
+    },
+    "line-2-3": {
+      "type": "Separator",
+      "props": { "orientation": "horizontal" }
+    },
+    "dot-3": {
+      "type": "Icon",
+      "props": { "name": "circle", "size": "sm", "variant": "muted" }
+    },
+    "line-3-4": {
+      "type": "Separator",
+      "props": { "orientation": "horizontal" }
+    },
+    "dot-4": {
+      "type": "Icon",
+      "props": { "name": "circle", "size": "sm", "variant": "muted" }
+    }
+  }
+}
