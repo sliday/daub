@@ -2,6 +2,12 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.15.4
+
+- Fix: regenerate 31 block screenshots with aspect ratio constraints (min-height padding, max-height clipping)
+- Fix: screenshot tool enforces min 0.3 and max 2.5 aspect ratios for consistent gallery display
+- Fix: 6 unrenderable blocks (CommandPalette, Drawer, Lightbox, Modal, BottomNav) set to null screenshot
+
 ## v3.15.3
 
 - Fix: block card image background changed to neutral #f1f0f0 for consistent tile appearance
