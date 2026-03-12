@@ -2,6 +2,23 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.16.0
+
+**Link component, 48 auth blocks, Icon renderer — 230+ blocks total.**
+
+- Feature: new `Link` component — inline text CTA that inherits font size, renders as bold terracotta `<a>`. CSS class `.db-link`, renderer in `daub-render.js`
+- Feature: new `Icon` renderer — Lucide icons via `data-lucide` attributes with size variants (xs/sm/md/lg/xl), inline-flex alignment
+- Feature: 48 auth blocks — 15 login variants, 4 forgot-password flows, 26 signup screens, plus register/reset/social-login/two-factor
+- Feature: all auth blocks use inline SVG data URIs for images (dashboard mockups, geometric patterns, charts)
+- Fix: replaced all "Untitled UI" references with "Daub" branding across auth blocks
+- Fix: CTA Download layout switched from broken horizontal Stack to Grid
+- Fix: CTA With Form AvatarGroup migrated from children to `props.avatars` array
+- Fix: renamed "Cta" to "CTA" in 7 block display names
+- Fix: Icon vertical alignment in flex containers (inline-flex + align-items center)
+- Fix: Link font-size/line-height inherit from parent for consistent inline text
+- Refactor: 59 ghost sm Buttons → Link conversions across 46 blocks (auth + non-auth)
+- Docs: updated component count 76→73, block count 189→230+ across all docs, meta tags, and AI files
+
 ## v3.15.4
 
 - Fix: regenerate 31 block screenshots with aspect ratio constraints (min-height padding, max-height clipping)
