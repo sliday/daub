@@ -2,6 +2,14 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.14.6
+
+**OpenUI streaming parser, playground mobile intent sync.**
+
+- Feature: added `daub-openui-parser.js` — streaming OpenUI Lang parser with format auto-detection
+- Feature: playground auto-detects OpenUI vs JSON format during streaming and renders progressively
+- Fix: synced mobile intent regex in playground with backend (`bottom-nav`, `app shell` triggers)
+
 ## v3.14.5
 
 **Agent skill, mobile design rules, README refresh.**
