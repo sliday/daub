@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.14.6-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.15.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -383,11 +383,12 @@ For Cursor, Windsurf, or other MCP clients, add to your config:
 
 | Tool | Description |
 |------|-------------|
-| `generate_ui` | Generate a complete DAUB UI from a natural language prompt |
+| `generate_ui` | Generate a complete DAUB UI from a natural language prompt. Supports `format: "openui"` for 67% fewer tokens |
 | `get_component_catalog` | Browse available components, props, themes, and spec format |
 | `validate_spec` | Validate a DAUB spec JSON and get issue reports |
 | `render_spec` | Get a playground preview URL for any spec |
 | `get_block_library` | Browse pre-made layout blocks by category |
+| `parse_openui` | Parse OpenUI Lang code into a DAUB JSON spec |
 
 ### Example Workflow
 
@@ -425,6 +426,23 @@ You can then:
 The spec renders directly in the [DAUB Playground](https://daub.dev/playground.html) or any page with `daub.css` + `daub.js`.
 
 No API key required. Runs on Cloudflare's edge network.
+
+### OpenUI Lang (Token-Efficient Output)
+
+DAUB supports **OpenUI Lang** — a compact, streaming-first notation that uses ~67% fewer tokens than JSON for LLM-generated UI specs. The Playground auto-detects the format and renders progressively.
+
+```
+__theme = "nord-light"
+root = Stack([sidebar, main], "horizontal", 4)
+sidebar = Sidebar([{title: "Settings", items: [{label: "Profile", icon: "user", active: true}]}])
+main = Stack([profile, notifs], "vertical", 4)
+profile = Card([Field("Full Name", "Jane Doe"), Field("Email", "jane@example.com", "email")], "Profile")
+notifs = Card([Switch("Email notifications", true), Switch("Push notifications")], "Notifications")
+```
+
+This produces the same spec as the JSON example above. Both positional and named arguments are supported.
+
+To use with the MCP server, pass `format: "openui"` to `generate_ui`. The `parse_openui` tool converts OpenUI Lang to JSON specs independently.
 
 ## Use with AI
 

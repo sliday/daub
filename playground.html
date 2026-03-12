@@ -2074,7 +2074,7 @@ function callOpenAI(messages) {
   return fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
-    body: JSON.stringify({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, response_format: { type: 'json_object' } })
+    body: JSON.stringify(Object.assign({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384 }, OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}))
   }).then(function(res) {
     if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
     return res.json();
@@ -2098,7 +2098,7 @@ function callOpenRouter(messages) {
   return fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim(), 'HTTP-Referer': 'https://daub.dev', 'X-Title': 'DAUB Playground' },
-    body: JSON.stringify({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, response_format: { type: 'json_object' } })
+    body: JSON.stringify(Object.assign({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384 }, OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}))
   }).then(function(res) {
     if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
     return res.json();
@@ -2160,6 +2160,7 @@ function streamDefault(messages, onText, onDone, onError, model, signal) {
   _lastFinishReason = '';
   var body = { messages: messages };
   if (model) body.model = model;
+  if (OUTPUT_FORMAT === 'openui') body.response_format = false;
   streamFetch(
     '/api/generate',
     { 'Content-Type': 'application/json' },
@@ -2178,7 +2179,7 @@ function streamOpenAI(messages, onText, onDone, onError, signal) {
   streamFetch(
     'https://api.openai.com/v1/chat/completions',
     { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
-    { model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, stream: true, response_format: { type: 'json_object' } },
+    Object.assign({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, stream: true }, OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}),
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
@@ -2208,7 +2209,7 @@ function streamOpenRouter(messages, onText, onDone, onError, signal) {
   streamFetch(
     'https://openrouter.ai/api/v1/chat/completions',
     { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim(), 'HTTP-Referer': 'https://daub.dev', 'X-Title': 'DAUB Playground' },
-    { model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, stream: true, response_format: { type: 'json_object' } },
+    Object.assign({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, stream: true }, OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}),
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);

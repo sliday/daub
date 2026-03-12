@@ -2,6 +2,20 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.15.0
+
+**OpenUI Lang integration — 67% fewer tokens for AI-generated UI.**
+
+- Feature: full OpenUI Lang pipeline — parser, system prompts, streaming, MCP tools
+- Feature: `daub-openui-parser.js` — standalone streaming parser (vanilla JS, no dependencies)
+- Feature: playground auto-detects OpenUI vs JSON format during streaming and renders progressively
+- Feature: MCP `generate_ui` tool accepts `format: "openui"` for token-efficient generation
+- Feature: new MCP tool `parse_openui` — converts OpenUI Lang code to DAUB JSON specs
+- Feature: dual-mode system prompts (OpenUI Lang default in playground, JSON default in MCP)
+- Feature: 135 TDD tests covering all 70 component types, streaming, error recovery, edge cases
+- Fix: root selection when `__theme` precedes first component statement
+- Fix: `response_format: json_object` conditionally skipped for OpenUI mode across all providers
+
 ## v3.14.6
 
 **OpenUI streaming parser, playground mobile intent sync.**

@@ -401,9 +401,7 @@ function resolveStatements(stmts) {
     }
     var id = stmt.name || genId('auto');
     nameToId[id] = id;
-    if (i === 0 && stmt.name !== '__theme' && stmt.name !== '__state') {
-      if (!rootName) rootName = id;
-    }
+    if (!rootName) rootName = id;
     if (stmt.name === 'root') rootName = id;
   }
 

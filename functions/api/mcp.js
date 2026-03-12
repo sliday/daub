@@ -344,6 +344,306 @@ function detectMobileIntent(prompt) {
   return /mobile\s*app|mobile\s*application|ios\s*app|android\s*app|phone\s*app|\bsmartphone\b|\biphone\b|mobile\s*screen|mobile\s*ui|mobile\s*layout|mobile\s*view|native\s*app|bottom.?nav|app\s*shell/i.test(prompt || '');
 }
 
+// ---- OpenUI Lang Parser (inlined for Cloudflare Pages Functions) ----
+
+const COMP_SCHEMA = {
+  Stack: ['children', 'direction', 'gap', 'justify', 'align', 'wrap', 'container'],
+  Grid: ['children', 'columns', 'gap', 'align', 'container'],
+  Surface: ['children', 'variant'],
+  Text: ['content', 'tag', 'class'],
+  Prose: ['content', 'size'],
+  Separator: ['vertical', 'dashed', 'label'],
+  Button: ['label', 'variant', 'size', 'loading', 'icon', 'trigger'],
+  ButtonGroup: ['children'],
+  Field: ['label', 'placeholder', 'type', 'error', 'helper'],
+  Input: ['placeholder', 'size', 'error', 'type'],
+  InputGroup: ['children', 'addonBefore', 'addonAfter'],
+  InputIcon: ['children', 'icon', 'right'],
+  Search: ['placeholder'],
+  Textarea: ['placeholder', 'rows', 'error'],
+  Checkbox: ['label', 'checked'],
+  RadioGroup: ['options', 'selected'],
+  Switch: ['label', 'checked'],
+  Slider: ['min', 'max', 'value', 'step', 'label'],
+  Toggle: ['label', 'pressed', 'size'],
+  ToggleGroup: ['options', 'selected'],
+  Select: ['label', 'options', 'selected'],
+  CustomSelect: ['placeholder', 'options', 'searchable'],
+  Kbd: ['keys'],
+  Label: ['text', 'required', 'optional'],
+  Spinner: ['size'],
+  InputOTP: ['length', 'separator'],
+  Tabs: ['children', 'tabs', 'active'],
+  Breadcrumbs: ['items'],
+  Pagination: ['current', 'total', 'perPage'],
+  Stepper: ['steps', 'vertical'],
+  NavMenu: ['items'],
+  Navbar: ['children', 'brand', 'brandHref'],
+  Menubar: ['items'],
+  Sidebar: ['sections', 'collapsed'],
+  BottomNav: ['items'],
+  Card: ['children', 'title', 'description', 'media', 'footer', 'interactive', 'clip'],
+  Table: ['columns', 'rows', 'sortable'],
+  DataTable: ['columns', 'rows', 'selectable'],
+  List: ['items'],
+  Badge: ['text', 'variant'],
+  Avatar: ['initials', 'src', 'size'],
+  AvatarGroup: ['avatars', 'max'],
+  Calendar: ['selected', 'today'],
+  Chart: ['bars'],
+  Carousel: ['slides'],
+  AspectRatio: ['children', 'ratio'],
+  Chip: ['label', 'color', 'active', 'closable'],
+  ScrollArea: ['children', 'direction'],
+  Image: ['src', 'alt', 'width', 'height'],
+  Alert: ['type', 'title', 'message'],
+  Progress: ['value', 'indeterminate'],
+  Skeleton: ['variant', 'lines'],
+  EmptyState: ['icon', 'title', 'message'],
+  Tooltip: ['children', 'text', 'position'],
+  Modal: ['children', 'id', 'title', 'footer'],
+  AlertDialog: ['id', 'title', 'description', 'footer'],
+  Sheet: ['children', 'id', 'position'],
+  Drawer: ['children', 'id'],
+  Popover: ['children', 'position'],
+  HoverCard: ['children'],
+  DropdownMenu: ['items'],
+  ContextMenu: ['items'],
+  CommandPalette: ['id', 'placeholder', 'groups'],
+  Accordion: ['items', 'multi'],
+  Collapsible: ['children', 'label'],
+  Resizable: ['children', 'direction'],
+  DatePicker: ['label', 'placeholder', 'selected'],
+  StatCard: ['label', 'value', 'trend', 'trendValue', 'icon', 'horizontal'],
+  ChartCard: ['children', 'title'],
+  CustomHTML: ['html', 'css', 'js', 'children']
+};
+
+function openUItoSpec(input) {
+  if (!input || typeof input !== 'string') return null;
+  input = input.trim().replace(/^```\w*\n?/, '').replace(/\n?```\s*$/, '');
+
+  const T = { STRING: 1, NUMBER: 2, BOOL: 3, NULL: 4, IDENT: 5, TYPE: 6, LPAR: 7, RPAR: 8, LBRK: 9, RBRK: 10, LBRC: 11, RBRC: 12, EQ: 13, COMMA: 14, COLON: 15, EOF: 16 };
+
+  function tokenize(s) {
+    const toks = []; let i = 0;
+    while (i < s.length) {
+      const ch = s[i];
+      if (' \t\r\n'.includes(ch)) { i++; continue; }
+      if (ch === '/' && s[i+1] === '/') { while (i < s.length && s[i] !== '\n') i++; continue; }
+      if (ch === '"' || ch === "'") {
+        const q = ch; let v = ''; i++;
+        while (i < s.length && s[i] !== q) { if (s[i] === '\\' && i+1<s.length) { const n=s[i+1]; v += n==='n'?'\n':n==='t'?'\t':n; i+=2; } else { v+=s[i]; i++; } }
+        if (i<s.length) i++; toks.push({t:T.STRING,v}); continue;
+      }
+      if ((ch>='0'&&ch<='9')||(ch==='-'&&s[i+1]>='0'&&s[i+1]<='9')) {
+        let n=''; if(ch==='-'){n+='-';i++;} while(i<s.length&&((s[i]>='0'&&s[i]<='9')||s[i]==='.'))n+=s[i++];
+        toks.push({t:T.NUMBER,v:parseFloat(n)}); continue;
+      }
+      if (/[a-zA-Z_$]/.test(ch)) {
+        let id=''; while(i<s.length&&/[a-zA-Z0-9_\-$]/.test(s[i]))id+=s[i++];
+        if(id==='true'||id==='false')toks.push({t:T.BOOL,v:id==='true'});
+        else if(id==='null')toks.push({t:T.NULL,v:null});
+        else if(ch>='A'&&ch<='Z'&&COMP_SCHEMA[id])toks.push({t:T.TYPE,v:id});
+        else toks.push({t:T.IDENT,v:id}); continue;
+      }
+      const singles = {'(':T.LPAR,')':T.RPAR,'[':T.LBRK,']':T.RBRK,'{':T.LBRC,'}':T.RBRC,'=':T.EQ,',':T.COMMA,':':T.COLON};
+      if(singles[ch]){toks.push({t:singles[ch]});i++;continue;} i++;
+    }
+    toks.push({t:T.EOF}); return toks;
+  }
+
+  let pos = 0, tokens;
+  function peek(){return tokens[pos]||{t:T.EOF};}
+  function next(){return tokens[pos++]||{t:T.EOF};}
+  function match(t){if(peek().t===t){pos++;return true;}return false;}
+
+  function parseExpr() {
+    const tok = peek();
+    if(tok.t===T.TYPE) return parseComp();
+    if(tok.t===T.STRING){next();return tok.v;}
+    if(tok.t===T.NUMBER){next();return tok.v;}
+    if(tok.t===T.BOOL){next();return tok.v;}
+    if(tok.t===T.NULL){next();return null;}
+    if(tok.t===T.LBRK){next();const a=[];while(peek().t!==T.RBRK&&peek().t!==T.EOF){a.push(parseExpr());match(T.COMMA);}match(T.RBRK);return a;}
+    if(tok.t===T.LBRC){next();const o={};while(peek().t!==T.RBRC&&peek().t!==T.EOF){let k;const kt=peek();if(kt.t===T.IDENT||kt.t===T.TYPE)k=next().v;else if(kt.t===T.STRING)k=next().v;else{next();continue;}if(peek().t===T.COLON)next();o[k]=parseExpr();match(T.COMMA);}match(T.RBRC);return o;}
+    if(tok.t===T.IDENT){next();return{__ref:tok.v};}
+    next();return null;
+  }
+
+  function parseComp() {
+    const name = next().v; const args = []; const named = {}; let hasNamed = false;
+    if(match(T.LPAR)){
+      while(peek().t!==T.RPAR&&peek().t!==T.EOF){
+        if(peek().t===T.IDENT&&pos+1<tokens.length&&tokens[pos+1].t===T.COLON){const k=next().v;next();named[k]=parseExpr();hasNamed=true;}
+        else args.push(parseExpr());
+        match(T.COMMA);
+      }match(T.RPAR);
+    }
+    return{__component:name,__args:args,__named:named,__hasNamed:hasNamed};
+  }
+
+  try {
+    tokens = tokenize(input); pos = 0;
+    const stmts = [];
+    while(peek().t!==T.EOF){
+      if(peek().t===T.IDENT){const saved=pos;const id=next().v;if(peek().t===T.EQ){next();stmts.push({name:id,value:parseExpr()});}else{pos=saved;next();}}
+      else if(peek().t===T.TYPE){stmts.push({name:null,value:parseComp()});}
+      else next();
+    }
+    if(!stmts.length) return null;
+
+    // Resolve
+    let counter = 0;
+    const genId = (p) => p.toLowerCase() + '-' + (++counter);
+    const elements = {};
+    const nameToId = {};
+    let theme = 'bone', rootName = null, state = null;
+
+    for(let i=0;i<stmts.length;i++){
+      const s=stmts[i];
+      if(s.name==='__theme'){theme=typeof s.value==='string'?s.value:'bone';continue;}
+      if(s.name==='__state'){state=s.value;continue;}
+      const id=s.name||genId('auto');nameToId[id]=id;
+      if(!rootName)rootName=id;
+      if(s.name==='root')rootName=id;
+    }
+
+    function resolveValue(v){
+      if(v==null||typeof v==='string'||typeof v==='number'||typeof v==='boolean')return v;
+      if(Array.isArray(v))return v.map(resolveValue);
+      if(v.__ref)return v.__ref;
+      if(v.__component)return resolveComponent(v);
+      const o={};for(const k in v)if(v.hasOwnProperty(k))o[k]=resolveValue(v[k]);return o;
+    }
+
+    function processChild(cv){
+      if(cv==null)return null;
+      if(typeof cv==='string'){if(nameToId[cv])return cv;const id=genId('text');elements[id]={type:'Text',props:{content:cv}};return id;}
+      if(typeof cv==='number'||typeof cv==='boolean'){const id=genId('text');elements[id]={type:'Text',props:{content:String(cv)}};return id;}
+      if(cv.__ref)return cv.__ref;
+      if(cv.__component)return resolveComponent(cv);
+      return null;
+    }
+
+    function resolveComponent(comp){
+      const {__component:typeName,__args:args,__named:named,__hasNamed:hn}=comp;
+      const schema=COMP_SCHEMA[typeName];const props={};const childIds=[];
+      if(schema&&args.length){
+        for(let a=0;a<args.length&&a<schema.length;a++){
+          if(schema[a]==='children'){const cv=args[a];if(Array.isArray(cv))cv.forEach(c=>{const id=processChild(c);if(id)childIds.push(id);});else{const id=processChild(cv);if(id)childIds.push(id);}}
+          else props[schema[a]]=resolveValue(args[a]);
+        }
+      }
+      if(hn)for(const k in named)if(named.hasOwnProperty(k)){
+        if(k==='children'){const cv=named[k];if(Array.isArray(cv))cv.forEach(c=>{const id=processChild(c);if(id)childIds.push(id);});else{const id=processChild(cv);if(id)childIds.push(id);}}
+        else props[k]=resolveValue(named[k]);
+      }
+      const elId=genId(typeName);elements[elId]={type:typeName,props};if(childIds.length)elements[elId].children=childIds;return elId;
+    }
+
+    for(const s of stmts){
+      if(s.name==='__theme'||s.name==='__state')continue;
+      const name=s.name||genId('auto');
+      if(s.value&&s.value.__component){
+        const compId=resolveComponent(s.value);
+        if(compId!==name&&elements[compId]){
+          elements[name]=elements[compId];delete elements[compId];
+          for(const eid in elements)if(elements[eid].children)elements[eid].children=elements[eid].children.map(c=>c===compId?name:c);
+        }
+      }
+    }
+    if(!rootName||!elements[rootName]){const ks=Object.keys(elements);if(ks.length)rootName=ks[0];}
+    const spec={theme,root:rootName||'root',elements};if(state)spec.state=state;return spec;
+  } catch(e) {
+    try {
+      const lastNl=input.lastIndexOf('\n');
+      if(lastNl>0)return openUItoSpec(input.substring(0,lastNl));
+    } catch{}
+    return null;
+  }
+}
+
+function detectOutputFormat(text) {
+  if(!text)return'unknown';
+  const t=text.trim().replace(/^```\w*\n?/,'');
+  if(t[0]==='{')return'json';
+  if(/^[a-zA-Z_]\w*\s*=/.test(t))return'openui';
+  return'unknown';
+}
+
+// ---- OpenUI Lang System Prompt Builder ----
+
+function buildOpenUISystemPrompt(ragBlocks, userPrompt) {
+  let prompt = 'You are a UI generator. Output ONLY valid openui-lang code using DAUB components.\n\n'
+    + 'BE EXHAUSTIVE AND DETAILED. Generate complete, production-realistic UIs:\n'
+    + '- Include ALL elements mentioned in the prompt\n'
+    + '- Add realistic sample data: full names, plausible numbers, real-looking dates\n'
+    + '- Build complete page structures: header/navbar, main content, sidebar if relevant\n'
+    + '- Aim for 20-50 elements per spec\n\n'
+    + 'SYNTAX:\n'
+    + '- One statement per line: identifier = Expression\n'
+    + '- "root = ..." is mandatory (top-level element)\n'
+    + '- Expressions: ComponentType(arg1, arg2, ...), "string", number, bool, [array], {key: value}\n'
+    + '- References: define name = ..., use name in children arrays\n'
+    + '- __theme = "themeName" to set theme (optional, defaults to "light")\n'
+    + '- __state = {key: value} for initial state (optional)\n'
+    + '- Line comments with //\n\n'
+    + 'ARGUMENT STYLES:\n'
+    + '- Positional: Button("Click", "primary", "sm")\n'
+    + '- Named: Button(label: "Click", variant: "primary")\n'
+    + '- Mixed: Stack([child1, child2], direction: "horizontal")\n\n'
+    + 'CHILDREN: first arg for layout components: Stack([c1, c2], "vertical")\n'
+    + 'Inline: Stack([Text("Hello", "h1"), Button("Go")])\n'
+    + 'References: Stack([header, content]) where header/content are separate statements\n\n'
+    + 'CRITICAL: Output ONLY openui-lang code. No markdown fences, no explanation.\n\n'
+    + 'COMPONENT SIGNATURES:\n\n';
+
+  for (const [cat, types] of COMP_CATEGORIES) {
+    prompt += cat + ':\n';
+    for (const t of types) {
+      if (COMP_PROPS[t] !== undefined) prompt += '- ' + t + '(' + (COMP_PROPS[t] || '') + ')\n';
+    }
+    prompt += '\n';
+  }
+
+  prompt += 'GUIDELINES:\n'
+    + '- Use Stack as root with direction:"vertical" for page layouts\n'
+    + '- Grid for equal-width arrangements\n'
+    + '- Stack direction:"horizontal" justify:"between" for headers/toolbars\n'
+    + '- Gap tokens: 0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px\n'
+    + '- Wrap related content in Card\n'
+    + '- StatCard for KPI metrics\n'
+    + '- Use trigger:"overlay-id" on Button to open overlays\n\n';
+
+  prompt += LAYOUT_RULES_COMPACT + '\n\n';
+
+  if (detectLandingIntent(userPrompt)) prompt += LANDING_PAGE_RULES + '\n\n';
+  if (detectMobileIntent(userPrompt)) prompt += MOBILE_DESIGN_RULES + '\n\n';
+
+  if (ragBlocks && ragBlocks.length > 0) {
+    prompt += 'REFERENCE BLOCKS (proven patterns — adapt structure):\n\n';
+    for (const block of ragBlocks) {
+      const indexEntry = BLOCK_INDEX.find(b => b.id === block.id);
+      const desc = indexEntry?.description || block.id;
+      prompt += `--- ${block.id}: ${desc} ---\n`;
+      prompt += JSON.stringify(block.spec, null, 2) + '\n\n';
+    }
+  }
+
+  prompt += 'THEMES:\n'
+    + '- Light: light, bone, material-light, github, nord-light, solarized-light, catppuccin, gruvbox-light, paper, grunge-light\n'
+    + '- Dark: dark, material-dark, github-dark, nord, solarized-dark, catppuccin-dark, gruvbox-dark, dracula, grunge-dark, synthwave, tokyo-night\n\n';
+
+  prompt += 'EXAMPLE:\n'
+    + '__theme = "bone"\n'
+    + 'root = Stack([header, content], "vertical", 4)\n'
+    + 'header = Stack([Text("Dashboard", "h1"), Button("Settings", "ghost")], "horizontal", 2, "between", "center")\n'
+    + 'content = Card([], "Overview", "Dashboard content")\n';
+
+  return prompt;
+}
+
 // ---- System Prompt Builder ----
 
 function buildSystemPrompt(ragBlocks, userPrompt) {
@@ -535,7 +835,9 @@ const BASE_BACKOFF_MS = 500;
 
 // ---- Generate Spec via OpenRouter (with routing + fallback) ----
 
-async function callOpenRouter(model, messages, apiKey) {
+async function callOpenRouter(model, messages, apiKey, format) {
+  const bodyObj = { model, messages, max_tokens: 32768, temperature: 0.7 };
+  if (format !== 'openui') bodyObj.response_format = { type: 'json_object' };
   const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -544,7 +846,7 @@ async function callOpenRouter(model, messages, apiKey) {
       'HTTP-Referer': 'https://daub.dev',
       'X-Title': 'DAUB MCP Server',
     },
-    body: JSON.stringify({ model, messages, max_tokens: 32768, temperature: 0.7, response_format: { type: 'json_object' } }),
+    body: JSON.stringify(bodyObj),
   });
 
   if (!res.ok) {
@@ -564,6 +866,7 @@ async function callOpenRouter(model, messages, apiKey) {
 }
 
 async function generateSpecWithRouting(prompt, options, apiKey, env) {
+  const format = options.format || 'json';
   const complexity = scorePromptComplexity(prompt);
   const tierConfig = MODEL_TIERS[complexity.tier];
   const modelsToTry = [tierConfig.primary, ...tierConfig.fallbacks.slice(0, MAX_FALLBACK_MODELS)];
@@ -594,7 +897,10 @@ async function generateSpecWithRouting(prompt, options, apiKey, env) {
     }
   }
 
-  const messages = [{ role: 'system', content: buildSystemPrompt(ragBlocks, prompt) }];
+  const sysPrompt = format === 'openui'
+    ? buildOpenUISystemPrompt(ragBlocks, prompt)
+    : buildSystemPrompt(ragBlocks, prompt);
+  const messages = [{ role: 'system', content: sysPrompt }];
   if (options.existing_spec) {
     messages.push({
       role: 'assistant',
@@ -619,16 +925,26 @@ async function generateSpecWithRouting(prompt, options, apiKey, env) {
           await new Promise(r => setTimeout(r, BASE_BACKOFF_MS * Math.pow(2, retry - 1)));
         }
 
-        const { rawContent, usage } = await callOpenRouter(model, messages, apiKey);
+        const { rawContent, usage } = await callOpenRouter(model, messages, apiKey, format);
         lastRawContent = rawContent;
 
         let spec;
-        try {
-          spec = JSON.parse(cleanJSON(rawContent));
-        } catch (e) {
-          const parseError = new Error(`Failed to parse JSON: ${e.message}`);
-          parseError.retryable = true;
-          throw parseError;
+        const detectedFmt = detectOutputFormat(rawContent);
+        if (detectedFmt === 'openui' || (format === 'openui' && detectedFmt !== 'json')) {
+          spec = openUItoSpec(rawContent);
+          if (!spec) {
+            const parseError = new Error('Failed to parse OpenUI Lang output');
+            parseError.retryable = true;
+            throw parseError;
+          }
+        } else {
+          try {
+            spec = JSON.parse(cleanJSON(rawContent));
+          } catch (e) {
+            const parseError = new Error(`Failed to parse JSON: ${e.message}`);
+            parseError.retryable = true;
+            throw parseError;
+          }
         }
 
         spec = autoFixSpec(spec);
@@ -746,6 +1062,7 @@ const TOOLS = [
         prompt: { type: 'string', description: 'Natural language description of the UI to generate' },
         theme: { type: 'string', description: 'Theme override, e.g. "dracula", "github", "bone"' },
         existing_spec: { type: 'string', description: 'Existing DAUB spec JSON string to modify/refine' },
+        format: { type: 'string', enum: ['json', 'openui'], description: 'Output format for LLM generation. "openui" uses token-efficient OpenUI Lang (67% fewer tokens). Default: "json"' },
       },
       required: ['prompt'],
     },
@@ -790,6 +1107,17 @@ const TOOLS = [
       properties: {
         category: { type: 'string', description: 'Filter by category: "landing", "dashboard", "forms", "auth", "ecommerce", "data-display", "mobile"' },
       },
+    },
+  },
+  {
+    name: 'parse_openui',
+    description: 'Parse OpenUI Lang code into a DAUB JSON spec. Useful for converting token-efficient OpenUI Lang output to the standard spec format.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        code: { type: 'string', description: 'OpenUI Lang code to parse' },
+      },
+      required: ['code'],
     },
   },
 ];
@@ -995,7 +1323,7 @@ async function handleToolCall(name, args, env) {
     case 'generate_ui': {
       const apiKey = env.OPENROUTER_API_KEY;
       if (!apiKey) throw new Error('Server misconfigured: missing OPENROUTER_API_KEY');
-      const options = { theme: args.theme };
+      const options = { theme: args.theme, format: args.format || 'json' };
       if (args.existing_spec) {
         try { options.existing_spec = JSON.parse(args.existing_spec); } catch { options.existing_spec = args.existing_spec; }
       }
@@ -1081,6 +1409,16 @@ async function handleToolCall(name, args, env) {
         categories: byCategory,
         usage: 'Use block IDs as references when prompting generate_ui. Example: "Build a landing page using the hero-01 and pricing-01 patterns"',
       }, null, 2);
+    }
+
+    case 'parse_openui': {
+      const spec = openUItoSpec(args.code);
+      if (!spec) {
+        return JSON.stringify({ error: 'Failed to parse OpenUI Lang code', raw: args.code.slice(0, 500) }, null, 2);
+      }
+      const validation = validateSpec(spec);
+      const html = renderToHTML(spec);
+      return JSON.stringify({ spec, html, validation }, null, 2);
     }
 
     default:
