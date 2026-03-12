@@ -36,6 +36,10 @@
     (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t);var s=localStorage.getItem('db-scheme');if(s)document.documentElement.setAttribute('data-scheme',s);var a=localStorage.getItem('db-accent');if(a)document.documentElement.style.setProperty('--db-terracotta',a)}catch(e){}})();
   </script>
 
+  <!-- lz-string — URL-safe compression for share links -->
+  <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"
+          crossorigin="anonymous"></script>
+
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
@@ -411,12 +415,122 @@
       margin-bottom: 20px;
     }
 
+    /* ---- Block Gallery ---- */
+    .block-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 24px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      border-bottom: 1px solid var(--db-sand);
+      background: var(--db-cream);
+    }
+    .block-tabs::-webkit-scrollbar { display: none; }
+    .block-tabs__tab {
+      flex-shrink: 0;
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--db-charcoal);
+      background: none;
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-2);
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: color var(--db-transition), background var(--db-transition), border-color var(--db-transition);
+      white-space: nowrap;
+    }
+    .block-tabs__tab:hover {
+      color: var(--db-terracotta);
+      border-color: var(--db-terracotta);
+    }
+    .block-tabs__tab--active {
+      color: var(--db-cream);
+      background: var(--db-terracotta);
+      border-color: var(--db-terracotta);
+    }
+    .block-tabs__count {
+      font-size: 0.6875rem;
+      opacity: 0.7;
+      margin-left: 4px;
+    }
+    .block-gallery__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 24px;
+    }
+    .block-card {
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-3);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color var(--db-transition), box-shadow var(--db-transition);
+      background: var(--db-cream);
+    }
+    .block-card:hover {
+      border-color: var(--db-terracotta);
+      box-shadow: 0 4px 16px color-mix(in srgb, var(--db-terracotta) 15%, transparent);
+    }
+    .block-card__img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+      background: var(--db-sand);
+    }
+    .block-card__info {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-top: 1px solid var(--db-sand);
+    }
+    .block-card__name {
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--db-ink);
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .block-card__badge {
+      font-family: var(--db-font-ui);
+      font-size: 0.6875rem;
+      color: var(--db-warm-gray);
+      background: color-mix(in srgb, var(--db-sand) 60%, transparent);
+      padding: 2px 8px;
+      border-radius: var(--db-radius-1);
+      white-space: nowrap;
+    }
+    .block-card__count {
+      font-family: var(--db-font-ui);
+      font-size: 0.6875rem;
+      color: var(--db-warm-gray);
+      white-space: nowrap;
+    }
+    .block-gallery__empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 64px 24px;
+      font-family: var(--db-font-ui);
+      color: var(--db-warm-gray);
+      font-size: 0.875rem;
+    }
+
     /* ---- Responsive ---- */
     @media (max-width: 768px) {
       .dash { grid-template-columns: 1fr; }
       .dash__sidebar { display: none; }
       .stat-grid { grid-template-columns: repeat(2, 1fr); }
       .profile-stats { grid-template-columns: repeat(3, 1fr); }
+      .block-gallery__grid { grid-template-columns: 1fr; padding: 16px; }
+      .block-tabs { padding: 10px 16px; }
     }
   </style>
 </head>
@@ -453,6 +567,16 @@
   </ul>
 </nav>
 
+<!-- ====== Block Gallery Tabs ====== -->
+<div class="block-tabs" role="tablist" aria-label="Block categories" id="block-tabs"></div>
+
+<!-- ====== Block Gallery Grid ====== -->
+<div id="block-gallery" style="display:none;">
+  <div class="block-gallery__grid" id="block-gallery-grid"></div>
+</div>
+
+<!-- ====== Existing Demos (shown in Misc tab) ====== -->
+<div id="demo-layouts" style="display:none;">
 
 <!-- ============================================ -->
 <!--  1. DASHBOARD LAYOUT                         -->
@@ -1084,6 +1208,8 @@
   </div>
 </div>
 
+</div><!-- /demo-layouts -->
+
 <!-- Footer -->
 <div class="db-divider"></div>
 <p style="text-align:center;padding:24px;font-family:var(--db-font-ui);font-size:0.75rem;color:var(--db-warm-gray);">
@@ -1095,8 +1221,146 @@
 
 <script src="daub.js?v=3.0.20"></script>
 <script>
-  // Initialize Lucide icons
   lucide.createIcons();
+
+  (function () {
+    var VERTICALS = {
+      all:        null,
+      saas:       ['dashboard','app-specific','data-display','stats','integrations'],
+      marketing:  ['hero','features','cta','social-proof','how-it-works','landing','logo-bar','newsletter','banners'],
+      commerce:   ['ecommerce','pricing','comparison'],
+      content:    ['blog','content','media','portfolio','faq','timeline'],
+      corporate:  ['team','contact','event-schedule','footer'],
+      essentials: ['auth','forms','navigation','modals-overlays','error-pages','mobile'],
+      misc:       ['misc']
+    };
+    var TAB_LABELS = {
+      all: 'All Blocks', saas: 'SaaS & Apps', marketing: 'Marketing',
+      commerce: 'E-Commerce', content: 'Content', corporate: 'Corporate',
+      essentials: 'Essentials', misc: 'Misc'
+    };
+    var TAB_ORDER = ['all','saas','marketing','commerce','content','corporate','essentials','misc'];
+
+    var tabBar = document.getElementById('block-tabs');
+    var gallery = document.getElementById('block-gallery');
+    var grid = document.getElementById('block-gallery-grid');
+    var demos = document.getElementById('demo-layouts');
+    var allBlocks = [];
+    var activeTab = 'all';
+
+    function clearChildren(el) {
+      while (el.firstChild) el.removeChild(el.firstChild);
+    }
+
+    function filterBlocks(tabId) {
+      var cats = VERTICALS[tabId];
+      if (!cats) return allBlocks;
+      return allBlocks.filter(function (b) { return cats.indexOf(b.category) !== -1; });
+    }
+
+    function renderTabs() {
+      TAB_ORDER.forEach(function (id) {
+        var btn = document.createElement('button');
+        btn.className = 'block-tabs__tab' + (id === activeTab ? ' block-tabs__tab--active' : '');
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-selected', id === activeTab ? 'true' : 'false');
+        btn.dataset.tab = id;
+        var count = filterBlocks(id).length;
+        if (id === 'misc') count += 6;
+        btn.textContent = TAB_LABELS[id];
+        var span = document.createElement('span');
+        span.className = 'block-tabs__count';
+        span.textContent = count;
+        btn.appendChild(span);
+        tabBar.appendChild(btn);
+      });
+    }
+
+    function renderGallery(blocks) {
+      clearChildren(grid);
+      if (blocks.length === 0) {
+        var empty = document.createElement('div');
+        empty.className = 'block-gallery__empty';
+        empty.textContent = 'No blocks in this category.';
+        grid.appendChild(empty);
+        return;
+      }
+      blocks.forEach(function (block) {
+        var card = document.createElement('div');
+        card.className = 'block-card';
+        card.title = block.name + ' \u2014 click to open in Playground';
+
+        var img = document.createElement('img');
+        img.className = 'block-card__img';
+        img.alt = block.name;
+        img.loading = 'lazy';
+        img.src = 'blocks/' + block.screenshot;
+
+        var info = document.createElement('div');
+        info.className = 'block-card__info';
+
+        var name = document.createElement('span');
+        name.className = 'block-card__name';
+        name.textContent = block.name;
+
+        var badge = document.createElement('span');
+        badge.className = 'block-card__badge';
+        badge.textContent = block.category;
+
+        var elCount = document.createElement('span');
+        elCount.className = 'block-card__count';
+        elCount.textContent = block.element_count + ' el';
+
+        info.appendChild(name);
+        info.appendChild(badge);
+        info.appendChild(elCount);
+        card.appendChild(img);
+        card.appendChild(info);
+        grid.appendChild(card);
+
+        card.addEventListener('click', function () {
+          openInPlayground(block);
+        });
+      });
+    }
+
+    function openInPlayground(block) {
+      fetch('blocks/' + block.file)
+        .then(function (r) { return r.json(); })
+        .then(function (spec) {
+          var json = JSON.stringify(spec);
+          var compressed = LZString.compressToEncodedURIComponent(json);
+          window.open('playground.html?s=' + compressed, '_blank');
+        });
+    }
+
+    function switchTab(tabId) {
+      activeTab = tabId;
+      tabBar.querySelectorAll('.block-tabs__tab').forEach(function (btn) {
+        var isActive = btn.dataset.tab === tabId;
+        btn.classList.toggle('block-tabs__tab--active', isActive);
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      var blocks = filterBlocks(tabId);
+      gallery.style.display = 'block';
+      renderGallery(blocks);
+      demos.style.display = (tabId === 'misc') ? 'block' : 'none';
+    }
+
+    tabBar.addEventListener('click', function (e) {
+      var btn = e.target.closest('.block-tabs__tab');
+      if (!btn) return;
+      switchTab(btn.dataset.tab);
+    });
+
+    fetch('blocks/index.json')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        allBlocks = data;
+        renderTabs();
+        switchTab('all');
+      });
+  })();
 </script>
 </body>
 </html>

@@ -2,6 +2,10 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.15.1
+
+- Feature: block gallery with category tabs, card previews, and lz-string share links in demo page
+
 ## v3.15.0
 
 **OpenUI Lang integration — 67% fewer tokens for AI-generated UI.**
