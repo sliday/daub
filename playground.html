@@ -998,6 +998,7 @@
 </div>
 
 <script src="daub.js?v=3.0.20"></script>
+<script src="daub-openui-parser.js"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -3183,7 +3184,8 @@ function tryProgressiveRender(text) {
 
 // ---- Chat message helpers ----
 function buildMessages(userPrompt, images, webContexts, figmaContexts, analysisBrief) {
-  var msgs = [{ role: 'system', content: SYSTEM_PROMPT }];
+  var sysPrompt = OUTPUT_FORMAT === 'openui' ? OPENUI_SYSTEM_PROMPT : SYSTEM_PROMPT;
+  var msgs = [{ role: 'system', content: sysPrompt }];
   if (analysisBrief) {
     userPrompt = analysisBrief + '\n---\n' + userPrompt;
   }
@@ -3560,7 +3562,24 @@ function generate() {
   var retries = 0;
   var MAX_RETRIES = 3;
   var usingFallback = false;
-  _currentStream.renderTimer = setInterval(function() { tryProgressiveRender(accumulated); refreshJsonTree(); }, 300);
+  var _streamParser = null;
+  var _detectedFormat = null;
+  _currentStream.renderTimer = setInterval(function() {
+    if (!accumulated) return;
+    if (!_detectedFormat) _detectedFormat = DaubOpenUI.detectFormat(accumulated);
+    if (_detectedFormat === 'openui') {
+      if (!_streamParser) _streamParser = DaubOpenUI.createStreamingOpenUIParser();
+      var result = _streamParser.push(accumulated);
+      if (result.spec && result.spec.root && result.spec.elements) {
+        renderSpec(result.spec, progressivePrevSpec);
+        progressivePrevSpec = result.spec;
+        $status.textContent = 'Rendering\u2026';
+      }
+    } else {
+      tryProgressiveRender(accumulated);
+    }
+    refreshJsonTree();
+  }, 300);
   var renderTimer = _currentStream.renderTimer;
 
   var streamFn;
@@ -3614,20 +3633,29 @@ function generate() {
         if (_lastFinishReason === 'length' && continuations < MAX_CONTINUATIONS) {
           continuations++;
           $status.textContent = 'Continuing (' + continuations + '/' + MAX_CONTINUATIONS + ')\u2026';
+          var contMsg = _detectedFormat === 'openui'
+            ? 'Continue the openui-lang code from where you stopped. Output ONLY remaining statements, no repetition, no explanation.'
+            : 'Continue the JSON exactly from where you stopped. Output ONLY the remaining JSON, no repetition, no explanation.';
           var contMsgs = msgs.concat([
             { role: 'assistant', content: accumulated },
-            { role: 'user', content: 'Continue the JSON exactly from where you stopped. Output ONLY the remaining JSON, no repetition, no explanation.' }
+            { role: 'user', content: contMsg }
           ]);
           startStream(contMsgs, model);
           return;
         }
         clearInterval(renderTimer);
-        var clean = cleanJSON(accumulated);
+        var finalFormat = _detectedFormat || DaubOpenUI.detectFormat(accumulated);
         var spec;
-        try {
-          spec = JSON.parse(clean);
-        } catch (e1) {
-          spec = repairJSON(clean);
+        if (finalFormat === 'openui') {
+          spec = DaubOpenUI.openUItoSpec(accumulated);
+          if (spec) $json.value = JSON.stringify(spec, null, 2);
+        } else {
+          var clean = cleanJSON(accumulated);
+          try {
+            spec = JSON.parse(clean);
+          } catch (e1) {
+            spec = repairJSON(clean);
+          }
         }
         if (spec && spec.root && spec.elements) {
           $json.value = JSON.stringify(spec, null, 2);
