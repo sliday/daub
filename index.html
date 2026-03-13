@@ -1098,10 +1098,14 @@
             <div class="db-slider__label">
               <span>Temperature</span>
               <span style="display:inline-flex;align-items:center;gap:6px;">
-                <button id="db-temp-auto" class="db-toggle db-toggle--sm" aria-pressed="false" title="Auto-adjust temperature based on time of day" style="font-size:0.6875rem;padding:2px 8px;">Auto</button>
+                <label id="db-temp-auto-wrap" style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:0.6875rem;color:var(--db-warm-gray);">
+                  <input type="checkbox" id="db-temp-auto" style="width:12px;height:12px;accent-color:var(--db-terracotta);cursor:pointer;">
+                  <span>Auto</span>
+                </label>
                 <span class="db-slider__value">0</span>
               </span>
             </div>
+            <div id="db-temp-auto-caption" style="display:none;font-size:0.75rem;color:var(--db-warm-gray);font-family:var(--db-font-ui);text-align:center;padding:4px 0;"></div>
             <input class="db-slider__input" type="range" min="-100" max="100" value="0">
           </div>
           <div class="db-slider" data-db-noise>
@@ -3091,43 +3095,50 @@
         if (e.target.closest('[data-db-temperature], [data-db-noise]')) updateCode();
         // Manual slider use exits auto mode
         if (e.target.closest('[data-db-temperature]')) {
-          var autoBtn = document.getElementById('db-temp-auto');
-          if (autoBtn) autoBtn.setAttribute('aria-pressed', 'false');
+          var autoChk = document.getElementById('db-temp-auto');
+          if (autoChk && autoChk.checked) {
+            autoChk.checked = false;
+            autoChk.dispatchEvent(new Event('change'));
+          }
         }
       });
 
       // Temperature auto toggle
       (function() {
-        var autoBtn = document.getElementById('db-temp-auto');
-        if (!autoBtn) return;
-        // Reflect initial state
-        if (DAUB.getTemperature() === 'auto') autoBtn.setAttribute('aria-pressed', 'true');
+        var autoChk = document.getElementById('db-temp-auto');
+        var caption = document.getElementById('db-temp-auto-caption');
+        var slider = document.querySelector('[data-db-temperature]');
+        if (!autoChk || !slider) return;
+        var input = slider.querySelector('.db-slider__input');
+        var valueEl = slider.querySelector('.db-slider__value');
 
-        autoBtn.addEventListener('click', function() {
-          var isAuto = autoBtn.getAttribute('aria-pressed') === 'true';
-          if (isAuto) {
-            // Turn off auto — set to current computed value
+        function getTimeOfDayLabel() {
+          var h = new Date().getHours();
+          if (h >= 5 && h < 10) return 'Morning light';
+          if (h >= 10 && h < 17) return 'Day light';
+          if (h >= 17 && h < 21) return 'Evening light';
+          return 'Night light';
+        }
+
+        function setAutoUI(on) {
+          if (input) { input.disabled = on; input.style.opacity = on ? '0.35' : '1'; input.style.pointerEvents = on ? 'none' : ''; }
+          if (caption) { caption.style.display = on ? 'block' : 'none'; caption.textContent = on ? getTimeOfDayLabel() : ''; }
+          if (valueEl) valueEl.style.display = on ? 'none' : '';
+        }
+
+        // Reflect initial state
+        if (DAUB.getTemperature() === 'auto') { autoChk.checked = true; setAutoUI(true); }
+
+        autoChk.addEventListener('change', function() {
+          if (autoChk.checked) {
+            DAUB.setTemperature('auto');
+            setAutoUI(true);
+          } else {
             var current = parseFloat(document.documentElement.style.getPropertyValue('--db-temperature')) || 0;
             DAUB.setTemperature(current);
-            autoBtn.setAttribute('aria-pressed', 'false');
-            // Update slider to show current value
-            var slider = document.querySelector('[data-db-temperature]');
-            if (slider) {
-              var input = slider.querySelector('.db-slider__input');
-              var valueEl = slider.querySelector('.db-slider__value');
-              if (input) input.value = Math.round(current * 100);
-              if (valueEl) valueEl.textContent = Math.round(current * 100);
-            }
-          } else {
-            // Turn on auto
-            DAUB.setTemperature('auto');
-            autoBtn.setAttribute('aria-pressed', 'true');
-            // Update slider to reflect auto value
-            var slider = document.querySelector('[data-db-temperature]');
-            if (slider) {
-              var valueEl = slider.querySelector('.db-slider__value');
-              if (valueEl) valueEl.textContent = 'auto';
-            }
+            setAutoUI(false);
+            if (input) input.value = Math.round(current * 100);
+            if (valueEl) valueEl.textContent = Math.round(current * 100);
           }
           setTimeout(updateCode, 60);
         });
