@@ -185,32 +185,32 @@
   --db-z-tooltip:  700;
 
   /* Component tokens — Button */
-  --db-btn-height: 2.5rem;
-  --db-btn-px: var(--db-space-4);
+  --db-btn-py: var(--db-space-3);
+  --db-btn-px: var(--db-space-5);
   --db-btn-radius: var(--db-radius-2);
   --db-btn-font-size: var(--db-text-sm);
   --db-btn-font-weight: var(--db-weight-semibold);
-  --db-btn-bg: var(--db-color-accent);
-  --db-btn-color: var(--db-color-text-inverse);
-  --db-btn-border: none;
+  --db-btn-bg: linear-gradient(180deg, var(--db-terracotta) 0%, var(--db-accent-dark) 100%);
+  --db-btn-color: var(--db-on-accent);
+  --db-btn-border: 1px solid rgba(var(--db-shadow-rgb),0.15);
 
   /* Component tokens — Field / Input */
-  --db-field-height: 2.5rem;
-  --db-field-px: var(--db-space-3);
+  --db-field-py: var(--db-space-3);
+  --db-field-px: var(--db-space-4);
   --db-field-radius: var(--db-radius-2);
-  --db-field-font-size: var(--db-text-base);
-  --db-field-bg: var(--db-color-bg);
+  --db-field-font-size: 0.9375rem;
+  --db-field-bg: var(--db-color-bg-alt);
   --db-field-color: var(--db-color-text);
   --db-field-border: 1px solid var(--db-color-border);
-  --db-field-border-focus: 1px solid var(--db-color-accent);
+  --db-field-border-focus: 1px solid var(--db-terracotta);
 
   /* Component tokens — Card */
   --db-card-padding: var(--db-space-5);
-  --db-card-radius: var(--db-radius-3);
-  --db-card-bg: var(--db-color-surface);
-  --db-card-border: 1px solid var(--db-color-border-subtle);
-  --db-card-shadow: var(--db-shadow-1);
-  --db-card-shadow-hover: var(--db-shadow-2);
+  --db-card-radius: var(--db-radius-4);
+  --db-card-bg: linear-gradient(180deg, var(--db-white) 0%, var(--db-cream) 100%);
+  --db-card-border: 1px solid var(--db-color-border);
+  --db-card-shadow: var(--db-shadow-2);
+  --db-card-shadow-hover: var(--db-shadow-3);
 
   /* Component tokens — Navbar */
   --db-navbar-height: 3.5rem;
@@ -219,36 +219,41 @@
   --db-navbar-shadow: var(--db-shadow-1);
 
   /* Component tokens — Badge */
-  --db-badge-px: var(--db-space-2);
   --db-badge-py: var(--db-space-1);
+  --db-badge-px: var(--db-space-3);
   --db-badge-radius: var(--db-radius-full);
-  --db-badge-font-size: var(--db-text-xs);
-  --db-badge-font-weight: var(--db-weight-medium);
+  --db-badge-font-size: 0.6875rem;
+  --db-badge-font-weight: var(--db-weight-semibold);
 
   /* Component tokens — Modal */
-  --db-modal-radius: var(--db-radius-4);
-  --db-modal-padding: var(--db-space-6);
-  --db-modal-bg: var(--db-color-surface);
+  --db-modal-radius: var(--db-radius-3);
+  --db-modal-padding: var(--db-space-5);
+  --db-modal-bg: linear-gradient(180deg, var(--db-white) 0%, var(--db-cream) 100%);
   --db-modal-shadow: var(--db-shadow-3);
-  --db-modal-max-width: 32rem;
-  --db-modal-backdrop: rgba(var(--db-surface-rgb), 0.8);
+  --db-modal-max-width: min(480px, calc(100vw - 32px));
+  --db-modal-backdrop: var(--db-overlay-bg);
 
   /* Component tokens — Toast */
   --db-toast-radius: var(--db-radius-3);
-  --db-toast-padding: var(--db-space-3) var(--db-space-4);
-  --db-toast-shadow: var(--db-shadow-2);
+  --db-toast-padding: var(--db-space-4);
+  --db-toast-shadow: var(--db-shadow-3);
+  --db-toast-font-size: var(--db-text-sm);
 
   /* Component tokens — Tabs */
   --db-tabs-border: 2px solid transparent;
   --db-tabs-border-active: 2px solid var(--db-color-accent);
   --db-tabs-font-size: var(--db-text-sm);
+  --db-tabs-font-weight: var(--db-weight-medium);
+  --db-tabs-px: var(--db-space-4);
+  --db-tabs-py: var(--db-space-3);
 
   /* Component tokens — Table */
-  --db-table-cell-px: var(--db-space-3);
-  --db-table-cell-py: var(--db-space-2);
-  --db-table-header-bg: var(--db-color-bg-alt);
-  --db-table-border: 1px solid var(--db-color-border-subtle);
-  --db-table-stripe-bg: var(--db-color-bg-alt);
+  --db-table-cell-py: var(--db-space-3);
+  --db-table-cell-px: var(--db-space-4);
+  --db-table-header-bg: transparent;
+  --db-table-border: 1px solid rgba(var(--db-sand-rgb),0.4);
+  --db-table-header-font-size: var(--db-text-xs);
+  --db-table-header-font-weight: var(--db-weight-semibold);
 
   /* Component tokens — Sidebar */
   --db-sidebar-width: 16rem;
@@ -263,27 +268,26 @@
   --db-dropdown-item-py: var(--db-space-2);
 
   /* Component tokens — Switch */
-  --db-switch-width: 2.75rem;
-  --db-switch-height: 1.5rem;
+  --db-switch-width: 44px;
+  --db-switch-height: 24px;
   --db-switch-radius: var(--db-radius-full);
-  --db-switch-bg: var(--db-color-border);
-  --db-switch-bg-on: var(--db-color-accent);
+  --db-switch-bg: var(--db-color-bg-alt);
+  --db-switch-bg-on: linear-gradient(180deg, var(--db-terracotta) 0%, var(--db-accent-dark) 100%);
 
   /* Component tokens — Progress */
-  --db-progress-height: 0.5rem;
+  --db-progress-height: 8px;
   --db-progress-radius: var(--db-radius-full);
   --db-progress-bg: var(--db-color-bg-alt);
-  --db-progress-fill: var(--db-color-accent);
+  --db-progress-fill: linear-gradient(90deg, var(--db-terracotta), var(--db-accent-light));
 
   /* Component tokens — Alert */
   --db-alert-radius: var(--db-radius-2);
-  --db-alert-padding: var(--db-space-3) var(--db-space-4);
-  --db-alert-border: 3px solid currentColor;
+  --db-alert-padding: var(--db-space-4);
 
   /* Component tokens — Separator */
-  --db-separator-color: var(--db-color-border-subtle);
+  --db-separator-color: var(--db-color-border);
   --db-separator-width: 1px;
-  --db-separator-spacing: var(--db-space-4);
+  --db-separator-spacing: var(--db-space-5);
 }
 
 /* Temperature overlay — uses backdrop-filter on html::after instead of filter on body
@@ -1947,10 +1951,10 @@ a:hover { color: var(--db-clay); }
 .db-border { border: 1px solid var(--db-sand); }
 .db-border-b { border-bottom: 1px solid var(--db-sand); }
 .db-divider {
-  height: 1px;
-  background: var(--db-sand);
+  height: var(--db-separator-width);
+  background: var(--db-separator-color);
   border: none;
-  margin: var(--db-space-5) 0;
+  margin: var(--db-separator-spacing) 0;
 }
 
 /* Radius utilities */
@@ -2158,10 +2162,10 @@ a:hover { color: var(--db-clay); }
   justify-content: center;
   gap: var(--db-space-2);
   font-family: var(--db-font-ui);
-  font-size: 0.875rem;
-  font-weight: 600;
-  padding: var(--db-space-3) var(--db-space-5);
-  border-radius: var(--db-radius-2);
+  font-size: var(--db-btn-font-size);
+  font-weight: var(--db-btn-font-weight);
+  padding: var(--db-btn-py) var(--db-btn-px);
+  border-radius: var(--db-btn-radius);
   transition: all var(--db-transition);
   position: relative;
   user-select: none;
@@ -2177,9 +2181,9 @@ a:hover { color: var(--db-clay); }
 
 /* Primary */
 .db-btn--primary {
-  background: linear-gradient(180deg, var(--db-terracotta) 0%, var(--db-accent-dark) 100%);
-  color: var(--db-on-accent);
-  border: 1px solid rgba(var(--db-shadow-rgb),0.15);
+  background: var(--db-btn-bg);
+  color: var(--db-btn-color);
+  border: var(--db-btn-border);
   box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.15);
   text-shadow: 0 -1px 0 rgba(var(--db-shadow-rgb), 0.35);
 }
@@ -2340,11 +2344,12 @@ a:hover { color: var(--db-clay); }
 
 .db-field__input {
   font-family: var(--db-font-body);
-  font-size: 0.9375rem;
-  padding: var(--db-space-3) var(--db-space-4);
-  background-color: var(--db-cream-dark);
-  border: 1px solid var(--db-sand);
-  border-radius: var(--db-radius-2);
+  font-size: var(--db-field-font-size);
+  color: var(--db-field-color);
+  padding: var(--db-field-py) var(--db-field-px);
+  background-color: var(--db-field-bg);
+  border: var(--db-field-border);
+  border-radius: var(--db-field-radius);
   box-shadow: var(--db-shadow-inset);
   transition: all var(--db-transition);
   width: 100%;
@@ -2357,7 +2362,7 @@ a:hover { color: var(--db-clay); }
 
 .db-field__input:focus {
   outline: none;
-  border-color: var(--db-terracotta);
+  border: var(--db-field-border-focus);
   box-shadow: var(--db-shadow-inset), var(--db-focus-ring);
   background-color: var(--db-white);
 }
@@ -2526,10 +2531,10 @@ textarea.db-field__input {
 }
 
 .db-switch__track {
-  width: 44px;
-  height: 24px;
-  border-radius: var(--db-radius-full);
-  background: var(--db-cream-dark);
+  width: var(--db-switch-width);
+  height: var(--db-switch-height);
+  border-radius: var(--db-switch-radius);
+  background: var(--db-switch-bg);
   border: 1px solid var(--db-sand);
   box-shadow: var(--db-shadow-inset);
   position: relative;
@@ -2550,7 +2555,7 @@ textarea.db-field__input {
 }
 
 .db-switch[aria-checked="true"] .db-switch__track {
-  background: linear-gradient(180deg, var(--db-terracotta) 0%, var(--db-accent-dark) 100%);
+  background: var(--db-switch-bg-on);
   border-color: var(--db-clay);
   box-shadow: none;
 }
@@ -2642,9 +2647,9 @@ textarea.db-field__input {
 
 .db-tabs__tab {
   font-family: var(--db-font-ui);
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: var(--db-space-3) var(--db-space-4);
+  font-size: var(--db-tabs-font-size);
+  font-weight: var(--db-tabs-font-weight);
+  padding: var(--db-tabs-py) var(--db-tabs-px);
   color: var(--db-warm-gray);
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
@@ -2933,16 +2938,16 @@ textarea.db-field__input {
    7. DATA DISPLAY — Card
    ------------------------------------------------------------ */
 .db-card {
-  background: linear-gradient(180deg, var(--db-white) 0%, var(--db-cream) 100%);
-  border: 1px solid var(--db-sand);
-  border-radius: var(--db-radius-4);
-  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
-  padding: var(--db-space-5);
+  background: var(--db-card-bg);
+  border: var(--db-card-border);
+  border-radius: var(--db-card-radius);
+  box-shadow: var(--db-card-shadow), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
+  padding: var(--db-card-padding);
   transition: box-shadow var(--db-transition);
 }
 
 .db-card:hover {
-  box-shadow: var(--db-shadow-3), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
+  box-shadow: var(--db-card-shadow-hover), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
 }
 
 .db-card__header {
@@ -3051,12 +3056,12 @@ textarea.db-field__input {
   width: fit-content;
   gap: var(--db-space-1);
   font-family: var(--db-font-ui);
-  font-size: 0.6875rem;
-  font-weight: 600;
+  font-size: var(--db-badge-font-size);
+  font-weight: var(--db-badge-font-weight);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: var(--db-space-1) var(--db-space-3);
-  border-radius: var(--db-radius-full);
+  padding: var(--db-badge-py) var(--db-badge-px);
+  border-radius: var(--db-badge-radius);
 }
 
 .db-badge--new {
@@ -3215,10 +3220,11 @@ textarea.db-field__input {
 
 .db-table th {
   text-align: left;
-  padding: var(--db-space-3) var(--db-space-4);
-  font-weight: 600;
+  padding: var(--db-table-cell-py) var(--db-table-cell-px);
+  background: var(--db-table-header-bg);
+  font-weight: var(--db-table-header-font-weight);
   color: var(--db-charcoal);
-  font-size: 0.75rem;
+  font-size: var(--db-table-header-font-size);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   white-space: nowrap;
@@ -3246,8 +3252,8 @@ textarea.db-field__input {
 }
 
 .db-table td {
-  padding: var(--db-space-3) var(--db-space-4);
-  border-bottom: 1px solid rgba(var(--db-sand-rgb),0.4);
+  padding: var(--db-table-cell-py) var(--db-table-cell-px);
+  border-bottom: var(--db-table-border);
   color: var(--db-charcoal);
 }
 
@@ -3265,7 +3271,7 @@ textarea.db-field__input {
 .db-modal-overlay {
   position: fixed;
   inset: 0;
-  background: var(--db-overlay-bg);
+  background: var(--db-modal-backdrop);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -3282,11 +3288,11 @@ textarea.db-field__input {
 }
 
 .db-modal {
-  background: linear-gradient(180deg, var(--db-white) 0%, var(--db-cream) 100%);
+  background: var(--db-modal-bg);
   border: 1px solid var(--db-sand);
-  border-radius: var(--db-radius-3);
-  box-shadow: var(--db-shadow-3), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
-  width: min(480px, calc(100vw - 32px));
+  border-radius: var(--db-modal-radius);
+  box-shadow: var(--db-modal-shadow), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
+  width: var(--db-modal-max-width);
   max-height: calc(100vh - 64px);
   overflow-y: auto;
   transform: translateY(16px) scale(0.97);
@@ -3301,7 +3307,7 @@ textarea.db-field__input {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--db-space-5);
+  padding: var(--db-modal-padding);
   border-bottom: 1px solid var(--db-sand);
 }
 
@@ -3329,7 +3335,7 @@ textarea.db-field__input {
 }
 
 .db-modal__body {
-  padding: var(--db-space-5);
+  padding: var(--db-modal-padding);
 }
 
 .db-modal__footer {
@@ -3360,17 +3366,17 @@ textarea.db-field__input {
   display: flex;
   align-items: flex-start;
   gap: var(--db-space-3);
-  padding: var(--db-space-4);
+  padding: var(--db-toast-padding);
   background: linear-gradient(180deg, var(--db-white) 0%, var(--db-cream) 100%);
   border: 1px solid var(--db-sand);
-  border-radius: var(--db-radius-3);
-  box-shadow: var(--db-shadow-3), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
+  border-radius: var(--db-toast-radius);
+  box-shadow: var(--db-toast-shadow), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
   min-width: 280px;
   max-width: 400px;
   pointer-events: auto;
   animation: db-toast-in 300ms ease forwards;
   font-family: var(--db-font-ui);
-  font-size: 0.875rem;
+  font-size: var(--db-toast-font-size);
 }
 
 .db-toast--removing {
@@ -3424,8 +3430,8 @@ textarea.db-field__input {
   display: flex;
   align-items: flex-start;
   gap: var(--db-space-3);
-  padding: var(--db-space-4);
-  border-radius: var(--db-radius-2);
+  padding: var(--db-alert-padding);
+  border-radius: var(--db-alert-radius);
   font-family: var(--db-font-ui);
   font-size: 0.875rem;
 }
@@ -3565,9 +3571,9 @@ textarea.db-field__input {
    ------------------------------------------------------------ */
 .db-progress {
   width: 100%;
-  height: 8px;
-  background: var(--db-cream-dark);
-  border-radius: var(--db-radius-full);
+  height: var(--db-progress-height);
+  background: var(--db-progress-bg);
+  border-radius: var(--db-progress-radius);
   box-shadow: var(--db-shadow-inset);
   overflow: hidden;
 }
@@ -3575,7 +3581,7 @@ textarea.db-field__input {
 .db-progress__bar {
   height: 100%;
   border-radius: var(--db-radius-full);
-  background: linear-gradient(90deg, var(--db-terracotta), var(--db-accent-light));
+  background: var(--db-progress-fill);
   box-shadow: inset 0 1px 0 rgba(var(--db-glow-rgb),0.3);
   transition: width 500ms ease;
   width: var(--db-progress, 0%);
