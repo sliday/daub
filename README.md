@@ -271,12 +271,22 @@ Override CSS custom properties:
   --db-terracotta: #E07A5F;
   --db-cream: #FAF8F0;
   --db-font-heading: 'Your Font', serif;
+  --db-btn-radius: 999px;       /* pill buttons */
+  --db-card-padding: 2rem;      /* roomier cards */
+  --db-field-border: 2px solid #CBD5E1;
 }
 ```
 
-Key variables: `--db-cream`, `--db-sand`, `--db-terracotta`, `--db-clay`, `--db-charcoal`, `--db-ink`, `--db-white`.
+### Token layers
 
-Semantic tokens (theme-aware aliases): `--db-color-bg`, `--db-color-surface`, `--db-color-text`, `--db-color-text-secondary`, `--db-color-text-muted`, `--db-color-border`, `--db-color-accent`, `--db-color-success`, `--db-color-warning`, `--db-color-error`.
+| Layer | Examples | Count |
+|-------|---------|-------|
+| **Palette** | `--db-terracotta`, `--db-cream`, `--db-sand`, `--db-clay`, `--db-ink` | ~30 |
+| **Scale** | `--db-space-1`–`8`, `--db-radius-1`–`full`, `--db-shadow-1`–`3`, `--db-text-xs`–`2xl` | ~30 |
+| **Semantic** | `--db-color-bg`, `--db-color-surface`, `--db-color-text`, `--db-color-accent` | ~15 |
+| **Component** | `--db-btn-*`, `--db-card-*`, `--db-field-*`, `--db-modal-*`, `--db-switch-*` | ~70 |
+
+Component tokens (v3.18): button, field, card, badge, switch, tabs, table, modal, toast, alert, progress, separator, navbar, sidebar, dropdown — each with `--db-{component}-*` properties for size, color, border, radius, and shadow.
 
 ## Accessibility
 
