@@ -10,15 +10,28 @@
       },
       "children": [
         "carousel-header",
-        "carousel-slider"
+        "carousel-featured",
+        "carousel-thumbnails"
       ]
     },
     "carousel-header": {
       "type": "Stack",
       "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "carousel-header-text",
+        "carousel-nav"
+      ]
+    },
+    "carousel-header-text": {
+      "type": "Stack",
+      "props": {
         "direction": "vertical",
-        "gap": 1,
-        "align": "center"
+        "gap": 1
       },
       "children": [
         "carousel-title",
@@ -30,8 +43,7 @@
       "props": {
         "tag": "h2",
         "content": "Featured Work",
-        "weight": "bold",
-        "align": "center"
+        "weight": "bold"
       }
     },
     "carousel-subtitle": {
@@ -39,66 +51,93 @@
       "props": {
         "tag": "p",
         "content": "Browse through recent client projects and case studies.",
-        "variant": "muted",
-        "align": "center"
+        "variant": "muted"
       }
     },
-    "carousel-slider": {
-      "type": "Carousel",
+    "carousel-nav": {
+      "type": "ButtonGroup",
       "children": [
-        "carousel-slide-1",
-        "carousel-slide-2",
-        "carousel-slide-3",
-        "carousel-slide-4"
+        "carousel-prev",
+        "carousel-next"
       ]
     },
-    "carousel-slide-1": {
+    "carousel-prev": {
+      "type": "Button",
+      "props": {
+        "label": "Previous",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "chevron-left"
+      }
+    },
+    "carousel-next": {
+      "type": "Button",
+      "props": {
+        "label": "Next",
+        "variant": "outline",
+        "size": "sm",
+        "icon": "chevron-right"
+      }
+    },
+    "carousel-featured": {
+      "type": "Card",
+      "props": {},
+      "children": [
+        "featured-content"
+      ]
+    },
+    "featured-content": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
-        "gap": 2
+        "gap": 3
       },
       "children": [
-        "carousel-img-1",
-        "carousel-caption-1"
+        "featured-image",
+        "featured-details"
       ]
     },
-    "carousel-img-1": {
-      "type": "AspectRatio",
-      "props": {
-        "ratio": "16/9"
-      },
-      "children": [
-        "carousel-image-1"
-      ]
-    },
-    "carousel-image-1": {
+    "featured-image": {
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/case-fintech/800/450",
-        "alt": "Fintech dashboard redesign for Apex Banking"
+        "alt": "Fintech dashboard redesign for Apex Banking",
+        "height": 400
       }
     },
-    "carousel-caption-1": {
+    "featured-details": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "featured-text",
+        "featured-cta"
+      ]
+    },
+    "featured-text": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
-        "gap": 0
+        "gap": 1
       },
       "children": [
-        "carousel-caption-1-title",
-        "carousel-caption-1-desc"
+        "featured-title",
+        "featured-desc"
       ]
     },
-    "carousel-caption-1-title": {
+    "featured-title": {
       "type": "Text",
       "props": {
-        "tag": "h4",
+        "tag": "h3",
         "content": "Apex Banking — Dashboard Redesign",
         "weight": "bold"
       }
     },
-    "carousel-caption-1-desc": {
+    "featured-desc": {
       "type": "Text",
       "props": {
         "tag": "p",
@@ -106,166 +145,126 @@
         "variant": "muted"
       }
     },
-    "carousel-slide-2": {
+    "featured-cta": {
+      "type": "Button",
+      "props": {
+        "label": "View Case Study",
+        "variant": "outline",
+        "icon": "arrow-right"
+      }
+    },
+    "carousel-thumbnails": {
+      "type": "Grid",
+      "props": {
+        "columns": 3,
+        "gap": 2
+      },
+      "children": [
+        "thumb-1",
+        "thumb-2",
+        "thumb-3"
+      ]
+    },
+    "thumb-1": {
+      "type": "Card",
+      "props": {},
+      "children": [
+        "thumb-1-inner"
+      ]
+    },
+    "thumb-1-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 2
       },
       "children": [
-        "carousel-img-2",
-        "carousel-caption-2"
+        "thumb-1-img",
+        "thumb-1-title"
       ]
     },
-    "carousel-img-2": {
-      "type": "AspectRatio",
-      "props": {
-        "ratio": "16/9"
-      },
-      "children": [
-        "carousel-image-2"
-      ]
-    },
-    "carousel-image-2": {
+    "thumb-1-img": {
       "type": "Image",
       "props": {
-        "src": "https://picsum.photos/seed/case-ecommerce/800/450",
-        "alt": "E-commerce storefront for Bloom & Branch"
+        "src": "https://picsum.photos/seed/case-ecommerce/400/225",
+        "alt": "E-commerce storefront",
+        "height": 120
       }
     },
-    "carousel-caption-2": {
-      "type": "Stack",
-      "props": {
-        "direction": "vertical",
-        "gap": 0
-      },
-      "children": [
-        "carousel-caption-2-title",
-        "carousel-caption-2-desc"
-      ]
-    },
-    "carousel-caption-2-title": {
-      "type": "Text",
-      "props": {
-        "tag": "h4",
-        "content": "Bloom & Branch — E-Commerce Platform",
-        "weight": "bold"
-      }
-    },
-    "carousel-caption-2-desc": {
+    "thumb-1-title": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Built a headless commerce storefront with sub-second page loads and a 35% improvement in conversion rate.",
-        "variant": "muted"
+        "content": "Bloom & Branch — E-Commerce",
+        "weight": "bold"
       }
     },
-    "carousel-slide-3": {
+    "thumb-2": {
+      "type": "Card",
+      "props": {},
+      "children": [
+        "thumb-2-inner"
+      ]
+    },
+    "thumb-2-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 2
       },
       "children": [
-        "carousel-img-3",
-        "carousel-caption-3"
+        "thumb-2-img",
+        "thumb-2-title"
       ]
     },
-    "carousel-img-3": {
-      "type": "AspectRatio",
-      "props": {
-        "ratio": "16/9"
-      },
-      "children": [
-        "carousel-image-3"
-      ]
-    },
-    "carousel-image-3": {
+    "thumb-2-img": {
       "type": "Image",
       "props": {
-        "src": "https://picsum.photos/seed/case-health/800/450",
-        "alt": "Patient portal interface for MedSync Health"
+        "src": "https://picsum.photos/seed/case-health/400/225",
+        "alt": "Patient portal",
+        "height": 120
       }
     },
-    "carousel-caption-3": {
-      "type": "Stack",
-      "props": {
-        "direction": "vertical",
-        "gap": 0
-      },
-      "children": [
-        "carousel-caption-3-title",
-        "carousel-caption-3-desc"
-      ]
-    },
-    "carousel-caption-3-title": {
+    "thumb-2-title": {
       "type": "Text",
       "props": {
-        "tag": "h4",
+        "tag": "p",
         "content": "MedSync — Patient Portal",
         "weight": "bold"
       }
     },
-    "carousel-caption-3-desc": {
-      "type": "Text",
-      "props": {
-        "tag": "p",
-        "content": "HIPAA-compliant patient portal with appointment scheduling, telehealth, and secure messaging for 500K+ users.",
-        "variant": "muted"
-      }
+    "thumb-3": {
+      "type": "Card",
+      "props": {},
+      "children": [
+        "thumb-3-inner"
+      ]
     },
-    "carousel-slide-4": {
+    "thumb-3-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 2
       },
       "children": [
-        "carousel-img-4",
-        "carousel-caption-4"
+        "thumb-3-img",
+        "thumb-3-title"
       ]
     },
-    "carousel-img-4": {
-      "type": "AspectRatio",
-      "props": {
-        "ratio": "16/9"
-      },
-      "children": [
-        "carousel-image-4"
-      ]
-    },
-    "carousel-image-4": {
+    "thumb-3-img": {
       "type": "Image",
       "props": {
-        "src": "https://picsum.photos/seed/case-saas/800/450",
-        "alt": "SaaS analytics dashboard for DataPulse"
+        "src": "https://picsum.photos/seed/case-saas/400/225",
+        "alt": "Analytics dashboard",
+        "height": 120
       }
     },
-    "carousel-caption-4": {
-      "type": "Stack",
-      "props": {
-        "direction": "vertical",
-        "gap": 0
-      },
-      "children": [
-        "carousel-caption-4-title",
-        "carousel-caption-4-desc"
-      ]
-    },
-    "carousel-caption-4-title": {
-      "type": "Text",
-      "props": {
-        "tag": "h4",
-        "content": "DataPulse — Analytics Platform",
-        "weight": "bold"
-      }
-    },
-    "carousel-caption-4-desc": {
+    "thumb-3-title": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Real-time analytics dashboard processing 2 billion events per day with custom visualization builder.",
-        "variant": "muted"
+        "content": "DataPulse — Analytics",
+        "weight": "bold"
       }
     }
   }

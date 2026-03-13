@@ -1,0 +1,263 @@
+{
+  "root": "not-found-simple-04",
+  "elements": {
+    "not-found-simple-04": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "align": "center",
+        "justify": "center",
+        "gap": 8
+      },
+      "children": [
+        "top-section",
+        "features-row"
+      ]
+    },
+    "top-section": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "heading-group",
+        "actions"
+      ]
+    },
+    "heading-group": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "error-label",
+        "heading",
+        "description"
+      ]
+    },
+    "error-label": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "404 error",
+        "variant": "brand",
+        "align": "center"
+      }
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h1",
+        "content": "We lost this page",
+        "align": "center"
+      }
+    },
+    "description": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "We searched high and low, but couldn't find what you're looking for. Let's find a better place for you to go.",
+        "variant": "secondary",
+        "align": "center"
+      }
+    },
+    "actions": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3
+      },
+      "children": [
+        "back-btn",
+        "home-btn"
+      ]
+    },
+    "back-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Go back",
+        "variant": "outline",
+        "size": "lg",
+        "icon": "arrow-left"
+      }
+    },
+    "home-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Take me home",
+        "variant": "primary",
+        "size": "lg"
+      }
+    },
+    "features-row": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 4
+      },
+      "children": [
+        "feature-docs",
+        "feature-blog",
+        "feature-chat"
+      ]
+    },
+    "feature-docs": {
+      "type": "Card",
+      "props": {
+        "padding": 6
+      },
+      "children": [
+        "docs-inner"
+      ]
+    },
+    "docs-inner": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "docs-icon",
+        "docs-title",
+        "docs-desc",
+        "docs-link"
+      ]
+    },
+    "docs-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "file-text",
+        "size": "md",
+        "variant": "muted"
+      }
+    },
+    "docs-title": {
+      "type": "Text",
+      "props": {
+        "tag": "h4",
+        "content": "Documentation"
+      }
+    },
+    "docs-desc": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Dive in to learn all about our product.",
+        "variant": "secondary"
+      }
+    },
+    "docs-link": {
+      "type": "Link",
+      "props": {
+        "label": "Start learning"
+      }
+    },
+    "feature-blog": {
+      "type": "Card",
+      "props": {
+        "padding": 6
+      },
+      "children": [
+        "blog-inner"
+      ]
+    },
+    "blog-inner": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "blog-icon",
+        "blog-title",
+        "blog-desc",
+        "blog-link"
+      ]
+    },
+    "blog-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "message-circle",
+        "size": "md",
+        "variant": "muted"
+      }
+    },
+    "blog-title": {
+      "type": "Text",
+      "props": {
+        "tag": "h4",
+        "content": "Our blog"
+      }
+    },
+    "blog-desc": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Read the latest posts on our blog.",
+        "variant": "secondary"
+      }
+    },
+    "blog-link": {
+      "type": "Link",
+      "props": {
+        "label": "View latest posts"
+      }
+    },
+    "feature-chat": {
+      "type": "Card",
+      "props": {
+        "padding": 6
+      },
+      "children": [
+        "chat-inner"
+      ]
+    },
+    "chat-inner": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "chat-icon",
+        "chat-title",
+        "chat-desc",
+        "chat-link"
+      ]
+    },
+    "chat-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "headphones",
+        "size": "md",
+        "variant": "muted"
+      }
+    },
+    "chat-title": {
+      "type": "Text",
+      "props": {
+        "tag": "h4",
+        "content": "Chat to us"
+      }
+    },
+    "chat-desc": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Can't find what you're looking for?",
+        "variant": "secondary"
+      }
+    },
+    "chat-link": {
+      "type": "Link",
+      "props": {
+        "label": "Chat to our team"
+      }
+    }
+  }
+}

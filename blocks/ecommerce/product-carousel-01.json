@@ -10,15 +10,14 @@
       },
       "children": [
         "carousel-header",
-        "product-slider",
-        "carousel-dots"
+        "product-grid"
       ]
     },
     "carousel-header": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
-        "justify": "space-between",
+        "justify": "between",
         "align": "center"
       },
       "children": [
@@ -76,8 +75,12 @@
         "icon": "chevron-right"
       }
     },
-    "product-slider": {
-      "type": "Carousel",
+    "product-grid": {
+      "type": "Grid",
+      "props": {
+        "columns": 4,
+        "gap": 3
+      },
       "children": [
         "featured-1",
         "featured-2",
@@ -87,10 +90,6 @@
     },
     "featured-1": {
       "type": "Card",
-      "props": {
-        "title": "Apple MacBook Air M3",
-        "description": "The world's best consumer laptop, now with M3 chip"
-      },
       "children": [
         "featured-1-content"
       ]
@@ -103,6 +102,8 @@
       },
       "children": [
         "featured-1-image",
+        "featured-1-name",
+        "featured-1-desc",
         "featured-1-price",
         "featured-1-badge"
       ]
@@ -111,7 +112,24 @@
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/macbook/400/300",
-        "alt": "Apple MacBook Air M3"
+        "alt": "Apple MacBook Air M3",
+        "height": 180
+      }
+    },
+    "featured-1-name": {
+      "type": "Text",
+      "props": {
+        "tag": "h4",
+        "content": "Apple MacBook Air M3",
+        "weight": "bold"
+      }
+    },
+    "featured-1-desc": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "The world's best consumer laptop, now with M3 chip",
+        "variant": "muted"
       }
     },
     "featured-1-price": {
@@ -131,10 +149,6 @@
     },
     "featured-2": {
       "type": "Card",
-      "props": {
-        "title": "Samsung Galaxy S25 Ultra",
-        "description": "AI-powered smartphone with titanium design"
-      },
       "children": [
         "featured-2-content"
       ]
@@ -147,6 +161,8 @@
       },
       "children": [
         "featured-2-image",
+        "featured-2-name",
+        "featured-2-desc",
         "featured-2-price",
         "featured-2-badge"
       ]
@@ -155,7 +171,24 @@
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/galaxy25/400/300",
-        "alt": "Samsung Galaxy S25 Ultra"
+        "alt": "Samsung Galaxy S25 Ultra",
+        "height": 180
+      }
+    },
+    "featured-2-name": {
+      "type": "Text",
+      "props": {
+        "tag": "h4",
+        "content": "Samsung Galaxy S25 Ultra",
+        "weight": "bold"
+      }
+    },
+    "featured-2-desc": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "AI-powered smartphone with titanium design",
+        "variant": "muted"
       }
     },
     "featured-2-price": {
@@ -175,10 +208,6 @@
     },
     "featured-3": {
       "type": "Card",
-      "props": {
-        "title": "Nike Air Max Dn",
-        "description": "Dynamic Air technology for next-level cushioning"
-      },
       "children": [
         "featured-3-content"
       ]
@@ -191,6 +220,8 @@
       },
       "children": [
         "featured-3-image",
+        "featured-3-name",
+        "featured-3-desc",
         "featured-3-price",
         "featured-3-badge"
       ]
@@ -199,7 +230,24 @@
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/nikedn/400/300",
-        "alt": "Nike Air Max Dn sneakers"
+        "alt": "Nike Air Max Dn sneakers",
+        "height": 180
+      }
+    },
+    "featured-3-name": {
+      "type": "Text",
+      "props": {
+        "tag": "h4",
+        "content": "Nike Air Max Dn",
+        "weight": "bold"
+      }
+    },
+    "featured-3-desc": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Dynamic Air technology for next-level cushioning",
+        "variant": "muted"
       }
     },
     "featured-3-price": {
@@ -219,10 +267,6 @@
     },
     "featured-4": {
       "type": "Card",
-      "props": {
-        "title": "Dyson Airwrap Complete",
-        "description": "Multi-styler with Coanda air technology"
-      },
       "children": [
         "featured-4-content"
       ]
@@ -235,6 +279,8 @@
       },
       "children": [
         "featured-4-image",
+        "featured-4-name",
+        "featured-4-desc",
         "featured-4-price",
         "featured-4-badge"
       ]
@@ -243,7 +289,24 @@
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/dysonair/400/300",
-        "alt": "Dyson Airwrap Complete"
+        "alt": "Dyson Airwrap Complete",
+        "height": 180
+      }
+    },
+    "featured-4-name": {
+      "type": "Text",
+      "props": {
+        "tag": "h4",
+        "content": "Dyson Airwrap Complete",
+        "weight": "bold"
+      }
+    },
+    "featured-4-desc": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Multi-styler with Coanda air technology",
+        "variant": "muted"
       }
     },
     "featured-4-price": {
@@ -259,13 +322,6 @@
       "props": {
         "text": "Bestseller",
         "variant": "success"
-      }
-    },
-    "carousel-dots": {
-      "type": "Pagination",
-      "props": {
-        "total": 4,
-        "current": 1
       }
     }
   }

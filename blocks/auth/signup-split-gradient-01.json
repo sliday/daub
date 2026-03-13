@@ -243,7 +243,45 @@
         "variant": "brand",
         "padding": 0
       },
-      "children": []
+      "children": ["gradient-inner"]
+    },
+    "gradient-inner": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "justify": "center",
+        "align": "center",
+        "padding": 8
+      },
+      "children": ["gradient-icon", "gradient-heading", "gradient-features"]
+    },
+    "gradient-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "rocket",
+        "size": "lg"
+      }
+    },
+    "gradient-heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Start building today",
+        "align": "center",
+        "variant": "inverted"
+      }
+    },
+    "gradient-features": {
+      "type": "List",
+      "props": {
+        "items": [
+          { "primary": "Unlimited projects", "icon": "check" },
+          { "primary": "Team collaboration", "icon": "check" },
+          { "primary": "Advanced analytics", "icon": "check" },
+          { "primary": "Priority support", "icon": "check" }
+        ]
+      }
     }
   }
 }

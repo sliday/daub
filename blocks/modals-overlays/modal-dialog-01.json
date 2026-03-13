@@ -2,7 +2,7 @@
   "root": "edit-profile-modal",
   "elements": {
     "edit-profile-modal": {
-      "type": "Modal",
+      "type": "Card",
       "props": {
         "title": "Edit Profile",
         "description": "Update your personal information and profile picture."

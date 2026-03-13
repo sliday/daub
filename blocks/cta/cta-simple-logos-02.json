@@ -1,0 +1,155 @@
+{
+  "root": "cta-simple-logos-02",
+  "elements": {
+    "cta-simple-logos-02": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 10,
+        "padding": [24, 0]
+      },
+      "children": [
+        "container"
+      ]
+    },
+    "container": {
+      "type": "Grid",
+      "props": {
+        "columns": 2,
+        "gap": 16,
+        "container": "wide"
+      },
+      "children": [
+        "left-content",
+        "right-logos"
+      ]
+    },
+    "left-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 8
+      },
+      "children": [
+        "content",
+        "actions"
+      ]
+    },
+    "content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 5
+      },
+      "children": [
+        "heading",
+        "subheading"
+      ]
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Start your free trial"
+      }
+    },
+    "subheading": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Join over 4,000+ startups already growing with Daub.",
+        "variant": "secondary"
+      }
+    },
+    "actions": {
+      "type": "ButtonGroup",
+      "children": [
+        "btn-secondary",
+        "btn-primary"
+      ]
+    },
+    "btn-secondary": {
+      "type": "Button",
+      "props": {
+        "label": "Learn more",
+        "variant": "outline",
+        "size": "lg"
+      }
+    },
+    "btn-primary": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg"
+      }
+    },
+    "right-logos": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "justify": "center"
+      },
+      "children": [
+        "logo-row-1",
+        "logo-row-2",
+        "logo-row-3"
+      ]
+    },
+    "logo-row-1": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 8,
+        "justify": "center"
+      },
+      "children": [
+        "logo-1",
+        "logo-2",
+        "logo-3",
+        "logo-4"
+      ]
+    },
+    "logo-row-2": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 8,
+        "justify": "center"
+      },
+      "children": [
+        "logo-5",
+        "logo-6",
+        "logo-7",
+        "logo-8"
+      ]
+    },
+    "logo-row-3": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 8,
+        "justify": "center"
+      },
+      "children": [
+        "logo-9",
+        "logo-10",
+        "logo-11",
+        "logo-12"
+      ]
+    },
+    "logo-1": { "type": "Icon", "props": { "name": "building-2", "size": "lg", "variant": "muted" } },
+    "logo-2": { "type": "Icon", "props": { "name": "hexagon", "size": "lg", "variant": "muted" } },
+    "logo-3": { "type": "Icon", "props": { "name": "triangle", "size": "lg", "variant": "muted" } },
+    "logo-4": { "type": "Icon", "props": { "name": "diamond", "size": "lg", "variant": "muted" } },
+    "logo-5": { "type": "Icon", "props": { "name": "pentagon", "size": "lg", "variant": "muted" } },
+    "logo-6": { "type": "Icon", "props": { "name": "circle", "size": "lg", "variant": "muted" } },
+    "logo-7": { "type": "Icon", "props": { "name": "square", "size": "lg", "variant": "muted" } },
+    "logo-8": { "type": "Icon", "props": { "name": "star", "size": "lg", "variant": "muted" } },
+    "logo-9": { "type": "Icon", "props": { "name": "octagon", "size": "lg", "variant": "muted" } },
+    "logo-10": { "type": "Icon", "props": { "name": "layers", "size": "lg", "variant": "muted" } },
+    "logo-11": { "type": "Icon", "props": { "name": "box", "size": "lg", "variant": "muted" } },
+    "logo-12": { "type": "Icon", "props": { "name": "globe", "size": "lg", "variant": "muted" } }
+  }
+}

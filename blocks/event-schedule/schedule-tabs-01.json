@@ -46,17 +46,22 @@
     "schedule-tabs-nav": {
       "type": "Tabs",
       "props": {
-        "items": [
+        "tabs": [
           {
-            "label": "Day 1 — June 14",
-            "content": "day-1-sessions"
+            "id": "day1",
+            "label": "Day 1 — June 14"
           },
           {
-            "label": "Day 2 — June 15",
-            "content": "day-2-sessions"
+            "id": "day2",
+            "label": "Day 2 — June 15"
           }
-        ]
-      }
+        ],
+        "active": "day1"
+      },
+      "children": [
+        "day-1-sessions",
+        "day-2-sessions"
+      ]
     },
     "day-1-sessions": {
       "type": "List",

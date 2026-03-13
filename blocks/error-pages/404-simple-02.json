@@ -1,0 +1,170 @@
+{
+  "root": "not-found-simple-02",
+  "elements": {
+    "not-found-simple-02": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "align": "start",
+        "justify": "center",
+        "container": "narrow",
+        "gap": 6
+      },
+      "children": [
+        "heading-group",
+        "actions",
+        "resources"
+      ]
+    },
+    "heading-group": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "error-label",
+        "heading",
+        "description"
+      ]
+    },
+    "error-label": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "404 error",
+        "variant": "brand"
+      }
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h1",
+        "content": "Page not found"
+      }
+    },
+    "description": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Sorry, the page you are looking for doesn't exist.",
+        "variant": "secondary"
+      }
+    },
+    "actions": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3
+      },
+      "children": [
+        "back-btn",
+        "home-btn"
+      ]
+    },
+    "back-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Go back",
+        "variant": "outline",
+        "size": "lg",
+        "icon": "arrow-left"
+      }
+    },
+    "home-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Take me home",
+        "variant": "primary",
+        "size": "lg"
+      }
+    },
+    "resources": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 4
+      },
+      "children": [
+        "resource-docs",
+        "resource-blog",
+        "resource-support"
+      ]
+    },
+    "resource-docs": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "docs-link",
+        "docs-text"
+      ]
+    },
+    "docs-link": {
+      "type": "Link",
+      "props": {
+        "label": "Documentation"
+      }
+    },
+    "docs-text": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Dive in to learn all about our product.",
+        "variant": "secondary"
+      }
+    },
+    "resource-blog": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "blog-link",
+        "blog-text"
+      ]
+    },
+    "blog-link": {
+      "type": "Link",
+      "props": {
+        "label": "Our blog"
+      }
+    },
+    "blog-text": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Read the latest posts on our blog.",
+        "variant": "secondary"
+      }
+    },
+    "resource-support": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 1
+      },
+      "children": [
+        "support-link",
+        "support-text"
+      ]
+    },
+    "support-link": {
+      "type": "Link",
+      "props": {
+        "label": "Chat to support"
+      }
+    },
+    "support-text": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Our friendly team is here to help.",
+        "variant": "secondary"
+      }
+    }
+  }
+}

@@ -272,13 +272,48 @@
       ]
     },
     "slide-image": {
-      "type": "Image",
+      "type": "Surface",
       "props": {
-        "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22500%22%20height%3D%22350%22%20viewBox%3D%220%200%20500%20350%22%3E%3Crect%20width%3D%22500%22%20height%3D%22350%22%20rx%3D%2212%22%20fill%3D%22%23F2F4F7%22%2F%3E%3Ctext%20x%3D%2240%22%20y%3D%2240%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22600%22%20fill%3D%22%23344054%22%3EUsers%20over%20time%3C%2Ftext%3E%3Cline%20x1%3D%2240%22%20y1%3D%2280%22%20x2%3D%22420%22%20y2%3D%2280%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Cline%20x1%3D%2240%22%20y1%3D%22130%22%20x2%3D%22420%22%20y2%3D%22130%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Cline%20x1%3D%2240%22%20y1%3D%22180%22%20x2%3D%22420%22%20y2%3D%22180%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Cline%20x1%3D%2240%22%20y1%3D%22230%22%20x2%3D%22420%22%20y2%3D%22230%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Cline%20x1%3D%2240%22%20y1%3D%22280%22%20x2%3D%22420%22%20y2%3D%22280%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Cpath%20d%3D%22M55%20250%20C80%20240%2C100%20200%2C130%20190%20C160%20180%2C180%20160%2C210%20140%20C240%20120%2C260%20130%2C290%20110%20C320%2090%2C340%20100%2C365%2095%20C390%2090%2C400%2080%2C410%2085%22%20fill%3D%22none%22%20stroke%3D%22%237F56D9%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M55%20250%20C80%20240%2C100%20200%2C130%20190%20C160%20180%2C180%20160%2C210%20140%20C240%20120%2C260%20130%2C290%20110%20C320%2090%2C340%20100%2C365%2095%20C390%2090%2C400%2080%2C410%2085%20L410%20280%20L55%20280%20Z%22%20fill%3D%22%237F56D920%22%2F%3E%3Ctext%20x%3D%2255%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3EMon%3C%2Ftext%3E%3Ctext%20x%3D%22115%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3ETue%3C%2Ftext%3E%3Ctext%20x%3D%22175%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3EWed%3C%2Ftext%3E%3Ctext%20x%3D%22233%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3EThu%3C%2Ftext%3E%3Ctext%20x%3D%22295%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3EFri%3C%2Ftext%3E%3Ctext%20x%3D%22350%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3ESat%3C%2Ftext%3E%3Ctext%20x%3D%22405%22%20y%3D%22300%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2212%22%20fill%3D%22%23667085%22%3ESun%3C%2Ftext%3E%3Crect%20x%3D%22370%22%20y%3D%22310%22%20width%3D%22110%22%20height%3D%2232%22%20rx%3D%2216%22%20fill%3D%22white%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22390%22%20y%3D%22330%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2214%22%20font-weight%3D%22700%22%20fill%3D%22%23344054%22%3E1%2C000%3C%2Ftext%3E%3Ctext%20x%3D%22432%22%20y%3D%22330%22%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2210%22%20fill%3D%22%23667085%22%3Eactive%3C%2Ftext%3E%3C%2Fsvg%3E",
-        "alt": "Dashboard mockup preview",
-        "objectFit": "contain"
-      }
+        "variant": "card",
+        "padding": 4
+      },
+      "children": ["si-content"]
     },
+    "si-content": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 4 },
+      "children": ["si-title", "si-stats"]
+    },
+    "si-title": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Users over time", "weight": "semibold" }
+    },
+    "si-stats": {
+      "type": "Grid",
+      "props": { "columns": 3, "gap": 3 },
+      "children": ["si-1", "si-2", "si-3"]
+    },
+    "si-1": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["si-1-v", "si-1-l"]
+    },
+    "si-1-v": { "type": "Text", "props": { "tag": "h3", "content": "1,000" } },
+    "si-1-l": { "type": "Text", "props": { "tag": "span", "content": "Active", "variant": "secondary" } },
+    "si-2": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["si-2-v", "si-2-l"]
+    },
+    "si-2-v": { "type": "Text", "props": { "tag": "h3", "content": "+24%" } },
+    "si-2-l": { "type": "Text", "props": { "tag": "span", "content": "Growth", "variant": "secondary" } },
+    "si-3": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["si-3-v", "si-3-l"]
+    },
+    "si-3-v": { "type": "Text", "props": { "tag": "h3", "content": "98.5%" } },
+    "si-3-l": { "type": "Text", "props": { "tag": "span", "content": "Uptime", "variant": "secondary" } },
     "carousel-caption": {
       "type": "Stack",
       "props": {

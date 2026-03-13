@@ -6,7 +6,8 @@
       "props": {
         "direction": "horizontal",
         "gap": 3,
-        "align": "center"
+        "align": "center",
+        "container": "wide"
       },
       "children": [
         "divider-line-left",

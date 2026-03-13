@@ -44,29 +44,22 @@
     "tab-nav-tabs": {
       "type": "Tabs",
       "props": {
-        "items": [
-          {
-            "label": "General",
-            "content": "general-panel"
-          },
-          {
-            "label": "Security",
-            "content": "security-panel"
-          },
-          {
-            "label": "Notifications",
-            "content": "notifications-panel"
-          },
-          {
-            "label": "Integrations",
-            "content": "integrations-panel"
-          },
-          {
-            "label": "API Keys",
-            "content": "api-panel"
-          }
-        ]
-      }
+        "tabs": [
+          { "id": "general", "label": "General" },
+          { "id": "security", "label": "Security" },
+          { "id": "notifications", "label": "Notifications" },
+          { "id": "integrations", "label": "Integrations" },
+          { "id": "api", "label": "API Keys" }
+        ],
+        "active": "general"
+      },
+      "children": [
+        "general-panel",
+        "security-panel",
+        "notifications-panel",
+        "integrations-panel",
+        "api-panel"
+      ]
     },
     "general-panel": {
       "type": "Stack",
@@ -88,11 +81,18 @@
       }
     },
     "general-email-field": {
+      "type": "Field",
+      "props": {
+        "label": "Email Address"
+      },
+      "children": [
+        "general-email-input"
+      ]
+    },
+    "general-email-input": {
       "type": "Input",
       "props": {
-        "label": "Email Address",
-        "placeholder": "you@company.com",
-        "type": "email"
+        "placeholder": "you@company.com"
       }
     },
     "general-timezone-field": {
@@ -114,11 +114,18 @@
       ]
     },
     "security-password-field": {
+      "type": "Field",
+      "props": {
+        "label": "Current Password"
+      },
+      "children": [
+        "security-password-input"
+      ]
+    },
+    "security-password-input": {
       "type": "Input",
       "props": {
-        "label": "Current Password",
-        "placeholder": "Enter current password",
-        "type": "password"
+        "placeholder": "Enter current password"
       }
     },
     "security-2fa-toggle": {

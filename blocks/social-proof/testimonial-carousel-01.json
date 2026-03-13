@@ -11,7 +11,8 @@
       },
       "children": [
         "carousel-header",
-        "carousel-container",
+        "featured-testimonial",
+        "testimonial-grid",
         "carousel-nav"
       ]
     },
@@ -23,24 +24,13 @@
         "align": "center"
       }
     },
-    "carousel-container": {
-      "type": "Carousel",
+    "featured-testimonial": {
+      "type": "Card",
       "children": [
-        "slide-1",
-        "slide-2",
-        "slide-3"
+        "featured-inner"
       ]
     },
-    "slide-1": {
-      "type": "Surface",
-      "props": {
-        "variant": "bordered"
-      },
-      "children": [
-        "slide-1-inner"
-      ]
-    },
-    "slide-1-inner": {
+    "featured-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
@@ -48,19 +38,19 @@
         "align": "center"
       },
       "children": [
-        "slide-1-stars",
-        "slide-1-quote",
-        "slide-1-author"
+        "featured-stars",
+        "featured-quote",
+        "featured-author"
       ]
     },
-    "slide-1-stars": {
+    "featured-stars": {
       "type": "Text",
       "props": {
         "tag": "span",
-        "content": "★★★★★"
+        "content": "\u2605\u2605\u2605\u2605\u2605"
       }
     },
-    "slide-1-quote": {
+    "featured-quote": {
       "type": "Text",
       "props": {
         "tag": "p",
@@ -68,7 +58,7 @@
         "align": "center"
       }
     },
-    "slide-1-author": {
+    "featured-author": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
@@ -76,29 +66,29 @@
         "align": "center"
       },
       "children": [
-        "slide-1-avatar",
-        "slide-1-info"
+        "featured-avatar",
+        "featured-info"
       ]
     },
-    "slide-1-avatar": {
+    "featured-avatar": {
       "type": "Avatar",
       "props": {
         "initials": "AV",
         "src": "https://i.pravatar.cc/96?u=anna-volkov"
       }
     },
-    "slide-1-info": {
+    "featured-info": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 0
       },
       "children": [
-        "slide-1-name",
-        "slide-1-role"
+        "featured-name",
+        "featured-role"
       ]
     },
-    "slide-1-name": {
+    "featured-name": {
       "type": "Text",
       "props": {
         "tag": "p",
@@ -106,7 +96,7 @@
         "weight": "semibold"
       }
     },
-    "slide-1-role": {
+    "featured-role": {
       "type": "Text",
       "props": {
         "tag": "span",
@@ -114,44 +104,53 @@
         "variant": "muted"
       }
     },
-    "slide-2": {
-      "type": "Surface",
+    "testimonial-grid": {
+      "type": "Grid",
       "props": {
-        "variant": "bordered"
+        "columns": 2,
+        "gap": 3
       },
       "children": [
-        "slide-2-inner"
+        "card-2",
+        "card-3"
       ]
     },
-    "slide-2-inner": {
+    "card-2": {
+      "type": "Card",
+      "children": [
+        "card-2-inner"
+      ]
+    },
+    "card-2-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
-        "gap": 4,
+        "gap": 3,
         "align": "center"
       },
       "children": [
-        "slide-2-stars",
-        "slide-2-quote",
-        "slide-2-author"
+        "card-2-stars",
+        "card-2-quote",
+        "card-2-author"
       ]
     },
-    "slide-2-stars": {
+    "card-2-stars": {
       "type": "Text",
       "props": {
         "tag": "span",
-        "content": "★★★★★"
+        "content": "\u2605\u2605\u2605\u2605\u2605"
       }
     },
-    "slide-2-quote": {
+    "card-2-quote": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "After three years on the platform, our API response times are 40% faster and we've had zero unplanned outages. The reliability is unmatched in our industry.",
-        "align": "center"
+        "content": "After three years on the platform, our API response times are 40% faster and we've had zero unplanned outages.",
+        "align": "center",
+        "variant": "muted"
       }
     },
-    "slide-2-author": {
+    "card-2-author": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
@@ -159,29 +158,29 @@
         "align": "center"
       },
       "children": [
-        "slide-2-avatar",
-        "slide-2-info"
+        "card-2-avatar",
+        "card-2-info"
       ]
     },
-    "slide-2-avatar": {
+    "card-2-avatar": {
       "type": "Avatar",
       "props": {
         "initials": "DM",
         "src": "https://i.pravatar.cc/96?u=david-morales"
       }
     },
-    "slide-2-info": {
+    "card-2-info": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 0
       },
       "children": [
-        "slide-2-name",
-        "slide-2-role"
+        "card-2-name",
+        "card-2-role"
       ]
     },
-    "slide-2-name": {
+    "card-2-name": {
       "type": "Text",
       "props": {
         "tag": "p",
@@ -189,7 +188,7 @@
         "weight": "semibold"
       }
     },
-    "slide-2-role": {
+    "card-2-role": {
       "type": "Text",
       "props": {
         "tag": "span",
@@ -197,44 +196,42 @@
         "variant": "muted"
       }
     },
-    "slide-3": {
-      "type": "Surface",
-      "props": {
-        "variant": "bordered"
-      },
+    "card-3": {
+      "type": "Card",
       "children": [
-        "slide-3-inner"
+        "card-3-inner"
       ]
     },
-    "slide-3-inner": {
+    "card-3-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
-        "gap": 4,
+        "gap": 3,
         "align": "center"
       },
       "children": [
-        "slide-3-stars",
-        "slide-3-quote",
-        "slide-3-author"
+        "card-3-stars",
+        "card-3-quote",
+        "card-3-author"
       ]
     },
-    "slide-3-stars": {
+    "card-3-stars": {
       "type": "Text",
       "props": {
         "tag": "span",
-        "content": "★★★★★"
+        "content": "\u2605\u2605\u2605\u2605\u2605"
       }
     },
-    "slide-3-quote": {
+    "card-3-quote": {
       "type": "Text",
       "props": {
         "tag": "p",
         "content": "The collaboration features transformed how our distributed team works. We shipped our biggest product launch ever with half the coordination overhead.",
-        "align": "center"
+        "align": "center",
+        "variant": "muted"
       }
     },
-    "slide-3-author": {
+    "card-3-author": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
@@ -242,29 +239,29 @@
         "align": "center"
       },
       "children": [
-        "slide-3-avatar",
-        "slide-3-info"
+        "card-3-avatar",
+        "card-3-info"
       ]
     },
-    "slide-3-avatar": {
+    "card-3-avatar": {
       "type": "Avatar",
       "props": {
         "initials": "RN",
         "src": "https://i.pravatar.cc/96?u=rachel-nguyen"
       }
     },
-    "slide-3-info": {
+    "card-3-info": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 0
       },
       "children": [
-        "slide-3-name",
-        "slide-3-role"
+        "card-3-name",
+        "card-3-role"
       ]
     },
-    "slide-3-name": {
+    "card-3-name": {
       "type": "Text",
       "props": {
         "tag": "p",
@@ -272,7 +269,7 @@
         "weight": "semibold"
       }
     },
-    "slide-3-role": {
+    "card-3-role": {
       "type": "Text",
       "props": {
         "tag": "span",

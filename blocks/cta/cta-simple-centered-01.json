@@ -1,0 +1,82 @@
+{
+  "root": "cta-simple-centered",
+  "elements": {
+    "cta-simple-centered": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 10,
+        "align": "center",
+        "padding": [24, 0]
+      },
+      "children": [
+        "container"
+      ]
+    },
+    "container": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 8,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "content",
+        "actions"
+      ]
+    },
+    "content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 5,
+        "align": "center"
+      },
+      "children": [
+        "heading",
+        "subheading"
+      ]
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Start your free trial",
+        "align": "center"
+      }
+    },
+    "subheading": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Join over 4,000+ startups already growing with Daub.",
+        "variant": "secondary",
+        "align": "center"
+      }
+    },
+    "actions": {
+      "type": "ButtonGroup",
+      "children": [
+        "btn-secondary",
+        "btn-primary"
+      ]
+    },
+    "btn-secondary": {
+      "type": "Button",
+      "props": {
+        "label": "Learn more",
+        "variant": "outline",
+        "size": "lg"
+      }
+    },
+    "btn-primary": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg"
+      }
+    }
+  }
+}

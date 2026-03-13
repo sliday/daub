@@ -37,7 +37,8 @@
         "microsoft-btn",
         "divider-row",
         "or-text",
-        "email-section"
+        "email-section",
+        "signup-prompt"
       ]
     },
     "google-btn": {

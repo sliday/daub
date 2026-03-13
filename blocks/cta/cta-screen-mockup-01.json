@@ -1,0 +1,130 @@
+{
+  "root": "cta-screen-mockup-01",
+  "elements": {
+    "cta-screen-mockup-01": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 10,
+        "padding": [24, 0]
+      },
+      "children": [
+        "container"
+      ]
+    },
+    "container": {
+      "type": "Grid",
+      "props": {
+        "columns": 2,
+        "gap": 16,
+        "container": "wide",
+        "align": "center"
+      },
+      "children": [
+        "left-content",
+        "screen-mockup"
+      ]
+    },
+    "left-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 8
+      },
+      "children": [
+        "text-block",
+        "button-group"
+      ]
+    },
+    "text-block": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6
+      },
+      "children": [
+        "heading",
+        "description",
+        "check-list"
+      ]
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Beautiful analytics to grow smarter"
+      }
+    },
+    "description": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Powerful, self-serve product and growth analytics.",
+        "variant": "secondary"
+      }
+    },
+    "check-list": {
+      "type": "List",
+      "props": {
+        "variant": "check",
+        "gap": 4
+      },
+      "children": [
+        "check-item-1",
+        "check-item-2",
+        "check-item-3"
+      ]
+    },
+    "check-item-1": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Share team inboxes"
+      }
+    },
+    "check-item-2": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Deliver instant answers"
+      }
+    },
+    "check-item-3": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Manage your team with reports"
+      }
+    },
+    "button-group": {
+      "type": "ButtonGroup",
+      "children": [
+        "btn-outline",
+        "btn-primary"
+      ]
+    },
+    "btn-outline": {
+      "type": "Button",
+      "props": {
+        "label": "Learn more",
+        "variant": "outline",
+        "size": "lg"
+      }
+    },
+    "btn-primary": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg"
+      }
+    },
+    "screen-mockup": {
+      "type": "Image",
+      "props": {
+        "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='533' fill='none'%3E%3Crect x='4' y='4' width='792' height='500' rx='12' fill='%23101828'/%3E%3Crect x='14' y='36' width='772' height='460' rx='4' fill='%23fff'/%3E%3Ccircle cx='30' cy='20' r='5' fill='%23F04438'/%3E%3Ccircle cx='46' cy='20' r='5' fill='%23F79009'/%3E%3Ccircle cx='62' cy='20' r='5' fill='%2312B76A'/%3E%3Crect x='14' y='36' width='180' height='460' fill='%23F9FAFB'/%3E%3Cline x1='194' y1='36' x2='194' y2='496' stroke='%23E4E7EC' stroke-width='1'/%3E%3Crect x='30' y='52' width='148' height='28' rx='6' fill='%23F2F4F7'/%3E%3Ctext x='104' y='70' text-anchor='middle' font-family='system-ui' font-size='11' fill='%23667085'%3EDaub Analytics%3C/text%3E%3Crect x='30' y='96' width='148' height='24' rx='6' fill='%237F56D9'/%3E%3Ctext x='104' y='112' text-anchor='middle' font-family='system-ui' font-size='10' fill='%23fff'%3EDashboard%3C/text%3E%3Crect x='30' y='128' width='148' height='24' rx='6' fill='%23F9FAFB'/%3E%3Ctext x='104' y='144' text-anchor='middle' font-family='system-ui' font-size='10' fill='%23667085'%3EAnalytics%3C/text%3E%3Crect x='30' y='160' width='148' height='24' rx='6' fill='%23F9FAFB'/%3E%3Ctext x='104' y='176' text-anchor='middle' font-family='system-ui' font-size='10' fill='%23667085'%3EReports%3C/text%3E%3Crect x='30' y='192' width='148' height='24' rx='6' fill='%23F9FAFB'/%3E%3Ctext x='104' y='208' text-anchor='middle' font-family='system-ui' font-size='10' fill='%23667085'%3ESettings%3C/text%3E%3Ctext x='220' y='64' font-family='system-ui' font-size='14' font-weight='bold' fill='%23101828'%3EDashboard%3C/text%3E%3Crect x='220' y='82' width='130' height='72' rx='10' fill='%237F56D9'/%3E%3Ctext x='285' y='115' text-anchor='middle' font-family='system-ui' font-size='18' font-weight='bold' fill='%23fff'%3E12,450%3C/text%3E%3Ctext x='285' y='135' text-anchor='middle' font-family='system-ui' font-size='10' fill='%23E9D7FE'%3ETotal Visitors%3C/text%3E%3Crect x='362' y='82' width='130' height='72' rx='10' fill='%23F9F5FF'/%3E%3Ctext x='427' y='115' text-anchor='middle' font-family='system-ui' font-size='18' font-weight='bold' fill='%237F56D9'%3E84%25%3C/text%3E%3Ctext x='427' y='135' text-anchor='middle' font-family='system-ui' font-size='10' fill='%237F56D9'%3EConversion%3C/text%3E%3Crect x='504' y='82' width='130' height='72' rx='10' fill='%23F9F5FF'/%3E%3Ctext x='569' y='115' text-anchor='middle' font-family='system-ui' font-size='18' font-weight='bold' fill='%237F56D9'%3E$48.2k%3C/text%3E%3Ctext x='569' y='135' text-anchor='middle' font-family='system-ui' font-size='10' fill='%237F56D9'%3ERevenue%3C/text%3E%3Crect x='646' y='82' width='130' height='72' rx='10' fill='%23F9F5FF'/%3E%3Ctext x='711' y='115' text-anchor='middle' font-family='system-ui' font-size='18' font-weight='bold' fill='%237F56D9'%3E2.4k%3C/text%3E%3Ctext x='711' y='135' text-anchor='middle' font-family='system-ui' font-size='10' fill='%237F56D9'%3ESignups%3C/text%3E%3Crect x='220' y='170' width='556' height='200' rx='10' fill='%23F9FAFB'/%3E%3Cline x1='220' y1='350' x2='776' y2='350' stroke='%23E4E7EC' stroke-width='1'/%3E%3Cline x1='330' y1='190' x2='330' y2='350' stroke='%23E4E7EC' stroke-dasharray='4'/%3E%3Cline x1='440' y1='190' x2='440' y2='350' stroke='%23E4E7EC' stroke-dasharray='4'/%3E%3Cline x1='550' y1='190' x2='550' y2='350' stroke='%23E4E7EC' stroke-dasharray='4'/%3E%3Cline x1='660' y1='190' x2='660' y2='350' stroke='%23E4E7EC' stroke-dasharray='4'/%3E%3Cpath d='M240 340 Q300 310 360 300 T480 260 T600 230 T760 200' stroke='%237F56D9' stroke-width='2.5' fill='none'/%3E%3Cpath d='M240 340 Q300 310 360 300 T480 260 T600 230 T760 200 V350 H240 Z' fill='%237F56D9' opacity='0.06'/%3E%3Ccircle cx='480' cy='260' r='5' fill='%237F56D9'/%3E%3Ccircle cx='600' cy='230' r='5' fill='%237F56D9'/%3E%3Crect x='220' y='386' width='270' height='100' rx='10' fill='%23F9FAFB'/%3E%3Ctext x='236' y='408' font-family='system-ui' font-size='11' font-weight='bold' fill='%23101828'%3ERecent Activity%3C/text%3E%3Crect x='236' y='418' width='238' height='24' rx='4' fill='%23fff'/%3E%3Ccircle cx='250' cy='430' r='7' fill='%23E4E7EC'/%3E%3Crect x='264' y='426' width='80' height='4' rx='2' fill='%23E4E7EC'/%3E%3Crect x='264' y='433' width='50' height='3' rx='1.5' fill='%23F2F4F7'/%3E%3Crect x='236' y='448' width='238' height='24' rx='4' fill='%23fff'/%3E%3Ccircle cx='250' cy='460' r='7' fill='%23E4E7EC'/%3E%3Crect x='264' y='456' width='80' height='4' rx='2' fill='%23E4E7EC'/%3E%3Crect x='264' y='463' width='50' height='3' rx='1.5' fill='%23F2F4F7'/%3E%3Crect x='506' y='386' width='270' height='100' rx='10' fill='%23F9FAFB'/%3E%3Ctext x='522' y='408' font-family='system-ui' font-size='11' font-weight='bold' fill='%23101828'%3ETop Pages%3C/text%3E%3Crect x='522' y='418' width='238' height='24' rx='4' fill='%23fff'/%3E%3Crect x='530' y='426' width='100' height='4' rx='2' fill='%23E4E7EC'/%3E%3Crect x='530' y='433' width='60' height='3' rx='1.5' fill='%23F2F4F7'/%3E%3Crect x='522' y='448' width='238' height='24' rx='4' fill='%23fff'/%3E%3Crect x='530' y='456' width='100' height='4' rx='2' fill='%23E4E7EC'/%3E%3Crect x='530' y='463' width='60' height='3' rx='1.5' fill='%23F2F4F7'/%3E%3Cpath d='M340 510 L400 510 L400 525 Q400 530 395 530 L345 530 Q340 530 340 525 Z' fill='%23E4E7EC'/%3E%3Crect x='320' y='504' width='160' height='8' rx='2' fill='%23E4E7EC'/%3E%3C/svg%3E",
+        "alt": "Dashboard mockup"
+      }
+    }
+  }
+}

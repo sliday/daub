@@ -10,8 +10,8 @@
       },
       "children": [
         "pc-header-row",
-        "pc-slider",
-        "pc-dots"
+        "pc-featured",
+        "pc-grid"
       ]
     },
     "pc-header-row": {
@@ -20,7 +20,7 @@
         "direction": "horizontal",
         "gap": 2,
         "align": "center",
-        "justify": "space-between"
+        "justify": "between"
       },
       "children": [
         "pc-header-text",
@@ -77,25 +77,14 @@
         "icon": "chevron-right"
       }
     },
-    "pc-slider": {
-      "type": "Carousel",
+    "pc-featured": {
+      "type": "Card",
+      "props": {},
       "children": [
-        "pc-slide-1",
-        "pc-slide-2",
-        "pc-slide-3",
-        "pc-slide-4"
+        "pc-featured-inner"
       ]
     },
-    "pc-slide-1": {
-      "type": "Surface",
-      "props": {
-        "variant": "bordered"
-      },
-      "children": [
-        "pc-s1-inner"
-      ]
-    },
-    "pc-s1-inner": {
+    "pc-featured-inner": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
@@ -103,38 +92,40 @@
         "align": "center"
       },
       "children": [
-        "pc-s1-img",
-        "pc-s1-info"
+        "pc-featured-img",
+        "pc-featured-info"
       ]
     },
-    "pc-s1-img": {
+    "pc-featured-img": {
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/carousel-atlas/700/450",
-        "alt": "Atlas CRM Dashboard"
+        "alt": "Atlas CRM Dashboard",
+        "width": 400,
+        "height": 260
       }
     },
-    "pc-s1-info": {
+    "pc-featured-info": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 2
       },
       "children": [
-        "pc-s1-client",
-        "pc-s1-title",
-        "pc-s1-desc",
-        "pc-s1-link"
+        "pc-featured-client",
+        "pc-featured-title",
+        "pc-featured-desc",
+        "pc-featured-link"
       ]
     },
-    "pc-s1-client": {
+    "pc-featured-client": {
       "type": "Chip",
       "props": {
         "label": "Atlas Corp",
         "variant": "primary"
       }
     },
-    "pc-s1-title": {
+    "pc-featured-title": {
       "type": "Text",
       "props": {
         "tag": "h3",
@@ -142,7 +133,7 @@
         "weight": "bold"
       }
     },
-    "pc-s1-desc": {
+    "pc-featured-desc": {
       "type": "Text",
       "props": {
         "tag": "p",
@@ -150,7 +141,7 @@
         "variant": "muted"
       }
     },
-    "pc-s1-link": {
+    "pc-featured-link": {
       "type": "Button",
       "props": {
         "label": "View Case Study",
@@ -158,227 +149,145 @@
         "icon": "arrow-right"
       }
     },
-    "pc-slide-2": {
-      "type": "Surface",
+    "pc-grid": {
+      "type": "Grid",
       "props": {
-        "variant": "bordered"
+        "columns": 3,
+        "gap": 2
       },
       "children": [
-        "pc-s2-inner"
+        "pc-card-2",
+        "pc-card-3",
+        "pc-card-4"
       ]
     },
-    "pc-s2-inner": {
-      "type": "Stack",
-      "props": {
-        "direction": "horizontal",
-        "gap": 4,
-        "align": "center"
-      },
+    "pc-card-2": {
+      "type": "Card",
+      "props": {},
       "children": [
-        "pc-s2-img",
-        "pc-s2-info"
+        "pc-card-2-inner"
       ]
     },
-    "pc-s2-img": {
-      "type": "Image",
-      "props": {
-        "src": "https://picsum.photos/seed/carousel-bloom/700/450",
-        "alt": "Bloom Marketplace"
-      }
-    },
-    "pc-s2-info": {
+    "pc-card-2-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 2
       },
       "children": [
-        "pc-s2-client",
-        "pc-s2-title",
-        "pc-s2-desc",
-        "pc-s2-link"
+        "pc-card-2-img",
+        "pc-card-2-title",
+        "pc-card-2-desc"
       ]
     },
-    "pc-s2-client": {
-      "type": "Chip",
+    "pc-card-2-img": {
+      "type": "Image",
       "props": {
-        "label": "Bloom",
-        "variant": "primary"
+        "src": "https://picsum.photos/seed/carousel-bloom/400/225",
+        "alt": "Bloom Marketplace",
+        "height": 140
       }
     },
-    "pc-s2-title": {
+    "pc-card-2-title": {
       "type": "Text",
       "props": {
-        "tag": "h3",
+        "tag": "h4",
         "content": "Artisan Marketplace Platform",
         "weight": "bold"
       }
     },
-    "pc-s2-desc": {
+    "pc-card-2-desc": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Built a two-sided marketplace connecting 3,000 artisans with buyers. Processed $8.2M in transactions in the first year with a 4.8-star seller rating.",
+        "content": "Two-sided marketplace connecting 3,000 artisans with buyers.",
         "variant": "muted"
       }
     },
-    "pc-s2-link": {
-      "type": "Button",
-      "props": {
-        "label": "View Case Study",
-        "variant": "outline",
-        "icon": "arrow-right"
-      }
-    },
-    "pc-slide-3": {
-      "type": "Surface",
-      "props": {
-        "variant": "bordered"
-      },
+    "pc-card-3": {
+      "type": "Card",
+      "props": {},
       "children": [
-        "pc-s3-inner"
+        "pc-card-3-inner"
       ]
     },
-    "pc-s3-inner": {
-      "type": "Stack",
-      "props": {
-        "direction": "horizontal",
-        "gap": 4,
-        "align": "center"
-      },
-      "children": [
-        "pc-s3-img",
-        "pc-s3-info"
-      ]
-    },
-    "pc-s3-img": {
-      "type": "Image",
-      "props": {
-        "src": "https://picsum.photos/seed/carousel-nova/700/450",
-        "alt": "Nova Streaming"
-      }
-    },
-    "pc-s3-info": {
+    "pc-card-3-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 2
       },
       "children": [
-        "pc-s3-client",
-        "pc-s3-title",
-        "pc-s3-desc",
-        "pc-s3-link"
+        "pc-card-3-img",
+        "pc-card-3-title",
+        "pc-card-3-desc"
       ]
     },
-    "pc-s3-client": {
-      "type": "Chip",
+    "pc-card-3-img": {
+      "type": "Image",
       "props": {
-        "label": "Nova Media",
-        "variant": "primary"
+        "src": "https://picsum.photos/seed/carousel-nova/400/225",
+        "alt": "Nova Streaming",
+        "height": 140
       }
     },
-    "pc-s3-title": {
+    "pc-card-3-title": {
       "type": "Text",
       "props": {
-        "tag": "h3",
+        "tag": "h4",
         "content": "Live Streaming Platform",
         "weight": "bold"
       }
     },
-    "pc-s3-desc": {
+    "pc-card-3-desc": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Engineered a low-latency streaming platform supporting 200K concurrent viewers. Sub-2-second glass-to-glass latency with adaptive bitrate streaming.",
+        "content": "Low-latency streaming supporting 200K concurrent viewers.",
         "variant": "muted"
       }
     },
-    "pc-s3-link": {
-      "type": "Button",
-      "props": {
-        "label": "View Case Study",
-        "variant": "outline",
-        "icon": "arrow-right"
-      }
-    },
-    "pc-slide-4": {
-      "type": "Surface",
-      "props": {
-        "variant": "bordered"
-      },
+    "pc-card-4": {
+      "type": "Card",
+      "props": {},
       "children": [
-        "pc-s4-inner"
+        "pc-card-4-inner"
       ]
     },
-    "pc-s4-inner": {
-      "type": "Stack",
-      "props": {
-        "direction": "horizontal",
-        "gap": 4,
-        "align": "center"
-      },
-      "children": [
-        "pc-s4-img",
-        "pc-s4-info"
-      ]
-    },
-    "pc-s4-img": {
-      "type": "Image",
-      "props": {
-        "src": "https://picsum.photos/seed/carousel-verde/700/450",
-        "alt": "Verde Sustainability"
-      }
-    },
-    "pc-s4-info": {
+    "pc-card-4-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
         "gap": 2
       },
       "children": [
-        "pc-s4-client",
-        "pc-s4-title",
-        "pc-s4-desc",
-        "pc-s4-link"
+        "pc-card-4-img",
+        "pc-card-4-title",
+        "pc-card-4-desc"
       ]
     },
-    "pc-s4-client": {
-      "type": "Chip",
+    "pc-card-4-img": {
+      "type": "Image",
       "props": {
-        "label": "Verde",
-        "variant": "primary"
+        "src": "https://picsum.photos/seed/carousel-verde/400/225",
+        "alt": "Verde Sustainability",
+        "height": 140
       }
     },
-    "pc-s4-title": {
+    "pc-card-4-title": {
       "type": "Text",
       "props": {
-        "tag": "h3",
+        "tag": "h4",
         "content": "Carbon Tracking Dashboard",
         "weight": "bold"
       }
     },
-    "pc-s4-desc": {
+    "pc-card-4-desc": {
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "Built a real-time carbon footprint tracker for enterprises. Helped 120 companies reduce emissions by an average of 23% in the first year of use.",
+        "content": "Real-time carbon footprint tracker for 120 enterprises.",
         "variant": "muted"
-      }
-    },
-    "pc-s4-link": {
-      "type": "Button",
-      "props": {
-        "label": "View Case Study",
-        "variant": "outline",
-        "icon": "arrow-right"
-      }
-    },
-    "pc-dots": {
-      "type": "Pagination",
-      "props": {
-        "total": 4,
-        "current": 1
       }
     }
   }

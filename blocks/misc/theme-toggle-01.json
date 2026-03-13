@@ -4,15 +4,47 @@
     "theme-toggle-root": {
       "type": "Stack",
       "props": {
-        "direction": "horizontal",
-        "gap": 2,
-        "align": "center"
+        "direction": "vertical",
+        "gap": 4,
+        "align": "center",
+        "container": "narrow"
       },
       "children": [
+        "theme-card"
+      ]
+    },
+    "theme-card": {
+      "type": "Card",
+      "props": {
+        "title": "Appearance",
+        "description": "Choose your preferred color scheme"
+      },
+      "children": [
+        "theme-toggle-inner"
+      ]
+    },
+    "theme-toggle-inner": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center",
+        "justify": "center"
+      },
+      "children": [
+        "theme-sun-icon",
         "theme-sun-label",
         "theme-toggle-switch",
-        "theme-moon-label"
+        "theme-moon-label",
+        "theme-moon-icon"
       ]
+    },
+    "theme-sun-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "sun",
+        "size": "sm"
+      }
     },
     "theme-sun-label": {
       "type": "Text",
@@ -34,6 +66,13 @@
         "tag": "span",
         "content": "Dark",
         "variant": "muted"
+      }
+    },
+    "theme-moon-icon": {
+      "type": "Icon",
+      "props": {
+        "name": "moon",
+        "size": "sm"
       }
     }
   }
