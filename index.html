@@ -1102,7 +1102,7 @@
             <div class="db-slider__label">
               <span>Temperature</span>
               <span style="display:flex;align-items:center;gap:6px;margin-left:auto;">
-                <span class="db-slider__value">0</span>
+                <span class="db-slider__value">Auto</span>
                 <label id="db-temp-toggle" style="position:relative;display:inline-block;width:28px;height:16px;cursor:pointer;flex-shrink:0;">
                   <input type="checkbox" id="db-temp-auto" style="opacity:0;width:0;height:0;">
                   <span style="position:absolute;inset:0;background:var(--db-warm-gray);border-radius:8px;transition:background .2s;"></span>
@@ -3132,14 +3132,14 @@
               if (input) input.value = Math.round(readAutoTemp() * 100);
             }, 300);
           } else {
-            if (valueEl) valueEl.textContent = savedManualValue;
+            if (valueEl) valueEl.textContent = 'Auto';
           }
         }
 
-        // Reflect initial state
+        // Reflect initial state (delay so DAUB's own slider init completes first)
         if (DAUB.getTemperature() === 'auto') {
           autoChk.checked = true;
-          setAutoUI(true);
+          setTimeout(function() { setAutoUI(true); }, 50);
         }
 
         // Manual slider drag exits auto mode — keep drag position, don't restore saved
@@ -3152,7 +3152,7 @@
             input.disabled = false;
             input.style.opacity = '1';
             input.style.pointerEvents = '';
-            if (valueEl) valueEl.textContent = val;
+            if (valueEl) valueEl.textContent = 'Auto';
             setTimeout(updateCode, 60);
           });
         }
