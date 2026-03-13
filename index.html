@@ -86,6 +86,10 @@
     /* Prevent horizontal overflow on mobile */
     html, body { overflow-x: hidden; }
 
+    /* Temperature auto toggle switch */
+    #db-temp-auto:checked ~ span:first-of-type { background: var(--db-terracotta); }
+    #db-temp-auto:checked ~ span:last-of-type { transform: translateX(12px); }
+
     /* Demo-only styles */
     .demo-section {
       margin-bottom: 80px;
@@ -1097,13 +1101,14 @@
           <div class="db-slider" data-db-temperature>
             <div class="db-slider__label">
               <span>Temperature</span>
-              <span class="db-slider__value">0</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
-              <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:0.6875rem;color:var(--db-warm-gray);font-family:system-ui,sans-serif;">
-                <input type="checkbox" id="db-temp-auto" style="width:11px;height:11px;accent-color:var(--db-terracotta);cursor:pointer;">
-                <span>Auto</span>
-              </label>
+              <span style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+                <span class="db-slider__value">0</span>
+                <label id="db-temp-toggle" style="position:relative;display:inline-block;width:28px;height:16px;cursor:pointer;flex-shrink:0;">
+                  <input type="checkbox" id="db-temp-auto" style="opacity:0;width:0;height:0;">
+                  <span style="position:absolute;inset:0;background:var(--db-warm-gray);border-radius:8px;transition:background .2s;"></span>
+                  <span style="position:absolute;top:2px;left:2px;width:12px;height:12px;background:#fff;border-radius:50%;transition:transform .2s;"></span>
+                </label>
+              </span>
             </div>
             <input class="db-slider__input" type="range" min="-100" max="100" value="0">
           </div>
