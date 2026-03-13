@@ -1100,9 +1100,9 @@
               <span class="db-slider__value">0</span>
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
-              <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:0.6875rem;color:var(--db-warm-gray);">
+              <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:0.6875rem;color:var(--db-warm-gray);font-family:system-ui,sans-serif;">
                 <input type="checkbox" id="db-temp-auto" style="width:11px;height:11px;accent-color:var(--db-terracotta);cursor:pointer;">
-                <span>Auto-adjust by time of day</span>
+                <span>Auto</span>
               </label>
             </div>
             <input class="db-slider__input" type="range" min="-100" max="100" value="0">
@@ -3109,6 +3109,7 @@
         if (!autoChk || !slider) return;
         var input = slider.querySelector('.db-slider__input');
         var valueEl = slider.querySelector('.db-slider__value');
+        var savedManualValue = input ? parseInt(input.value) : 0;
 
         function getTimeOfDayLabel() {
           var h = new Date().getHours();
@@ -3118,23 +3119,41 @@
           return 'Night light';
         }
 
+        function readAutoTemp() {
+          return parseFloat(document.documentElement.style.getPropertyValue('--db-temperature')) || 0;
+        }
+
         function setAutoUI(on) {
-          if (input) { input.disabled = on; input.style.opacity = on ? '0.35' : '1'; input.style.pointerEvents = on ? 'none' : ''; }
-          if (valueEl) { valueEl.textContent = on ? getTimeOfDayLabel() : Math.round((parseFloat(document.documentElement.style.getPropertyValue('--db-temperature')) || 0) * 100); }
+          if (input) {
+            input.disabled = on;
+            input.style.opacity = on ? '0.35' : '1';
+            input.style.pointerEvents = on ? 'none' : '';
+          }
+          if (on) {
+            if (valueEl) valueEl.textContent = getTimeOfDayLabel();
+            setTimeout(function() {
+              if (input) input.value = Math.round(readAutoTemp() * 100);
+            }, 300);
+          } else {
+            if (valueEl) valueEl.textContent = savedManualValue;
+          }
         }
 
         // Reflect initial state
-        if (DAUB.getTemperature() === 'auto') { autoChk.checked = true; setAutoUI(true); }
+        if (DAUB.getTemperature() === 'auto') {
+          autoChk.checked = true;
+          setAutoUI(true);
+        }
 
         autoChk.addEventListener('change', function() {
           if (autoChk.checked) {
+            savedManualValue = input ? parseInt(input.value) : 0;
             DAUB.setTemperature('auto');
             setAutoUI(true);
           } else {
-            var current = parseFloat(document.documentElement.style.getPropertyValue('--db-temperature')) || 0;
-            DAUB.setTemperature(current);
+            DAUB.setTemperature(savedManualValue / 100);
+            if (input) input.value = savedManualValue;
             setAutoUI(false);
-            if (input) input.value = Math.round(current * 100);
           }
           setTimeout(updateCode, 60);
         });
