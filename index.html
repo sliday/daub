@@ -303,7 +303,7 @@
 
     /* Quick Install */
     .db-quick-install {
-      max-width: 680px;
+      max-width: 900px;
       margin: 0 auto 56px;
       padding: 0 24px;
     }
@@ -1097,13 +1097,13 @@
           <div class="db-slider" data-db-temperature>
             <div class="db-slider__label">
               <span>Temperature</span>
-              <span style="display:inline-flex;align-items:center;gap:6px;">
-                <label id="db-temp-auto-wrap" style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:0.6875rem;color:var(--db-warm-gray);">
-                  <input type="checkbox" id="db-temp-auto" style="width:12px;height:12px;accent-color:var(--db-terracotta);cursor:pointer;">
-                  <span>Auto</span>
-                </label>
-                <span class="db-slider__value">0</span>
-              </span>
+              <span class="db-slider__value">0</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+              <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:0.6875rem;color:var(--db-warm-gray);">
+                <input type="checkbox" id="db-temp-auto" style="width:11px;height:11px;accent-color:var(--db-terracotta);cursor:pointer;">
+                <span>Auto-adjust by time of day</span>
+              </label>
             </div>
             <input class="db-slider__input" type="range" min="-100" max="100" value="0">
           </div>
