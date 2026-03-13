@@ -124,6 +124,166 @@
   --db-element-texture: none;
   --db-element-texture-opacity: 0;
   --db-element-texture-blend: overlay;
+
+  /* ---- EXPANDED TOKENS (Phase 1) ---- */
+
+  /* Additional semantic colors */
+  --db-color-surface-raised: var(--db-white);
+  --db-color-text-inverse: var(--db-white);
+  --db-color-accent-active: var(--db-accent-pressed);
+  --db-color-accent-subtle: rgba(var(--db-accent-rgb), 0.1);
+  --db-color-border-strong: var(--db-charcoal);
+  --db-color-border-subtle: rgba(var(--db-sand-rgb), 0.5);
+  --db-color-error-subtle: rgba(var(--db-error-rgb), 0.1);
+  --db-color-success-subtle: rgba(var(--db-success-rgb), 0.1);
+  --db-color-warning-subtle: rgba(var(--db-warning-rgb), 0.1);
+  --db-surface-rgb: var(--db-white-rgb);
+
+  /* Typography scale */
+  --db-font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
+  --db-text-xs:   0.75rem;
+  --db-text-sm:   0.875rem;
+  --db-text-base: 1rem;
+  --db-text-lg:   1.125rem;
+  --db-text-xl:   1.25rem;
+  --db-text-2xl:  1.5rem;
+  --db-text-3xl:  1.875rem;
+  --db-text-4xl:  2.25rem;
+  --db-leading-tight:  1.25;
+  --db-leading-normal: 1.5;
+  --db-leading-loose:  1.75;
+  --db-weight-normal:  400;
+  --db-weight-medium:  500;
+  --db-weight-semibold: 600;
+  --db-weight-bold:    700;
+
+  /* Radius — pill */
+  --db-radius-5: 24px;
+
+  /* Shadow — ring */
+  --db-shadow-ring: 0 0 0 2px rgba(var(--db-accent-rgb), 0.25);
+
+  /* Interactive states */
+  --db-focus-ring-color: rgba(var(--db-accent-rgb), 0.25);
+  --db-focus-ring-width: 3px;
+  --db-focus-ring-offset: 0px;
+  --db-hover-brightness: 1.05;
+  --db-hover-scale: 1;
+  --db-active-scale: 0.98;
+  --db-disabled-opacity: 0.5;
+  --db-transition-fast: 100ms ease;
+  --db-transition-slow: 400ms ease;
+  --db-transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index scale */
+  --db-z-dropdown: 100;
+  --db-z-sticky:   200;
+  --db-z-overlay:  300;
+  --db-z-modal:    400;
+  --db-z-popover:  500;
+  --db-z-toast:    600;
+  --db-z-tooltip:  700;
+
+  /* Component tokens — Button */
+  --db-btn-height: 2.5rem;
+  --db-btn-px: var(--db-space-4);
+  --db-btn-radius: var(--db-radius-2);
+  --db-btn-font-size: var(--db-text-sm);
+  --db-btn-font-weight: var(--db-weight-semibold);
+  --db-btn-bg: var(--db-color-accent);
+  --db-btn-color: var(--db-color-text-inverse);
+  --db-btn-border: none;
+
+  /* Component tokens — Field / Input */
+  --db-field-height: 2.5rem;
+  --db-field-px: var(--db-space-3);
+  --db-field-radius: var(--db-radius-2);
+  --db-field-font-size: var(--db-text-base);
+  --db-field-bg: var(--db-color-bg);
+  --db-field-color: var(--db-color-text);
+  --db-field-border: 1px solid var(--db-color-border);
+  --db-field-border-focus: 1px solid var(--db-color-accent);
+
+  /* Component tokens — Card */
+  --db-card-padding: var(--db-space-5);
+  --db-card-radius: var(--db-radius-3);
+  --db-card-bg: var(--db-color-surface);
+  --db-card-border: 1px solid var(--db-color-border-subtle);
+  --db-card-shadow: var(--db-shadow-1);
+  --db-card-shadow-hover: var(--db-shadow-2);
+
+  /* Component tokens — Navbar */
+  --db-navbar-height: 3.5rem;
+  --db-navbar-bg: var(--db-color-surface);
+  --db-navbar-border: 1px solid var(--db-color-border-subtle);
+  --db-navbar-shadow: var(--db-shadow-1);
+
+  /* Component tokens — Badge */
+  --db-badge-px: var(--db-space-2);
+  --db-badge-py: var(--db-space-1);
+  --db-badge-radius: var(--db-radius-full);
+  --db-badge-font-size: var(--db-text-xs);
+  --db-badge-font-weight: var(--db-weight-medium);
+
+  /* Component tokens — Modal */
+  --db-modal-radius: var(--db-radius-4);
+  --db-modal-padding: var(--db-space-6);
+  --db-modal-bg: var(--db-color-surface);
+  --db-modal-shadow: var(--db-shadow-3);
+  --db-modal-max-width: 32rem;
+  --db-modal-backdrop: rgba(var(--db-surface-rgb), 0.8);
+
+  /* Component tokens — Toast */
+  --db-toast-radius: var(--db-radius-3);
+  --db-toast-padding: var(--db-space-3) var(--db-space-4);
+  --db-toast-shadow: var(--db-shadow-2);
+
+  /* Component tokens — Tabs */
+  --db-tabs-border: 2px solid transparent;
+  --db-tabs-border-active: 2px solid var(--db-color-accent);
+  --db-tabs-font-size: var(--db-text-sm);
+
+  /* Component tokens — Table */
+  --db-table-cell-px: var(--db-space-3);
+  --db-table-cell-py: var(--db-space-2);
+  --db-table-header-bg: var(--db-color-bg-alt);
+  --db-table-border: 1px solid var(--db-color-border-subtle);
+  --db-table-stripe-bg: var(--db-color-bg-alt);
+
+  /* Component tokens — Sidebar */
+  --db-sidebar-width: 16rem;
+  --db-sidebar-bg: var(--db-color-surface);
+  --db-sidebar-border: 1px solid var(--db-color-border-subtle);
+
+  /* Component tokens — Dropdown */
+  --db-dropdown-radius: var(--db-radius-3);
+  --db-dropdown-shadow: var(--db-shadow-2);
+  --db-dropdown-bg: var(--db-color-surface-raised);
+  --db-dropdown-item-px: var(--db-space-3);
+  --db-dropdown-item-py: var(--db-space-2);
+
+  /* Component tokens — Switch */
+  --db-switch-width: 2.75rem;
+  --db-switch-height: 1.5rem;
+  --db-switch-radius: var(--db-radius-full);
+  --db-switch-bg: var(--db-color-border);
+  --db-switch-bg-on: var(--db-color-accent);
+
+  /* Component tokens — Progress */
+  --db-progress-height: 0.5rem;
+  --db-progress-radius: var(--db-radius-full);
+  --db-progress-bg: var(--db-color-bg-alt);
+  --db-progress-fill: var(--db-color-accent);
+
+  /* Component tokens — Alert */
+  --db-alert-radius: var(--db-radius-2);
+  --db-alert-padding: var(--db-space-3) var(--db-space-4);
+  --db-alert-border: 3px solid currentColor;
+
+  /* Component tokens — Separator */
+  --db-separator-color: var(--db-color-border-subtle);
+  --db-separator-width: 1px;
+  --db-separator-spacing: var(--db-space-4);
 }
 
 /* Temperature overlay — uses backdrop-filter on html::after instead of filter on body
