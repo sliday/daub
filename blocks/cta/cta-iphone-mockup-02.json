@@ -1,0 +1,90 @@
+{
+  "root": "cta-iphone-mockup-02",
+  "elements": {
+    "cta-iphone-mockup-02": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 10,
+        "align": "center",
+        "padding": [24, 0]
+      },
+      "children": [
+        "top-content",
+        "phone-mockup"
+      ]
+    },
+    "top-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "text-block",
+        "button-group"
+      ]
+    },
+    "text-block": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "align": "center"
+      },
+      "children": [
+        "heading",
+        "description"
+      ]
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Beautiful analytics to grow smarter",
+        "align": "center"
+      }
+    },
+    "description": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Powerful, self-serve product and growth analytics.",
+        "variant": "secondary",
+        "align": "center"
+      }
+    },
+    "button-group": {
+      "type": "ButtonGroup",
+      "children": [
+        "btn-outline",
+        "btn-primary"
+      ]
+    },
+    "btn-outline": {
+      "type": "Button",
+      "props": {
+        "label": "Learn more",
+        "variant": "outline",
+        "size": "lg"
+      }
+    },
+    "btn-primary": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg"
+      }
+    },
+    "phone-mockup": {
+      "type": "Image",
+      "props": {
+        "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' fill='none'%3E%3Crect width='600' height='400' rx='8' fill='%23F9FAFB'/%3E%3Crect x='220' y='10' width='160' height='380' rx='24' fill='%23101828'/%3E%3Crect x='225' y='15' width='150' height='370' rx='21' fill='%23fff'/%3E%3Crect x='265' y='22' width='70' height='18' rx='9' fill='%23101828'/%3E%3Ctext x='300' y='56' text-anchor='middle' font-family='system-ui' font-size='8' fill='%23667085'%3E9:41%3C/text%3E%3Crect x='240' y='66' width='120' height='24' rx='6' fill='%23F2F4F7'/%3E%3Ctext x='300' y='82' text-anchor='middle' font-family='system-ui' font-size='9' fill='%23667085'%3EDaub Dashboard%3C/text%3E%3Crect x='240' y='100' width='56' height='44' rx='8' fill='%237F56D9'/%3E%3Ctext x='268' y='121' text-anchor='middle' font-family='system-ui' font-size='8' font-weight='bold' fill='%23fff'%3E2.4k%3C/text%3E%3Ctext x='268' y='133' text-anchor='middle' font-family='system-ui' font-size='6' fill='%23E9D7FE'%3EVisitors%3C/text%3E%3Crect x='304' y='100' width='56' height='44' rx='8' fill='%23F9F5FF'/%3E%3Ctext x='332' y='121' text-anchor='middle' font-family='system-ui' font-size='8' font-weight='bold' fill='%237F56D9'%3E84%25%3C/text%3E%3Ctext x='332' y='133' text-anchor='middle' font-family='system-ui' font-size='6' fill='%237F56D9'%3EConvert%3C/text%3E%3Crect x='240' y='154' width='120' height='70' rx='8' fill='%23F9FAFB'/%3E%3Cline x1='240' y1='210' x2='360' y2='210' stroke='%23E4E7EC' stroke-width='0.5'/%3E%3Cpath d='M248 204 Q268 190 288 186 T328 174 T354 168' stroke='%237F56D9' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='288' cy='186' r='2.5' fill='%237F56D9'/%3E%3Crect x='240' y='234' width='120' height='28' rx='6' fill='%23F9FAFB'/%3E%3Ccircle cx='254' cy='248' r='8' fill='%23E4E7EC'/%3E%3Crect x='268' y='244' width='50' height='4' rx='2' fill='%23E4E7EC'/%3E%3Crect x='268' y='250' width='30' height='3' rx='1.5' fill='%23F2F4F7'/%3E%3Crect x='240' y='268' width='120' height='28' rx='6' fill='%23F9FAFB'/%3E%3Ccircle cx='254' cy='282' r='8' fill='%23E4E7EC'/%3E%3Crect x='268' y='278' width='50' height='4' rx='2' fill='%23E4E7EC'/%3E%3Crect x='268' y='284' width='30' height='3' rx='1.5' fill='%23F2F4F7'/%3E%3Crect x='240' y='302' width='120' height='28' rx='6' fill='%23F9FAFB'/%3E%3Ccircle cx='254' cy='316' r='8' fill='%23E4E7EC'/%3E%3Crect x='268' y='312' width='50' height='4' rx='2' fill='%23E4E7EC'/%3E%3Crect x='268' y='318' width='30' height='3' rx='1.5' fill='%23F2F4F7'/%3E%3Crect x='270' y='358' width='60' height='3' rx='1.5' fill='%23101828'/%3E%3C/svg%3E",
+        "alt": "Mobile app mockup"
+      }
+    }
+  }
+}

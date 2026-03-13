@@ -2,69 +2,54 @@
   "root": "command-palette-section",
   "elements": {
     "command-palette-section": {
-      "type": "CommandPalette",
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": ["palette-card"]
+    },
+    "palette-card": {
+      "type": "Card",
+      "children": ["palette-inner"]
+    },
+    "palette-inner": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": ["palette-search", "palette-divider", "palette-results"]
+    },
+    "palette-search": {
+      "type": "Input",
       "props": {
         "placeholder": "Type a command or search...",
+        "type": "search"
+      }
+    },
+    "palette-divider": {
+      "type": "Separator",
+      "props": { "orientation": "horizontal" }
+    },
+    "palette-results": {
+      "type": "List",
+      "props": {
         "items": [
-          {
-            "label": "New Project",
-            "icon": "plus",
-            "shortcut": "Ctrl+N"
-          },
-          {
-            "label": "Open File",
-            "icon": "file",
-            "shortcut": "Ctrl+O"
-          },
-          {
-            "label": "Search Documentation",
-            "icon": "search",
-            "shortcut": "Ctrl+K"
-          },
-          {
-            "label": "Toggle Dark Mode",
-            "icon": "moon",
-            "shortcut": "Ctrl+Shift+D"
-          },
-          {
-            "label": "Invite Team Member",
-            "icon": "user-plus",
-            "shortcut": "Ctrl+I"
-          },
-          {
-            "label": "Go to Dashboard",
-            "icon": "layout-dashboard",
-            "shortcut": "G D"
-          },
-          {
-            "label": "Go to Settings",
-            "icon": "settings",
-            "shortcut": "G S"
-          },
-          {
-            "label": "Go to Projects",
-            "icon": "folder",
-            "shortcut": "G P"
-          },
-          {
-            "label": "Export Data",
-            "icon": "download",
-            "shortcut": "Ctrl+E"
-          },
-          {
-            "label": "View Notifications",
-            "icon": "bell",
-            "shortcut": "Ctrl+Shift+N"
-          },
-          {
-            "label": "Open Terminal",
-            "icon": "terminal",
-            "shortcut": "Ctrl+`"
-          },
-          {
-            "label": "Sign Out",
-            "icon": "log-out"
-          }
+          { "primary": "New Project", "icon": "plus", "meta": "Ctrl+N" },
+          { "primary": "Open File", "icon": "file", "meta": "Ctrl+O" },
+          { "primary": "Search Documentation", "icon": "search", "meta": "Ctrl+K" },
+          { "primary": "Toggle Dark Mode", "icon": "moon", "meta": "Ctrl+Shift+D" },
+          { "primary": "Invite Team Member", "icon": "user-plus", "meta": "Ctrl+I" },
+          { "primary": "Go to Dashboard", "icon": "layout-dashboard", "meta": "G D" },
+          { "primary": "Go to Settings", "icon": "settings", "meta": "G S" },
+          { "primary": "Go to Projects", "icon": "folder", "meta": "G P" },
+          { "primary": "Export Data", "icon": "download", "meta": "Ctrl+E" },
+          { "primary": "View Notifications", "icon": "bell", "meta": "Ctrl+Shift+N" },
+          { "primary": "Open Terminal", "icon": "terminal", "meta": "Ctrl+`" },
+          { "primary": "Sign Out", "icon": "log-out" }
         ]
       }
     }

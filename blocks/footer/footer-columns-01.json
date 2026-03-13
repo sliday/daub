@@ -241,7 +241,7 @@
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "2026 Acme Studio, Inc. All rights reserved.",
+        "content": "© 2026 Acme Studio, Inc. All rights reserved.",
         "variant": "muted"
       }
     },

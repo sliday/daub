@@ -6,12 +6,13 @@
       "props": {
         "direction": "vertical",
         "gap": 4,
-        "container": true
+        "container": true,
+        "align": "center"
       },
       "children": [
         "tc-header",
         "tc-sub",
-        "tc-slider",
+        "tc-grid",
         "tc-nav"
       ]
     },
@@ -33,23 +34,25 @@
         "align": "center"
       }
     },
-    "tc-slider": {
-      "type": "Carousel",
+    "tc-grid": {
+      "type": "Grid",
+      "props": {
+        "columns": 3,
+        "gap": 3
+      },
       "children": [
-        "tc-slide-1",
-        "tc-slide-2",
-        "tc-slide-3",
-        "tc-slide-4",
-        "tc-slide-5"
+        "tc-card-1",
+        "tc-card-2",
+        "tc-card-3"
       ]
     },
-    "tc-slide-1": {
+    "tc-card-1": {
       "type": "Card",
       "children": [
-        "tc-s1-inner"
+        "tc-c1-inner"
       ]
     },
-    "tc-s1-inner": {
+    "tc-c1-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
@@ -57,13 +60,13 @@
         "align": "center"
       },
       "children": [
-        "tc-s1-img",
-        "tc-s1-name",
-        "tc-s1-role",
-        "tc-s1-bio"
+        "tc-c1-img",
+        "tc-c1-name",
+        "tc-c1-role",
+        "tc-c1-bio"
       ]
     },
-    "tc-s1-img": {
+    "tc-c1-img": {
       "type": "Avatar",
       "props": {
         "src": "https://picsum.photos/seed/mia-torres/200/200",
@@ -71,7 +74,7 @@
         "size": "xl"
       }
     },
-    "tc-s1-name": {
+    "tc-c1-name": {
       "type": "Text",
       "props": {
         "tag": "h3",
@@ -79,14 +82,14 @@
         "weight": "bold"
       }
     },
-    "tc-s1-role": {
+    "tc-c1-role": {
       "type": "Chip",
       "props": {
         "label": "Frontend Lead",
         "variant": "secondary"
       }
     },
-    "tc-s1-bio": {
+    "tc-c1-bio": {
       "type": "Text",
       "props": {
         "tag": "p",
@@ -95,13 +98,13 @@
         "align": "center"
       }
     },
-    "tc-slide-2": {
+    "tc-card-2": {
       "type": "Card",
       "children": [
-        "tc-s2-inner"
+        "tc-c2-inner"
       ]
     },
-    "tc-s2-inner": {
+    "tc-c2-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
@@ -109,13 +112,13 @@
         "align": "center"
       },
       "children": [
-        "tc-s2-img",
-        "tc-s2-name",
-        "tc-s2-role",
-        "tc-s2-bio"
+        "tc-c2-img",
+        "tc-c2-name",
+        "tc-c2-role",
+        "tc-c2-bio"
       ]
     },
-    "tc-s2-img": {
+    "tc-c2-img": {
       "type": "Avatar",
       "props": {
         "src": "https://picsum.photos/seed/alex-novak/200/200",
@@ -123,7 +126,7 @@
         "size": "xl"
       }
     },
-    "tc-s2-name": {
+    "tc-c2-name": {
       "type": "Text",
       "props": {
         "tag": "h3",
@@ -131,14 +134,14 @@
         "weight": "bold"
       }
     },
-    "tc-s2-role": {
+    "tc-c2-role": {
       "type": "Chip",
       "props": {
         "label": "Backend Lead",
         "variant": "secondary"
       }
     },
-    "tc-s2-bio": {
+    "tc-c2-bio": {
       "type": "Text",
       "props": {
         "tag": "p",
@@ -147,13 +150,13 @@
         "align": "center"
       }
     },
-    "tc-slide-3": {
+    "tc-card-3": {
       "type": "Card",
       "children": [
-        "tc-s3-inner"
+        "tc-c3-inner"
       ]
     },
-    "tc-s3-inner": {
+    "tc-c3-inner": {
       "type": "Stack",
       "props": {
         "direction": "vertical",
@@ -161,13 +164,13 @@
         "align": "center"
       },
       "children": [
-        "tc-s3-img",
-        "tc-s3-name",
-        "tc-s3-role",
-        "tc-s3-bio"
+        "tc-c3-img",
+        "tc-c3-name",
+        "tc-c3-role",
+        "tc-c3-bio"
       ]
     },
-    "tc-s3-img": {
+    "tc-c3-img": {
       "type": "Avatar",
       "props": {
         "src": "https://picsum.photos/seed/zara-williams/200/200",
@@ -175,7 +178,7 @@
         "size": "xl"
       }
     },
-    "tc-s3-name": {
+    "tc-c3-name": {
       "type": "Text",
       "props": {
         "tag": "h3",
@@ -183,122 +186,18 @@
         "weight": "bold"
       }
     },
-    "tc-s3-role": {
+    "tc-c3-role": {
       "type": "Chip",
       "props": {
         "label": "Design Director",
         "variant": "secondary"
       }
     },
-    "tc-s3-bio": {
+    "tc-c3-bio": {
       "type": "Text",
       "props": {
         "tag": "p",
         "content": "Award-winning designer. Led brand and product design at Spotify for 6 years.",
-        "variant": "muted",
-        "align": "center"
-      }
-    },
-    "tc-slide-4": {
-      "type": "Card",
-      "children": [
-        "tc-s4-inner"
-      ]
-    },
-    "tc-s4-inner": {
-      "type": "Stack",
-      "props": {
-        "direction": "vertical",
-        "gap": 2,
-        "align": "center"
-      },
-      "children": [
-        "tc-s4-img",
-        "tc-s4-name",
-        "tc-s4-role",
-        "tc-s4-bio"
-      ]
-    },
-    "tc-s4-img": {
-      "type": "Avatar",
-      "props": {
-        "src": "https://picsum.photos/seed/ben-okafor/200/200",
-        "initials": "BO",
-        "size": "xl"
-      }
-    },
-    "tc-s4-name": {
-      "type": "Text",
-      "props": {
-        "tag": "h3",
-        "content": "Ben Okafor",
-        "weight": "bold"
-      }
-    },
-    "tc-s4-role": {
-      "type": "Chip",
-      "props": {
-        "label": "DevOps Lead",
-        "variant": "secondary"
-      }
-    },
-    "tc-s4-bio": {
-      "type": "Text",
-      "props": {
-        "tag": "p",
-        "content": "Kubernetes and cloud infrastructure specialist. Maintains 99.99% uptime SLA.",
-        "variant": "muted",
-        "align": "center"
-      }
-    },
-    "tc-slide-5": {
-      "type": "Card",
-      "children": [
-        "tc-s5-inner"
-      ]
-    },
-    "tc-s5-inner": {
-      "type": "Stack",
-      "props": {
-        "direction": "vertical",
-        "gap": 2,
-        "align": "center"
-      },
-      "children": [
-        "tc-s5-img",
-        "tc-s5-name",
-        "tc-s5-role",
-        "tc-s5-bio"
-      ]
-    },
-    "tc-s5-img": {
-      "type": "Avatar",
-      "props": {
-        "src": "https://picsum.photos/seed/nina-sato/200/200",
-        "initials": "NS",
-        "size": "xl"
-      }
-    },
-    "tc-s5-name": {
-      "type": "Text",
-      "props": {
-        "tag": "h3",
-        "content": "Nina Sato",
-        "weight": "bold"
-      }
-    },
-    "tc-s5-role": {
-      "type": "Chip",
-      "props": {
-        "label": "Data Science Lead",
-        "variant": "secondary"
-      }
-    },
-    "tc-s5-bio": {
-      "type": "Text",
-      "props": {
-        "tag": "p",
-        "content": "ML and analytics expert. Built recommendation engines serving 50M+ users at Netflix.",
         "variant": "muted",
         "align": "center"
       }

@@ -1,0 +1,90 @@
+{
+  "root": "cta-screen-mockup-02",
+  "elements": {
+    "cta-screen-mockup-02": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 10,
+        "align": "center",
+        "padding": [24, 0]
+      },
+      "children": [
+        "top-content",
+        "screen-mockup"
+      ]
+    },
+    "top-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "text-block",
+        "button-group"
+      ]
+    },
+    "text-block": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "align": "center"
+      },
+      "children": [
+        "heading",
+        "description"
+      ]
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Beautiful analytics to grow smarter",
+        "align": "center"
+      }
+    },
+    "description": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Powerful, self-serve product and growth analytics.",
+        "variant": "secondary",
+        "align": "center"
+      }
+    },
+    "button-group": {
+      "type": "ButtonGroup",
+      "children": [
+        "btn-outline",
+        "btn-primary"
+      ]
+    },
+    "btn-outline": {
+      "type": "Button",
+      "props": {
+        "label": "Learn more",
+        "variant": "outline",
+        "size": "lg"
+      }
+    },
+    "btn-primary": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg"
+      }
+    },
+    "screen-mockup": {
+      "type": "Image",
+      "props": {
+        "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1024' height='640' fill='none'%3E%3Crect x='4' y='4' width='1016' height='604' rx='12' fill='%23101828'/%3E%3Crect x='14' y='36' width='996' height='564' rx='4' fill='%23fff'/%3E%3Ccircle cx='30' cy='20' r='5' fill='%23F04438'/%3E%3Ccircle cx='46' cy='20' r='5' fill='%23F79009'/%3E%3Ccircle cx='62' cy='20' r='5' fill='%2312B76A'/%3E%3Crect x='14' y='36' width='200' height='564' fill='%23F9FAFB'/%3E%3Cline x1='214' y1='36' x2='214' y2='600' stroke='%23E4E7EC' stroke-width='1'/%3E%3Crect x='30' y='52' width='168' height='28' rx='6' fill='%23F2F4F7'/%3E%3Ctext x='114' y='70' text-anchor='middle' font-family='system-ui' font-size='12' fill='%23667085'%3EDaub Analytics%3C/text%3E%3Crect x='30' y='96' width='168' height='28' rx='6' fill='%237F56D9'/%3E%3Ctext x='114' y='114' text-anchor='middle' font-family='system-ui' font-size='11' fill='%23fff'%3EDashboard%3C/text%3E%3Crect x='30' y='132' width='168' height='28' rx='6' fill='%23F9FAFB'/%3E%3Ctext x='114' y='150' text-anchor='middle' font-family='system-ui' font-size='11' fill='%23667085'%3EAnalytics%3C/text%3E%3Crect x='30' y='168' width='168' height='28' rx='6' fill='%23F9FAFB'/%3E%3Ctext x='114' y='186' text-anchor='middle' font-family='system-ui' font-size='11' fill='%23667085'%3EReports%3C/text%3E%3Crect x='30' y='204' width='168' height='28' rx='6' fill='%23F9FAFB'/%3E%3Ctext x='114' y='222' text-anchor='middle' font-family='system-ui' font-size='11' fill='%23667085'%3EAudiences%3C/text%3E%3Crect x='30' y='240' width='168' height='28' rx='6' fill='%23F9FAFB'/%3E%3Ctext x='114' y='258' text-anchor='middle' font-family='system-ui' font-size='11' fill='%23667085'%3ESettings%3C/text%3E%3Ctext x='240' y='68' font-family='system-ui' font-size='16' font-weight='bold' fill='%23101828'%3EDashboard%3C/text%3E%3Crect x='240' y='86' width='180' height='80' rx='12' fill='%237F56D9'/%3E%3Ctext x='330' y='122' text-anchor='middle' font-family='system-ui' font-size='20' font-weight='bold' fill='%23fff'%3E24,890%3C/text%3E%3Ctext x='330' y='145' text-anchor='middle' font-family='system-ui' font-size='11' fill='%23E9D7FE'%3ETotal Visitors%3C/text%3E%3Crect x='434' y='86' width='180' height='80' rx='12' fill='%23F9F5FF'/%3E%3Ctext x='524' y='122' text-anchor='middle' font-family='system-ui' font-size='20' font-weight='bold' fill='%237F56D9'%3E87%25%3C/text%3E%3Ctext x='524' y='145' text-anchor='middle' font-family='system-ui' font-size='11' fill='%237F56D9'%3EConversion Rate%3C/text%3E%3Crect x='628' y='86' width='180' height='80' rx='12' fill='%23F9F5FF'/%3E%3Ctext x='718' y='122' text-anchor='middle' font-family='system-ui' font-size='20' font-weight='bold' fill='%237F56D9'%3E$96.4k%3C/text%3E%3Ctext x='718' y='145' text-anchor='middle' font-family='system-ui' font-size='11' fill='%237F56D9'%3ERevenue%3C/text%3E%3Crect x='822' y='86' width='180' height='80' rx='12' fill='%23F9F5FF'/%3E%3Ctext x='912' y='122' text-anchor='middle' font-family='system-ui' font-size='20' font-weight='bold' fill='%237F56D9'%3E5.2k%3C/text%3E%3Ctext x='912' y='145' text-anchor='middle' font-family='system-ui' font-size='11' fill='%237F56D9'%3ENew Signups%3C/text%3E%3Crect x='240' y='182' width='762' height='240' rx='12' fill='%23F9FAFB'/%3E%3Ctext x='260' y='206' font-family='system-ui' font-size='12' font-weight='bold' fill='%23101828'%3ETraffic Overview%3C/text%3E%3Cline x1='240' y1='400' x2='1002' y2='400' stroke='%23E4E7EC' stroke-width='1'/%3E%3Cline x1='390' y1='220' x2='390' y2='400' stroke='%23E4E7EC' stroke-dasharray='4'/%3E%3Cline x1='540' y1='220' x2='540' y2='400' stroke='%23E4E7EC' stroke-dasharray='4'/%3E%3Cline x1='690' y1='220' x2='690' y2='400' stroke='%23E4E7EC' stroke-dasharray='4'/%3E%3Cline x1='840' y1='220' x2='840' y2='400' stroke='%23E4E7EC' stroke-dasharray='4'/%3E%3Cpath d='M260 390 Q340 360 420 340 T580 290 T740 250 T900 220 T990 210' stroke='%237F56D9' stroke-width='2.5' fill='none'/%3E%3Cpath d='M260 390 Q340 360 420 340 T580 290 T740 250 T900 220 T990 210 V400 H260 Z' fill='%237F56D9' opacity='0.05'/%3E%3Ccircle cx='580' cy='290' r='5' fill='%237F56D9'/%3E%3Ccircle cx='740' cy='250' r='5' fill='%237F56D9'/%3E%3Ccircle cx='900' cy='220' r='5' fill='%237F56D9'/%3E%3Crect x='240' y='438' width='370' height='150' rx='12' fill='%23F9FAFB'/%3E%3Ctext x='260' y='462' font-family='system-ui' font-size='12' font-weight='bold' fill='%23101828'%3ERecent Activity%3C/text%3E%3Crect x='256' y='474' width='338' height='30' rx='6' fill='%23fff'/%3E%3Ccircle cx='274' cy='489' r='9' fill='%23E4E7EC'/%3E%3Crect x='292' y='484' width='100' height='5' rx='2.5' fill='%23E4E7EC'/%3E%3Crect x='292' y='492' width='60' height='4' rx='2' fill='%23F2F4F7'/%3E%3Crect x='256' y='510' width='338' height='30' rx='6' fill='%23fff'/%3E%3Ccircle cx='274' cy='525' r='9' fill='%23E4E7EC'/%3E%3Crect x='292' y='520' width='100' height='5' rx='2.5' fill='%23E4E7EC'/%3E%3Crect x='292' y='528' width='60' height='4' rx='2' fill='%23F2F4F7'/%3E%3Crect x='256' y='546' width='338' height='30' rx='6' fill='%23fff'/%3E%3Ccircle cx='274' cy='561' r='9' fill='%23E4E7EC'/%3E%3Crect x='292' y='556' width='100' height='5' rx='2.5' fill='%23E4E7EC'/%3E%3Crect x='292' y='564' width='60' height='4' rx='2' fill='%23F2F4F7'/%3E%3Crect x='624' y='438' width='378' height='150' rx='12' fill='%23F9FAFB'/%3E%3Ctext x='644' y='462' font-family='system-ui' font-size='12' font-weight='bold' fill='%23101828'%3ETop Pages%3C/text%3E%3Crect x='640' y='474' width='346' height='30' rx='6' fill='%23fff'/%3E%3Crect x='652' y='484' width='120' height='5' rx='2.5' fill='%23E4E7EC'/%3E%3Crect x='652' y='492' width='70' height='4' rx='2' fill='%23F2F4F7'/%3E%3Crect x='640' y='510' width='346' height='30' rx='6' fill='%23fff'/%3E%3Crect x='652' y='520' width='120' height='5' rx='2.5' fill='%23E4E7EC'/%3E%3Crect x='652' y='528' width='70' height='4' rx='2' fill='%23F2F4F7'/%3E%3Crect x='640' y='546' width='346' height='30' rx='6' fill='%23fff'/%3E%3Crect x='652' y='556' width='120' height='5' rx='2.5' fill='%23E4E7EC'/%3E%3Crect x='652' y='564' width='70' height='4' rx='2' fill='%23F2F4F7'/%3E%3Cpath d='M440 612 L512 612 L512 630 Q512 636 506 636 L446 636 Q440 636 440 630 Z' fill='%23E4E7EC'/%3E%3Crect x='412' y='604' width='200' height='10' rx='3' fill='%23E4E7EC'/%3E%3C/svg%3E",
+        "alt": "Dashboard mockup"
+      }
+    }
+  }
+}

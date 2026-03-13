@@ -36,7 +36,7 @@
       "type": "Text",
       "props": {
         "tag": "p",
-        "content": "2026 Acme Studio",
+        "content": "© 2026 Acme Studio",
         "variant": "muted"
       }
     },

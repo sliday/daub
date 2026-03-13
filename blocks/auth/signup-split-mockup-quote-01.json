@@ -261,13 +261,55 @@
       ]
     },
     "mockup-image": {
-      "type": "Image",
+      "type": "Surface",
       "props": {
-        "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22600%22%20height%3D%22400%22%20viewBox%3D%220%200%20600%20400%22%3E%3Crect%20width%3D%22600%22%20height%3D%22400%22%20rx%3D%2212%22%20fill%3D%22%23F2F4F7%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22600%22%20height%3D%2248%22%20rx%3D%2212%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%2236%22%20width%3D%22600%22%20height%3D%2212%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%2248%22%20width%3D%22140%22%20height%3D%22352%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2264%22%20width%3D%22108%22%20height%3D%2210%22%20rx%3D%223%22%20fill%3D%22%23C0C5CE%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2284%22%20width%3D%2290%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%23C0C5CE%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%22100%22%20width%3D%2298%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%23C0C5CE%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%22116%22%20width%3D%2280%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%23C0C5CE%22%2F%3E%3Crect%20x%3D%22164%22%20y%3D%2272%22%20width%3D%22196%22%20height%3D%2290%22%20rx%3D%2210%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%22180%22%20y%3D%2288%22%20width%3D%2260%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%23C0C5CE%22%2F%3E%3Crect%20x%3D%22180%22%20y%3D%22104%22%20width%3D%2290%22%20height%3D%2216%22%20rx%3D%223%22%20fill%3D%22%237F56D9%22%20opacity%3D%220.2%22%2F%3E%3Crect%20x%3D%22180%22%20y%3D%22128%22%20width%3D%2240%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%23C0C5CE%22%2F%3E%3Crect%20x%3D%22384%22%20y%3D%2272%22%20width%3D%22196%22%20height%3D%2290%22%20rx%3D%2210%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%22400%22%20y%3D%2288%22%20width%3D%2260%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%23C0C5CE%22%2F%3E%3Crect%20x%3D%22400%22%20y%3D%22104%22%20width%3D%2290%22%20height%3D%2216%22%20rx%3D%223%22%20fill%3D%22%237F56D9%22%20opacity%3D%220.2%22%2F%3E%3Crect%20x%3D%22400%22%20y%3D%22128%22%20width%3D%2240%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%23C0C5CE%22%2F%3E%3Crect%20x%3D%22164%22%20y%3D%22186%22%20width%3D%22416%22%20height%3D%22190%22%20rx%3D%2210%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%22180%22%20y%3D%22202%22%20width%3D%2280%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%23C0C5CE%22%2F%3E%3Cpath%20d%3D%22M190%20340%20L230%20310%20L270%20320%20L310%20280%20L350%20290%20L390%20250%20L430%20260%20L470%20230%20L510%20240%20L550%20220%22%20fill%3D%22none%22%20stroke%3D%22%237F56D9%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M190%20340%20L230%20310%20L270%20320%20L310%20280%20L350%20290%20L390%20250%20L430%20260%20L470%20230%20L510%20240%20L550%20220%20L550%20350%20L190%20350Z%22%20fill%3D%22%237F56D9%22%20opacity%3D%220.08%22%2F%3E%3C%2Fsvg%3E",
-        "alt": "Dashboard mockup preview",
-        "objectFit": "contain"
-      }
+        "variant": "card",
+        "padding": 5
+      },
+      "children": ["mk-content"]
     },
+    "mk-content": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 5 },
+      "children": ["mk-header", "mk-stats"]
+    },
+    "mk-header": {
+      "type": "Text",
+      "props": { "tag": "h4", "content": "Dashboard Overview", "weight": "semibold" }
+    },
+    "mk-stats": {
+      "type": "Grid",
+      "props": { "columns": 2, "gap": 4 },
+      "children": ["mk-s1", "mk-s2", "mk-s3", "mk-s4"]
+    },
+    "mk-s1": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["mk-s1-v", "mk-s1-l"]
+    },
+    "mk-s1-v": { "type": "Text", "props": { "tag": "h3", "content": "2,420" } },
+    "mk-s1-l": { "type": "Text", "props": { "tag": "span", "content": "Active users", "variant": "secondary" } },
+    "mk-s2": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["mk-s2-v", "mk-s2-l"]
+    },
+    "mk-s2-v": { "type": "Text", "props": { "tag": "h3", "content": "$45.2k" } },
+    "mk-s2-l": { "type": "Text", "props": { "tag": "span", "content": "Revenue", "variant": "secondary" } },
+    "mk-s3": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["mk-s3-v", "mk-s3-l"]
+    },
+    "mk-s3-v": { "type": "Text", "props": { "tag": "h3", "content": "+18%" } },
+    "mk-s3-l": { "type": "Text", "props": { "tag": "span", "content": "Growth", "variant": "secondary" } },
+    "mk-s4": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["mk-s4-v", "mk-s4-l"]
+    },
+    "mk-s4-v": { "type": "Text", "props": { "tag": "h3", "content": "99.9%" } },
+    "mk-s4-l": { "type": "Text", "props": { "tag": "span", "content": "Uptime", "variant": "secondary" } },
     "showcase-quote": {
       "type": "Stack",
       "props": {

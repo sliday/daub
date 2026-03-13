@@ -2,7 +2,7 @@
   "root": "delete-confirm",
   "elements": {
     "delete-confirm": {
-      "type": "AlertDialog",
+      "type": "Card",
       "props": {
         "title": "Delete Project",
         "description": "Are you sure you want to delete \"Q2 Marketing Campaign\"? This action cannot be undone and will permanently remove all associated data, files, and team assignments."

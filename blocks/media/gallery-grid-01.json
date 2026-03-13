@@ -59,99 +59,51 @@
       ]
     },
     "gallery-item-1": {
-      "type": "AspectRatio",
-      "props": {
-        "ratio": "4/3"
-      },
-      "children": [
-        "gallery-img-1"
-      ]
-    },
-    "gallery-img-1": {
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/gallery-office/600/450",
-        "alt": "Modern open-plan office with collaborative workspaces"
+        "alt": "Modern open-plan office with collaborative workspaces",
+        "height": 200
       }
     },
     "gallery-item-2": {
-      "type": "AspectRatio",
-      "props": {
-        "ratio": "4/3"
-      },
-      "children": [
-        "gallery-img-2"
-      ]
-    },
-    "gallery-img-2": {
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/gallery-workshop/600/450",
-        "alt": "Team workshop with sticky notes on a whiteboard"
+        "alt": "Team workshop with sticky notes on a whiteboard",
+        "height": 200
       }
     },
     "gallery-item-3": {
-      "type": "AspectRatio",
-      "props": {
-        "ratio": "4/3"
-      },
-      "children": [
-        "gallery-img-3"
-      ]
-    },
-    "gallery-img-3": {
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/gallery-launch/600/450",
-        "alt": "Product launch event with audience and stage"
+        "alt": "Product launch event with audience and stage",
+        "height": 200
       }
     },
     "gallery-item-4": {
-      "type": "AspectRatio",
-      "props": {
-        "ratio": "4/3"
-      },
-      "children": [
-        "gallery-img-4"
-      ]
-    },
-    "gallery-img-4": {
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/gallery-retreat/600/450",
-        "alt": "Team retreat in nature with group hiking"
+        "alt": "Team retreat in nature with group hiking",
+        "height": 200
       }
     },
     "gallery-item-5": {
-      "type": "AspectRatio",
-      "props": {
-        "ratio": "4/3"
-      },
-      "children": [
-        "gallery-img-5"
-      ]
-    },
-    "gallery-img-5": {
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/gallery-hackathon/600/450",
-        "alt": "Hackathon participants coding late at night"
+        "alt": "Hackathon participants coding late at night",
+        "height": 200
       }
     },
     "gallery-item-6": {
-      "type": "AspectRatio",
-      "props": {
-        "ratio": "4/3"
-      },
-      "children": [
-        "gallery-img-6"
-      ]
-    },
-    "gallery-img-6": {
       "type": "Image",
       "props": {
         "src": "https://picsum.photos/seed/gallery-award/600/450",
-        "alt": "Team celebrating a product design award"
+        "alt": "Team celebrating a product design award",
+        "height": 200
       }
     }
   }

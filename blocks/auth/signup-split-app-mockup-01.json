@@ -241,19 +241,62 @@
       "type": "Surface",
       "props": {
         "variant": "sunken",
-        "padding": 0
+        "padding": 6
       },
       "children": [
-        "app-mockup-image"
+        "app-content"
       ]
     },
-    "app-mockup-image": {
-      "type": "Image",
+    "app-content": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 6, "justify": "center" },
+      "children": ["app-header", "app-stats", "app-features"]
+    },
+    "app-header": {
+      "type": "Text",
+      "props": { "tag": "h3", "content": "Your analytics at a glance", "weight": "semibold" }
+    },
+    "app-stats": {
+      "type": "Grid",
+      "props": { "columns": 2, "gap": 4 },
+      "children": ["as-1", "as-2", "as-3", "as-4"]
+    },
+    "as-1": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["as-1-v", "as-1-l"]
+    },
+    "as-1-v": { "type": "Text", "props": { "tag": "h3", "content": "2,420" } },
+    "as-1-l": { "type": "Text", "props": { "tag": "span", "content": "Active users", "variant": "secondary" } },
+    "as-2": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["as-2-v", "as-2-l"]
+    },
+    "as-2-v": { "type": "Text", "props": { "tag": "h3", "content": "$45.2k" } },
+    "as-2-l": { "type": "Text", "props": { "tag": "span", "content": "Revenue", "variant": "secondary" } },
+    "as-3": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["as-3-v", "as-3-l"]
+    },
+    "as-3-v": { "type": "Text", "props": { "tag": "h3", "content": "+18%" } },
+    "as-3-l": { "type": "Text", "props": { "tag": "span", "content": "Growth", "variant": "secondary" } },
+    "as-4": {
+      "type": "Stack",
+      "props": { "direction": "vertical", "gap": 1 },
+      "children": ["as-4-v", "as-4-l"]
+    },
+    "as-4-v": { "type": "Text", "props": { "tag": "h3", "content": "99.9%" } },
+    "as-4-l": { "type": "Text", "props": { "tag": "span", "content": "Uptime", "variant": "secondary" } },
+    "app-features": {
+      "type": "List",
       "props": {
-        "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22720%22%20height%3D%22960%22%20viewBox%3D%220%200%20720%20960%22%3E%3Crect%20width%3D%22720%22%20height%3D%22960%22%20rx%3D%2212%22%20fill%3D%22%23F9FAFB%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22720%22%20height%3D%2256%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Ccircle%20cx%3D%2236%22%20cy%3D%2228%22%20r%3D%2216%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Ccircle%20cx%3D%22660%22%20cy%3D%2228%22%20r%3D%224%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Ccircle%20cx%3D%22676%22%20cy%3D%2228%22%20r%3D%224%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Ccircle%20cx%3D%22692%22%20cy%3D%2228%22%20r%3D%224%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%2256%22%20width%3D%22180%22%20height%3D%22904%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2280%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%22108%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%22136%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%22164%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%22192%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%22220%22%20width%3D%22140%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22204%22%20y%3D%2280%22%20width%3D%22492%22%20height%3D%22360%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Crect%20x%3D%22260%22%20y%3D%22340%22%20width%3D%2256%22%20height%3D%2276%22%20rx%3D%224%22%20fill%3D%22%237F56D9%22%2F%3E%3Crect%20x%3D%22336%22%20y%3D%22300%22%20width%3D%2256%22%20height%3D%22116%22%20rx%3D%224%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22412%22%20y%3D%22260%22%20width%3D%2256%22%20height%3D%22156%22%20rx%3D%224%22%20fill%3D%22%237F56D9%22%2F%3E%3Crect%20x%3D%22488%22%20y%3D%22200%22%20width%3D%2256%22%20height%3D%22216%22%20rx%3D%224%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22564%22%20y%3D%22160%22%20width%3D%2256%22%20height%3D%22256%22%20rx%3D%224%22%20fill%3D%22%237F56D9%22%2F%3E%3Crect%20x%3D%22204%22%20y%3D%22464%22%20width%3D%22492%22%20height%3D%22460%22%20rx%3D%2212%22%20fill%3D%22%23FFFFFF%22%2F%3E%3Crect%20x%3D%22228%22%20y%3D%22496%22%20width%3D%22444%22%20height%3D%2216%22%20rx%3D%228%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22228%22%20y%3D%22536%22%20width%3D%22444%22%20height%3D%2216%22%20rx%3D%228%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22228%22%20y%3D%22576%22%20width%3D%22444%22%20height%3D%2216%22%20rx%3D%228%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Crect%20x%3D%22228%22%20y%3D%22616%22%20width%3D%22444%22%20height%3D%2216%22%20rx%3D%228%22%20fill%3D%22%23E4E7EC%22%2F%3E%3C%2Fsvg%3E",
-        "alt": "Full app interface mockup",
-        "objectFit": "cover",
-        "fullHeight": true
+        "items": [
+          { "primary": "Real-time analytics dashboard", "icon": "bar-chart-2" },
+          { "primary": "Team collaboration tools", "icon": "users" },
+          { "primary": "Automated reporting", "icon": "file-text" }
+        ]
       }
     }
   }

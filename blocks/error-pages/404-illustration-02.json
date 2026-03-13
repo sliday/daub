@@ -1,0 +1,99 @@
+{
+  "root": "not-found-illustration-02",
+  "elements": {
+    "not-found-illustration-02": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "align": "center",
+        "justify": "center",
+        "gap": 6,
+        "container": true,
+        "padding": [8, 0]
+      },
+      "children": [
+        "text-section",
+        "illustration-section"
+      ]
+    },
+
+    "text-section": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6
+      },
+      "children": [
+        "heading-group",
+        "search-row"
+      ]
+    },
+    "heading-group": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "error-label",
+        "heading",
+        "description"
+      ]
+    },
+    "error-label": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "404 error",
+        "variant": "brand"
+      }
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h1",
+        "content": "Page not found..."
+      }
+    },
+    "description": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Sorry, the page you are looking for doesn't exist or has been moved. Try searching our site.",
+        "variant": "secondary"
+      }
+    },
+    "search-row": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3
+      },
+      "children": [
+        "search-input",
+        "search-btn"
+      ]
+    },
+    "search-input": {
+      "type": "Search",
+      "props": {
+        "placeholder": "Search our site"
+      }
+    },
+    "search-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Search",
+        "variant": "primary"
+      }
+    },
+
+    "illustration-section": {
+      "type": "Image",
+      "props": {
+        "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22367%22%20viewBox%3D%220%200%20480%20367%22%3E%3Cellipse%20cx%3D%22240%22%20cy%3D%22350%22%20rx%3D%22140%22%20ry%3D%2212%22%20fill%3D%22%23F2F4F7%22%2F%3E%3Cpath%20d%3D%22M160%20280%20L240%20320%20L320%20280%20L320%2090%20L240%20130%20L160%2090%20Z%22%20fill%3D%22%23E4E7EC%22%20stroke%3D%22%23D0D5DD%22%20stroke-width%3D%221.5%22%2F%3E%3Cpath%20d%3D%22M240%20130%20L320%2090%20L320%20280%20L240%20320%20Z%22%20fill%3D%22%23D0D5DD%22%20stroke%3D%22%23D0D5DD%22%20stroke-width%3D%221.5%22%2F%3E%3Cpath%20d%3D%22M160%2090%20L240%2050%20L320%2090%20L240%20130%20Z%22%20fill%3D%22%23F2F4F7%22%20stroke%3D%22%23D0D5DD%22%20stroke-width%3D%221.5%22%2F%3E%3Ccircle%20cx%3D%22240%22%20cy%3D%22200%22%20r%3D%2250%22%20fill%3D%22%23F9FAFB%22%20stroke%3D%22%2398A2B3%22%20stroke-width%3D%223%22%2F%3E%3Ccircle%20cx%3D%22240%22%20cy%3D%22200%22%20r%3D%2218%22%20fill%3D%22%23D0D5DD%22%20stroke%3D%22%23667085%22%20stroke-width%3D%222%22%2F%3E%3Ccircle%20cx%3D%22240%22%20cy%3D%22200%22%20r%3D%226%22%20fill%3D%22%2398A2B3%22%2F%3E%3Cline%20x1%3D%22180%22%20y1%3D%2260%22%20x2%3D%22180%22%20y2%3D%2240%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221.5%22%2F%3E%3Cline%20x1%3D%22300%22%20y1%3D%2260%22%20x2%3D%22300%22%20y2%3D%2240%22%20stroke%3D%22%23E4E7EC%22%20stroke-width%3D%221.5%22%2F%3E%3Ccircle%20cx%3D%22180%22%20cy%3D%2235%22%20r%3D%225%22%20fill%3D%22%23E4E7EC%22%2F%3E%3Ccircle%20cx%3D%22300%22%20cy%3D%2235%22%20r%3D%225%22%20fill%3D%22%23E4E7EC%22%2F%3E%3C%2Fsvg%3E",
+        "alt": "3D vault illustration"
+      }
+    }
+  }
+}

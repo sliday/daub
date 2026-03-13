@@ -2,29 +2,59 @@
   "root": "navbar-search",
   "elements": {
     "navbar-search": {
-      "type": "Navbar",
+      "type": "Stack",
       "props": {
-        "brand": "Coppice",
-        "items": [
-          {
-            "label": "Explore",
-            "href": "/explore"
-          },
-          {
-            "label": "Collections",
-            "href": "/collections"
-          },
-          {
-            "label": "Trending",
-            "href": "/trending"
-          }
-        ],
-        "actions": [
-          "search-actions"
-        ]
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "nav-bar"
+      ]
+    },
+    "nav-bar": {
+      "type": "Surface",
+      "props": {
+        "variant": "card"
+      },
+      "children": [
+        "nav-inner"
+      ]
+    },
+    "nav-inner": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "nav-left",
+        "nav-search-input",
+        "nav-right"
+      ]
+    },
+    "nav-left": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center"
+      },
+      "children": [
+        "nav-brand",
+        "nav-links"
+      ]
+    },
+    "nav-brand": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Coppice",
+        "weight": "bold"
       }
     },
-    "search-actions": {
+    "nav-links": {
       "type": "Stack",
       "props": {
         "direction": "horizontal",
@@ -32,10 +62,31 @@
         "align": "center"
       },
       "children": [
-        "nav-search-input",
-        "nav-search-cart",
-        "nav-search-avatar"
+        "link-explore",
+        "link-collections",
+        "link-trending"
       ]
+    },
+    "link-explore": {
+      "type": "Link",
+      "props": {
+        "label": "Explore",
+        "href": "/explore"
+      }
+    },
+    "link-collections": {
+      "type": "Link",
+      "props": {
+        "label": "Collections",
+        "href": "/collections"
+      }
+    },
+    "link-trending": {
+      "type": "Link",
+      "props": {
+        "label": "Trending",
+        "href": "/trending"
+      }
     },
     "nav-search-input": {
       "type": "Search",
@@ -43,7 +94,19 @@
         "placeholder": "Search products, brands, categories..."
       }
     },
-    "nav-search-cart": {
+    "nav-right": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 2,
+        "align": "center"
+      },
+      "children": [
+        "nav-cart-btn",
+        "nav-avatar"
+      ]
+    },
+    "nav-cart-btn": {
       "type": "Button",
       "props": {
         "label": "Cart",
@@ -52,7 +115,7 @@
         "icon": "shopping-cart"
       }
     },
-    "nav-search-avatar": {
+    "nav-avatar": {
       "type": "Avatar",
       "props": {
         "initials": "KW",

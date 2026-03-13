@@ -2,34 +2,105 @@
   "root": "navbar",
   "elements": {
     "navbar": {
-      "type": "Navbar",
+      "type": "Stack",
       "props": {
-        "brand": "Meridian",
-        "items": [
-          {
-            "label": "Products",
-            "href": "/products"
-          },
-          {
-            "label": "Solutions",
-            "href": "/solutions"
-          },
-          {
-            "label": "Pricing",
-            "href": "/pricing"
-          },
-          {
-            "label": "Resources",
-            "href": "/resources"
-          },
-          {
-            "label": "Company",
-            "href": "/company"
-          }
-        ],
-        "actions": [
-          "nav-cta"
-        ]
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "nav-bar"
+      ]
+    },
+    "nav-bar": {
+      "type": "Surface",
+      "props": {
+        "variant": "card"
+      },
+      "children": [
+        "nav-inner"
+      ]
+    },
+    "nav-inner": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "nav-left",
+        "nav-cta"
+      ]
+    },
+    "nav-left": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center"
+      },
+      "children": [
+        "nav-brand",
+        "nav-links"
+      ]
+    },
+    "nav-brand": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Meridian",
+        "weight": "bold"
+      }
+    },
+    "nav-links": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "link-products",
+        "link-solutions",
+        "link-pricing",
+        "link-resources",
+        "link-company"
+      ]
+    },
+    "link-products": {
+      "type": "Link",
+      "props": {
+        "label": "Products",
+        "href": "/products"
+      }
+    },
+    "link-solutions": {
+      "type": "Link",
+      "props": {
+        "label": "Solutions",
+        "href": "/solutions"
+      }
+    },
+    "link-pricing": {
+      "type": "Link",
+      "props": {
+        "label": "Pricing",
+        "href": "/pricing"
+      }
+    },
+    "link-resources": {
+      "type": "Link",
+      "props": {
+        "label": "Resources",
+        "href": "/resources"
+      }
+    },
+    "link-company": {
+      "type": "Link",
+      "props": {
+        "label": "Company",
+        "href": "/company"
       }
     },
     "nav-cta": {

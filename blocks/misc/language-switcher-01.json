@@ -14,11 +14,10 @@
       ]
     },
     "language-icon-text": {
-      "type": "Text",
+      "type": "Icon",
       "props": {
-        "tag": "span",
-        "content": "Language",
-        "variant": "muted"
+        "name": "globe",
+        "size": "sm"
       }
     },
     "language-select": {

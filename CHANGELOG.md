@@ -2,6 +2,13 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.16.1
+
+**Text renderer resilience — auto-corrects swapped tag/content props.**
+
+- Fix: Text renderer auto-detects and swaps reversed `tag`/`content` props (e.g. `{"content": "h1", "tag": "Create Account"}` now renders correctly as `<h1>`)
+- Fix: block spec improvements — simplified SVG illustrations to Icon components, improved carousel and gallery layouts
+
 ## v3.16.0
 
 **Link component, 48 auth blocks, Icon renderer — 230+ blocks total.**

@@ -2,10 +2,21 @@
   "root": "newsletter-popup",
   "elements": {
     "newsletter-popup": {
-      "type": "Modal",
+      "type": "Stack",
       "props": {
-        "title": "Don't miss out"
+        "direction": "vertical",
+        "gap": 0,
+        "align": "center",
+        "justify": "center",
+        "container": "narrow"
       },
+      "children": [
+        "nl-popup-card"
+      ]
+    },
+    "nl-popup-card": {
+      "type": "Card",
+      "props": {},
       "children": [
         "nl-popup-body"
       ]
@@ -14,7 +25,8 @@
       "type": "Stack",
       "props": {
         "direction": "vertical",
-        "gap": 4
+        "gap": 4,
+        "align": "center"
       },
       "children": [
         "nl-popup-icon",
@@ -25,11 +37,10 @@
       ]
     },
     "nl-popup-icon": {
-      "type": "Text",
+      "type": "Icon",
       "props": {
-        "tag": "span",
-        "content": "📬",
-        "align": "center"
+        "name": "mail",
+        "size": "lg"
       }
     },
     "nl-popup-heading": {
@@ -64,8 +75,7 @@
     "nl-popup-email": {
       "type": "Input",
       "props": {
-        "placeholder": "Enter your email address",
-        "type": "email"
+        "placeholder": "Enter your email address"
       }
     },
     "nl-popup-submit": {
@@ -77,17 +87,6 @@
       }
     },
     "nl-popup-footer": {
-      "type": "Stack",
-      "props": {
-        "direction": "horizontal",
-        "gap": 2,
-        "justify": "center"
-      },
-      "children": [
-        "nl-popup-lock-text"
-      ]
-    },
-    "nl-popup-lock-text": {
       "type": "Text",
       "props": {
         "tag": "p",

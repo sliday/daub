@@ -2,7 +2,7 @@
   "root": "image-lightbox",
   "elements": {
     "image-lightbox": {
-      "type": "Modal",
+      "type": "Card",
       "props": {
         "title": "Product Screenshot"
       },

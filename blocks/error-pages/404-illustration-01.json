@@ -1,0 +1,103 @@
+{
+  "root": "not-found-illustration-01",
+  "elements": {
+    "not-found-illustration-01": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "align": "center",
+        "justify": "center",
+        "gap": 6,
+        "container": true,
+        "padding": [8, 0]
+      },
+      "children": [
+        "text-section",
+        "illustration-section"
+      ]
+    },
+
+    "text-section": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6
+      },
+      "children": [
+        "heading-group",
+        "actions"
+      ]
+    },
+    "heading-group": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 3
+      },
+      "children": [
+        "error-label",
+        "heading",
+        "description"
+      ]
+    },
+    "error-label": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "404 error",
+        "variant": "brand"
+      }
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h1",
+        "content": "Page not found"
+      }
+    },
+    "description": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Sorry, the page you are looking for doesn't exist. Here are some helpful links:",
+        "variant": "secondary"
+      }
+    },
+    "actions": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3
+      },
+      "children": [
+        "back-btn",
+        "home-btn"
+      ]
+    },
+    "back-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Go back",
+        "variant": "outline",
+        "size": "lg",
+        "icon": "arrow-left"
+      }
+    },
+    "home-btn": {
+      "type": "Button",
+      "props": {
+        "label": "Take me home",
+        "variant": "primary",
+        "size": "lg"
+      }
+    },
+
+    "illustration-section": {
+      "type": "Image",
+      "props": {
+        "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22350%22%20viewBox%3D%220%200%20480%20350%22%3E%3Cellipse%20cx%3D%22240%22%20cy%3D%22175%22%20rx%3D%22200%22%20ry%3D%22170%22%20fill%3D%22%237F56D910%22%2F%3E%3Ccircle%20cx%3D%22240%22%20cy%3D%22175%22%20r%3D%22130%22%20fill%3D%22%23F4EBFF%22%2F%3E%3Ccircle%20cx%3D%22240%22%20cy%3D%22175%22%20r%3D%2295%22%20fill%3D%22none%22%20stroke%3D%22%23D6BBFB%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%228%204%22%2F%3E%3Ccircle%20cx%3D%22240%22%20cy%3D%22175%22%20r%3D%2260%22%20fill%3D%22%23E9D7FE%22%2F%3E%3Ccircle%20cx%3D%22240%22%20cy%3D%22175%22%20r%3D%2230%22%20fill%3D%22%237F56D9%22%2F%3E%3Ccircle%20cx%3D%22240%22%20cy%3D%22175%22%20r%3D%2212%22%20fill%3D%22%23F4EBFF%22%20stroke%3D%22%23F4EBFF%22%20stroke-width%3D%222%22%2F%3E%3Ccircle%20cx%3D%22120%22%20cy%3D%2260%22%20r%3D%224%22%20fill%3D%22%23D6BBFB%22%2F%3E%3Ccircle%20cx%3D%22380%22%20cy%3D%2280%22%20r%3D%226%22%20fill%3D%22%23D6BBFB%22%2F%3E%3Ccircle%20cx%3D%2290%22%20cy%3D%22230%22%20r%3D%225%22%20fill%3D%22%23E9D7FE%22%2F%3E%3Ccircle%20cx%3D%22400%22%20cy%3D%22260%22%20r%3D%224%22%20fill%3D%22%23E9D7FE%22%2F%3E%3Cline%20x1%3D%22100%22%20y1%3D%22120%22%20x2%3D%22130%22%20y2%3D%22100%22%20stroke%3D%22%23D6BBFB%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%224%203%22%2F%3E%3Cline%20x1%3D%22360%22%20y1%3D%22250%22%20x2%3D%22390%22%20y2%3D%22270%22%20stroke%3D%22%23D6BBFB%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%224%203%22%2F%3E%3C%2Fsvg%3E",
+        "alt": "Abstract circular illustration"
+      }
+    }
+  }
+}

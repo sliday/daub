@@ -10,7 +10,8 @@
       },
       "children": [
         "hero-ss-content",
-        "hero-ss-image-wrapper"
+        "hero-ss-image-wrapper",
+        "hero-ss-logos"
       ]
     },
     "hero-ss-content": {

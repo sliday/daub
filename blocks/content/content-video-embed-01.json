@@ -101,10 +101,10 @@
       }
     },
     "play-icon": {
-      "type": "Text",
+      "type": "Icon",
       "props": {
-        "tag": "span",
-        "content": "play-circle"
+        "name": "play-circle",
+        "size": "lg"
       }
     },
     "play-label": {

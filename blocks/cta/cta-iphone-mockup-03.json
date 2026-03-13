@@ -1,0 +1,90 @@
+{
+  "root": "cta-iphone-mockup-03",
+  "elements": {
+    "cta-iphone-mockup-03": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 10,
+        "align": "center",
+        "padding": [24, 0]
+      },
+      "children": [
+        "top-content",
+        "phone-mockup"
+      ]
+    },
+    "top-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6,
+        "align": "center",
+        "container": "narrow"
+      },
+      "children": [
+        "text-block",
+        "button-group"
+      ]
+    },
+    "text-block": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 4,
+        "align": "center"
+      },
+      "children": [
+        "heading",
+        "description"
+      ]
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Start your free trial",
+        "align": "center"
+      }
+    },
+    "description": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Join over 4,000+ startups already growing with Daub.",
+        "variant": "secondary",
+        "align": "center"
+      }
+    },
+    "button-group": {
+      "type": "ButtonGroup",
+      "children": [
+        "btn-outline",
+        "btn-primary"
+      ]
+    },
+    "btn-outline": {
+      "type": "Button",
+      "props": {
+        "label": "Learn more",
+        "variant": "outline",
+        "size": "lg"
+      }
+    },
+    "btn-primary": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg"
+      }
+    },
+    "phone-mockup": {
+      "type": "Image",
+      "props": {
+        "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='640' fill='none'%3E%3Cellipse cx='240' cy='400' rx='200' ry='180' fill='%23F4EBFF'/%3E%3Cellipse cx='180' cy='350' rx='120' ry='140' fill='%23F9F5FF' opacity='0.7'/%3E%3Cellipse cx='310' cy='440' rx='100' ry='120' fill='%23EDE2FE' opacity='0.5'/%3E%3Crect x='160' y='40' width='160' height='560' rx='24' fill='%23101828'/%3E%3Crect x='166' y='46' width='148' height='548' rx='20' fill='%23fff'/%3E%3Crect x='205' y='54' width='70' height='18' rx='9' fill='%23101828'/%3E%3Ctext x='240' y='88' text-anchor='middle' font-family='system-ui' font-size='8' fill='%23667085'%3E9:41%3C/text%3E%3Crect x='181' y='102' width='118' height='24' rx='6' fill='%23F2F4F7'/%3E%3Ctext x='240' y='118' text-anchor='middle' font-family='system-ui' font-size='9' fill='%23667085'%3EDaub Dashboard%3C/text%3E%3Crect x='181' y='138' width='55' height='44' rx='8' fill='%237F56D9'/%3E%3Ctext x='208' y='159' text-anchor='middle' font-family='system-ui' font-size='8' font-weight='bold' fill='%23fff'%3E4.2k%3C/text%3E%3Ctext x='208' y='171' text-anchor='middle' font-family='system-ui' font-size='6' fill='%23E9D7FE'%3EUsers%3C/text%3E%3Crect x='244' y='138' width='55' height='44' rx='8' fill='%23F9F5FF'/%3E%3Ctext x='271' y='159' text-anchor='middle' font-family='system-ui' font-size='8' font-weight='bold' fill='%237F56D9'%3E92%25%3C/text%3E%3Ctext x='271' y='171' text-anchor='middle' font-family='system-ui' font-size='6' fill='%237F56D9'%3EGrowth%3C/text%3E%3Crect x='181' y='194' width='118' height='80' rx='8' fill='%23F9FAFB'/%3E%3Cline x1='181' y1='260' x2='299' y2='260' stroke='%23E4E7EC' stroke-width='0.5'/%3E%3Cpath d='M189 254 Q209 240 229 234 T269 220 T293 212' stroke='%237F56D9' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='229' cy='234' r='2.5' fill='%237F56D9'/%3E%3Crect x='181' y='286' width='118' height='26' rx='6' fill='%23F9FAFB'/%3E%3Ccircle cx='195' cy='299' r='7' fill='%23E4E7EC'/%3E%3Crect x='208' y='295' width='50' height='4' rx='2' fill='%23E4E7EC'/%3E%3Crect x='208' y='301' width='30' height='3' rx='1.5' fill='%23F2F4F7'/%3E%3Crect x='181' y='318' width='118' height='26' rx='6' fill='%23F9FAFB'/%3E%3Ccircle cx='195' cy='331' r='7' fill='%23E4E7EC'/%3E%3Crect x='208' y='327' width='50' height='4' rx='2' fill='%23E4E7EC'/%3E%3Crect x='208' y='333' width='30' height='3' rx='1.5' fill='%23F2F4F7'/%3E%3Crect x='181' y='350' width='118' height='26' rx='6' fill='%23F9FAFB'/%3E%3Ccircle cx='195' cy='363' r='7' fill='%23E4E7EC'/%3E%3Crect x='208' y='359' width='50' height='4' rx='2' fill='%23E4E7EC'/%3E%3Crect x='208' y='365' width='30' height='3' rx='1.5' fill='%23F2F4F7'/%3E%3Crect x='181' y='388' width='118' height='36' rx='8' fill='%237F56D9'/%3E%3Ctext x='240' y='410' text-anchor='middle' font-family='system-ui' font-size='9' font-weight='bold' fill='%23fff'%3EView Report%3C/text%3E%3Crect x='181' y='436' width='118' height='26' rx='6' fill='%23F9FAFB'/%3E%3Crect x='181' y='468' width='118' height='26' rx='6' fill='%23F9FAFB'/%3E%3Crect x='181' y='500' width='118' height='26' rx='6' fill='%23F9FAFB'/%3E%3Crect x='210' y='556' width='60' height='3' rx='1.5' fill='%23101828'/%3E%3C/svg%3E",
+        "alt": "Mobile app mockup"
+      }
+    }
+  }
+}

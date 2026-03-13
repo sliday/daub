@@ -1,0 +1,130 @@
+{
+  "root": "cta-iphone-mockup-04",
+  "elements": {
+    "cta-iphone-mockup-04": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 10,
+        "padding": [24, 0]
+      },
+      "children": [
+        "container"
+      ]
+    },
+    "container": {
+      "type": "Grid",
+      "props": {
+        "columns": 2,
+        "gap": 16,
+        "container": "wide",
+        "align": "center"
+      },
+      "children": [
+        "phone-mockup",
+        "right-content"
+      ]
+    },
+    "phone-mockup": {
+      "type": "Image",
+      "props": {
+        "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='640' fill='none'%3E%3Crect x='8' y='8' width='304' height='624' rx='40' fill='%23101828'/%3E%3Crect x='14' y='14' width='292' height='612' rx='36' fill='%23fff'/%3E%3Crect x='110' y='22' width='100' height='28' rx='14' fill='%23101828'/%3E%3Ctext x='160' y='72' text-anchor='middle' font-family='system-ui' font-size='11' fill='%23667085'%3E9:41%3C/text%3E%3Crect x='34' y='96' width='252' height='36' rx='8' fill='%23F2F4F7'/%3E%3Ctext x='160' y='118' text-anchor='middle' font-family='system-ui' font-size='12' fill='%23667085'%3EDaub Analytics%3C/text%3E%3Crect x='34' y='148' width='120' height='80' rx='12' fill='%237F56D9'/%3E%3Ctext x='94' y='183' text-anchor='middle' font-family='system-ui' font-size='11' font-weight='bold' fill='%23fff'%3E5,280%3C/text%3E%3Ctext x='94' y='200' text-anchor='middle' font-family='system-ui' font-size='9' fill='%23E9D7FE'%3EActive Users%3C/text%3E%3Crect x='166' y='148' width='120' height='80' rx='12' fill='%23F9F5FF'/%3E%3Ctext x='226' y='183' text-anchor='middle' font-family='system-ui' font-size='11' font-weight='bold' fill='%237F56D9'%3E+32%25%3C/text%3E%3Ctext x='226' y='200' text-anchor='middle' font-family='system-ui' font-size='9' fill='%237F56D9'%3EGrowth%3C/text%3E%3Crect x='34' y='244' width='252' height='120' rx='12' fill='%23F9FAFB'/%3E%3Cline x1='34' y1='340' x2='286' y2='340' stroke='%23E4E7EC' stroke-width='1'/%3E%3Cpath d='M44 330 Q84 300 124 310 T204 280 T276 260' stroke='%237F56D9' stroke-width='2' fill='none'/%3E%3Ccircle cx='204' cy='280' r='4' fill='%237F56D9'/%3E%3Crect x='34' y='380' width='252' height='48' rx='8' fill='%23F9FAFB'/%3E%3Ccircle cx='58' cy='404' r='14' fill='%23E4E7EC'/%3E%3Crect x='82' y='396' width='80' height='8' rx='4' fill='%23E4E7EC'/%3E%3Crect x='82' y='408' width='50' height='6' rx='3' fill='%23F2F4F7'/%3E%3Crect x='34' y='436' width='252' height='48' rx='8' fill='%23F9FAFB'/%3E%3Ccircle cx='58' cy='460' r='14' fill='%23E4E7EC'/%3E%3Crect x='82' y='452' width='80' height='8' rx='4' fill='%23E4E7EC'/%3E%3Crect x='82' y='464' width='50' height='6' rx='3' fill='%23F2F4F7'/%3E%3Crect x='34' y='492' width='252' height='48' rx='8' fill='%23F9FAFB'/%3E%3Ccircle cx='58' cy='516' r='14' fill='%23E4E7EC'/%3E%3Crect x='82' y='508' width='80' height='8' rx='4' fill='%23E4E7EC'/%3E%3Crect x='82' y='520' width='50' height='6' rx='3' fill='%23F2F4F7'/%3E%3Crect x='100' y='580' width='120' height='4' rx='2' fill='%23101828'/%3E%3C/svg%3E",
+        "alt": "Mobile app mockup"
+      }
+    },
+    "right-content": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 8
+      },
+      "children": [
+        "text-block",
+        "button-group"
+      ]
+    },
+    "text-block": {
+      "type": "Stack",
+      "props": {
+        "direction": "vertical",
+        "gap": 6
+      },
+      "children": [
+        "heading",
+        "description",
+        "check-list"
+      ]
+    },
+    "heading": {
+      "type": "Text",
+      "props": {
+        "tag": "h2",
+        "content": "Beautiful analytics to grow smarter"
+      }
+    },
+    "description": {
+      "type": "Text",
+      "props": {
+        "tag": "p",
+        "content": "Powerful, self-serve product and growth analytics.",
+        "variant": "secondary"
+      }
+    },
+    "check-list": {
+      "type": "List",
+      "props": {
+        "variant": "check",
+        "gap": 4
+      },
+      "children": [
+        "check-item-1",
+        "check-item-2",
+        "check-item-3"
+      ]
+    },
+    "check-item-1": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "30-day free trial"
+      }
+    },
+    "check-item-2": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Personalized onboarding"
+      }
+    },
+    "check-item-3": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Access to all features"
+      }
+    },
+    "button-group": {
+      "type": "ButtonGroup",
+      "children": [
+        "btn-outline",
+        "btn-primary"
+      ]
+    },
+    "btn-outline": {
+      "type": "Button",
+      "props": {
+        "label": "Learn more",
+        "variant": "outline",
+        "size": "lg"
+      }
+    },
+    "btn-primary": {
+      "type": "Button",
+      "props": {
+        "label": "Get started",
+        "variant": "primary",
+        "size": "lg"
+      }
+    }
+  }
+}
