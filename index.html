@@ -1098,7 +1098,10 @@
           <div class="db-slider" data-db-temperature>
             <div class="db-slider__label">
               <span>Temperature</span>
-              <span class="db-slider__value">0</span>
+              <span style="display:inline-flex;align-items:center;gap:6px;">
+                <button id="db-temp-auto" class="db-toggle db-toggle--sm" aria-pressed="false" title="Auto-adjust temperature based on time of day" style="font-size:0.6875rem;padding:2px 8px;">Auto</button>
+                <span class="db-slider__value">0</span>
+              </span>
             </div>
             <input class="db-slider__input" type="range" min="-100" max="100" value="0">
           </div>
@@ -3006,11 +3009,12 @@
       var DEFAULTS = { theme: 'light', family: 'default', temperature: 0, noise: 0.18, texture: 'grain', scheme: 'auto' };
 
       function getState() {
+        var tempMode = DAUB.getTemperature();
         return {
           theme: DAUB.getTheme() || 'light',
           family: DAUB.getFamily() || 'default',
           scheme: DAUB.getScheme() || 'auto',
-          temperature: parseFloat(document.documentElement.style.getPropertyValue('--db-temperature')) || DEFAULTS.temperature,
+          temperature: tempMode === 'auto' ? 'auto' : (parseFloat(document.documentElement.style.getPropertyValue('--db-temperature')) || DEFAULTS.temperature),
           noise: parseFloat(document.documentElement.style.getPropertyValue('--db-noise')) || DEFAULTS.noise,
           texture: document.documentElement.getAttribute('data-db-texture') || 'grain',
           accent: localStorage.getItem('db-accent') || null
@@ -3025,7 +3029,7 @@
         ];
 
         var cssVars = [];
-        if (Math.abs(s.temperature - DEFAULTS.temperature) > 0.01) cssVars.push('    --db-temperature: ' + s.temperature + ';');
+        if (s.temperature !== 'auto' && Math.abs(s.temperature - DEFAULTS.temperature) > 0.01) cssVars.push('    --db-temperature: ' + s.temperature + ';');
         if (Math.abs(s.noise - DEFAULTS.noise) > 0.01) cssVars.push('    --db-noise: ' + s.noise + ';');
 
         if (cssVars.length) {
@@ -3042,6 +3046,7 @@
         var VALID_HEX      = /^#[0-9a-fA-F]{6}$/;
 
         var jsLines = [];
+        if (s.temperature === 'auto') jsLines.push("DAUB.setTemperature('auto');");
         if (s.texture !== DEFAULTS.texture && VALID_TEXTURES.indexOf(s.texture) !== -1) jsLines.push("DAUB.setTexture('" + s.texture + "');");
         if (s.family !== DEFAULTS.family && VALID_FAMILIES.indexOf(s.family) !== -1) jsLines.push("DAUB.setFamily('" + s.family + "');");
         if (s.scheme !== DEFAULTS.scheme && VALID_SCHEMES.indexOf(s.scheme) !== -1) jsLines.push("DAUB.setScheme('" + s.scheme + "');");
@@ -3085,7 +3090,49 @@
       });
       document.addEventListener('input', function(e) {
         if (e.target.closest('[data-db-temperature], [data-db-noise]')) updateCode();
+        // Manual slider use exits auto mode
+        if (e.target.closest('[data-db-temperature]')) {
+          var autoBtn = document.getElementById('db-temp-auto');
+          if (autoBtn) autoBtn.setAttribute('aria-pressed', 'false');
+        }
       });
+
+      // Temperature auto toggle
+      (function() {
+        var autoBtn = document.getElementById('db-temp-auto');
+        if (!autoBtn) return;
+        // Reflect initial state
+        if (DAUB.getTemperature() === 'auto') autoBtn.setAttribute('aria-pressed', 'true');
+
+        autoBtn.addEventListener('click', function() {
+          var isAuto = autoBtn.getAttribute('aria-pressed') === 'true';
+          if (isAuto) {
+            // Turn off auto — set to current computed value
+            var current = parseFloat(document.documentElement.style.getPropertyValue('--db-temperature')) || 0;
+            DAUB.setTemperature(current);
+            autoBtn.setAttribute('aria-pressed', 'false');
+            // Update slider to show current value
+            var slider = document.querySelector('[data-db-temperature]');
+            if (slider) {
+              var input = slider.querySelector('.db-slider__input');
+              var valueEl = slider.querySelector('.db-slider__value');
+              if (input) input.value = Math.round(current * 100);
+              if (valueEl) valueEl.textContent = Math.round(current * 100);
+            }
+          } else {
+            // Turn on auto
+            DAUB.setTemperature('auto');
+            autoBtn.setAttribute('aria-pressed', 'true');
+            // Update slider to reflect auto value
+            var slider = document.querySelector('[data-db-temperature]');
+            if (slider) {
+              var valueEl = slider.querySelector('.db-slider__value');
+              if (valueEl) valueEl.textContent = 'auto';
+            }
+          }
+          setTimeout(updateCode, 60);
+        });
+      })();
 
       // Copy button
       function doCopy() {
