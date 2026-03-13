@@ -3093,8 +3093,8 @@
       });
       document.addEventListener('input', function(e) {
         if (e.target.closest('[data-db-temperature], [data-db-noise]')) updateCode();
-        // Manual slider use exits auto mode
-        if (e.target.closest('[data-db-temperature]')) {
+        // Manual slider use exits auto mode (only for the range input, not the auto checkbox)
+        if (e.target.matches('[data-db-temperature] .db-slider__input')) {
           var autoChk = document.getElementById('db-temp-auto');
           if (autoChk && autoChk.checked) {
             autoChk.checked = false;
