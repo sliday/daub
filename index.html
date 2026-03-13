@@ -3092,14 +3092,6 @@
       });
       document.addEventListener('input', function(e) {
         if (e.target.closest('[data-db-temperature], [data-db-noise]')) updateCode();
-        // Manual slider use exits auto mode (only for the range input, not the auto checkbox)
-        if (e.target.matches('[data-db-temperature] .db-slider__input')) {
-          var autoChk = document.getElementById('db-temp-auto');
-          if (autoChk && autoChk.checked) {
-            autoChk.checked = false;
-            autoChk.dispatchEvent(new Event('change'));
-          }
-        }
       });
 
       // Temperature auto toggle
@@ -3145,6 +3137,22 @@
           setAutoUI(true);
         }
 
+        // Manual slider drag exits auto mode — keep drag position, don't restore saved
+        if (input) {
+          input.addEventListener('input', function() {
+            if (!autoChk.checked) return;
+            autoChk.checked = false;
+            var val = parseInt(input.value);
+            DAUB.setTemperature(val / 100);
+            input.disabled = false;
+            input.style.opacity = '1';
+            input.style.pointerEvents = '';
+            if (valueEl) valueEl.textContent = val;
+            setTimeout(updateCode, 60);
+          });
+        }
+
+        // Checkbox toggle
         autoChk.addEventListener('change', function() {
           if (autoChk.checked) {
             savedManualValue = input ? parseInt(input.value) : 0;
