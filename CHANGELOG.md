@@ -2,6 +2,20 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.17.0
+
+**Auto-temperature, block test suite, landing page refresh.**
+
+- Feature: `DAUB.setTemperature('auto')` — auto-adjusts UI warmth based on time of day and estimated daylight hours for the current date (solar declination at ~45°N). Warm golden tones at sunrise/sunset, cool neutral at midday, candlelight warmth at night. Updates every 15 minutes.
+- Feature: Auto toggle button in configurator panel next to the Temperature slider
+- Feature: `tools/block-test.js` — 3-layer test suite (structural, render via Playwright, visual regression) for all 230+ block specs
+- Fix: Text renderer handles duplicated tag/content (`tag:"h2", content:"h2"` no longer renders literal "h2" text)
+- Fix: MCP `autoFixSpec()` server-side auto-corrects both swapped and duplicated Text tag/content
+- Fix: MCP Text prop documentation clarified to prevent AI generation errors
+- UI: Landing page hero simplified to "UI for AI"
+- UI: GitHub stars counter with count-up animation in nav bar
+- UI: json-render and OpenUI compatibility mentioned in spec format section
+
 ## v3.16.1
 
 **Text renderer resilience — auto-corrects swapped tag/content props.**

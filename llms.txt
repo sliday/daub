@@ -1,6 +1,6 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 3.16.1
+> Version: 3.17.0
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
@@ -90,7 +90,8 @@ Set via attribute: `<html data-theme="dark">`
 Family API: `DAUB.setFamily('ink')`, `DAUB.setScheme('dark')`, `DAUB.getFamily()`
 Direct API: `DAUB.setTheme('ink')`, `DAUB.cycleTheme()`, `DAUB.getTheme()`
 Accent API: `DAUB.setAccent('#6B7C3E')`, `DAUB.resetAccent()`, `DAUB.getAccent()`
-Persisted in `localStorage` keys: `db-theme`, `db-scheme`, `db-accent`.
+Temperature API: `DAUB.setTemperature('auto')` (daylight-aware), `DAUB.setTemperature(0.5)` (manual -1 to +1), `DAUB.getTemperature()`
+Persisted in `localStorage` keys: `db-theme`, `db-scheme`, `db-accent`, `db-temperature`.
 
 ## Quick Reference Skeletons
 
@@ -1039,6 +1040,9 @@ DAUB.getCategory(family)       // Get category for a family name
 DAUB.setAccent(hex)            // Override accent color
 DAUB.resetAccent()             // Restore theme default accent
 DAUB.getAccent()               // Get current accent color
+DAUB.setTemperature('auto')    // Auto-adjust warmth by time of day and season
+DAUB.setTemperature(0.5)       // Manual temperature (-1 cold to +1 warm)
+DAUB.getTemperature()          // Returns 'auto' or current numeric value
 DAUB.getColor(token)           // Get computed CSS variable value (e.g. 'terracotta' → --db-terracotta)
 ```
 
