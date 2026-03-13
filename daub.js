@@ -887,10 +887,90 @@
 
   /* ----------------------------------------------------------
      Temperature — cold (-1) to neutral (0) to warm (+1)
+     Supports 'auto' mode: adjusts based on time of day and
+     estimated daylight hours for the current date (~45°N).
      ---------------------------------------------------------- */
+  var _tempAutoTimer = null;
+
+  // Estimate daylight temperature from time of day and date.
+  // Uses solar declination to approximate sunrise/sunset at ~45°N latitude.
+  // Returns a value from -0.3 (cool midday) to +0.6 (warm golden hour) to +0.35 (night).
+  function calcAutoTemperature() {
+    var now = new Date();
+    var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+    // Solar declination (radians) — simplified equation of time
+    var decl = -23.44 * Math.cos(2 * Math.PI * (dayOfYear + 10) / 365) * Math.PI / 180;
+    var lat = 45 * Math.PI / 180; // ~45°N — reasonable mid-latitude default
+    // Hour angle at sunrise/sunset
+    var cosH = -Math.tan(lat) * Math.tan(decl);
+    cosH = Math.max(-1, Math.min(1, cosH)); // clamp for polar edge cases
+    var halfDay = Math.acos(cosH) / Math.PI * 12; // hours of daylight / 2
+    var solarNoon = 12; // approximate
+    var sunrise = solarNoon - halfDay;
+    var sunset = solarNoon + halfDay;
+
+    var hour = now.getHours() + now.getMinutes() / 60;
+    var goldenBefore = sunrise + 0.75; // ~45 min after sunrise
+    var goldenAfter = sunset - 0.75;   // ~45 min before sunset
+
+    if (hour < sunrise - 0.5 || hour > sunset + 0.5) {
+      // Night — warm like candlelight
+      return 0.35;
+    } else if (hour < goldenBefore) {
+      // Sunrise golden hour — warm
+      var t = (hour - (sunrise - 0.5)) / (goldenBefore - (sunrise - 0.5));
+      return 0.35 + (0.6 - 0.35) * Math.sin(t * Math.PI / 2); // peak at golden
+    } else if (hour > goldenAfter) {
+      // Sunset golden hour — warm
+      var t2 = (hour - goldenAfter) / ((sunset + 0.5) - goldenAfter);
+      return -0.15 + (0.6 + 0.15) * Math.sin((1 - t2) * Math.PI / 2); // peak at golden start
+    } else {
+      // Daytime — cooler/neutral, slight midday dip
+      var dayProgress = (hour - goldenBefore) / (goldenAfter - goldenBefore);
+      return -0.15 - 0.15 * Math.sin(dayProgress * Math.PI); // -0.15 to -0.3 midday
+    }
+  }
+
+  function applyAutoTemperature() {
+    var val = calcAutoTemperature();
+    document.documentElement.style.setProperty('--db-temperature', val.toFixed(3));
+  }
+
+  function startAutoTemperature() {
+    if (_tempAutoTimer) clearInterval(_tempAutoTimer);
+    applyAutoTemperature();
+    _tempAutoTimer = setInterval(applyAutoTemperature, 15 * 60 * 1000); // every 15 min
+  }
+
+  function stopAutoTemperature() {
+    if (_tempAutoTimer) { clearInterval(_tempAutoTimer); _tempAutoTimer = null; }
+  }
+
+  function setTemperature(val) {
+    if (val === 'auto') {
+      localStorage.setItem('db-temperature', 'auto');
+      startAutoTemperature();
+    } else {
+      stopAutoTemperature();
+      var n = parseFloat(val);
+      if (isNaN(n)) n = 0;
+      n = Math.max(-1, Math.min(1, n));
+      document.documentElement.style.setProperty('--db-temperature', n);
+      localStorage.setItem('db-temperature', String(n));
+    }
+  }
+
+  function getTemperature() {
+    var saved = localStorage.getItem('db-temperature');
+    if (saved === 'auto') return 'auto';
+    return parseFloat(document.documentElement.style.getPropertyValue('--db-temperature')) || 0;
+  }
+
   function initTemperature() {
     var saved = localStorage.getItem('db-temperature');
-    if (saved !== null) {
+    if (saved === 'auto') {
+      startAutoTemperature();
+    } else if (saved !== null) {
       document.documentElement.style.setProperty('--db-temperature', saved);
     }
 
@@ -901,12 +981,19 @@
       var valueEl = slider.querySelector('.db-slider__value');
       if (!input) return;
 
-      if (saved !== null) {
+      if (saved === 'auto') {
+        // In auto mode, show current computed value but mark as auto
+        var current = calcAutoTemperature();
+        input.value = Math.round(current * 100);
+        if (valueEl) valueEl.textContent = 'auto';
+      } else if (saved !== null) {
         input.value = Math.round(parseFloat(saved) * 100);
         if (valueEl) valueEl.textContent = input.value;
       }
 
       input.addEventListener('input', function() {
+        // Manual slider interaction exits auto mode
+        stopAutoTemperature();
         var val = input.value / 100;
         document.documentElement.style.setProperty('--db-temperature', val);
         localStorage.setItem('db-temperature', val);
@@ -2039,6 +2126,8 @@
     getTexture: function() {
       return document.documentElement.getAttribute('data-db-texture') || 'grain';
     },
+    setTemperature: setTemperature,
+    getTemperature: getTemperature,
     TEXTURES: ['grain', 'paper', 'metal', 'wood', 'glass', 'none'],
     toggleSidebar: toggleSidebar,
     toggleNavbar: toggleNavbar,
