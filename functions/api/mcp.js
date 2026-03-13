@@ -7,7 +7,7 @@ const COMP_PROPS = {
   Stack: 'direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly", align: "center"|"end"|"start"|"stretch", wrap: bool, container: "wide"|"narrow"|true',
   Grid: 'columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true',
   Surface: 'variant: "raised"|"inset"|"pressed"',
-  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
+  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span" (the HTML element to render), content: string (the visible text to display — NOT a tag name), class: string',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
   Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId"',
@@ -120,8 +120,20 @@ function validateSpec(spec) {
 
 function autoFixSpec(spec) {
   if (!spec || !spec.elements) return spec;
+  const validTags = ['h1','h2','h3','h4','p','span'];
   for (const def of Object.values(spec.elements)) {
     if (def.children) def.children = def.children.filter(cid => !!spec.elements[cid]);
+    // Auto-fix Text tag/content issues
+    if (def.type === 'Text' && def.props) {
+      // Swap reversed: content is a tag name, tag is not
+      if (validTags.includes(def.props.content) && !validTags.includes(def.props.tag)) {
+        [def.props.tag, def.props.content] = [def.props.content, def.props.tag];
+      }
+      // Clear duplicated: both tag and content are the same tag name
+      if (validTags.includes(def.props.content) && def.props.content === def.props.tag) {
+        def.props.content = '';
+      }
+    }
   }
   if (!spec.root || !spec.elements[spec.root]) {
     const ids = Object.keys(spec.elements);

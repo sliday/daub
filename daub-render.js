@@ -332,7 +332,10 @@
     RENDERERS.Text = function(p) {
       var validTags = ['h1','h2','h3','h4','p','span'];
       var t = p.tag, c = p.content;
+      // Fix swapped: content is a tag name, tag is not
       if (validTags.indexOf(t) < 0 && validTags.indexOf(c) >= 0) { t = c; c = p.tag; }
+      // Fix duplicated: both tag and content are the same tag name (AI forgot actual text)
+      if (validTags.indexOf(c) >= 0 && c === t) { c = ''; }
       var tag = validTags.indexOf(t) >= 0 ? t : 'p';
       var el = document.createElement(tag);
       var classMap = { h1:'db-h1', h2:'db-h2', h3:'db-h3', h4:'db-h4', p:'db-body', span:'' };
