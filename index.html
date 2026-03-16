@@ -1231,43 +1231,41 @@
   <section style="max-width:min(960px,100%); margin:0 auto; padding:64px 24px; text-align:center;">
     <span class="db-badge db-badge--new">Zero Config</span>
     <h2 style="font-family:var(--db-font-heading); font-size:clamp(1.5rem,3vw,2.25rem); font-weight:700; color:var(--db-ink); margin:16px 0 8px; line-height:1.2;">Zero classes. Just HTML.</h2>
-    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px; max-width:540px; margin-left:auto; margin-right:auto;">Drop in one stylesheet and semantic HTML gets full DAUB styling — forms, tables, navs, typography. No classes needed.</p>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; text-align:left;" class="db-classless-demo">
-      <div>
-        <div style="font-family:var(--db-font-body); font-size:0.75rem; font-weight:600; color:var(--db-warm-gray); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Source HTML</div>
-        <pre class="db-card" style="padding:16px; font-size:0.8125rem; line-height:1.6; overflow-x:auto; margin:0; white-space:pre; tab-size:2;">&lt;header&gt;
-  &lt;nav&gt;
-    &lt;a href="/"&gt;Brand&lt;/a&gt;
-    &lt;a href="/about"&gt;About&lt;/a&gt;
-    &lt;a href="/contact"&gt;Contact&lt;/a&gt;
-  &lt;/nav&gt;
-&lt;/header&gt;
-&lt;main&gt;
-  &lt;h1&gt;Hello, DAUB&lt;/h1&gt;
-  &lt;p&gt;Semantic HTML, styled automatically.&lt;/p&gt;
-  &lt;form&gt;
-    &lt;label&gt;Email
-      &lt;input type="email" placeholder="you@example.com"&gt;
-    &lt;/label&gt;
-    &lt;button type="submit"&gt;Subscribe&lt;/button&gt;
-  &lt;/form&gt;
-  &lt;table&gt;
-    &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Feature&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
-    &lt;tbody&gt;
-      &lt;tr&gt;&lt;td&gt;Typography&lt;/td&gt;&lt;td&gt;Styled&lt;/td&gt;&lt;/tr&gt;
-      &lt;tr&gt;&lt;td&gt;Forms&lt;/td&gt;&lt;td&gt;Styled&lt;/td&gt;&lt;/tr&gt;
-      &lt;tr&gt;&lt;td&gt;Tables&lt;/td&gt;&lt;td&gt;Styled&lt;/td&gt;&lt;/tr&gt;
-    &lt;/tbody&gt;
-  &lt;/table&gt;
-&lt;/main&gt;
-&lt;footer&gt;&lt;p&gt;&amp;copy; 2026 Your Site&lt;/p&gt;&lt;/footer&gt;</pre>
+    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px; max-width:540px; margin-left:auto; margin-right:auto;">One stylesheet turns semantic HTML into a fully styled page. No classes, no config.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; text-align:left; align-items:stretch;" class="db-classless-demo">
+      <div style="display:flex; flex-direction:column;">
+        <div style="font-family:var(--db-font-body); font-size:0.75rem; font-weight:600; color:var(--db-warm-gray); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Your HTML</div>
+        <pre class="db-card" style="padding:20px; font-size:0.8125rem; line-height:1.7; overflow-x:auto; margin:0; white-space:pre; tab-size:2; flex:1;"><span style="color:var(--db-warm-gray);">&lt;!-- That's it. No classes. --&gt;</span>
+&lt;link rel="stylesheet"
+      href="<span style="color:var(--db-terracotta);">daub-classless.css</span>"&gt;
+
+&lt;h1&gt;Hello, DAUB&lt;/h1&gt;
+&lt;p&gt;Styled automatically.&lt;/p&gt;
+
+&lt;form&gt;
+  &lt;label&gt;Email&lt;/label&gt;
+  &lt;input type="email"
+         placeholder="you@example.com"&gt;
+  &lt;button&gt;Subscribe&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;Feature&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Forms&lt;/td&gt;&lt;td&gt;Styled&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Tables&lt;/td&gt;&lt;td&gt;Styled&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Typography&lt;/td&gt;&lt;td&gt;Styled&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre>
       </div>
-      <div>
-        <div style="font-family:var(--db-font-body); font-size:0.75rem; font-weight:600; color:var(--db-warm-gray); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Live Result</div>
-        <iframe class="db-card" style="width:100%; min-height:420px; border:none; border-radius:var(--db-card-radius); overflow:hidden;" srcdoc="<!DOCTYPE html><html><head><link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/daub-ui@latest/daub-classless.css'><style>body{padding:16px;margin:0;}</style></head><body><header><nav><a href='/'>Brand</a> <a href='/about'>About</a> <a href='/contact'>Contact</a></nav></header><main><h1>Hello, DAUB</h1><p>Semantic HTML, styled automatically.</p><form><label>Email<input type='email' placeholder='you@example.com'></label><button type='submit'>Subscribe</button></form><table><thead><tr><th>Feature</th><th>Status</th></tr></thead><tbody><tr><td>Typography</td><td>Styled</td></tr><tr><td>Forms</td><td>Styled</td></tr><tr><td>Tables</td><td>Styled</td></tr></tbody></table></main><footer><p>&copy; 2026 Your Site</p></footer></body></html>"></iframe>
+      <div style="display:flex; flex-direction:column;">
+        <div style="font-family:var(--db-font-body); font-size:0.75rem; font-weight:600; color:var(--db-warm-gray); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">What you get</div>
+        <iframe class="db-card" style="width:100%; border:none; border-radius:var(--db-card-radius); overflow:hidden; flex:1; min-height:380px;" srcdoc="<!DOCTYPE html><html><head><link rel='stylesheet' href='daub-classless.css'><style>body{padding:20px 24px;margin:0;}</style></head><body><h1 style='margin-top:0;'>Hello, DAUB</h1><p>Styled automatically.</p><form><label>Email</label><input type='email' placeholder='you@example.com'><button>Subscribe</button></form><table><thead><tr><th>Feature</th><th>Status</th></tr></thead><tbody><tr><td>Forms</td><td>Styled</td></tr><tr><td>Tables</td><td>Styled</td></tr><tr><td>Typography</td><td>Styled</td></tr></tbody></table></body></html>"></iframe>
       </div>
     </div>
-    <p style="font-family:var(--db-font-body); font-size:0.875rem; color:var(--db-warm-gray); margin-top:16px;">Just add <code style="background:var(--db-cream-dark); padding:2px 6px; border-radius:4px; font-size:0.8125rem;">&lt;link rel="stylesheet" href="daub-classless.css"&gt;</code> — that's it.</p>
+    <p style="font-family:var(--db-font-body); font-size:0.875rem; color:var(--db-warm-gray); margin-top:20px;">Or use the full library for <strong style="color:var(--db-charcoal);">76 components</strong> with <code style="background:var(--db-cream-dark); padding:2px 6px; border-radius:4px; font-size:0.8125rem;">daub.css</code> + <code style="background:var(--db-cream-dark); padding:2px 6px; border-radius:4px; font-size:0.8125rem;">daub.js</code></p>
   </section>
   <style>
     @media (max-width: 640px) {
