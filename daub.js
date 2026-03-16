@@ -596,6 +596,8 @@
      Modal
      ---------------------------------------------------------- */
   var _dbModalKeyInit = false;
+  function _isDialog(el) { return el && el.tagName === 'DIALOG'; }
+
   function initModals(root) {
     root.querySelectorAll('[data-db-modal-trigger]').forEach(function(trigger) {
       if (trigger._dbInit) return;
@@ -621,6 +623,33 @@
           closeModal(overlay);
         });
       }
+    });
+
+    /* Native <dialog> elements */
+    root.querySelectorAll('dialog.db-modal').forEach(function(dialog) {
+      if (dialog._dbInit) return;
+      dialog._dbInit = true;
+
+      /* Close on backdrop click */
+      dialog.addEventListener('click', function(e) {
+        if (e.target === dialog) dialog.close();
+      });
+
+      var closeBtn = dialog.querySelector('.db-modal__close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          dialog.close();
+        });
+      }
+
+      /* Restore focus on close */
+      dialog.addEventListener('close', function() {
+        document.body.style.overflow = '';
+        if (_lastModalTrigger) {
+          _lastModalTrigger.focus();
+          _lastModalTrigger = null;
+        }
+      });
     });
 
     if (!_dbModalKeyInit) {
@@ -664,6 +693,14 @@
     }
 
     _lastModalTrigger = trigger;
+
+    /* Native <dialog> path — browser handles backdrop, escape, focus trap */
+    if (_isDialog(overlay)) {
+      if (!overlay.open) overlay.showModal();
+      document.body.style.overflow = 'hidden';
+      return;
+    }
+
     overlay.classList.add('db-modal--open');
     overlay.setAttribute('aria-hidden', 'false');
 
@@ -696,6 +733,13 @@
   function closeModal(overlay) {
     overlay = typeof overlay === 'string' ? document.getElementById(overlay) : overlay;
     if (!overlay) return;
+
+    /* Native <dialog> path */
+    if (_isDialog(overlay)) {
+      if (overlay.open) overlay.close();
+      return; /* close event listener handles cleanup */
+    }
+
     overlay.classList.remove('db-modal--open');
     overlay.setAttribute('aria-hidden', 'true');
     if (overlay._dbTrap) {

@@ -11,9 +11,9 @@
   --db-cream: #F5F0E1;
   --db-cream-dark: #EDE7D4;
   --db-sand: #D4C4A8;
-  --db-terracotta: #C67B5C;
+  --db-terracotta: #C1714F;
   --db-clay: #B5651D;
-  --db-warm-gray: #8B8377;
+  --db-warm-gray: #6B645B;
   --db-charcoal: #3D3832;
   --db-ink: #2A2520;
   --db-white: #FDFBF5;
@@ -559,7 +559,7 @@ body::before {
   --db-sand: #A89880;
   --db-terracotta: #964F2A;
   --db-clay: #8B4C1E;
-  --db-warm-gray: #655F57;
+  --db-warm-gray: #504B45;
   --db-charcoal: #33302B;
   --db-ink: #1E1B17;
   --db-white: #E8E0D0;
@@ -641,10 +641,10 @@ body::before {
   --db-cream: #eee8d5;
   --db-cream-dark: #e4ddcc;
   --db-sand: #93a1a1;
-  --db-terracotta: #2aa198;
+  --db-terracotta: #258E87;
   --db-clay: #268bd2;
-  --db-warm-gray: #657b83;
-  --db-charcoal: #586e75;
+  --db-warm-gray: #516268;
+  --db-charcoal: #546970;
   --db-ink: #073642;
   --db-white: #fdf6e3;
   --db-error: #dc322f;
@@ -679,7 +679,7 @@ body::before {
   --db-sand: #586e75;
   --db-terracotta: #2aa198;
   --db-clay: #268bd2;
-  --db-warm-gray: #839496;
+  --db-warm-gray: #8F9FA0;
   --db-charcoal: #93a1a1;
   --db-ink: #fdf6e3;
   --db-white: #002b36;
@@ -748,7 +748,7 @@ body::before {
   --db-sand: #C0C4D0;
   --db-terracotta: #5A6D8E;
   --db-clay: #4A5D7E;
-  --db-warm-gray: #7880A0;
+  --db-warm-gray: #5B6281;
   --db-charcoal: #3A3E52;
   --db-ink: #1C2030;
   --db-white: #F5F7FC;
@@ -817,7 +817,7 @@ body::before {
   --db-sand: #D8C4B0;
   --db-terracotta: #B06840;
   --db-clay: #9A5830;
-  --db-warm-gray: #8A7868;
+  --db-warm-gray: #716356;
   --db-charcoal: #3A2E24;
   --db-ink: #201810;
   --db-white: #FFF8F0;
@@ -853,7 +853,7 @@ body::before {
   --db-sand: #D8D8D8;
   --db-terracotta: #6B6B6B;
   --db-clay: #505050;
-  --db-warm-gray: #909090;
+  --db-warm-gray: #6A6A6A;
   --db-charcoal: #383838;
   --db-ink: #1A1A1A;
   --db-white: #FFFFFF;
@@ -889,7 +889,7 @@ body::before {
   --db-sand: #383838;
   --db-terracotta: #A0A0A0;
   --db-clay: #8A8A8A;
-  --db-warm-gray: #787878;
+  --db-warm-gray: #858585;
   --db-charcoal: #D0D0D0;
   --db-ink: #E8E8E8;
   --db-white: #222222;
@@ -927,7 +927,7 @@ body::before {
   --db-sand: #44475A;
   --db-terracotta: #BD93F9;
   --db-clay: #FF79C6;
-  --db-warm-gray: #6272A4;
+  --db-warm-gray: #8794BA;
   --db-charcoal: #E0DEF4;
   --db-ink: #F8F8F2;
   --db-white: #343746;
@@ -993,7 +993,7 @@ body::before {
   --db-sand: #3B4252;
   --db-terracotta: #88C0D0;
   --db-clay: #81A1C1;
-  --db-warm-gray: #7B88A1;
+  --db-warm-gray: #95A0B4;
   --db-charcoal: #D8DEE9;
   --db-ink: #ECEFF4;
   --db-white: #3B4252;
@@ -1026,7 +1026,7 @@ body::before {
   --db-sand: #D8DEE9;
   --db-terracotta: #5E81AC;
   --db-clay: #81A1C1;
-  --db-warm-gray: #7B88A1;
+  --db-warm-gray: #5A667E;
   --db-charcoal: #434C5E;
   --db-ink: #2E3440;
   --db-white: #F0F3F8;
@@ -1059,7 +1059,7 @@ body::before {
   --db-sand: #3E4451;
   --db-terracotta: #61AFEF;
   --db-clay: #C678DD;
-  --db-warm-gray: #5C6370;
+  --db-warm-gray: #8F96A3;
   --db-charcoal: #B0B8C8;
   --db-ink: #ABB2BF;
   --db-white: #333842;
@@ -1092,7 +1092,7 @@ body::before {
   --db-sand: #DBDBDC;
   --db-terracotta: #4078F2;
   --db-clay: #A626A4;
-  --db-warm-gray: #A0A1A7;
+  --db-warm-gray: #696A72;
   --db-charcoal: #494B53;
   --db-ink: #383A42;
   --db-white: #FFFFFF;
@@ -1125,7 +1125,7 @@ body::before {
   --db-sand: #3E3D32;
   --db-terracotta: #66D9EF;
   --db-clay: #F92672;
-  --db-warm-gray: #75715E;
+  --db-warm-gray: #96927C;
   --db-charcoal: #CFCFC2;
   --db-ink: #F8F8F2;
   --db-white: #333428;
@@ -1158,7 +1158,7 @@ body::before {
   --db-sand: #D8D8D0;
   --db-terracotta: #0089B6;
   --db-clay: #C4265E;
-  --db-warm-gray: #8C8A78;
+  --db-warm-gray: #6D6B5C;
   --db-charcoal: #4A4A40;
   --db-ink: #272822;
   --db-white: #FFFFFF;
@@ -1191,7 +1191,7 @@ body::before {
   --db-sand: #3C3836;
   --db-terracotta: #FE8019;
   --db-clay: #FABD2F;
-  --db-warm-gray: #928374;
+  --db-warm-gray: #9D9082;
   --db-charcoal: #D5C4A1;
   --db-ink: #FBF1C7;
   --db-white: #3C3836;
@@ -1224,7 +1224,7 @@ body::before {
   --db-sand: #D5C4A1;
   --db-terracotta: #AF3A03;
   --db-clay: #B57614;
-  --db-warm-gray: #928374;
+  --db-warm-gray: #6E6257;
   --db-charcoal: #504945;
   --db-ink: #282828;
   --db-white: #FFF8D8;
@@ -1259,7 +1259,7 @@ body::before {
   --db-sand: #1D3B53;
   --db-terracotta: #82AAFF;
   --db-clay: #C792EA;
-  --db-warm-gray: #637777;
+  --db-warm-gray: #6F8686;
   --db-charcoal: #B0C4DE;
   --db-ink: #D6DEEB;
   --db-white: #0B2942;
@@ -1292,7 +1292,7 @@ body::before {
   --db-sand: #E0E0E0;
   --db-terracotta: #4876D6;
   --db-clay: #994CC3;
-  --db-warm-gray: #93A1A1;
+  --db-warm-gray: #5F6D6D;
   --db-charcoal: #403F53;
   --db-ink: #403F53;
   --db-white: #FFFFFF;
@@ -1325,7 +1325,7 @@ body::before {
   --db-sand: #D0D7DE;
   --db-terracotta: #0969DA;
   --db-clay: #8250DF;
-  --db-warm-gray: #6E7781;
+  --db-warm-gray: #656C76;
   --db-charcoal: #424A53;
   --db-ink: #1F2328;
   --db-white: #FFFFFF;
@@ -1391,7 +1391,7 @@ body::before {
   --db-sand: #CCD0DA;
   --db-terracotta: #8839EF;
   --db-clay: #1E66F5;
-  --db-warm-gray: #9CA0B0;
+  --db-warm-gray: #616579;
   --db-charcoal: #5C5F77;
   --db-ink: #4C4F69;
   --db-white: #F4F6FA;
@@ -1424,7 +1424,7 @@ body::before {
   --db-sand: #313244;
   --db-terracotta: #CBA6F7;
   --db-clay: #89B4FA;
-  --db-warm-gray: #6C7086;
+  --db-warm-gray: #85899D;
   --db-charcoal: #BAC2DE;
   --db-ink: #CDD6F4;
   --db-white: #2A2A3C;
@@ -1457,7 +1457,7 @@ body::before {
   --db-sand: #292E42;
   --db-terracotta: #7AA2F7;
   --db-clay: #BB9AF7;
-  --db-warm-gray: #565F89;
+  --db-warm-gray: #7C85AD;
   --db-charcoal: #A9B1D6;
   --db-ink: #C0CAF5;
   --db-white: #24283B;
@@ -1490,7 +1490,7 @@ body::before {
   --db-sand: #B8B9C0;
   --db-terracotta: #34548A;
   --db-clay: #5A3E8E;
-  --db-warm-gray: #9699A3;
+  --db-warm-gray: #52545D;
   --db-charcoal: #565A6E;
   --db-ink: #343B59;
   --db-white: #E0E0E5;
@@ -1523,7 +1523,7 @@ body::before {
   --db-sand: #3A3F55;
   --db-terracotta: #82AAFF;
   --db-clay: #C792EA;
-  --db-warm-gray: #676E95;
+  --db-warm-gray: #9197B3;
   --db-charcoal: #959DCB;
   --db-ink: #A6ACCD;
   --db-white: #343848;
@@ -1556,7 +1556,7 @@ body::before {
   --db-sand: #D4D4D8;
   --db-terracotta: #6182B8;
   --db-clay: #7C4DFF;
-  --db-warm-gray: #90A4AE;
+  --db-warm-gray: #586E78;
   --db-charcoal: #546E7A;
   --db-ink: #263238;
   --db-white: #FFFFFF;
@@ -1591,7 +1591,7 @@ body::before {
   --db-sand: #3E2F58;
   --db-terracotta: #F92AAD;
   --db-clay: #72F1B8;
-  --db-warm-gray: #7A6B8C;
+  --db-warm-gray: #978AA6;
   --db-charcoal: #D0C0E8;
   --db-ink: #FFF5F6;
   --db-white: #362A4A;
@@ -1624,7 +1624,7 @@ body::before {
   --db-sand: #D0BFE0;
   --db-terracotta: #A80068;
   --db-clay: #2A8F60;
-  --db-warm-gray: #8878A0;
+  --db-warm-gray: #6A5A81;
   --db-charcoal: #4A3860;
   --db-ink: #2B213A;
   --db-white: #FAF0FF;
@@ -1657,7 +1657,7 @@ body::before {
   --db-sand: #4D4578;
   --db-terracotta: #FAD000;
   --db-clay: #A599E9;
-  --db-warm-gray: #7A6BAA;
+  --db-warm-gray: #9F94C1;
   --db-charcoal: #C0B8E8;
   --db-ink: #E0DEF5;
   --db-white: #383262;
@@ -1690,7 +1690,7 @@ body::before {
   --db-sand: #D0C8E8;
   --db-terracotta: #6943A8;
   --db-clay: #7C3AED;
-  --db-warm-gray: #8A80A8;
+  --db-warm-gray: #685E88;
   --db-charcoal: #4A4068;
   --db-ink: #2D2B55;
   --db-white: #F8F5FF;
@@ -1721,9 +1721,9 @@ body::before {
   --db-cream: #FAFAFA;
   --db-cream-dark: #F0F0F0;
   --db-sand: #D8D8D4;
-  --db-terracotta: #FF8F40;
+  --db-terracotta: #EC6100;
   --db-clay: #A37ACC;
-  --db-warm-gray: #ABB0B6;
+  --db-warm-gray: #656B74;
   --db-charcoal: #5C6773;
   --db-ink: #575F66;
   --db-white: #FFFFFF;
@@ -1756,7 +1756,7 @@ body::before {
   --db-sand: #1B1F28;
   --db-terracotta: #FF8F40;
   --db-clay: #D4BFFF;
-  --db-warm-gray: #626A73;
+  --db-warm-gray: #757F89;
   --db-charcoal: #B8C4D0;
   --db-ink: #E6E1CF;
   --db-white: #151920;
@@ -1789,7 +1789,7 @@ body::before {
   --db-sand: #2E303E;
   --db-terracotta: #E95678;
   --db-clay: #B877DB;
-  --db-warm-gray: #6C6F93;
+  --db-warm-gray: #8487A5;
   --db-charcoal: #C0BFD0;
   --db-ink: #E0DEF4;
   --db-white: #272938;
@@ -1822,7 +1822,7 @@ body::before {
   --db-sand: #E0CEC8;
   --db-terracotta: #DA103F;
   --db-clay: #823EB7;
-  --db-warm-gray: #9C8A85;
+  --db-warm-gray: #74625E;
   --db-charcoal: #5A4A48;
   --db-ink: #1C1E26;
   --db-white: #FFF5F2;
@@ -3348,6 +3348,50 @@ textarea.db-field__input {
   border-bottom-right-radius: var(--db-radius-3);
 }
 
+/* Native <dialog> support */
+dialog.db-modal {
+  padding: 0;
+  border: 1px solid var(--db-sand);
+  border-radius: var(--db-modal-radius);
+  background: var(--db-modal-bg);
+  box-shadow: var(--db-modal-shadow), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6);
+  width: var(--db-modal-max-width);
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  transform: translateY(16px) scale(0.97);
+  opacity: 0;
+  transition: transform 200ms ease, opacity 200ms ease, overlay 200ms ease allow-discrete, display 200ms ease allow-discrete;
+}
+
+dialog.db-modal[open] {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+@starting-style {
+  dialog.db-modal[open] {
+    transform: translateY(16px) scale(0.97);
+    opacity: 0;
+  }
+}
+
+dialog.db-modal::backdrop {
+  background: var(--db-modal-backdrop);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 200ms ease, overlay 200ms ease allow-discrete, display 200ms ease allow-discrete;
+}
+
+dialog.db-modal[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  dialog.db-modal[open]::backdrop {
+    opacity: 0;
+  }
+}
+
 /* ------------------------------------------------------------
    8b. FEEDBACK — Toast Stack
    ------------------------------------------------------------ */
@@ -3590,6 +3634,44 @@ textarea.db-field__input {
 .db-progress--indeterminate .db-progress__bar {
   width: 30%;
   animation: db-progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+/* Native <progress> element support */
+progress.db-progress {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  height: var(--db-progress-height);
+  border: none;
+  border-radius: var(--db-progress-radius);
+  background: var(--db-progress-bg);
+  box-shadow: var(--db-shadow-inset);
+  overflow: hidden;
+}
+
+progress.db-progress::-webkit-progress-bar {
+  background: var(--db-progress-bg);
+  border-radius: var(--db-progress-radius);
+  box-shadow: var(--db-shadow-inset);
+}
+
+progress.db-progress::-webkit-progress-value {
+  background: var(--db-progress-fill);
+  border-radius: var(--db-progress-radius);
+  box-shadow: inset 0 1px 0 rgba(var(--db-glow-rgb),0.3);
+}
+
+progress.db-progress::-moz-progress-bar {
+  background: var(--db-progress-fill);
+  border-radius: var(--db-progress-radius);
+  box-shadow: inset 0 1px 0 rgba(var(--db-glow-rgb),0.3);
+}
+
+progress.db-progress:indeterminate {
+  animation: db-progress-indeterminate 1.5s ease-in-out infinite;
+  background-size: 30% 100%;
+  background-repeat: no-repeat;
+  background-image: var(--db-progress-fill);
 }
 
 /* ------------------------------------------------------------
@@ -4882,7 +4964,7 @@ textarea.db-field__input {
   transition: all var(--db-transition);
 }
 
-.db-nav-menu__item:hover { color: var(--db-ink); background: var(--db-cream-dark); }
+.db-nav-menu__item:hover { color: var(--db-ink); background: rgba(var(--db-shadow-rgb), 0.06); }
 
 .db-nav-menu__item--active {
   color: var(--db-terracotta);

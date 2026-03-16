@@ -3,12 +3,12 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.17.0-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.19.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-73-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
 
-[Live Demo](https://daub.dev) | [Block Gallery](https://daub.dev/demo.html) | [Playground](https://daub.dev/playground.html) | [Roadmap](https://daub.dev/roadmap.html) | [Case Studies](https://daub.dev/case-studies.html) | [AI Docs](https://daub.dev/llms.txt)
+[Live Demo](https://daub.dev) | [Docs](https://daub.dev/docs.html) | [Block Gallery](https://daub.dev/demo.html) | [Playground](https://daub.dev/playground.html) | [Roadmap](https://daub.dev/roadmap.html) | [Case Studies](https://daub.dev/case-studies.html) | [AI Docs](https://daub.dev/llms.txt)
 
 ---
 
@@ -286,7 +286,7 @@ Override CSS custom properties:
 | **Semantic** | `--db-color-bg`, `--db-color-surface`, `--db-color-text`, `--db-color-accent` | ~15 |
 | **Component** | `--db-btn-*`, `--db-card-*`, `--db-field-*`, `--db-modal-*`, `--db-switch-*` | ~70 |
 
-Component tokens (v3.18): button, field, card, badge, switch, tabs, table, modal, toast, alert, progress, separator, navbar, sidebar, dropdown — each with `--db-{component}-*` properties for size, color, border, radius, and shadow.
+Component tokens (v3.19): button, field, card, badge, switch, tabs, table, modal, toast, alert, progress, separator, navbar, sidebar, dropdown — each with `--db-{component}-*` properties for size, color, border, radius, and shadow.
 
 ## Accessibility
 
@@ -548,7 +548,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.17.0** — Link component, 48 auth blocks, Icon renderer, 230+ blocks. 73 components, 20 theme families.
+**Latest: v3.19.0** — WCAG AA contrast across all 40 themes, native `<dialog>` + `<progress>` support, docs page, classless demo, comparison table. 76 components, 20 theme families.
 
 ## Star History
 

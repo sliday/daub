@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAUB — Component Documentation</title>
+  <meta name="description" content="Full documentation for all 73+ DAUB UI components with live examples, copyable code, and modifier badges.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+  <link rel="stylesheet" href="daub.css">
+  <script src="daub.js" defer></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--db-font-body);
+      background: var(--db-cream);
+      color: var(--db-charcoal);
+      line-height: 1.6;
+    }
+
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+
+    .docs-sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--db-white);
+      border-right: 1px solid var(--db-sand);
+      padding: 24px 16px;
+    }
+
+    .docs-sidebar__brand {
+      font-family: var(--db-font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .docs-sidebar__back {
+      font-size: 0.8125rem;
+      color: var(--db-warm-gray);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .docs-sidebar__back:hover { color: var(--db-ink); }
+
+    .docs-sidebar__search {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-2);
+      background: var(--db-cream);
+      color: var(--db-charcoal);
+      font-size: 0.8125rem;
+      margin-bottom: 20px;
+      outline: none;
+    }
+
+    .docs-sidebar__search:focus {
+      border-color: var(--db-terracotta);
+      box-shadow: 0 0 0 2px rgba(var(--db-accent-rgb), 0.15);
+    }
+
+    .docs-sidebar__category {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--db-warm-gray);
+      margin: 16px 0 6px;
+    }
+
+    .docs-sidebar__link {
+      display: block;
+      padding: 4px 8px;
+      font-size: 0.8125rem;
+      color: var(--db-charcoal);
+      text-decoration: none;
+      border-radius: var(--db-radius-1);
+      transition: background 150ms ease;
+    }
+
+    .docs-sidebar__link:hover {
+      background: var(--db-cream);
+      color: var(--db-ink);
+    }
+
+    .docs-sidebar__link--active {
+      background: rgba(var(--db-accent-rgb), 0.1);
+      color: var(--db-terracotta);
+      font-weight: 600;
+    }
+
+    .docs-main {
+      padding: 32px 48px;
+      max-width: 860px;
+    }
+
+    .docs-header { margin-bottom: 40px; }
+
+    .docs-header__title {
+      font-family: var(--db-font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      margin-bottom: 8px;
+    }
+
+    .docs-header__desc {
+      font-size: 1.0625rem;
+      color: var(--db-warm-gray);
+    }
+
+    .docs-stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .docs-stat {
+      font-size: 0.875rem;
+      color: var(--db-warm-gray);
+    }
+
+    .docs-stat strong {
+      color: var(--db-ink);
+      font-size: 1.125rem;
+    }
+
+    .docs-component {
+      margin-bottom: 48px;
+      scroll-margin-top: 24px;
+    }
+
+    .docs-component__name {
+      font-family: var(--db-font-heading);
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--db-ink);
+      margin-bottom: 4px;
+    }
+
+    .docs-component__class {
+      font-family: var(--db-font-mono, monospace);
+      font-size: 0.8125rem;
+      color: var(--db-terracotta);
+      margin-bottom: 8px;
+    }
+
+    .docs-component__notes {
+      font-size: 0.875rem;
+      color: var(--db-warm-gray);
+      margin-bottom: 12px;
+    }
+
+    .docs-component__modifiers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .docs-component__preview {
+      background: var(--db-white);
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-2) var(--db-radius-2) 0 0;
+      padding: 24px;
+      overflow-x: auto;
+    }
+
+    .docs-component__code-wrap {
+      position: relative;
+      background: var(--db-cream-dark);
+      border: 1px solid var(--db-sand);
+      border-top: none;
+      border-radius: 0 0 var(--db-radius-2) var(--db-radius-2);
+    }
+
+    .docs-component__code {
+      display: block;
+      padding: 16px;
+      font-family: var(--db-font-mono, monospace);
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      color: var(--db-charcoal);
+      white-space: pre;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .docs-component__copy {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 4px 10px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      background: var(--db-white);
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-1);
+      color: var(--db-charcoal);
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+
+    .docs-component__copy:hover { background: var(--db-cream); }
+
+    .docs-component__meta {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .docs-component__tag {
+      font-size: 0.6875rem;
+      padding: 2px 8px;
+      border-radius: var(--db-radius-full);
+      background: rgba(var(--db-accent-rgb), 0.1);
+      color: var(--db-terracotta);
+      font-weight: 600;
+    }
+
+    .docs-component__tag--js {
+      background: rgba(var(--db-warning-rgb), 0.15);
+      color: var(--db-warning);
+    }
+
+    .docs-empty {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--db-warm-gray);
+      font-size: 1.0625rem;
+    }
+
+    .docs-cat-heading {
+      font-family: var(--db-font-heading);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--db-warm-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 40px 0 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--db-sand);
+    }
+
+    @media (max-width: 768px) {
+      .docs-layout { grid-template-columns: 1fr; }
+      .docs-sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--db-sand);
+        padding: 16px;
+      }
+      .docs-sidebar__nav { display: none; }
+      .docs-sidebar.docs-sidebar--open .docs-sidebar__nav { display: block; }
+      .docs-main { padding: 24px 16px; }
+      .docs-toggle {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.8125rem;
+        color: var(--db-terracotta);
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: inherit;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .docs-toggle { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="docs-layout">
+  <aside class="docs-sidebar" id="sidebar">
+    <a href="/" class="docs-sidebar__brand">DAUB</a>
+    <a href="/" class="docs-sidebar__back">&larr; Back to homepage</a>
+    <input type="search" class="docs-sidebar__search" id="search" placeholder="Search components..." autocomplete="off">
+    <button class="docs-toggle" id="sidebarToggle">Browse categories</button>
+    <nav class="docs-sidebar__nav" id="sidebarNav"></nav>
+  </aside>
+  <main class="docs-main" id="main">
+    <div class="docs-header">
+      <h1 class="docs-header__title">Component Documentation</h1>
+      <p class="docs-header__desc">Every DAUB component with live preview, code snippet, and modifiers.</p>
+      <div class="docs-stats" id="stats"></div>
+    </div>
+    <div id="components"></div>
+  </main>
+</div>
+
+<script>
+/**
+ * DAUB Docs — client-side component docs renderer.
+ * Fetches components.json (trusted local file, part of the project)
+ * and renders live previews + code snippets.
+ *
+ * Note: innerHTML is used intentionally here to render live component
+ * previews from the project's own components.json HTML examples.
+ * This data is first-party and not user-supplied.
+ */
+(function() {
+  var CATEGORY_LABELS = {
+    'controls': 'Controls',
+    'foundations': 'Foundations',
+    'feedback': 'Feedback',
+    'navigation': 'Navigation',
+    'data-display': 'Data Display',
+    'overlays': 'Overlays',
+    'layout-utility': 'Layout & Utility'
+  };
+
+  var CATEGORY_ORDER = ['controls', 'foundations', 'feedback', 'navigation', 'data-display', 'overlays', 'layout-utility'];
+
+  fetch('components.json')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      render(d.components);
+      buildSidebar(d.components);
+      buildStats(d.components);
+      initSearch(d.components);
+    });
+
+  function groupByCategory(components) {
+    var groups = {};
+    components.forEach(function(c) {
+      if (!groups[c.category]) groups[c.category] = [];
+      groups[c.category].push(c);
+    });
+    return groups;
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  function slugify(str) {
+    return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  function render(components) {
+    var container = document.getElementById('components');
+    container.textContent = '';
+
+    if (!components.length) {
+      var empty = document.createElement('div');
+      empty.className = 'docs-empty';
+      empty.textContent = 'No components match your search.';
+      container.appendChild(empty);
+      return;
+    }
+
+    var groups = groupByCategory(components);
+
+    CATEGORY_ORDER.forEach(function(cat) {
+      var items = groups[cat];
+      if (!items || !items.length) return;
+
+      var heading = document.createElement('h2');
+      heading.className = 'docs-cat-heading';
+      heading.id = 'cat-' + cat;
+      heading.textContent = CATEGORY_LABELS[cat] || cat;
+      container.appendChild(heading);
+
+      items.forEach(function(c) {
+        var id = slugify(c.name);
+        var card = document.createElement('div');
+        card.className = 'docs-component';
+        card.id = id;
+
+        var name = document.createElement('h3');
+        name.className = 'docs-component__name';
+        name.textContent = c.name;
+        card.appendChild(name);
+
+        var meta = document.createElement('div');
+        meta.className = 'docs-component__meta';
+        var cls = document.createElement('span');
+        cls.className = 'docs-component__class';
+        cls.textContent = c.class;
+        meta.appendChild(cls);
+        if (c.js) {
+          var jsTag = document.createElement('span');
+          jsTag.className = 'docs-component__tag docs-component__tag--js';
+          jsTag.textContent = 'JS';
+          meta.appendChild(jsTag);
+        }
+        var elTag = document.createElement('span');
+        elTag.className = 'docs-component__tag';
+        elTag.textContent = '<' + c.element + '>';
+        meta.appendChild(elTag);
+        card.appendChild(meta);
+
+        if (c.notes) {
+          var notes = document.createElement('p');
+          notes.className = 'docs-component__notes';
+          notes.textContent = c.notes;
+          card.appendChild(notes);
+        }
+
+        if (c.modifiers && c.modifiers.length) {
+          var mods = document.createElement('div');
+          mods.className = 'docs-component__modifiers';
+          c.modifiers.forEach(function(mod) {
+            var badge = document.createElement('span');
+            badge.className = 'db-badge db-badge--gray';
+            badge.style.fontSize = '0.6875rem';
+            badge.textContent = mod;
+            mods.appendChild(badge);
+          });
+          card.appendChild(mods);
+        }
+
+        // Live preview — trusted first-party HTML from components.json
+        var preview = document.createElement('div');
+        preview.className = 'docs-component__preview';
+        preview.innerHTML = c.html;
+        card.appendChild(preview);
+
+        var codeWrap = document.createElement('div');
+        codeWrap.className = 'docs-component__code-wrap';
+        var pre = document.createElement('pre');
+        pre.className = 'docs-component__code';
+        pre.textContent = c.html;
+        codeWrap.appendChild(pre);
+
+        var copyBtn = document.createElement('button');
+        copyBtn.className = 'docs-component__copy';
+        copyBtn.textContent = 'Copy';
+        copyBtn.addEventListener('click', (function(code, btn) {
+          return function() {
+            navigator.clipboard.writeText(code).then(function() {
+              btn.textContent = 'Copied!';
+              setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+            });
+          };
+        })(c.html, copyBtn));
+        codeWrap.appendChild(copyBtn);
+        card.appendChild(codeWrap);
+        container.appendChild(card);
+      });
+    });
+
+    if (window.DAUB && window.DAUB.init) {
+      window.DAUB.init(container);
+    }
+  }
+
+  function buildSidebar(components) {
+    var nav = document.getElementById('sidebarNav');
+    nav.textContent = '';
+    var groups = groupByCategory(components);
+
+    CATEGORY_ORDER.forEach(function(cat) {
+      var items = groups[cat];
+      if (!items || !items.length) return;
+
+      var catEl = document.createElement('div');
+      catEl.className = 'docs-sidebar__category';
+      catEl.textContent = CATEGORY_LABELS[cat] || cat;
+      nav.appendChild(catEl);
+
+      items.forEach(function(c) {
+        var a = document.createElement('a');
+        a.className = 'docs-sidebar__link';
+        a.href = '#' + slugify(c.name);
+        a.textContent = c.name;
+        nav.appendChild(a);
+      });
+    });
+  }
+
+  function buildStats(components) {
+    var categories = {};
+    var jsCount = 0;
+    components.forEach(function(c) {
+      categories[c.category] = true;
+      if (c.js) jsCount++;
+    });
+    var el = document.getElementById('stats');
+    el.textContent = '';
+
+    [
+      [components.length, 'components'],
+      [Object.keys(categories).length, 'categories'],
+      [jsCount, 'with JS']
+    ].forEach(function(pair) {
+      var stat = document.createElement('div');
+      stat.className = 'docs-stat';
+      var strong = document.createElement('strong');
+      strong.textContent = pair[0];
+      stat.appendChild(strong);
+      stat.appendChild(document.createTextNode('\u00a0' + pair[1]));
+      el.appendChild(stat);
+    });
+  }
+
+  function initSearch(allComponents) {
+    var searchEl = document.getElementById('search');
+    searchEl.addEventListener('input', function() {
+      var q = searchEl.value.toLowerCase().trim();
+      if (!q) {
+        render(allComponents);
+        buildSidebar(allComponents);
+        return;
+      }
+      var filtered = allComponents.filter(function(c) {
+        return c.name.toLowerCase().indexOf(q) !== -1 ||
+               c.class.toLowerCase().indexOf(q) !== -1 ||
+               c.category.toLowerCase().indexOf(q) !== -1 ||
+               (c.notes && c.notes.toLowerCase().indexOf(q) !== -1);
+      });
+      render(filtered);
+      buildSidebar(filtered);
+    });
+  }
+
+  document.getElementById('sidebarToggle').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.toggle('docs-sidebar--open');
+  });
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.docs-sidebar__link').forEach(function(link) {
+          link.classList.remove('docs-sidebar__link--active');
+          if (link.getAttribute('href') === '#' + entry.target.id) {
+            link.classList.add('docs-sidebar__link--active');
+          }
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  setTimeout(function() {
+    document.querySelectorAll('.docs-component').forEach(function(el) {
+      observer.observe(el);
+    });
+  }, 500);
+})();
+</script>
+
+</body>
+</html>
