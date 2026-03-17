@@ -548,7 +548,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.19.2** — SEO & AI discoverability: keyword-rich title/meta, FAQ schema, complete sitemap, consistent component count (76), updated llms.txt version.
+**Latest: v3.19.2** — SEO & AI discoverability: keyword-rich title/meta, FAQ schema, complete sitemap, consistent component count (76), llms.txt version sync. Mobile fixes: hamburger nav on all pages, configurator corner radius, toggle sizing, classless demo overflow, docs title responsiveness.
 
 **v3.19.1** — Fix playground renderer: add Icon and Link components, fix Field children prop passing, eliminate orphan elements. All 135 parser tests pass.
 
