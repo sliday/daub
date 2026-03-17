@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { LAYOUT_RULES_COMPACT, LANDING_PAGE_RULES, detectLandingIntent } from './design-knowledge.js';
+import { LAYOUT_RULES_COMPACT, LANDING_PAGE_RULES, detectLandingIntent, detectIndustryIntent, detectMobileIntent, MOBILE_DESIGN_RULES, PAGE_FORMULAS } from './design-knowledge.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,10 +21,10 @@ export const COMP_PROPS = {
   Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
-  Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id)',
+  Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id) | UX: one primary per view, loading:true during async, verb-first labels',
   ButtonGroup: '(children are Buttons)',
-  Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string',
-  Input: 'placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time"',
+  Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string | UX: always include label, helper for complex inputs, error near field',
+  Input: 'placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time" | UX: wrap in Field for label+helper, or pair with Label',
   InputGroup: 'addonBefore: string, addonAfter: string (child is Input)',
   InputIcon: 'icon: string, right: bool (child is Input)',
   Search: 'placeholder: string',
@@ -44,13 +44,13 @@ export const COMP_PROPS = {
   Tabs: 'tabs: [{label, id}], active: string, children: [childIds] (one child per tab — each child becomes a tab panel; order matches tabs array)',
   Breadcrumbs: 'items: [{label, href}]',
   Pagination: 'current: number, total: number, perPage: number',
-  Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool',
+  Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool | UX: one active step at a time, completed steps should be revisitable',
   NavMenu: 'items: [{label, href, active: bool}]',
   Navbar: 'brand: string, brandHref: string',
   Menubar: 'items: [{label, dropdown: [{label, href}]}]',
   Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool',
-  BottomNav: 'items: [{label, icon, active, badge}]',
-  Card: 'title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool',
+  BottomNav: 'items: [{label, icon, active, badge}] | UX: max 5 items, icon+label always, highlight active',
+  Card: 'title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool | UX: always include title or meaningful children, interactive:true for clickable',
   Table: 'columns: [{key, label, numeric}], rows: [{}], sortable: bool',
   DataTable: 'columns: [{key, label}], rows: [{}], selectable: bool',
   List: 'items: [{title, secondary, icon}]',
@@ -69,7 +69,7 @@ export const COMP_PROPS = {
   Skeleton: 'variant: "text"|"heading"|"avatar"|"btn", lines: number',
   EmptyState: 'icon: string, title: string, message: string',
   Tooltip: 'text: string, position: "top"|"bottom"|"left"|"right"',
-  Modal: 'id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm)',
+  Modal: 'id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm) | UX: clear close affordance, confirm before dismiss with unsaved data',
   AlertDialog: 'id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)',
   Sheet: 'id: string, position: "right"|"left"|"top"|"bottom"',
   Drawer: 'id: string',
@@ -179,6 +179,12 @@ export function buildSystemPrompt(ragBlocks, userPrompt) {
     ? LANDING_PAGE_RULES + '\n\n'
     : '';
 
+  const mobileSection = detectMobileIntent(userPrompt)
+    ? MOBILE_DESIGN_RULES + '\n\n'
+    : '';
+
+  const formulaSection = PAGE_FORMULAS + '\n\n';
+
   const stateSection = 'INTERACTIVITY — DECLARATIVE STATE (PREFERRED):\n'
     + '- Use declarative state for tabs, toggles, forms, counters, show/hide — NO JavaScript needed\n'
     + '- Add "state" to root spec: initial values as JSON object with paths\n'
@@ -199,14 +205,31 @@ export function buildSystemPrompt(ragBlocks, userPrompt) {
     + '- "pushState": append to array\n'
     + '- "removeState": delete a state key\n\n';
 
-  const themes = 'THEMES:\n'
+  const industryIntent = detectIndustryIntent(userPrompt);
+
+  let themes = 'THEMES:\n'
     + 'Set "theme" in the root JSON to apply a DAUB theme. Available themes:\n'
     + '- Light: "light", "bone", "material-light", "github", "nord-light", "solarized-light", "catppuccin", "gruvbox-light", "paper", "grunge-light"\n'
-    + '- Dark: "dark", "material-dark", "github-dark", "nord", "solarized-dark", "catppuccin-dark", "gruvbox-dark", "dracula", "grunge-dark", "synthwave", "tokyo-night"\n\n'
-    + 'Theme selection heuristics:\n'
+    + '- Dark: "dark", "material-dark", "github-dark", "nord", "solarized-dark", "catppuccin-dark", "gruvbox-dark", "dracula", "grunge-dark", "synthwave", "tokyo-night"\n\n';
+
+  if (industryIntent) {
+    themes += 'DETECTED INDUSTRY CONTEXT — recommended theme: "' + industryIntent.theme + '"\n'
+      + 'Industry-specific guidance: ' + industryIntent.rules + '\n\n';
+  }
+
+  themes += 'Theme selection heuristics:\n'
+    + '- SaaS/B2B/CRM → "github" or "material-light"\n'
+    + '- E-commerce/shop → "light" or "catppuccin"\n'
+    + '- Fintech/banking → "material-light" or "github-dark"\n'
+    + '- Healthcare/wellness → "nord-light" or "bone"\n'
+    + '- Education/learning → "catppuccin" or "light"\n'
+    + '- Creative/portfolio → "grunge-dark" or "synthwave"\n'
+    + '- Blog/editorial → "paper" or "bone"\n'
     + '- Dashboards/analytics → "github" or "material-light"\n'
-    + '- Dark UIs, code tools, dev tools → "dracula" or "tokyo-night"\n'
-    + '- Retro/nostalgic → "grunge-dark" or "synthwave"\n'
+    + '- Dev tools/code → "dracula" or "tokyo-night"\n'
+    + '- Gaming/esports → "tokyo-night" or "synthwave"\n'
+    + '- Music/audio → "synthwave" or "grunge-dark"\n'
+    + '- Fitness/sports → "material-dark" or "github-dark"\n'
     + '- Minimal/clean → "bone" or "nord-light"\n'
     + '- Warm/cozy → "gruvbox-light" or "catppuccin"\n'
     + '- Default: "light" when no preference is detected\n';
@@ -240,5 +263,5 @@ export function buildSystemPrompt(ragBlocks, userPrompt) {
     }
   }
 
-  return preamble + sections + guidelines + density + layoutRulesSection + landingSection + blocksSection + stateSection + themes;
+  return preamble + sections + guidelines + density + layoutRulesSection + formulaSection + landingSection + mobileSection + blocksSection + stateSection + themes;
 }

@@ -2,6 +2,20 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.19.4
+
+**Industry-aware design intelligence for AI spec generation.**
+
+- Feature: `detectIndustryIntent()` — 20 industry categories (SaaS, fintech, healthcare, e-commerce, education, gaming, etc.) with theme mapping and anti-pattern rules
+- Feature: Industry-specific guidance injected into LLM system prompt when intent is detected (recommended theme, layout rules, anti-patterns)
+- Feature: Expanded theme heuristics — 14 industry-to-theme mappings (up from 6 generic ones)
+- Feature: `PAGE_FORMULAS` — structural templates for dashboards, settings, onboarding, profiles, inbox, pricing pages
+- Feature: UX validation warnings in `validateSpec()` — BottomNav >5 items, multiple primary Buttons, empty Text, empty Card, Input without Label
+- Feature: Component UX hints in system prompt — terse guidance for Button, Field, Input, BottomNav, Modal, Card, Stepper
+- Feature: Mobile design rules parity — `detectMobileIntent()` and `MOBILE_DESIGN_RULES` now in local MCP (previously only in Cloudflare MCP)
+- Feature: Cloudflare MCP synced with all new features (industry detection, page formulas, expanded theme heuristics)
+- Test: 36 new tests covering industry detection, mobile detection, UX warnings, and prompt integration
+
 ## v3.17.0
 
 **Auto-temperature, block test suite, landing page refresh.**

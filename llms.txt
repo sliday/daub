@@ -1,6 +1,6 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 3.19.3
+> Version: 3.19.4
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
@@ -1485,3 +1485,51 @@ function App({ spec }) {
 Pattern: define more DAUB components in the catalog as needed. Each wrapper just
 outputs DAUB's expected BEM HTML structure. Call `DAUB.init()` after mount for
 interactive components (modals, tabs, accordions, dropdowns).
+
+## Design Intelligence (v3.19.4)
+
+DAUB's MCP server and generation pipeline include industry-aware design intelligence that automatically adapts the system prompt based on prompt content.
+
+### Industry Intent Detection
+
+`detectIndustryIntent(prompt)` maps 20 industry categories to optimal DAUB themes and layout guidance:
+
+| Industry | Theme | Key Rules |
+|----------|-------|-----------|
+| SaaS/B2B | github | Trust blue, data-dense, Hero+Features+Pricing |
+| E-commerce | light | Product cards, CTA prominence, grid catalogs |
+| Fintech | material-light | Data-dense, muted palette, StatCards for KPIs |
+| Healthcare | nord-light | Calming, accessible, high contrast, no dark default |
+| Dashboard | github | StatCards + Charts + Tables, sidebar nav, compact |
+| Dev tools | dracula | Dark theme, monospace, Kbd shortcuts, compact |
+| Creative | grunge-dark | Bold, large imagery, full-bleed sections |
+| Gaming | tokyo-night | Dark, immersive, leaderboard tables, bold accents |
+| Music | synthwave | Dark + vibrant, list-based tracks, progress bars |
+
+Plus: education, blog, social, real estate, food, travel, fitness, HR, legal, nonprofit, onboarding.
+
+### UX Validation Warnings
+
+`validateSpec()` returns a `warnings` array with soft UX checks:
+- BottomNav with >5 items
+- Multiple `variant:"primary"` Buttons in same parent
+- Input without Label or Field wrapper
+- Empty Text content
+- Card with no title and no children
+
+### Page Formulas
+
+Structural templates injected into prompts for common page types:
+- Dashboard: Navbar + StatCards + Chart/Table + Activity feed
+- Settings: Sidebar/Tabs + Section cards + Form fields + Save footer
+- Onboarding: Stepper + Welcome + Profile + Preferences + Complete
+- Profile: Avatar + Stats + Tabs + Content
+- Pricing: Toggle + Plan cards + Feature comparison + FAQ
+
+### Mobile Design Rules
+
+`detectMobileIntent(prompt)` triggers mobile-specific guidance:
+- BottomNav (5 tabs max) as primary navigation
+- Single-column layout, 48px touch targets
+- Sheet over Modal, Drawer for settings
+- App Shell pattern: Navbar + content + BottomNav

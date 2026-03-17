@@ -57,3 +57,151 @@ Red lines: no carousels in hero, no "Submit" CTA, no company-name-only headlines
 export function detectLandingIntent(prompt) {
   return /landing\s*page|hero\s*section|marketing|pricing\s*(page|table)|signup\s*page|\bcta\b|conversion|above.?the.?fold|sales\s*page|lead\s*gen/i.test(prompt || '');
 }
+
+export const INDUSTRY_INTENTS = [
+  { pattern: /saas|b2b|subscription|crm|erp|project\s*manage/i,
+    theme: 'github',
+    rules: 'Trust blue tones. Hero+Features+Pricing+CTA. Clean data-dense layouts. Anti: excessive animation, playful icons in serious tools.' },
+  { pattern: /e.?commerce|shop|store|product\s*page|cart|checkout/i,
+    theme: 'light',
+    rules: 'Product-focused cards with hover lift. CTA prominence. Success green for cart. Grid layouts for product catalogs. Anti: flat without depth, text-heavy pages.' },
+  { pattern: /fintech|banking|finance|payment|trading|invest/i,
+    theme: 'material-light',
+    rules: 'Data-dense, trust-focused. StatCards for KPIs. Tables for transactions. Muted palette, no neons. Anti: vibrant colors, excessive animation, playful tone.' },
+  { pattern: /health|medical|clinic|patient|pharma|wellness/i,
+    theme: 'nord-light',
+    rules: 'Calming, accessible. Clear hierarchy. Large text, high contrast. Whitespace-generous. Anti: dark mode default, playful animations, small text.' },
+  { pattern: /education|learn|course|student|school|lms|tutor/i,
+    theme: 'catppuccin',
+    rules: 'Warm, inviting. Progress indicators (Stepper, Progress). Card-based content. Clear navigation. Anti: dense data tables, corporate tone.' },
+  { pattern: /creative|portfolio|design\s*agency|studio|artist/i,
+    theme: 'grunge-dark',
+    rules: 'Expressive, bold. Large imagery. Minimal text. Full-bleed sections. Anti: corporate blue, dense forms, cookie-cutter layouts.' },
+  { pattern: /blog|news|magazine|editorial|article|content\s*site/i,
+    theme: 'paper',
+    rules: 'Typography-first. Prose component for body. Max 65ch line length. Clear reading hierarchy. Anti: sidebar clutter, small body text, low contrast.' },
+  { pattern: /social|community|forum|chat|messaging|feed/i,
+    theme: 'light',
+    rules: 'Card-based feeds. Avatar+name patterns. List for threads. BottomNav for mobile. Anti: dense tables, formal tone, no user presence indicators.' },
+  { pattern: /dashboard|analytics|admin\s*panel|back.?office|monitoring/i,
+    theme: 'github',
+    rules: 'Data-dense. StatCards row + Charts + Tables. Sidebar navigation. Compact spacing. Anti: large hero sections, marketing copy, excessive whitespace.' },
+  { pattern: /dev\s*tool|developer|api|code|terminal|ide|cli/i,
+    theme: 'dracula',
+    rules: 'Dark theme preferred. Monospace for code. Compact UI. Kbd for shortcuts. Anti: rounded playful shapes, pastel colors, large images.' },
+  { pattern: /real\s*estate|property|listing|rental|housing/i,
+    theme: 'bone',
+    rules: 'Image-heavy cards. Grid layouts for listings. Filter chips. Map integration hints. Anti: dark themes, dense tables without imagery.' },
+  { pattern: /food|restaurant|recipe|delivery|menu|cafe/i,
+    theme: 'gruvbox-light',
+    rules: 'Warm tones. Image-heavy cards. Grid for menu items. Large CTAs for ordering. Anti: corporate blue, data-dense layouts.' },
+  { pattern: /travel|booking|hotel|flight|tourism|vacation/i,
+    theme: 'nord-light',
+    rules: 'Image-forward. Search-first layout. Card grids for destinations. DatePicker for dates. Anti: text-heavy, dark themes, no imagery.' },
+  { pattern: /fitness|gym|workout|sport|exercise|training/i,
+    theme: 'material-dark',
+    rules: 'Bold, energetic. Progress bars, stat cards. Dark with accent pops. Charts for progress. Anti: pastel, formal corporate tone.' },
+  { pattern: /music|audio|podcast|streaming|playlist/i,
+    theme: 'synthwave',
+    rules: 'Dark with vibrant accents. List-based for tracks/episodes. Progress for playback. BottomNav for mobile. Anti: white themes, corporate layouts.' },
+  { pattern: /gaming|game|esport|player|leaderboard/i,
+    theme: 'tokyo-night',
+    rules: 'Dark, immersive. StatCards for scores. Tables for leaderboards. Bold accent colors. Anti: light themes, formal business tone.' },
+  { pattern: /hr|recruit|hiring|job\s*board|career|applicant/i,
+    theme: 'material-light',
+    rules: 'Clean, professional. Card-based job listings. Stepper for application flow. Filter sidebar. Anti: dark themes, playful tone.' },
+  { pattern: /legal|law|compliance|contract|policy/i,
+    theme: 'bone',
+    rules: 'Conservative, trustworthy. Prose for documents. Accordion for FAQs. Muted palette. Anti: bright colors, playful elements, dark mode.' },
+  { pattern: /nonprofit|charity|donation|cause|volunteer/i,
+    theme: 'catppuccin',
+    rules: 'Warm, emotive. Hero with impact stats. Progress for goals. Testimonials. Anti: corporate cold, dark themes, dense data.' },
+  { pattern: /onboarding|signup\s*flow|welcome|getting\s*started/i,
+    theme: 'light',
+    rules: 'Stepper for progress. One task per step. Centered layout. Minimal navigation. Anti: dense forms, sidebar nav, multiple CTAs per step.' },
+];
+
+export function detectIndustryIntent(prompt) {
+  if (!prompt) return null;
+  for (const intent of INDUSTRY_INTENTS) {
+    if (intent.pattern.test(prompt)) {
+      return { industry: intent.pattern.source, theme: intent.theme, rules: intent.rules };
+    }
+  }
+  return null;
+}
+
+export const MOBILE_DESIGN_RULES = `MOBILE APP DESIGN PATTERNS:
+Core principle: thumb-driven, single-column, bottom-anchored navigation.
+
+Layout structure:
+- Use BottomNav (5 tabs max) as primary navigation — NOT Sidebar or horizontal Navbar links
+- App Shell pattern: Navbar (title + actions) + scrollable content + BottomNav
+- Single-column layout only. No Grid columns > 1 on mobile
+- Stack direction:"vertical" for all page content, direction:"horizontal" only for inline elements (chips, button rows, avatar + text)
+- Cards go full-width (no side margins except 16px page gutter)
+
+Navigation hierarchy:
+- BottomNav = top-level sections (Home, Search, Create, Activity, Profile)
+- Navbar = contextual title + back arrow + action icons (max 2 right-side icons)
+- Tabs = sub-sections within a screen
+- Sheet (bottom) = contextual actions, filters, sort options
+- Drawer = secondary navigation or settings
+
+Touch targets & spacing:
+- All interactive elements: min 48x48px touch target
+- 8px minimum gap between adjacent touch targets
+- Button height: 48px (primary actions), 40px (secondary)
+- Gap tokens: prefer 3 (12px) for tight lists, 4 (16px) for section spacing, 5 (24px) for major sections
+- Page gutter: 16px (gap 4) on both sides — content never touches screen edges
+
+Content patterns:
+- Lists with db-list for feeds, settings, contacts (icon/avatar + title + secondary + chevron)
+- Cards for content previews (image + text + actions)
+- StatCard row (2 across in horizontal Stack) for dashboard metrics
+- Avatar + name patterns for user references
+- Chip rows for filters/categories (horizontal Stack, wrap:true)
+
+Mobile-specific components to prefer:
+- BottomNav over Sidebar
+- Sheet (bottom) over Modal for actions/filters
+- Drawer for settings/profile menus
+- Carousel for media galleries
+- Tabs for sub-navigation (max 4-5 tabs)
+- Search with db-search component at page top
+
+Screen templates by type:
+- Feed: Navbar + Search + filter Chips + List/Cards + BottomNav
+- Detail: Navbar (back + title + share) + hero image + content Stack + sticky bottom CTA
+- Settings: Navbar (back + "Settings") + grouped Lists with Separators
+- Profile: Navbar + Avatar (lg) + stats row + Tabs + content
+- Dashboard: Navbar + StatCards (2x2 Grid) + Chart + recent List + BottomNav
+- Auth/Login: centered Stack with logo + Fields + primary Button + text links
+
+Typography for mobile:
+- Body: 16px (never smaller for readability)
+- Headings: scale 1.2 ratio (16-20-24-28)
+- Use db-caption (12px) sparingly — only for timestamps, metadata
+- Left-align everything (no center-aligned paragraphs on mobile)
+
+Common mobile mistakes to avoid:
+- Using Sidebar navigation (use BottomNav)
+- Grid with 3+ columns (max 2, prefer 1)
+- Tiny touch targets (< 48px)
+- Modal for simple choices (use Sheet)
+- Desktop-style horizontal navbars with many links
+- Content without page gutters (16px minimum)
+- Floating action buttons overlapping content
+- Deep navigation hierarchies (max 3 levels)`;
+
+export function detectMobileIntent(prompt) {
+  return /mobile\s*app|mobile\s*application|ios\s*app|android\s*app|phone\s*app|\bsmartphone\b|\biphone\b|mobile\s*screen|mobile\s*ui|mobile\s*layout|mobile\s*view|native\s*app|bottom.?nav|app\s*shell/i.test(prompt || '');
+}
+
+export const PAGE_FORMULAS = `PAGE FORMULAS (beyond landing pages):
+Dashboard: Navbar + StatCards row + Primary chart/table + Secondary data + Activity feed
+Settings: Sidebar/Tabs nav + Section cards + Form fields + Save/Cancel footer
+Onboarding: Stepper + Welcome + Profile setup + Preferences + Completion
+Profile: Avatar + Stats row + Tabs (Posts/Activity/Settings) + Content
+Inbox/List: Search + Filter chips + Scrollable list + Detail panel (or navigate)
+Pricing: Toggle (monthly/annual) + Plan cards (3 tiers) + Feature comparison table + FAQ`;

@@ -358,6 +358,47 @@ function detectMobileIntent(prompt) {
   return /mobile\s*app|mobile\s*application|ios\s*app|android\s*app|phone\s*app|\bsmartphone\b|\biphone\b|mobile\s*screen|mobile\s*ui|mobile\s*layout|mobile\s*view|native\s*app|bottom.?nav|app\s*shell/i.test(prompt || '');
 }
 
+const INDUSTRY_INTENTS = [
+  { pattern: /saas|b2b|subscription|crm|erp|project\s*manage/i, theme: 'github', rules: 'Trust blue tones. Hero+Features+Pricing+CTA. Clean data-dense layouts. Anti: excessive animation, playful icons in serious tools.' },
+  { pattern: /e.?commerce|shop|store|product\s*page|cart|checkout/i, theme: 'light', rules: 'Product-focused cards with hover lift. CTA prominence. Success green for cart. Grid layouts for product catalogs. Anti: flat without depth, text-heavy pages.' },
+  { pattern: /fintech|banking|finance|payment|trading|invest/i, theme: 'material-light', rules: 'Data-dense, trust-focused. StatCards for KPIs. Tables for transactions. Muted palette, no neons. Anti: vibrant colors, excessive animation, playful tone.' },
+  { pattern: /health|medical|clinic|patient|pharma|wellness/i, theme: 'nord-light', rules: 'Calming, accessible. Clear hierarchy. Large text, high contrast. Whitespace-generous. Anti: dark mode default, playful animations, small text.' },
+  { pattern: /education|learn|course|student|school|lms|tutor/i, theme: 'catppuccin', rules: 'Warm, inviting. Progress indicators (Stepper, Progress). Card-based content. Clear navigation. Anti: dense data tables, corporate tone.' },
+  { pattern: /creative|portfolio|design\s*agency|studio|artist/i, theme: 'grunge-dark', rules: 'Expressive, bold. Large imagery. Minimal text. Full-bleed sections. Anti: corporate blue, dense forms, cookie-cutter layouts.' },
+  { pattern: /blog|news|magazine|editorial|article|content\s*site/i, theme: 'paper', rules: 'Typography-first. Prose component for body. Max 65ch line length. Clear reading hierarchy. Anti: sidebar clutter, small body text, low contrast.' },
+  { pattern: /social|community|forum|chat|messaging|feed/i, theme: 'light', rules: 'Card-based feeds. Avatar+name patterns. List for threads. BottomNav for mobile. Anti: dense tables, formal tone, no user presence indicators.' },
+  { pattern: /dashboard|analytics|admin\s*panel|back.?office|monitoring/i, theme: 'github', rules: 'Data-dense. StatCards row + Charts + Tables. Sidebar navigation. Compact spacing. Anti: large hero sections, marketing copy, excessive whitespace.' },
+  { pattern: /dev\s*tool|developer|api|code|terminal|ide|cli/i, theme: 'dracula', rules: 'Dark theme preferred. Monospace for code. Compact UI. Kbd for shortcuts. Anti: rounded playful shapes, pastel colors, large images.' },
+  { pattern: /real\s*estate|property|listing|rental|housing/i, theme: 'bone', rules: 'Image-heavy cards. Grid layouts for listings. Filter chips. Anti: dark themes, dense tables without imagery.' },
+  { pattern: /food|restaurant|recipe|delivery|menu|cafe/i, theme: 'gruvbox-light', rules: 'Warm tones. Image-heavy cards. Grid for menu items. Large CTAs for ordering. Anti: corporate blue, data-dense layouts.' },
+  { pattern: /travel|booking|hotel|flight|tourism|vacation/i, theme: 'nord-light', rules: 'Image-forward. Search-first layout. Card grids for destinations. DatePicker for dates. Anti: text-heavy, dark themes, no imagery.' },
+  { pattern: /fitness|gym|workout|sport|exercise|training/i, theme: 'material-dark', rules: 'Bold, energetic. Progress bars, stat cards. Dark with accent pops. Charts for progress. Anti: pastel, formal corporate tone.' },
+  { pattern: /music|audio|podcast|streaming|playlist/i, theme: 'synthwave', rules: 'Dark with vibrant accents. List-based for tracks/episodes. Progress for playback. BottomNav for mobile. Anti: white themes, corporate layouts.' },
+  { pattern: /gaming|game|esport|player|leaderboard/i, theme: 'tokyo-night', rules: 'Dark, immersive. StatCards for scores. Tables for leaderboards. Bold accent colors. Anti: light themes, formal business tone.' },
+  { pattern: /hr|recruit|hiring|job\s*board|career|applicant/i, theme: 'material-light', rules: 'Clean, professional. Card-based job listings. Stepper for application flow. Filter sidebar. Anti: dark themes, playful tone.' },
+  { pattern: /legal|law|compliance|contract|policy/i, theme: 'bone', rules: 'Conservative, trustworthy. Prose for documents. Accordion for FAQs. Muted palette. Anti: bright colors, playful elements, dark mode.' },
+  { pattern: /nonprofit|charity|donation|cause|volunteer/i, theme: 'catppuccin', rules: 'Warm, emotive. Hero with impact stats. Progress for goals. Testimonials. Anti: corporate cold, dark themes, dense data.' },
+  { pattern: /onboarding|signup\s*flow|welcome|getting\s*started/i, theme: 'light', rules: 'Stepper for progress. One task per step. Centered layout. Minimal navigation. Anti: dense forms, sidebar nav, multiple CTAs per step.' },
+];
+
+function detectIndustryIntent(prompt) {
+  if (!prompt) return null;
+  for (const intent of INDUSTRY_INTENTS) {
+    if (intent.pattern.test(prompt)) {
+      return { industry: intent.pattern.source, theme: intent.theme, rules: intent.rules };
+    }
+  }
+  return null;
+}
+
+const PAGE_FORMULAS = `PAGE FORMULAS (beyond landing pages):
+Dashboard: Navbar + StatCards row + Primary chart/table + Secondary data + Activity feed
+Settings: Sidebar/Tabs nav + Section cards + Form fields + Save/Cancel footer
+Onboarding: Stepper + Welcome + Profile setup + Preferences + Completion
+Profile: Avatar + Stats row + Tabs (Posts/Activity/Settings) + Content
+Inbox/List: Search + Filter chips + Scrollable list + Detail panel (or navigate)
+Pricing: Toggle (monthly/annual) + Plan cards (3 tiers) + Feature comparison table + FAQ`;
+
 // ---- OpenUI Lang Parser (inlined for Cloudflare Pages Functions) ----
 
 const COMP_SCHEMA = {
@@ -631,9 +672,12 @@ function buildOpenUISystemPrompt(ragBlocks, userPrompt) {
     + '- Use trigger:"overlay-id" on Button to open overlays\n\n';
 
   prompt += LAYOUT_RULES_COMPACT + '\n\n';
+  prompt += PAGE_FORMULAS + '\n\n';
 
   if (detectLandingIntent(userPrompt)) prompt += LANDING_PAGE_RULES + '\n\n';
   if (detectMobileIntent(userPrompt)) prompt += MOBILE_DESIGN_RULES + '\n\n';
+
+  const industryIntentOUI = detectIndustryIntent(userPrompt);
 
   if (ragBlocks && ragBlocks.length > 0) {
     prompt += 'REFERENCE BLOCKS (proven patterns — adapt structure):\n\n';
@@ -648,6 +692,11 @@ function buildOpenUISystemPrompt(ragBlocks, userPrompt) {
   prompt += 'THEMES:\n'
     + '- Light: light, bone, material-light, github, nord-light, solarized-light, catppuccin, gruvbox-light, paper, grunge-light\n'
     + '- Dark: dark, material-dark, github-dark, nord, solarized-dark, catppuccin-dark, gruvbox-dark, dracula, grunge-dark, synthwave, tokyo-night\n\n';
+
+  if (industryIntentOUI) {
+    prompt += 'DETECTED INDUSTRY CONTEXT — recommended theme: "' + industryIntentOUI.theme + '"\n'
+      + 'Industry-specific guidance: ' + industryIntentOUI.rules + '\n\n';
+  }
 
   prompt += 'EXAMPLE:\n'
     + '__theme = "bone"\n'
@@ -699,6 +748,7 @@ function buildSystemPrompt(ragBlocks, userPrompt) {
     + '- Use trigger:"overlay-id" on Button to open overlays\n\n';
 
   prompt += LAYOUT_RULES_COMPACT + '\n\n';
+  prompt += PAGE_FORMULAS + '\n\n';
 
   if (detectLandingIntent(userPrompt)) {
     prompt += LANDING_PAGE_RULES + '\n\n';
@@ -707,6 +757,8 @@ function buildSystemPrompt(ragBlocks, userPrompt) {
   if (detectMobileIntent(userPrompt)) {
     prompt += MOBILE_DESIGN_RULES + '\n\n';
   }
+
+  const industryIntent = detectIndustryIntent(userPrompt);
 
   // RAG-retrieved blocks as few-shot examples (dynamic)
   if (ragBlocks && ragBlocks.length > 0) {
@@ -738,7 +790,22 @@ function buildSystemPrompt(ragBlocks, userPrompt) {
 
   prompt += 'THEMES:\n'
     + '- Light: light, bone, material-light, github, nord-light, solarized-light, catppuccin, gruvbox-light, paper, grunge-light\n'
-    + '- Dark: dark, material-dark, github-dark, nord, solarized-dark, catppuccin-dark, gruvbox-dark, dracula, grunge-dark, synthwave, tokyo-night\n';
+    + '- Dark: dark, material-dark, github-dark, nord, solarized-dark, catppuccin-dark, gruvbox-dark, dracula, grunge-dark, synthwave, tokyo-night\n\n';
+
+  if (industryIntent) {
+    prompt += 'DETECTED INDUSTRY CONTEXT — recommended theme: "' + industryIntent.theme + '"\n'
+      + 'Industry-specific guidance: ' + industryIntent.rules + '\n\n';
+  }
+
+  prompt += 'Theme selection heuristics:\n'
+    + '- SaaS/B2B/CRM → "github" or "material-light"\n'
+    + '- E-commerce/shop → "light" or "catppuccin"\n'
+    + '- Fintech/banking → "material-light" or "github-dark"\n'
+    + '- Healthcare/wellness → "nord-light" or "bone"\n'
+    + '- Dashboards/analytics → "github" or "material-light"\n'
+    + '- Dev tools/code → "dracula" or "tokyo-night"\n'
+    + '- Creative/portfolio → "grunge-dark" or "synthwave"\n'
+    + '- Default: "light" when no preference is detected\n';
 
   return prompt;
 }
