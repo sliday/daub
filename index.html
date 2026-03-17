@@ -954,6 +954,10 @@
       margin: 0 0 16px;
     }
     .db-use-ai__example { position: relative; }
+    #example-tabs .db-toggle { font-size: 0.75rem; padding: 6px 14px; }
+    @media (max-width: 640px) {
+      .db-use-ai__example > div:first-child { flex-direction: column; align-items: flex-start !important; gap: 12px; }
+    }
     .db-use-ai__code {
       background: var(--db-ink);
       color: var(--db-cream);
