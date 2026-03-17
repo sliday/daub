@@ -330,11 +330,15 @@
     
     // -- Text --
     RENDERERS.Text = function(p) {
-      var tag = ['h1','h2','h3','h4','p','span'].indexOf(p.tag) >= 0 ? p.tag : 'p';
+      var validTags = ['h1','h2','h3','h4','p','span'];
+      var t = p.tag, c = p.content;
+      if (validTags.indexOf(t) < 0 && validTags.indexOf(c) >= 0) { t = c; c = p.tag; }
+      if (validTags.indexOf(c) >= 0 && c === t) { c = ''; }
+      var tag = validTags.indexOf(t) >= 0 ? t : 'p';
       var el = document.createElement(tag);
       var classMap = { h1:'db-h1', h2:'db-h2', h3:'db-h3', h4:'db-h4', p:'db-body', span:'' };
       el.className = (classMap[tag] || '') + (p.class ? ' ' + p.class : '');
-      el.textContent = p.content || '';
+      el.textContent = c || '';
       return el;
     };
     
