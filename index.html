@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DAUB — Considered Interface Components</title>
-  <meta name="description" content="DAUB is a CSS component library with 73 considered UI elements and 20 theme families. Thoughtful, tactile, and accessible. No build step required.">
+  <title>DAUB — CSS Component Library for AI | 76 Components, 20 Themes</title>
+  <meta name="description" content="DAUB is an open-source CSS component library with 76 UI components, 20 theme families, and AI-ready docs (llms.txt, MCP server). Drop-in two CDN files — zero build step. MIT licensed.">
   <meta name="keywords" content="CSS components, neo-skeuomorphic, UI kit, design system, considered UI, tactile, accessible, themes, AI components, llms.txt, drop-in CSS, dark mode, skeuomorphic, dashboard components, no build step">
   <meta name="theme-color" content="#C67B5C">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -16,8 +16,8 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="DAUB — Considered Interface Components">
-  <meta property="og:description" content="73 considered UI elements with 20 theme families. Drop-in CSS + JS. No build step.">
+  <meta property="og:title" content="DAUB — CSS Component Library for AI | 76 Components, 20 Themes">
+  <meta property="og:description" content="76 UI components with 20 theme families. AI-ready docs (llms.txt, MCP server). Drop-in CSS + JS. No build step.">
   <meta property="og:url" content="https://daub.dev">
   <meta property="og:site_name" content="DAUB UI">
   <meta property="og:image" content="https://daub.dev/og-image.png">
@@ -27,8 +27,8 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="DAUB — Considered Interface Components">
-  <meta name="twitter:description" content="73 considered UI elements with 20 theme families. Drop-in CSS + JS. No build step.">
+  <meta name="twitter:title" content="DAUB — CSS Component Library for AI | 76 Components, 20 Themes">
+  <meta name="twitter:description" content="76 UI components with 20 theme families. AI-ready docs (llms.txt, MCP server). Drop-in CSS + JS. No build step.">
   <meta name="twitter:image" content="https://daub.dev/og-image.png">
   <meta name="twitter:site" content="@staskulesh">
   <meta name="twitter:creator" content="@staskulesh">
@@ -43,7 +43,7 @@
     "@type": "SoftwareSourceCode",
     "name": "DAUB UI",
     "alternateName": "daub-ui",
-    "description": "Considered CSS component library with 73 UI elements and 20 theme families (40 light/dark variants). Drop-in CSS + JS, zero build step. Neo-skeuomorphic aesthetic with tactile surfaces, letterpress typography, and per-element textures. AI-ready with llms.txt, components.json, and TypeScript declarations.",
+    "description": "Considered CSS component library with 76 UI components and 20 theme families (40 light/dark variants). Drop-in CSS + JS, zero build step. Neo-skeuomorphic aesthetic with tactile surfaces, letterpress typography, and per-element textures. AI-ready with llms.txt, components.json, and TypeScript declarations.",
     "url": "https://daub.dev",
     "codeRepository": "https://github.com/sliday/daub",
     "programmingLanguage": ["CSS", "JavaScript", "HTML"],
@@ -51,7 +51,7 @@
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "license": "https://opensource.org/licenses/MIT",
-    "version": "3.19.0",
+    "version": "3.19.2",
     "dateCreated": "2026-02-01",
     "dateModified": "2026-03-13",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
@@ -68,6 +68,54 @@
     "name": "DAUB UI",
     "url": "https://daub.dev",
     "description": "Considered CSS components for discerning interfaces"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is DAUB?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DAUB is an open-source CSS component library with 76 UI components and 20 theme families (40 light/dark variants). It features a neo-skeuomorphic aesthetic with tactile surfaces and warm shadows. No build step required — just drop in two CDN files."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I install DAUB?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Add two CDN links to your HTML: <link rel=\"stylesheet\" href=\"https://daub.dev/daub.css\"> and <script src=\"https://daub.dev/daub.js\"></script>. Alternatively, install via npm: npm install daub-ui."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is DAUB free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, DAUB is completely free and open source under the MIT license. The source code is available on GitHub at github.com/sliday/daub."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does DAUB support dark mode?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. DAUB ships 20 theme families with 40 total variants — each family includes both a light and dark scheme. Themes can be switched at runtime with a single data attribute."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does DAUB work with AI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DAUB provides AI-ready documentation via llms.txt, a structured component catalog at components.json, TypeScript declarations, and an MCP server that AI agents can use to browse components, generate UI specs, and render previews."
+        }
+      }
+    ]
   }
   </script>
 
@@ -1036,6 +1084,7 @@
   </svg>
 
   <!-- Navigation -->
+  <header>
   <nav class="db-nav" role="navigation" aria-label="Main">
     <a href="/" class="db-nav__brand">DAUB</a>
     <ul class="db-nav__links">
@@ -1055,6 +1104,7 @@
       </li>
     </ul>
   </nav>
+  </header>
 
   <!-- Hero -->
   <section class="db-hero">
@@ -1219,7 +1269,7 @@
       <div class="db-quick-install__option" onclick="navigator.clipboard.writeText(this.querySelector('.db-quick-install__code').textContent).then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
         <button class="db-quick-install__copy" aria-label="Copy"><i data-lucide="copy" style="width:13px;height:13px;"></i></button>
         <div class="db-quick-install__label">Full <span class="db-badge db-badge--updated">2 lines</span></div>
-        <div class="db-quick-install__desc">All 73 components + JS interactivity</div>
+        <div class="db-quick-install__desc">All 76 components + JS interactivity</div>
         <div class="db-quick-install__code">&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.css"&gt;
 &lt;script src="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js"&gt;&lt;/script&gt;</div>
         <a class="db-quick-install__ai-link" href="/llms.txt" onclick="event.stopPropagation()"><i data-lucide="bot" style="width:11px;height:11px;"></i> llms.txt</a>
@@ -1377,7 +1427,7 @@
         <div class="db-mcp-tool__icon"><i data-lucide="book-open" style="width:18px;height:18px;"></i></div>
         <div>
           <div class="db-mcp-tool__name">get_component_catalog</div>
-          <div class="db-mcp-tool__desc">Browse all 73 components, their props, categories, themes, and the spec format — so the AI can build specs without guessing.</div>
+          <div class="db-mcp-tool__desc">Browse all 76 components, their props, categories, themes, and the spec format — so the AI can build specs without guessing.</div>
         </div>
       </div>
       <div class="db-mcp-tool">
@@ -2507,7 +2557,7 @@
             <svg class="db-accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <div class="db-accordion__content">
-            DAUB takes a considered approach to interface design. Every component has tactile surfaces, warm shadows, and depth that feels intentional. 73 components, 20 theme families, zero build step.
+            DAUB takes a considered approach to interface design. Every component has tactile surfaces, warm shadows, and depth that feels intentional. 76 components, 20 theme families, zero build step.
           </div>
         </div>
         <div class="db-accordion__item">
@@ -3055,7 +3105,7 @@
   <!-- Closing CTA -->
   <section style="max-width:min(640px,100%); margin:0 auto; padding:64px 24px; text-align:center;">
     <h2 style="font-family:var(--db-font-heading); font-size:clamp(1.5rem, 3vw, 2.25rem); font-weight:700; color:var(--db-ink); margin:0 0 16px; line-height:1.2;">Two files. Full surface.</h2>
-    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px;">73 components that respond to light, texture, and theme. Drop them in, ship something that feels considered — without the ceremony.</p>
+    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px;">76 components that respond to light, texture, and theme. Drop them in, ship something that feels considered — without the ceremony.</p>
     <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
       <a href="#configurator" class="db-btn db-btn--primary db-btn--lg">Get Started</a>
       <a href="https://github.com/sliday/daub" target="_blank" rel="noopener" class="db-btn db-btn--secondary db-btn--lg">

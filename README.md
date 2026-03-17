@@ -3,8 +3,8 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.19.1-3D3832.svg)](https://daub.dev)
-[![Components](https://img.shields.io/badge/components-73-D4C4A8.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.19.2-3D3832.svg)](https://daub.dev)
+[![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
 
@@ -14,7 +14,7 @@
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 73 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 76 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
 Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 230+ block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
 
@@ -39,7 +39,7 @@ Toggle in the Chat toolbar (on by default). Forces `gemini-3.1-flash-lite-previe
 ### CDN (recommended)
 
 ```html
-<!-- Full library: 73 components + themes -->
+<!-- Full library: 76 components + themes -->
 <link rel="stylesheet" href="https://daub.dev/daub.css">
 <script src="https://daub.dev/daub.js"></script>
 
@@ -77,7 +77,7 @@ DAUB uses system font stacks by default. For richer typography:
 <script src="https://unpkg.com/lucide@latest"></script>
 ```
 
-## Components (73)
+## Components (76)
 
 ### Foundations
 | Component | Class | Notes |
@@ -304,7 +304,7 @@ DAUB speaks both human and machine:
 
 - **`/llms.txt`** — Plain-text component reference for LLMs ([spec](https://llmstxt.org))
 - **`/llms-compact.txt`** — Condensed version for token-constrained contexts
-- **`/components.json`** — Machine-readable structured component reference (73 components with HTML examples)
+- **`/components.json`** — Machine-readable structured component reference (76 components with HTML examples)
 - **`/daub.d.ts`** — TypeScript declarations for `window.DAUB` API
 - **`/.well-known/ai-plugin.json`** — AI plugin manifest
 - **`SKILL.md`** — Claude Code skill for DAUB development
@@ -321,7 +321,7 @@ Install the DAUB skill into any AI coding agent ([40+ supported](https://skills.
 npx skills add sliday/daub
 ```
 
-This gives your agent full knowledge of all 73 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
+This gives your agent full knowledge of all 76 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
 
 ## Block Library
 
@@ -548,7 +548,9 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.19.1** — Fix playground renderer: add Icon and Link components, fix Field children prop passing, eliminate orphan elements. All 135 parser tests pass.
+**Latest: v3.19.2** — SEO & AI discoverability: keyword-rich title/meta, FAQ schema, complete sitemap, consistent component count (76), updated llms.txt version.
+
+**v3.19.1** — Fix playground renderer: add Icon and Link components, fix Field children prop passing, eliminate orphan elements. All 135 parser tests pass.
 
 **v3.19.0** — WCAG AA contrast across all 40 themes, native `<dialog>` + `<progress>` support, docs page, classless demo, comparison table. 76 components, 20 theme families.
 

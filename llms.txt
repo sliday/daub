@@ -1,12 +1,12 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 3.17.0
+> Version: 3.19.2
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
 > Repo: https://github.com/sliday/daub
 > License: MIT
-> Components: 73
+> Components: 76
 > Theme Families: 20 (40 variants total)
 > Components JSON: https://daub.dev/components.json
 > TypeScript: https://daub.dev/daub.d.ts
@@ -117,7 +117,7 @@ Required HTML nesting for overlay and complex components. Use these as a startin
 - `db-field__input` goes on wrapper elements — not just `<input>` tags
 - Icons: DAUB pairs well with [Lucide](https://unpkg.com/lucide@latest) — all demos use Lucide icons
 
-## Components (73)
+## Components (76)
 
 ### 1. Button — `.db-btn`
 Variants: `db-btn--primary`, `db-btn--secondary`, `db-btn--ghost`
