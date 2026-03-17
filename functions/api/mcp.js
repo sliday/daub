@@ -369,7 +369,7 @@ const COMP_SCHEMA = {
   Separator: ['vertical', 'dashed', 'label'],
   Button: ['label', 'variant', 'size', 'loading', 'icon', 'trigger'],
   ButtonGroup: ['children'],
-  Field: ['label', 'placeholder', 'type', 'error', 'helper'],
+  Field: ['children', 'label', 'placeholder', 'type', 'error', 'helper'],
   Input: ['placeholder', 'size', 'error', 'type'],
   InputGroup: ['children', 'addonBefore', 'addonAfter'],
   InputIcon: ['children', 'icon', 'right'],

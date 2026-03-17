@@ -5012,17 +5012,38 @@ RENDERERS.ButtonGroup = function(p, ch, els, d) {
 };
 
 // -- Field --
-RENDERERS.Field = function(p) {
+RENDERERS.Field = function(p, ch, els, d) {
   var el = mkEl('div', 'db-field' + (p.error ? ' db-field--error' : ''));
   if (p.label) {
     var lbl = mkEl('label', 'db-field__label', p.label);
     el.appendChild(lbl);
   }
-  var inp = document.createElement('input');
-  inp.className = 'db-field__input';
-  inp.type = p.type || 'text';
-  inp.placeholder = p.placeholder || '';
-  el.appendChild(inp);
+  if (ch && ch.length) {
+    // Render children (e.g. Input) — pass Field props as defaults
+    ch.forEach(function(cid) {
+      var cdef = els[cid];
+      if (cdef && cdef.type === 'Input') {
+        // Merge Field props into Input as defaults (Input's own props win)
+        var cp = cdef.props || {};
+        if (!cp.type && p.type) cp.type = p.type;
+        if (!cp.placeholder && p.placeholder) cp.placeholder = p.placeholder;
+        cdef.props = cp;
+      }
+      var child = renderElement(els, cid, d + 1);
+      if (child) {
+        if (child.tagName === 'INPUT' && !child.classList.contains('db-field__input')) {
+          child.classList.add('db-field__input');
+        }
+        el.appendChild(child);
+      }
+    });
+  } else {
+    var inp = document.createElement('input');
+    inp.className = 'db-field__input';
+    inp.type = p.type || 'text';
+    inp.placeholder = p.placeholder || '';
+    el.appendChild(inp);
+  }
   if (p.helper) {
     var help = mkEl('span', 'db-field__helper', p.helper);
     el.appendChild(help);
@@ -6268,6 +6289,29 @@ RENDERERS.CustomHTML = function(p, ch, els, d) {
   return el;
 };
 
+// -- Icon (Lucide) --
+RENDERERS.Icon = function(p) {
+  var el = document.createElement('i');
+  el.setAttribute('data-lucide', p.name || 'circle');
+  var sz = { xs: '12px', sm: '16px', md: '20px', lg: '24px', xl: '32px' };
+  var s = sz[p.size] || sz.md;
+  el.style.width = s;
+  el.style.height = s;
+  el.style.flexShrink = '0';
+  if (p.variant === 'branded') el.style.color = 'var(--db-terracotta)';
+  else if (p.variant === 'success') el.style.color = 'var(--db-color-success, green)';
+  return el;
+};
+
+// -- Link --
+RENDERERS.Link = function(p) {
+  var el = document.createElement('a');
+  el.href = '#';
+  el.textContent = p.label || p.content || 'Link';
+  if (p.class) el.className = p.class;
+  return el;
+};
+
 // -- Image --
 RENDERERS.Image = function(p) {
   var el = document.createElement('img');
@@ -6300,6 +6344,8 @@ var COMP_PROPS = {
   Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
+  Icon: 'name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"',
+  Link: 'label: string, class: string',
   // Controls
   Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id)',
   ButtonGroup: '(children are Buttons)',
@@ -6375,7 +6421,7 @@ var COMP_PROPS = {
 };
 
 var COMP_CATEGORIES = [
-  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator']],
+  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator', 'Icon', 'Link']],
   ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
   ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
   ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea', 'Image']],
