@@ -128,7 +128,7 @@
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.19.0">
+  <link rel="stylesheet" href="daub.css?v=3.19.2">
 
   <style>
     /* Prevent horizontal overflow on mobile */
@@ -462,6 +462,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 32px;
+      overflow: hidden;
     }
     .db-showcase__col {
       display: flex;
@@ -1030,10 +1031,40 @@
     .db-nav__github:hover {
       border-color: var(--db-terracotta);
     }
-    @media (max-width: 640px) {
-      .db-nav__links { gap: 2px; }
-      .db-nav__links a { font-size: 0.75rem; padding: 4px 8px; }
-      .db-nav__github span { display: none; }
+    .db-nav__toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-2);
+      cursor: pointer;
+      color: var(--db-ink);
+      flex-shrink: 0;
+    }
+    .db-nav__toggle:hover { background: color-mix(in srgb, var(--db-ink) 5%, transparent); }
+    @media (max-width: 768px) {
+      .db-nav__toggle { display: flex; }
+      .db-nav__links {
+        display: none;
+        position: absolute;
+        top: 48px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: var(--db-cream);
+        border-bottom: 1px solid var(--db-sand);
+        padding: 8px 16px;
+        gap: 0;
+        box-shadow: var(--db-shadow-2);
+        z-index: 99;
+      }
+      .db-nav__links li { width: 100%; }
+      .db-nav__links a { display: block; width: 100%; padding: 10px 12px; font-size: 0.875rem; }
+      .db-nav__github { width: 100%; justify-content: flex-start; border: none; padding: 10px 12px !important; }
+      .db-nav--open .db-nav__links { display: flex; }
     }
 
     /* Component index bar */
@@ -1087,6 +1118,9 @@
   <header>
   <nav class="db-nav" role="navigation" aria-label="Main">
     <a href="/" class="db-nav__brand">DAUB</a>
+    <button class="db-nav__toggle" aria-label="Menu" aria-expanded="false" onclick="this.closest('.db-nav').classList.toggle('db-nav--open');this.setAttribute('aria-expanded',this.closest('.db-nav').classList.contains('db-nav--open'))">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <ul class="db-nav__links">
       <li><a href="#components-index" class="db-nav__link--active">Components</a></li>
       <li><a href="docs.html">Docs</a></li>
@@ -1109,7 +1143,7 @@
   <!-- Hero -->
   <section class="db-hero">
     <a class="db-hero__announce" href="https://github.com/sliday/daub" target="_blank" rel="noopener">
-      <span class="db-badge db-badge--new">v3.19.0</span>
+      <span class="db-badge db-badge--new">v3.19.2</span>
       Auto-temperature, block test suite, 230+ blocks — Star on GitHub
       <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
     </a>
@@ -1155,7 +1189,7 @@
               <span style="display:flex;align-items:center;gap:6px;margin-left:auto;">
                 <span class="db-slider__value">Auto</span>
                 <label id="db-temp-toggle" style="position:relative;display:inline-block;width:28px;height:16px;cursor:pointer;flex-shrink:0;">
-                  <input type="checkbox" id="db-temp-auto" style="opacity:0;width:0;height:0;">
+                  <input type="checkbox" id="db-temp-auto" checked style="opacity:0;width:0;height:0;">
                   <span style="position:absolute;inset:0;background:var(--db-warm-gray);border-radius:8px;transition:background .2s;"></span>
                   <span style="position:absolute;top:2px;left:2px;width:12px;height:12px;background:#fff;border-radius:50%;transition:transform .2s;"></span>
                 </label>
@@ -1320,6 +1354,8 @@
   <style>
     @media (max-width: 640px) {
       .db-classless-demo { grid-template-columns: 1fr !important; }
+      .db-classless-demo pre { font-size: 0.6875rem; max-width: calc(100vw - 48px); }
+      .db-classless-demo iframe { min-height: 320px !important; }
     }
   </style>
 
@@ -1389,12 +1425,17 @@
         </div>
         <p class="db-card__desc">Drop in <a href="https://daub.dev/daub-classless.css" style="color:var(--db-terracotta);">daub-classless.css</a> — plain HTML looks good. No classes needed.</p>
       </div>
-      <a href="#mcp" class="db-card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;">
-        <div class="db-avatar db-avatar--sm" style="margin-bottom:8px;">
-          <i data-lucide="cpu" style="width:16px;height:16px;"></i>
+      <a href="#mcp" class="db-card" style="text-decoration:none;cursor:pointer;">
+        <div class="db-card__header">
+          <div class="db-avatar db-avatar--sm">
+            <i data-lucide="cpu" style="width:16px;height:16px;"></i>
+          </div>
+          <div>
+            <div class="db-card__title">MCP Server</div>
+            <div class="db-caption">AI Integration</div>
+          </div>
         </div>
-        <div class="db-card__title">MCP Server</div>
-        <p class="db-card__desc" style="margin-top:4px;">Generate UIs from any AI assistant. <span style="color:var(--db-terracotta);">Learn more &darr;</span></p>
+        <p class="db-card__desc">Generate UIs from any AI assistant. <span style="color:var(--db-terracotta);">Learn more &darr;</span></p>
       </a>
     </div>
   </section>
@@ -3129,7 +3170,7 @@
   </div>
 
   <!-- JS -->
-  <script src="daub.js?v=3.19.0"></script>
+  <script src="daub.js?v=3.19.2"></script>
   <script>
     // Initialize Lucide icons
     lucide.createIcons();
