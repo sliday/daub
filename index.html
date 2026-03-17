@@ -1358,7 +1358,7 @@
   <style>
     @media (max-width: 640px) {
       .db-classless-demo { grid-template-columns: 1fr !important; }
-      .db-classless-demo pre { font-size: 0.6875rem; max-width: calc(100vw - 48px); }
+      .db-classless-demo pre { font-size: 0.6875rem; max-width: calc(100vw - 48px); overflow-x: auto; box-sizing: border-box; }
       .db-classless-demo iframe { min-height: 320px !important; }
     }
   </style>
@@ -1622,7 +1622,7 @@
       </div>
 
       <!-- Preview tab -->
-      <div id="example-preview" class="db-surface--raised" style="border-radius:var(--db-radius-3);overflow:hidden;max-width:720px;margin:0 auto;">
+      <div id="example-preview" class="db-surface--raised" style="border-radius:var(--db-radius-3);overflow-x:auto;overflow-y:hidden;max-width:720px;margin:0 auto;">
         <nav class="db-navbar">
           <a class="db-navbar__brand" href="#">Acme</a>
           <div class="db-navbar__spacer"></div>
@@ -3342,8 +3342,9 @@
         }
 
         // Reflect initial state (delay so DAUB's own slider init completes first)
-        if (DAUB.getTemperature() === 'auto') {
+        if (DAUB.getTemperature() === 'auto' || autoChk.checked) {
           autoChk.checked = true;
+          DAUB.setTemperature('auto');
           setTimeout(function() { setAutoUI(true); }, 50);
         }
 

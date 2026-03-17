@@ -108,10 +108,40 @@
     .db-nav__github:hover {
       border-color: var(--db-terracotta);
     }
-    @media (max-width: 640px) {
-      .db-nav__links { gap: 2px; }
-      .db-nav__links a { font-size: 0.75rem; padding: 4px 8px; }
-      .db-nav__github span { display: none; }
+    .db-nav__toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: 1px solid var(--db-sand);
+      border-radius: var(--db-radius-2);
+      cursor: pointer;
+      color: var(--db-ink);
+      flex-shrink: 0;
+    }
+    .db-nav__toggle:hover { background: color-mix(in srgb, var(--db-ink) 5%, transparent); }
+    @media (max-width: 768px) {
+      .db-nav__toggle { display: flex; }
+      .db-nav__links {
+        display: none;
+        position: absolute;
+        top: 48px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: var(--db-cream);
+        border-bottom: 1px solid var(--db-sand);
+        padding: 8px 16px;
+        gap: 0;
+        box-shadow: var(--db-shadow-2);
+        z-index: 99;
+      }
+      .db-nav__links li { width: 100%; }
+      .db-nav__links a { display: block; width: 100%; padding: 10px 12px; font-size: 0.875rem; }
+      .db-nav__github { width: 100%; justify-content: flex-start; border: none; padding: 10px 12px !important; }
+      .db-nav--open .db-nav__links { display: flex; }
     }
 
     /* Hero */
@@ -203,6 +233,9 @@
   <!-- Nav -->
   <nav class="db-nav" role="navigation" aria-label="Main">
     <a href="/" class="db-nav__brand">DAUB</a>
+    <button class="db-nav__toggle" aria-label="Menu" aria-expanded="false" onclick="this.closest('.db-nav').classList.toggle('db-nav--open');this.setAttribute('aria-expanded',this.closest('.db-nav').classList.contains('db-nav--open'))">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <ul class="db-nav__links">
       <li><a href="/">Components</a></li>
       <li><a href="demo.html">Layouts</a></li>
