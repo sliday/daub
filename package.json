@@ -36,7 +36,7 @@
   "homepage": "https://daub.dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sliday/daub"
+    "url": "git+https://github.com/sliday/daub.git"
   },
   "license": "MIT",
   "author": "Sliday"
