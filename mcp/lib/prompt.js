@@ -18,7 +18,7 @@ export const COMP_PROPS = {
   Stack: 'direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true',
   Grid: 'columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true',
   Surface: 'variant: "raised"|"inset"|"pressed"',
-  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
+  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
   Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id) | UX: one primary per view, loading:true during async, verb-first labels',
@@ -48,13 +48,13 @@ export const COMP_PROPS = {
   NavMenu: 'items: [{label, href, active: bool}]',
   Navbar: 'brand: string, brandHref: string',
   Menubar: 'items: [{label, dropdown: [{label, href}]}]',
-  Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool',
+  Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}] (inline objects, NOT element ID references), collapsed: bool',
   BottomNav: 'items: [{label, icon, active, badge}] | UX: max 5 items, icon+label always, highlight active',
-  Card: 'title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool | UX: always include title or meaningful children, interactive:true for clickable',
+  Card: 'title: string, description: string, media: string (image URL only, NOT element IDs), footer: [childIds] (element IDs rendered in card footer area, NOT a boolean), interactive: bool, clip: bool | UX: footer is an array of element IDs not a boolean, media is a URL string not element IDs',
   Table: 'columns: [{key, label, numeric}], rows: [{}], sortable: bool',
   DataTable: 'columns: [{key, label}], rows: [{}], selectable: bool',
   List: 'items: [{title, secondary, icon}]',
-  Badge: 'text: string, variant: "new"|"updated"|"warning"|"error"',
+  Badge: 'text: string, variant: "new"|"updated"|"success"|"warning"|"error"',
   Avatar: 'initials: string, src: string, size: "sm"|"md"|"lg"',
   AvatarGroup: 'avatars: [{initials, src}], max: number',
   Calendar: 'selected: "YYYY-MM-DD" (date to highlight), today: "YYYY-MM-DD" (today override)',
@@ -77,7 +77,7 @@ export const COMP_PROPS = {
   HoverCard: '',
   DropdownMenu: 'items: [{label, icon, separator, groupLabel, active: bool}]',
   ContextMenu: 'items: [{label, icon, separator}]',
-  CommandPalette: 'id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}]',
+  CommandPalette: 'id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] (inline objects, NOT element ID references)',
   Accordion: 'items: [{title, content, children: [childIds]}], multi: bool',
   Collapsible: 'label: string',
   Resizable: 'direction: "horizontal"|"vertical"',
@@ -162,7 +162,8 @@ export function buildSystemPrompt(ragBlocks, userPrompt) {
     + '- StatCard horizontal:true for compact inline stat display\n'
     + '- Stepper vertical:true for vertical process flows and timelines\n'
     + '- Use CustomSelect (not Select) when you need searchable dropdowns\n'
-    + '- Use "Separator" for dividers — there is no "Divider" component\n\n';
+    + '- Use "Separator" for dividers — there is no "Divider" component\n'
+    + '- There is NO "Icon" component type — icons are props on Button, Sidebar items, List items, etc. Use icon: "name" on supported components\n\n';
 
   const density = 'DENSITY & COMPLETENESS:\n'
     + '- Generate 12-25 elements minimum for any non-trivial UI\n'

@@ -7,7 +7,7 @@ const COMP_PROPS = {
   Stack: 'direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly", align: "center"|"end"|"start"|"stretch", wrap: bool, container: "wide"|"narrow"|true',
   Grid: 'columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true',
   Surface: 'variant: "raised"|"inset"|"pressed"',
-  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span" (the HTML element to render), content: string (the visible text to display — NOT a tag name), class: string',
+  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
   Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId"',
@@ -37,13 +37,13 @@ const COMP_PROPS = {
   NavMenu: 'items: [{label, href, active}]',
   Navbar: 'brand: string, brandHref: string',
   Menubar: 'items: [{label, dropdown: [{label, href}]}]',
-  Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool',
+  Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}] (inline objects, NOT element ID references), collapsed: bool',
   BottomNav: 'items: [{label, icon, active, badge}]',
-  Card: 'title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool',
+  Card: 'title: string, description: string, media: string (image URL only, NOT element IDs), footer: [childIds] (element IDs rendered in card footer area, NOT a boolean), interactive: bool, clip: bool | UX: footer is an array of element IDs not a boolean, media is a URL string not element IDs',
   Table: 'columns: [{key, label, numeric}], rows: [{}], sortable: bool',
   DataTable: 'columns: [{key, label}], rows: [{}], selectable: bool',
   List: 'items: [{title, secondary, icon}]',
-  Badge: 'text: string, variant: "new"|"updated"|"warning"|"error"',
+  Badge: 'text: string, variant: "new"|"updated"|"success"|"warning"|"error"',
   Avatar: 'initials: string, src: string, size: "sm"|"md"|"lg"',
   AvatarGroup: 'avatars: [{initials, src}], max: number',
   Calendar: 'selected: "YYYY-MM-DD", today: "YYYY-MM-DD"',
@@ -66,7 +66,7 @@ const COMP_PROPS = {
   HoverCard: '',
   DropdownMenu: 'items: [{label, icon, separator, groupLabel, active}]',
   ContextMenu: 'items: [{label, icon, separator}]',
-  CommandPalette: 'id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}]',
+  CommandPalette: 'id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] (inline objects, NOT element ID references)',
   Accordion: 'items: [{title, content, children: [childIds]}], multi: bool',
   Collapsible: 'label: string',
   Resizable: 'direction: "horizontal"|"vertical"',
@@ -74,12 +74,10 @@ const COMP_PROPS = {
   StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool',
   ChartCard: 'title: string',
   CustomHTML: 'html: string, css: string, js: string, children: [childIds]',
-  Link: 'label: string, href: string',
-  Icon: 'name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"',
 };
 
 const COMP_CATEGORIES = [
-  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator', 'Link', 'Icon']],
+  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator']],
   ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
   ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
   ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea', 'Image']],
@@ -115,7 +113,18 @@ function validateSpec(spec) {
       }
     }
   }
-  return { valid: issues.length === 0, issues, element_count: spec.elements ? Object.keys(spec.elements).length : 0, components_used: [...componentsUsed] };
+  const warnings = [];
+  if (spec.elements) {
+    for (const [id, def] of Object.entries(spec.elements)) {
+      if (def.type === 'Card' && def.props?.footer === true) {
+        warnings.push(`Card "${id}" has footer:true (boolean) — footer should be an array of child element IDs`);
+      }
+      if (def.type === 'Card' && Array.isArray(def.props?.media)) {
+        warnings.push(`Card "${id}" has media as array — media should be a URL string, use footer for child element IDs`);
+      }
+    }
+  }
+  return { valid: issues.length === 0, issues, warnings, element_count: spec.elements ? Object.keys(spec.elements).length : 0, components_used: [...componentsUsed] };
 }
 
 function autoFixSpec(spec) {
@@ -669,7 +678,8 @@ function buildOpenUISystemPrompt(ragBlocks, userPrompt) {
     + '- Gap tokens: 0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px\n'
     + '- Wrap related content in Card\n'
     + '- StatCard for KPI metrics\n'
-    + '- Use trigger:"overlay-id" on Button to open overlays\n\n';
+    + '- Use trigger:"overlay-id" on Button to open overlays\n'
+    + '- There is NO "Icon" component type — icons are props on Button, Sidebar items, List items, etc.\n\n';
 
   prompt += LAYOUT_RULES_COMPACT + '\n\n';
   prompt += PAGE_FORMULAS + '\n\n';
@@ -745,7 +755,8 @@ function buildSystemPrompt(ragBlocks, userPrompt) {
     + '- Gap tokens: 0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px\n'
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'
-    + '- Use trigger:"overlay-id" on Button to open overlays\n\n';
+    + '- Use trigger:"overlay-id" on Button to open overlays\n'
+    + '- There is NO "Icon" component type — icons are props on Button, Sidebar items, List items, etc.\n\n';
 
   prompt += LAYOUT_RULES_COMPACT + '\n\n';
   prompt += PAGE_FORMULAS + '\n\n';

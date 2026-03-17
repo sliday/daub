@@ -1,6 +1,6 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 3.19.4
+> Version: 3.19.5
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
@@ -1486,7 +1486,7 @@ Pattern: define more DAUB components in the catalog as needed. Each wrapper just
 outputs DAUB's expected BEM HTML structure. Call `DAUB.init()` after mount for
 interactive components (modals, tabs, accordions, dropdowns).
 
-## Design Intelligence (v3.19.4)
+## Design Intelligence (v3.19.5)
 
 DAUB's MCP server and generation pipeline include industry-aware design intelligence that automatically adapts the system prompt based on prompt content.
 

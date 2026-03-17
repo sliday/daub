@@ -43,6 +43,12 @@ export function validateSpec(spec) {
       if (def.type === 'Card' && !def.props?.title && (!def.children || def.children.length === 0)) {
         warnings.push(`Card "${id}" has no title and no children`);
       }
+      if (def.type === 'Card' && def.props?.footer === true) {
+        warnings.push(`Card "${id}" has footer:true (boolean) — footer should be an array of child element IDs`);
+      }
+      if (def.type === 'Card' && Array.isArray(def.props?.media)) {
+        warnings.push(`Card "${id}" has media as array — media should be a URL string, use footer for child element IDs`);
+      }
       if (def.type === 'Button' && def.props?.variant === 'primary') {
         const parentId = Object.entries(spec.elements).find(([, p]) => p.children?.includes(id))?.[0] || 'root';
         (parentPrimaryButtons[parentId] = parentPrimaryButtons[parentId] || []).push(id);

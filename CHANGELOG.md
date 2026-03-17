@@ -2,6 +2,19 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.19.5
+
+**Fix AI spec generation quality — 7 prompt and validation improvements.**
+
+- Fix: Text component prop guidance strengthened — "tag is the HTML element, content is the displayed text — never swap them"
+- Fix: Card footer/media prop confusion — clarified footer is array of element IDs (not boolean), media is URL string (not element IDs)
+- Fix: Sidebar and CommandPalette sections/groups now explicitly documented as "inline objects, NOT element ID references"
+- Fix: Added guideline rule "There is NO Icon component type" — icons are props on Button, Sidebar items, List items, etc.
+- Fix: Badge variant "success" added to prompt (CSS `.db-badge--success` already existed but wasn't listed)
+- Fix: Validation warnings for Card `footer: true` (boolean misuse) and `media: [array]` (should be URL string)
+- Fix: Removed stale `Icon` and `Link` component types from Cloudflare MCP COMP_PROPS/CATEGORIES
+- Sync: All prompt and validation fixes applied to both local MCP and Cloudflare MCP (`functions/api/mcp.js`)
+
 ## v3.19.4
 
 **Industry-aware design intelligence for AI spec generation.**
