@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB — Case Studies</title>
   <meta name="description" content="Real products built with DAUB. See how teams use DAUB's considered CSS components in production.">
-  <meta name="keywords" content="DAUB case studies, Dashrock, AWS Bedrock analytics, DAUB UI examples, production DAUB">
+  <meta name="keywords" content="DAUB case studies, Dashrock, AWS Bedrock analytics, Tamp, Claude API proxy, token compression, DAUB UI examples, production DAUB">
   <meta name="theme-color" content="#C67B5C">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://daub.dev/case-studies.html">
@@ -390,15 +390,128 @@
       </blockquote>
     </div>
 
-    <div class="cs-cta">
-      <h3>Built something with DAUB?</h3>
-      <p>We'd love to feature your project. Share it with us.</p>
-      <a href="https://x.com/staskulesh" target="_blank" rel="noopener">
-        <i data-lucide="message-circle" style="width:16px;height:16px;"></i> Tell @staskulesh on X
-      </a>
+  </article>
+
+  <!-- Tamp Case Study -->
+  <article class="cs-article" id="tamp">
+
+    <div class="cs-project-header">
+      <h2>Tamp</h2>
+      <p class="cs-tagline">Transparent HTTP proxy that compresses Claude API requests in real-time. Save up to 50% on input tokens — zero config, zero latency.</p>
+      <div class="cs-project-links">
+        <a href="https://tamp.dev" target="_blank" rel="noopener">
+          <i data-lucide="globe" style="width:14px;height:14px;"></i> tamp.dev
+        </a>
+        <a href="https://github.com/sliday/tamp" target="_blank" rel="noopener">
+          <i data-lucide="github" style="width:14px;height:14px;"></i> GitHub
+        </a>
+        <a href="https://www.npmjs.com/package/@sliday/tamp" target="_blank" rel="noopener">
+          <i data-lucide="package" style="width:14px;height:14px;"></i> npm
+        </a>
+      </div>
+    </div>
+
+    <blockquote class="cs-quote">
+      "Claude Code sends full conversation history every turn — tool results pile up fast. Tamp sits between your client and Anthropic, compressing input tokens by up to 50% without changing a thing about how Claude behaves."
+      <cite>The problem Tamp solves &#183; Mar 2026</cite>
+    </blockquote>
+
+    <div class="cs-section">
+      <h3>What it does</h3>
+      <p>
+        Tamp is a local HTTP proxy that intercepts Claude API requests and applies a multi-stage compression pipeline before forwarding them upstream. Claude Code (and any Anthropic API client) sends verbose tool results on every turn — pretty-printed JSON from Read, raw CLI output from Bash, full file listings from Grep and Glob. These accumulate to 100K+ tokens in minutes, driving up cost and exhausting context windows.
+      </p>
+      <p>
+        Tamp fixes this transparently. Set <code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">ANTHROPIC_BASE_URL=http://localhost:7778</code>, run <code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">npx @sliday/tamp</code>, and every API call gets compressed on the fly. Responses stream back untouched. Claude doesn't know the difference.
+      </p>
+    </div>
+
+    <div class="cs-gallery">
+      <figure>
+        <img src="case-studies/tamp-terminal.jpg" alt="Tamp proxy running in terminal showing real-time compression stats" loading="lazy">
+        <figcaption>Live compression stats: 50%+ savings per block</figcaption>
+      </figure>
+      <figure style="display:flex;flex-direction:column;justify-content:center;">
+        <div style="padding:24px;background:var(--db-cream-dark);border:1px solid var(--db-color-border);border-radius:var(--db-radius-2);">
+          <div style="font-family:var(--db-font-heading);font-size:2rem;color:var(--db-terracotta);font-weight:800;margin-bottom:4px;">~50%</div>
+          <div style="font-family:var(--db-font-ui);font-size:0.85rem;color:var(--db-color-text-secondary);margin-bottom:16px;">average input token savings</div>
+          <div style="font-family:var(--db-font-ui);font-size:0.8rem;color:var(--db-color-text-muted);line-height:1.6;">
+            package.json: 334 &#8594; 165 chars <strong>(-50.6%)</strong><br>
+            JS source: 4,630 &#8594; 2,214 chars <strong>(-52.2%)</strong><br>
+            Bash output: 1,046 &#8594; 516 chars <strong>(-50.7%)</strong>
+          </div>
+        </div>
+      </figure>
+    </div>
+
+    <div class="cs-section">
+      <h3>3-Stage Compression Pipeline</h3>
+      <p>
+        Tamp classifies each content block (JSON, prose, already-compressed) and routes it through the appropriate stages:
+      </p>
+      <ul>
+        <li><strong>Stage 1 — JSON Minification:</strong> Pretty-printed JSON is minified. Zero risk — Claude handles minified JSON perfectly. ~15-20% savings.</li>
+        <li><strong>Stage 2 — TOON Encoding:</strong> Tabular/array JSON is converted to TOON format, a compact alternative representation. ~40-60% savings over minified JSON.</li>
+        <li><strong>Stage 3 — LLMLingua-2 (optional):</strong> Natural language prose is compressed via a Python sidecar. Lossy but meaning-preserving. 2-20x compression.</li>
+      </ul>
+      <p>
+        Images, system blocks, tool schemas, and content under 200 characters are never touched. A cache-safe mode (default) only compresses new content in the latest user message, preserving Anthropic prompt cache hit rates.
+      </p>
+    </div>
+
+    <div class="cs-section">
+      <h3>Tech Stack</h3>
+    </div>
+    <div class="cs-stack">
+      <span class="cs-stack-pill">Node.js</span>
+      <span class="cs-stack-pill">@toon-format/toon</span>
+      <span class="cs-stack-pill">LLMLingua-2</span>
+      <span class="cs-stack-pill">FastAPI</span>
+      <span class="cs-stack-pill cs-stack-pill--highlight">DAUB</span>
+      <span class="cs-stack-pill">Cloudflare Pages</span>
+    </div>
+
+    <div class="cs-section">
+      <h3>How DAUB is used</h3>
+      <p>
+        The Tamp marketing site (<a href="https://tamp.dev" target="_blank" rel="noopener" style="color:var(--db-terracotta);text-decoration:none;">tamp.dev</a>) is built entirely with DAUB's classless CSS. The landing page uses DAUB's typography system, spacing tokens, and theme variables to create a clean developer-focused presentation — no custom CSS classes needed. DAUB's CDN delivery (<code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">daub-ui@latest</code>) means the site loads fast with zero build step.
+      </p>
+      <p>
+        The tactile aesthetic works particularly well for developer tools — it makes a terminal proxy feel polished rather than bare-bones, which matters when you're asking developers to route their API traffic through your software.
+      </p>
+    </div>
+
+    <div class="cs-section">
+      <h3>Key Features</h3>
+      <ul>
+        <li>One-command install: <code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">npx @sliday/tamp</code></li>
+        <li>Per-block compression stats logged in real-time</li>
+        <li>Session-wide savings tracking (cumulative chars saved)</li>
+        <li>Selective compression — only POST /v1/messages, passthrough everything else</li>
+        <li>Cache-safe mode preserves Anthropic prompt cache hits</li>
+        <li>Graceful error recovery — compression failures fall back to original content</li>
+        <li>Optional LLMLingua-2 sidecar for prose compression</li>
+        <li>570 LOC total — small, auditable, no framework dependencies</li>
+      </ul>
+    </div>
+
+    <div class="cs-section">
+      <h3>Why it matters</h3>
+      <p>
+        Extended Claude Code sessions with heavy tool use can burn through context windows and rack up significant API costs. Tamp addresses this at the transport layer — no changes to your workflow, no changes to Claude's behavior, just smaller requests. The 50% savings compound across a full development session: a typical hour of Claude Code work that would consume 500K input tokens drops to ~250K. That's real money at Anthropic's pricing.
+      </p>
     </div>
 
   </article>
+
+  <div class="cs-cta">
+    <h3>Built something with DAUB?</h3>
+    <p>We'd love to feature your project. Share it with us.</p>
+    <a href="https://x.com/staskulesh" target="_blank" rel="noopener">
+      <i data-lucide="message-circle" style="width:16px;height:16px;"></i> Tell @staskulesh on X
+    </a>
+  </div>
+
 
   <footer style="text-align:center; padding:8px; background:var(--db-cream-dark); color:var(--db-warm-gray); margin-top:16px; font-family:var(--db-font-ui); font-size:0.75rem;">
     Made by <a href="https://x.com/staskulesh" target="_blank" rel="noopener" style="color:var(--db-terracotta); text-decoration:none;">@staskulesh</a> <a href="https://aichess.co/static/easter-egg/index.html" title="&#127875;" style="text-decoration:none; display:inline-block; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.3)'" onmouseout="this.style.transform='scale(1)'">&#128007;</a>
