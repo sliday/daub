@@ -541,7 +541,14 @@
         themeStyleEl.id = 'theme-override';
         document.head.appendChild(themeStyleEl);
       }
-      // Boost specificity: :root loses to [data-theme="..."] selectors in daub.css
+      // Apply variables directly as inline styles on <html> for maximum specificity
+      // This beats any selector in daub.css including [data-theme="..."]
+      var varRe = /--(db-[a-z0-9-]+)\s*:\s*([^;]+)/g;
+      var vm;
+      while ((vm = varRe.exec(css)) !== null) {
+        document.documentElement.style.setProperty('--' + vm[1], vm[2].trim());
+      }
+      // Also keep the stylesheet for any non-variable rules
       css = css.replace(/:root/g, 'html[data-theme]');
       themeStyleEl.textContent = css;
 
@@ -560,6 +567,12 @@
       cssInput.value = '';
       sourceLabel.textContent = '';
       if (themeStyleEl) themeStyleEl.textContent = '';
+      // Remove all inline custom properties
+      var style = document.documentElement.style;
+      for (var i = style.length - 1; i >= 0; i--) {
+        var prop = style[i];
+        if (prop.startsWith('--db-')) style.removeProperty(prop);
+      }
       tokenInspector.style.display = 'none';
       history.replaceState(null, '', location.pathname);
     };
