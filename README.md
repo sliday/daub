@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.19.5-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.19.6-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -548,7 +548,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.19.5** — Fix AI spec generation quality: stronger Text prop guidance, Card footer/media clarification, Sidebar/CommandPalette inline-data warnings, "no Icon component" rule, Badge "success" variant, Card prop validation.
+**Latest: v3.19.6** — Perceptually balanced chip colors: all 6 chip color variants now tuned for equal visual brightness (luminance ratio 3.1x → 1.3x), inspired by Tailwind's uniform palette approach.
 
 **v3.19.2** — SEO & AI discoverability: keyword-rich title/meta, FAQ schema, complete sitemap, consistent component count (76), llms.txt version sync. Mobile fixes: hamburger nav on all pages, configurator corner radius, toggle sizing, classless demo overflow, docs title responsiveness.
 

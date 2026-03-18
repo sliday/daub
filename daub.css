@@ -3142,12 +3142,12 @@ textarea.db-field__input {
   transition: background var(--db-transition);
 }
 .db-chip__close:hover { background: hsla(var(--db-chip-h), var(--db-chip-s), var(--db-chip-l), 0.35); }
-.db-chip--red    { --db-chip-h: 5;   --db-chip-s: 65%; --db-chip-l: 48%; }
-.db-chip--green  { --db-chip-h: 120; --db-chip-s: 25%; --db-chip-l: 45%; }
-.db-chip--blue   { --db-chip-h: 210; --db-chip-s: 55%; --db-chip-l: 50%; }
-.db-chip--purple { --db-chip-h: 270; --db-chip-s: 50%; --db-chip-l: 50%; }
-.db-chip--amber  { --db-chip-h: 40;  --db-chip-s: 75%; --db-chip-l: 48%; }
-.db-chip--pink   { --db-chip-h: 330; --db-chip-s: 60%; --db-chip-l: 52%; }
+.db-chip--red    { --db-chip-h: 5;   --db-chip-s: 60%; --db-chip-l: 46%; }
+.db-chip--green  { --db-chip-h: 152; --db-chip-s: 30%; --db-chip-l: 38%; }
+.db-chip--blue   { --db-chip-h: 215; --db-chip-s: 50%; --db-chip-l: 48%; }
+.db-chip--purple { --db-chip-h: 270; --db-chip-s: 40%; --db-chip-l: 52%; }
+.db-chip--amber  { --db-chip-h: 35;  --db-chip-s: 50%; --db-chip-l: 40%; }
+.db-chip--pink   { --db-chip-h: 335; --db-chip-s: 45%; --db-chip-l: 48%; }
 
 /* Chip — active / selected state */
 .db-chip--active {
