@@ -4,13 +4,19 @@ All notable changes to DAUB are documented here.
 
 ## v3.19.6
 
-**Perceptually balanced chip colors.**
+**Perceptually balanced chip colors + Theme Preview page.**
 
 - Fix: All 6 chip color variants (red, green, blue, purple, amber, pink) retuned for equal visual brightness
 - Luminance ratio compressed from 3.1x to 1.3x across the palette
 - Green hue shifted from 120→152 (more teal, less neon) for better perceived weight
 - Amber saturation/lightness reduced significantly (was perceptually brightest at 75%/48%)
 - Inspired by Tailwind's approach where all colors at the same shade level have equal visual weight
+- New: Theme Preview page (`theme-preview.html`) for testing Daub Style Chrome extension exports
+- Accepts CSS paste, JSON file drop, and full HTML snippet from the extension
+- Live preview of buttons, cards, fields, badges, chips, alerts, table, avatars, progress, skeleton, modal, typography
+- Token inspector shows all applied variables with color swatches
+- Shareable theme URLs via lz-string compression in URL hash
+- CSS variables applied as inline styles on `<html>` for guaranteed specificity override
 
 ## v3.19.5
 

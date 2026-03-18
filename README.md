@@ -548,7 +548,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.19.6** — Perceptually balanced chip colors: all 6 chip color variants now tuned for equal visual brightness (luminance ratio 3.1x → 1.3x), inspired by Tailwind's uniform palette approach.
+**Latest: v3.19.6** — Perceptually balanced chip colors (luminance 3.1x → 1.3x) + new Theme Preview page for testing Daub Style Chrome extension themes with live component previews.
 
 **v3.19.2** — SEO & AI discoverability: keyword-rich title/meta, FAQ schema, complete sitemap, consistent component count (76), llms.txt version sync. Mobile fixes: hamburger nav on all pages, configurator corner radius, toggle sizing, classless demo overflow, docs title responsiveness.
 
