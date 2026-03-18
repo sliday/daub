@@ -436,7 +436,7 @@
 
     // Convert Daub Style JSON export to CSS variables
     function jsonToCss(json) {
-      var lines = [':root {'];
+      var lines = ['html[data-theme] {'];
       var dom = json.dom || {};
       var colors = dom.colors || {};
       var semantic = colors.semantic || {};
@@ -541,6 +541,8 @@
         themeStyleEl.id = 'theme-override';
         document.head.appendChild(themeStyleEl);
       }
+      // Boost specificity: :root loses to [data-theme="..."] selectors in daub.css
+      css = css.replace(/:root/g, 'html[data-theme]');
       themeStyleEl.textContent = css;
 
       // URL hash for sharing
