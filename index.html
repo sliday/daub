@@ -1317,9 +1317,9 @@
 
   <!-- Classless Demo Section -->
   <section style="max-width:min(960px,100%); margin:0 auto; padding:64px 24px; text-align:center;">
-    <span class="db-badge db-badge--new">Zero Config</span>
-    <h2 style="font-family:var(--db-font-heading); font-size:clamp(1.5rem,3vw,2.25rem); font-weight:700; color:var(--db-ink); margin:16px 0 8px; line-height:1.2;">Zero classes. Just HTML.</h2>
-    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px; max-width:540px; margin-left:auto; margin-right:auto;">One stylesheet turns semantic HTML into a fully styled page. No classes, no config.</p>
+    <span class="db-badge db-badge--new">Also Available</span>
+    <h2 style="font-family:var(--db-font-heading); font-size:clamp(1.5rem,3vw,2.25rem); font-weight:700; color:var(--db-ink); margin:16px 0 8px; line-height:1.2;">Classless Edition</h2>
+    <p style="font-family:var(--db-font-body); font-size:1.0625rem; color:var(--db-warm-gray); line-height:1.6; margin:0 0 32px; max-width:540px; margin-left:auto; margin-right:auto;">Don't need 76 components? Drop in <code style="background:var(--db-cream-dark); padding:2px 6px; border-radius:4px; font-size:0.9375rem;">daub-classless.css</code> and plain HTML gets beautiful typography, forms, and tables — zero classes required.</p>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; text-align:left; align-items:stretch;" class="db-classless-demo">
       <div style="display:flex; flex-direction:column;">
         <div style="font-family:var(--db-font-body); font-size:0.75rem; font-weight:600; color:var(--db-warm-gray); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">Your HTML</div>
@@ -1327,30 +1327,33 @@
 &lt;link rel="stylesheet"
       href="<span style="color:var(--db-terracotta);">daub-classless.css</span>"&gt;
 
-&lt;h1&gt;Hello, DAUB&lt;/h1&gt;
-&lt;p&gt;Styled automatically.&lt;/p&gt;
+&lt;h2&gt;Project Status&lt;/h2&gt;
+&lt;p&gt;All systems &lt;strong&gt;operational&lt;/strong&gt;.
+   Last checked &lt;em&gt;2 min ago&lt;/em&gt;.&lt;/p&gt;
 
-&lt;form&gt;
-  &lt;label&gt;Email&lt;/label&gt;
-  &lt;input type="email"
-         placeholder="you@example.com"&gt;
-  &lt;button&gt;Subscribe&lt;/button&gt;
-&lt;/form&gt;
+&lt;details&gt;
+  &lt;summary&gt;View details&lt;/summary&gt;
+  &lt;p&gt;Uptime: 99.98% over 30 days.&lt;/p&gt;
+&lt;/details&gt;
 
 &lt;table&gt;
   &lt;thead&gt;
-    &lt;tr&gt;&lt;th&gt;Feature&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;Service&lt;/th&gt;&lt;th&gt;Ping&lt;/th&gt;&lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
-    &lt;tr&gt;&lt;td&gt;Forms&lt;/td&gt;&lt;td&gt;Styled&lt;/td&gt;&lt;/tr&gt;
-    &lt;tr&gt;&lt;td&gt;Tables&lt;/td&gt;&lt;td&gt;Styled&lt;/td&gt;&lt;/tr&gt;
-    &lt;tr&gt;&lt;td&gt;Typography&lt;/td&gt;&lt;td&gt;Styled&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;API&lt;/td&gt;&lt;td&gt;12ms&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;CDN&lt;/td&gt;&lt;td&gt;4ms&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;DB&lt;/td&gt;&lt;td&gt;8ms&lt;/td&gt;&lt;/tr&gt;
   &lt;/tbody&gt;
-&lt;/table&gt;</pre>
+&lt;/table&gt;
+
+&lt;blockquote&gt;
+  Ship it. &amp;mdash; Every founder, ever
+&lt;/blockquote&gt;</pre>
       </div>
       <div style="display:flex; flex-direction:column;">
         <div style="font-family:var(--db-font-body); font-size:0.75rem; font-weight:600; color:var(--db-warm-gray); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px;">What you get</div>
-        <iframe class="db-card" style="width:100%; border:none; border-radius:var(--db-card-radius); overflow:hidden; flex:1; min-height:380px;" srcdoc="<!DOCTYPE html><html><head><link rel='stylesheet' href='daub-classless.css'><style>body{padding:20px 24px;margin:0;}</style></head><body><h1 style='margin-top:0;'>Hello, DAUB</h1><p>Styled automatically.</p><form><label>Email</label><input type='email' placeholder='you@example.com'><button>Subscribe</button></form><table><thead><tr><th>Feature</th><th>Status</th></tr></thead><tbody><tr><td>Forms</td><td>Styled</td></tr><tr><td>Tables</td><td>Styled</td></tr><tr><td>Typography</td><td>Styled</td></tr></tbody></table></body></html>"></iframe>
+        <iframe class="db-card" style="width:100%; border:none; border-radius:var(--db-card-radius); overflow:hidden; flex:1; min-height:380px;" srcdoc="<!DOCTYPE html><html><head><link rel='stylesheet' href='daub-classless.css'><style>body{padding:20px 24px;margin:0;}</style></head><body><h2 style='margin-top:0;'>Project Status</h2><p>All systems <strong>operational</strong>. Last checked <em>2 min ago</em>.</p><details><summary>View details</summary><p>Uptime: 99.98% over 30 days.</p></details><table><thead><tr><th>Service</th><th>Ping</th></tr></thead><tbody><tr><td>API</td><td>12ms</td></tr><tr><td>CDN</td><td>4ms</td></tr><tr><td>DB</td><td>8ms</td></tr></tbody></table><blockquote>Ship it. &mdash; Every founder, ever</blockquote></body></html>"></iframe>
       </div>
     </div>
     <p style="font-family:var(--db-font-body); font-size:0.875rem; color:var(--db-warm-gray); margin-top:20px;">Or use the full library for <strong style="color:var(--db-charcoal);">76 components</strong> with <code style="background:var(--db-cream-dark); padding:2px 6px; border-radius:4px; font-size:0.8125rem;">daub.css</code> + <code style="background:var(--db-cream-dark); padding:2px 6px; border-radius:4px; font-size:0.8125rem;">daub.js</code></p>
