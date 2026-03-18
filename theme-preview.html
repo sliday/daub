@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAUB — Theme Preview</title>
+  <meta name="description" content="Test custom themes from the Daub Style Chrome extension. Paste CSS or drop JSON to see live DAUB components with your theme applied.">
+  <meta name="theme-color" content="#C67B5C">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://daub.dev/theme-preview.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+
+  <script>
+    (function(){document.documentElement.setAttribute('data-theme','bone')})();
+  </script>
+
+  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="daub.css?v=3.19.6">
+
+  <style>
+    html, body { margin: 0; height: 100%; }
+
+    /* Nav */
+    .db-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--db-cream); border-bottom: 1px solid var(--db-sand);
+      padding: 0 24px; display: flex; align-items: center;
+      justify-content: space-between; height: 48px;
+      font-family: var(--db-font-ui); backdrop-filter: blur(8px);
+    }
+    .db-nav__brand { font-family: var(--db-font-heading); font-weight: 800; font-size: 1.125rem; color: var(--db-ink); text-decoration: none; }
+    .db-nav__links { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+    .db-nav__links a { font-size: 0.8125rem; font-weight: 500; color: var(--db-charcoal); text-decoration: none; padding: 6px 12px; border-radius: var(--db-radius-2); transition: color var(--db-transition), background var(--db-transition); }
+    .db-nav__links a:hover { color: var(--db-terracotta); background: color-mix(in srgb, var(--db-ink) 7%, transparent); }
+    .db-nav__link--active { color: var(--db-terracotta) !important; background: color-mix(in srgb, var(--db-terracotta) 15%, transparent) !important; }
+    .db-nav__toggle { display: none; background: none; border: none; cursor: pointer; color: var(--db-charcoal); padding: 6px; }
+    @media (max-width: 768px) {
+      .db-nav { flex-wrap: wrap; height: auto; padding: 8px 12px; gap: 4px; }
+      .db-nav__toggle { display: block; }
+      .db-nav__links { display: none; flex-direction: column; width: 100%; padding: 8px 0; }
+      .db-nav__links li { width: 100%; }
+      .db-nav__links a { display: block; width: 100%; padding: 10px 12px; font-size: 0.875rem; }
+      .db-nav--open .db-nav__links { display: flex; }
+    }
+
+    /* Layout */
+    .tp-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      min-height: calc(100vh - 48px);
+    }
+    @media (max-width: 900px) {
+      .tp-layout { grid-template-columns: 1fr; }
+    }
+
+    /* Input panel */
+    .tp-input {
+      border-right: 1px solid var(--db-sand);
+      display: flex; flex-direction: column;
+      background: var(--db-cream);
+    }
+    .tp-input__header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--db-sand);
+    }
+    .tp-input__header h2 {
+      font-family: var(--db-font-heading);
+      font-size: 1rem; font-weight: 700;
+      color: var(--db-ink); margin: 0 0 4px;
+    }
+    .tp-input__header p {
+      font-size: 0.75rem; color: var(--db-warm-gray);
+      margin: 0; line-height: 1.5;
+    }
+    .tp-input__tabs {
+      display: flex; border-bottom: 1px solid var(--db-sand);
+      padding: 0 20px; gap: 0;
+    }
+    .tp-input__tab {
+      padding: 8px 16px; font-size: 0.75rem; font-weight: 600;
+      font-family: var(--db-font-ui); color: var(--db-warm-gray);
+      background: none; border: none; border-bottom: 2px solid transparent;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .tp-input__tab--active {
+      color: var(--db-terracotta);
+      border-bottom-color: var(--db-terracotta);
+    }
+    .tp-input__body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    .tp-input__textarea {
+      flex: 1; resize: none; border: none; outline: none;
+      padding: 16px 20px; font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.75rem; line-height: 1.6;
+      background: transparent; color: var(--db-ink);
+      min-height: 200px;
+    }
+    .tp-input__textarea::placeholder { color: var(--db-warm-gray); }
+    .tp-input__actions {
+      padding: 12px 20px; border-top: 1px solid var(--db-sand);
+      display: flex; gap: 8px; align-items: center;
+    }
+    .tp-input__actions .tp-source {
+      flex: 1; font-size: 0.75rem; color: var(--db-warm-gray);
+      font-family: var(--db-font-ui); overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+    }
+    .tp-dropzone {
+      border: 2px dashed var(--db-sand); border-radius: var(--db-radius-3);
+      margin: 16px 20px; padding: 32px 20px; text-align: center;
+      color: var(--db-warm-gray); font-size: 0.8125rem;
+      font-family: var(--db-font-ui); transition: all 0.15s;
+      cursor: pointer; display: none; flex-direction: column;
+      align-items: center; gap: 8px;
+    }
+    .tp-dropzone--active { border-color: var(--db-terracotta); background: color-mix(in srgb, var(--db-terracotta) 5%, transparent); }
+    .tp-dropzone--visible { display: flex; }
+
+    /* Preview panel */
+    .tp-preview {
+      overflow-y: auto; padding: 32px;
+      background: var(--db-color-bg, #fff);
+    }
+    .tp-preview__section {
+      margin-bottom: 32px;
+    }
+    .tp-preview__label {
+      font-family: var(--db-font-ui);
+      font-size: 0.625rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--db-warm-gray); margin-bottom: 12px;
+    }
+    .tp-preview__row {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      align-items: flex-start;
+    }
+    .tp-preview__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    /* Token inspector */
+    .tp-tokens {
+      margin-top: 32px; padding-top: 24px;
+      border-top: 1px solid var(--db-sand);
+    }
+    .tp-tokens__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+    }
+    .tp-token {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.6875rem; color: var(--db-charcoal);
+      padding: 6px 8px; border-radius: var(--db-radius-2);
+      background: color-mix(in srgb, var(--db-ink) 4%, transparent);
+    }
+    .tp-token__swatch {
+      width: 16px; height: 16px; border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.1); flex-shrink: 0;
+    }
+    .tp-token__name { opacity: 0.7; }
+  </style>
+</head>
+<body>
+  <nav class="db-nav" role="navigation">
+    <a href="/" class="db-nav__brand">DAUB</a>
+    <button class="db-nav__toggle" aria-label="Menu" aria-expanded="false" onclick="this.closest('.db-nav').classList.toggle('db-nav--open');this.setAttribute('aria-expanded',this.closest('.db-nav').classList.contains('db-nav--open'))">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <ul class="db-nav__links">
+      <li><a href="/">Home</a></li>
+      <li><a href="docs.html">Docs</a></li>
+      <li><a href="demo.html">Layouts</a></li>
+      <li><a href="playground.html">Playground</a></li>
+      <li><a href="theme-preview.html" class="db-nav__link--active">Themes</a></li>
+      <li><a href="case-studies.html">Case Studies</a></li>
+    </ul>
+  </nav>
+
+  <div class="tp-layout">
+    <!-- Input panel -->
+    <div class="tp-input">
+      <div class="tp-input__header">
+        <h2>Theme Preview</h2>
+        <p>Paste CSS from <strong>Daub Style</strong> extension, drop a JSON export, or type token overrides manually.</p>
+      </div>
+      <div class="tp-input__tabs">
+        <button class="tp-input__tab tp-input__tab--active" data-tab="css">CSS</button>
+        <button class="tp-input__tab" data-tab="json">JSON</button>
+      </div>
+      <div class="tp-input__body">
+        <textarea class="tp-input__textarea" id="css-input" spellcheck="false" placeholder=":root {
+  --db-color-bg: #ffffff;
+  --db-color-surface: #f5f0eb;
+  --db-color-text: #3D3832;
+  --db-color-accent: #C67B5C;
+  --db-btn-bg: #C67B5C;
+  --db-btn-radius: 8px;
+  --db-card-radius: 12px;
+  /* ... paste from Daub Style */
+}"></textarea>
+        <div class="tp-dropzone" id="json-dropzone">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Drop a <strong>.json</strong> file here<br>or paste JSON from "Export JSON"</span>
+          <input type="file" id="json-file" accept=".json" style="display:none">
+        </div>
+      </div>
+      <div class="tp-input__actions">
+        <span class="tp-source" id="source-label"></span>
+        <button class="db-btn db-btn--sm db-btn--ghost" onclick="clearTheme()">Reset</button>
+        <button class="db-btn db-btn--sm" onclick="applyTheme()">Apply</button>
+      </div>
+    </div>
+
+    <!-- Preview panel -->
+    <div class="tp-preview" id="preview">
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Buttons</div>
+        <div class="tp-preview__row">
+          <button class="db-btn">Primary</button>
+          <button class="db-btn db-btn--secondary">Secondary</button>
+          <button class="db-btn db-btn--ghost">Ghost</button>
+          <button class="db-btn" disabled>Disabled</button>
+          <button class="db-btn db-btn--sm">Small</button>
+          <button class="db-btn db-btn--lg">Large</button>
+        </div>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Cards</div>
+        <div class="tp-preview__grid">
+          <div class="db-card">
+            <div class="db-card__body">
+              <h3 style="margin:0 0 8px">Card Title</h3>
+              <p style="margin:0;font-size:0.875rem;color:var(--db-color-text-secondary)">Sample card content with some preview text to check typography and spacing.</p>
+            </div>
+            <div class="db-card__footer">
+              <button class="db-btn db-btn--sm db-btn--ghost">Action</button>
+            </div>
+          </div>
+          <div class="db-card db-card--interactive">
+            <div class="db-card__body">
+              <h3 style="margin:0 0 8px">Interactive Card</h3>
+              <p style="margin:0;font-size:0.875rem;color:var(--db-color-text-secondary)">This card has hover effects. Try hovering over it.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Form Fields</div>
+        <div style="max-width:400px;display:flex;flex-direction:column;gap:12px">
+          <input type="text" class="db-field" placeholder="Text input">
+          <textarea class="db-field" rows="2" placeholder="Textarea field"></textarea>
+          <select class="db-field">
+            <option>Select option</option>
+            <option>Option A</option>
+            <option>Option B</option>
+          </select>
+          <div style="display:flex;gap:12px;align-items:center">
+            <label class="db-switch"><input type="checkbox" checked><span class="db-switch__slider"></span></label>
+            <span style="font-size:0.875rem">Toggle switch</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Badges</div>
+        <div class="tp-preview__row">
+          <span class="db-badge">Default</span>
+          <span class="db-badge db-badge--new">New</span>
+          <span class="db-badge db-badge--success">Success</span>
+          <span class="db-badge db-badge--warning">Warning</span>
+          <span class="db-badge db-badge--error">Error</span>
+        </div>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Chips</div>
+        <div class="tp-preview__row">
+          <span class="db-chip">Default</span>
+          <span class="db-chip db-chip--red">Red</span>
+          <span class="db-chip db-chip--green">Green</span>
+          <span class="db-chip db-chip--blue">Blue</span>
+          <span class="db-chip db-chip--purple">Purple</span>
+          <span class="db-chip db-chip--amber">Amber</span>
+          <span class="db-chip db-chip--pink">Pink</span>
+        </div>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Alerts</div>
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:500px">
+          <div class="db-alert db-alert--info">This is an informational alert message.</div>
+          <div class="db-alert db-alert--success">Operation completed successfully.</div>
+          <div class="db-alert db-alert--warning">Please review before proceeding.</div>
+          <div class="db-alert db-alert--error">Something went wrong. Please try again.</div>
+        </div>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Table</div>
+        <table class="db-table" style="max-width:500px">
+          <thead><tr><th>Name</th><th>Role</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Alice Chen</td><td>Engineer</td><td><span class="db-badge db-badge--success">Active</span></td></tr>
+            <tr><td>Bob Park</td><td>Designer</td><td><span class="db-badge db-badge--warning">Away</span></td></tr>
+            <tr><td>Carol Liu</td><td>Manager</td><td><span class="db-badge">Offline</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Avatar</div>
+        <div class="tp-preview__row" style="align-items:center">
+          <div class="db-avatar db-avatar--sm" style="background:var(--db-color-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600">A</div>
+          <div class="db-avatar" style="background:var(--db-color-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600">B</div>
+          <div class="db-avatar db-avatar--lg" style="background:var(--db-color-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600">C</div>
+        </div>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Progress</div>
+        <div style="max-width:400px;display:flex;flex-direction:column;gap:12px">
+          <div class="db-progress"><div class="db-progress__bar" style="width:65%"></div></div>
+          <div class="db-progress"><div class="db-progress__bar" style="width:30%"></div></div>
+        </div>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Skeleton</div>
+        <div style="max-width:300px;display:flex;flex-direction:column;gap:8px">
+          <div class="db-skeleton" style="height:12px;width:80%"></div>
+          <div class="db-skeleton" style="height:12px;width:100%"></div>
+          <div class="db-skeleton" style="height:12px;width:60%"></div>
+        </div>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Modal Preview</div>
+        <div class="db-card" style="max-width:400px;padding:0">
+          <div style="padding:20px 24px 0">
+            <h3 style="margin:0 0 4px">Confirm Action</h3>
+            <p style="margin:0;font-size:0.875rem;color:var(--db-color-text-secondary)">Are you sure you want to proceed? This cannot be undone.</p>
+          </div>
+          <div style="padding:16px 24px;display:flex;gap:8px;justify-content:flex-end">
+            <button class="db-btn db-btn--sm db-btn--ghost">Cancel</button>
+            <button class="db-btn db-btn--sm">Confirm</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tp-preview__section">
+        <div class="tp-preview__label">Typography</div>
+        <div style="max-width:500px">
+          <h1 style="margin:0 0 8px">Heading 1</h1>
+          <h2 style="margin:0 0 8px">Heading 2</h2>
+          <h3 style="margin:0 0 8px">Heading 3</h3>
+          <p style="margin:0 0 8px;color:var(--db-color-text-secondary)">Body text in secondary color. This is how longer paragraphs look with the current theme settings applied to the page.</p>
+          <p style="margin:0;font-size:0.75rem;color:var(--db-color-text-muted)">Muted text for captions and labels.</p>
+        </div>
+      </div>
+
+      <!-- Token inspector -->
+      <div class="tp-tokens" id="token-inspector" style="display:none">
+        <div class="tp-preview__label">Applied Tokens</div>
+        <div class="tp-tokens__grid" id="token-grid"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="daub.js?v=3.19.6"></script>
+  <script>
+  (function() {
+    var cssInput = document.getElementById('css-input');
+    var jsonDropzone = document.getElementById('json-dropzone');
+    var jsonFile = document.getElementById('json-file');
+    var sourceLabel = document.getElementById('source-label');
+    var tokenInspector = document.getElementById('token-inspector');
+    var tokenGrid = document.getElementById('token-grid');
+    var activeTab = 'css';
+    var themeStyleEl = null;
+
+    // Tab switching
+    document.querySelectorAll('.tp-input__tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelector('.tp-input__tab--active').classList.remove('tp-input__tab--active');
+        tab.classList.add('tp-input__tab--active');
+        activeTab = tab.dataset.tab;
+        cssInput.style.display = activeTab === 'css' ? '' : 'none';
+        jsonDropzone.classList.toggle('tp-dropzone--visible', activeTab === 'json');
+      });
+    });
+
+    // JSON drop zone
+    jsonDropzone.addEventListener('click', function() { jsonFile.click(); });
+    jsonDropzone.addEventListener('dragover', function(e) { e.preventDefault(); jsonDropzone.classList.add('tp-dropzone--active'); });
+    jsonDropzone.addEventListener('dragleave', function() { jsonDropzone.classList.remove('tp-dropzone--active'); });
+    jsonDropzone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      jsonDropzone.classList.remove('tp-dropzone--active');
+      var file = e.dataTransfer.files[0];
+      if (file) readJsonFile(file);
+    });
+    jsonFile.addEventListener('change', function(e) {
+      if (e.target.files[0]) readJsonFile(e.target.files[0]);
+    });
+
+    function readJsonFile(file) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var json = JSON.parse(e.target.result);
+          var css = jsonToCss(json);
+          cssInput.value = css;
+          sourceLabel.textContent = json.domain ? 'Source: ' + json.domain : '';
+          // Switch to CSS tab to show result
+          document.querySelector('.tp-input__tab--active').classList.remove('tp-input__tab--active');
+          document.querySelector('[data-tab="css"]').classList.add('tp-input__tab--active');
+          activeTab = 'css';
+          cssInput.style.display = '';
+          jsonDropzone.classList.remove('tp-dropzone--visible');
+          applyTheme();
+        } catch (err) {
+          alert('Invalid JSON: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Convert Daub Style JSON export to CSS variables
+    function jsonToCss(json) {
+      var lines = [':root {'];
+      var dom = json.dom || {};
+      var colors = dom.colors || {};
+      var semantic = colors.semantic || {};
+      var status = colors.status || {};
+      var components = dom.components || {};
+      var typography = dom.typography || {};
+      var radii = dom.radii || {};
+      var shadows = dom.shadows || {};
+
+      // Semantic colors
+      var colorMap = {
+        'bg': '--db-color-bg', 'bg-alt': '--db-color-bg-alt',
+        'surface': '--db-color-surface', 'text': '--db-color-text',
+        'text-secondary': '--db-color-text-secondary', 'text-muted': '--db-color-text-muted',
+        'border': '--db-color-border', 'accent': '--db-color-accent',
+        'overlay': '--db-color-overlay'
+      };
+      Object.keys(colorMap).forEach(function(key) {
+        if (semantic[key]) lines.push('  ' + colorMap[key] + ': ' + semantic[key] + ';');
+      });
+
+      if (status.success) lines.push('  --db-success: ' + status.success + ';');
+      if (status.warning) lines.push('  --db-warning: ' + status.warning + ';');
+      if (status.error) lines.push('  --db-error: ' + status.error + ';');
+
+      if (typography.headingFont) lines.push('  --db-font-heading: ' + typography.headingFont + ';');
+      if (typography.bodyFont) lines.push('  --db-font-body: ' + typography.bodyFont + ';');
+      if (typography.uiFont) lines.push('  --db-font-ui: ' + typography.uiFont + ';');
+
+      if (radii.clustered) {
+        var r = radii.clustered;
+        if (r.sm != null) lines.push('  --db-radius-1: ' + r.sm + 'px;');
+        if (r['default'] != null) lines.push('  --db-radius-2: ' + r['default'] + 'px;');
+        if (r.lg != null) lines.push('  --db-radius-3: ' + r.lg + 'px;');
+        if (r.xl != null) lines.push('  --db-radius-4: ' + r.xl + 'px;');
+        if (r.full != null) lines.push('  --db-radius-full: ' + r.full + 'px;');
+      }
+
+      if (shadows.levels) {
+        shadows.levels.forEach(function(lvl, i) {
+          var v = lvl.value;
+          if (v) {
+            var val = (v.inset ? 'inset ' : '') + v.x + 'px ' + v.y + 'px ' + v.blur + 'px ' + v.spread + 'px ' + v.color;
+            lines.push('  --db-shadow-' + (i + 1) + ': ' + val + ';');
+          }
+        });
+      }
+      if (shadows.inset) {
+        var vi = shadows.inset;
+        lines.push('  --db-shadow-inset: inset ' + vi.x + 'px ' + vi.y + 'px ' + vi.blur + 'px ' + vi.spread + 'px ' + vi.color + ';');
+      }
+
+      // Component tokens
+      var compMap = {
+        button: { backgroundColor: '--db-btn-bg', color: '--db-btn-color', border: '--db-btn-border', borderRadius: '--db-btn-radius', fontSize: '--db-btn-font-size' },
+        field: { backgroundColor: '--db-field-bg', color: '--db-field-color', border: '--db-field-border', borderRadius: '--db-field-radius' },
+        card: { backgroundColor: '--db-card-bg', borderRadius: '--db-card-radius', boxShadow: '--db-card-shadow', border: '--db-card-border' },
+        navbar: { backgroundColor: '--db-navbar-bg', boxShadow: '--db-navbar-shadow' },
+        modal: { backgroundColor: '--db-modal-bg', borderRadius: '--db-modal-radius', boxShadow: '--db-modal-shadow', padding: '--db-modal-padding' }
+      };
+      Object.keys(compMap).forEach(function(comp) {
+        var map = compMap[comp];
+        var styles = components[comp] && components[comp].styles;
+        if (!styles) return;
+        Object.keys(map).forEach(function(cssProp) {
+          if (styles[cssProp] != null) {
+            var val = String(styles[cssProp]);
+            if (val.indexOf('[object Object]') !== -1) return;
+            lines.push('  ' + map[cssProp] + ': ' + val + ';');
+          }
+        });
+      });
+
+      if (components['switch'] && components['switch'].styles && components['switch'].styles.backgroundColor) {
+        lines.push('  --db-switch-bg: ' + components['switch'].styles.backgroundColor + ';');
+      }
+
+      lines.push('}');
+      return lines.join('\n');
+    }
+
+    // Apply theme
+    window.applyTheme = function() {
+      var css = cssInput.value.trim();
+      if (!css) return;
+
+      // If it looks like JSON, convert first
+      if (css.charAt(0) === '{') {
+        try {
+          var json = JSON.parse(css);
+          css = jsonToCss(json);
+          cssInput.value = css;
+          if (json.domain) sourceLabel.textContent = 'Source: ' + json.domain;
+        } catch(e) {}
+      }
+
+      // Strip HTML wrappers if pasted from extension snippet
+      css = css.replace(/<!--[\s\S]*?-->/g, '').replace(/<\/?style[^>]*>/gi, '').replace(/<link[^>]*>/gi, '').replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+
+      if (!themeStyleEl) {
+        themeStyleEl = document.createElement('style');
+        themeStyleEl.id = 'theme-override';
+        document.head.appendChild(themeStyleEl);
+      }
+      themeStyleEl.textContent = css;
+
+      // URL hash for sharing
+      try {
+        if (typeof LZString !== 'undefined') {
+          var compressed = LZString.compressToEncodedURIComponent(css);
+          history.replaceState(null, '', '#' + compressed);
+        }
+      } catch(e) {}
+
+      showTokens(css);
+    };
+
+    window.clearTheme = function() {
+      cssInput.value = '';
+      sourceLabel.textContent = '';
+      if (themeStyleEl) themeStyleEl.textContent = '';
+      tokenInspector.style.display = 'none';
+      history.replaceState(null, '', location.pathname);
+    };
+
+    function showTokens(css) {
+      var re = /--(db-[a-z0-9-]+)\s*:\s*([^;]+)/g;
+      var matches = [];
+      var m;
+      while ((m = re.exec(css)) !== null) matches.push(m);
+      if (matches.length === 0) { tokenInspector.style.display = 'none'; return; }
+      tokenInspector.style.display = '';
+      tokenGrid.innerHTML = '';
+      matches.forEach(function(m) {
+        var name = '--' + m[1];
+        var value = m[2].trim();
+        var div = document.createElement('div');
+        div.className = 'tp-token';
+        var isColor = /^(#|rgb|hsl|color)/.test(value) || /\b(bg|color|surface|accent|text|border|overlay|success|warning|error)\b/.test(name);
+        if (isColor) {
+          var swatch = document.createElement('span');
+          swatch.className = 'tp-token__swatch';
+          swatch.style.background = value;
+          div.appendChild(swatch);
+        }
+        var nameEl = document.createElement('span');
+        nameEl.className = 'tp-token__name';
+        nameEl.textContent = name.replace('--db-', '');
+        div.appendChild(nameEl);
+        var valEl = document.createElement('span');
+        valEl.textContent = value.length > 30 ? value.slice(0, 27) + '...' : value;
+        div.appendChild(valEl);
+        tokenGrid.appendChild(div);
+      });
+    }
+
+    // Auto-apply on paste
+    cssInput.addEventListener('paste', function() { setTimeout(applyTheme, 50); });
+
+    // Load from URL hash
+    if (location.hash.length > 1) {
+      try {
+        if (typeof LZString !== 'undefined') {
+          var css = LZString.decompressFromEncodedURIComponent(location.hash.slice(1));
+          if (css) { cssInput.value = css; applyTheme(); }
+        }
+      } catch(e) {}
+    }
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  })();
+  </script>
+</body>
+</html>
