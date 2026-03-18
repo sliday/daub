@@ -11,7 +11,20 @@
       "class": "db-btn",
       "category": "controls",
       "element": "button",
-      "modifiers": ["--primary", "--secondary", "--ghost", "--sm", "--lg", "--icon", "--loading", "--disabled", "--pressed", "--icon-danger", "--icon-success", "--icon-accent"],
+      "modifiers": [
+        "--primary",
+        "--secondary",
+        "--ghost",
+        "--sm",
+        "--lg",
+        "--icon",
+        "--loading",
+        "--disabled",
+        "--pressed",
+        "--icon-danger",
+        "--icon-success",
+        "--icon-accent"
+      ],
       "children": [],
       "js": false,
       "html": "<button class=\"db-btn db-btn--primary\">Label</button>",
@@ -33,11 +46,25 @@
       "class": "db-field",
       "category": "controls",
       "element": "div",
-      "modifiers": ["--error"],
+      "modifiers": [
+        "--error"
+      ],
       "children": [
-        { "class": "db-field__label", "element": "label", "required": false },
-        { "class": "db-field__input", "element": "input", "required": true },
-        { "class": "db-field__helper", "element": "span", "required": false }
+        {
+          "class": "db-field__label",
+          "element": "label",
+          "required": false
+        },
+        {
+          "class": "db-field__input",
+          "element": "input",
+          "required": true
+        },
+        {
+          "class": "db-field__helper",
+          "element": "span",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<div class=\"db-field\">\n  <label class=\"db-field__label\">Email</label>\n  <input class=\"db-field__input\" type=\"email\" placeholder=\"you@example.com\">\n  <span class=\"db-field__helper\">We'll never share your email.</span>\n</div>",
@@ -48,7 +75,11 @@
       "class": "db-input",
       "category": "controls",
       "element": "input",
-      "modifiers": ["--sm", "--lg", "--error"],
+      "modifiers": [
+        "--sm",
+        "--lg",
+        "--error"
+      ],
       "children": [],
       "js": false,
       "html": "<input class=\"db-input\" type=\"text\" placeholder=\"Standalone input\">",
@@ -61,7 +92,11 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-input-group__addon", "element": "span", "required": false }
+        {
+          "class": "db-input-group__addon",
+          "element": "span",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<div class=\"db-input-group\">\n  <span class=\"db-input-group__addon\">https://</span>\n  <input class=\"db-input\" type=\"text\" placeholder=\"example.com\">\n</div>",
@@ -72,12 +107,18 @@
       "class": "db-input-icon",
       "category": "controls",
       "element": "div",
-      "modifiers": ["--right"],
+      "modifiers": [
+        "--right"
+      ],
       "children": [
-        { "class": "db-input-icon__icon", "element": "span", "required": true }
+        {
+          "class": "db-input-icon__icon",
+          "element": "span",
+          "required": true
+        }
       ],
       "js": false,
-      "html": "<div class=\"db-input-icon\">\n  <span class=\"db-input-icon__icon\">\ud83d\udd0d</span>\n  <input class=\"db-input\" placeholder=\"Search...\">\n</div>",
+      "html": "<div class=\"db-input-icon\">\n  <span class=\"db-input-icon__icon\">🔍</span>\n  <input class=\"db-input\" placeholder=\"Search...\">\n</div>",
       "notes": "Icon highlights on :focus-within. Use --right for trailing icon."
     },
     {
@@ -87,8 +128,16 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-search__icon", "element": "svg", "required": false },
-        { "class": "db-search__clear", "element": "button", "required": false }
+        {
+          "class": "db-search__icon",
+          "element": "svg",
+          "required": false
+        },
+        {
+          "class": "db-search__clear",
+          "element": "button",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<div class=\"db-search\">\n  <svg class=\"db-search__icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg>\n  <input class=\"db-input\" type=\"search\" placeholder=\"Search...\">\n  <button class=\"db-search__clear\" aria-label=\"Clear\">&times;</button>\n</div>",
@@ -99,7 +148,9 @@
       "class": "db-textarea",
       "category": "controls",
       "element": "textarea",
-      "modifiers": ["--error"],
+      "modifiers": [
+        "--error"
+      ],
       "children": [],
       "js": false,
       "html": "<textarea class=\"db-textarea\" placeholder=\"Write here...\"></textarea>",
@@ -112,8 +163,16 @@
       "element": "label",
       "modifiers": [],
       "children": [
-        { "class": "db-checkbox__input", "element": "input", "required": true },
-        { "class": "db-checkbox__box", "element": "span", "required": true }
+        {
+          "class": "db-checkbox__input",
+          "element": "input",
+          "required": true
+        },
+        {
+          "class": "db-checkbox__box",
+          "element": "span",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<label class=\"db-checkbox\">\n  <input class=\"db-checkbox__input\" type=\"checkbox\">\n  <span class=\"db-checkbox__box\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg></span>\n  Accept terms\n</label>",
@@ -126,8 +185,16 @@
       "element": "label",
       "modifiers": [],
       "children": [
-        { "class": "db-radio__input", "element": "input", "required": true },
-        { "class": "db-radio__circle", "element": "span", "required": true }
+        {
+          "class": "db-radio__input",
+          "element": "input",
+          "required": true
+        },
+        {
+          "class": "db-radio__circle",
+          "element": "span",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<label class=\"db-radio\">\n  <input class=\"db-radio__input\" type=\"radio\" name=\"plan\" value=\"free\">\n  <span class=\"db-radio__circle\"></span>\n  Free\n</label>",
@@ -151,8 +218,16 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-switch__track", "element": "span", "required": true },
-        { "class": "db-switch__thumb", "element": "span", "required": true }
+        {
+          "class": "db-switch__track",
+          "element": "span",
+          "required": true
+        },
+        {
+          "class": "db-switch__thumb",
+          "element": "span",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<div class=\"db-switch\" role=\"switch\" tabindex=\"0\" aria-checked=\"false\">\n  <span class=\"db-switch__track\"><span class=\"db-switch__thumb\"></span></span>\n  Label\n</div>",
@@ -165,9 +240,21 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-slider__label", "element": "div", "required": false },
-        { "class": "db-slider__value", "element": "span", "required": false },
-        { "class": "db-slider__input", "element": "input", "required": true }
+        {
+          "class": "db-slider__label",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-slider__value",
+          "element": "span",
+          "required": false
+        },
+        {
+          "class": "db-slider__input",
+          "element": "input",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<div class=\"db-slider\">\n  <div class=\"db-slider__label\"><span>Volume</span><span class=\"db-slider__value\">50</span></div>\n  <input class=\"db-slider__input\" type=\"range\" min=\"0\" max=\"100\" value=\"50\">\n</div>",
@@ -178,7 +265,10 @@
       "class": "db-toggle",
       "category": "controls",
       "element": "button",
-      "modifiers": ["--active", "--sm"],
+      "modifiers": [
+        "--active",
+        "--sm"
+      ],
       "children": [],
       "js": true,
       "html": "<button class=\"db-toggle\" aria-pressed=\"false\">Bold</button>",
@@ -202,7 +292,11 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-select__input", "element": "select", "required": true }
+        {
+          "class": "db-select__input",
+          "element": "select",
+          "required": true
+        }
       ],
       "js": false,
       "html": "<div class=\"db-select\">\n  <label class=\"db-label\">Framework</label>\n  <select class=\"db-select__input\">\n    <option value=\"\">Choose...</option>\n    <option>React</option>\n  </select>\n</div>",
@@ -213,12 +307,30 @@
       "class": "db-custom-select",
       "category": "controls",
       "element": "div",
-      "modifiers": ["--open"],
+      "modifiers": [
+        "--open"
+      ],
       "children": [
-        { "class": "db-custom-select__trigger", "element": "button", "required": true },
-        { "class": "db-custom-select__dropdown", "element": "div", "required": true },
-        { "class": "db-custom-select__option", "element": "div", "required": true },
-        { "class": "db-custom-select__search", "element": "div", "required": false }
+        {
+          "class": "db-custom-select__trigger",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-custom-select__dropdown",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-custom-select__option",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-custom-select__search",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-custom-select\">\n  <button class=\"db-custom-select__trigger\" type=\"button\">\n    <span class=\"db-custom-select__placeholder\">Select...</span>\n    <svg class=\"db-custom-select__icon\" viewBox=\"0 0 24 24\"><path d=\"m6 9 6 6 6-6\"/></svg>\n  </button>\n  <div class=\"db-custom-select__dropdown\">\n    <div class=\"db-custom-select__option\">Option A</div>\n    <div class=\"db-custom-select__option\">Option B</div>\n  </div>\n</div>",
@@ -229,7 +341,10 @@
       "class": "db-label",
       "category": "foundations",
       "element": "label",
-      "modifiers": ["--required", "--optional"],
+      "modifiers": [
+        "--required",
+        "--optional"
+      ],
       "children": [],
       "js": false,
       "html": "<label class=\"db-label db-label--required\">Email</label>",
@@ -240,7 +355,9 @@
       "class": "db-kbd",
       "category": "foundations",
       "element": "kbd",
-      "modifiers": ["--sm"],
+      "modifiers": [
+        "--sm"
+      ],
       "children": [],
       "js": false,
       "html": "<kbd class=\"db-kbd\">Ctrl</kbd> + <kbd class=\"db-kbd\">K</kbd>",
@@ -251,7 +368,11 @@
       "class": "db-spinner",
       "category": "feedback",
       "element": "span",
-      "modifiers": ["--sm", "--lg", "--xl"],
+      "modifiers": [
+        "--sm",
+        "--lg",
+        "--xl"
+      ],
       "children": [],
       "js": false,
       "html": "<span class=\"db-spinner\"></span>",
@@ -264,8 +385,16 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-otp__input", "element": "input", "required": true },
-        { "class": "db-otp__separator", "element": "span", "required": false }
+        {
+          "class": "db-otp__input",
+          "element": "input",
+          "required": true
+        },
+        {
+          "class": "db-otp__separator",
+          "element": "span",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-otp\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n  <span class=\"db-otp__separator\">-</span>\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n</div>",
@@ -278,9 +407,21 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-tabs__list", "element": "div", "required": true },
-        { "class": "db-tabs__tab", "element": "button", "required": true },
-        { "class": "db-tabs__panel", "element": "div", "required": true }
+        {
+          "class": "db-tabs__list",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-tabs__tab",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-tabs__panel",
+          "element": "div",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<div class=\"db-tabs\">\n  <div class=\"db-tabs__list\" role=\"tablist\">\n    <button class=\"db-tabs__tab\" aria-selected=\"true\">Tab 1</button>\n    <button class=\"db-tabs__tab\">Tab 2</button>\n  </div>\n  <div class=\"db-tabs__panel\">Content 1</div>\n  <div class=\"db-tabs__panel\" hidden>Content 2</div>\n</div>",
@@ -292,14 +433,41 @@
       "class": "db-card",
       "category": "data-display",
       "element": "div",
-      "modifiers": ["--clip", "--media"],
+      "modifiers": [
+        "--clip",
+        "--media"
+      ],
       "children": [
-        { "class": "db-card__header", "element": "div", "required": false },
-        { "class": "db-card__title", "element": "h3", "required": false },
-        { "class": "db-card__desc", "element": "p", "required": false },
-        { "class": "db-card__body", "element": "div", "required": false },
-        { "class": "db-card__media", "element": "div", "required": false },
-        { "class": "db-card__footer", "element": "div", "required": false }
+        {
+          "class": "db-card__header",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-card__title",
+          "element": "h3",
+          "required": false
+        },
+        {
+          "class": "db-card__desc",
+          "element": "p",
+          "required": false
+        },
+        {
+          "class": "db-card__body",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-card__media",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-card__footer",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<div class=\"db-card\">\n  <div class=\"db-card__header\">\n    <h3 class=\"db-card__title\">Title</h3>\n    <p class=\"db-card__desc\">Description</p>\n  </div>\n  <div class=\"db-card__footer\">\n    <button class=\"db-btn db-btn--primary db-btn--sm\">Action</button>\n  </div>\n</div>",
@@ -312,11 +480,31 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-modal__header", "element": "div", "required": false },
-        { "class": "db-modal__title", "element": "h2", "required": false },
-        { "class": "db-modal__close", "element": "button", "required": false },
-        { "class": "db-modal__body", "element": "div", "required": false },
-        { "class": "db-modal__footer", "element": "div", "required": false }
+        {
+          "class": "db-modal__header",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-modal__title",
+          "element": "h2",
+          "required": false
+        },
+        {
+          "class": "db-modal__close",
+          "element": "button",
+          "required": false
+        },
+        {
+          "class": "db-modal__body",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-modal__footer",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-modal-overlay\" id=\"my-modal\" aria-hidden=\"true\">\n  <div class=\"db-modal\">\n    <div class=\"db-modal__header\">\n      <h2 class=\"db-modal__title\">Title</h2>\n      <button class=\"db-modal__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-modal__body\">Content</div>\n    <div class=\"db-modal__footer\">\n      <button class=\"db-btn db-btn--primary\">Confirm</button>\n    </div>\n  </div>\n</div>",
@@ -340,13 +528,35 @@
       "class": "db-alert-dialog",
       "category": "overlays",
       "element": "div",
-      "modifiers": ["--open"],
+      "modifiers": [
+        "--open"
+      ],
       "children": [
-        { "class": "db-alert-dialog__overlay", "element": "div", "required": true },
-        { "class": "db-alert-dialog__panel", "element": "div", "required": true },
-        { "class": "db-alert-dialog__title", "element": "h3", "required": false },
-        { "class": "db-alert-dialog__desc", "element": "p", "required": false },
-        { "class": "db-alert-dialog__actions", "element": "div", "required": false }
+        {
+          "class": "db-alert-dialog__overlay",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-alert-dialog__panel",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-alert-dialog__title",
+          "element": "h3",
+          "required": false
+        },
+        {
+          "class": "db-alert-dialog__desc",
+          "element": "p",
+          "required": false
+        },
+        {
+          "class": "db-alert-dialog__actions",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-alert-dialog\" id=\"confirm-delete\">\n  <div class=\"db-alert-dialog__overlay\"></div>\n  <div class=\"db-alert-dialog__panel\">\n    <h3 class=\"db-alert-dialog__title\">Are you sure?</h3>\n    <p class=\"db-alert-dialog__desc\">This action cannot be undone.</p>\n    <div class=\"db-alert-dialog__actions\">\n      <button class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Cancel</button>\n      <button class=\"db-btn db-btn--primary\">Continue</button>\n    </div>\n  </div>\n</div>",
@@ -358,14 +568,44 @@
       "class": "db-sheet",
       "category": "overlays",
       "element": "div",
-      "modifiers": ["--open", "--right", "--left", "--top", "--bottom"],
+      "modifiers": [
+        "--open",
+        "--right",
+        "--left",
+        "--top",
+        "--bottom"
+      ],
       "children": [
-        { "class": "db-sheet__overlay", "element": "div", "required": true },
-        { "class": "db-sheet__panel", "element": "div", "required": true },
-        { "class": "db-sheet__header", "element": "div", "required": false },
-        { "class": "db-sheet__title", "element": "span", "required": false },
-        { "class": "db-sheet__close", "element": "button", "required": false },
-        { "class": "db-sheet__body", "element": "div", "required": false }
+        {
+          "class": "db-sheet__overlay",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-sheet__panel",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-sheet__header",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-sheet__title",
+          "element": "span",
+          "required": false
+        },
+        {
+          "class": "db-sheet__close",
+          "element": "button",
+          "required": false
+        },
+        {
+          "class": "db-sheet__body",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-sheet db-sheet--right\" id=\"my-sheet\">\n  <div class=\"db-sheet__overlay\"></div>\n  <div class=\"db-sheet__panel\">\n    <div class=\"db-sheet__header\">\n      <span class=\"db-sheet__title\">Title</span>\n      <button class=\"db-sheet__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-sheet__body\">Content</div>\n  </div>\n</div>",
@@ -377,12 +617,30 @@
       "class": "db-drawer",
       "category": "overlays",
       "element": "div",
-      "modifiers": ["--open"],
+      "modifiers": [
+        "--open"
+      ],
       "children": [
-        { "class": "db-drawer__overlay", "element": "div", "required": true },
-        { "class": "db-drawer__panel", "element": "div", "required": true },
-        { "class": "db-drawer__handle", "element": "div", "required": false },
-        { "class": "db-drawer__body", "element": "div", "required": false }
+        {
+          "class": "db-drawer__overlay",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-drawer__panel",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-drawer__handle",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-drawer__body",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-drawer\" id=\"my-drawer\">\n  <div class=\"db-drawer__overlay\"></div>\n  <div class=\"db-drawer__panel\">\n    <div class=\"db-drawer__handle\"></div>\n    <div class=\"db-drawer__body\">Content</div>\n  </div>\n</div>",
@@ -394,13 +652,38 @@
       "class": "db-toast",
       "category": "feedback",
       "element": "div",
-      "modifiers": ["--success", "--error", "--warning", "--removing"],
+      "modifiers": [
+        "--success",
+        "--error",
+        "--warning",
+        "--removing"
+      ],
       "children": [
-        { "class": "db-toast__icon", "element": "span", "required": false },
-        { "class": "db-toast__content", "element": "div", "required": false },
-        { "class": "db-toast__title", "element": "div", "required": false },
-        { "class": "db-toast__message", "element": "div", "required": false },
-        { "class": "db-toast__close", "element": "button", "required": false }
+        {
+          "class": "db-toast__icon",
+          "element": "span",
+          "required": false
+        },
+        {
+          "class": "db-toast__content",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-toast__title",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-toast__message",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-toast__close",
+          "element": "button",
+          "required": false
+        }
       ],
       "js": true,
       "html": "DAUB.toast('Hello!')\nDAUB.toast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 4000 })",
@@ -422,11 +705,28 @@
       "class": "db-alert",
       "category": "feedback",
       "element": "div",
-      "modifiers": ["--info", "--warning", "--error", "--success"],
+      "modifiers": [
+        "--info",
+        "--warning",
+        "--error",
+        "--success"
+      ],
       "children": [
-        { "class": "db-alert__icon", "element": "span", "required": false },
-        { "class": "db-alert__content", "element": "div", "required": false },
-        { "class": "db-alert__title", "element": "div", "required": false }
+        {
+          "class": "db-alert__icon",
+          "element": "span",
+          "required": false
+        },
+        {
+          "class": "db-alert__content",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-alert__title",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<div class=\"db-alert db-alert--warning\">\n  <span class=\"db-alert__icon\"><!-- icon --></span>\n  <div class=\"db-alert__content\">\n    <div class=\"db-alert__title\">Warning</div>\n    <p>Something needs attention.</p>\n  </div>\n</div>",
@@ -437,7 +737,15 @@
       "class": "db-badge",
       "category": "data-display",
       "element": "span",
-      "modifiers": ["--new", "--updated", "--success", "--warning", "--error", "--danger", "--info"],
+      "modifiers": [
+        "--new",
+        "--updated",
+        "--success",
+        "--warning",
+        "--error",
+        "--danger",
+        "--info"
+      ],
       "children": [],
       "js": false,
       "html": "<span class=\"db-badge db-badge--new\">New</span>",
@@ -448,7 +756,11 @@
       "class": "db-avatar",
       "category": "data-display",
       "element": "div",
-      "modifiers": ["--sm", "--md", "--lg"],
+      "modifiers": [
+        "--sm",
+        "--md",
+        "--lg"
+      ],
       "children": [],
       "js": false,
       "html": "<div class=\"db-avatar db-avatar--md\"><img src=\"photo.jpg\" alt=\"User\"></div>",
@@ -461,7 +773,11 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-avatar-group__overflow", "element": "span", "required": false }
+        {
+          "class": "db-avatar-group__overflow",
+          "element": "span",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<div class=\"db-avatar-group\">\n  <div class=\"db-avatar db-avatar--md\"><img src=\"user1.jpg\" alt=\"\"></div>\n  <div class=\"db-avatar db-avatar--md\"><img src=\"user2.jpg\" alt=\"\"></div>\n  <span class=\"db-avatar-group__overflow\">+5</span>\n</div>",
@@ -485,7 +801,11 @@
       "element": "table",
       "modifiers": [],
       "children": [
-        { "class": "db-data-table__check", "element": "input", "required": false }
+        {
+          "class": "db-data-table__check",
+          "element": "input",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<table class=\"db-data-table\">\n  <thead><tr>\n    <th><input class=\"db-data-table__check\" type=\"checkbox\"></th>\n    <th data-sortable>Name</th>\n  </tr></thead>\n  <tbody><tr>\n    <td><input class=\"db-data-table__check\" type=\"checkbox\"></td>\n    <td>Item</td>\n  </tr></tbody>\n</table>",
@@ -498,10 +818,26 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-list__item", "element": "div", "required": true },
-        { "class": "db-list__content", "element": "div", "required": false },
-        { "class": "db-list__title", "element": "div", "required": false },
-        { "class": "db-list__secondary", "element": "div", "required": false }
+        {
+          "class": "db-list__item",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-list__content",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-list__title",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-list__secondary",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<div class=\"db-list\">\n  <div class=\"db-list__item\">\n    <div class=\"db-list__content\">\n      <div class=\"db-list__title\">Item</div>\n      <div class=\"db-list__secondary\">Details</div>\n    </div>\n  </div>\n</div>",
@@ -512,9 +848,21 @@
       "class": "db-chip",
       "category": "data-display",
       "element": "span",
-      "modifiers": ["--red", "--green", "--blue", "--purple", "--amber", "--pink", "--active"],
+      "modifiers": [
+        "--red",
+        "--green",
+        "--blue",
+        "--purple",
+        "--amber",
+        "--pink",
+        "--active"
+      ],
       "children": [
-        { "class": "db-chip__close", "element": "button", "required": false }
+        {
+          "class": "db-chip__close",
+          "element": "button",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<span class=\"db-chip db-chip--blue\">Design</span>",
@@ -538,8 +886,16 @@
       "element": "nav",
       "modifiers": [],
       "children": [
-        { "class": "db-pagination__btn", "element": "button", "required": true },
-        { "class": "db-pagination__ellipsis", "element": "span", "required": false }
+        {
+          "class": "db-pagination__btn",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-pagination__ellipsis",
+          "element": "span",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<nav class=\"db-pagination\" aria-label=\"Pagination\">\n  <button class=\"db-pagination__btn\" disabled>&laquo;</button>\n  <button class=\"db-pagination__btn\" aria-current=\"page\">1</button>\n  <button class=\"db-pagination__btn\">2</button>\n  <button class=\"db-pagination__btn\">&raquo;</button>\n</nav>",
@@ -550,11 +906,25 @@
       "class": "db-stepper",
       "category": "navigation",
       "element": "div",
-      "modifiers": ["--vertical"],
+      "modifiers": [
+        "--vertical"
+      ],
       "children": [
-        { "class": "db-stepper__step", "element": "div", "required": true },
-        { "class": "db-stepper__indicator", "element": "div", "required": true },
-        { "class": "db-stepper__label", "element": "div", "required": false }
+        {
+          "class": "db-stepper__step",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-stepper__indicator",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-stepper__label",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-stepper\">\n  <div class=\"db-stepper__step db-stepper__step--completed\">\n    <div class=\"db-stepper__indicator\">1</div>\n    <div class=\"db-stepper__label\">Done</div>\n  </div>\n  <div class=\"db-stepper__step db-stepper__step--active\">\n    <div class=\"db-stepper__indicator\">2</div>\n    <div class=\"db-stepper__label\">Current</div>\n  </div>\n</div>",
@@ -567,7 +937,11 @@
       "element": "nav",
       "modifiers": [],
       "children": [
-        { "class": "db-nav-menu__item", "element": "a", "required": true }
+        {
+          "class": "db-nav-menu__item",
+          "element": "a",
+          "required": true
+        }
       ],
       "js": false,
       "html": "<nav class=\"db-nav-menu\">\n  <a class=\"db-nav-menu__item db-nav-menu__item--active\" href=\"#\">Home</a>\n  <a class=\"db-nav-menu__item\" href=\"#\">About</a>\n</nav>",
@@ -578,13 +952,35 @@
       "class": "db-navbar",
       "category": "navigation",
       "element": "nav",
-      "modifiers": ["--open"],
+      "modifiers": [
+        "--open"
+      ],
       "children": [
-        { "class": "db-navbar__brand", "element": "a", "required": false },
-        { "class": "db-navbar__nav", "element": "div", "required": false },
-        { "class": "db-navbar__spacer", "element": "div", "required": false },
-        { "class": "db-navbar__actions", "element": "div", "required": false },
-        { "class": "db-navbar__toggle", "element": "button", "required": false }
+        {
+          "class": "db-navbar__brand",
+          "element": "a",
+          "required": false
+        },
+        {
+          "class": "db-navbar__nav",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-navbar__spacer",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-navbar__actions",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-navbar__toggle",
+          "element": "button",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<nav class=\"db-navbar\">\n  <a class=\"db-navbar__brand\" href=\"/\">AppName</a>\n  <div class=\"db-navbar__nav\">\n    <div class=\"db-nav-menu\">\n      <a class=\"db-nav-menu__item db-nav-menu__item--active\" href=\"/\">Home</a>\n    </div>\n  </div>\n  <div class=\"db-navbar__spacer\"></div>\n  <div class=\"db-navbar__actions\">\n    <button class=\"db-btn db-btn--icon\" aria-label=\"Notifications\">Bell</button>\n  </div>\n  <button class=\"db-navbar__toggle\" aria-label=\"Menu\">Menu</button>\n</nav>",
@@ -597,8 +993,16 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-menubar__item", "element": "button", "required": true },
-        { "class": "db-menubar__dropdown", "element": "div", "required": false }
+        {
+          "class": "db-menubar__item",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-menubar__dropdown",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-menubar\">\n  <button class=\"db-menubar__item\">File\n    <div class=\"db-menubar__dropdown\">\n      <button class=\"db-dropdown__item\">New</button>\n      <button class=\"db-dropdown__item\">Open</button>\n    </div>\n  </button>\n  <button class=\"db-menubar__item\">Edit</button>\n</div>",
@@ -609,14 +1013,40 @@
       "class": "db-sidebar",
       "category": "navigation",
       "element": "aside",
-      "modifiers": ["--collapsed"],
+      "modifiers": [
+        "--collapsed"
+      ],
       "children": [
-        { "class": "db-sidebar__header", "element": "div", "required": false },
-        { "class": "db-sidebar__section", "element": "div", "required": false },
-        { "class": "db-sidebar__label", "element": "div", "required": false },
-        { "class": "db-sidebar__item", "element": "a", "required": true },
-        { "class": "db-sidebar__footer", "element": "div", "required": false },
-        { "class": "db-sidebar__toggle", "element": "button", "required": false }
+        {
+          "class": "db-sidebar__header",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-sidebar__section",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-sidebar__label",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-sidebar__item",
+          "element": "a",
+          "required": true
+        },
+        {
+          "class": "db-sidebar__footer",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-sidebar__toggle",
+          "element": "button",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<aside class=\"db-sidebar\">\n  <div class=\"db-sidebar__header\">\n    <h3>App Name</h3>\n    <button class=\"db-sidebar__toggle\" aria-label=\"Toggle sidebar\">Toggle</button>\n  </div>\n  <div class=\"db-sidebar__section\">\n    <div class=\"db-sidebar__label\">Main</div>\n    <a class=\"db-sidebar__item db-sidebar__item--active\" data-tooltip=\"Dashboard\" href=\"#\">Dashboard</a>\n  </div>\n</aside>",
@@ -627,10 +1057,20 @@
       "class": "db-bottom-nav",
       "category": "navigation",
       "element": "nav",
-      "modifiers": ["--always"],
+      "modifiers": [
+        "--always"
+      ],
       "children": [
-        { "class": "db-bottom-nav__item", "element": "a", "required": true },
-        { "class": "db-bottom-nav__badge", "element": "span", "required": false }
+        {
+          "class": "db-bottom-nav__item",
+          "element": "a",
+          "required": true
+        },
+        {
+          "class": "db-bottom-nav__badge",
+          "element": "span",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<nav class=\"db-bottom-nav\">\n  <a class=\"db-bottom-nav__item db-bottom-nav__item--active\" href=\"#\">\n    <svg>...</svg>\n    <span>Home</span>\n  </a>\n  <a class=\"db-bottom-nav__item\" href=\"#\">\n    <svg>...</svg>\n    <span>Search</span>\n    <span class=\"db-bottom-nav__badge\">3</span>\n  </a>\n</nav>",
@@ -641,9 +1081,16 @@
       "class": "db-tooltip",
       "category": "overlays",
       "element": "div",
-      "modifiers": ["--visible", "--open"],
+      "modifiers": [
+        "--visible",
+        "--open"
+      ],
       "children": [
-        { "class": "db-tooltip__content", "element": "span", "required": true }
+        {
+          "class": "db-tooltip__content",
+          "element": "span",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<div class=\"db-tooltip\">\n  <button class=\"db-btn\">Hover me</button>\n  <span class=\"db-tooltip__content db-tooltip__content--top\">Tooltip text</span>\n</div>",
@@ -654,10 +1101,20 @@
       "class": "db-popover",
       "category": "overlays",
       "element": "div",
-      "modifiers": ["--open"],
+      "modifiers": [
+        "--open"
+      ],
       "children": [
-        { "class": "db-popover__trigger", "element": "button", "required": true },
-        { "class": "db-popover__content", "element": "div", "required": true }
+        {
+          "class": "db-popover__trigger",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-popover__content",
+          "element": "div",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<div class=\"db-popover\">\n  <button class=\"db-btn db-popover__trigger\">Click me</button>\n  <div class=\"db-popover__content db-popover__content--bottom\">\n    <p>Popover content here.</p>\n  </div>\n</div>",
@@ -670,7 +1127,11 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-hover-card__content", "element": "div", "required": true }
+        {
+          "class": "db-hover-card__content",
+          "element": "div",
+          "required": true
+        }
       ],
       "js": false,
       "html": "<div class=\"db-hover-card\">\n  <a href=\"#\">@username</a>\n  <div class=\"db-hover-card__content\">\n    <p>User profile info shown on hover.</p>\n  </div>\n</div>",
@@ -681,13 +1142,35 @@
       "class": "db-dropdown",
       "category": "overlays",
       "element": "div",
-      "modifiers": ["--open"],
+      "modifiers": [
+        "--open"
+      ],
       "children": [
-        { "class": "db-dropdown__trigger", "element": "button", "required": true },
-        { "class": "db-dropdown__content", "element": "div", "required": true },
-        { "class": "db-dropdown__item", "element": "button", "required": true },
-        { "class": "db-dropdown__separator", "element": "hr", "required": false },
-        { "class": "db-dropdown__label", "element": "div", "required": false }
+        {
+          "class": "db-dropdown__trigger",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-dropdown__content",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-dropdown__item",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-dropdown__separator",
+          "element": "hr",
+          "required": false
+        },
+        {
+          "class": "db-dropdown__label",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-dropdown\">\n  <button class=\"db-btn db-dropdown__trigger\">Options</button>\n  <div class=\"db-dropdown__content\">\n    <div class=\"db-dropdown__label\">Actions</div>\n    <button class=\"db-dropdown__item\">Edit</button>\n    <hr class=\"db-dropdown__separator\">\n    <button class=\"db-dropdown__item\">Delete</button>\n  </div>\n</div>",
@@ -699,11 +1182,25 @@
       "class": "db-context-menu",
       "category": "overlays",
       "element": "div",
-      "modifiers": ["--open"],
+      "modifiers": [
+        "--open"
+      ],
       "children": [
-        { "class": "db-context-menu__label", "element": "div", "required": false },
-        { "class": "db-context-menu__item", "element": "button", "required": true },
-        { "class": "db-context-menu__separator", "element": "hr", "required": false }
+        {
+          "class": "db-context-menu__label",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-context-menu__item",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-context-menu__separator",
+          "element": "hr",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div data-context-menu=\"my-ctx-menu\">Right-click here</div>\n<div class=\"db-context-menu\" id=\"my-ctx-menu\">\n  <div class=\"db-context-menu__label\">Actions</div>\n  <button class=\"db-context-menu__item\">Copy</button>\n  <hr class=\"db-context-menu__separator\">\n  <button class=\"db-context-menu__item\">Delete</button>\n</div>",
@@ -715,17 +1212,55 @@
       "class": "db-command",
       "category": "overlays",
       "element": "div",
-      "modifiers": ["--open"],
+      "modifiers": [
+        "--open"
+      ],
       "children": [
-        { "class": "db-command__overlay", "element": "div", "required": true },
-        { "class": "db-command__panel", "element": "div", "required": true },
-        { "class": "db-command__input-wrap", "element": "div", "required": true },
-        { "class": "db-command__input", "element": "input", "required": true },
-        { "class": "db-command__list", "element": "div", "required": true },
-        { "class": "db-command__group-label", "element": "div", "required": false },
-        { "class": "db-command__item", "element": "div", "required": true },
-        { "class": "db-command__shortcut", "element": "span", "required": false },
-        { "class": "db-command__empty", "element": "div", "required": false }
+        {
+          "class": "db-command__overlay",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-command__panel",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-command__input-wrap",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-command__input",
+          "element": "input",
+          "required": true
+        },
+        {
+          "class": "db-command__list",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-command__group-label",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-command__item",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-command__shortcut",
+          "element": "span",
+          "required": false
+        },
+        {
+          "class": "db-command__empty",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-command\" id=\"cmd\">\n  <div class=\"db-command__overlay\"></div>\n  <div class=\"db-command__panel\">\n    <div class=\"db-command__input-wrap\">\n      <input class=\"db-command__input\" placeholder=\"Search...\">\n    </div>\n    <div class=\"db-command__list\">\n      <div class=\"db-command__group-label\">Navigation</div>\n      <div class=\"db-command__item\">Home</div>\n    </div>\n  </div>\n</div>",
@@ -739,10 +1274,26 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-accordion__item", "element": "div", "required": true },
-        { "class": "db-accordion__trigger", "element": "button", "required": true },
-        { "class": "db-accordion__icon", "element": "svg", "required": false },
-        { "class": "db-accordion__content", "element": "div", "required": true }
+        {
+          "class": "db-accordion__item",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-accordion__trigger",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-accordion__icon",
+          "element": "svg",
+          "required": false
+        },
+        {
+          "class": "db-accordion__content",
+          "element": "div",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<div class=\"db-accordion\">\n  <div class=\"db-accordion__item\">\n    <button class=\"db-accordion__trigger\" aria-expanded=\"false\">\n      Question\n      <svg class=\"db-accordion__icon\" viewBox=\"0 0 24 24\"><path d=\"m6 9 6 6 6-6\"/></svg>\n    </button>\n    <div class=\"db-accordion__content\">Answer</div>\n  </div>\n</div>",
@@ -753,11 +1304,25 @@
       "class": "db-collapsible",
       "category": "data-display",
       "element": "div",
-      "modifiers": ["--open"],
+      "modifiers": [
+        "--open"
+      ],
       "children": [
-        { "class": "db-collapsible__trigger", "element": "button", "required": true },
-        { "class": "db-collapsible__icon", "element": "svg", "required": false },
-        { "class": "db-collapsible__content", "element": "div", "required": true }
+        {
+          "class": "db-collapsible__trigger",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-collapsible__icon",
+          "element": "svg",
+          "required": false
+        },
+        {
+          "class": "db-collapsible__content",
+          "element": "div",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<div class=\"db-collapsible\">\n  <button class=\"db-collapsible__trigger\" aria-expanded=\"false\">\n    <svg class=\"db-collapsible__icon\" viewBox=\"0 0 24 24\"><path d=\"m9 18 6-6-6-6\"/></svg>\n    Show more\n  </button>\n  <div class=\"db-collapsible__content\">Hidden content</div>\n</div>",
@@ -768,9 +1333,15 @@
       "class": "db-progress",
       "category": "feedback",
       "element": "div",
-      "modifiers": ["--indeterminate"],
+      "modifiers": [
+        "--indeterminate"
+      ],
       "children": [
-        { "class": "db-progress__bar", "element": "div", "required": true }
+        {
+          "class": "db-progress__bar",
+          "element": "div",
+          "required": true
+        }
       ],
       "js": false,
       "html": "<div class=\"db-progress\"><div class=\"db-progress__bar\" style=\"--db-progress: 65%;\"></div></div>",
@@ -781,7 +1352,12 @@
       "class": "db-skeleton",
       "category": "feedback",
       "element": "div",
-      "modifiers": ["--text", "--heading", "--avatar", "--btn"],
+      "modifiers": [
+        "--text",
+        "--heading",
+        "--avatar",
+        "--btn"
+      ],
       "children": [],
       "js": false,
       "html": "<div class=\"db-skeleton db-skeleton--text\"></div>\n<div class=\"db-skeleton db-skeleton--heading\"></div>\n<div class=\"db-skeleton db-skeleton--avatar\"></div>",
@@ -794,9 +1370,21 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-empty__icon", "element": "div", "required": false },
-        { "class": "db-empty__title", "element": "h3", "required": false },
-        { "class": "db-empty__desc", "element": "p", "required": false }
+        {
+          "class": "db-empty__icon",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-empty__title",
+          "element": "h3",
+          "required": false
+        },
+        {
+          "class": "db-empty__desc",
+          "element": "p",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<div class=\"db-empty\">\n  <div class=\"db-empty__icon\"><!-- icon --></div>\n  <h3 class=\"db-empty__title\">No items</h3>\n  <p class=\"db-empty__desc\">Get started by creating your first item.</p>\n  <button class=\"db-btn db-btn--primary\">Create</button>\n</div>",
@@ -809,12 +1397,36 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-calendar__header", "element": "div", "required": true },
-        { "class": "db-calendar__title", "element": "span", "required": true },
-        { "class": "db-calendar__nav", "element": "button", "required": true },
-        { "class": "db-calendar__grid", "element": "div", "required": true },
-        { "class": "db-calendar__day-label", "element": "span", "required": true },
-        { "class": "db-calendar__day", "element": "button", "required": true }
+        {
+          "class": "db-calendar__header",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-calendar__title",
+          "element": "span",
+          "required": true
+        },
+        {
+          "class": "db-calendar__nav",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-calendar__grid",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-calendar__day-label",
+          "element": "span",
+          "required": true
+        },
+        {
+          "class": "db-calendar__day",
+          "element": "button",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<div class=\"db-calendar\">\n  <div class=\"db-calendar__header\">\n    <button class=\"db-calendar__nav\">&lsaquo;</button>\n    <span class=\"db-calendar__title\">February 2026</span>\n    <button class=\"db-calendar__nav\">&rsaquo;</button>\n  </div>\n  <div class=\"db-calendar__grid\">\n    <span class=\"db-calendar__day-label\">Mo</span>\n    <button class=\"db-calendar__day\">1</button>\n    <button class=\"db-calendar__day db-calendar__day--today\">27</button>\n  </div>\n</div>",
@@ -827,8 +1439,16 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-date-picker__trigger", "element": "button", "required": true },
-        { "class": "db-date-picker__dropdown", "element": "div", "required": true }
+        {
+          "class": "db-date-picker__trigger",
+          "element": "button",
+          "required": true
+        },
+        {
+          "class": "db-date-picker__dropdown",
+          "element": "div",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<div class=\"db-date-picker\">\n  <button class=\"db-date-picker__trigger db-input\" type=\"button\">Select date...</button>\n  <div class=\"db-date-picker__dropdown\">\n    <div class=\"db-calendar\"><!-- calendar markup --></div>\n  </div>\n</div>",
@@ -841,11 +1461,31 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-carousel__track", "element": "div", "required": true },
-        { "class": "db-carousel__slide", "element": "div", "required": true },
-        { "class": "db-carousel__btn", "element": "button", "required": false },
-        { "class": "db-carousel__dots", "element": "div", "required": false },
-        { "class": "db-carousel__dot", "element": "button", "required": false }
+        {
+          "class": "db-carousel__track",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-carousel__slide",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-carousel__btn",
+          "element": "button",
+          "required": false
+        },
+        {
+          "class": "db-carousel__dots",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-carousel__dot",
+          "element": "button",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-carousel\">\n  <div class=\"db-carousel__track\">\n    <div class=\"db-carousel__slide\">Slide 1</div>\n    <div class=\"db-carousel__slide\">Slide 2</div>\n  </div>\n  <button class=\"db-carousel__btn db-carousel__btn--prev\">&lsaquo;</button>\n  <button class=\"db-carousel__btn db-carousel__btn--next\">&rsaquo;</button>\n  <div class=\"db-carousel__dots\">\n    <button class=\"db-carousel__dot db-carousel__dot--active\"></button>\n    <button class=\"db-carousel__dot\"></button>\n  </div>\n</div>",
@@ -858,8 +1498,16 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-chart__bar", "element": "div", "required": true },
-        { "class": "db-chart__labels", "element": "div", "required": false }
+        {
+          "class": "db-chart__bar",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-chart__labels",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<div class=\"db-chart\">\n  <div class=\"db-chart__bar\" style=\"height:40%;\"></div>\n  <div class=\"db-chart__bar\" style=\"height:80%;\"></div>\n</div>\n<div class=\"db-chart__labels\"><span>Mon</span><span>Tue</span></div>",
@@ -870,15 +1518,33 @@
       "class": "db-stat",
       "category": "data-display",
       "element": "div",
-      "modifiers": ["--horizontal"],
+      "modifiers": [
+        "--horizontal"
+      ],
       "children": [
-        { "class": "db-stat__label", "element": "span", "required": true },
-        { "class": "db-stat__value", "element": "span", "required": true },
-        { "class": "db-stat__change", "element": "span", "required": false },
-        { "class": "db-stat__icon", "element": "div", "required": false }
+        {
+          "class": "db-stat__label",
+          "element": "span",
+          "required": true
+        },
+        {
+          "class": "db-stat__value",
+          "element": "span",
+          "required": true
+        },
+        {
+          "class": "db-stat__change",
+          "element": "span",
+          "required": false
+        },
+        {
+          "class": "db-stat__icon",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": false,
-      "html": "<div class=\"db-stat\">\n  <span class=\"db-stat__label\">Total Users</span>\n  <span class=\"db-stat__value\">12,847</span>\n  <span class=\"db-stat__change db-stat__change--up\">\u2191 12.5%</span>\n</div>",
+      "html": "<div class=\"db-stat\">\n  <span class=\"db-stat__label\">Total Users</span>\n  <span class=\"db-stat__value\">12,847</span>\n  <span class=\"db-stat__change db-stat__change--up\">↑ 12.5%</span>\n</div>",
       "notes": "KPI/metric card. --horizontal for row layout. __change--up (green) / --down (red). Optional __icon slot."
     },
     {
@@ -888,10 +1554,26 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-chart-card__header", "element": "div", "required": false },
-        { "class": "db-chart-card__title", "element": "span", "required": false },
-        { "class": "db-chart-card__actions", "element": "div", "required": false },
-        { "class": "db-chart-card__body", "element": "div", "required": true }
+        {
+          "class": "db-chart-card__header",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-chart-card__title",
+          "element": "span",
+          "required": false
+        },
+        {
+          "class": "db-chart-card__actions",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-chart-card__body",
+          "element": "div",
+          "required": true
+        }
       ],
       "js": false,
       "html": "<div class=\"db-chart-card\">\n  <div class=\"db-chart-card__header\">\n    <span class=\"db-chart-card__title\">Revenue</span>\n    <div class=\"db-chart-card__actions\"><button class=\"db-btn db-btn--sm db-btn--secondary\">Export</button></div>\n  </div>\n  <div class=\"db-chart-card__body\">\n    <canvas id=\"myChart\"></canvas>\n  </div>\n</div>",
@@ -904,7 +1586,11 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-resizable__handle", "element": "div", "required": true }
+        {
+          "class": "db-resizable__handle",
+          "element": "div",
+          "required": true
+        }
       ],
       "js": true,
       "html": "<div class=\"db-resizable\" style=\"width:300px;height:200px;\">\n  Content\n  <div class=\"db-resizable__handle db-resizable__handle--right\"></div>\n  <div class=\"db-resizable__handle db-resizable__handle--bottom\"></div>\n</div>",
@@ -915,9 +1601,16 @@
       "class": "db-separator",
       "category": "layout-utility",
       "element": "hr",
-      "modifiers": ["--vertical", "--dashed"],
+      "modifiers": [
+        "--vertical",
+        "--dashed"
+      ],
       "children": [
-        { "class": "db-separator__label", "element": "div", "required": false }
+        {
+          "class": "db-separator__label",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": false,
       "html": "<hr class=\"db-separator\">\n<hr class=\"db-separator db-separator--dashed\">\n<div class=\"db-separator__label\">Or continue with</div>",
@@ -939,7 +1632,10 @@
       "class": "db-scroll-area",
       "category": "layout-utility",
       "element": "div",
-      "modifiers": ["--horizontal", "--vertical"],
+      "modifiers": [
+        "--horizontal",
+        "--vertical"
+      ],
       "children": [],
       "js": false,
       "html": "<div class=\"db-scroll-area\" style=\"max-height:200px;\">\n  <!-- long content -->\n</div>",
@@ -950,7 +1646,12 @@
       "class": "db-aspect",
       "category": "layout-utility",
       "element": "div",
-      "modifiers": ["--16-9", "--4-3", "--1-1", "--21-9"],
+      "modifiers": [
+        "--16-9",
+        "--4-3",
+        "--1-1",
+        "--21-9"
+      ],
       "children": [],
       "js": false,
       "html": "<div class=\"db-aspect db-aspect--16-9\"><img src=\"photo.jpg\" alt=\"\"></div>",
@@ -961,7 +1662,11 @@
       "class": "db-surface",
       "category": "foundations",
       "element": "div",
-      "modifiers": ["--raised", "--inset", "--pressed"],
+      "modifiers": [
+        "--raised",
+        "--inset",
+        "--pressed"
+      ],
       "children": [],
       "js": false,
       "html": "<div class=\"db-surface\">Base</div>\n<div class=\"db-surface--raised\">Raised</div>\n<div class=\"db-surface--inset\">Inset</div>",
@@ -972,7 +1677,11 @@
       "class": "db-elevation",
       "category": "foundations",
       "element": "div",
-      "modifiers": ["-1", "-2", "-3"],
+      "modifiers": [
+        "-1",
+        "-2",
+        "-3"
+      ],
       "children": [],
       "js": false,
       "html": "<div class=\"db-elevation-1\">Level 1</div>\n<div class=\"db-elevation-2\">Level 2</div>\n<div class=\"db-elevation-3\">Level 3</div>",
@@ -983,7 +1692,12 @@
       "class": "db-prose",
       "category": "foundations",
       "element": "article",
-      "modifiers": ["--sm", "--lg", "--xl", "--2xl"],
+      "modifiers": [
+        "--sm",
+        "--lg",
+        "--xl",
+        "--2xl"
+      ],
       "children": [],
       "js": false,
       "html": "<div class=\"db-prose\">\n  <h2>Heading</h2>\n  <p>Paragraph with 1.75 line-height and 65ch max-width.</p>\n  <blockquote>Blockquote with left border.</blockquote>\n</div>",
@@ -994,7 +1708,10 @@
       "class": "db-container",
       "category": "layout-utility",
       "element": "div",
-      "modifiers": ["--wide", "--narrow"],
+      "modifiers": [
+        "--wide",
+        "--narrow"
+      ],
       "children": [],
       "js": false,
       "html": "<div class=\"db-container\">960px centered</div>\n<div class=\"db-container db-container--wide\">1200px centered</div>",
@@ -1005,7 +1722,11 @@
       "class": "db-flex",
       "category": "layout-utility",
       "element": "div",
-      "modifiers": ["--col", "--wrap", "--center"],
+      "modifiers": [
+        "--col",
+        "--wrap",
+        "--center"
+      ],
       "children": [],
       "js": false,
       "html": "<div class=\"db-flex db-gap-4\">\n  <div>Item 1</div>\n  <div>Item 2</div>\n</div>",
@@ -1016,7 +1737,13 @@
       "class": "db-grid",
       "category": "layout-utility",
       "element": "div",
-      "modifiers": ["--2", "--3", "--4", "--5", "--6"],
+      "modifiers": [
+        "--2",
+        "--3",
+        "--4",
+        "--5",
+        "--6"
+      ],
       "children": [],
       "js": false,
       "html": "<div class=\"db-grid db-grid--3 db-gap-4\">\n  <div>Col 1</div>\n  <div>Col 2</div>\n  <div>Col 3</div>\n</div>",
@@ -1029,8 +1756,16 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-theme-switcher__toggle", "element": "button", "required": false },
-        { "class": "db-theme-switcher__popover", "element": "div", "required": false }
+        {
+          "class": "db-theme-switcher__toggle",
+          "element": "button",
+          "required": false
+        },
+        {
+          "class": "db-theme-switcher__popover",
+          "element": "div",
+          "required": false
+        }
       ],
       "js": true,
       "html": "<div class=\"db-theme-switcher\" role=\"group\" aria-label=\"Theme switcher\"></div>",
@@ -1043,10 +1778,14 @@
       "element": "div",
       "modifiers": [],
       "children": [
-        { "class": "db-accent-picker__dot", "element": "button", "required": true }
+        {
+          "class": "db-accent-picker__dot",
+          "element": "button",
+          "required": true
+        }
       ],
       "js": true,
-      "html": "<div class=\"db-accent-picker\">\n  <button class=\"db-accent-picker__dot\" data-accent=\"#6B7C3E\" style=\"--dot-color:#6B7C3E\"></button>\n  <button class=\"db-accent-picker__dot\" data-accent=\"reset\">Reset</button>\n</div>",
+      "html": "<div class=\"db-accent-picker\">\n  <button class=\"db-accent-picker__dot\" data-accent=\"#C67B5C\" style=\"background:#C67B5C\" aria-label=\"Terracotta\"></button>\n  <button class=\"db-accent-picker__dot\" data-accent=\"#6B7C3E\" style=\"background:#6B7C3E\" aria-label=\"Olive\"></button>\n  <button class=\"db-accent-picker__dot\" data-accent=\"#5A6D8E\" style=\"background:#5A6D8E\" aria-label=\"Slate\"></button>\n  <button class=\"db-accent-picker__dot\" data-accent=\"#7B506F\" style=\"background:#7B506F\" aria-label=\"Plum\"></button>\n  <button class=\"db-accent-picker__dot db-accent-picker__dot--reset\" data-accent=\"reset\" aria-label=\"Reset accent\">\n    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"/><path d=\"M3 3v5h5\"/></svg>\n  </button>\n</div>",
       "notes": "Color dots for accent override. data-accent=\"reset\" restores theme default."
     }
   ]
