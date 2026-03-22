@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAUB — Theme Gallery | 20 Families, 40 Variants</title>
+  <meta name="description" content="Browse all 40 DAUB themes — 20 families with light and dark variants. Preview colors, components, and apply themes live.">
+  <meta name="keywords" content="DAUB themes, CSS themes, dark mode, light mode, theme gallery, UI themes, color schemes">
+  <meta name="theme-color" content="#C67B5C">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://daub.dev/themes.html">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM documentation">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DAUB — Theme Gallery | 20 Families, 40 Variants">
+  <meta property="og:description" content="Browse all 40 DAUB themes — 20 families with light and dark variants. Preview colors, components, and apply themes live.">
+  <meta property="og:url" content="https://daub.dev/themes.html">
+  <meta property="og:site_name" content="DAUB UI">
+  <meta property="og:image" content="https://daub.dev/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="DAUB Theme Gallery — 40 Themes">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DAUB — Theme Gallery | 20 Families, 40 Variants">
+  <meta name="twitter:description" content="Browse all 40 DAUB themes — 20 families with light and dark variants. Preview and apply live.">
+  <meta name="twitter:image" content="https://daub.dev/og-image.png">
+  <meta name="twitter:site" content="@staskulesh">
+
+  <!-- FOUC prevention -->
+  <script>
+    (function(){try{var t=localStorage.getItem('db-theme');if(t)document.documentElement.setAttribute('data-theme',t);var s=localStorage.getItem('db-scheme');if(s)document.documentElement.setAttribute('data-scheme',s);var a=localStorage.getItem('db-accent');if(a)document.documentElement.style.setProperty('--db-terracotta',a)}catch(e){}})();
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
+
+  <!-- DAUB -->
+  <link rel="stylesheet" href="daub.css?v=3.19.6">
+
+  <style>
+    body { margin: 0; overflow-x: hidden; }
+
+    /* Nav (matches index.html) */
+    .db-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--db-cream); border-bottom: 1px solid var(--db-sand);
+      padding: 0 24px; display: flex; align-items: center;
+      justify-content: space-between; height: 48px;
+      font-family: var(--db-font-ui); backdrop-filter: blur(8px);
+    }
+    .db-nav__brand { font-family: var(--db-font-heading); font-weight: 800; font-size: 1.125rem; color: var(--db-ink); text-decoration: none; }
+    .db-nav__links { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+    .db-nav__links a { font-size: 0.8125rem; font-weight: 500; color: var(--db-charcoal); text-decoration: none; padding: 6px 12px; border-radius: var(--db-radius-2); transition: color var(--db-transition), background var(--db-transition); }
+    .db-nav__links a:hover { color: var(--db-terracotta); background: color-mix(in srgb, var(--db-ink) 7%, transparent); }
+    .db-nav__link--active { color: var(--db-terracotta) !important; background: color-mix(in srgb, var(--db-terracotta) 15%, transparent) !important; }
+    .db-nav__github { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 500; color: var(--db-charcoal); text-decoration: none; padding: 6px 12px; border-radius: var(--db-radius-2); border: 1px solid var(--db-sand); transition: border-color var(--db-transition); }
+    .db-nav__github:hover { border-color: var(--db-terracotta); }
+    .db-nav__toggle { display: none; background: none; border: none; cursor: pointer; color: var(--db-charcoal); padding: 6px; }
+    @media (max-width: 768px) {
+      .db-nav { flex-wrap: wrap; height: auto; padding: 8px 16px; gap: 4px; }
+      .db-nav__toggle { display: block; }
+      .db-nav__links { display: none; position: absolute; top: 48px; left: 0; right: 0; flex-direction: column; background: var(--db-cream); border-bottom: 1px solid var(--db-sand); padding: 8px 16px; gap: 0; box-shadow: var(--db-shadow-2); z-index: 99; }
+      .db-nav__links li { width: 100%; }
+      .db-nav__links a { display: block; width: 100%; padding: 10px 12px; font-size: 0.875rem; }
+      .db-nav__github { width: 100%; justify-content: flex-start; border: none; padding: 10px 12px !important; }
+      .db-nav--open .db-nav__links { display: flex; }
+    }
+
+    /* Hero */
+    .tg-hero {
+      text-align: center;
+      padding: 64px 24px 32px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .tg-hero h1 {
+      font-family: var(--db-font-heading);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      color: var(--db-ink);
+      margin: 0 0 12px;
+      line-height: 1.1;
+    }
+    .tg-hero p {
+      font-family: var(--db-font-body);
+      font-size: 1.0625rem;
+      color: var(--db-warm-gray);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Filters */
+    .tg-filters {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 24px 24px;
+    }
+    .tg-filters button {
+      font-family: var(--db-font-ui);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: var(--db-radius-full);
+      border: 1px solid var(--db-sand);
+      background: var(--db-cream);
+      color: var(--db-charcoal);
+      cursor: pointer;
+      transition: all var(--db-transition);
+    }
+    .tg-filters button:hover { border-color: var(--db-terracotta); color: var(--db-terracotta); }
+    .tg-filters button.active { background: var(--db-terracotta); color: #fff; border-color: var(--db-terracotta); }
+
+    /* Grid */
+    .tg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 0 24px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* Theme card */
+    .tg-card {
+      border-radius: var(--db-radius-3);
+      border: 1px solid var(--db-sand);
+      overflow: hidden;
+      transition: box-shadow var(--db-transition), border-color var(--db-transition);
+    }
+    .tg-card:hover { border-color: var(--db-terracotta); box-shadow: var(--db-shadow-2); }
+
+    .tg-card__preview {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .tg-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .tg-card__name {
+      font-family: var(--db-font-heading);
+      font-weight: 700;
+      font-size: 0.9375rem;
+      color: var(--db-ink);
+    }
+
+    .tg-card__swatches {
+      display: flex;
+      gap: 4px;
+    }
+    .tg-card__swatch {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--db-radius-full);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .tg-card__components {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tg-card__footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--db-sand);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--db-cream-dark);
+    }
+    .tg-card__apply {
+      font-family: var(--db-font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: var(--db-radius-2);
+      border: 1px solid var(--db-terracotta);
+      background: transparent;
+      color: var(--db-terracotta);
+      cursor: pointer;
+      transition: all var(--db-transition);
+    }
+    .tg-card__apply:hover { background: var(--db-terracotta); color: #fff; }
+    .tg-card__apply.active { background: var(--db-terracotta); color: #fff; }
+
+    /* CTA */
+    .tg-cta {
+      text-align: center;
+      padding: 40px 24px 64px;
+      font-family: var(--db-font-body);
+    }
+    .tg-cta a {
+      color: var(--db-terracotta);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .tg-cta a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      .tg-grid { grid-template-columns: 1fr; padding: 0 16px 32px; }
+      .tg-hero { padding: 48px 16px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+  <nav class="db-nav">
+    <a href="index.html" class="db-nav__brand">DAUB</a>
+    <button class="db-nav__toggle" aria-label="Menu" onclick="this.closest('.db-nav').classList.toggle('db-nav--open')">
+      <i data-lucide="menu" style="width:20px;height:20px;"></i>
+    </button>
+    <ul class="db-nav__links">
+      <li><a href="index.html#components-index">Components</a></li>
+      <li><a href="docs.html">Docs</a></li>
+      <li><a href="demo.html">Layouts</a></li>
+      <li><a href="playground.html">Playground</a></li>
+      <li><a href="themes.html" class="db-nav__link--active">Themes</a></li>
+      <li><a href="roadmap.html">Roadmap</a></li>
+      <li><a href="case-studies.html">Case Studies</a></li>
+      <li><a href="llms.txt">AI Docs</a></li>
+      <li>
+        <a href="https://github.com/sliday/daub" class="db-nav__github" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  </header>
+
+  <section class="tg-hero">
+    <h1>Theme Gallery</h1>
+    <p>20 theme families, 40 light &amp; dark variants. Click any card to preview it live on this page, then apply it across the library.</p>
+  </section>
+
+  <div class="tg-filters">
+    <button class="active" data-filter="all">All (40)</button>
+    <button data-filter="light">Light</button>
+    <button data-filter="dark">Dark</button>
+  </div>
+
+  <div class="tg-grid" id="tg-grid"></div>
+
+  <section class="tg-cta">
+    <p>Have a custom theme from the <strong>Daub Style</strong> Chrome extension?<br>
+    <a href="theme-preview.html">Test it in Theme Preview &rarr;</a></p>
+  </section>
+
+  <script src="daub.js?v=3.19.6"></script>
+  <script>
+  (function() {
+    var THEMES = [
+      { id: '', name: 'Default', scheme: 'light' },
+      { id: 'dark', name: 'Dark', scheme: 'dark' },
+      { id: 'grunge-light', name: 'Grunge Light', scheme: 'light' },
+      { id: 'grunge-dark', name: 'Grunge Dark', scheme: 'dark' },
+      { id: 'solarized', name: 'Solarized', scheme: 'light' },
+      { id: 'solarized-dark', name: 'Solarized Dark', scheme: 'dark' },
+      { id: 'ink', name: 'Ink', scheme: 'dark' },
+      { id: 'ink-light', name: 'Ink Light', scheme: 'light' },
+      { id: 'ember', name: 'Ember', scheme: 'dark' },
+      { id: 'ember-light', name: 'Ember Light', scheme: 'light' },
+      { id: 'bone', name: 'Bone', scheme: 'light' },
+      { id: 'bone-dark', name: 'Bone Dark', scheme: 'dark' },
+      { id: 'dracula', name: 'Dracula', scheme: 'dark' },
+      { id: 'dracula-light', name: 'Dracula Light', scheme: 'light' },
+      { id: 'nord', name: 'Nord', scheme: 'dark' },
+      { id: 'nord-light', name: 'Nord Light', scheme: 'light' },
+      { id: 'one-dark', name: 'One Dark', scheme: 'dark' },
+      { id: 'one-dark-light', name: 'One Dark Light', scheme: 'light' },
+      { id: 'monokai', name: 'Monokai', scheme: 'dark' },
+      { id: 'monokai-light', name: 'Monokai Light', scheme: 'light' },
+      { id: 'gruvbox', name: 'Gruvbox', scheme: 'dark' },
+      { id: 'gruvbox-light', name: 'Gruvbox Light', scheme: 'light' },
+      { id: 'night-owl', name: 'Night Owl', scheme: 'dark' },
+      { id: 'night-owl-light', name: 'Night Owl Light', scheme: 'light' },
+      { id: 'github', name: 'GitHub', scheme: 'light' },
+      { id: 'github-dark', name: 'GitHub Dark', scheme: 'dark' },
+      { id: 'catppuccin', name: 'Catppuccin', scheme: 'light' },
+      { id: 'catppuccin-dark', name: 'Catppuccin Dark', scheme: 'dark' },
+      { id: 'tokyo-night', name: 'Tokyo Night', scheme: 'dark' },
+      { id: 'tokyo-night-light', name: 'Tokyo Night Light', scheme: 'light' },
+      { id: 'material', name: 'Material', scheme: 'dark' },
+      { id: 'material-light', name: 'Material Light', scheme: 'light' },
+      { id: 'synthwave', name: 'Synthwave', scheme: 'dark' },
+      { id: 'synthwave-light', name: 'Synthwave Light', scheme: 'light' },
+      { id: 'shades-of-purple', name: 'Shades of Purple', scheme: 'dark' },
+      { id: 'shades-of-purple-light', name: 'Shades of Purple Light', scheme: 'light' },
+      { id: 'ayu', name: 'Ayu', scheme: 'light' },
+      { id: 'ayu-dark', name: 'Ayu Dark', scheme: 'dark' },
+      { id: 'horizon', name: 'Horizon', scheme: 'dark' },
+      { id: 'horizon-light', name: 'Horizon Light', scheme: 'light' }
+    ];
+
+    var SWATCH_PROPS = ['--db-cream', '--db-terracotta', '--db-ink', '--db-sand', '--db-charcoal'];
+    var grid = document.getElementById('tg-grid');
+    var currentTheme = document.documentElement.getAttribute('data-theme') || '';
+
+    function buildCard(theme) {
+      var card = document.createElement('div');
+      card.className = 'tg-card';
+      card.setAttribute('data-scheme-type', theme.scheme);
+      if (theme.id) card.setAttribute('data-theme', theme.id);
+
+      var swatchesHtml = SWATCH_PROPS.map(function(prop) {
+        return '<div class="tg-card__swatch" data-prop="' + prop + '"></div>';
+      }).join('');
+
+      var isActive = (theme.id === currentTheme);
+
+      card.innerHTML =
+        '<div class="tg-card__preview">' +
+          '<div class="tg-card__header">' +
+            '<span class="tg-card__name">' + theme.name + '</span>' +
+            '<span class="db-chip db-chip--' + (theme.scheme === 'dark' ? 'error' : 'success') + '">' + theme.scheme + '</span>' +
+          '</div>' +
+          '<div class="tg-card__swatches">' + swatchesHtml + '</div>' +
+          '<div class="tg-card__components">' +
+            '<button class="db-btn db-btn--primary db-btn--sm">Button</button>' +
+            '<button class="db-btn db-btn--secondary db-btn--sm">Secondary</button>' +
+            '<span class="db-chip">Chip</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="tg-card__footer">' +
+          '<span class="db-chip db-chip--neutral" style="font-size:0.6875rem;">' + (theme.id || 'default') + '</span>' +
+          '<button class="tg-card__apply' + (isActive ? ' active' : '') + '">' + (isActive ? 'Active' : 'Apply') + '</button>' +
+        '</div>';
+
+      card.querySelector('.tg-card__apply').addEventListener('click', function() {
+        if (theme.id) {
+          document.documentElement.setAttribute('data-theme', theme.id);
+          localStorage.setItem('db-theme', theme.id);
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          localStorage.removeItem('db-theme');
+        }
+        currentTheme = theme.id;
+        updateSwatches();
+        updateActiveButtons();
+      });
+
+      return card;
+    }
+
+    function updateSwatches() {
+      var cards = grid.querySelectorAll('.tg-card');
+      cards.forEach(function(card) {
+        var swatches = card.querySelectorAll('.tg-card__swatch');
+        swatches.forEach(function(sw) {
+          var prop = sw.getAttribute('data-prop');
+          var val = getComputedStyle(card).getPropertyValue(prop).trim();
+          sw.style.background = val;
+        });
+      });
+    }
+
+    function updateActiveButtons() {
+      grid.querySelectorAll('.tg-card__apply').forEach(function(btn) {
+        var card = btn.closest('.tg-card');
+        var cardTheme = card.getAttribute('data-theme') || '';
+        if (cardTheme === currentTheme) {
+          btn.textContent = 'Active';
+          btn.classList.add('active');
+        } else {
+          btn.textContent = 'Apply';
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // Build grid
+    THEMES.forEach(function(theme) {
+      grid.appendChild(buildCard(theme));
+    });
+
+    // Read swatches after render
+    requestAnimationFrame(function() {
+      updateSwatches();
+    });
+
+    // Filters
+    document.querySelectorAll('.tg-filters button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tg-filters button').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var filter = btn.getAttribute('data-filter');
+        grid.querySelectorAll('.tg-card').forEach(function(card) {
+          if (filter === 'all') {
+            card.style.display = '';
+          } else {
+            card.style.display = card.getAttribute('data-scheme-type') === filter ? '' : 'none';
+          }
+        });
+      });
+    });
+
+    // Init Lucide
+    if (window.lucide) lucide.createIcons();
+  })();
+  </script>
+</body>
+</html>
