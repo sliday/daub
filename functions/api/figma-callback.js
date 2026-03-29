@@ -64,7 +64,7 @@ export async function onRequestGet(context) {
 
 function htmlRedirect(errorMsg) {
   return new Response(`<!DOCTYPE html><html><body><script>
-    window.opener && window.opener.postMessage({ type: 'figma-oauth-error', error: ${JSON.stringify(errorMsg)} }, '*');
+    window.opener && window.opener.postMessage({ type: 'figma-oauth-error', error: ${JSON.stringify(errorMsg)} }, window.location.origin);
     window.close();
   </script><p>${errorMsg}</p></body></html>`, {
     status: 200,

@@ -306,7 +306,16 @@
       if (p.gap) el.classList.add('db-gap-' + Math.max(1, Math.min(6, p.gap)));
       if (p.align === 'center') el.style.justifyItems = 'center';
       else if (p.align === 'end') el.style.justifyItems = 'end';
-      el.appendChild(renderChildren(els, ch, d));
+      (ch || []).forEach(function(id) {
+        var child = renderElement(els, id, d + 1);
+        if (child) {
+          var childDef = els[id];
+          if (childDef && childDef.props && childDef.props.span) {
+            child.style.gridColumn = 'span ' + childDef.props.span;
+          }
+          el.appendChild(child);
+        }
+      });
       return el;
     };
     

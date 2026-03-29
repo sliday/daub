@@ -86,7 +86,7 @@
     "hero-ss-app-image": {
       "type": "Image",
       "props": {
-        "src": "/images/trackline-dashboard.webp",
+        "src": "https://picsum.photos/seed/trackline-dash/1200/600",
         "alt": "Trackline dashboard showing sprint board with tasks organized by status columns"
       }
     },

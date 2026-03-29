@@ -180,7 +180,7 @@
     "hero-split-screenshot": {
       "type": "Image",
       "props": {
-        "src": "/images/hero-app-screenshot.webp",
+        "src": "https://picsum.photos/seed/quill-editor/800/600",
         "alt": "Quill design editor showing AI component generation in action"
       }
     }

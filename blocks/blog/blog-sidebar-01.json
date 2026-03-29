@@ -16,7 +16,8 @@
       "type": "Stack",
       "props": {
         "direction": "vertical",
-        "gap": 3
+        "gap": 3,
+        "span": 3
       },
       "children": [
         "bs-main-header",

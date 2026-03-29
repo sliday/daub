@@ -59,7 +59,7 @@ export async function onRequestPost(context) {
       model: body.model || 'google/gemini-3-flash-preview',
       messages: body.messages,
       temperature: 0.7,
-      max_tokens: body.max_tokens || 16384,
+      max_tokens: Math.min(Math.max(parseInt(body.max_tokens) || 16384, 1), 32768),
       stream: true,
       reasoning: body.reasoning || { effort: 'medium' },
     }, body.response_format !== false ? { response_format: { type: 'json_object' } } : {})),
@@ -84,11 +84,14 @@ export async function onRequestPost(context) {
   });
 }
 
-export async function onRequestOptions() {
+export async function onRequestOptions(context) {
+  const origin = context.request.headers.get('Origin') || '';
+  const allowedOrigins = ['https://daub.dev', 'https://daub.pages.dev'];
+  const isAllowed = allowedOrigins.some(o => origin === o || origin.endsWith('.daub.pages.dev'));
   return new Response(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': 'https://daub.dev',
+      'Access-Control-Allow-Origin': isAllowed ? origin : allowedOrigins[0],
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },
