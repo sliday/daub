@@ -1,6 +1,6 @@
 /**
  * DAUB UI Kit — TypeScript Declarations
- * Version 2.3.0
+ * Version 3.19.6
  * https://daub.dev
  */
 

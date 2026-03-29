@@ -38,6 +38,9 @@
     "type": "git",
     "url": "git+https://github.com/sliday/daub.git"
   },
+  "scripts": {
+    "test": "node --test tests/**/*.test.{js,mjs}"
+  },
   "license": "MIT",
   "author": "Sliday"
 }
