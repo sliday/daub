@@ -1246,25 +1246,6 @@
       "kpi",
       "metrics"
     ],
-    "file": "dashboard/stats-row-01.json",
-    "element_count": 5,
-    "components_used": [
-      "Grid",
-      "StatCard"
-    ],
-    "screenshot": "dashboard/stats-row-01.png"
-  },
-  {
-    "id": "stats-row-01",
-    "name": "Stats Row",
-    "category": "dashboard",
-    "description": "4-column KPI stat cards row (Revenue, Users, Conversion, Avg Order) with trends",
-    "tags": [
-      "dashboard",
-      "stats",
-      "kpi",
-      "metrics"
-    ],
     "file": "stats/stats-row-01.json",
     "element_count": 16,
     "components_used": [
@@ -1273,27 +1254,6 @@
       "Separator"
     ],
     "screenshot": "dashboard/stats-row-01.png"
-  },
-  {
-    "id": "empty-state-01",
-    "name": "Empty State",
-    "category": "data-display",
-    "description": "Centered empty state with icon, title, message, and action button",
-    "tags": [
-      "empty",
-      "placeholder",
-      "no-data",
-      "cta"
-    ],
-    "file": "dashboard/empty-state-01.json",
-    "element_count": 6,
-    "components_used": [
-      "Surface",
-      "Stack",
-      "EmptyState",
-      "Button"
-    ],
-    "screenshot": "data-display/empty-state-01.png"
   },
   {
     "id": "empty-state-01",
