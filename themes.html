@@ -129,19 +129,19 @@
     /* Theme card */
     .tg-card {
       border-radius: var(--db-radius-3);
-      border: 1px solid var(--db-color-border, var(--db-sand));
+      border: 1px solid var(--db-sand);
       overflow: hidden;
       transition: box-shadow var(--db-transition), border-color var(--db-transition);
     }
-    .tg-card:hover { border-color: var(--db-color-accent, var(--db-terracotta)); box-shadow: var(--db-shadow-2); }
+    .tg-card:hover { border-color: var(--db-terracotta); box-shadow: var(--db-shadow-2); }
 
     .tg-card__preview {
       padding: 20px;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      background: var(--db-color-bg, var(--db-cream));
-      color: var(--db-color-fg, var(--db-ink));
+      background: var(--db-cream);
+      color: var(--db-ink);
     }
     .tg-card__header {
       display: flex;
@@ -175,11 +175,11 @@
 
     .tg-card__footer {
       padding: 12px 20px;
-      border-top: 1px solid var(--db-color-border, var(--db-sand));
+      border-top: 1px solid var(--db-sand);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--db-color-surface, var(--db-cream-dark));
+      background: var(--db-cream-dark);
     }
     .tg-card__apply {
       font-family: var(--db-font-ui);
