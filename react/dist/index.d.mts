@@ -475,6 +475,150 @@ interface InputOTPProps extends Omit<ComponentProps<"div">, "onChange" | "defaul
 }
 declare const InputOTP: react.ForwardRefExoticComponent<Omit<InputOTPProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
+interface ModalProps {
+    open: boolean;
+    onClose: () => void;
+    title?: string;
+    footer?: ReactNode;
+    className?: string;
+    children?: ReactNode;
+}
+declare function Modal({ open, onClose, title, footer, className, children }: ModalProps): react.ReactPortal | null;
+
+interface AlertDialogProps {
+    open: boolean;
+    onClose: () => void;
+    title: string;
+    description?: string;
+    confirmLabel?: string;
+    cancelLabel?: string;
+    onConfirm?: () => void;
+    variant?: "danger" | "warning" | "info";
+}
+declare function AlertDialog({ open, onClose, title, description, confirmLabel, cancelLabel, onConfirm, variant, }: AlertDialogProps): react.ReactPortal | null;
+
+interface SheetProps {
+    open: boolean;
+    onClose: () => void;
+    side?: "right" | "left" | "top" | "bottom";
+    title?: string;
+    children?: ReactNode;
+}
+declare function Sheet({ open, onClose, side, title, children }: SheetProps): react.ReactPortal | null;
+
+interface DrawerProps {
+    open: boolean;
+    onClose: () => void;
+    children?: ReactNode;
+}
+declare function Drawer({ open, onClose, children }: DrawerProps): react.ReactPortal | null;
+
+interface ToastProps {
+    id: string;
+    type?: "info" | "success" | "warning" | "error";
+    title?: string;
+    message: string;
+    onDismiss: (id: string) => void;
+}
+declare function Toast({ id, type, title, message, onDismiss }: ToastProps): react_jsx_runtime.JSX.Element;
+
+interface ToastOpts {
+    type?: "info" | "success" | "warning" | "error";
+    title?: string;
+    message: string;
+    duration?: number;
+}
+interface ToastContextValue {
+    toast: (opts: ToastOpts) => void;
+}
+declare function ToastProvider({ children }: {
+    children: ReactNode;
+}): react_jsx_runtime.JSX.Element;
+declare function useToast(): ToastContextValue;
+
+type TooltipPosition = "top" | "bottom" | "left" | "right";
+interface TooltipProps {
+    content: ReactNode;
+    position?: TooltipPosition;
+    children: ReactNode;
+    className?: string;
+}
+declare function Tooltip({ content, position, children, className, }: TooltipProps): react_jsx_runtime.JSX.Element;
+declare namespace Tooltip {
+    var displayName: string;
+}
+
+type PopoverPosition = "top" | "bottom" | "left" | "right";
+interface PopoverProps {
+    trigger: ReactNode;
+    content: ReactNode;
+    position?: PopoverPosition;
+    open?: boolean;
+    defaultOpen?: boolean;
+    onChange?: (open: boolean) => void;
+    className?: string;
+}
+declare const Popover: react.ForwardRefExoticComponent<PopoverProps & react.RefAttributes<HTMLDivElement>>;
+
+interface DropdownMenuItem {
+    label: string;
+    onClick?: () => void;
+    icon?: string;
+    divider?: boolean;
+    disabled?: boolean;
+}
+interface DropdownMenuProps {
+    trigger: ReactNode;
+    items: DropdownMenuItem[];
+    align?: "left" | "right";
+    className?: string;
+}
+declare function DropdownMenu({ trigger, items, align, className, }: DropdownMenuProps): react_jsx_runtime.JSX.Element;
+declare namespace DropdownMenu {
+    var displayName: string;
+}
+
+interface ContextMenuItem {
+    label: string;
+    onClick?: () => void;
+    divider?: boolean;
+    disabled?: boolean;
+}
+interface ContextMenuProps {
+    items: ContextMenuItem[];
+    children: ReactNode;
+    className?: string;
+}
+declare function ContextMenu({ items, children, className }: ContextMenuProps): react_jsx_runtime.JSX.Element;
+declare namespace ContextMenu {
+    var displayName: string;
+}
+
+interface CommandItem {
+    label: string;
+    shortcut?: string;
+    onClick?: () => void;
+}
+interface CommandGroup {
+    label: string;
+    items: CommandItem[];
+}
+interface CommandPaletteProps {
+    open: boolean;
+    onClose: () => void;
+    groups: CommandGroup[];
+    placeholder?: string;
+    className?: string;
+}
+declare function CommandPalette({ open, onClose, groups, placeholder, className, }: CommandPaletteProps): react.ReactPortal | null;
+declare namespace CommandPalette {
+    var displayName: string;
+}
+
 declare function useControllable<T>(controlled: T | undefined, defaultValue: T, onChange?: (value: T) => void): [T, (next: T) => void];
 
-export { Accordion, Alert, type AlertVariant, AspectRatio, type AspectRatio$1 as AspectRatioType, Avatar, AvatarGroup, Badge, type BadgeVariant, BottomNav, Breadcrumbs, Button, ButtonGroup, type ButtonVariant, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, Chip, type ChipColor, Collapsible, Container, type ContainerSize, CustomSelect, DataTable, DatePicker, EmptyState, Field, type GapToken, Grid, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, NavMenu, Navbar, Pagination, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, type Size, Skeleton, type SkeletonVariant, Slider, Spinner, Stack, StatCard, Stepper, Surface, type SurfaceVariant, Switch, Table, Tabs, Textarea, ThemeProvider, Toggle, ToggleGroup, useControllable };
+declare function useEscapeKey(onClose: (() => void) | undefined, active: boolean): void;
+declare function useOutsideClick(ref: React.RefObject<HTMLElement | null>, onClose: (() => void) | undefined, active: boolean): void;
+declare function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean): void;
+
+export { Accordion, Alert, AlertDialog, type AlertVariant, AspectRatio, type AspectRatio$1 as AspectRatioType, Avatar, AvatarGroup, Badge, type BadgeVariant, BottomNav, Breadcrumbs, Button, ButtonGroup, type ButtonVariant, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, Chip, type ChipColor, Collapsible, CommandPalette, Container, type ContainerSize, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, type GapToken, Grid, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Modal, NavMenu, Navbar, Pagination, Popover, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, type Size, Skeleton, type SkeletonVariant, Slider, Spinner, Stack, StatCard, Stepper, Surface, type SurfaceVariant, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };

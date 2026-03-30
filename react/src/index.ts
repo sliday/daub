@@ -64,7 +64,21 @@ export { Toggle } from "./components/Toggle";
 export { ToggleGroup } from "./components/ToggleGroup";
 export { InputOTP } from "./components/InputOTP";
 
+export { Modal } from "./components/Modal";
+export { AlertDialog } from "./components/AlertDialog";
+export { Sheet } from "./components/Sheet";
+export { Drawer } from "./components/Drawer";
+export { Toast } from "./components/Toast";
+export { ToastProvider, useToast } from "./components/ToastProvider";
+
+export { Tooltip } from "./components/Tooltip";
+export { Popover } from "./components/Popover";
+export { DropdownMenu } from "./components/DropdownMenu";
+export { ContextMenu } from "./components/ContextMenu";
+export { CommandPalette } from "./components/CommandPalette";
+
 export { useControllable } from "./hooks/useControllable";
+export { useEscapeKey, useOutsideClick, useFocusTrap } from "./hooks/useOverlay";
 
 export type {
   Size,

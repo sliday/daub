@@ -1,5 +1,6 @@
-import { forwardRef, useState, useRef, useCallback, useEffect, Children } from 'react';
+import { forwardRef, useState, useRef, useCallback, useEffect, Children, createContext, useContext, useMemo } from 'react';
 import { jsx, jsxs } from 'react/jsx-runtime';
+import { createPortal } from 'react-dom';
 
 // src/components/Stack.tsx
 
@@ -1244,7 +1245,423 @@ var InputOTP = forwardRef(
   }
 );
 InputOTP.displayName = "InputOTP";
+function useEscapeKey(onClose, active) {
+  useEffect(() => {
+    if (!active || !onClose) return;
+    const handler = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [active, onClose]);
+}
+function useOutsideClick(ref, onClose, active) {
+  useEffect(() => {
+    if (!active || !onClose) return;
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) onClose();
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [active, onClose, ref]);
+}
+function useFocusTrap(ref, active) {
+  useEffect(() => {
+    if (!active || !ref.current) return;
+    const el = ref.current;
+    const focusable = el.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first?.focus();
+    const handler = (e) => {
+      if (e.key !== "Tab") return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    el.addEventListener("keydown", handler);
+    return () => el.removeEventListener("keydown", handler);
+  }, [active, ref]);
+}
+function Modal({ open, onClose, title, footer, className, children }) {
+  const ref = useRef(null);
+  useEscapeKey(onClose, open);
+  useFocusTrap(ref, open);
+  if (!open) return null;
+  return createPortal(
+    /* @__PURE__ */ jsx("div", { className: "db-modal-overlay db-modal-overlay--active", onClick: onClose, children: /* @__PURE__ */ jsxs(
+      "div",
+      {
+        ref,
+        className: cn("db-modal db-modal--active", className),
+        onClick: (e) => e.stopPropagation(),
+        children: [
+          title && /* @__PURE__ */ jsxs("div", { className: "db-modal__header", children: [
+            /* @__PURE__ */ jsx("h3", { children: title }),
+            /* @__PURE__ */ jsx("button", { className: "db-btn db-btn--ghost db-btn--icon", onClick: onClose, children: "\xD7" })
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "db-modal__body", children }),
+          footer && /* @__PURE__ */ jsx("div", { className: "db-modal__footer", children: footer })
+        ]
+      }
+    ) }),
+    document.body
+  );
+}
+function AlertDialog({
+  open,
+  onClose,
+  title,
+  description,
+  confirmLabel = "Confirm",
+  cancelLabel = "Cancel",
+  onConfirm,
+  variant = "info"
+}) {
+  const ref = useRef(null);
+  useEscapeKey(onClose, open);
+  useFocusTrap(ref, open);
+  if (!open) return null;
+  return createPortal(
+    /* @__PURE__ */ jsx("div", { className: "db-modal-overlay db-modal-overlay--active", onClick: onClose, children: /* @__PURE__ */ jsxs(
+      "div",
+      {
+        ref,
+        className: "db-alert-dialog",
+        onClick: (e) => e.stopPropagation(),
+        children: [
+          /* @__PURE__ */ jsx("h3", { children: title }),
+          description && /* @__PURE__ */ jsx("p", { children: description }),
+          /* @__PURE__ */ jsxs("div", { className: "db-modal__footer", children: [
+            /* @__PURE__ */ jsx("button", { className: "db-btn db-btn--ghost", onClick: onClose, children: cancelLabel }),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                className: cn(
+                  "db-btn",
+                  variant === "danger" ? "db-btn--danger" : "db-btn--primary"
+                ),
+                onClick: () => {
+                  onConfirm?.();
+                  onClose();
+                },
+                children: confirmLabel
+              }
+            )
+          ] })
+        ]
+      }
+    ) }),
+    document.body
+  );
+}
+function Sheet({ open, onClose, side = "right", title, children }) {
+  useEscapeKey(onClose, open);
+  if (!open) return null;
+  return createPortal(
+    /* @__PURE__ */ jsx("div", { className: "db-sheet-overlay", onClick: onClose, children: /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: cn("db-sheet", `db-sheet--${side}`, "db-sheet--active"),
+        onClick: (e) => e.stopPropagation(),
+        children: [
+          /* @__PURE__ */ jsxs("div", { className: "db-sheet__header", children: [
+            title && /* @__PURE__ */ jsx("h3", { children: title }),
+            /* @__PURE__ */ jsx("button", { className: "db-btn db-btn--ghost db-btn--icon", onClick: onClose, children: "\xD7" })
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "db-sheet__body", children })
+        ]
+      }
+    ) }),
+    document.body
+  );
+}
+function Drawer({ open, onClose, children }) {
+  useEscapeKey(onClose, open);
+  if (!open) return null;
+  return createPortal(
+    /* @__PURE__ */ jsx("div", { className: "db-drawer-overlay", onClick: onClose, children: /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: "db-drawer db-drawer--active",
+        onClick: (e) => e.stopPropagation(),
+        children: [
+          /* @__PURE__ */ jsx("div", { className: "db-drawer__handle" }),
+          /* @__PURE__ */ jsx("div", { className: "db-drawer__body", children })
+        ]
+      }
+    ) }),
+    document.body
+  );
+}
+function Toast({ id, type = "info", title, message, onDismiss }) {
+  return /* @__PURE__ */ jsxs("div", { className: cn("db-toast", `db-toast--${type}`), children: [
+    /* @__PURE__ */ jsxs("div", { className: "db-toast__content", children: [
+      title && /* @__PURE__ */ jsx("strong", { children: title }),
+      /* @__PURE__ */ jsx("span", { children: message })
+    ] }),
+    /* @__PURE__ */ jsx("button", { className: "db-btn db-btn--ghost db-btn--icon", onClick: () => onDismiss(id), children: "\xD7" })
+  ] });
+}
+var ToastContext = createContext(null);
+var uid = 0;
+function ToastProvider({ children }) {
+  const [toasts, setToasts] = useState([]);
+  const timers = useRef(/* @__PURE__ */ new Map());
+  const dismiss = useCallback((id) => {
+    const t = timers.current.get(id);
+    if (t) clearTimeout(t);
+    timers.current.delete(id);
+    setToasts((prev) => prev.filter((t2) => t2.id !== id));
+  }, []);
+  const toast = useCallback((opts) => {
+    const id = `toast-${++uid}`;
+    const duration = opts.duration ?? 4e3;
+    const item = { id, type: opts.type, title: opts.title, message: opts.message, duration };
+    setToasts((prev) => [...prev, item]);
+    if (duration > 0) {
+      timers.current.set(id, setTimeout(() => dismiss(id), duration));
+    }
+  }, [dismiss]);
+  useEffect(() => {
+    return () => {
+      timers.current.forEach((t) => clearTimeout(t));
+    };
+  }, []);
+  return /* @__PURE__ */ jsxs(ToastContext.Provider, { value: { toast }, children: [
+    children,
+    toasts.length > 0 && createPortal(
+      /* @__PURE__ */ jsx("div", { className: "db-toast-stack", children: toasts.map((t) => /* @__PURE__ */ jsx(Toast, { id: t.id, type: t.type, title: t.title, message: t.message, onDismiss: dismiss }, t.id)) }),
+      document.body
+    )
+  ] });
+}
+function useToast() {
+  const ctx = useContext(ToastContext);
+  if (!ctx) throw new Error("useToast must be used within a ToastProvider");
+  return ctx;
+}
+function Tooltip({
+  content,
+  position = "top",
+  children,
+  className
+}) {
+  const [visible, setVisible] = useState(false);
+  return /* @__PURE__ */ jsxs("div", { className: cn("db-tooltip", className), children: [
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: "db-tooltip__trigger",
+        onMouseEnter: () => setVisible(true),
+        onMouseLeave: () => setVisible(false),
+        onFocus: () => setVisible(true),
+        onBlur: () => setVisible(false),
+        children
+      }
+    ),
+    visible && /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: cn("db-tooltip__content", `db-tooltip__content--${position}`),
+        role: "tooltip",
+        children: content
+      }
+    )
+  ] });
+}
+Tooltip.displayName = "Tooltip";
+var Popover = forwardRef(
+  ({
+    trigger,
+    content,
+    position = "bottom",
+    open,
+    defaultOpen = false,
+    onChange,
+    className
+  }, forwardedRef) => {
+    const internalRef = useRef(null);
+    const ref = forwardedRef || internalRef;
+    const [isOpen, setIsOpen] = useControllable(open, defaultOpen, onChange);
+    const close = useCallback(() => setIsOpen(false), [setIsOpen]);
+    const toggle = useCallback(() => setIsOpen(!isOpen), [setIsOpen, isOpen]);
+    useOutsideClick(ref, close, isOpen);
+    useEscapeKey(close, isOpen);
+    return /* @__PURE__ */ jsxs("div", { ref, className: cn("db-popover", className), children: [
+      /* @__PURE__ */ jsx("div", { className: "db-popover__trigger", onClick: toggle, children: trigger }),
+      isOpen && /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: cn(
+            "db-popover__content",
+            `db-popover__content--${position}`
+          ),
+          children: content
+        }
+      )
+    ] });
+  }
+);
+Popover.displayName = "Popover";
+function DropdownMenu({
+  trigger,
+  items,
+  align = "left",
+  className
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const close = useCallback(() => setOpen(false), []);
+  const toggle = useCallback(() => setOpen((prev) => !prev), []);
+  useOutsideClick(ref, close, open);
+  useEscapeKey(close, open);
+  return /* @__PURE__ */ jsxs("div", { ref, className: cn("db-dropdown", className), children: [
+    /* @__PURE__ */ jsx("div", { className: "db-dropdown__trigger", onClick: toggle, children: trigger }),
+    open && /* @__PURE__ */ jsx("div", { className: cn("db-dropdown__menu", `db-dropdown__menu--${align}`), children: items.map(
+      (item, i) => item.divider ? /* @__PURE__ */ jsx("hr", { className: "db-dropdown__divider" }, i) : /* @__PURE__ */ jsxs(
+        "button",
+        {
+          className: cn(
+            "db-dropdown__item",
+            item.disabled && "db-dropdown__item--disabled"
+          ),
+          onClick: () => {
+            item.onClick?.();
+            setOpen(false);
+          },
+          disabled: item.disabled,
+          children: [
+            item.icon && /* @__PURE__ */ jsx("span", { className: "db-dropdown__icon", children: item.icon }),
+            item.label
+          ]
+        },
+        i
+      )
+    ) })
+  ] });
+}
+DropdownMenu.displayName = "DropdownMenu";
+function ContextMenu({ items, children, className }) {
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const menuRef = useRef(null);
+  const close = useCallback(() => setOpen(false), []);
+  const handleRightClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      setPos({ x: e.clientX, y: e.clientY });
+      setOpen(true);
+    },
+    []
+  );
+  useOutsideClick(menuRef, close, open);
+  useEscapeKey(close, open);
+  return /* @__PURE__ */ jsxs("div", { className: cn("db-context-menu", className), onContextMenu: handleRightClick, children: [
+    children,
+    open && /* @__PURE__ */ jsx(
+      "div",
+      {
+        ref: menuRef,
+        className: "db-context-menu__menu",
+        style: { position: "fixed", top: pos.y, left: pos.x },
+        children: items.map(
+          (item, i) => item.divider ? /* @__PURE__ */ jsx("hr", { className: "db-context-menu__divider" }, i) : /* @__PURE__ */ jsx(
+            "button",
+            {
+              className: cn(
+                "db-context-menu__item",
+                item.disabled && "db-context-menu__item--disabled"
+              ),
+              onClick: () => {
+                item.onClick?.();
+                setOpen(false);
+              },
+              disabled: item.disabled,
+              children: item.label
+            },
+            i
+          )
+        )
+      }
+    )
+  ] });
+}
+ContextMenu.displayName = "ContextMenu";
+function CommandPalette({
+  open,
+  onClose,
+  groups,
+  placeholder = "Type a command...",
+  className
+}) {
+  const [search, setSearch] = useState("");
+  const ref = useRef(null);
+  useEscapeKey(onClose, open);
+  useFocusTrap(ref, open);
+  const filteredGroups = useMemo(() => {
+    if (!search) return groups;
+    const q = search.toLowerCase();
+    return groups.map((g) => ({
+      ...g,
+      items: g.items.filter((item) => item.label.toLowerCase().includes(q))
+    })).filter((g) => g.items.length > 0);
+  }, [groups, search]);
+  if (!open) return null;
+  return createPortal(
+    /* @__PURE__ */ jsx("div", { className: "db-modal-overlay db-modal-overlay--active", onClick: onClose, children: /* @__PURE__ */ jsxs(
+      "div",
+      {
+        ref,
+        className: cn("db-command", "db-command--active", className),
+        onClick: (e) => e.stopPropagation(),
+        children: [
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              className: "db-command__input",
+              placeholder,
+              value: search,
+              onChange: (e) => setSearch(e.target.value),
+              autoFocus: true
+            }
+          ),
+          /* @__PURE__ */ jsx("div", { className: "db-command__list", children: filteredGroups.map((g) => /* @__PURE__ */ jsxs("div", { className: "db-command__group", children: [
+            /* @__PURE__ */ jsx("div", { className: "db-command__group-label", children: g.label }),
+            g.items.map((item) => /* @__PURE__ */ jsxs(
+              "button",
+              {
+                className: "db-command__item",
+                onClick: () => {
+                  item.onClick?.();
+                  onClose();
+                },
+                children: [
+                  /* @__PURE__ */ jsx("span", { children: item.label }),
+                  item.shortcut && /* @__PURE__ */ jsx("kbd", { className: "db-kbd", children: item.shortcut })
+                ]
+              },
+              item.label
+            ))
+          ] }, g.label)) })
+        ]
+      }
+    ) }),
+    document.body
+  );
+}
+CommandPalette.displayName = "CommandPalette";
 
-export { Accordion, Alert, AspectRatio, Avatar, AvatarGroup, Badge, BottomNav, Breadcrumbs, Button, ButtonGroup, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, Chip, Collapsible, Container, CustomSelect, DataTable, DatePicker, EmptyState, Field, Grid, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, NavMenu, Navbar, Pagination, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Skeleton, Slider, Spinner, Stack, StatCard, Stepper, Surface, Switch, Table, Tabs, Textarea, ThemeProvider, Toggle, ToggleGroup, useControllable };
+export { Accordion, Alert, AlertDialog, AspectRatio, Avatar, AvatarGroup, Badge, BottomNav, Breadcrumbs, Button, ButtonGroup, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, Chip, Collapsible, CommandPalette, Container, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Grid, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Modal, NavMenu, Navbar, Pagination, Popover, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, Skeleton, Slider, Spinner, Stack, StatCard, Stepper, Surface, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };
 //# sourceMappingURL=index.mjs.map
 //# sourceMappingURL=index.mjs.map
