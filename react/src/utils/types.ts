@@ -1,0 +1,10 @@
+export type Size = "sm" | "lg";
+export type ButtonVariant = "primary" | "secondary" | "ghost";
+export type AlertVariant = "info" | "warning" | "error" | "success";
+export type BadgeVariant = "new" | "updated" | "success" | "warning" | "error" | "danger" | "info";
+export type SurfaceVariant = "base" | "raised" | "inset" | "pressed" | "bordered";
+export type ChipColor = "red" | "green" | "blue" | "purple" | "amber" | "pink";
+export type AspectRatio = "16-9" | "4-3" | "1-1" | "21-9";
+export type ContainerSize = "default" | "wide" | "narrow";
+export type SkeletonVariant = "text" | "heading" | "avatar" | "btn";
+export type GapToken = 0 | 1 | 2 | 3 | 4 | 5 | 6;
