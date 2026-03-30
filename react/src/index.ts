@@ -47,6 +47,25 @@ export { HoverCard } from "./components/HoverCard";
 
 export { ThemeProvider } from "./components/ThemeProvider";
 
+export { Tabs } from "./components/Tabs";
+export { Accordion } from "./components/Accordion";
+export { Collapsible } from "./components/Collapsible";
+export { CustomSelect } from "./components/CustomSelect";
+export { Calendar } from "./components/Calendar";
+export { DatePicker } from "./components/DatePicker";
+export { Carousel } from "./components/Carousel";
+
+export { Checkbox } from "./components/Checkbox";
+export { Radio } from "./components/Radio";
+export { RadioGroup } from "./components/RadioGroup";
+export { Switch } from "./components/Switch";
+export { Slider } from "./components/Slider";
+export { Toggle } from "./components/Toggle";
+export { ToggleGroup } from "./components/ToggleGroup";
+export { InputOTP } from "./components/InputOTP";
+
+export { useControllable } from "./hooks/useControllable";
+
 export type {
   Size,
   ButtonVariant,

@@ -10,6 +10,7 @@
 > Theme Families: 20 (40 variants total)
 > Components JSON: https://daub.dev/components.json
 > TypeScript: https://daub.dev/daub.d.ts
+> React: npm install daub-react daub-ui (59 typed JSX components)
 
 ## Quick Start
 
