@@ -76,8 +76,8 @@ const daubAdapter: ChatModelAdapter = {
     if (error) throw error;
     await streamPromise;
 
-    yield { content: [{ type: "text" as const, text: accumulated }] };
-
+    // Try to parse spec and render
+    let summary = accumulated;
     try {
       const clean = bridge.cleanJSON(accumulated);
       let spec: any;
@@ -91,8 +91,17 @@ const daubAdapter: ChatModelAdapter = {
         bridge.refreshJsonTree();
         bridge.updatePreviewToolbar();
         bridge.hideJsonError();
+
+        // Show summary instead of raw JSON
+        const count = Object.keys(spec.elements).length;
+        const types = new Set(Object.values(spec.elements).map((e: any) => e.type));
+        summary = `Generated UI with ${count} elements (${Array.from(types).slice(0, 6).join(", ")}${types.size > 6 ? "..." : ""}). Theme: ${spec.theme || "default"}. Check the Design tab →`;
       }
-    } catch { /* non-JSON response */ }
+    } catch (e) {
+      console.error("[daub-adapter] spec parse error:", e);
+    }
+
+    yield { content: [{ type: "text" as const, text: summary }] };
   },
 };
 
