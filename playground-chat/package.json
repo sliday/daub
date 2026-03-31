@@ -1,0 +1,20 @@
+{
+  "name": "daub-playground-chat",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "@assistant-ui/react": "^0.10",
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tsup": "^8",
+    "typescript": "^5"
+  }
+}

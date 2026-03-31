@@ -6821,5 +6821,76 @@ if (sharedSpec) {
 })();
 </script>
 
+<script>
+// ---- assistant-ui React Chat (feature-flagged) ----
+(function() {
+  var useReactChat = new URLSearchParams(location.search).has('react-chat');
+  if (!useReactChat) return;
+
+  // Expose bridge for React chat to call vanilla JS functions
+  window.__playgroundBridge = {
+    getSystemPrompt: function() { return typeof buildSystemPrompt === 'function' ? buildSystemPrompt(null, '') : ''; },
+    getCurrentSpec: function() { return typeof currentSpec !== 'undefined' ? currentSpec : null; },
+    getSpecVersions: function() { return typeof specVersions !== 'undefined' ? specVersions : []; },
+    getOutputFormat: function() { return typeof OUTPUT_FORMAT !== 'undefined' ? OUTPUT_FORMAT : 'json'; },
+    isDefaultMode: function() { return typeof isDefaultMode !== 'undefined' ? isDefaultMode : true; },
+    getProviderConfig: function() {
+      var $provider = document.getElementById('pg-provider');
+      var $model = document.getElementById('pg-model');
+      var $apikey = document.getElementById('pg-apikey');
+      var $fastMode = document.getElementById('pg-fast-mode');
+      return {
+        provider: $provider ? $provider.value : 'default',
+        model: $model ? $model.value : null,
+        apiKey: $apikey ? $apikey.value : null,
+        fastMode: $fastMode ? $fastMode.checked : false
+      };
+    },
+    renderSpec: function(spec, prev) { if (typeof renderSpec === 'function') renderSpec(spec, prev); },
+    postToPreview: function(msg) { if (typeof postToPreview === 'function') postToPreview(msg); },
+    cleanJSON: function(text) { return typeof cleanJSON === 'function' ? cleanJSON(text) : text; },
+    repairJSON: function(s) { return typeof repairJSON === 'function' ? repairJSON(s) : null; },
+    pushVersion: function(spec, prompt) { if (typeof pushVersion === 'function') pushVersion(spec, prompt); },
+    revertToVersion: function(idx) { if (typeof revertToVersion === 'function') revertToVersion(idx); },
+    setLoading: function(on) { if (typeof setLoading === 'function') setLoading(on); },
+    showJsonError: function(msg) { if (typeof showJsonError === 'function') showJsonError(msg); },
+    hideJsonError: function() { if (typeof hideJsonError === 'function') hideJsonError(); },
+    updatePreviewToolbar: function() { if (typeof updatePreviewToolbar === 'function') updatePreviewToolbar(); },
+    refreshJsonTree: function() { if (typeof refreshJsonTree === 'function') refreshJsonTree(); },
+    setJsonValue: function(v) { var el = document.getElementById('pg-json'); if (el) el.value = v; },
+    openByokModal: function() { if (typeof openByokModal === 'function') openByokModal(); },
+    streamDefault: function(msgs, onChunk, onDone, onError, signal) { if (typeof streamDefault === 'function') streamDefault(msgs, onChunk, onDone, onError, signal); },
+    streamOpenAI: function(msgs, onChunk, onDone, onError, signal) { if (typeof streamOpenAI === 'function') streamOpenAI(msgs, onChunk, onDone, onError, signal); },
+    streamAnthropic: function(msgs, onChunk, onDone, onError, signal) { if (typeof streamAnthropic === 'function') streamAnthropic(msgs, onChunk, onDone, onError, signal); },
+    streamOpenRouter: function(msgs, onChunk, onDone, onError, signal) { if (typeof streamOpenRouter === 'function') streamOpenRouter(msgs, onChunk, onDone, onError, signal); },
+    on: function(event, fn) { if (!this._l) this._l = {}; (this._l[event] = this._l[event] || []).push(fn); },
+    emit: function(event, data) { (this._l && this._l[event] || []).forEach(function(f) { f(data); }); }
+  };
+
+  // Hide vanilla chat, show React mount point
+  var vanillaChat = document.querySelector('.pg-panel__body.pg-chat');
+  if (vanillaChat) {
+    var mount = document.createElement('div');
+    mount.id = 'pg-chat-mount';
+    mount.style.cssText = 'display:flex;flex-direction:column;height:100%;overflow:hidden;';
+    vanillaChat.parentNode.insertBefore(mount, vanillaChat);
+    vanillaChat.style.display = 'none';
+  }
+
+  // Wire new-chat button
+  var newChatBtn = document.getElementById('pg-new-chat');
+  if (newChatBtn) {
+    newChatBtn.addEventListener('click', function() {
+      if (window.__chatBridge && window.__chatBridge.clearChat) window.__chatBridge.clearChat();
+    });
+  }
+
+  // Load React chat bundle
+  var s = document.createElement('script');
+  s.src = 'index.playground-chat.js';
+  document.body.appendChild(s);
+})();
+</script>
+
 </body>
 </html>
