@@ -66,18 +66,22 @@ const daubAdapter: ChatModelAdapter = {
       }
     });
 
+    // Show generating status instead of raw JSON
+    let ticks = 0;
+    const dots = ["", ".", "..", "..."];
     while (!done && !error) {
-      await new Promise((r) => setTimeout(r, 150));
-      if (accumulated) {
-        yield { content: [{ type: "text" as const, text: accumulated }] };
-      }
+      await new Promise((r) => setTimeout(r, 300));
+      ticks++;
+      const chars = accumulated.length;
+      const progress = chars > 0 ? `Generating UI${dots[ticks % 4]}  (${chars} chars)` : `Connecting${dots[ticks % 4]}`;
+      yield { content: [{ type: "text" as const, text: progress }] };
     }
 
     if (error) throw error;
     await streamPromise;
 
     // Try to parse spec and render
-    let summary = accumulated;
+    let summary = "Response received. Could not parse as UI spec.";
     try {
       const clean = bridge.cleanJSON(accumulated);
       let spec: any;
@@ -92,10 +96,10 @@ const daubAdapter: ChatModelAdapter = {
         bridge.updatePreviewToolbar();
         bridge.hideJsonError();
 
-        // Show summary instead of raw JSON
         const count = Object.keys(spec.elements).length;
         const types = new Set(Object.values(spec.elements).map((e: any) => e.type));
-        summary = `Generated UI with ${count} elements (${Array.from(types).slice(0, 6).join(", ")}${types.size > 6 ? "..." : ""}). Theme: ${spec.theme || "default"}. Check the Design tab →`;
+        const typeList = Array.from(types).slice(0, 5).join(", ");
+        summary = `✅ ${count} elements · ${types.size} types (${typeList}${types.size > 5 ? " …" : ""}) · Theme: ${spec.theme || "default"}`;
       }
     } catch (e) {
       console.error("[daub-adapter] spec parse error:", e);

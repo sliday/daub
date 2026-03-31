@@ -109,20 +109,16 @@ function AssistantMessage() {
   return (
     <MessagePrimitive.Root>
       <div style={{
-        maxWidth: "85%",
+        maxWidth: "90%",
         padding: "10px 14px",
         borderRadius: "var(--db-radius-3)",
-        background: "var(--db-white)",
-        border: "1px solid var(--db-sand)",
+        background: "var(--db-cream-dark)",
         fontFamily: "var(--db-font-body)",
         fontSize: "0.8125rem",
         lineHeight: 1.6,
-        color: "var(--db-ink)",
+        color: "var(--db-charcoal)",
         marginBottom: "8px",
         wordBreak: "break-word",
-        maxHeight: "200px",
-        overflowY: "auto",
-        whiteSpace: "pre-wrap",
       }}>
         <MessagePrimitive.Content />
       </div>
@@ -192,20 +188,6 @@ export function DaubThread() {
             padding: "4px 8px 8px",
             gap: "2px",
           }}>
-            <button
-              className="db-btn db-btn--ghost db-btn--sm"
-              onClick={() => getBridge()?.openByokModal()}
-              type="button"
-              style={{ fontSize: "0.6875rem", padding: "4px 8px", opacity: 0.7 }}
-            >
-              🔑 Key
-            </button>
-            <ComposerPrimitive.Cancel
-              className="db-btn db-btn--ghost db-btn--sm"
-              style={{ fontSize: "0.6875rem", padding: "4px 8px", opacity: 0.7 }}
-            >
-              ⏹ Stop
-            </ComposerPrimitive.Cancel>
             <div style={{ flex: 1 }} />
             <span style={{
               fontSize: "0.625rem",
@@ -215,6 +197,13 @@ export function DaubThread() {
             }}>
               ↵ Enter
             </span>
+            <ComposerPrimitive.Cancel
+              className="db-btn db-btn--ghost db-btn--sm pg-cancel-btn"
+              style={{ fontSize: "0.75rem", padding: "5px 14px" }}
+            >
+              Stop
+            </ComposerPrimitive.Cancel>
+            <style>{`.pg-cancel-btn:disabled { display: none; }`}</style>
             <ComposerPrimitive.Send
               className="db-btn db-btn--primary db-btn--sm"
               style={{ fontSize: "0.75rem", padding: "5px 14px", borderRadius: "var(--db-radius-2)" }}
