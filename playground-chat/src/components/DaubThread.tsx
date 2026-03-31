@@ -154,61 +154,75 @@ export function DaubThread() {
 
       <div style={{
         borderTop: "1px solid var(--db-sand)",
-        padding: "12px",
+        padding: "10px 12px",
         background: "var(--db-cream-dark)",
       }}>
         <ComposerPrimitive.Root style={{
           display: "flex",
-          gap: "8px",
-          alignItems: "flex-end",
+          flexDirection: "column",
+          gap: "0",
+          background: "var(--db-white)",
+          border: "1px solid var(--db-sand)",
+          borderRadius: "var(--db-radius-3)",
+          overflow: "hidden",
+          transition: "border-color 0.15s",
         }}>
           <ComposerPrimitive.Input
             placeholder="Describe a UI to generate..."
             data-aui-composer-input=""
             autoFocus
+            rows={2}
             style={{
-              flex: 1,
+              width: "100%",
               resize: "none",
-              border: "1px solid var(--db-sand)",
-              borderRadius: "var(--db-radius-2)",
-              padding: "10px 12px",
+              border: "none",
+              padding: "12px 14px 4px",
               fontFamily: "var(--db-font-body)",
               fontSize: "0.875rem",
               color: "var(--db-ink)",
-              background: "var(--db-white)",
+              background: "transparent",
               outline: "none",
-              minHeight: "42px",
+              minHeight: "48px",
               lineHeight: 1.5,
             }}
           />
-          <ComposerPrimitive.Send
-            className="db-btn db-btn--primary db-btn--sm"
-            style={{ flexShrink: 0 }}
-          >
-            Send
-          </ComposerPrimitive.Send>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "4px 8px 8px",
+            gap: "2px",
+          }}>
+            <button
+              className="db-btn db-btn--ghost db-btn--sm"
+              onClick={() => getBridge()?.openByokModal()}
+              type="button"
+              style={{ fontSize: "0.6875rem", padding: "4px 8px", opacity: 0.7 }}
+            >
+              🔑 Key
+            </button>
+            <ComposerPrimitive.Cancel
+              className="db-btn db-btn--ghost db-btn--sm"
+              style={{ fontSize: "0.6875rem", padding: "4px 8px", opacity: 0.7 }}
+            >
+              ⏹ Stop
+            </ComposerPrimitive.Cancel>
+            <div style={{ flex: 1 }} />
+            <span style={{
+              fontSize: "0.625rem",
+              color: "var(--db-warm-gray)",
+              marginRight: "4px",
+              opacity: 0.6,
+            }}>
+              ↵ Enter
+            </span>
+            <ComposerPrimitive.Send
+              className="db-btn db-btn--primary db-btn--sm"
+              style={{ fontSize: "0.75rem", padding: "5px 14px", borderRadius: "var(--db-radius-2)" }}
+            >
+              Send
+            </ComposerPrimitive.Send>
+          </div>
         </ComposerPrimitive.Root>
-        <div style={{
-          display: "flex",
-          gap: "8px",
-          marginTop: "8px",
-          alignItems: "center",
-        }}>
-          <button
-            className="db-btn db-btn--ghost db-btn--sm"
-            onClick={() => getBridge()?.openByokModal()}
-            type="button"
-            style={{ fontSize: "0.75rem" }}
-          >
-            Own Key
-          </button>
-          <ComposerPrimitive.Cancel
-            className="db-btn db-btn--ghost db-btn--sm"
-            style={{ fontSize: "0.75rem" }}
-          >
-            Stop
-          </ComposerPrimitive.Cancel>
-        </div>
       </div>
     </ThreadPrimitive.Root>
   );
