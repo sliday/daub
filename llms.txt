@@ -1,6 +1,6 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 3.19.6
+> Version: 3.19.7
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
@@ -10,7 +10,7 @@
 > Theme Families: 20 (40 variants total)
 > Components JSON: https://daub.dev/components.json
 > TypeScript: https://daub.dev/daub.d.ts
-> React: npm install daub-react daub-ui (59 typed JSX components)
+> React: npm install daub-react daub-ui (72 typed JSX components)
 
 ## Quick Start
 
@@ -1344,150 +1344,38 @@ Wrap the canvas inside `db-chart-card` for consistent card framing:
 </div>
 ```
 
-## json-render Integration (Vercel Generative UI)
+## React Integration (daub-react)
 
-DAUB works with [json-render](https://json-render.dev/) for AI-generated UIs. Define a catalog of DAUB components, map them to React wrappers, and let AI generate type-safe DAUB layouts.
+72 typed JSX components wrapping DAUB's CSS classes. Full TypeScript, IDE autocomplete, forwardRef on all components.
 
-Install:
 ```bash
-npm install @json-render/core @json-render/react zod
-# Plus DAUB CSS/JS via CDN or npm (daub-ui)
+npm install daub-react daub-ui
 ```
 
-### Step 1: Define Catalog
+```tsx
+import "daub-ui/daub.css";
+import { Button, Card, Stack, ThemeProvider, Modal, Tabs, Switch } from "daub-react";
 
-```js
-import { defineCatalog } from '@json-render/core';
-import { schema } from '@json-render/react/schema';
-import { z } from 'zod';
-
-const catalog = defineCatalog(schema, {
-  components: {
-    Button: {
-      props: z.object({
-        label: z.string(),
-        variant: z.enum(['primary', 'secondary', 'ghost']).nullable(),
-        size: z.enum(['sm', 'lg', 'icon']).nullable(),
-      }),
-      description: 'DAUB button. primary=accent fill, secondary=muted, ghost=transparent.',
-    },
-    Card: {
-      props: z.object({
-        title: z.string().nullable(),
-        description: z.string().nullable(),
-      }),
-      slots: ['default', 'footer'],
-      description: 'Container card with optional title and footer slot.',
-    },
-    StatCard: {
-      props: z.object({
-        label: z.string(),
-        value: z.string(),
-        trend: z.enum(['up', 'down']).nullable(),
-        trendValue: z.string().nullable(),
-      }),
-      description: 'KPI stat card with trend indicator.',
-    },
-    Field: {
-      props: z.object({
-        label: z.string().nullable(),
-        placeholder: z.string().nullable(),
-        type: z.enum(['text', 'email', 'password', 'number']).nullable(),
-        error: z.boolean().nullable(),
-        helper: z.string().nullable(),
-      }),
-      description: 'Form field with label, input, and helper text.',
-    },
-    DataTable: {
-      props: z.object({
-        columns: z.array(z.object({ key: z.string(), label: z.string() })),
-        rows: z.array(z.record(z.string())),
-      }),
-      description: 'Sortable data table.',
-    },
-  },
-  actions: {
-    toast: { params: z.object({ message: z.string(), type: z.enum(['success', 'error', 'warning', 'info']).nullable() }) },
-    setTheme: { params: z.object({ family: z.string() }) },
-  },
-});
-```
-
-### Step 2: React Registry
-
-```jsx
-import { defineRegistry } from '@json-render/react';
-import { useEffect, useRef } from 'react';
-
-function useDaubInit(ref) {
-  useEffect(() => {
-    if (ref.current && window.DAUB) {
-      window.DAUB.init(ref.current);
-      window.DAUB.fixNestedRadius(ref.current);
-    }
-  });
-}
-
-const { registry } = defineRegistry(catalog, {
-  components: {
-    Button: ({ props }) => {
-      const cls = ['db-btn'];
-      if (props.variant) cls.push('db-btn--' + props.variant);
-      if (props.size) cls.push('db-btn--' + props.size);
-      return <button className={cls.join(' ')}>{props.label}</button>;
-    },
-    Card: ({ props, slots }) => {
-      const ref = useRef(null);
-      useDaubInit(ref);
-      return (
-        <div className="db-card" ref={ref}>
-          {props.title && <div className="db-card__header"><h3 className="db-card__title">{props.title}</h3>
-            {props.description && <p className="db-card__desc">{props.description}</p>}</div>}
-          {slots.default}
-          {slots.footer && <div className="db-card__footer">{slots.footer}</div>}
-        </div>
-      );
-    },
-    StatCard: ({ props }) => (
-      <div className="db-stat">
-        <span className="db-stat__label">{props.label}</span>
-        <span className="db-stat__value">{props.value}</span>
-        {props.trend && <span className={'db-stat__change db-stat__change--' + props.trend}>
-          {props.trend === 'up' ? '↑' : '↓'} {props.trendValue}</span>}
-      </div>
-    ),
-    Field: ({ props }) => (
-      <div className={'db-field' + (props.error ? ' db-field--error' : '')}>
-        {props.label && <label className="db-field__label">{props.label}</label>}
-        <input className="db-field__input db-input" type={props.type || 'text'} placeholder={props.placeholder} />
-        {props.helper && <span className="db-field__helper">{props.helper}</span>}
-      </div>
-    ),
-    DataTable: ({ props }) => (
-      <table className="db-table db-data-table">
-        <thead><tr>{props.columns.map(c => <th key={c.key}>{c.label}</th>)}</tr></thead>
-        <tbody>{props.rows.map((row, i) => <tr key={i}>{props.columns.map(c => <td key={c.key}>{row[c.key]}</td>)}</tr>)}</tbody>
-      </table>
-    ),
-  },
-});
-```
-
-### Step 3: Render
-
-```jsx
-import { Renderer } from '@json-render/react';
-
-function App({ spec }) {
-  return <Renderer spec={spec} registry={registry} />;
+function App() {
+  return (
+    <ThemeProvider theme="bone">
+      <Stack direction="vertical" gap={4}>
+        <Card title="Welcome">
+          <Button variant="primary">Get Started</Button>
+        </Card>
+      </Stack>
+    </ThemeProvider>
+  );
 }
 ```
 
-Pattern: define more DAUB components in the catalog as needed. Each wrapper just
-outputs DAUB's expected BEM HTML structure. Call `DAUB.init()` after mount for
-interactive components (modals, tabs, accordions, dropdowns).
+Components: Stack, Grid, Surface, Container, Separator, ScrollArea, AspectRatio, Card, Badge, Avatar, AvatarGroup, Alert, Progress, Skeleton, EmptyState, Spinner, StatCard, ChartCard, Chart, Image, Button, ButtonGroup, Input, Textarea, Field, InputGroup, InputIcon, Search, Select, Label, Kbd, Prose, List, Table, DataTable, Chip, Breadcrumbs, Pagination, NavMenu, BottomNav, Stepper, Navbar, HoverCard, ThemeProvider, Checkbox, Radio, RadioGroup, Switch, Slider, Toggle, ToggleGroup, InputOTP, Tabs, Accordion, Collapsible, CustomSelect, Calendar, DatePicker, Carousel, Modal, AlertDialog, Sheet, Drawer, Tooltip, Popover, DropdownMenu, ContextMenu, CommandPalette, Toast, ToastProvider.
 
-## Design Intelligence (v3.19.6)
+Hooks: useControllable, useToast, useEscapeKey, useOutsideClick, useFocusTrap.
+
+npm: https://www.npmjs.com/package/daub-react
+
+## Design Intelligence (v3.19.7)
 
 DAUB's MCP server and generation pipeline include industry-aware design intelligence that automatically adapts the system prompt based on prompt content.
 

@@ -1,8 +1,10 @@
 # DAUB UI — Compact Reference
 
+> Version: 3.19.7
 > Full docs: https://daub.dev/llms.txt
 > CSS: https://daub.dev/daub.css | JS: https://daub.dev/daub.js
 > Classless: https://daub.dev/daub-classless.css
+> React: `npm install daub-react daub-ui` (72 typed JSX components)
 > Prefix: `db-` (classes), `--db-` (CSS vars)
 
 ## Quick Start
