@@ -16,6 +16,4 @@ export function unmount() {
   }
 }
 
-// Auto-mount when script loads
-const el = document.getElementById("pg-chat-mount");
-if (el) mount(el);
+// Exported as window.DaubChat.mount(el) via IIFE globalName
