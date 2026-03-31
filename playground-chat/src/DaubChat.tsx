@@ -66,15 +66,27 @@ const daubAdapter: ChatModelAdapter = {
       }
     });
 
-    // Show generating status instead of raw JSON
+    // Progressive render: try parsing partial JSON every 2s
     let ticks = 0;
+    let lastRenderLen = 0;
     const dots = ["", ".", "..", "..."];
     while (!done && !error) {
-      await new Promise((r) => setTimeout(r, 300));
+      await new Promise((r) => setTimeout(r, 400));
       ticks++;
       const chars = accumulated.length;
       const progress = chars > 0 ? `Generating UI${dots[ticks % 4]}  (${chars} chars)` : `Connecting${dots[ticks % 4]}`;
       yield { content: [{ type: "text" as const, text: progress }] };
+
+      // Try live render every ~2s if we have enough new content
+      if (chars > 200 && chars - lastRenderLen > 500) {
+        try {
+          const partial = bridge.repairJSON(bridge.cleanJSON(accumulated));
+          if (partial?.root && partial?.elements && Object.keys(partial.elements).length > 2) {
+            bridge.renderSpec(partial, null);
+            lastRenderLen = chars;
+          }
+        } catch { /* partial parse failed, keep going */ }
+      }
     }
 
     if (error) throw error;
@@ -99,7 +111,7 @@ const daubAdapter: ChatModelAdapter = {
         const count = Object.keys(spec.elements).length;
         const types = new Set(Object.values(spec.elements).map((e: any) => e.type));
         const typeList = Array.from(types).slice(0, 5).join(", ");
-        summary = `✅ ${count} elements · ${types.size} types (${typeList}${types.size > 5 ? " …" : ""}) · Theme: ${spec.theme || "default"}`;
+        summary = `✅ ${count} elements · ${types.size} types\n${typeList}${types.size > 5 ? " …" : ""}\nTheme: ${spec.theme || "default"}`;
       }
     } catch (e) {
       console.error("[daub-adapter] spec parse error:", e);

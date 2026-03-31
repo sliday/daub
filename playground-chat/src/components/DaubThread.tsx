@@ -119,6 +119,7 @@ function AssistantMessage() {
         color: "var(--db-charcoal)",
         marginBottom: "8px",
         wordBreak: "break-word",
+        whiteSpace: "pre-wrap",
       }}>
         <MessagePrimitive.Content />
       </div>
