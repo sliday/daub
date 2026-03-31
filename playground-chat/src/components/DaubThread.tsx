@@ -197,13 +197,6 @@ export function DaubThread() {
             }}>
               ↵ Enter
             </span>
-            <ComposerPrimitive.Cancel
-              className="db-btn db-btn--ghost db-btn--sm pg-cancel-btn"
-              style={{ fontSize: "0.75rem", padding: "5px 14px" }}
-            >
-              Stop
-            </ComposerPrimitive.Cancel>
-            <style>{`.pg-cancel-btn:disabled { display: none; }`}</style>
             <ComposerPrimitive.Send
               className="db-btn db-btn--primary db-btn--sm"
               style={{ fontSize: "0.75rem", padding: "5px 14px", borderRadius: "var(--db-radius-2)" }}
