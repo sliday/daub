@@ -26,7 +26,7 @@ export interface PlaygroundBridge {
   capturePreview: () => Promise<string>;
   saveChatState: (history: any[]) => void;
   streamFetch: (url: string, opts: any, onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, signal?: AbortSignal) => void;
-  streamDefault: (messages: any[], onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, signal?: AbortSignal) => void;
+  streamDefault: (messages: any[], onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, model?: string, signal?: AbortSignal) => void;
   streamOpenAI: (messages: any[], onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, signal?: AbortSignal) => void;
   streamAnthropic: (messages: any[], onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, signal?: AbortSignal) => void;
   streamOpenRouter: (messages: any[], onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, signal?: AbortSignal) => void;
