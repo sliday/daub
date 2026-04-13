@@ -1,27 +1,23 @@
 ---
 name: daub-ui
-description: |
-  Use when building UI with DAUB, the considered CSS component library from daub.dev.
-  Trigger phrases: "daub", "daub.dev", "considered components", "db- components", "tactile UI kit"
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Bash
-  - WebFetch
-  - mcp__daub__generate_ui
-  - mcp__daub__get_component_catalog
-  - mcp__daub__validate_spec
-  - mcp__daub__render_spec
+description: "Build UI with DAUB, a drop-in CSS + JS component library (76 components, 20 theme families) from daub.dev. Use when the user asks to create interfaces, pages, or dashboards using DAUB components, apply db- prefixed CSS classes, configure DAUB themes, use the DAUB MCP server tools, or integrate daub-ui via CDN or npm. Trigger on mentions of 'daub', 'daub.dev', 'daub-ui', 'db- components', 'considered components', 'tactile UI kit', or 'DAUB theme'. Do NOT use for general CSS questions unrelated to DAUB."
+allowed-tools: "Read, Write, Edit, Bash, WebFetch, mcp__daub__generate_ui, mcp__daub__get_component_catalog, mcp__daub__validate_spec, mcp__daub__render_spec"
 ---
 
 # DAUB UI — Component Library
 
-DAUB is a drop-in CSS + JS library with 73 considered components and 20 theme families (40 variants). Thoughtfully composed, no ceremony required.
+DAUB is a drop-in CSS + JS library with 76 considered components and 20 theme families (40 variants). Thoughtfully composed, no ceremony required.
 
 npm: `daub-ui` | CDN: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css`
 Machine-readable component reference: `https://daub.dev/components.json`
 TypeScript declarations: `https://daub.dev/daub.d.ts`
+
+## Workflow
+
+1. **Check MCP availability**: If the DAUB MCP server is connected, prefer MCP tools (`generate_ui`, `get_component_catalog`, `validate_spec`, `render_spec`) over manual HTML construction.
+2. **With MCP**: Call `generate_ui` with a natural language prompt → iterate with `existing_spec` → `validate_spec` → `render_spec` for preview URL.
+3. **Without MCP**: Build HTML manually using `db-` prefixed classes from the component reference below. Consult `https://daub.dev/llms.txt` for complete HTML examples.
+4. **Theming**: Apply themes via `<html data-theme="dark">` or JS API (`DAUB.setFamily()`, `DAUB.setTheme()`).
 
 ## Include (CDN)
 
