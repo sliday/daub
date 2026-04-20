@@ -2,6 +2,19 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.19.8
+
+**Agent discovery endpoints for AI clients (2026-04-20).**
+
+- Add Link response headers on `/` advertising `service-doc`, `api-catalog`, `agent-skills`, `mcp-server`, `ai-plugin` (RFC 8288)
+- Add Markdown for Agents content negotiation on `/` — `Accept: text/markdown` returns `llms-compact.txt` as `text/markdown`
+- Add Content Signals to `robots.txt` — `search=yes, ai-train=yes, ai-input=yes`
+- Add `/.well-known/api-catalog` (RFC 9727) as `application/linkset+json` describing MCP, generate, and weblook endpoints
+- Add `/.well-known/mcp/server-card.json` declaring the DAUB MCP server (6 tools, transport, capabilities)
+- Add `/.well-known/agent-skills/index.json` with sha256 digests for `SKILL.md`, `llms.txt`, `llms-compact.txt`, `components.json`
+- Add WebMCP — `navigator.modelContext.provideContext()` on the homepage exposes 5 site tools (`open_playground`, `get_component_catalog`, `get_llm_docs`, `generate_ui`, `view_theme`)
+- Ignore local artifacts: `test-results/`, `codedb.snapshot`, `.wrangler/`
+
 ## v3.19.6
 
 **Perceptually balanced chip colors + Theme Preview page.**
