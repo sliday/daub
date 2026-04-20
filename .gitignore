@@ -16,3 +16,6 @@ CLAUDE.local.md
 .tmp-test/
 .tmp-screenshots/
 blocks/test-results.json
+test-results/
+codedb.snapshot
+.wrangler/
