@@ -1,0 +1,50 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/server-card.json",
+  "serverInfo": {
+    "name": "daub-mcp",
+    "version": "1.0.0",
+    "title": "DAUB UI MCP Server",
+    "description": "Generate, validate, and render DAUB CSS UIs from natural language. 76 components, 20 theme families.",
+    "vendor": "Sliday",
+    "homepage": "https://daub.dev",
+    "documentation": "https://daub.dev/llms.txt",
+    "license": "MIT"
+  },
+  "transport": {
+    "type": "streamable-http",
+    "endpoint": "https://daub.dev/api/mcp"
+  },
+  "protocolVersion": "2025-06-18",
+  "capabilities": {
+    "tools": { "listChanged": false }
+  },
+  "auth": {
+    "type": "none"
+  },
+  "tools": [
+    {
+      "name": "generate_ui",
+      "description": "Generate a complete DAUB UI from a natural language prompt. Returns JSON spec, self-contained HTML, validation, summary."
+    },
+    {
+      "name": "get_component_catalog",
+      "description": "Returns available DAUB components, props, categories, themes, and an example spec."
+    },
+    {
+      "name": "validate_spec",
+      "description": "Validate a DAUB spec JSON. Returns status, issues, element count, components used."
+    },
+    {
+      "name": "render_spec",
+      "description": "Render an existing DAUB spec JSON into self-contained HTML."
+    },
+    {
+      "name": "get_block_library",
+      "description": "Returns pre-made UI building blocks (dashboards, landing pages, forms, auth, etc.)."
+    },
+    {
+      "name": "parse_openui",
+      "description": "Parse OpenUI Lang code into a DAUB JSON spec."
+    }
+  ]
+}

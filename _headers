@@ -5,6 +5,27 @@
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
+/
+  Link: </llms.txt>; rel="service-doc"; type="text/plain", </components.json>; rel="describedby"; type="application/json", </daub.d.ts>; rel="type-definition"; type="text/plain", </.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json", </.well-known/agent-skills/index.json>; rel="agent-skills"; type="application/json", </.well-known/mcp/server-card.json>; rel="mcp-server"; type="application/json", </.well-known/ai-plugin.json>; rel="ai-plugin"; type="application/json"
+  Vary: Accept
+
+/index.html
+  Link: </llms.txt>; rel="service-doc"; type="text/plain", </components.json>; rel="describedby"; type="application/json", </daub.d.ts>; rel="type-definition"; type="text/plain", </.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json", </.well-known/agent-skills/index.json>; rel="agent-skills"; type="application/json", </.well-known/mcp/server-card.json>; rel="mcp-server"; type="application/json", </.well-known/ai-plugin.json>; rel="ai-plugin"; type="application/json"
+  Vary: Accept
+
+/.well-known/api-catalog
+  Content-Type: application/linkset+json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+
+/.well-known/agent-skills/index.json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+
+/.well-known/mcp/server-card.json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+
 /daub.d.ts
   Content-Type: text/plain; charset=utf-8
   Access-Control-Allow-Origin: *

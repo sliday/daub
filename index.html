@@ -3560,5 +3560,125 @@
       }, { once: true });
     })();
   </script>
+
+  <!-- WebMCP — expose DAUB site tools to AI agents via navigator.modelContext -->
+  <script>
+    (function () {
+      if (!('modelContext' in navigator) ||
+          typeof navigator.modelContext.provideContext !== 'function') return;
+
+      var ORIGIN = location.origin;
+
+      navigator.modelContext.provideContext({
+        tools: [
+          {
+            name: 'open_playground',
+            description: 'Open the DAUB generative UI playground.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                prompt: {
+                  type: 'string',
+                  description: 'Optional natural-language UI prompt to pre-fill the playground.'
+                },
+                theme: {
+                  type: 'string',
+                  description: 'Optional DAUB theme family (e.g. "dracula", "github", "bone").'
+                }
+              }
+            },
+            execute: function (args) {
+              var qs = [];
+              if (args && args.prompt) qs.push('prompt=' + encodeURIComponent(args.prompt));
+              if (args && args.theme) qs.push('theme=' + encodeURIComponent(args.theme));
+              var url = '/playground.html' + (qs.length ? '?' + qs.join('&') : '');
+              window.location.href = url;
+              return { ok: true, url: ORIGIN + url };
+            }
+          },
+          {
+            name: 'get_component_catalog',
+            description: 'Fetch the full DAUB component catalog (76 components with props, categories, themes).',
+            inputSchema: { type: 'object', properties: {} },
+            execute: async function () {
+              var res = await fetch('/components.json', { headers: { 'Accept': 'application/json' } });
+              if (!res.ok) throw new Error('components.json fetch failed: ' + res.status);
+              return await res.json();
+            }
+          },
+          {
+            name: 'get_llm_docs',
+            description: 'Fetch the llms.txt AI-ready documentation for DAUB (full component reference).',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                compact: {
+                  type: 'boolean',
+                  description: 'If true, return the compact reference (top 15 components, ~5KB). Default: false.'
+                }
+              }
+            },
+            execute: async function (args) {
+              var path = (args && args.compact) ? '/llms-compact.txt' : '/llms.txt';
+              var res = await fetch(path, { headers: { 'Accept': 'text/plain' } });
+              if (!res.ok) throw new Error(path + ' fetch failed: ' + res.status);
+              return { path: path, text: await res.text() };
+            }
+          },
+          {
+            name: 'generate_ui',
+            description: 'Generate a DAUB UI from a natural-language prompt via the DAUB MCP server. Returns a JSON spec and self-contained HTML.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                prompt: { type: 'string', description: 'Natural-language description of the UI to generate.' },
+                theme: { type: 'string', description: 'Optional DAUB theme family.' }
+              },
+              required: ['prompt']
+            },
+            execute: async function (args) {
+              var body = {
+                jsonrpc: '2.0',
+                id: 1,
+                method: 'tools/call',
+                params: {
+                  name: 'generate_ui',
+                  arguments: {
+                    prompt: args.prompt,
+                    theme: args.theme
+                  }
+                }
+              };
+              var res = await fetch('/api/mcp', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json, text/event-stream'
+                },
+                body: JSON.stringify(body)
+              });
+              if (!res.ok) throw new Error('MCP generate_ui failed: ' + res.status);
+              return await res.json();
+            }
+          },
+          {
+            name: 'view_theme',
+            description: 'Navigate to the DAUB themes gallery showing all 20 theme families (40 light/dark variants).',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                theme: { type: 'string', description: 'Optional specific theme to focus (e.g. "dracula").' }
+              }
+            },
+            execute: function (args) {
+              var url = '/themes.html' + (args && args.theme ? '#' + encodeURIComponent(args.theme) : '');
+              window.location.href = url;
+              return { ok: true, url: ORIGIN + url };
+            }
+          }
+        ]
+      });
+    })();
+  </script>
 </body>
 </html>

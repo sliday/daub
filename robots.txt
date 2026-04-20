@@ -1,10 +1,17 @@
 User-agent: *
 Allow: /
 
+# Content Signals (draft-romm-aipref-contentsignals)
+# Declares how this site's content may be used by AI systems
+Content-Signal: search=yes, ai-train=yes, ai-input=yes
+
 Sitemap: https://daub.dev/sitemap.xml
 
 # AI agent resources
 # LLM documentation: https://daub.dev/llms.txt
 # Component data: https://daub.dev/components.json
 # AI plugin: https://daub.dev/.well-known/ai-plugin.json
+# API catalog: https://daub.dev/.well-known/api-catalog
+# Agent skills: https://daub.dev/.well-known/agent-skills/index.json
+# MCP server card: https://daub.dev/.well-known/mcp/server-card.json
 # TypeScript: https://daub.dev/daub.d.ts

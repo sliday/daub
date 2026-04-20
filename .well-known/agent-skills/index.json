@@ -1,0 +1,34 @@
+{
+  "$schema": "https://agentskills.io/schemas/index-v0.2.0.json",
+  "version": "0.2.0",
+  "skills": [
+    {
+      "name": "daub-ui",
+      "type": "skill",
+      "description": "Build UI with DAUB — considered CSS component library (76 components, 20 themes). Drop-in CSS + JS, no build step. Use db-* class prefix.",
+      "url": "https://daub.dev/SKILL.md",
+      "sha256": "2eb3253d29c4ecf9774a4e67a9568680c368649e8bd8d4ef04234a8cf5c64dc0"
+    },
+    {
+      "name": "daub-llms-full",
+      "type": "documentation",
+      "description": "Full DAUB UI component reference — all 76 components with props, variants, and examples.",
+      "url": "https://daub.dev/llms.txt",
+      "sha256": "222b329decf76847af35ee229c581c5d31145fb9b0d784feea2d68af9ebe28bc"
+    },
+    {
+      "name": "daub-llms-compact",
+      "type": "documentation",
+      "description": "Compact DAUB reference — top 15 components, quick-start, token-efficient for LLM context.",
+      "url": "https://daub.dev/llms-compact.txt",
+      "sha256": "2a442e147ba3856592c6d5c4b3fd0f1304cecb3633fb9c3d33ee9eb0daa4f426"
+    },
+    {
+      "name": "daub-components",
+      "type": "data",
+      "description": "Structured JSON catalog of all DAUB components, props, themes, and categories.",
+      "url": "https://daub.dev/components.json",
+      "sha256": "94a9c7fbafd38439c73a6e086efb4cc5864918cf4418028a2826ce79ffcbbb11"
+    }
+  ]
+}
