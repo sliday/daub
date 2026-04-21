@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Daub Audit Fixture</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="/daub.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--db-color-bg, #F5F0E1); }
+  body { padding: 24px; font-family: var(--db-font-body, system-ui); }
+  #slot { min-height: 80px; }
+</style>
+</head>
+<body>
+<main id="slot"></main>
+<script>
+  // Capture console errors early so the harness can inspect them.
+  window.__dbConsoleErrors = [];
+  var _origErr = console.error;
+  console.error = function(){ try { window.__dbConsoleErrors.push(Array.from(arguments).map(String).join(' ')); } catch(e){} return _origErr.apply(console, arguments); };
+  window.addEventListener('error', function(e){ window.__dbConsoleErrors.push('window.error: ' + (e && e.message || e)); });
+  window.addEventListener('unhandledrejection', function(e){ window.__dbConsoleErrors.push('unhandledrejection: ' + (e && e.reason && e.reason.message || e.reason || e)); });
+
+  // Inject component markup decoded from the URL hash before daub.js runs so
+  // any IIFE auto-initialization sees the DOM. The harness controls the hash,
+  // so the content is trusted by construction.
+  try {
+    var hash = decodeURIComponent(location.hash.slice(1));
+    if (hash) {
+      var raw = atob(hash);
+      var tpl = document.createElement('template');
+      tpl.innerHTML = raw; // trusted fixture payload, set intentionally
+      document.getElementById('slot').appendChild(tpl.content.cloneNode(true));
+    }
+  } catch (err) {
+    window.__dbConsoleErrors.push('inject failed: ' + (err && err.message || err));
+  }
+</script>
+<script src="/daub.js"></script>
+</body>
+</html>

@@ -692,6 +692,7 @@
     {
       "name": "Toast Stack",
       "class": "db-toast-stack",
+      "runtime_only": true,
       "category": "feedback",
       "element": "div",
       "modifiers": [],
