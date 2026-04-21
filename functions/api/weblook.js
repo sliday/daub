@@ -58,6 +58,7 @@ async function handleRequest(request, env, corsHeaders) {
       method: 'POST',
       headers: { 'X-BB-API-Key': apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({ projectId }),
+      signal: AbortSignal.timeout(30_000),
     });
     if (!sessionRes.ok) {
       const errText = await sessionRes.text();
@@ -69,6 +70,9 @@ async function handleRequest(request, env, corsHeaders) {
       return jsonResponse({ error: 'No connectUrl in session response' }, 502, corsHeaders);
     }
   } catch (e) {
+    if (e && (e.name === 'AbortError' || e.name === 'TimeoutError')) {
+      return jsonResponse({ error: 'Gateway Timeout: Browserbase session creation timed out' }, 504, corsHeaders);
+    }
     return jsonResponse({ error: 'Session creation failed: ' + e.message }, 502, corsHeaders);
   }
 
@@ -77,6 +81,9 @@ async function handleRequest(request, env, corsHeaders) {
     const result = await runCDP(connectUrl, url);
     return jsonResponse(result, 200, corsHeaders);
   } catch (e) {
+    if (e && (e.name === 'AbortError' || e.name === 'TimeoutError')) {
+      return jsonResponse({ error: 'Gateway Timeout: Browserbase CDP did not respond in time' }, 504, corsHeaders);
+    }
     return jsonResponse({ error: 'Page capture failed: ' + e.message }, 502, corsHeaders);
   }
 }
@@ -177,6 +184,7 @@ async function runCDP(connectUrl, targetUrl) {
   const httpUrl = connectUrl.replace(/^wss:\/\//, 'https://').replace(/^ws:\/\//, 'http://');
   const wsResp = await fetch(httpUrl, {
     headers: { Upgrade: 'websocket' },
+    signal: AbortSignal.timeout(30_000),
   });
 
   const ws = wsResp.webSocket;

@@ -1,6 +1,8 @@
 // Cloudflare Pages Function — Figma OAuth callback
 // GET /api/figma-callback?code=...&state=...
 
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
 export async function onRequestGet(context) {
   const { request, env } = context;
   const url = new URL(request.url);
@@ -36,6 +38,7 @@ export async function onRequestGet(context) {
         code: code,
         grant_type: 'authorization_code',
       }).toString(),
+      signal: AbortSignal.timeout(15_000),
     });
 
     if (!tokenRes.ok) {
@@ -58,6 +61,12 @@ export async function onRequestGet(context) {
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
     });
   } catch (e) {
+    if (e && (e.name === 'AbortError' || e.name === 'TimeoutError')) {
+      return new Response(JSON.stringify({ error: 'Gateway Timeout: Figma OAuth token exchange timed out' }), {
+        status: 504,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
     return htmlRedirect('OAuth error: ' + e.message);
   }
 }
@@ -66,7 +75,7 @@ function htmlRedirect(errorMsg) {
   return new Response(`<!DOCTYPE html><html><body><script>
     window.opener && window.opener.postMessage({ type: 'figma-oauth-error', error: ${JSON.stringify(errorMsg)} }, window.location.origin);
     window.close();
-  </script><p>${errorMsg}</p></body></html>`, {
+  </script><p>${esc(errorMsg)}</p></body></html>`, {
     status: 200,
     headers: { 'Content-Type': 'text/html; charset=utf-8' },
   });

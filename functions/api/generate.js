@@ -47,23 +47,35 @@ export async function onRequestPost(context) {
     });
   }
 
-  const upstream = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-      'HTTP-Referer': 'https://daub.dev',
-      'X-Title': 'DAUB Playground',
-    },
-    body: JSON.stringify(Object.assign({
-      model: body.model || 'google/gemini-3-flash-preview',
-      messages: body.messages,
-      temperature: 0.7,
-      max_tokens: Math.min(Math.max(parseInt(body.max_tokens) || 16384, 1), 32768),
-      stream: true,
-      reasoning: body.reasoning || { effort: 'medium' },
-    }, body.response_format !== false ? { response_format: { type: 'json_object' } } : {})),
-  });
+  let upstream;
+  try {
+    upstream = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'HTTP-Referer': 'https://daub.dev',
+        'X-Title': 'DAUB Playground',
+      },
+      body: JSON.stringify(Object.assign({
+        model: body.model || 'google/gemini-3-flash-preview',
+        messages: body.messages,
+        temperature: 0.7,
+        max_tokens: Math.min(Math.max(parseInt(body.max_tokens) || 16384, 1), 32768),
+        stream: true,
+        reasoning: body.reasoning || { effort: 'medium' },
+      }, body.response_format !== false ? { response_format: { type: 'json_object' } } : {})),
+      signal: AbortSignal.timeout(60_000),
+    });
+  } catch (e) {
+    if (e && (e.name === 'AbortError' || e.name === 'TimeoutError')) {
+      return new Response(JSON.stringify({ error: 'Gateway Timeout: upstream LLM did not respond in time' }), {
+        status: 504,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    throw e;
+  }
 
   if (!upstream.ok) {
     const errBody = await upstream.text();

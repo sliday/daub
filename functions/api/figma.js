@@ -62,16 +62,25 @@ async function handleRefresh(request, env, corsHeaders) {
   if (!clientId || !clientSecret) return jsonResponse({ error: 'Server misconfigured' }, 500, corsHeaders);
 
   const basicAuth = btoa(clientId + ':' + clientSecret);
-  const res = await fetch('https://api.figma.com/v1/oauth/refresh', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + basicAuth,
-    },
-    body: new URLSearchParams({
-      refresh_token: refreshToken,
-    }).toString(),
-  });
+  let res;
+  try {
+    res = await fetch('https://api.figma.com/v1/oauth/refresh', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + basicAuth,
+      },
+      body: new URLSearchParams({
+        refresh_token: refreshToken,
+      }).toString(),
+      signal: AbortSignal.timeout(15_000),
+    });
+  } catch (e) {
+    if (e && (e.name === 'AbortError' || e.name === 'TimeoutError')) {
+      return jsonResponse({ error: 'Gateway Timeout: Figma refresh timed out' }, 504, corsHeaders);
+    }
+    throw e;
+  }
   if (!res.ok) {
     const t = await res.text();
     return jsonResponse({ error: 'Refresh failed: ' + t.substring(0, 200) }, 502, corsHeaders);
@@ -311,7 +320,7 @@ async function handleRequest(request, env, corsHeaders) {
       apiUrl = 'https://api.figma.com/v1/files/' + fileKey + '?depth=4';
     }
 
-    const res = await fetch(apiUrl, { headers: figmaHeaders });
+    const res = await fetch(apiUrl, { headers: figmaHeaders, signal: AbortSignal.timeout(15_000) });
     if (res.status === 403) return jsonResponse({ error: 'Invalid or expired Figma token' }, 403, corsHeaders);
     if (res.status === 404) return jsonResponse({ error: 'Figma file not found' }, 404, corsHeaders);
     if (res.status === 429) return jsonResponse({ error: 'Figma API rate limited — try again shortly' }, 429, corsHeaders);
@@ -321,6 +330,9 @@ async function handleRequest(request, env, corsHeaders) {
     }
     fileData = await res.json();
   } catch (e) {
+    if (e && (e.name === 'AbortError' || e.name === 'TimeoutError')) {
+      return jsonResponse({ error: 'Gateway Timeout: Figma API did not respond in time' }, 504, corsHeaders);
+    }
     return jsonResponse({ error: 'Failed to fetch Figma file: ' + e.message }, 502, corsHeaders);
   }
 
@@ -343,13 +355,13 @@ async function handleRequest(request, env, corsHeaders) {
     if (imageNodeId) {
       const imgRes = await fetch(
         'https://api.figma.com/v1/images/' + fileKey + '?ids=' + encodeURIComponent(imageNodeId) + '&format=png&scale=1',
-        { headers: figmaHeaders }
+        { headers: figmaHeaders, signal: AbortSignal.timeout(15_000) }
       );
       if (imgRes.ok) {
         const imgData = await imgRes.json();
         const imgUrl = imgData.images && imgData.images[Object.keys(imgData.images)[0]];
         if (imgUrl) {
-          const pngRes = await fetch(imgUrl);
+          const pngRes = await fetch(imgUrl, { signal: AbortSignal.timeout(15_000) });
           if (pngRes.ok) {
             const buf = await pngRes.arrayBuffer();
             if (buf.byteLength <= 500 * 1024) {
@@ -358,13 +370,13 @@ async function handleRequest(request, env, corsHeaders) {
               // Retry at half scale
               const imgRes2 = await fetch(
                 'https://api.figma.com/v1/images/' + fileKey + '?ids=' + encodeURIComponent(imageNodeId) + '&format=png&scale=0.5',
-                { headers: figmaHeaders }
+                { headers: figmaHeaders, signal: AbortSignal.timeout(15_000) }
               );
               if (imgRes2.ok) {
                 const imgData2 = await imgRes2.json();
                 const imgUrl2 = imgData2.images && imgData2.images[Object.keys(imgData2.images)[0]];
                 if (imgUrl2) {
-                  const pngRes2 = await fetch(imgUrl2);
+                  const pngRes2 = await fetch(imgUrl2, { signal: AbortSignal.timeout(15_000) });
                   if (pngRes2.ok) {
                     const buf2 = await pngRes2.arrayBuffer();
                     if (buf2.byteLength <= 500 * 1024) {
