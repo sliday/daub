@@ -55,3 +55,12 @@
 
 /robots.txt
   Cache-Control: public, max-age=3600, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.map
+  Cache-Control: no-store
+
+/api/*
+  Cache-Control: no-store
