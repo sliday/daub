@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.19.11
+
+**Tokenize accent-text + 76/76 green audit (2026-04-21).**
+
+- `--db-terracotta-text` (`#8C4A2A`) and `--db-success-text` (`#3E6B3E`) are now consumed by `.db-slider__value`, `.db-tabs__tab[aria-selected]`, `.db-hover-card a`, and `.db-stat__change--up` — the localized literals from v3.19.10 are replaced by `var(--db-color-accent-text)` / `var(--db-success-text)`. All 35 theme blocks already defined these tokens so per-theme overrides continue to work.
+- `scripts/predeploy-clean.sh` now also strips `test-results/` before `wrangler pages deploy` (audit screenshots no longer leaked).
+- Audit harness hardened: `runtime_only: true` tag on `db-toast-stack` (empty-by-design) + classifier relaxes "no content" layout when the tag is set; contrast sampler skips gradient and alpha-composited backgrounds (the 11-item false-positive cluster).
+- Audit result: **76 green / 0 yellow / 0 red**.
+
 ## v3.19.10
 
 **Component audit pass (2026-04-21).**

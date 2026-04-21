@@ -1,6 +1,6 @@
 # DAUB UI — Compact Reference
 
-> Version: 3.19.10
+> Version: 3.19.11
 > Full docs: https://daub.dev/llms.txt
 > CSS: https://daub.dev/daub.css | JS: https://daub.dev/daub.js
 > Classless: https://daub.dev/daub-classless.css
