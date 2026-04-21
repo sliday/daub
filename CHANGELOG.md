@@ -2,6 +2,20 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.19.9
+
+**Deploy hygiene, frontend polish, backend hardening (2026-04-21).**
+
+- Deploy: `scripts/predeploy-clean.sh` strips ~22 MB of dev artifacts before publish; source map no longer tracked
+- `_headers`: add `Cache-Control` rules for `/*.html` (no-cache), `/*.map` and `/api/*` (no-store)
+- Frontend: `defer` on all render-blocking CDN scripts (Lucide, renderjson, lz-string) with `DOMContentLoaded` initialisers; sync cache-busters and JSON-LD across 10 HTML pages
+- `playground.html`: 14 diagnostic `console.{log,warn}` calls gated behind `?debug` query flag via `dlog` / `dwarn` helpers
+- Accessibility: `aria-hidden` on 6 decorative SVGs in `index.html`; `aria-label` on 4 demo inputs
+- `docs.html`: Twitter Card meta + `WebSite` JSON-LD
+- Backend: `AbortSignal.timeout` on every upstream `fetch` in `/api` routes (60 s generate / 30 s weblook / 15 s figma); `AbortError` mapped to `504 Gateway Timeout` JSON
+- Security: HTML-escape `?error=` interpolation in Figma OAuth callback page (reflected-HTML fix)
+- SEO: refresh all `sitemap.xml` `lastmod` entries to 2026-04-21
+
 ## v3.19.8
 
 **Agent discovery endpoints for AI clients (2026-04-20).**
