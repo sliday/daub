@@ -37,19 +37,19 @@
   </script>
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous" defer></script>
 
   <!-- renderjson — collapsible JSON tree viewer -->
   <script src="https://cdn.jsdelivr.net/npm/renderjson@1.4.0/renderjson.js"
           integrity="sha384-hl9XDoSE5GkFfgDwdDe7GiHvBTDwxDu2Cx2vQ+JkZVfFSNkfTVnTsKiASLv22pEZ"
-          crossorigin="anonymous"></script>
+          crossorigin="anonymous" defer></script>
 
   <!-- lz-string — URL-safe compression for share links -->
   <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"
-          crossorigin="anonymous"></script>
+          crossorigin="anonymous" defer></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.19.6">
+  <link rel="stylesheet" href="daub.css?v=3.19.8">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -999,7 +999,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.19.6"></script>
+<script src="daub.js?v=3.19.8"></script>
 <script src="daub-openui-parser.js"></script>
 <script>
 // ============================================================
@@ -1012,6 +1012,11 @@
 //
 (function() {
 'use strict';
+
+// ---- Debug gating: opt-in via ?debug in URL ----
+const DEBUG = new URLSearchParams(location.search).has('debug');
+const dlog = (...a) => { if (DEBUG) console.log(...a); };
+const dwarn = (...a) => { if (DEBUG) console.warn(...a); };
 
 // ---- DOM refs ----
 var $provider   = document.getElementById('pg-provider');
@@ -1075,7 +1080,7 @@ function buildIframeSrcdoc(theme) {
   return '<!DOCTYPE html><html lang="en"' + themeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
     + '<base target="_blank">'
-    + '<link rel="stylesheet" href="daub.css?v=3.19.6">'
+    + '<link rel="stylesheet" href="daub.css?v=3.19.8">'
     + '<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" crossorigin="anonymous"><\/script>'
     + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
     + '<style>html,body{margin:0;min-height:100%;}'
@@ -1099,7 +1104,7 @@ function buildIframeSrcdoc(theme) {
     + '"\u201CThe best design is the simplest one that works.\u201D\\n\u2014 Albert Einstein",'
     + '"\u201CTypography is the craft of endowing human language with a durable visual form.\u201D\\n\u2014 Robert Bringhurst"'
     + '];document.getElementById("pg-iframe-root").setAttribute("data-quote",qs[Math.floor(Math.random()*qs.length)])})()<\/script>'
-    + '<script src="daub.js?v=3.19.6"><\/script>'
+    + '<script src="daub.js?v=3.19.8"><\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
     // ---- Declarative State Engine (iframe runtime) ----
@@ -2387,7 +2392,7 @@ function mergeSpecFixes(original, fixed) {
   });
   if (fixed.theme && fixed.theme !== original.theme) { merged.theme = fixed.theme; mergedCount++; }
   if (fixed.scheme && fixed.scheme !== original.scheme) { merged.scheme = fixed.scheme; mergedCount++; }
-  console.log('[mergeSpecFixes] Merged ' + mergedCount + ' cosmetic props across ' + Object.keys(origEls).length + ' elements');
+  dlog('[mergeSpecFixes] Merged ' + mergedCount + ' cosmetic props across ' + Object.keys(origEls).length + ' elements');
   return merged;
 }
 
@@ -2441,14 +2446,14 @@ function selfCheck(spec, screenshotDataUrl, signal) {
     var origCount = Object.keys(spec.elements).length;
     var fixedCount = Object.keys(fixed.elements).length;
     if (fixedCount < origCount * 0.8) {
-      console.warn('[selfCheck] Rejected fix: dropped too many elements (' + origCount + ' → ' + fixedCount + ')');
+      dwarn('[selfCheck] Rejected fix: dropped too many elements (' + origCount + ' → ' + fixedCount + ')');
       return null;
     }
     // Guard: reject fixes that lose more than 30% of text content
     var origText = measureTextContent(spec);
     var fixedText = measureTextContent(fixed);
     if (origText > 0 && fixedText < origText * 0.7) {
-      console.warn('[selfCheck] Rejected fix: lost text content (' + origText + ' → ' + fixedText + ' chars)');
+      dwarn('[selfCheck] Rejected fix: lost text content (' + origText + ' → ' + fixedText + ' chars)');
       return null;
     }
     return fixed;
@@ -2530,7 +2535,7 @@ function analyzeLayout(userPrompt, images, webContexts, figmaContexts, signal) {
   })
   .then(parseSseResponse)
   .then(function(sse) { return sse.content || null; })
-  .catch(function(e) { console.warn('[analyzeLayout] Failed:', e.message); return null; });
+  .catch(function(e) { dwarn('[analyzeLayout] Failed:', e.message); return null; });
 }
 
 function visualDiff(spec, renderedScreenshot, originalImageDataUrl, signal) {
@@ -2580,12 +2585,12 @@ function visualDiff(spec, renderedScreenshot, originalImageDataUrl, signal) {
     var origCount = Object.keys(spec.elements).length;
     var fixedCount = Object.keys(fixed.elements).length;
     if (fixedCount < origCount * 0.8) {
-      console.warn('[visualDiff] Rejected fix: dropped too many elements (' + origCount + ' → ' + fixedCount + ')');
+      dwarn('[visualDiff] Rejected fix: dropped too many elements (' + origCount + ' → ' + fixedCount + ')');
       return null;
     }
     return fixed;
   })
-  .catch(function(e) { if (e.name === 'AbortError') return null; console.warn('[visualDiff] Failed:', e.message); return null; });
+  .catch(function(e) { if (e.name === 'AbortError') return null; dwarn('[visualDiff] Failed:', e.message); return null; });
 }
 
 // ---- Interactivity pipeline: analyze spec → generate code ----
@@ -2630,17 +2635,17 @@ function analyzeInteractivity(spec, signal) {
   .then(parseSseResponse)
   .then(function(sse) {
     var raw = sse.content;
-    console.log('[analyzeInteractivity] raw:', raw.slice(0, 200));
+    dlog('[analyzeInteractivity] raw:', raw.slice(0, 200));
     var clean = cleanJSON(raw);
     if (!clean) return null;
     try {
       var result = JSON.parse(clean);
-      console.log('[analyzeInteractivity] result:', result);
+      dlog('[analyzeInteractivity] result:', result);
       if (typeof result.needed === 'boolean') return result;
-    } catch(e) { console.warn('[analyzeInteractivity] parse error:', e); }
+    } catch(e) { dwarn('[analyzeInteractivity] parse error:', e); }
     return null;
   })
-  .catch(function(e) { if (e.name === 'AbortError') return null; console.warn('[analyzeInteractivity] failed:', e); return null; });
+  .catch(function(e) { if (e.name === 'AbortError') return null; dwarn('[analyzeInteractivity] failed:', e); return null; });
 }
 
 function generateInteractiveCode(spec, analysis, onProgress) {
@@ -2691,16 +2696,16 @@ function generateInteractiveCode(spec, analysis, onProgress) {
         }
       },
       function onDone() {
-        console.log('[generateInteractiveCode] raw length:', accumulated.length, 'preview:', accumulated.slice(0, 300));
+        dlog('[generateInteractiveCode] raw length:', accumulated.length, 'preview:', accumulated.slice(0, 300));
         var clean = cleanJSON(accumulated);
-        if (!clean) { console.warn('[generateInteractiveCode] cleanJSON returned empty'); resolve(null); return; }
+        if (!clean) { dwarn('[generateInteractiveCode] cleanJSON returned empty'); resolve(null); return; }
         var updated;
         try { updated = JSON.parse(clean); } catch(e) { updated = repairJSON(clean); }
         if (!updated || !updated.root || !updated.elements) {
-          console.warn('[generateInteractiveCode] invalid spec structure:', updated ? Object.keys(updated) : 'null');
+          dwarn('[generateInteractiveCode] invalid spec structure:', updated ? Object.keys(updated) : 'null');
           resolve(null); return;
         }
-        console.log('[generateInteractiveCode] success:', countComponents(updated), 'components');
+        dlog('[generateInteractiveCode] success:', countComponents(updated), 'components');
         resolve(updated);
       },
       function onError(err) {
@@ -4281,6 +4286,11 @@ if (window.renderjson) {
 // ---- Tree view (always on) ----
 var _treeRefreshTimer = null;
 function refreshJsonTree() {
+  // renderjson script is deferred — retry once it has loaded
+  if (typeof renderjson === 'undefined') {
+    document.addEventListener('DOMContentLoaded', refreshJsonTree, { once: true });
+    return;
+  }
   var raw = $json.value;
   if (!raw || !raw.trim()) {
     $jsonTree.textContent = '';
@@ -6749,7 +6759,8 @@ document.querySelectorAll('.pg-bottom-tabs .db-bottom-nav__item').forEach(functi
 
 // ---- Init ----
 loadSettings();
-lucide.createIcons();
+// Lucide is deferred — wait for DOMContentLoaded so the library is loaded
+document.addEventListener('DOMContentLoaded', function(){ if (window.lucide) lucide.createIcons(); });
 
 // ---- Pill toggle sync ----
 function syncPillToggle(checkbox, pillEl) {
@@ -6797,9 +6808,9 @@ if (presetPrompt) {
   setTimeout(function(){ generate(); }, 500);
 }
 
-// Load shared spec from ?s= param
+// Load shared spec from ?s= param (LZString is deferred — defer the lookup too)
 var sharedSpec = urlParams.get('s');
-if (sharedSpec) {
+function _loadSharedSpec() {
   try {
     var json = LZString.decompressFromEncodedURIComponent(sharedSpec);
     var spec = JSON.parse(json);
@@ -6816,6 +6827,10 @@ if (sharedSpec) {
     }
   } catch(e) { console.warn('[share] failed to load shared spec:', e); }
   window.history.replaceState({}, '', window.location.pathname);
+}
+if (sharedSpec) {
+  if (typeof LZString !== 'undefined') _loadSharedSpec();
+  else document.addEventListener('DOMContentLoaded', _loadSharedSpec, { once: true });
 }
 
 // ---- assistant-ui React Chat bridge (expose IIFE-scoped vars) ----

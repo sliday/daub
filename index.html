@@ -51,9 +51,9 @@
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "license": "https://opensource.org/licenses/MIT",
-    "version": "3.19.6",
+    "version": "3.19.8",
     "dateCreated": "2026-02-01",
-    "dateModified": "2026-03-29",
+    "dateModified": "2026-04-21",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "keywords": ["CSS components", "UI kit", "design system", "neo-skeuomorphic", "themes", "dark mode", "accessible", "AI-friendly", "llms.txt", "drop-in CSS", "no build step"],
@@ -125,10 +125,10 @@
   </script>
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous" defer></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.19.6">
+  <link rel="stylesheet" href="daub.css?v=3.19.8">
 
   <style>
     /* Prevent horizontal overflow on mobile */
@@ -1123,7 +1123,7 @@
   <nav class="db-nav" role="navigation" aria-label="Main">
     <a href="/" class="db-nav__brand">DAUB</a>
     <button class="db-nav__toggle" aria-label="Menu" aria-expanded="false" onclick="this.closest('.db-nav').classList.toggle('db-nav--open');this.setAttribute('aria-expanded',this.closest('.db-nav').classList.contains('db-nav--open'))">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <ul class="db-nav__links">
       <li><a href="#components-index">Components</a></li>
@@ -1136,7 +1136,7 @@
       <li><a href="llms.txt">AI Docs</a></li>
       <li>
         <a href="https://github.com/sliday/daub" class="db-nav__github" target="_blank" rel="noopener">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
           <span>GitHub</span>
           <span id="gh-stars" style="display:none;font-size:0.75rem;background:var(--db-sand);padding:1px 6px;border-radius:var(--db-radius-1);font-variant-numeric:tabular-nums;"></span>
         </a>
@@ -1148,7 +1148,7 @@
   <!-- Hero -->
   <section class="db-hero">
     <a class="db-hero__announce" href="https://github.com/sliday/daub" target="_blank" rel="noopener">
-      <span class="db-badge db-badge--new">v3.19.6</span>
+      <span class="db-badge db-badge--new">v3.19.8</span>
       Auto-temperature, block test suite, 230+ blocks — Star on GitHub
       <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
     </a>
@@ -1250,7 +1250,7 @@
               <button class="db-accent-picker__dot" data-accent="#6B4423" style="background:#6B4423" aria-label="Umber" aria-pressed="false"></button>
               <button class="db-accent-picker__dot" data-accent="#505050" style="background:#505050" aria-label="Charcoal" aria-pressed="false"></button>
               <button class="db-accent-picker__dot db-accent-picker__dot--reset" data-accent="reset" aria-label="Reset accent" aria-pressed="false">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
               </button>
             </div>
           </div>
@@ -1918,21 +1918,21 @@
       <div class="demo-grid">
         <div class="db-field">
           <label class="db-field__label" for="demo-name">Full Name</label>
-          <input class="db-field__input" id="demo-name" type="text" placeholder="Enter your name">
+          <input class="db-field__input" id="demo-name" type="text" placeholder="Enter your name" aria-label="Demo: full name field">
           <span class="db-field__helper">Your display name</span>
         </div>
         <div class="db-field">
           <label class="db-field__label" for="demo-focus">Focused Field</label>
-          <input class="db-field__input" id="demo-focus" type="text" value="Warm terracotta glow">
+          <input class="db-field__input" id="demo-focus" type="text" value="Warm terracotta glow" aria-label="Demo: focused field">
         </div>
         <div class="db-field db-field--error">
           <label class="db-field__label" for="demo-error">Email</label>
-          <input class="db-field__input" id="demo-error" type="email" value="not-valid">
+          <input class="db-field__input" id="demo-error" type="email" value="not-valid" aria-label="Demo: email field in error state">
           <span class="db-field__helper">Please enter a valid email</span>
         </div>
         <div class="db-field">
           <label class="db-field__label" for="demo-disabled">Disabled</label>
-          <input class="db-field__input" id="demo-disabled" type="text" value="Read only" disabled>
+          <input class="db-field__input" id="demo-disabled" type="text" value="Read only" disabled aria-label="Demo: disabled field">
         </div>
       </div>
 
@@ -1953,21 +1953,21 @@
           <label class="db-checkbox">
             <input class="db-checkbox__input" type="checkbox" checked>
             <span class="db-checkbox__box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </span>
             Enable notifications
           </label>
           <label class="db-checkbox">
             <input class="db-checkbox__input" type="checkbox">
             <span class="db-checkbox__box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </span>
             Dark mode
           </label>
           <label class="db-checkbox">
             <input class="db-checkbox__input" type="checkbox" checked>
             <span class="db-checkbox__box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </span>
             Auto-save
           </label>
@@ -3214,10 +3214,10 @@
   </div>
 
   <!-- JS -->
-  <script src="daub.js?v=3.19.6"></script>
+  <script src="daub.js?v=3.19.8"></script>
   <script>
-    // Initialize Lucide icons
-    lucide.createIcons();
+    // Initialize Lucide icons (Lucide script is deferred — wait for DOMContentLoaded)
+    document.addEventListener('DOMContentLoaded', function(){ lucide.createIcons(); });
 
     // Example tab switcher (Preview / Code)
     function dbExampleTab(tab, btn) {
