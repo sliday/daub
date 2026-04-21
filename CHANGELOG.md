@@ -2,9 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
-## vNext
+## v3.19.10
 
-- Component audit pass — 9 contrast & a11y fixes across `components.json` and `daub.css` (`db-otp` aria, `db-toast-stack` example, terracotta/success contrast). Follow-up ticket: tokenize `--db-terracotta-ink` across all theme blocks (Option A) in place of the localized `#8C4A2A` literals shipped now.
+**Component audit pass (2026-04-21).**
+
+- Full headless-render + a11y + spec-diff audit of all 76 components (lab/reviewer/surgeon team)
+- 9 contrast & a11y fixes across `components.json` and `daub.css`: `db-otp` role/aria-label per digit, `db-toast-stack` live-region example, `db-slider` / `db-data-table` / `db-carousel` aria-labels, `db-tooltip` dead-modifier trim, terracotta-on-cream contrast (localized `#8C4A2A` on slider value, active tab color, hover-card link), `db-stepper` and `db-stat--up` → `--db-success-dark`
+- No components removed — both initially-flagged reds (`db-otp`, `db-toast-stack`) fixed in place
+- Audit delta: 56/18/2 → 64/12/0 (green/yellow/red); remaining 12 yellows are harness false positives on gradient + alpha-composited backgrounds
+- Follow-up: tokenize `--db-terracotta-ink` across theme blocks (Option A) in place of the localized `#8C4A2A` literals
 
 ## v3.19.9
 
