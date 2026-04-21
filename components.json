@@ -257,7 +257,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-slider\">\n  <div class=\"db-slider__label\"><span>Volume</span><span class=\"db-slider__value\">50</span></div>\n  <input class=\"db-slider__input\" type=\"range\" min=\"0\" max=\"100\" value=\"50\">\n</div>",
+      "html": "<div class=\"db-slider\">\n  <div class=\"db-slider__label\"><span>Volume</span><span class=\"db-slider__value\">50</span></div>\n  <input class=\"db-slider__input\" type=\"range\" min=\"0\" max=\"100\" value=\"50\" aria-label=\"Volume\">\n</div>",
       "notes": "JS syncs __value text with range input."
     },
     {
@@ -397,7 +397,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-otp\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n  <span class=\"db-otp__separator\">-</span>\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\">\n</div>",
+      "html": "<div class=\"db-otp\" role=\"group\" aria-label=\"One-time code\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\" aria-label=\"Digit 1\" maxlength=\"1\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\" aria-label=\"Digit 2\" maxlength=\"1\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\" aria-label=\"Digit 3\" maxlength=\"1\">\n  <span class=\"db-otp__separator\" aria-hidden=\"true\">-</span>\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\" aria-label=\"Digit 4\" maxlength=\"1\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\" aria-label=\"Digit 5\" maxlength=\"1\">\n  <input class=\"db-otp__input\" type=\"text\" inputmode=\"numeric\" aria-label=\"Digit 6\" maxlength=\"1\">\n</div>",
       "notes": "JS auto-focuses next input and handles paste."
     },
     {
@@ -697,7 +697,7 @@
       "modifiers": [],
       "children": [],
       "js": true,
-      "html": "<!-- Auto-created by DAUB.toast() -->",
+      "html": "<div class=\"db-toast-stack\" role=\"region\" aria-live=\"polite\" aria-label=\"Notifications\">\n  <div class=\"db-toast db-toast--success\">\n    <div class=\"db-toast__content\">Toast message 1</div>\n  </div>\n  <div class=\"db-toast db-toast--warning\">\n    <div class=\"db-toast__content\">Toast message 2</div>\n  </div>\n</div>",
       "notes": "Container auto-created by JS when first toast fires. Fixed bottom-right."
     },
     {
@@ -808,7 +808,7 @@
         }
       ],
       "js": false,
-      "html": "<table class=\"db-data-table\">\n  <thead><tr>\n    <th><input class=\"db-data-table__check\" type=\"checkbox\"></th>\n    <th data-sortable>Name</th>\n  </tr></thead>\n  <tbody><tr>\n    <td><input class=\"db-data-table__check\" type=\"checkbox\"></td>\n    <td>Item</td>\n  </tr></tbody>\n</table>",
+      "html": "<table class=\"db-data-table\">\n  <thead><tr>\n    <th><input class=\"db-data-table__check\" type=\"checkbox\" aria-label=\"Select all rows\"></th>\n    <th data-sortable>Name</th>\n  </tr></thead>\n  <tbody><tr>\n    <td><input class=\"db-data-table__check\" type=\"checkbox\" aria-label=\"Select row\"></td>\n    <td>Item</td>\n  </tr></tbody>\n</table>",
       "notes": "Enhanced table with checkbox selection and sortable headers via data-sortable."
     },
     {
@@ -1082,7 +1082,6 @@
       "category": "overlays",
       "element": "div",
       "modifiers": [
-        "--visible",
         "--open"
       ],
       "children": [
@@ -1488,7 +1487,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-carousel\">\n  <div class=\"db-carousel__track\">\n    <div class=\"db-carousel__slide\">Slide 1</div>\n    <div class=\"db-carousel__slide\">Slide 2</div>\n  </div>\n  <button class=\"db-carousel__btn db-carousel__btn--prev\">&lsaquo;</button>\n  <button class=\"db-carousel__btn db-carousel__btn--next\">&rsaquo;</button>\n  <div class=\"db-carousel__dots\">\n    <button class=\"db-carousel__dot db-carousel__dot--active\"></button>\n    <button class=\"db-carousel__dot\"></button>\n  </div>\n</div>",
+      "html": "<div class=\"db-carousel\">\n  <div class=\"db-carousel__track\">\n    <div class=\"db-carousel__slide\">Slide 1</div>\n    <div class=\"db-carousel__slide\">Slide 2</div>\n  </div>\n  <button class=\"db-carousel__btn db-carousel__btn--prev\" aria-label=\"Previous slide\">&lsaquo;</button>\n  <button class=\"db-carousel__btn db-carousel__btn--next\" aria-label=\"Next slide\">&rsaquo;</button>\n  <div class=\"db-carousel__dots\">\n    <button class=\"db-carousel__dot db-carousel__dot--active\" aria-label=\"Go to slide 1\" aria-current=\"true\"></button>\n    <button class=\"db-carousel__dot\" aria-label=\"Go to slide 2\"></button>\n  </div>\n</div>",
       "notes": "JS handles slide navigation, dot sync, and swipe."
     },
     {

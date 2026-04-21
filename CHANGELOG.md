@@ -2,6 +2,10 @@
 
 All notable changes to DAUB are documented here.
 
+## vNext
+
+- Component audit pass — 9 contrast & a11y fixes across `components.json` and `daub.css` (`db-otp` aria, `db-toast-stack` example, terracotta/success contrast). Follow-up ticket: tokenize `--db-terracotta-ink` across all theme blocks (Option A) in place of the localized `#8C4A2A` literals shipped now.
+
 ## v3.19.9
 
 **Deploy hygiene, frontend polish, backend hardening (2026-04-21).**
