@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-3.19.6-3D3832.svg)](https://daub.dev)
-[![Components](https://img.shields.io/badge/components-76-D4C4A8.svg)](https://daub.dev)
+[![Components](https://img.shields.io/badge/components-84-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
 
@@ -14,7 +14,7 @@
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 76 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 84 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
 Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 230+ block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
 
@@ -39,7 +39,7 @@ Toggle in the Chat toolbar (on by default). Forces `gemini-3.1-flash-lite-previe
 ### CDN (recommended)
 
 ```html
-<!-- Full library: 76 components + themes -->
+<!-- Full library: 84 components + themes -->
 <link rel="stylesheet" href="https://daub.dev/daub.css">
 <script src="https://daub.dev/daub.js"></script>
 
@@ -77,7 +77,7 @@ DAUB uses system font stacks by default. For richer typography:
 <script src="https://unpkg.com/lucide@latest"></script>
 ```
 
-## Components (76)
+## Components (84)
 
 ### Foundations
 | Component | Class | Notes |
@@ -104,9 +104,12 @@ DAUB uses system font stacks by default. For richer typography:
 | Search | `db-search` | `__icon`, `__clear`, auto show/hide clear button |
 | Textarea | `db-textarea` | `--error`, standalone |
 | Checkbox | `db-checkbox` | |
+| Checkbox Group | `db-checkbox-group` | `--inline`, label + helper |
+| Fieldset | `db-fieldset` | Native field grouping with legend |
 | Radio | `db-radio` | `db-radio-group` |
 | Switch | `db-switch` | `aria-checked` |
 | Slider | `db-slider` | |
+| Number Field | `db-number-field` | Numeric input with step controls |
 | Toggle | `db-toggle` | `--sm`, `aria-pressed` |
 | Toggle Group | `db-toggle-group` | Single/multi select |
 | Native Select | `db-select` | `__input` with chevron |
@@ -126,6 +129,7 @@ DAUB uses system font stacks by default. For richer typography:
 | Nav Menu | `db-nav-menu` | `__item`, `--active` |
 | Navbar | `db-navbar` | `__brand`, `__nav`, `__actions`, `__toggle`, sticky mobile hamburger |
 | Menubar | `db-menubar` | `__item`, `__dropdown` |
+| Toolbar | `db-toolbar` | `__group`, `__separator`, `--vertical` |
 | Sidebar | `db-sidebar` | `__item`, `--active`, `--collapsed`, `__toggle` |
 | Bottom Nav | `db-bottom-nav` | `__item`, `--active`, `__badge`, `--always` |
 
@@ -152,6 +156,7 @@ DAUB uses system font stacks by default. For richer typography:
 | Toast | JS only | `DAUB.toast({ type, title, message })` |
 | Alert | `db-alert` | `--info`, `--warning`, `--error`, `--success` |
 | Progress | `db-progress` | `--indeterminate` |
+| Meter | `db-meter` | `--warning`, `--error` |
 | Skeleton | `db-skeleton` | `--text`, `--heading`, `--avatar`, `--btn` |
 | Empty State | `db-empty` | |
 | Tooltip | `db-tooltip` | `--top`, `--bottom`, `--left`, `--right` |
@@ -165,6 +170,7 @@ DAUB uses system font stacks by default. For richer typography:
 | Drawer | `db-drawer` | Mobile-friendly bottom panel |
 | Popover | `db-popover` | `--top`, `--bottom`, `--left`, `--right` |
 | Hover Card | `db-hover-card` | CSS hover trigger |
+| Preview Card | `db-preview-card` | Hover and focus preview |
 | Dropdown Menu | `db-dropdown` | `__item`, `__separator`, `__label` |
 | Context Menu | `db-context-menu` | Right-click, `data-context-menu` |
 | Command Palette | `db-command` | `DAUB.openCommand()`, Ctrl+K |
@@ -174,6 +180,8 @@ DAUB uses system font stacks by default. For richer typography:
 |-----------|-------|-------|
 | Accordion | `db-accordion` | Single/multi mode via `data-multi` |
 | Collapsible | `db-collapsible` | Progressive disclosure |
+| Frame | `db-frame` | `__header`, `__body`, `__footer`, `--flush` |
+| Group | `db-group` | `--attached`, `--vertical` |
 | Resizable | `db-resizable` | `__handle--right`, `--bottom`, `--corner` |
 | Date Picker | `db-date-picker` | Wraps Calendar in popover |
 | Theme Switcher | `db-theme-switcher` | 20 families + scheme switcher |
@@ -304,7 +312,7 @@ DAUB speaks both human and machine:
 
 - **`/llms.txt`** — Plain-text component reference for LLMs ([spec](https://llmstxt.org))
 - **`/llms-compact.txt`** — Condensed version for token-constrained contexts
-- **`/components.json`** — Machine-readable structured component reference (76 components with HTML examples)
+- **`/components.json`** — Machine-readable structured component reference (84 components with HTML examples)
 - **`/daub.d.ts`** — TypeScript declarations for `window.DAUB` API
 - **`/.well-known/ai-plugin.json`** — AI plugin manifest
 - **`SKILL.md`** — Claude Code skill for DAUB development
@@ -321,7 +329,7 @@ Install the DAUB skill into any AI coding agent ([40+ supported](https://skills.
 npx skills add sliday/daub
 ```
 
-This gives your agent full knowledge of all 76 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
+This gives your agent full knowledge of all 84 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
 
 ## Block Library
 

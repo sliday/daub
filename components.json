@@ -1750,6 +1750,203 @@
       "notes": "CSS grid utility. 2-6 columns. Auto-responsive: collapses at smaller screens."
     },
     {
+      "name": "Checkbox Group",
+      "class": "db-checkbox-group",
+      "category": "controls",
+      "element": "div",
+      "modifiers": [
+        "--inline"
+      ],
+      "children": [
+        {
+          "class": "db-checkbox-group__label",
+          "element": "span",
+          "required": false
+        },
+        {
+          "class": "db-checkbox-group__helper",
+          "element": "span",
+          "required": false
+        }
+      ],
+      "js": false,
+      "html": "<div class=\"db-checkbox-group\" role=\"group\" aria-labelledby=\"topics-label\">\n  <span class=\"db-checkbox-group__label\" id=\"topics-label\">Topics</span>\n  <label class=\"db-checkbox\"><input class=\"db-checkbox__input\" type=\"checkbox\"><span class=\"db-checkbox__box\"></span><span>Design</span></label>\n  <label class=\"db-checkbox\"><input class=\"db-checkbox__input\" type=\"checkbox\"><span class=\"db-checkbox__box\"></span><span>Engineering</span></label>\n  <span class=\"db-checkbox-group__helper\">Choose all that apply.</span>\n</div>",
+      "notes": "Use --inline for horizontal checkbox sets."
+    },
+    {
+      "name": "Fieldset",
+      "class": "db-fieldset",
+      "category": "controls",
+      "element": "fieldset",
+      "modifiers": [],
+      "children": [
+        {
+          "class": "db-fieldset__legend",
+          "element": "legend",
+          "required": false
+        },
+        {
+          "class": "db-fieldset__content",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-fieldset__helper",
+          "element": "span",
+          "required": false
+        }
+      ],
+      "js": false,
+      "html": "<fieldset class=\"db-fieldset\">\n  <legend class=\"db-fieldset__legend\">Profile</legend>\n  <div class=\"db-fieldset__content\">\n    <label class=\"db-field\"><span class=\"db-field__label\">Name</span><input class=\"db-field__input\" type=\"text\"></label>\n  </div>\n  <span class=\"db-fieldset__helper\">Visible to your workspace.</span>\n</fieldset>",
+      "notes": "Groups related form fields with a legend and helper text."
+    },
+    {
+      "name": "Frame",
+      "class": "db-frame",
+      "category": "layout-utility",
+      "element": "div",
+      "modifiers": [
+        "--flush"
+      ],
+      "children": [
+        {
+          "class": "db-frame__header",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-frame__body",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-frame__footer",
+          "element": "div",
+          "required": false
+        }
+      ],
+      "js": false,
+      "html": "<div class=\"db-frame\">\n  <div class=\"db-frame__header\">Preview</div>\n  <div class=\"db-frame__body\">Framed content</div>\n  <div class=\"db-frame__footer\">Updated now</div>\n</div>",
+      "notes": "Use for embedded previews, canvases, screenshots, and inspector panels."
+    },
+    {
+      "name": "Group",
+      "class": "db-group",
+      "category": "layout-utility",
+      "element": "div",
+      "modifiers": [
+        "--attached",
+        "--vertical"
+      ],
+      "children": [],
+      "js": false,
+      "html": "<div class=\"db-group db-group--attached\" role=\"group\" aria-label=\"Alignment\">\n  <button class=\"db-btn db-btn--secondary\">Left</button>\n  <button class=\"db-btn db-btn--secondary\">Center</button>\n  <button class=\"db-btn db-btn--secondary\">Right</button>\n</div>",
+      "notes": "Generic control grouping. Use --attached for connected controls."
+    },
+    {
+      "name": "Meter",
+      "class": "db-meter",
+      "category": "feedback",
+      "element": "div",
+      "modifiers": [
+        "--warning",
+        "--error"
+      ],
+      "children": [
+        {
+          "class": "db-meter__bar",
+          "element": "div",
+          "required": true
+        }
+      ],
+      "js": false,
+      "html": "<div class=\"db-meter\" role=\"meter\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"72\" style=\"--db-meter:72%\"><div class=\"db-meter__bar\"></div></div>",
+      "notes": "Use for bounded measurements such as quota, health, or strength."
+    },
+    {
+      "name": "Number Field",
+      "class": "db-number-field",
+      "category": "controls",
+      "element": "div",
+      "modifiers": [],
+      "children": [
+        {
+          "class": "db-number-field__btn",
+          "element": "button",
+          "required": false
+        },
+        {
+          "class": "db-input",
+          "element": "input",
+          "required": true
+        }
+      ],
+      "js": false,
+      "html": "<div class=\"db-number-field\" role=\"group\" aria-label=\"Quantity\">\n  <button class=\"db-btn db-btn--secondary db-number-field__btn\" type=\"button\" aria-label=\"Decrease\">-</button>\n  <input class=\"db-input\" type=\"number\" value=\"3\" min=\"0\" aria-label=\"Quantity\">\n  <button class=\"db-btn db-btn--secondary db-number-field__btn\" type=\"button\" aria-label=\"Increase\">+</button>\n</div>",
+      "notes": "Combines a numeric input with increment and decrement controls."
+    },
+    {
+      "name": "Preview Card",
+      "class": "db-preview-card",
+      "category": "overlays",
+      "element": "div",
+      "modifiers": [],
+      "children": [
+        {
+          "class": "db-preview-card__trigger",
+          "element": "span",
+          "required": true
+        },
+        {
+          "class": "db-preview-card__content",
+          "element": "div",
+          "required": true
+        },
+        {
+          "class": "db-preview-card__media",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-preview-card__title",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-preview-card__desc",
+          "element": "div",
+          "required": false
+        }
+      ],
+      "js": false,
+      "html": "<span class=\"db-preview-card\"><button class=\"db-btn db-btn--ghost db-preview-card__trigger\">Account</button><span class=\"db-preview-card__content\"><strong class=\"db-preview-card__title\">Ada Lovelace</strong><span class=\"db-preview-card__desc\">Workspace owner and billing contact.</span></span></span>",
+      "notes": "Hover and focus preview surface for rich inline references."
+    },
+    {
+      "name": "Toolbar",
+      "class": "db-toolbar",
+      "category": "navigation",
+      "element": "div",
+      "modifiers": [
+        "--vertical"
+      ],
+      "children": [
+        {
+          "class": "db-toolbar__group",
+          "element": "div",
+          "required": false
+        },
+        {
+          "class": "db-toolbar__separator",
+          "element": "span",
+          "required": false
+        }
+      ],
+      "js": false,
+      "html": "<div class=\"db-toolbar\" role=\"toolbar\" aria-label=\"Editor tools\">\n  <div class=\"db-toolbar__group\"><button class=\"db-btn db-btn--icon\" aria-label=\"Bold\">B</button><button class=\"db-btn db-btn--icon\" aria-label=\"Italic\">I</button></div>\n  <span class=\"db-toolbar__separator\" aria-hidden=\"true\"></span>\n  <button class=\"db-btn db-btn--secondary\">Save</button>\n</div>",
+      "notes": "Groups action buttons and segmented controls in editor or dashboard surfaces."
+    },
+    {
       "name": "Theme Switcher",
       "class": "db-theme-switcher",
       "category": "navigation",

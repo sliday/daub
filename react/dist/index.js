@@ -140,6 +140,50 @@ var AspectRatio = react.forwardRef(
   )
 );
 AspectRatio.displayName = "AspectRatio";
+var Frame = react.forwardRef(
+  ({ header, footer, flush, className, children, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs(
+    "div",
+    {
+      ref,
+      className: cn("db-frame", flush && "db-frame--flush", className),
+      ...props,
+      children: [
+        header && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "db-frame__header", children: header }),
+        /* @__PURE__ */ jsxRuntime.jsx("div", { className: "db-frame__body", children }),
+        footer && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "db-frame__footer", children: footer })
+      ]
+    }
+  )
+);
+Frame.displayName = "Frame";
+var Group = react.forwardRef(
+  ({ attached, vertical, className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+    "div",
+    {
+      ref,
+      className: cn(
+        "db-group",
+        attached && "db-group--attached",
+        vertical && "db-group--vertical",
+        className
+      ),
+      ...props
+    }
+  )
+);
+Group.displayName = "Group";
+var Toolbar = react.forwardRef(
+  ({ vertical, className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+    "div",
+    {
+      ref,
+      className: cn("db-toolbar", vertical && "db-toolbar--vertical", className),
+      role: "toolbar",
+      ...props
+    }
+  )
+);
+Toolbar.displayName = "Toolbar";
 var Card = react.forwardRef(
   ({ title, description, media, footer, clip, interactive, className, children, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs(
     "div",
@@ -236,6 +280,31 @@ var Progress = react.forwardRef(
   )
 );
 Progress.displayName = "Progress";
+var Meter = react.forwardRef(
+  ({ value = 0, min = 0, max = 100, status = "success", className, style, ...props }, ref) => {
+    const range = max - min || 1;
+    const pct = Math.min(100, Math.max(0, (value - min) / range * 100));
+    return /* @__PURE__ */ jsxRuntime.jsx(
+      "div",
+      {
+        ref,
+        className: cn(
+          "db-meter",
+          status !== "success" && `db-meter--${status}`,
+          className
+        ),
+        role: "meter",
+        "aria-valuemin": min,
+        "aria-valuemax": max,
+        "aria-valuenow": value,
+        style: { "--db-meter": `${pct}%`, ...style },
+        ...props,
+        children: /* @__PURE__ */ jsxRuntime.jsx("div", { className: "db-meter__bar" })
+      }
+    );
+  }
+);
+Meter.displayName = "Meter";
 var Skeleton = react.forwardRef(
   ({ variant, lines = 1, className, ...props }, ref) => {
     const classes = cn(
@@ -316,6 +385,18 @@ var ChartCard = react.forwardRef(
   )
 );
 ChartCard.displayName = "ChartCard";
+var PreviewCard = react.forwardRef(
+  ({ trigger, title, description, media, className, children, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs("div", { ref, className: cn("db-preview-card", className), ...props, children: [
+    /* @__PURE__ */ jsxRuntime.jsx("span", { className: "db-preview-card__trigger", children: trigger }),
+    /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "db-preview-card__content", children: [
+      media && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "db-preview-card__media", children: media }),
+      title && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "db-preview-card__title", children: title }),
+      description && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "db-preview-card__desc", children: description }),
+      children
+    ] })
+  ] })
+);
+PreviewCard.displayName = "PreviewCard";
 var Image = react.forwardRef(
   ({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
     "img",
@@ -420,6 +501,14 @@ var Field = react.forwardRef(
   }
 );
 Field.displayName = "Field";
+var Fieldset = react.forwardRef(
+  ({ legend, helper, className, children, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs("fieldset", { ref, className: cn("db-fieldset", className), ...props, children: [
+    legend && /* @__PURE__ */ jsxRuntime.jsx("legend", { className: "db-fieldset__legend", children: legend }),
+    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "db-fieldset__content", children }),
+    helper && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "db-fieldset__helper", children: helper })
+  ] })
+);
+Fieldset.displayName = "Fieldset";
 var InputGroup = react.forwardRef(
   ({ addonBefore, addonAfter, className, children, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs("div", { ref, className: cn("db-input-group", className), ...props, children: [
     addonBefore && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "db-input-group__addon", children: addonBefore }),
@@ -1048,6 +1137,23 @@ var Checkbox = react.forwardRef(
   }
 );
 Checkbox.displayName = "Checkbox";
+var CheckboxGroup = react.forwardRef(
+  ({ label, helper, inline, className, children, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs(
+    "div",
+    {
+      ref,
+      className: cn("db-checkbox-group", inline && "db-checkbox-group--inline", className),
+      role: "group",
+      ...props,
+      children: [
+        label && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "db-checkbox-group__label", children: label }),
+        children,
+        helper && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "db-checkbox-group__helper", children: helper })
+      ]
+    }
+  )
+);
+CheckboxGroup.displayName = "CheckboxGroup";
 var Radio = react.forwardRef(
   ({ checked, defaultChecked, onChange, label, name, value, className, ...props }, ref) => {
     const [on, setOn] = useControllable(checked, defaultChecked ?? false, onChange);
@@ -1142,6 +1248,51 @@ var Slider = react.forwardRef(
   }
 );
 Slider.displayName = "Slider";
+var NumberField = react.forwardRef(
+  ({ value, defaultValue, onChange, step = 1, min, max, className, "aria-label": ariaLabel, ...props }, ref) => {
+    const [val, setVal] = useControllable(value, defaultValue ?? min ?? 0, onChange);
+    const clamp = (next) => Math.min(max ?? next, Math.max(min ?? next, next));
+    const update = (next) => setVal(clamp(next));
+    return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: cn("db-number-field", className), role: "group", children: [
+      /* @__PURE__ */ jsxRuntime.jsx(
+        "button",
+        {
+          type: "button",
+          className: "db-btn db-btn--secondary db-number-field__btn",
+          onClick: () => update(val - step),
+          "aria-label": "Decrease",
+          children: "-"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntime.jsx(
+        "input",
+        {
+          ref,
+          type: "number",
+          className: "db-input",
+          value: val,
+          min,
+          max,
+          step,
+          "aria-label": ariaLabel ?? "Value",
+          onChange: (event) => update(Number(event.target.value)),
+          ...props
+        }
+      ),
+      /* @__PURE__ */ jsxRuntime.jsx(
+        "button",
+        {
+          type: "button",
+          className: "db-btn db-btn--secondary db-number-field__btn",
+          onClick: () => update(val + step),
+          "aria-label": "Increase",
+          children: "+"
+        }
+      )
+    ] });
+  }
+);
+NumberField.displayName = "NumberField";
 var Toggle = react.forwardRef(
   ({ pressed, defaultPressed, onChange, size, className, children, ...props }, ref) => {
     const [on, setOn] = useControllable(pressed, defaultPressed ?? false, onChange);
@@ -1681,6 +1832,7 @@ exports.Carousel = Carousel;
 exports.Chart = Chart;
 exports.ChartCard = ChartCard;
 exports.Checkbox = Checkbox;
+exports.CheckboxGroup = CheckboxGroup;
 exports.Chip = Chip;
 exports.Collapsible = Collapsible;
 exports.CommandPalette = CommandPalette;
@@ -1693,7 +1845,10 @@ exports.Drawer = Drawer;
 exports.DropdownMenu = DropdownMenu;
 exports.EmptyState = EmptyState;
 exports.Field = Field;
+exports.Fieldset = Fieldset;
+exports.Frame = Frame;
 exports.Grid = Grid;
+exports.Group = Group;
 exports.HoverCard = HoverCard;
 exports.Image = Image;
 exports.Input = Input;
@@ -1703,11 +1858,14 @@ exports.InputOTP = InputOTP;
 exports.Kbd = Kbd;
 exports.Label = Label;
 exports.List = List;
+exports.Meter = Meter;
 exports.Modal = Modal;
 exports.NavMenu = NavMenu;
 exports.Navbar = Navbar;
+exports.NumberField = NumberField;
 exports.Pagination = Pagination;
 exports.Popover = Popover;
+exports.PreviewCard = PreviewCard;
 exports.Progress = Progress;
 exports.Prose = Prose;
 exports.Radio = Radio;
@@ -1733,6 +1891,7 @@ exports.Toast = Toast;
 exports.ToastProvider = ToastProvider;
 exports.Toggle = Toggle;
 exports.ToggleGroup = ToggleGroup;
+exports.Toolbar = Toolbar;
 exports.Tooltip = Tooltip;
 exports.useControllable = useControllable;
 exports.useEscapeKey = useEscapeKey;

@@ -65,6 +65,24 @@ interface AspectRatioProps extends ComponentProps<"div"> {
 }
 declare const AspectRatio: react.ForwardRefExoticComponent<Omit<AspectRatioProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
+interface FrameProps extends ComponentProps<"div"> {
+    header?: ReactNode;
+    footer?: ReactNode;
+    flush?: boolean;
+}
+declare const Frame: react.ForwardRefExoticComponent<Omit<FrameProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
+interface GroupProps extends ComponentProps<"div"> {
+    attached?: boolean;
+    vertical?: boolean;
+}
+declare const Group: react.ForwardRefExoticComponent<Omit<GroupProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
+interface ToolbarProps extends ComponentProps<"div"> {
+    vertical?: boolean;
+}
+declare const Toolbar: react.ForwardRefExoticComponent<Omit<ToolbarProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
 interface CardProps extends ComponentProps<"div"> {
     title?: string;
     description?: string;
@@ -105,6 +123,14 @@ interface ProgressProps extends ComponentProps<"div"> {
 }
 declare const Progress: react.ForwardRefExoticComponent<Omit<ProgressProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
+interface MeterProps extends Omit<ComponentProps<"div">, "children"> {
+    value?: number;
+    min?: number;
+    max?: number;
+    status?: "success" | "warning" | "error";
+}
+declare const Meter: react.ForwardRefExoticComponent<Omit<MeterProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
 interface SkeletonProps extends ComponentProps<"div"> {
     variant?: SkeletonVariant;
     lines?: number;
@@ -137,6 +163,14 @@ interface ChartCardProps extends ComponentProps<"div"> {
     title?: string;
 }
 declare const ChartCard: react.ForwardRefExoticComponent<Omit<ChartCardProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
+interface PreviewCardProps extends Omit<ComponentProps<"div">, "title"> {
+    trigger: ReactNode;
+    title?: ReactNode;
+    description?: ReactNode;
+    media?: ReactNode;
+}
+declare const PreviewCard: react.ForwardRefExoticComponent<Omit<PreviewCardProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
 declare const Image: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>, "ref"> & react.RefAttributes<HTMLImageElement>>;
 
@@ -177,6 +211,12 @@ interface FieldProps extends ComponentProps<"div"> {
     error?: boolean | string;
 }
 declare const Field: react.ForwardRefExoticComponent<Omit<FieldProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
+interface FieldsetProps extends ComponentProps<"fieldset"> {
+    legend?: ReactNode;
+    helper?: ReactNode;
+}
+declare const Fieldset: react.ForwardRefExoticComponent<Omit<FieldsetProps, "ref"> & react.RefAttributes<HTMLFieldSetElement>>;
 
 interface InputGroupProps extends ComponentProps<"div"> {
     addonBefore?: ReactNode;
@@ -411,6 +451,13 @@ interface CheckboxProps extends Omit<ComponentProps<"input">, "type" | "checked"
 }
 declare const Checkbox: react.ForwardRefExoticComponent<Omit<CheckboxProps, "ref"> & react.RefAttributes<HTMLInputElement>>;
 
+interface CheckboxGroupProps extends ComponentProps<"div"> {
+    label?: ReactNode;
+    helper?: ReactNode;
+    inline?: boolean;
+}
+declare const CheckboxGroup: react.ForwardRefExoticComponent<Omit<CheckboxGroupProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
 interface RadioProps extends Omit<ComponentProps<"input">, "type" | "checked" | "defaultChecked" | "onChange"> {
     checked?: boolean;
     defaultChecked?: boolean;
@@ -449,6 +496,16 @@ interface SliderProps extends Omit<ComponentProps<"div">, "onChange" | "defaultV
     label?: string;
 }
 declare const Slider: react.ForwardRefExoticComponent<Omit<SliderProps, "ref"> & react.RefAttributes<HTMLInputElement>>;
+
+interface NumberFieldProps extends Omit<ComponentProps<"input">, "type" | "value" | "defaultValue" | "onChange"> {
+    value?: number;
+    defaultValue?: number;
+    onChange?: (value: number) => void;
+    step?: number;
+    min?: number;
+    max?: number;
+}
+declare const NumberField: react.ForwardRefExoticComponent<Omit<NumberFieldProps, "ref"> & react.RefAttributes<HTMLInputElement>>;
 
 interface ToggleProps extends Omit<ComponentProps<"button">, "onChange"> {
     pressed?: boolean;
@@ -621,4 +678,4 @@ declare function useEscapeKey(onClose: (() => void) | undefined, active: boolean
 declare function useOutsideClick(ref: React.RefObject<HTMLElement | null>, onClose: (() => void) | undefined, active: boolean): void;
 declare function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean): void;
 
-export { Accordion, Alert, AlertDialog, type AlertVariant, AspectRatio, type AspectRatio$1 as AspectRatioType, Avatar, AvatarGroup, Badge, type BadgeVariant, BottomNav, Breadcrumbs, Button, ButtonGroup, type ButtonVariant, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, Chip, type ChipColor, Collapsible, CommandPalette, Container, type ContainerSize, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, type GapToken, Grid, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Modal, NavMenu, Navbar, Pagination, Popover, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, type Size, Skeleton, type SkeletonVariant, Slider, Spinner, Stack, StatCard, Stepper, Surface, type SurfaceVariant, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };
+export { Accordion, Alert, AlertDialog, type AlertVariant, AspectRatio, type AspectRatio$1 as AspectRatioType, Avatar, AvatarGroup, Badge, type BadgeVariant, BottomNav, Breadcrumbs, Button, ButtonGroup, type ButtonVariant, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, CheckboxGroup, Chip, type ChipColor, Collapsible, CommandPalette, Container, type ContainerSize, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, type GapToken, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, type Size, Skeleton, type SkeletonVariant, Slider, Spinner, Stack, StatCard, Stepper, Surface, type SurfaceVariant, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };

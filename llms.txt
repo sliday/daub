@@ -6,11 +6,11 @@
 > JS: https://daub.dev/daub.js
 > Repo: https://github.com/sliday/daub
 > License: MIT
-> Components: 76
+> Components: 84
 > Theme Families: 20 (40 variants total)
 > Components JSON: https://daub.dev/components.json
 > TypeScript: https://daub.dev/daub.d.ts
-> React: npm install daub-react daub-ui (72 typed JSX components)
+> React: npm install daub-react daub-ui (80 typed JSX components)
 
 ## Quick Start
 
@@ -118,7 +118,7 @@ Required HTML nesting for overlay and complex components. Use these as a startin
 - `db-field__input` goes on wrapper elements — not just `<input>` tags
 - Icons: DAUB pairs well with [Lucide](https://unpkg.com/lucide@latest) — all demos use Lucide icons
 
-## Components (76)
+## Components (84)
 
 ### 1. Button — `.db-btn`
 Variants: `db-btn--primary`, `db-btn--secondary`, `db-btn--ghost`
@@ -1346,7 +1346,7 @@ Wrap the canvas inside `db-chart-card` for consistent card framing:
 
 ## React Integration (daub-react)
 
-72 typed JSX components wrapping DAUB's CSS classes. Full TypeScript, IDE autocomplete, forwardRef on all components.
+80 typed JSX components wrapping DAUB's CSS classes. Full TypeScript, IDE autocomplete, forwardRef on all components.
 
 ```bash
 npm install daub-react daub-ui
@@ -1369,11 +1369,87 @@ function App() {
 }
 ```
 
-Components: Stack, Grid, Surface, Container, Separator, ScrollArea, AspectRatio, Card, Badge, Avatar, AvatarGroup, Alert, Progress, Skeleton, EmptyState, Spinner, StatCard, ChartCard, Chart, Image, Button, ButtonGroup, Input, Textarea, Field, InputGroup, InputIcon, Search, Select, Label, Kbd, Prose, List, Table, DataTable, Chip, Breadcrumbs, Pagination, NavMenu, BottomNav, Stepper, Navbar, HoverCard, ThemeProvider, Checkbox, Radio, RadioGroup, Switch, Slider, Toggle, ToggleGroup, InputOTP, Tabs, Accordion, Collapsible, CustomSelect, Calendar, DatePicker, Carousel, Modal, AlertDialog, Sheet, Drawer, Tooltip, Popover, DropdownMenu, ContextMenu, CommandPalette, Toast, ToastProvider.
+Components: Stack, Grid, Surface, Container, Separator, ScrollArea, AspectRatio, Frame, Group, Toolbar, Card, Badge, Avatar, AvatarGroup, Alert, Progress, Meter, Skeleton, EmptyState, Spinner, StatCard, ChartCard, PreviewCard, Chart, Image, Button, ButtonGroup, Input, Textarea, Field, Fieldset, InputGroup, InputIcon, Search, Select, Label, Kbd, Prose, List, Table, DataTable, Chip, Breadcrumbs, Pagination, NavMenu, BottomNav, Stepper, Navbar, HoverCard, ThemeProvider, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Slider, NumberField, Toggle, ToggleGroup, InputOTP, Tabs, Accordion, Collapsible, CustomSelect, Calendar, DatePicker, Carousel, Modal, AlertDialog, Sheet, Drawer, Tooltip, Popover, DropdownMenu, ContextMenu, CommandPalette, Toast, ToastProvider.
 
 Hooks: useControllable, useToast, useEscapeKey, useOutsideClick, useFocusTrap.
 
 npm: https://www.npmjs.com/package/daub-react
+
+## COSS Particle Coverage Additions
+
+### Checkbox Group
+```html
+<div class="db-checkbox-group" role="group" aria-labelledby="topics-label">
+  <span class="db-checkbox-group__label" id="topics-label">Topics</span>
+  <label class="db-checkbox"><input class="db-checkbox__input" type="checkbox"><span class="db-checkbox__box"></span><span>Design</span></label>
+  <span class="db-checkbox-group__helper">Choose all that apply.</span>
+</div>
+```
+
+### Fieldset
+```html
+<fieldset class="db-fieldset">
+  <legend class="db-fieldset__legend">Profile</legend>
+  <div class="db-fieldset__content">
+    <label class="db-field"><span class="db-field__label">Name</span><input class="db-field__input" type="text"></label>
+  </div>
+</fieldset>
+```
+
+### Frame
+```html
+<div class="db-frame">
+  <div class="db-frame__header">Preview</div>
+  <div class="db-frame__body">Framed content</div>
+</div>
+```
+
+### Group
+```html
+<div class="db-group db-group--attached" role="group" aria-label="Alignment">
+  <button class="db-btn db-btn--secondary">Left</button>
+  <button class="db-btn db-btn--secondary">Right</button>
+</div>
+```
+
+### Meter
+```html
+<div class="db-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72" style="--db-meter:72%">
+  <div class="db-meter__bar"></div>
+</div>
+```
+
+### Number Field
+```html
+<div class="db-number-field" role="group" aria-label="Quantity">
+  <button class="db-btn db-btn--secondary db-number-field__btn" type="button" aria-label="Decrease">-</button>
+  <input class="db-input" type="number" value="3" min="0" aria-label="Quantity">
+  <button class="db-btn db-btn--secondary db-number-field__btn" type="button" aria-label="Increase">+</button>
+</div>
+```
+
+### Preview Card
+```html
+<span class="db-preview-card">
+  <button class="db-btn db-btn--ghost db-preview-card__trigger">Account</button>
+  <span class="db-preview-card__content">
+    <strong class="db-preview-card__title">Ada Lovelace</strong>
+    <span class="db-preview-card__desc">Workspace owner and billing contact.</span>
+  </span>
+</span>
+```
+
+### Toolbar
+```html
+<div class="db-toolbar" role="toolbar" aria-label="Editor tools">
+  <div class="db-toolbar__group">
+    <button class="db-btn db-btn--icon" aria-label="Bold">B</button>
+    <button class="db-btn db-btn--icon" aria-label="Italic">I</button>
+  </div>
+  <span class="db-toolbar__separator" aria-hidden="true"></span>
+  <button class="db-btn db-btn--secondary">Save</button>
+</div>
+```
 
 ## Design Intelligence (v3.19.11)
 

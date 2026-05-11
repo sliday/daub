@@ -138,6 +138,50 @@ var AspectRatio = forwardRef(
   )
 );
 AspectRatio.displayName = "AspectRatio";
+var Frame = forwardRef(
+  ({ header, footer, flush, className, children, ...props }, ref) => /* @__PURE__ */ jsxs(
+    "div",
+    {
+      ref,
+      className: cn("db-frame", flush && "db-frame--flush", className),
+      ...props,
+      children: [
+        header && /* @__PURE__ */ jsx("div", { className: "db-frame__header", children: header }),
+        /* @__PURE__ */ jsx("div", { className: "db-frame__body", children }),
+        footer && /* @__PURE__ */ jsx("div", { className: "db-frame__footer", children: footer })
+      ]
+    }
+  )
+);
+Frame.displayName = "Frame";
+var Group = forwardRef(
+  ({ attached, vertical, className, ...props }, ref) => /* @__PURE__ */ jsx(
+    "div",
+    {
+      ref,
+      className: cn(
+        "db-group",
+        attached && "db-group--attached",
+        vertical && "db-group--vertical",
+        className
+      ),
+      ...props
+    }
+  )
+);
+Group.displayName = "Group";
+var Toolbar = forwardRef(
+  ({ vertical, className, ...props }, ref) => /* @__PURE__ */ jsx(
+    "div",
+    {
+      ref,
+      className: cn("db-toolbar", vertical && "db-toolbar--vertical", className),
+      role: "toolbar",
+      ...props
+    }
+  )
+);
+Toolbar.displayName = "Toolbar";
 var Card = forwardRef(
   ({ title, description, media, footer, clip, interactive, className, children, ...props }, ref) => /* @__PURE__ */ jsxs(
     "div",
@@ -234,6 +278,31 @@ var Progress = forwardRef(
   )
 );
 Progress.displayName = "Progress";
+var Meter = forwardRef(
+  ({ value = 0, min = 0, max = 100, status = "success", className, style, ...props }, ref) => {
+    const range = max - min || 1;
+    const pct = Math.min(100, Math.max(0, (value - min) / range * 100));
+    return /* @__PURE__ */ jsx(
+      "div",
+      {
+        ref,
+        className: cn(
+          "db-meter",
+          status !== "success" && `db-meter--${status}`,
+          className
+        ),
+        role: "meter",
+        "aria-valuemin": min,
+        "aria-valuemax": max,
+        "aria-valuenow": value,
+        style: { "--db-meter": `${pct}%`, ...style },
+        ...props,
+        children: /* @__PURE__ */ jsx("div", { className: "db-meter__bar" })
+      }
+    );
+  }
+);
+Meter.displayName = "Meter";
 var Skeleton = forwardRef(
   ({ variant, lines = 1, className, ...props }, ref) => {
     const classes = cn(
@@ -314,6 +383,18 @@ var ChartCard = forwardRef(
   )
 );
 ChartCard.displayName = "ChartCard";
+var PreviewCard = forwardRef(
+  ({ trigger, title, description, media, className, children, ...props }, ref) => /* @__PURE__ */ jsxs("div", { ref, className: cn("db-preview-card", className), ...props, children: [
+    /* @__PURE__ */ jsx("span", { className: "db-preview-card__trigger", children: trigger }),
+    /* @__PURE__ */ jsxs("div", { className: "db-preview-card__content", children: [
+      media && /* @__PURE__ */ jsx("div", { className: "db-preview-card__media", children: media }),
+      title && /* @__PURE__ */ jsx("div", { className: "db-preview-card__title", children: title }),
+      description && /* @__PURE__ */ jsx("div", { className: "db-preview-card__desc", children: description }),
+      children
+    ] })
+  ] })
+);
+PreviewCard.displayName = "PreviewCard";
 var Image = forwardRef(
   ({ className, ...props }, ref) => /* @__PURE__ */ jsx(
     "img",
@@ -418,6 +499,14 @@ var Field = forwardRef(
   }
 );
 Field.displayName = "Field";
+var Fieldset = forwardRef(
+  ({ legend, helper, className, children, ...props }, ref) => /* @__PURE__ */ jsxs("fieldset", { ref, className: cn("db-fieldset", className), ...props, children: [
+    legend && /* @__PURE__ */ jsx("legend", { className: "db-fieldset__legend", children: legend }),
+    /* @__PURE__ */ jsx("div", { className: "db-fieldset__content", children }),
+    helper && /* @__PURE__ */ jsx("span", { className: "db-fieldset__helper", children: helper })
+  ] })
+);
+Fieldset.displayName = "Fieldset";
 var InputGroup = forwardRef(
   ({ addonBefore, addonAfter, className, children, ...props }, ref) => /* @__PURE__ */ jsxs("div", { ref, className: cn("db-input-group", className), ...props, children: [
     addonBefore && /* @__PURE__ */ jsx("span", { className: "db-input-group__addon", children: addonBefore }),
@@ -1046,6 +1135,23 @@ var Checkbox = forwardRef(
   }
 );
 Checkbox.displayName = "Checkbox";
+var CheckboxGroup = forwardRef(
+  ({ label, helper, inline, className, children, ...props }, ref) => /* @__PURE__ */ jsxs(
+    "div",
+    {
+      ref,
+      className: cn("db-checkbox-group", inline && "db-checkbox-group--inline", className),
+      role: "group",
+      ...props,
+      children: [
+        label && /* @__PURE__ */ jsx("span", { className: "db-checkbox-group__label", children: label }),
+        children,
+        helper && /* @__PURE__ */ jsx("span", { className: "db-checkbox-group__helper", children: helper })
+      ]
+    }
+  )
+);
+CheckboxGroup.displayName = "CheckboxGroup";
 var Radio = forwardRef(
   ({ checked, defaultChecked, onChange, label, name, value, className, ...props }, ref) => {
     const [on, setOn] = useControllable(checked, defaultChecked ?? false, onChange);
@@ -1140,6 +1246,51 @@ var Slider = forwardRef(
   }
 );
 Slider.displayName = "Slider";
+var NumberField = forwardRef(
+  ({ value, defaultValue, onChange, step = 1, min, max, className, "aria-label": ariaLabel, ...props }, ref) => {
+    const [val, setVal] = useControllable(value, defaultValue ?? min ?? 0, onChange);
+    const clamp = (next) => Math.min(max ?? next, Math.max(min ?? next, next));
+    const update = (next) => setVal(clamp(next));
+    return /* @__PURE__ */ jsxs("div", { className: cn("db-number-field", className), role: "group", children: [
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          className: "db-btn db-btn--secondary db-number-field__btn",
+          onClick: () => update(val - step),
+          "aria-label": "Decrease",
+          children: "-"
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        "input",
+        {
+          ref,
+          type: "number",
+          className: "db-input",
+          value: val,
+          min,
+          max,
+          step,
+          "aria-label": ariaLabel ?? "Value",
+          onChange: (event) => update(Number(event.target.value)),
+          ...props
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          className: "db-btn db-btn--secondary db-number-field__btn",
+          onClick: () => update(val + step),
+          "aria-label": "Increase",
+          children: "+"
+        }
+      )
+    ] });
+  }
+);
+NumberField.displayName = "NumberField";
 var Toggle = forwardRef(
   ({ pressed, defaultPressed, onChange, size, className, children, ...props }, ref) => {
     const [on, setOn] = useControllable(pressed, defaultPressed ?? false, onChange);
@@ -1662,6 +1813,6 @@ function CommandPalette({
 }
 CommandPalette.displayName = "CommandPalette";
 
-export { Accordion, Alert, AlertDialog, AspectRatio, Avatar, AvatarGroup, Badge, BottomNav, Breadcrumbs, Button, ButtonGroup, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, Chip, Collapsible, CommandPalette, Container, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Grid, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Modal, NavMenu, Navbar, Pagination, Popover, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, Skeleton, Slider, Spinner, Stack, StatCard, Stepper, Surface, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };
+export { Accordion, Alert, AlertDialog, AspectRatio, Avatar, AvatarGroup, Badge, BottomNav, Breadcrumbs, Button, ButtonGroup, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, CheckboxGroup, Chip, Collapsible, CommandPalette, Container, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, Skeleton, Slider, Spinner, Stack, StatCard, Stepper, Surface, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };
 //# sourceMappingURL=index.mjs.map
 //# sourceMappingURL=index.mjs.map
