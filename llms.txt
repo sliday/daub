@@ -1,6 +1,6 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 3.19.11
+> Version: 3.19.12
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
@@ -1451,7 +1451,7 @@ npm: https://www.npmjs.com/package/daub-react
 </div>
 ```
 
-## Design Intelligence (v3.19.11)
+## Design Intelligence (v3.19.12)
 
 DAUB's MCP server and generation pipeline include industry-aware design intelligence that automatically adapts the system prompt based on prompt content.
 

@@ -20,7 +20,7 @@
       "keys",
       "page"
     ],
-    "screenshot": "app-specific/api-keys-page-01.png"
+    "screenshot": "thumbs/app-specific/api-keys-page-01.webp"
   },
   {
     "id": "billing-page-01",
@@ -44,7 +44,7 @@
       "billing",
       "page"
     ],
-    "screenshot": "app-specific/billing-page-01.png"
+    "screenshot": "thumbs/app-specific/billing-page-01.webp"
   },
   {
     "id": "changelog-page-01",
@@ -66,7 +66,7 @@
       "changelog",
       "page"
     ],
-    "screenshot": "app-specific/changelog-page-01.png"
+    "screenshot": "thumbs/app-specific/changelog-page-01.webp"
   },
   {
     "id": "onboarding-tour-01",
@@ -88,7 +88,7 @@
       "onboarding",
       "tour"
     ],
-    "screenshot": "app-specific/onboarding-tour-01.png"
+    "screenshot": "thumbs/app-specific/onboarding-tour-01.webp"
   },
   {
     "id": "profile-page-01",
@@ -114,7 +114,7 @@
       "profile",
       "page"
     ],
-    "screenshot": "app-specific/profile-page-01.png"
+    "screenshot": "thumbs/app-specific/profile-page-01.webp"
   },
   {
     "id": "settings-page-01",
@@ -139,7 +139,7 @@
       "settings",
       "page"
     ],
-    "screenshot": "app-specific/settings-page-01.png"
+    "screenshot": "thumbs/app-specific/settings-page-01.webp"
   },
   {
     "id": "auth-page-01",
@@ -166,7 +166,7 @@
       "Field",
       "Switch"
     ],
-    "screenshot": "auth/auth-page-01.png"
+    "screenshot": "thumbs/auth/auth-page-01.webp"
   },
   {
     "id": "forgot-password-01",
@@ -191,7 +191,7 @@
       "forgot",
       "password"
     ],
-    "screenshot": "auth/forgot-password-01.png"
+    "screenshot": "thumbs/auth/forgot-password-01.webp"
   },
   {
     "id": "login-form-01",
@@ -216,7 +216,7 @@
       "login",
       "form"
     ],
-    "screenshot": "auth/login-form-01.png"
+    "screenshot": "thumbs/auth/login-form-01.webp"
   },
   {
     "id": "register-form-01",
@@ -242,7 +242,7 @@
       "register",
       "form"
     ],
-    "screenshot": "auth/register-form-01.png"
+    "screenshot": "thumbs/auth/register-form-01.webp"
   },
   {
     "id": "reset-password-01",
@@ -267,7 +267,7 @@
       "reset",
       "password"
     ],
-    "screenshot": "auth/reset-password-01.png"
+    "screenshot": "thumbs/auth/reset-password-01.webp"
   },
   {
     "id": "social-login-01",
@@ -291,7 +291,7 @@
       "social",
       "login"
     ],
-    "screenshot": "auth/social-login-01.png"
+    "screenshot": "thumbs/auth/social-login-01.webp"
   },
   {
     "id": "two-factor-01",
@@ -315,7 +315,7 @@
       "two",
       "factor"
     ],
-    "screenshot": "auth/two-factor-01.png"
+    "screenshot": "thumbs/auth/two-factor-01.webp"
   },
   {
     "id": "banner-bottom-sticky-01",
@@ -338,7 +338,7 @@
       "bottom",
       "sticky"
     ],
-    "screenshot": "banners/banner-bottom-sticky-01.png"
+    "screenshot": "thumbs/banners/banner-bottom-sticky-01.webp"
   },
   {
     "id": "banner-inline-01",
@@ -362,7 +362,7 @@
       "banner",
       "inline"
     ],
-    "screenshot": "banners/banner-inline-01.png"
+    "screenshot": "thumbs/banners/banner-inline-01.webp"
   },
   {
     "id": "banner-top-01",
@@ -384,7 +384,7 @@
       "banner",
       "top"
     ],
-    "screenshot": "banners/banner-top-01.png"
+    "screenshot": "thumbs/banners/banner-top-01.webp"
   },
   {
     "id": "blog-featured-01",
@@ -408,7 +408,7 @@
       "blog",
       "featured"
     ],
-    "screenshot": "blog/blog-featured-01.png"
+    "screenshot": "thumbs/blog/blog-featured-01.webp"
   },
   {
     "id": "blog-grid-01",
@@ -431,7 +431,7 @@
       "blog",
       "grid"
     ],
-    "screenshot": "blog/blog-grid-01.png"
+    "screenshot": "thumbs/blog/blog-grid-01.webp"
   },
   {
     "id": "blog-list-01",
@@ -453,7 +453,7 @@
       "blog",
       "list"
     ],
-    "screenshot": "blog/blog-list-01.png"
+    "screenshot": "thumbs/blog/blog-list-01.webp"
   },
   {
     "id": "blog-newsletter-01",
@@ -479,7 +479,7 @@
       "blog",
       "newsletter"
     ],
-    "screenshot": "blog/blog-newsletter-01.png"
+    "screenshot": "thumbs/blog/blog-newsletter-01.webp"
   },
   {
     "id": "blog-post-header-01",
@@ -505,7 +505,7 @@
       "post",
       "header"
     ],
-    "screenshot": "blog/blog-post-header-01.png"
+    "screenshot": "thumbs/blog/blog-post-header-01.webp"
   },
   {
     "id": "blog-sidebar-01",
@@ -531,7 +531,7 @@
       "blog",
       "sidebar"
     ],
-    "screenshot": "blog/blog-sidebar-01.png"
+    "screenshot": "thumbs/blog/blog-sidebar-01.webp"
   },
   {
     "id": "before-after-01",
@@ -555,7 +555,7 @@
       "before",
       "after"
     ],
-    "screenshot": "comparison/before-after-01.png"
+    "screenshot": "thumbs/comparison/before-after-01.webp"
   },
   {
     "id": "comparison-table-01",
@@ -575,7 +575,7 @@
       "comparison",
       "table"
     ],
-    "screenshot": "comparison/comparison-table-01.png"
+    "screenshot": "thumbs/comparison/comparison-table-01.webp"
   },
   {
     "id": "vs-layout-01",
@@ -600,7 +600,7 @@
       "vs",
       "layout"
     ],
-    "screenshot": "comparison/vs-layout-01.png"
+    "screenshot": "thumbs/comparison/vs-layout-01.webp"
   },
   {
     "id": "contact-form-simple-01",
@@ -626,7 +626,7 @@
       "form",
       "simple"
     ],
-    "screenshot": "contact/contact-form-simple-01.png"
+    "screenshot": "thumbs/contact/contact-form-simple-01.webp"
   },
   {
     "id": "contact-info-01",
@@ -648,7 +648,7 @@
       "contact",
       "info"
     ],
-    "screenshot": "contact/contact-info-01.png"
+    "screenshot": "thumbs/contact/contact-info-01.webp"
   },
   {
     "id": "contact-offices-01",
@@ -670,7 +670,7 @@
       "contact",
       "offices"
     ],
-    "screenshot": "contact/contact-offices-01.png"
+    "screenshot": "thumbs/contact/contact-offices-01.webp"
   },
   {
     "id": "contact-split-01",
@@ -696,7 +696,7 @@
       "contact",
       "split"
     ],
-    "screenshot": "contact/contact-split-01.png"
+    "screenshot": "thumbs/contact/contact-split-01.webp"
   },
   {
     "id": "contact-with-map-01",
@@ -723,7 +723,7 @@
       "with",
       "map"
     ],
-    "screenshot": "contact/contact-with-map-01.png"
+    "screenshot": "thumbs/contact/contact-with-map-01.webp"
   },
   {
     "id": "content-numbered-steps-01",
@@ -746,7 +746,7 @@
       "numbered",
       "steps"
     ],
-    "screenshot": "content/content-numbered-steps-01.png"
+    "screenshot": "thumbs/content/content-numbered-steps-01.webp"
   },
   {
     "id": "content-quote-highlight-01",
@@ -770,7 +770,7 @@
       "quote",
       "highlight"
     ],
-    "screenshot": "content/content-quote-highlight-01.png"
+    "screenshot": "thumbs/content/content-quote-highlight-01.webp"
   },
   {
     "id": "content-section-01",
@@ -792,7 +792,7 @@
       "content",
       "section"
     ],
-    "screenshot": "content/content-section-01.png"
+    "screenshot": "thumbs/content/content-section-01.webp"
   },
   {
     "id": "content-split-01",
@@ -814,7 +814,7 @@
       "content",
       "split"
     ],
-    "screenshot": "content/content-split-01.png"
+    "screenshot": "thumbs/content/content-split-01.webp"
   },
   {
     "id": "content-video-embed-01",
@@ -840,7 +840,7 @@
       "video",
       "embed"
     ],
-    "screenshot": "content/content-video-embed-01.png"
+    "screenshot": "thumbs/content/content-video-embed-01.webp"
   },
   {
     "id": "content-with-image-01",
@@ -864,7 +864,7 @@
       "with",
       "image"
     ],
-    "screenshot": "content/content-with-image-01.png"
+    "screenshot": "thumbs/content/content-with-image-01.webp"
   },
   {
     "id": "cta-banner-01",
@@ -885,7 +885,7 @@
       "cta",
       "banner"
     ],
-    "screenshot": "cta/cta-banner-01.png"
+    "screenshot": "thumbs/cta/cta-banner-01.webp"
   },
   {
     "id": "cta-download-01",
@@ -908,7 +908,7 @@
       "cta",
       "download"
     ],
-    "screenshot": "cta/cta-download-01.png"
+    "screenshot": "thumbs/cta/cta-download-01.webp"
   },
   {
     "id": "cta-floating-01",
@@ -930,7 +930,7 @@
       "cta",
       "floating"
     ],
-    "screenshot": "cta/cta-floating-01.png"
+    "screenshot": "thumbs/cta/cta-floating-01.webp"
   },
   {
     "id": "cta-simple-01",
@@ -951,7 +951,7 @@
       "cta",
       "simple"
     ],
-    "screenshot": "cta/cta-simple-01.png"
+    "screenshot": "thumbs/cta/cta-simple-01.webp"
   },
   {
     "id": "cta-split-01",
@@ -975,7 +975,7 @@
       "cta",
       "split"
     ],
-    "screenshot": "cta/cta-split-01.png"
+    "screenshot": "thumbs/cta/cta-split-01.webp"
   },
   {
     "id": "cta-with-form-01",
@@ -1000,7 +1000,7 @@
       "with",
       "form"
     ],
-    "screenshot": "cta/cta-with-form-01.png"
+    "screenshot": "thumbs/cta/cta-with-form-01.webp"
   },
   {
     "id": "activity-feed-01",
@@ -1021,7 +1021,7 @@
       "activity",
       "feed"
     ],
-    "screenshot": "dashboard/activity-feed-01.png"
+    "screenshot": "thumbs/dashboard/activity-feed-01.webp"
   },
   {
     "id": "chart-panel-01",
@@ -1049,7 +1049,7 @@
       "Separator",
       "List"
     ],
-    "screenshot": "dashboard/chart-panel-01.png"
+    "screenshot": "thumbs/dashboard/chart-panel-01.webp"
   },
   {
     "id": "chart-section-01",
@@ -1068,7 +1068,7 @@
       "chart",
       "section"
     ],
-    "screenshot": "dashboard/chart-section-01.png"
+    "screenshot": "thumbs/dashboard/chart-section-01.webp"
   },
   {
     "id": "dashboard-header-01",
@@ -1089,7 +1089,7 @@
       "dashboard",
       "header"
     ],
-    "screenshot": "dashboard/dashboard-header-01.png"
+    "screenshot": "thumbs/dashboard/dashboard-header-01.webp"
   },
   {
     "id": "data-table-01",
@@ -1113,7 +1113,7 @@
       "DataTable",
       "Pagination"
     ],
-    "screenshot": "dashboard/data-table-01.png"
+    "screenshot": "thumbs/dashboard/data-table-01.webp"
   },
   {
     "id": "header-01",
@@ -1139,7 +1139,7 @@
       "dashboard",
       "header"
     ],
-    "screenshot": "dashboard/header-01.png"
+    "screenshot": "thumbs/dashboard/header-01.webp"
   },
   {
     "id": "kanban-board-01",
@@ -1161,7 +1161,7 @@
       "kanban",
       "board"
     ],
-    "screenshot": "dashboard/kanban-board-01.png"
+    "screenshot": "thumbs/dashboard/kanban-board-01.webp"
   },
   {
     "id": "notification-panel-01",
@@ -1183,7 +1183,7 @@
       "notification",
       "panel"
     ],
-    "screenshot": "dashboard/notification-panel-01.png"
+    "screenshot": "thumbs/dashboard/notification-panel-01.webp"
   },
   {
     "id": "sidebar-layout-01",
@@ -1213,7 +1213,7 @@
       "sidebar",
       "layout"
     ],
-    "screenshot": "dashboard/sidebar-layout-01.png"
+    "screenshot": "thumbs/dashboard/sidebar-layout-01.webp"
   },
   {
     "id": "stats-cards-row-01",
@@ -1233,7 +1233,7 @@
       "cards",
       "row"
     ],
-    "screenshot": "dashboard/stats-cards-row-01.png"
+    "screenshot": "thumbs/dashboard/stats-cards-row-01.webp"
   },
   {
     "id": "stats-row-01",
@@ -1253,7 +1253,7 @@
       "Text",
       "Separator"
     ],
-    "screenshot": "dashboard/stats-row-01.png"
+    "screenshot": "thumbs/dashboard/stats-row-01.webp"
   },
   {
     "id": "empty-state-01",
@@ -1273,7 +1273,7 @@
       "EmptyState",
       "Button"
     ],
-    "screenshot": "data-display/empty-state-01.png"
+    "screenshot": "thumbs/data-display/empty-state-01.webp"
   },
   {
     "id": "notification-center-01",
@@ -1294,7 +1294,7 @@
       "Button",
       "List"
     ],
-    "screenshot": "data-display/notification-center-01.png"
+    "screenshot": "thumbs/data-display/notification-center-01.webp"
   },
   {
     "id": "profile-01",
@@ -1319,7 +1319,7 @@
       "Tabs",
       "List"
     ],
-    "screenshot": "data-display/profile-01.png"
+    "screenshot": "thumbs/data-display/profile-01.webp"
   },
   {
     "id": "category-grid-01",
@@ -1342,7 +1342,7 @@
       "category",
       "grid"
     ],
-    "screenshot": "ecommerce/category-grid-01.png"
+    "screenshot": "thumbs/ecommerce/category-grid-01.webp"
   },
   {
     "id": "checkout-form-01",
@@ -1370,7 +1370,7 @@
       "checkout",
       "form"
     ],
-    "screenshot": "ecommerce/checkout-form-01.png"
+    "screenshot": "thumbs/ecommerce/checkout-form-01.webp"
   },
   {
     "id": "order-summary-01",
@@ -1396,7 +1396,7 @@
       "DataTable",
       "Button"
     ],
-    "screenshot": "ecommerce/order-summary-01.png"
+    "screenshot": "thumbs/ecommerce/order-summary-01.webp"
   },
   {
     "id": "product-card-01",
@@ -1422,7 +1422,7 @@
       "product",
       "card"
     ],
-    "screenshot": "ecommerce/product-card-01.png"
+    "screenshot": "thumbs/ecommerce/product-card-01.webp"
   },
   {
     "id": "product-carousel-01",
@@ -1448,7 +1448,7 @@
       "product",
       "carousel"
     ],
-    "screenshot": "ecommerce/product-carousel-01.png"
+    "screenshot": "thumbs/ecommerce/product-carousel-01.webp"
   },
   {
     "id": "product-detail-01",
@@ -1478,7 +1478,7 @@
       "product",
       "detail"
     ],
-    "screenshot": "ecommerce/product-detail-01.png"
+    "screenshot": "thumbs/ecommerce/product-detail-01.webp"
   },
   {
     "id": "product-grid-01",
@@ -1503,7 +1503,7 @@
       "Card",
       "Button"
     ],
-    "screenshot": "ecommerce/product-grid-01.png"
+    "screenshot": "thumbs/ecommerce/product-grid-01.webp"
   },
   {
     "id": "shopping-cart-01",
@@ -1529,7 +1529,7 @@
       "shopping",
       "cart"
     ],
-    "screenshot": "ecommerce/shopping-cart-01.png"
+    "screenshot": "thumbs/ecommerce/shopping-cart-01.webp"
   },
   {
     "id": "wishlist-01",
@@ -1553,7 +1553,7 @@
       "ecommerce",
       "wishlist"
     ],
-    "screenshot": "ecommerce/wishlist-01.png"
+    "screenshot": "thumbs/ecommerce/wishlist-01.webp"
   },
   {
     "id": "404-page-01",
@@ -1576,7 +1576,7 @@
       "404",
       "page"
     ],
-    "screenshot": "error-pages/404-page-01.png"
+    "screenshot": "thumbs/error-pages/404-page-01.webp"
   },
   {
     "id": "500-page-01",
@@ -1600,7 +1600,7 @@
       "500",
       "page"
     ],
-    "screenshot": "error-pages/500-page-01.png"
+    "screenshot": "thumbs/error-pages/500-page-01.webp"
   },
   {
     "id": "coming-soon-01",
@@ -1627,7 +1627,7 @@
       "coming",
       "soon"
     ],
-    "screenshot": "error-pages/coming-soon-01.png"
+    "screenshot": "thumbs/error-pages/coming-soon-01.webp"
   },
   {
     "id": "maintenance-page-01",
@@ -1651,7 +1651,7 @@
       "maintenance",
       "page"
     ],
-    "screenshot": "error-pages/maintenance-page-01.png"
+    "screenshot": "thumbs/error-pages/maintenance-page-01.webp"
   },
   {
     "id": "event-countdown-01",
@@ -1675,7 +1675,7 @@
       "event",
       "countdown"
     ],
-    "screenshot": "event-schedule/event-countdown-01.png"
+    "screenshot": "thumbs/event-schedule/event-countdown-01.webp"
   },
   {
     "id": "schedule-tabs-01",
@@ -1696,7 +1696,7 @@
       "schedule",
       "tabs"
     ],
-    "screenshot": "event-schedule/schedule-tabs-01.png"
+    "screenshot": "thumbs/event-schedule/schedule-tabs-01.webp"
   },
   {
     "id": "speaker-grid-01",
@@ -1719,7 +1719,7 @@
       "speaker",
       "grid"
     ],
-    "screenshot": "event-schedule/speaker-grid-01.png"
+    "screenshot": "thumbs/event-schedule/speaker-grid-01.webp"
   },
   {
     "id": "faq-accordion-01",
@@ -1739,7 +1739,7 @@
       "faq",
       "accordion"
     ],
-    "screenshot": "faq/faq-accordion-01.png"
+    "screenshot": "thumbs/faq/faq-accordion-01.webp"
   },
   {
     "id": "faq-grid-01",
@@ -1760,7 +1760,7 @@
       "faq",
       "grid"
     ],
-    "screenshot": "faq/faq-grid-01.png"
+    "screenshot": "thumbs/faq/faq-grid-01.webp"
   },
   {
     "id": "faq-simple-01",
@@ -1780,7 +1780,7 @@
       "faq",
       "simple"
     ],
-    "screenshot": "faq/faq-simple-01.png"
+    "screenshot": "thumbs/faq/faq-simple-01.webp"
   },
   {
     "id": "faq-with-sidebar-01",
@@ -1805,7 +1805,7 @@
       "with",
       "sidebar"
     ],
-    "screenshot": "faq/faq-with-sidebar-01.png"
+    "screenshot": "thumbs/faq/faq-with-sidebar-01.webp"
   },
   {
     "id": "feature-alternating-01",
@@ -1827,7 +1827,7 @@
       "feature",
       "alternating"
     ],
-    "screenshot": "features/feature-alternating-01.png"
+    "screenshot": "thumbs/features/feature-alternating-01.webp"
   },
   {
     "id": "feature-bento-01",
@@ -1850,7 +1850,7 @@
       "feature",
       "bento"
     ],
-    "screenshot": "features/feature-bento-01.png"
+    "screenshot": "thumbs/features/feature-bento-01.webp"
   },
   {
     "id": "feature-centered-01",
@@ -1872,7 +1872,7 @@
       "feature",
       "centered"
     ],
-    "screenshot": "features/feature-centered-01.png"
+    "screenshot": "thumbs/features/feature-centered-01.webp"
   },
   {
     "id": "feature-comparison-01",
@@ -1896,7 +1896,7 @@
       "feature",
       "comparison"
     ],
-    "screenshot": "features/feature-comparison-01.png"
+    "screenshot": "thumbs/features/feature-comparison-01.webp"
   },
   {
     "id": "feature-grid-01",
@@ -1918,7 +1918,7 @@
       "feature",
       "grid"
     ],
-    "screenshot": "features/feature-grid-01.png"
+    "screenshot": "thumbs/features/feature-grid-01.webp"
   },
   {
     "id": "feature-icon-grid-01",
@@ -1939,7 +1939,7 @@
       "icon",
       "grid"
     ],
-    "screenshot": "features/feature-icon-grid-01.png"
+    "screenshot": "thumbs/features/feature-icon-grid-01.webp"
   },
   {
     "id": "feature-list-01",
@@ -1959,7 +1959,7 @@
       "feature",
       "list"
     ],
-    "screenshot": "features/feature-list-01.png"
+    "screenshot": "thumbs/features/feature-list-01.webp"
   },
   {
     "id": "feature-tabs-01",
@@ -1981,7 +1981,7 @@
       "feature",
       "tabs"
     ],
-    "screenshot": "features/feature-tabs-01.png"
+    "screenshot": "thumbs/features/feature-tabs-01.webp"
   },
   {
     "id": "feature-with-code-01",
@@ -2006,7 +2006,7 @@
       "with",
       "code"
     ],
-    "screenshot": "features/feature-with-code-01.png"
+    "screenshot": "thumbs/features/feature-with-code-01.webp"
   },
   {
     "id": "footer-columns-01",
@@ -2030,7 +2030,7 @@
       "footer",
       "columns"
     ],
-    "screenshot": "footer/footer-columns-01.png"
+    "screenshot": "thumbs/footer/footer-columns-01.webp"
   },
   {
     "id": "footer-mega-01",
@@ -2056,7 +2056,7 @@
       "footer",
       "mega"
     ],
-    "screenshot": "footer/footer-mega-01.png"
+    "screenshot": "thumbs/footer/footer-mega-01.webp"
   },
   {
     "id": "footer-minimal-01",
@@ -2077,7 +2077,7 @@
       "footer",
       "minimal"
     ],
-    "screenshot": "footer/footer-minimal-01.png"
+    "screenshot": "thumbs/footer/footer-minimal-01.webp"
   },
   {
     "id": "footer-simple-01",
@@ -2100,7 +2100,7 @@
       "footer",
       "simple"
     ],
-    "screenshot": "footer/footer-simple-01.png"
+    "screenshot": "thumbs/footer/footer-simple-01.webp"
   },
   {
     "id": "footer-with-cta-01",
@@ -2126,7 +2126,7 @@
       "with",
       "cta"
     ],
-    "screenshot": "footer/footer-with-cta-01.png"
+    "screenshot": "thumbs/footer/footer-with-cta-01.webp"
   },
   {
     "id": "checkout-01",
@@ -2150,7 +2150,7 @@
       "forms",
       "checkout"
     ],
-    "screenshot": "forms/checkout-01.png"
+    "screenshot": "thumbs/forms/checkout-01.webp"
   },
   {
     "id": "contact-01",
@@ -2173,7 +2173,7 @@
       "forms",
       "contact"
     ],
-    "screenshot": "forms/contact-01.png"
+    "screenshot": "thumbs/forms/contact-01.webp"
   },
   {
     "id": "file-upload-01",
@@ -2196,7 +2196,7 @@
       "file",
       "upload"
     ],
-    "screenshot": "forms/file-upload-01.png"
+    "screenshot": "thumbs/forms/file-upload-01.webp"
   },
   {
     "id": "form-inline-01",
@@ -2218,7 +2218,7 @@
       "form",
       "inline"
     ],
-    "screenshot": "forms/form-inline-01.png"
+    "screenshot": "thumbs/forms/form-inline-01.webp"
   },
   {
     "id": "form-multi-step-01",
@@ -2244,7 +2244,7 @@
       "multi",
       "step"
     ],
-    "screenshot": "forms/form-multi-step-01.png"
+    "screenshot": "thumbs/forms/form-multi-step-01.webp"
   },
   {
     "id": "form-stacked-01",
@@ -2270,7 +2270,7 @@
       "form",
       "stacked"
     ],
-    "screenshot": "forms/form-stacked-01.png"
+    "screenshot": "thumbs/forms/form-stacked-01.webp"
   },
   {
     "id": "form-with-sidebar-01",
@@ -2301,7 +2301,7 @@
       "with",
       "sidebar"
     ],
-    "screenshot": "forms/form-with-sidebar-01.png"
+    "screenshot": "thumbs/forms/form-with-sidebar-01.webp"
   },
   {
     "id": "login-01",
@@ -2324,7 +2324,7 @@
       "forms",
       "login"
     ],
-    "screenshot": "forms/login-01.png"
+    "screenshot": "thumbs/forms/login-01.webp"
   },
   {
     "id": "search-bar-01",
@@ -2347,7 +2347,7 @@
       "search",
       "bar"
     ],
-    "screenshot": "forms/search-bar-01.png"
+    "screenshot": "thumbs/forms/search-bar-01.webp"
   },
   {
     "id": "settings-01",
@@ -2371,7 +2371,7 @@
       "forms",
       "settings"
     ],
-    "screenshot": "forms/settings-01.png"
+    "screenshot": "thumbs/forms/settings-01.webp"
   },
   {
     "id": "settings-form-01",
@@ -2395,7 +2395,7 @@
       "settings",
       "form"
     ],
-    "screenshot": "forms/settings-form-01.png"
+    "screenshot": "thumbs/forms/settings-form-01.webp"
   },
   {
     "id": "signup-01",
@@ -2418,7 +2418,7 @@
       "forms",
       "signup"
     ],
-    "screenshot": "forms/signup-01.png"
+    "screenshot": "thumbs/forms/signup-01.webp"
   },
   {
     "id": "hero-centered-01",
@@ -2441,7 +2441,7 @@
       "hero",
       "centered"
     ],
-    "screenshot": "hero/hero-centered-01.png"
+    "screenshot": "thumbs/hero/hero-centered-01.webp"
   },
   {
     "id": "hero-fullscreen-01",
@@ -2462,7 +2462,7 @@
       "hero",
       "fullscreen"
     ],
-    "screenshot": "hero/hero-fullscreen-01.png"
+    "screenshot": "thumbs/hero/hero-fullscreen-01.webp"
   },
   {
     "id": "hero-minimal-01",
@@ -2483,7 +2483,7 @@
       "hero",
       "minimal"
     ],
-    "screenshot": "hero/hero-minimal-01.png"
+    "screenshot": "thumbs/hero/hero-minimal-01.webp"
   },
   {
     "id": "hero-split-01",
@@ -2508,7 +2508,7 @@
       "hero",
       "split"
     ],
-    "screenshot": "hero/hero-split-01.png"
+    "screenshot": "thumbs/hero/hero-split-01.webp"
   },
   {
     "id": "hero-video-background-01",
@@ -2530,7 +2530,7 @@
       "video",
       "background"
     ],
-    "screenshot": "hero/hero-video-background-01.png"
+    "screenshot": "thumbs/hero/hero-video-background-01.webp"
   },
   {
     "id": "hero-with-app-screenshot-01",
@@ -2554,7 +2554,7 @@
       "app",
       "screenshot"
     ],
-    "screenshot": "hero/hero-with-app-screenshot-01.png"
+    "screenshot": "thumbs/hero/hero-with-app-screenshot-01.webp"
   },
   {
     "id": "hero-with-form-01",
@@ -2581,7 +2581,7 @@
       "with",
       "form"
     ],
-    "screenshot": "hero/hero-with-form-01.png"
+    "screenshot": "thumbs/hero/hero-with-form-01.webp"
   },
   {
     "id": "hero-with-stats-01",
@@ -2605,7 +2605,7 @@
       "with",
       "stats"
     ],
-    "screenshot": "hero/hero-with-stats-01.png"
+    "screenshot": "thumbs/hero/hero-with-stats-01.webp"
   },
   {
     "id": "process-alternating-01",
@@ -2628,7 +2628,7 @@
       "process",
       "alternating"
     ],
-    "screenshot": "how-it-works/process-alternating-01.png"
+    "screenshot": "thumbs/how-it-works/process-alternating-01.webp"
   },
   {
     "id": "steps-horizontal-01",
@@ -2651,7 +2651,7 @@
       "steps",
       "horizontal"
     ],
-    "screenshot": "how-it-works/steps-horizontal-01.png"
+    "screenshot": "thumbs/how-it-works/steps-horizontal-01.webp"
   },
   {
     "id": "steps-vertical-01",
@@ -2673,7 +2673,7 @@
       "steps",
       "vertical"
     ],
-    "screenshot": "how-it-works/steps-vertical-01.png"
+    "screenshot": "thumbs/how-it-works/steps-vertical-01.webp"
   },
   {
     "id": "api-reference-01",
@@ -2697,7 +2697,7 @@
       "api",
       "reference"
     ],
-    "screenshot": "integrations/api-reference-01.png"
+    "screenshot": "thumbs/integrations/api-reference-01.webp"
   },
   {
     "id": "integration-grid-01",
@@ -2720,7 +2720,7 @@
       "integration",
       "grid"
     ],
-    "screenshot": "integrations/integration-grid-01.png"
+    "screenshot": "thumbs/integrations/integration-grid-01.webp"
   },
   {
     "id": "integration-showcase-01",
@@ -2747,7 +2747,7 @@
       "integration",
       "showcase"
     ],
-    "screenshot": "integrations/integration-showcase-01.png"
+    "screenshot": "thumbs/integrations/integration-showcase-01.webp"
   },
   {
     "id": "features-grid-01",
@@ -2768,7 +2768,7 @@
       "Grid",
       "Card"
     ],
-    "screenshot": "landing/features-grid-01.png"
+    "screenshot": "thumbs/landing/features-grid-01.webp"
   },
   {
     "id": "footer-01",
@@ -2790,7 +2790,7 @@
       "Separator",
       "Button"
     ],
-    "screenshot": "landing/footer-01.png"
+    "screenshot": "thumbs/landing/footer-01.webp"
   },
   {
     "id": "hero-01",
@@ -2814,7 +2814,7 @@
       "Grid",
       "StatCard"
     ],
-    "screenshot": "landing/hero-01.png"
+    "screenshot": "thumbs/landing/hero-01.webp"
   },
   {
     "id": "pricing-01",
@@ -2838,7 +2838,7 @@
       "Button",
       "Badge"
     ],
-    "screenshot": "landing/pricing-01.png"
+    "screenshot": "thumbs/landing/pricing-01.webp"
   },
   {
     "id": "testimonials-01",
@@ -2860,7 +2860,7 @@
       "Separator",
       "Avatar"
     ],
-    "screenshot": "landing/testimonials-01.png"
+    "screenshot": "thumbs/landing/testimonials-01.webp"
   },
   {
     "id": "logo-cloud-scrolling-01",
@@ -2881,7 +2881,7 @@
       "cloud",
       "scrolling"
     ],
-    "screenshot": "logo-bar/logo-cloud-scrolling-01.png"
+    "screenshot": "thumbs/logo-bar/logo-cloud-scrolling-01.webp"
   },
   {
     "id": "logo-cloud-simple-01",
@@ -2903,7 +2903,7 @@
       "cloud",
       "simple"
     ],
-    "screenshot": "logo-bar/logo-cloud-simple-01.png"
+    "screenshot": "thumbs/logo-bar/logo-cloud-simple-01.webp"
   },
   {
     "id": "logo-cloud-with-heading-01",
@@ -2928,7 +2928,7 @@
       "with",
       "heading"
     ],
-    "screenshot": "logo-bar/logo-cloud-with-heading-01.png"
+    "screenshot": "thumbs/logo-bar/logo-cloud-with-heading-01.webp"
   },
   {
     "id": "gallery-carousel-01",
@@ -2950,7 +2950,7 @@
       "gallery",
       "carousel"
     ],
-    "screenshot": "media/gallery-carousel-01.png"
+    "screenshot": "thumbs/media/gallery-carousel-01.webp"
   },
   {
     "id": "gallery-grid-01",
@@ -2972,7 +2972,7 @@
       "gallery",
       "grid"
     ],
-    "screenshot": "media/gallery-grid-01.png"
+    "screenshot": "thumbs/media/gallery-grid-01.webp"
   },
   {
     "id": "media-with-text-01",
@@ -3000,7 +3000,7 @@
       "with",
       "text"
     ],
-    "screenshot": "media/media-with-text-01.png"
+    "screenshot": "thumbs/media/media-with-text-01.webp"
   },
   {
     "id": "video-section-01",
@@ -3025,7 +3025,7 @@
       "video",
       "section"
     ],
-    "screenshot": "media/video-section-01.png"
+    "screenshot": "thumbs/media/video-section-01.webp"
   },
   {
     "id": "back-to-top-01",
@@ -3045,7 +3045,7 @@
       "to",
       "top"
     ],
-    "screenshot": "misc/back-to-top-01.png"
+    "screenshot": "thumbs/misc/back-to-top-01.webp"
   },
   {
     "id": "divider-01",
@@ -3064,7 +3064,7 @@
       "misc",
       "divider"
     ],
-    "screenshot": "misc/divider-01.png"
+    "screenshot": "thumbs/misc/divider-01.webp"
   },
   {
     "id": "language-switcher-01",
@@ -3084,7 +3084,7 @@
       "language",
       "switcher"
     ],
-    "screenshot": "misc/language-switcher-01.png"
+    "screenshot": "thumbs/misc/language-switcher-01.webp"
   },
   {
     "id": "scroll-indicator-01",
@@ -3103,7 +3103,7 @@
       "scroll",
       "indicator"
     ],
-    "screenshot": "misc/scroll-indicator-01.png"
+    "screenshot": "thumbs/misc/scroll-indicator-01.webp"
   },
   {
     "id": "skip-link-01",
@@ -3122,7 +3122,7 @@
       "skip",
       "link"
     ],
-    "screenshot": "misc/skip-link-01.png"
+    "screenshot": "thumbs/misc/skip-link-01.webp"
   },
   {
     "id": "social-links-01",
@@ -3143,7 +3143,7 @@
       "social",
       "links"
     ],
-    "screenshot": "misc/social-links-01.png"
+    "screenshot": "thumbs/misc/social-links-01.webp"
   },
   {
     "id": "table-of-contents-01",
@@ -3164,7 +3164,7 @@
       "of",
       "contents"
     ],
-    "screenshot": "misc/table-of-contents-01.png"
+    "screenshot": "thumbs/misc/table-of-contents-01.webp"
   },
   {
     "id": "theme-toggle-01",
@@ -3184,7 +3184,7 @@
       "theme",
       "toggle"
     ],
-    "screenshot": "misc/theme-toggle-01.png"
+    "screenshot": "thumbs/misc/theme-toggle-01.webp"
   },
   {
     "id": "app-shell-01",
@@ -3213,7 +3213,7 @@
       "List",
       "BottomNav"
     ],
-    "screenshot": "mobile/app-shell-01.png"
+    "screenshot": "thumbs/mobile/app-shell-01.webp"
   },
   {
     "id": "command-palette-01",
@@ -3231,7 +3231,7 @@
       "command",
       "palette"
     ],
-    "screenshot": "modals-overlays/command-palette-01.png"
+    "screenshot": "thumbs/modals-overlays/command-palette-01.webp"
   },
   {
     "id": "cookie-consent-01",
@@ -3252,7 +3252,7 @@
       "cookie",
       "consent"
     ],
-    "screenshot": "modals-overlays/cookie-consent-01.png"
+    "screenshot": "thumbs/modals-overlays/cookie-consent-01.webp"
   },
   {
     "id": "drawer-01",
@@ -3276,7 +3276,7 @@
       "modals-overlays",
       "drawer"
     ],
-    "screenshot": "modals-overlays/drawer-01.png"
+    "screenshot": "thumbs/modals-overlays/drawer-01.webp"
   },
   {
     "id": "lightbox-01",
@@ -3298,7 +3298,7 @@
       "modals-overlays",
       "lightbox"
     ],
-    "screenshot": "modals-overlays/lightbox-01.png"
+    "screenshot": "thumbs/modals-overlays/lightbox-01.webp"
   },
   {
     "id": "modal-confirm-01",
@@ -3320,7 +3320,7 @@
       "modal",
       "confirm"
     ],
-    "screenshot": "modals-overlays/modal-confirm-01.png"
+    "screenshot": "thumbs/modals-overlays/modal-confirm-01.webp"
   },
   {
     "id": "modal-dialog-01",
@@ -3346,7 +3346,7 @@
       "modal",
       "dialog"
     ],
-    "screenshot": "modals-overlays/modal-dialog-01.png"
+    "screenshot": "thumbs/modals-overlays/modal-dialog-01.webp"
   },
   {
     "id": "toast-notification-01",
@@ -3365,7 +3365,7 @@
       "toast",
       "notification"
     ],
-    "screenshot": "modals-overlays/toast-notification-01.png"
+    "screenshot": "thumbs/modals-overlays/toast-notification-01.webp"
   },
   {
     "id": "bottom-nav-01",
@@ -3383,7 +3383,7 @@
       "bottom",
       "nav"
     ],
-    "screenshot": "navigation/bottom-nav-01.png"
+    "screenshot": "thumbs/navigation/bottom-nav-01.webp"
   },
   {
     "id": "breadcrumbs-01",
@@ -3402,7 +3402,7 @@
       "navigation",
       "breadcrumbs"
     ],
-    "screenshot": "navigation/breadcrumbs-01.png"
+    "screenshot": "thumbs/navigation/breadcrumbs-01.webp"
   },
   {
     "id": "navbar-mega-menu-01",
@@ -3426,7 +3426,7 @@
       "mega",
       "menu"
     ],
-    "screenshot": "navigation/navbar-mega-menu-01.png"
+    "screenshot": "thumbs/navigation/navbar-mega-menu-01.webp"
   },
   {
     "id": "navbar-mobile-drawer-01",
@@ -3451,7 +3451,7 @@
       "mobile",
       "drawer"
     ],
-    "screenshot": "navigation/navbar-mobile-drawer-01.png"
+    "screenshot": "thumbs/navigation/navbar-mobile-drawer-01.webp"
   },
   {
     "id": "navbar-simple-01",
@@ -3470,7 +3470,7 @@
       "navbar",
       "simple"
     ],
-    "screenshot": "navigation/navbar-simple-01.png"
+    "screenshot": "thumbs/navigation/navbar-simple-01.webp"
   },
   {
     "id": "navbar-with-auth-01",
@@ -3491,7 +3491,7 @@
       "with",
       "auth"
     ],
-    "screenshot": "navigation/navbar-with-auth-01.png"
+    "screenshot": "thumbs/navigation/navbar-with-auth-01.webp"
   },
   {
     "id": "navbar-with-search-01",
@@ -3514,7 +3514,7 @@
       "with",
       "search"
     ],
-    "screenshot": "navigation/navbar-with-search-01.png"
+    "screenshot": "thumbs/navigation/navbar-with-search-01.webp"
   },
   {
     "id": "pagination-01",
@@ -3534,7 +3534,7 @@
       "navigation",
       "pagination"
     ],
-    "screenshot": "navigation/pagination-01.png"
+    "screenshot": "thumbs/navigation/pagination-01.webp"
   },
   {
     "id": "sidebar-nav-01",
@@ -3552,7 +3552,7 @@
       "sidebar",
       "nav"
     ],
-    "screenshot": "navigation/sidebar-nav-01.png"
+    "screenshot": "thumbs/navigation/sidebar-nav-01.webp"
   },
   {
     "id": "tab-nav-01",
@@ -3577,7 +3577,7 @@
       "tab",
       "nav"
     ],
-    "screenshot": "navigation/tab-nav-01.png"
+    "screenshot": "thumbs/navigation/tab-nav-01.webp"
   },
   {
     "id": "topbar-announcement-01",
@@ -3599,7 +3599,7 @@
       "topbar",
       "announcement"
     ],
-    "screenshot": "navigation/topbar-announcement-01.png"
+    "screenshot": "thumbs/navigation/topbar-announcement-01.webp"
   },
   {
     "id": "newsletter-card-01",
@@ -3623,7 +3623,7 @@
       "newsletter",
       "card"
     ],
-    "screenshot": "newsletter/newsletter-card-01.png"
+    "screenshot": "thumbs/newsletter/newsletter-card-01.webp"
   },
   {
     "id": "newsletter-footer-01",
@@ -3646,7 +3646,7 @@
       "newsletter",
       "footer"
     ],
-    "screenshot": "newsletter/newsletter-footer-01.png"
+    "screenshot": "thumbs/newsletter/newsletter-footer-01.webp"
   },
   {
     "id": "newsletter-inline-01",
@@ -3668,7 +3668,7 @@
       "newsletter",
       "inline"
     ],
-    "screenshot": "newsletter/newsletter-inline-01.png"
+    "screenshot": "thumbs/newsletter/newsletter-inline-01.webp"
   },
   {
     "id": "newsletter-popup-01",
@@ -3690,7 +3690,7 @@
       "newsletter",
       "popup"
     ],
-    "screenshot": "newsletter/newsletter-popup-01.png"
+    "screenshot": "thumbs/newsletter/newsletter-popup-01.webp"
   },
   {
     "id": "portfolio-carousel-01",
@@ -3716,7 +3716,7 @@
       "portfolio",
       "carousel"
     ],
-    "screenshot": "portfolio/portfolio-carousel-01.png"
+    "screenshot": "thumbs/portfolio/portfolio-carousel-01.webp"
   },
   {
     "id": "portfolio-case-study-01",
@@ -3746,7 +3746,7 @@
       "case",
       "study"
     ],
-    "screenshot": "portfolio/portfolio-case-study-01.png"
+    "screenshot": "thumbs/portfolio/portfolio-case-study-01.webp"
   },
   {
     "id": "portfolio-grid-01",
@@ -3770,7 +3770,7 @@
       "portfolio",
       "grid"
     ],
-    "screenshot": "portfolio/portfolio-grid-01.png"
+    "screenshot": "thumbs/portfolio/portfolio-grid-01.webp"
   },
   {
     "id": "pricing-calculator-01",
@@ -3793,7 +3793,7 @@
       "pricing",
       "calculator"
     ],
-    "screenshot": "pricing/pricing-calculator-01.png"
+    "screenshot": "thumbs/pricing/pricing-calculator-01.webp"
   },
   {
     "id": "pricing-comparison-table-01",
@@ -3815,7 +3815,7 @@
       "comparison",
       "table"
     ],
-    "screenshot": "pricing/pricing-comparison-table-01.png"
+    "screenshot": "thumbs/pricing/pricing-comparison-table-01.webp"
   },
   {
     "id": "pricing-faq-01",
@@ -3837,7 +3837,7 @@
       "pricing",
       "faq"
     ],
-    "screenshot": "pricing/pricing-faq-01.png"
+    "screenshot": "thumbs/pricing/pricing-faq-01.webp"
   },
   {
     "id": "pricing-single-01",
@@ -3861,7 +3861,7 @@
       "pricing",
       "single"
     ],
-    "screenshot": "pricing/pricing-single-01.png"
+    "screenshot": "thumbs/pricing/pricing-single-01.webp"
   },
   {
     "id": "pricing-tiers-01",
@@ -3886,7 +3886,7 @@
       "pricing",
       "tiers"
     ],
-    "screenshot": "pricing/pricing-tiers-01.png"
+    "screenshot": "thumbs/pricing/pricing-tiers-01.webp"
   },
   {
     "id": "pricing-toggle-01",
@@ -3912,7 +3912,7 @@
       "pricing",
       "toggle"
     ],
-    "screenshot": "pricing/pricing-toggle-01.png"
+    "screenshot": "thumbs/pricing/pricing-toggle-01.webp"
   },
   {
     "id": "case-study-card-01",
@@ -3938,7 +3938,7 @@
       "study",
       "card"
     ],
-    "screenshot": "social-proof/case-study-card-01.png"
+    "screenshot": "thumbs/social-proof/case-study-card-01.webp"
   },
   {
     "id": "press-mentions-01",
@@ -3960,7 +3960,7 @@
       "press",
       "mentions"
     ],
-    "screenshot": "social-proof/press-mentions-01.png"
+    "screenshot": "thumbs/social-proof/press-mentions-01.webp"
   },
   {
     "id": "review-stars-01",
@@ -3981,7 +3981,7 @@
       "review",
       "stars"
     ],
-    "screenshot": "social-proof/review-stars-01.png"
+    "screenshot": "thumbs/social-proof/review-stars-01.webp"
   },
   {
     "id": "social-proof-bar-01",
@@ -4003,7 +4003,7 @@
       "proof",
       "bar"
     ],
-    "screenshot": "social-proof/social-proof-bar-01.png"
+    "screenshot": "thumbs/social-proof/social-proof-bar-01.webp"
   },
   {
     "id": "testimonial-carousel-01",
@@ -4027,7 +4027,7 @@
       "testimonial",
       "carousel"
     ],
-    "screenshot": "social-proof/testimonial-carousel-01.png"
+    "screenshot": "thumbs/social-proof/testimonial-carousel-01.webp"
   },
   {
     "id": "testimonial-grid-01",
@@ -4050,7 +4050,7 @@
       "testimonial",
       "grid"
     ],
-    "screenshot": "social-proof/testimonial-grid-01.png"
+    "screenshot": "thumbs/social-proof/testimonial-grid-01.webp"
   },
   {
     "id": "testimonial-single-01",
@@ -4071,7 +4071,7 @@
       "testimonial",
       "single"
     ],
-    "screenshot": "social-proof/testimonial-single-01.png"
+    "screenshot": "thumbs/social-proof/testimonial-single-01.webp"
   },
   {
     "id": "testimonial-wall-01",
@@ -4093,7 +4093,7 @@
       "testimonial",
       "wall"
     ],
-    "screenshot": "social-proof/testimonial-wall-01.png"
+    "screenshot": "thumbs/social-proof/testimonial-wall-01.webp"
   },
   {
     "id": "stats-counter-01",
@@ -4114,7 +4114,7 @@
       "stats",
       "counter"
     ],
-    "screenshot": "stats/stats-counter-01.png"
+    "screenshot": "thumbs/stats/stats-counter-01.webp"
   },
   {
     "id": "stats-grid-01",
@@ -4135,7 +4135,7 @@
       "stats",
       "grid"
     ],
-    "screenshot": "stats/stats-grid-01.png"
+    "screenshot": "thumbs/stats/stats-grid-01.webp"
   },
   {
     "id": "stats-with-description-01",
@@ -4160,7 +4160,7 @@
       "with",
       "description"
     ],
-    "screenshot": "stats/stats-with-description-01.png"
+    "screenshot": "thumbs/stats/stats-with-description-01.webp"
   },
   {
     "id": "team-carousel-01",
@@ -4185,7 +4185,7 @@
       "team",
       "carousel"
     ],
-    "screenshot": "team/team-carousel-01.png"
+    "screenshot": "thumbs/team/team-carousel-01.webp"
   },
   {
     "id": "team-featured-01",
@@ -4209,7 +4209,7 @@
       "team",
       "featured"
     ],
-    "screenshot": "team/team-featured-01.png"
+    "screenshot": "thumbs/team/team-featured-01.webp"
   },
   {
     "id": "team-grid-01",
@@ -4231,7 +4231,7 @@
       "team",
       "grid"
     ],
-    "screenshot": "team/team-grid-01.png"
+    "screenshot": "thumbs/team/team-grid-01.webp"
   },
   {
     "id": "team-list-01",
@@ -4253,7 +4253,7 @@
       "team",
       "list"
     ],
-    "screenshot": "team/team-list-01.png"
+    "screenshot": "thumbs/team/team-list-01.webp"
   },
   {
     "id": "changelog-01",
@@ -4274,7 +4274,7 @@
       "timeline",
       "changelog"
     ],
-    "screenshot": "timeline/changelog-01.png"
+    "screenshot": "thumbs/timeline/changelog-01.webp"
   },
   {
     "id": "roadmap-01",
@@ -4298,7 +4298,7 @@
       "timeline",
       "roadmap"
     ],
-    "screenshot": "timeline/roadmap-01.png"
+    "screenshot": "thumbs/timeline/roadmap-01.webp"
   },
   {
     "id": "timeline-horizontal-01",
@@ -4320,7 +4320,7 @@
       "timeline",
       "horizontal"
     ],
-    "screenshot": "timeline/timeline-horizontal-01.png"
+    "screenshot": "thumbs/timeline/timeline-horizontal-01.webp"
   },
   {
     "id": "timeline-vertical-01",
@@ -4340,7 +4340,7 @@
       "timeline",
       "vertical"
     ],
-    "screenshot": "timeline/timeline-vertical-01.png"
+    "screenshot": "thumbs/timeline/timeline-vertical-01.webp"
   },
   {
     "id": "login-split-quote-01",
@@ -4366,7 +4366,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/login-split-quote-01.png"
+    "screenshot": "thumbs/auth/login-split-quote-01.webp"
   },
   {
     "id": "login-page-card-01",
@@ -4391,7 +4391,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/login-page-card-01.png"
+    "screenshot": "thumbs/auth/login-page-card-01.webp"
   },
   {
     "id": "login-page-card-02",
@@ -4414,7 +4414,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/login-page-card-02.png"
+    "screenshot": "thumbs/auth/login-page-card-02.webp"
   },
   {
     "id": "login-page-illustration-01",
@@ -4437,7 +4437,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/login-page-illustration-01.png"
+    "screenshot": "thumbs/auth/login-page-illustration-01.webp"
   },
   {
     "id": "login-page-minimal-01",
@@ -4458,7 +4458,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/login-page-minimal-01.png"
+    "screenshot": "thumbs/auth/login-page-minimal-01.webp"
   },
   {
     "id": "login-page-nav-01",
@@ -4481,7 +4481,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/login-page-nav-01.png"
+    "screenshot": "thumbs/auth/login-page-nav-01.webp"
   },
   {
     "id": "login-page-simple-01",
@@ -4504,7 +4504,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/login-page-simple-01.png"
+    "screenshot": "thumbs/auth/login-page-simple-01.webp"
   },
   {
     "id": "login-page-social-01",
@@ -4527,7 +4527,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/login-page-social-01.png"
+    "screenshot": "thumbs/auth/login-page-social-01.webp"
   },
   {
     "id": "login-page-social-leading-01",
@@ -4550,7 +4550,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/login-page-social-leading-01.png"
+    "screenshot": "thumbs/auth/login-page-social-leading-01.webp"
   },
   {
     "id": "login-split-carousel-01",
@@ -4577,7 +4577,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/login-split-carousel-01.png"
+    "screenshot": "thumbs/auth/login-split-carousel-01.webp"
   },
   {
     "id": "login-split-geometric-01",
@@ -4603,7 +4603,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/login-split-geometric-01.png"
+    "screenshot": "thumbs/auth/login-split-geometric-01.webp"
   },
   {
     "id": "login-split-image-01",
@@ -4627,7 +4627,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/login-split-image-01.png"
+    "screenshot": "thumbs/auth/login-split-image-01.webp"
   },
   {
     "id": "login-split-image-quote-01",
@@ -4652,7 +4652,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/login-split-image-quote-01.png"
+    "screenshot": "thumbs/auth/login-split-image-quote-01.webp"
   },
   {
     "id": "login-split-mockup-01",
@@ -4677,7 +4677,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/login-split-mockup-01.png"
+    "screenshot": "thumbs/auth/login-split-mockup-01.webp"
   },
   {
     "id": "login-split-mockup-quote-01",
@@ -4703,7 +4703,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/login-split-mockup-quote-01.png"
+    "screenshot": "thumbs/auth/login-split-mockup-quote-01.webp"
   },
   {
     "id": "forgot-password-check-email-01",
@@ -4723,7 +4723,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/forgot-password-check-email-01.png"
+    "screenshot": "thumbs/auth/forgot-password-check-email-01.webp"
   },
   {
     "id": "forgot-password-form-01",
@@ -4745,7 +4745,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/forgot-password-form-01.png"
+    "screenshot": "thumbs/auth/forgot-password-form-01.webp"
   },
   {
     "id": "forgot-password-new-password-01",
@@ -4767,7 +4767,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/forgot-password-new-password-01.png"
+    "screenshot": "thumbs/auth/forgot-password-new-password-01.webp"
   },
   {
     "id": "forgot-password-success-01",
@@ -4787,7 +4787,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/forgot-password-success-01.png"
+    "screenshot": "thumbs/auth/forgot-password-success-01.webp"
   },
   {
     "id": "signup-card-01",
@@ -4810,7 +4810,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-card-01.png"
+    "screenshot": "thumbs/auth/signup-card-01.webp"
   },
   {
     "id": "signup-card-02",
@@ -4833,7 +4833,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-card-02.png"
+    "screenshot": "thumbs/auth/signup-card-02.webp"
   },
   {
     "id": "signup-nav-01",
@@ -4854,7 +4854,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/signup-nav-01.png"
+    "screenshot": "thumbs/auth/signup-nav-01.webp"
   },
   {
     "id": "signup-progress-01",
@@ -4876,7 +4876,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/signup-progress-01.png"
+    "screenshot": "thumbs/auth/signup-progress-01.webp"
   },
   {
     "id": "signup-progress-02",
@@ -4899,7 +4899,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-progress-02.png"
+    "screenshot": "thumbs/auth/signup-progress-02.webp"
   },
   {
     "id": "signup-progress-03",
@@ -4921,7 +4921,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/signup-progress-03.png"
+    "screenshot": "thumbs/auth/signup-progress-03.webp"
   },
   {
     "id": "signup-sidebar-progress-01",
@@ -4945,7 +4945,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/signup-sidebar-progress-01.png"
+    "screenshot": "thumbs/auth/signup-sidebar-progress-01.webp"
   },
   {
     "id": "signup-sidebar-progress-02",
@@ -4969,7 +4969,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/signup-sidebar-progress-02.png"
+    "screenshot": "thumbs/auth/signup-sidebar-progress-02.webp"
   },
   {
     "id": "signup-sidebar-progress-03",
@@ -4994,7 +4994,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/signup-sidebar-progress-03.png"
+    "screenshot": "thumbs/auth/signup-sidebar-progress-03.webp"
   },
   {
     "id": "signup-simple-01",
@@ -5015,7 +5015,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/signup-simple-01.png"
+    "screenshot": "thumbs/auth/signup-simple-01.webp"
   },
   {
     "id": "signup-social-01",
@@ -5037,7 +5037,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/signup-social-01.png"
+    "screenshot": "thumbs/auth/signup-social-01.webp"
   },
   {
     "id": "signup-social-leading-01",
@@ -5059,7 +5059,7 @@
       "Stack",
       "Text"
     ],
-    "screenshot": "auth/signup-social-leading-01.png"
+    "screenshot": "thumbs/auth/signup-social-leading-01.webp"
   },
   {
     "id": "signup-split-app-mockup-01",
@@ -5083,7 +5083,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-split-app-mockup-01.png"
+    "screenshot": "thumbs/auth/signup-split-app-mockup-01.webp"
   },
   {
     "id": "signup-split-arrow-01",
@@ -5107,7 +5107,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-split-arrow-01.png"
+    "screenshot": "thumbs/auth/signup-split-arrow-01.webp"
   },
   {
     "id": "signup-split-carousel-01",
@@ -5132,7 +5132,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-split-carousel-01.png"
+    "screenshot": "thumbs/auth/signup-split-carousel-01.webp"
   },
   {
     "id": "signup-split-gradient-01",
@@ -5155,7 +5155,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-split-gradient-01.png"
+    "screenshot": "thumbs/auth/signup-split-gradient-01.webp"
   },
   {
     "id": "signup-split-image-bg-01",
@@ -5179,7 +5179,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-split-image-bg-01.png"
+    "screenshot": "thumbs/auth/signup-split-image-bg-01.webp"
   },
   {
     "id": "signup-split-mockup-01",
@@ -5203,7 +5203,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-split-mockup-01.png"
+    "screenshot": "thumbs/auth/signup-split-mockup-01.webp"
   },
   {
     "id": "signup-split-mockup-quote-01",
@@ -5228,7 +5228,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-split-mockup-quote-01.png"
+    "screenshot": "thumbs/auth/signup-split-mockup-quote-01.webp"
   },
   {
     "id": "signup-split-quote-carousel-01",
@@ -5253,7 +5253,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-split-quote-carousel-01.png"
+    "screenshot": "thumbs/auth/signup-split-quote-carousel-01.webp"
   },
   {
     "id": "signup-split-quote-image-01",
@@ -5277,7 +5277,7 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-split-quote-image-01.png"
+    "screenshot": "thumbs/auth/signup-split-quote-image-01.webp"
   },
   {
     "id": "signup-split-quote-image-02",
@@ -5302,6 +5302,6 @@
       "Surface",
       "Text"
     ],
-    "screenshot": "auth/signup-split-quote-image-02.png"
+    "screenshot": "thumbs/auth/signup-split-quote-image-02.webp"
   }
 ]
