@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB — Playground</title>
-  <meta name="description" content="Interactive Playground for DAUB UI Kit: prompt an AI, get a json-render spec, and see live DAUB component previews with all 76 components.">
+  <meta name="description" content="Interactive Playground for DAUB UI Kit: prompt an AI, get a json-render spec, and see live DAUB component previews with all 84 components.">
   <meta name="keywords" content="DAUB playground, json-render, generative UI, AI components, CSS components, live preview, BYOK">
   <meta name="theme-color" content="#C67B5C">
   <meta name="robots" content="index, follow">
@@ -15,7 +15,7 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="DAUB — Playground">
-  <meta property="og:description" content="Interactive Generative UI playground with 73 DAUB components. Prompt AI, get JSON specs, see live previews.">
+  <meta property="og:description" content="Interactive Generative UI playground with 84 DAUB components. Prompt AI, get JSON specs, see live previews.">
   <meta property="og:url" content="https://daub.dev/playground.html">
   <meta property="og:site_name" content="DAUB UI">
   <meta property="og:image" content="https://daub.dev/og-image.png">
@@ -27,7 +27,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="DAUB — Playground">
-  <meta name="twitter:description" content="Interactive Generative UI playground with 73 DAUB components. Prompt AI, get JSON specs, see live previews.">
+  <meta name="twitter:description" content="Interactive Generative UI playground with 84 DAUB components. Prompt AI, get JSON specs, see live previews.">
   <meta name="twitter:image" content="https://daub.dev/og-image.png">
   <meta name="twitter:site" content="@staskulesh">
 
@@ -49,7 +49,7 @@
           crossorigin="anonymous" defer></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.19.11">
+  <link rel="stylesheet" href="daub.css?v=3.19.12">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -959,7 +959,7 @@
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher"></div>
 
 <!-- BYOK Settings Modal -->
-<div class="db-modal-overlay" id="pg-byok-modal">
+<div class="db-modal-overlay" id="pg-byok-modal" aria-hidden="true">
   <div class="db-modal" data-db-texture="glass" style="max-width:380px;">
     <div class="db-modal__header">
       <div class="db-modal__title">Use Your Own Key</div>
@@ -969,7 +969,7 @@
       <div style="display:flex;flex-direction:column;gap:12px;">
         <div class="db-field">
           <label class="db-field__label">Provider</label>
-          <div class="db-select">
+          <div class="db-select db-field__input">
             <select class="db-select__input" id="pg-provider">
               <option value="openai">OpenAI</option>
               <option value="anthropic">Anthropic</option>
@@ -979,7 +979,7 @@
         </div>
         <div class="db-field">
           <label class="db-field__label">Model</label>
-          <div class="db-select">
+          <div class="db-select db-field__input">
             <select class="db-select__input" id="pg-model">
               <option value="gpt-4o-mini">gpt-4o-mini</option>
             </select>
@@ -999,7 +999,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.19.11"></script>
+<script src="daub.js?v=3.19.12"></script>
 <script src="daub-openui-parser.js"></script>
 <script>
 // ============================================================
@@ -1037,7 +1037,7 @@ var $share      = document.getElementById('pg-share');
 var $download   = document.getElementById('pg-download');
 var $viewportToggle = document.getElementById('pg-viewport-toggle');
 var $fastMode = document.getElementById('pg-fast-mode');
-var FAST_MODEL = 'google/gemini-3.1-flash-lite-preview';
+var FAST_MODEL = 'google/gemini-3.1-flash-lite';
 
 function fastModel() { return $fastMode && $fastMode.checked ? FAST_MODEL : null; }
 function fastEffort(stage) {
@@ -1080,7 +1080,7 @@ function buildIframeSrcdoc(theme) {
   return '<!DOCTYPE html><html lang="en"' + themeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
     + '<base target="_blank">'
-    + '<link rel="stylesheet" href="daub.css?v=3.19.11">'
+    + '<link rel="stylesheet" href="daub.css?v=3.19.12">'
     + '<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" crossorigin="anonymous"><\/script>'
     + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
     + '<style>html,body{margin:0;min-height:100%;}'
@@ -1104,7 +1104,7 @@ function buildIframeSrcdoc(theme) {
     + '"\u201CThe best design is the simplest one that works.\u201D\\n\u2014 Albert Einstein",'
     + '"\u201CTypography is the craft of endowing human language with a durable visual form.\u201D\\n\u2014 Robert Bringhurst"'
     + '];document.getElementById("pg-iframe-root").setAttribute("data-quote",qs[Math.floor(Math.random()*qs.length)])})()<\/script>'
-    + '<script src="daub.js?v=3.19.11"><\/script>'
+    + '<script src="daub.js?v=3.19.12"><\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
     // ---- Declarative State Engine (iframe runtime) ----
@@ -1607,7 +1607,7 @@ var MODELS = {
   openrouter: [
     { value: 'google/gemini-3-flash-preview', label: 'Gemini 3 Flash' },
     { value: 'google/gemini-3.1-pro-preview', label: 'Gemini 3.1 Pro' },
-    { value: 'google/gemini-3.1-flash-lite-preview', label: 'Gemini 3.1 Flash Lite' },
+    { value: 'google/gemini-3.1-flash-lite', label: 'Gemini 3.1 Flash Lite' },
     { value: 'moonshotai/kimi-k2.5', label: 'Kimi K2.5' },
     { value: 'minimax/minimax-m2.5', label: 'MiniMax M2.5' },
     { value: 'anthropic/claude-sonnet-4.6', label: 'Claude Sonnet 4.6' },
@@ -2623,7 +2623,7 @@ function analyzeInteractivity(spec, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'google/gemini-3.1-flash-lite-preview',
+      model: 'google/gemini-3.1-flash-lite',
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: JSON.stringify(spec) }
@@ -2780,7 +2780,7 @@ function planCodeArchitecture(spec, analysis, signal) {
   .then(parseSseResponse)
   .then(function(sse) {
     var raw = sse.content;
-    console.log('[planCodeArchitecture] raw:', raw.slice(0, 300));
+    dlog('[planCodeArchitecture] raw:', raw.slice(0, 300));
     var clean = cleanJSON(raw);
     if (!clean) return null;
     try {
@@ -2798,7 +2798,7 @@ function planCodeArchitecture(spec, analysis, signal) {
             ch.description = 'DO: ' + ch.do + (ch.proof ? '\nPROOF: ' + ch.proof : '');
           }
         }
-        console.log('[planCodeArchitecture] plan:', plan.chunks.length, 'chunks, state:', plan.sharedStateInit || 'none');
+        dlog('[planCodeArchitecture] plan:', plan.chunks.length, 'chunks, state:', plan.sharedStateInit || 'none');
         return plan;
       }
     } catch(e) { console.warn('[planCodeArchitecture] parse error:', e); }
@@ -2875,20 +2875,20 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
   .then(function(sse) {
     var raw = sse.content;
     var usage = sse.usage;
-    console.log('[executeChunk:' + chunk.id + '] raw:', raw.slice(0, 200));
+    dlog('[executeChunk:' + chunk.id + '] raw:', raw.slice(0, 200));
     var clean = cleanJSON(raw);
     if (!clean) return { chunkId: chunk.id, elements: [], success: false, error: 'empty response', usage: usage };
     try {
       var result = JSON.parse(clean);
       if (result && result.elements) {
-        console.log('[executeChunk:' + chunk.id + '] success:', result.elements.length, 'elements');
+        dlog('[executeChunk:' + chunk.id + '] success:', result.elements.length, 'elements');
         return { chunkId: chunk.id, elements: result.elements, success: true, error: null, usage: usage };
       }
     } catch(e) {
       console.warn('[executeChunk:' + chunk.id + '] parse error:', e);
       var repaired = repairJSON(clean);
       if (repaired && repaired.elements) {
-        console.log('[executeChunk:' + chunk.id + '] repaired:', repaired.elements.length, 'elements');
+        dlog('[executeChunk:' + chunk.id + '] repaired:', repaired.elements.length, 'elements');
         return { chunkId: chunk.id, elements: repaired.elements, success: true, error: null, usage: usage };
       }
     }
@@ -3039,7 +3039,7 @@ function runChunkTests(chunkResults, timeout) {
     });
   });
   if (!tests.length) return Promise.resolve([]);
-  var iframe = document.getElementById('pg-preview-iframe');
+  var iframe = document.getElementById('pg-preview-frame');
   if (!iframe || !iframe.contentWindow) return Promise.resolve([]);
   return new Promise(function(resolve) {
     var resolved = false;
@@ -3125,13 +3125,13 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
         }
       },
       function onDone() {
-        console.log('[reviewAndAssemble] raw length:', accumulated.length);
+        dlog('[reviewAndAssemble] raw length:', accumulated.length);
         var clean = cleanJSON(accumulated);
         if (!clean) { resolve(null); return; }
         var reviewed;
         try { reviewed = JSON.parse(clean); } catch(e) { reviewed = repairJSON(clean); }
         if (!reviewed || !reviewed.root || !reviewed.elements) { resolve(null); return; }
-        console.log('[reviewAndAssemble] success:', countComponents(reviewed), 'components');
+        dlog('[reviewAndAssemble] success:', countComponents(reviewed), 'components');
         resolve(reviewed);
       },
       function onError() { resolve(null); }
@@ -3745,7 +3745,7 @@ function generate() {
           }
           function _addSkeleton(elements) {
             if (!elements || !elements.length) return;
-            var iframe = document.getElementById('pg-preview-iframe');
+            var iframe = document.getElementById('pg-preview-frame');
             if (!iframe || !iframe.contentDocument) return;
             elements.forEach(function(id) {
               var el = iframe.contentDocument.querySelector('[data-spec-id="' + id + '"]');
@@ -3754,7 +3754,7 @@ function generate() {
           }
           function _removeSkeleton(elements) {
             if (!elements || !elements.length) return;
-            var iframe = document.getElementById('pg-preview-iframe');
+            var iframe = document.getElementById('pg-preview-frame');
             if (!iframe || !iframe.contentDocument) return;
             elements.forEach(function(id) {
               var el = iframe.contentDocument.querySelector('[data-spec-id="' + id + '"]');
@@ -3848,7 +3848,7 @@ function generate() {
             // ---- Code generation pipeline (complexity-routed) ----
             var _complexity = (_analysis && _analysis.complexity) || 'none';
             if (!_analysis || !_analysis.needed) _complexity = 'none';
-            console.log('[pipeline] complexity:', _complexity);
+            dlog('[pipeline] complexity:', _complexity);
 
             if (_complexity === 'none') {
               _pipeSkip(stepPlan, 'Skipped');
@@ -3985,7 +3985,7 @@ function generate() {
                       codeProgress.textContent = succeeded.length + retriedOk + '/' + chunkResults.length + ' chunks succeeded (' + retriedOk + ' retried)';
                     }
                     if (stillFailed.length) {
-                      console.log('[pipeline] chunks still failed after retry:', stillFailed.map(function(r) { return r.chunkId; }));
+                      dlog('[pipeline] chunks still failed after retry:', stillFailed.map(function(r) { return r.chunkId; }));
                       codeProgress.textContent += ' \u2014 ' + stillFailed.length + ' \u2192 Kimi';
                     }
                     return chunkResults;
@@ -4005,13 +4005,13 @@ function generate() {
                   }
                 });
                 if (failedChunks.length) {
-                  console.log('[pipeline] failed chunks passed to review:', failedChunks.map(function(c) { return c.id; }));
+                  dlog('[pipeline] failed chunks passed to review:', failedChunks.map(function(c) { return c.id; }));
                 }
 
                 // ---- Client-side assembly ----
                 var assembled = assembleChunkResults(finalSpec, plan, finalResults);
                 if (assembled.conflicts.length) {
-                  console.log('[pipeline] conflicts:', assembled.conflicts);
+                  dlog('[pipeline] conflicts:', assembled.conflicts);
                 }
 
                 // ---- Step: Test ----
@@ -4026,7 +4026,7 @@ function generate() {
                     testFailures = testResults.filter(function(t) { return !t.pass; });
                     if (testFailures.length) {
                       _pipeDone(stepTest, passed + '/' + total + ' tests passed');
-                      console.log('[pipeline:test] failures:', testFailures);
+                      dlog('[pipeline:test] failures:', testFailures);
                     } else {
                       _pipeDone(stepTest, 'All ' + total + ' tests passed');
                     }
@@ -4081,7 +4081,7 @@ function generate() {
     );
   }
   analysisPromise.then(function(analysisBrief) {
-    if (analysisBrief) console.log('[analyzeLayout] Brief:', analysisBrief.slice(0, 200));
+    if (analysisBrief) dlog('[analyzeLayout] Brief:', analysisBrief.slice(0, 200));
     else if (!currentSpec) console.warn('[analyzeLayout] Skipped or failed');
     messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief);
     $status.textContent = 'Streaming\u2026';
@@ -4515,7 +4515,7 @@ function autoFixSpec(spec) {
           if (idx !== -1) p.children.splice(idx, 1);
         }
       });
-      console.log('[autoFixSpec] Merged duplicate CustomHTML "' + id + '" into "' + baseId + '"');
+      dlog('[autoFixSpec] Merged duplicate CustomHTML "' + id + '" into "' + baseId + '"');
     }
   });
   // Fix missing root: use first element
