@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Considered Component Library
-   Version 2.2 — 6 theme families × light/dark: default, grunge, solarized, ink, ember, bone
+   Version 3.19.13 — 21 theme families × light/dark
    ============================================================ */
 
 /* ------------------------------------------------------------
@@ -338,6 +338,7 @@ body::before {
 [data-theme="catppuccin-dark"] body::before,
 [data-theme="tokyo-night"] body::before,
 [data-theme="material"] body::before,
+[data-theme="monospace"] body::before,
 [data-theme="synthwave"] body::before,
 [data-theme="shades-of-purple"] body::before,
 [data-theme="ayu-dark"] body::before,
@@ -1582,6 +1583,87 @@ body::before {
   --db-overlay-bg: rgba(38,50,56,0.5);
 }
 
+/* Monospace Dark */
+[data-theme="monospace"] {
+  --db-cream: #101410;
+  --db-cream-dark: #0B0F0C;
+  --db-sand: #263026;
+  --db-terracotta: #7DD3FC;
+  --db-clay: #34D399;
+  --db-warm-gray: #89968C;
+  --db-charcoal: #C6D1C8;
+  --db-ink: #E8F0E8;
+  --db-white: #182018;
+  --db-error: #F87171;
+  --db-success: #86EFAC;
+  --db-warning: #FACC15;
+  --db-shadow-rgb: 5,8,5;
+  --db-glow-rgb: 24,32,24;
+  --db-accent-rgb: 125,211,252;
+  --db-clay-rgb: 52,211,153;
+  --db-success-rgb: 134,239,172;
+  --db-warning-rgb: 250,204,21;
+  --db-error-rgb: 248,113,113;
+  --db-sand-rgb: 38,48,38;
+  --db-white-rgb: 24,32,24;
+  --db-terracotta-text: #7DD3FC;
+  --db-success-text: #86EFAC;
+  --db-accent-dark: #38BDF8;
+  --db-accent-light: #BAE6FD;
+  --db-accent-hover: #38BDF8;
+  --db-accent-pressed: #0284C7;
+  --db-success-dark: #4ADE80;
+  --db-overlay-bg: rgba(5,8,5,0.76);
+  --db-on-accent: #071014;
+  --db-font-heading: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  --db-font-body: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  --db-font-ui: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  --db-radius-1: 3px;
+  --db-radius-2: 4px;
+  --db-radius-3: 6px;
+  --db-radius-4: 10px;
+}
+
+/* Monospace Light */
+[data-theme="monospace-light"] {
+  --db-cream: #F7F7F2;
+  --db-cream-dark: #ECECE4;
+  --db-sand: #C7C8BE;
+  --db-terracotta: #2563EB;
+  --db-clay: #0F766E;
+  --db-warm-gray: #5F665F;
+  --db-charcoal: #303832;
+  --db-ink: #141A16;
+  --db-white: #FFFFFF;
+  --db-error: #B91C1C;
+  --db-success: #15803D;
+  --db-warning: #A16207;
+  --db-shadow-rgb: 20,26,22;
+  --db-glow-rgb: 255,255,255;
+  --db-accent-rgb: 37,99,235;
+  --db-clay-rgb: 15,118,110;
+  --db-success-rgb: 21,128,61;
+  --db-warning-rgb: 161,98,7;
+  --db-error-rgb: 185,28,28;
+  --db-sand-rgb: 199,200,190;
+  --db-white-rgb: 255,255,255;
+  --db-terracotta-text: #1D4ED8;
+  --db-success-text: #166534;
+  --db-accent-dark: #1D4ED8;
+  --db-accent-light: #60A5FA;
+  --db-accent-hover: #1E40AF;
+  --db-accent-pressed: #1E3A8A;
+  --db-success-dark: #166534;
+  --db-overlay-bg: rgba(20,26,22,0.45);
+  --db-font-heading: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  --db-font-body: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  --db-font-ui: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  --db-radius-1: 3px;
+  --db-radius-2: 4px;
+  --db-radius-3: 6px;
+  --db-radius-4: 10px;
+}
+
 /* === TRENDING === */
 
 /* Synthwave Dark */
@@ -1865,6 +1947,7 @@ body::before {
 [data-theme="catppuccin-dark"],
 [data-theme="tokyo-night"],
 [data-theme="material"],
+[data-theme="monospace"],
 [data-theme="synthwave"],
 [data-theme="shades-of-purple"],
 [data-theme="ayu-dark"],
@@ -1872,6 +1955,10 @@ body::before {
   --db-on-accent: #fff;
   --db-text-emboss: 0 1px 0 rgba(var(--db-glow-rgb), 0.5);
   --db-text-emboss-subtle: 0 1px 0 rgba(var(--db-glow-rgb), 0.25);
+}
+
+[data-theme="monospace"] {
+  --db-on-accent: #071014;
 }
 
 /* ------------------------------------------------------------

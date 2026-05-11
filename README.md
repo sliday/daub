@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.19.12-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.19.13-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-84-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -14,7 +14,7 @@
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 84 components, 20 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 84 components, 21 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
 Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 230+ block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
 
@@ -184,11 +184,11 @@ DAUB uses system font stacks by default. For richer typography:
 | Group | `db-group` | `--attached`, `--vertical` |
 | Resizable | `db-resizable` | `__handle--right`, `--bottom`, `--corner` |
 | Date Picker | `db-date-picker` | Wraps Calendar in popover |
-| Theme Switcher | `db-theme-switcher` | 20 families + scheme switcher |
+| Theme Switcher | `db-theme-switcher` | 21 families + scheme switcher |
 
 ## Themes
 
-20 theme families in 4 categories, each with light and dark modes (40 variants total):
+21 theme families in 4 categories, each with light and dark modes (42 variants total):
 
 ### Originals
 | Family | Light | Dark | Character |
@@ -217,6 +217,7 @@ DAUB uses system font stacks by default. For richer typography:
 | Catppuccin | `catppuccin` | `catppuccin-dark` | Latte pastel / mocha warmth |
 | Tokyo Night | `tokyo-night-light` | `tokyo-night` | Storm light / city neon |
 | Material | `material-light` | `material` | Lighter paper / palenight haze |
+| Monospace | `monospace-light` | `monospace` | Terminal paper / phosphor console |
 
 ### Trending
 | Family | Light | Dark | Character |
@@ -236,7 +237,7 @@ DAUB uses system font stacks by default. For richer typography:
 // Family-based (recommended)
 DAUB.setFamily('ink');       // sets ink-light or ink depending on scheme
 DAUB.setScheme('dark');      // switches current family to dark mode
-DAUB.cycleTheme();           // cycles through 20 families, preserving mode
+DAUB.cycleTheme();           // cycles through 21 families, preserving mode
 
 // Direct theme (backward compatible)
 DAUB.setTheme('ink');        // sets exact theme variant
@@ -298,7 +299,7 @@ Component tokens (v3.19): button, field, card, badge, switch, tabs, table, modal
 
 ## Accessibility
 
-- WCAG AA colour contrast across all 40 theme variants
+- WCAG AA colour contrast across all 42 theme variants
 - `aria-*` attributes on all interactive components
 - Focus-visible outlines (keyboard navigation)
 - Modal/Dialog: focus trapping, Escape to close
@@ -559,13 +560,13 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.19.12** — COSS particle coverage map, 8 new component primitives, 84-component catalog, and lightweight layout gallery thumbnails.
+**Latest: v3.19.13** — Added the Monospace theme family (`monospace-light` / `monospace`) across CSS, JS theme APIs, gallery, and docs.
 
 **v3.19.2** — SEO & AI discoverability: keyword-rich title/meta, FAQ schema, complete sitemap, consistent component count (76), llms.txt version sync. Mobile fixes: hamburger nav on all pages, configurator corner radius, toggle sizing, classless demo overflow, docs title responsiveness.
 
 **v3.19.1** — Fix playground renderer: add Icon and Link components, fix Field children prop passing, eliminate orphan elements. All 135 parser tests pass.
 
-**v3.19.0** — WCAG AA contrast across all 40 themes, native `<dialog>` + `<progress>` support, docs page, classless demo, comparison table. 84 components, 20 theme families.
+**v3.19.0** — WCAG AA contrast pass, native `<dialog>` + `<progress>` support, docs page, classless demo, comparison table.
 
 ## Star History
 

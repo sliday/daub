@@ -1,6 +1,6 @@
 # DAUB UI — Compact Reference
 
-> Version: 3.19.12
+> Version: 3.19.13
 > Full docs: https://daub.dev/llms.txt
 > CSS: https://daub.dev/daub.css | JS: https://daub.dev/daub.js
 > Classless: https://daub.dev/daub-classless.css
@@ -143,7 +143,7 @@ DAUB.toast('Saved!', { type: 'success', duration: 3000 });
 
 ## Themes
 
-20 families × light/dark = 40 variants. Set: `<html data-theme="dark">`.
+21 families × light/dark = 42 variants. Set: `<html data-theme="dark">`.
 JS: `DAUB.setFamily('dracula')`, `DAUB.setScheme('dark')`, `DAUB.cycleTheme()`
 
 ## JS Init

@@ -1,5 +1,5 @@
 {
-  "version": "3.19.12",
+  "version": "3.19.13",
   "prefix": "db-",
   "cdn": {
     "css": "https://daub.dev/daub.css",
@@ -1966,7 +1966,7 @@
       ],
       "js": true,
       "html": "<div class=\"db-theme-switcher\" role=\"group\" aria-label=\"Theme switcher\"></div>",
-      "notes": "Auto-populates toggle + popover if empty. Popover shows 20 families in 4 categories + scheme buttons."
+      "notes": "Auto-populates toggle + popover if empty. Popover shows 21 families in 4 categories + scheme buttons."
     },
     {
       "name": "Accent Picker",

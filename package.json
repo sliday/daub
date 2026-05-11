@@ -1,7 +1,7 @@
 {
   "name": "daub-ui",
-  "version": "3.19.12",
-  "description": "Considered CSS component library — 84 components, 20 theme families, zero build step",
+  "version": "3.19.13",
+  "description": "Considered CSS component library — 84 components, 21 theme families, zero build step",
   "main": "daub.js",
   "style": "daub.css",
   "types": "daub.d.ts",

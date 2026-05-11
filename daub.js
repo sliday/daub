@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Interactive Behaviors
-   Version 3.19.6
+   Version 3.19.13
    IIFE module exposing window.DAUB = { init, toast, theme API }
    ============================================================ */
 ;(function() {
@@ -13,7 +13,7 @@
     'light','dark','grunge-light','grunge-dark','solarized','solarized-dark','ink-light','ink','ember-light','ember','bone','bone-dark',
     'dracula','dracula-light','nord','nord-light','one-dark','one-dark-light','monokai','monokai-light','gruvbox','gruvbox-light',
     'night-owl','night-owl-light','github','github-dark','catppuccin','catppuccin-dark','tokyo-night','tokyo-night-light','material','material-light',
-    'synthwave','synthwave-light','shades-of-purple','shades-of-purple-light','ayu','ayu-dark','horizon','horizon-light'
+    'monospace','monospace-light','synthwave','synthwave-light','shades-of-purple','shades-of-purple-light','ayu','ayu-dark','horizon','horizon-light'
   ];
 
   var THEME_FAMILIES = {
@@ -33,6 +33,7 @@
     'catppuccin': { light: 'catppuccin',    dark: 'catppuccin-dark' },
     'tokyo-night':{ light: 'tokyo-night-light',dark: 'tokyo-night' },
     'material':   { light: 'material-light', dark: 'material' },
+    'monospace':  { light: 'monospace-light', dark: 'monospace' },
     'synthwave':  { light: 'synthwave-light',dark: 'synthwave' },
     'shades-of-purple':{ light: 'shades-of-purple-light',dark: 'shades-of-purple' },
     'ayu':        { light: 'ayu',           dark: 'ayu-dark' },
@@ -41,14 +42,14 @@
   var FAMILY_NAMES = [
     'default','grunge','solarized','ink','ember','bone',
     'dracula','nord','one-dark','monokai','gruvbox',
-    'night-owl','github','catppuccin','tokyo-night','material',
+    'night-owl','github','catppuccin','tokyo-night','material','monospace',
     'synthwave','shades-of-purple','ayu','horizon'
   ];
 
   var THEME_CATEGORIES = {
     'originals': ['default','grunge','solarized','ink','ember','bone'],
     'classics':  ['dracula','nord','one-dark','monokai','gruvbox'],
-    'modern':    ['night-owl','github','catppuccin','tokyo-night','material'],
+    'modern':    ['night-owl','github','catppuccin','tokyo-night','material','monospace'],
     'trending':  ['synthwave','shades-of-purple','ayu','horizon']
   };
   var CATEGORY_NAMES = ['originals','classics','modern','trending'];
@@ -275,6 +276,7 @@
     'catppuccin':{light:'#EFF1F5',dark:'#1E1E2E',accent:'#CBA6F7'},
     'tokyo-night':{light:'#D5D6DB',dark:'#1A1B26',accent:'#7AA2F7'},
     'material':{light:'#FAFAFA',dark:'#263238',accent:'#82AAFF'},
+    'monospace':{light:'#F7F7F2',dark:'#101410',accent:'#7DD3FC'},
     'synthwave':{light:'#F5E6FF',dark:'#2B213A',accent:'#F92AAD'},
     'shades-of-purple':{light:'#F3EFFF',dark:'#2D2B55',accent:'#FAD000'},
     'ayu':{light:'#FAFAFA',dark:'#0B0E14',accent:'#FF8F40'},
@@ -284,7 +286,7 @@
   var FAMILY_LABELS = {
     'default':'Default','grunge':'Grunge','solarized':'Solar','ink':'Ink','ember':'Ember','bone':'Bone',
     'dracula':'Dracula','nord':'Nord','one-dark':'One Dark','monokai':'Monokai','gruvbox':'Gruvbox',
-    'night-owl':'Night Owl','github':'GitHub','catppuccin':'Catppuccin','tokyo-night':'Tokyo','material':'Material',
+    'night-owl':'Night Owl','github':'GitHub','catppuccin':'Catppuccin','tokyo-night':'Tokyo','material':'Material','monospace':'Mono',
     'synthwave':'Synthwave','shades-of-purple':'Purple','ayu':'Ayu','horizon':'Horizon'
   };
 
