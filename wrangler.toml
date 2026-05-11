@@ -5,3 +5,10 @@ pages_build_output_dir = "."
 # Environment variables for MCP server (set via Cloudflare dashboard or wrangler secret)
 # OPENROUTER_API_KEY — required for generate_ui (LLM generation)
 # GEMINI_API_KEY — required for RAG (gemini-embedding-2-preview, Google-only)
+#
+# Rate-limit bindings (Pages does not accept [[unsafe.bindings]] in wrangler.toml):
+# Add via CF dashboard → Pages → daub → Settings → Functions → Bindings → Rate Limiting:
+#   RL_WEBLOOK  → 30 req / 60 s  (protects Browserbase)
+#   RL_GENERATE → 60 req / 60 s  (protects OpenRouter)
+#   RL_MCP      → 60 req / 60 s  (protects MCP + OpenRouter)
+# Handler code fails open when a binding is missing, so deploy stays green.

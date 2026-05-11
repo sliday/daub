@@ -4,7 +4,7 @@
     "name": "daub-mcp",
     "version": "1.0.0",
     "title": "DAUB UI MCP Server",
-    "description": "Generate, validate, and render DAUB CSS UIs from natural language. 76 components, 20 theme families.",
+    "description": "Generate, validate, and render DAUB CSS UIs from natural language. 84 components, 20 theme families.",
     "vendor": "Sliday",
     "homepage": "https://daub.dev",
     "documentation": "https://daub.dev/llms.txt",

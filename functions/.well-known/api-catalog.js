@@ -14,19 +14,29 @@ export async function onRequestGet({ request }) {
           { href: `${origin}/llms.txt`, type: "text/plain" }
         ],
         "describedby": [
-          { href: `${origin}/.well-known/ai-plugin.json`, type: "application/json" }
+          { href: `${origin}/.well-known/ai-plugin.json`, type: "application/json" },
+          { href: `${origin}/.well-known/oauth-protected-resource`, type: "application/json" }
+        ],
+        "authorization-server": [
+          { href: `${origin}/.well-known/oauth-authorization-server`, type: "application/json" }
         ]
       },
       {
         anchor: `${origin}/api/generate`,
         "service-doc": [
           { href: `${origin}/llms.txt`, type: "text/plain" }
+        ],
+        "describedby": [
+          { href: `${origin}/.well-known/oauth-protected-resource`, type: "application/json" }
         ]
       },
       {
         anchor: `${origin}/api/weblook`,
         "service-doc": [
           { href: `${origin}/llms.txt`, type: "text/plain" }
+        ],
+        "describedby": [
+          { href: `${origin}/.well-known/oauth-protected-resource`, type: "application/json" }
         ]
       }
     ]

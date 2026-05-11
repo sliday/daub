@@ -1633,6 +1633,19 @@ export async function onRequestPost(context) {
     'Access-Control-Expose-Headers': 'Mcp-Session-Id',
   };
 
+  if (env.RL_MCP) {
+    try {
+      const key = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const { success } = await env.RL_MCP.limit({ key });
+      if (!success) {
+        return new Response(JSON.stringify(jsonrpcError(null, -32000, 'Rate limit exceeded — 60 req/min per IP')), {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    } catch {}
+  }
+
   let body;
   try {
     body = await request.json();

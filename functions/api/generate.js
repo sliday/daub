@@ -15,6 +15,19 @@ export async function onRequestPost(context) {
     'Access-Control-Allow-Headers': 'Content-Type',
   };
 
+  if (env.RL_GENERATE) {
+    try {
+      const key = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const { success } = await env.RL_GENERATE.limit({ key });
+      if (!success) {
+        return new Response(JSON.stringify({ error: 'Rate limit exceeded — 60 req/min per IP' }), {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    } catch {}
+  }
+
   let body;
   try {
     body = await request.json();

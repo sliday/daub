@@ -33,7 +33,7 @@ export async function onRequestGet({ request, env, next }) {
       "Vary": "Accept",
       "Cache-Control": "public, max-age=300, must-revalidate",
       "Access-Control-Allow-Origin": "*",
-      "Link": '</llms.txt>; rel="service-doc"; type="text/plain", </components.json>; rel="describedby"; type="application/json", </.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json", </.well-known/agent-skills/index.json>; rel="agent-skills"; type="application/json", </.well-known/mcp/server-card.json>; rel="mcp-server"; type="application/json"'
+      "Link": '</llms.txt>; rel="service-doc"; type="text/plain", </components.json>; rel="describedby"; type="application/json", </.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json", </.well-known/agent-skills/index.json>; rel="agent-skills"; type="application/json", </.well-known/mcp/server-card.json>; rel="mcp-server"; type="application/json", </.well-known/oauth-authorization-server>; rel="oauth-authorization-server"; type="application/json", </.well-known/oauth-protected-resource>; rel="oauth-protected-resource"; type="application/json"'
     }
   });
 }

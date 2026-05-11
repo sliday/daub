@@ -24,6 +24,14 @@ export async function onRequestPost(context) {
   const { request, env } = context;
   const corsHeaders = getCorsHeaders(request);
 
+  if (env.RL_WEBLOOK) {
+    try {
+      const key = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const { success } = await env.RL_WEBLOOK.limit({ key });
+      if (!success) return jsonResponse({ error: 'Rate limit exceeded — 30 req/min per IP' }, 429, corsHeaders);
+    } catch {}
+  }
+
   // Top-level safety net — always return JSON, never let CF serve HTML error page
   try {
     return await handleRequest(request, env, corsHeaders);

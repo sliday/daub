@@ -315,6 +315,9 @@ DAUB speaks both human and machine:
 - **`/components.json`** — Machine-readable structured component reference (84 components with HTML examples)
 - **`/daub.d.ts`** — TypeScript declarations for `window.DAUB` API
 - **`/.well-known/ai-plugin.json`** — AI plugin manifest
+- **`/.well-known/api-catalog`** — API catalog for MCP, generation, and web lookups
+- **`/.well-known/oauth-authorization-server`** — OAuth authorization server metadata
+- **`/.well-known/oauth-protected-resource`** — OAuth protected resource metadata for DAUB APIs
 - **`SKILL.md`** — Claude Code skill for DAUB development
 
 Point your AI at `https://daub.dev/llms.txt` for complete component docs with HTML snippets, or fetch `https://daub.dev/components.json` for structured data.
