@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB — Case Studies</title>
   <meta name="description" content="Real products built with DAUB. See how teams use DAUB's considered CSS components in production.">
-  <meta name="keywords" content="DAUB case studies, Dashrock, AWS Bedrock analytics, Tamp, Claude API proxy, token compression, DAUB UI examples, production DAUB">
+  <meta name="keywords" content="DAUB case studies, Dashrock, AWS Bedrock analytics, Tamp, Claude API proxy, token compression, Dwarf Land, AI civilization simulator, DAUB UI examples, production DAUB">
   <meta name="theme-color" content="#C67B5C">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://daub.dev/case-studies.html">
@@ -495,6 +495,118 @@
       <h3>Why it matters</h3>
       <p>
         Extended Claude Code sessions with heavy tool use can burn through context windows and rack up significant API costs. Tamp addresses this at the transport layer — no changes to your workflow, no changes to Claude's behavior, just smaller requests. The 50% savings compound across a full development session: a typical hour of Claude Code work that would consume 500K input tokens drops to ~250K. That's real money at Anthropic's pricing.
+      </p>
+    </div>
+
+  </article>
+
+
+  <!-- Dwarf Land Case Study -->
+  <article class="cs-article" id="dwarf-land">
+
+    <div class="cs-project-header">
+      <h2>Dwarf Land</h2>
+      <p class="cs-tagline">AI-powered civilization simulator. Up to 300 autonomous dwarves live across 125+ real-world cities, making decisions with tiered LLMs. The world runs 24/7 on Cloudflare Workers.</p>
+      <div class="cs-project-links">
+        <a href="https://dwarf.land" target="_blank" rel="noopener">
+          <i data-lucide="globe" style="width:14px;height:14px;"></i> dwarf.land
+        </a>
+        <a href="https://github.com/sliday/dwarf-land" target="_blank" rel="noopener">
+          <i data-lucide="github" style="width:14px;height:14px;"></i> GitHub
+        </a>
+      </div>
+    </div>
+
+    <blockquote class="cs-quote">
+      "A living world of AI-powered dwarves. Click any dwarf to inspect their stats, backstory, and personality. Sponsor their brain to upgrade their AI reasoning. The world lives while you watch."
+      <cite>The welcome screen &middot; dwarf.land</cite>
+    </blockquote>
+
+    <div class="cs-section">
+      <h3>What it does</h3>
+      <p>
+        Dwarf Land is a persistent civilization simulator rendered as an emoji tile planet — continents, oceans, mountains, jungles, deserts, and a map that wraps horizontally like a globe. Dwarves with D&amp;D stats and culturally accurate names mine, farm, craft, trade, raise families, tame animals, and build roads between cities. Nobody scripts their behavior: each decision comes from an LLM call routed through a 4-tier model system, and the world keeps running whether you watch or not. State saves every 60 seconds; your dwarves remember everything.
+      </p>
+    </div>
+
+    <div class="cs-gallery">
+      <figure>
+        <img src="case-studies/dwarf-welcome.jpg" alt="Dwarf Land welcome modal built with DAUB over the world map" loading="lazy">
+        <figcaption>Welcome modal — pure DAUB</figcaption>
+      </figure>
+      <figure>
+        <img src="case-studies/dwarf-world.jpg" alt="Honolulu island in Dwarf Land with city, jungle, and beaches" loading="lazy">
+        <figcaption>Honolulu, Year 45</figcaption>
+      </figure>
+      <figure>
+        <img src="case-studies/dwarf-america.jpg" alt="Central American cities connected by roads and railroads" loading="lazy">
+        <figcaption>Roads &amp; railroads between cities</figcaption>
+      </figure>
+      <figure>
+        <img src="case-studies/dwarf-europe.jpg" alt="Desert coastline near Baghdad with mountains and beaches" loading="lazy">
+        <figcaption>Biome transitions near Baghdad</figcaption>
+      </figure>
+    </div>
+
+    <div class="cs-section">
+      <h3>4-Tier AI Brains</h3>
+      <p>
+        Every dwarf thinks through OpenRouter via the Vercel AI SDK. Model routing depends on the decision's complexity — and on sponsorship:
+      </p>
+      <ul>
+        <li><strong>Simple</strong> — basic needs: eat, sleep, mine. The free default.</li>
+        <li><strong>Medium</strong> — social behavior and planning. Bronze sponsorship ($1, 100 calls).</li>
+        <li><strong>Complex</strong> — strategy and relationships. Silver ($3, 75 calls).</li>
+        <li><strong>Premium</strong> — deep reasoning with full personality context. Gold ($10, 100 calls).</li>
+      </ul>
+      <p>
+        AI calls are fire-and-forget: the game never blocks on a response. An intent cache stores each decision until the dwarf is idle enough to execute it, and hard budget caps ($8.50/hr total) keep the world from thinking itself bankrupt. Sponsoring a dwarf's brain goes through Polar.sh checkout — the dwarf gets a star badge and visibly smarter behavior.
+      </p>
+    </div>
+
+    <div class="cs-section">
+      <h3>Tech Stack</h3>
+    </div>
+    <div class="cs-stack">
+      <span class="cs-stack-pill">Cloudflare Workers</span>
+      <span class="cs-stack-pill">Hono</span>
+      <span class="cs-stack-pill">Cloudflare D1</span>
+      <span class="cs-stack-pill">Vercel AI SDK</span>
+      <span class="cs-stack-pill">OpenRouter</span>
+      <span class="cs-stack-pill">Polar.sh</span>
+      <span class="cs-stack-pill">Canvas 2D</span>
+      <span class="cs-stack-pill cs-stack-pill--highlight">DAUB</span>
+      <span class="cs-stack-pill">Vitest</span>
+    </div>
+
+    <div class="cs-section">
+      <h3>How DAUB is used</h3>
+      <p>
+        The entire game chrome is DAUB in the grunge theme (<code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">data-theme="grunge"</code>) — dark, tactile HUD panels that let the emoji world own the screen. The welcome and How-it-works overlays are <code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">db-modal</code> with <code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">db-prose</code> content, sponsorship pricing renders as a compact <code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">db-table</code>, and buttons, scroll areas, and toasts come straight from the component library — driven at runtime by <code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">DAUB.openModal()</code> and <code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">DAUB.toast()</code>.
+      </p>
+      <p>
+        The whole frontend is a single HTML file pulling <code style="font-size:0.85em;padding:2px 6px;background:var(--db-cream-dark);border-radius:4px;">daub-ui@3.19.12</code> from CDN. No build step, no framework — vanilla JS canvas for the world, DAUB for everything with text in it.
+      </p>
+    </div>
+
+    <div class="cs-section">
+      <h3>Key Features</h3>
+      <ul>
+        <li>Up to 300 autonomous dwarves with D&amp;D stats, aging, families, and AI-generated backstories</li>
+        <li>125+ real-world cities across 7 continents with culturally named populations</li>
+        <li>4-tier road system (dirt &#8594; gravel &#8594; asphalt &#8594; railroad) built, upgraded, and repaired by dwarves</li>
+        <li>Infinite crafting: combine any two items — unknown combos resolved by AI and cached forever</li>
+        <li>24 wildlife species with taming, hunting, and combat encounters</li>
+        <li>Horse carts, cars, and trains; autonomous freight balances resources between cities</li>
+        <li>Live sponsorship via Polar.sh upgrades individual dwarves' AI reasoning</li>
+        <li>453 Vitest tests; world state autosaves every 60 seconds</li>
+      </ul>
+    </div>
+
+    <div class="cs-section">
+      <h3>Why it matters</h3>
+      <p>
+        Most DAUB deployments are dashboards and marketing sites. Dwarf Land stretches the library into game HUD territory — modals, tables, and toasts floating over a 60fps canvas — and the grunge theme handles it without a line of custom component CSS. It also demonstrates LLM calls as a game mechanic with real economics: budget caps on the house's spend, micro-payments to raise a single agent's intelligence.
       </p>
     </div>
 
