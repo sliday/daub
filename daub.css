@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Considered Component Library
-   Version 3.19.13 — 21 theme families × light/dark
+   Version 3.19.14 — 21 theme families × light/dark
    ============================================================ */
 
 /* ------------------------------------------------------------
@@ -4434,19 +4434,23 @@ meter.db-meter::-moz-meter-bar {
    ------------------------------------------------------------ */
 .db-toggle-group {
   display: inline-flex;
-  gap: 0;
+  gap: 3px;
+  padding: 3px;
+  background: var(--db-cream-dark);
+  border: 1px solid var(--db-sand);
+  border-radius: var(--db-radius-2);
 }
 
 .db-toggle-group .db-toggle {
-  border-radius: 0;
+  flex: 1;
+  border: none;
+  border-radius: max(0px, calc(var(--db-radius-2) - 3px));
+  padding: var(--db-space-2) var(--db-space-4);
 }
 
-.db-toggle-group .db-toggle + .db-toggle {
-  margin-left: -1px;
+.db-toggle-group .db-toggle:hover:not([aria-pressed="true"]):not(.db-toggle--active) {
+  background: color-mix(in srgb, var(--db-color-surface) 55%, transparent);
 }
-
-.db-toggle-group .db-toggle:first-child { border-radius: var(--db-radius-2) 0 0 var(--db-radius-2); }
-.db-toggle-group .db-toggle:last-child { border-radius: 0 var(--db-radius-2) var(--db-radius-2) 0; }
 
 /* ------------------------------------------------------------
    Button Group

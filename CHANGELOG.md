@@ -2,6 +2,17 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.19.14
+
+**Toggle Group redesigned as segmented control (2026-08-26).**
+
+- `.db-toggle-group` is now a proper segmented track: inset `--db-cream-dark` background, `--db-sand` border, 3px padding + 3px gap — replaces the butted 1px-border look.
+- Segments inside the group: borderless, `flex: 1` (equal widths when the group is stretched), inner radius `max(0px, calc(var(--db-radius-2) - 3px))` so sharp-radius themes stay sharp.
+- Active segment keeps the terracotta gradient and reads as a raised pill inside the track; inactive hover uses a translucent surface via `color-mix`.
+- Robust against page-level gap/width overrides (external `seg`-style wrappers no longer split the group into floating boxes).
+- Standalone `.db-toggle` unchanged. Docs wording ("segmented control") added to SKILL.md, components.json, llms.txt.
+- Audit: **84 green / 0 yellow / 0 red**. Verified in dark, grunge-light, grunge-dark, solarized.
+
 ## v3.19.11
 
 **Tokenize accent-text + 76/76 green audit (2026-04-21).**

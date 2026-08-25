@@ -88,7 +88,7 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Switch**: `db-switch` (role="switch", JS-managed)
 - **Slider**: `db-slider` > `db-slider__input` + `db-slider__value`
 - **Toggle**: `db-toggle` / `--sm` (aria-pressed)
-- **Toggle Group**: `db-toggle-group` — single/multi select
+- **Toggle Group**: `db-toggle-group` — segmented control (inset track, raised active segment); single/multi select
 - **Native Select**: `db-select` > `db-select__input`
 - **Custom Select**: `db-custom-select` — search, selection, combobox
 - **Kbd**: `db-kbd` / `--sm`

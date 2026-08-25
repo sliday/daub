@@ -1,5 +1,5 @@
 {
-  "version": "3.19.13",
+  "version": "3.19.14",
   "prefix": "db-",
   "cdn": {
     "css": "https://daub.dev/daub.css",
@@ -283,7 +283,7 @@
       "children": [],
       "js": true,
       "html": "<div class=\"db-toggle-group\">\n  <button class=\"db-toggle\" aria-pressed=\"true\">Left</button>\n  <button class=\"db-toggle\" aria-pressed=\"false\">Center</button>\n  <button class=\"db-toggle\" aria-pressed=\"false\">Right</button>\n</div>",
-      "notes": "Single select by default. Add data-multi for multi-select."
+      "notes": "Segmented control: inset track with raised active segment. Single select by default. Add data-multi for multi-select."
     },
     {
       "name": "Native Select",

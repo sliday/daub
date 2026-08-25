@@ -1,6 +1,6 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 3.19.13
+> Version: 3.19.14
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
@@ -220,7 +220,7 @@ Sizes: `db-toggle--sm`. Active: `aria-pressed="true"` or `db-toggle--active`.
 ```
 
 ### 12. Toggle Group — `.db-toggle-group`
-Single select by default. Add `data-multi` for multi-select.
+Segmented control: inset track, raised active segment. Single select by default. Add `data-multi` for multi-select.
 ```html
 <div class="db-toggle-group">
   <button class="db-toggle" aria-pressed="true">Left</button>
@@ -1452,7 +1452,7 @@ npm: https://www.npmjs.com/package/daub-react
 </div>
 ```
 
-## Design Intelligence (v3.19.13)
+## Design Intelligence (v3.19.14)
 
 DAUB's MCP server and generation pipeline include industry-aware design intelligence that automatically adapts the system prompt based on prompt content.
 
