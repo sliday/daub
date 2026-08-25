@@ -406,8 +406,9 @@
     // -- Field --
     RENDERERS.Field = function(p, ch, els, d) {
       var el = mkEl('div', 'db-field' + (p.error ? ' db-field--error' : ''));
+      var lbl = null;
       if (p.label) {
-        var lbl = mkEl('label', 'db-field__label', p.label);
+        lbl = mkEl('label', 'db-field__label', p.label);
         el.appendChild(lbl);
       }
       if (ch && ch.length) {
@@ -417,6 +418,10 @@
         inp.className = 'db-field__input';
         inp.type = p.type || 'text';
         inp.placeholder = p.placeholder || '';
+        if (lbl) {
+          inp.id = 'db-field-' + Math.random().toString(36).slice(2, 8);
+          lbl.htmlFor = inp.id;
+        }
         el.appendChild(inp);
       }
       if (p.helper) {
@@ -579,7 +584,7 @@
     };
     
     // -- ToggleGroup --
-    RENDERERS.ToggleGroup = function(p) {
+    RENDERERS.ToggleGroup = function(p, ch, els, d) {
       var el = mkEl('div', 'db-toggle-group');
       (p.options || []).forEach(function(opt) {
         var btn = document.createElement('button');
@@ -588,15 +593,24 @@
         btn.textContent = opt.label || '';
         el.appendChild(btn);
       });
+      if (ch && ch.length) el.appendChild(renderChildren(els, ch, d));
       return el;
     };
     
     // -- Select --
     RENDERERS.Select = function(p) {
       var el = mkEl('div', 'db-select');
-      if (p.label) el.appendChild(mkEl('label', 'db-label', p.label));
+      var lbl = null;
+      if (p.label) {
+        lbl = mkEl('label', 'db-label', p.label);
+        el.appendChild(lbl);
+      }
       var sel = document.createElement('select');
       sel.className = 'db-select__input';
+      if (lbl) {
+        sel.id = 'db-select-' + Math.random().toString(36).slice(2, 8);
+        lbl.htmlFor = sel.id;
+      }
       (p.options || []).forEach(function(o) {
         var opt = document.createElement('option');
         opt.value = o.value || '';
@@ -1175,28 +1189,39 @@
     };
     
     // -- Carousel --
-    RENDERERS.Carousel = function(p) {
+    RENDERERS.Carousel = function(p, ch, els, d) {
       var el = mkEl('div', 'db-carousel');
       var track = mkEl('div', 'db-carousel__track');
       var slides = p.slides || [];
       slides.forEach(function(s) {
         track.appendChild(mkEl('div', 'db-carousel__slide', s.content || ''));
       });
+      (ch || []).forEach(function(id) {
+        var node = renderElement(els, id, (d || 0) + 1);
+        if (!node) return;
+        var slide = mkEl('div', 'db-carousel__slide');
+        slide.appendChild(node);
+        track.appendChild(slide);
+      });
       el.appendChild(track);
       var prevBtn = document.createElement('button');
       prevBtn.className = 'db-carousel__btn db-carousel__btn--prev';
       prevBtn.textContent = '\u2039';
+      prevBtn.setAttribute('aria-label', 'Previous slide');
       el.appendChild(prevBtn);
       var nextBtn = document.createElement('button');
       nextBtn.className = 'db-carousel__btn db-carousel__btn--next';
       nextBtn.textContent = '\u203A';
+      nextBtn.setAttribute('aria-label', 'Next slide');
       el.appendChild(nextBtn);
       var dots = mkEl('div', 'db-carousel__dots');
-      slides.forEach(function(_, i) {
+      var slideCount = track.children.length;
+      for (var i = 0; i < slideCount; i++) {
         var dot = document.createElement('button');
         dot.className = 'db-carousel__dot' + (i === 0 ? ' db-carousel__dot--active' : '');
+        dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
         dots.appendChild(dot);
-      });
+      }
       el.appendChild(dots);
       return el;
     };

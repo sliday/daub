@@ -44,7 +44,7 @@
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.19.14">
+  <link rel="stylesheet" href="daub.css?v=3.20.0">
 
   <style>
     /* ---- Demo page layout ---- */
@@ -258,15 +258,10 @@
     }
     .stat-card__change--up { color: var(--db-success); }
     .stat-card__change--down { color: var(--db-error); }
-    .chart-placeholder {
-      height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--db-warm-gray);
-      font-family: var(--db-font-ui);
-      font-size: 0.8125rem;
-    }
+    .dash-split { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-scroll td span svg { flex-shrink: 0; }
 
     /* ---- 2. Login ---- */
     .login-wrap {
@@ -364,6 +359,7 @@
     }
     .profile-header {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       gap: 24px;
       margin-bottom: 32px;
@@ -556,9 +552,10 @@
     /* ---- Responsive ---- */
     @media (max-width: 768px) {
       .dash { grid-template-columns: 1fr; }
+      .dash-split, .field-row { grid-template-columns: 1fr; }
       .dash__sidebar { display: none; }
       .stat-grid { grid-template-columns: repeat(2, 1fr); }
-      .profile-stats { grid-template-columns: repeat(3, 1fr); }
+      .profile-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .block-gallery__grid { grid-template-columns: 1fr; padding: 16px; }
       .block-tabs { padding: 10px 16px; }
     }
@@ -679,12 +676,12 @@
     </div>
 
     <!-- Chart + Recent activity side-by-side -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+    <div class="dash-split">
       <!-- Chart area -->
       <div class="db-surface--raised db-rounded" style="padding:20px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
           <h4 class="db-h4" style="margin:0;">Revenue Trend</h4>
-          <div class="db-tabs" style="margin:0;">
+          <div class="db-tabs db-tabs--static" style="margin:0;">
             <div class="db-tabs__list" role="tablist">
               <button class="db-tabs__tab" role="tab" aria-selected="true">Week</button>
               <button class="db-tabs__tab" role="tab">Month</button>
@@ -692,9 +689,17 @@
             </div>
           </div>
         </div>
-        <div class="db-surface--inset db-rounded chart-placeholder">
-          <i data-lucide="bar-chart-3" style="width:40px;height:40px;opacity:0.3;margin-right:12px;"></i>
-          Chart visualization area
+        <div class="db-surface--inset db-rounded" style="padding:12px 16px 16px;">
+          <div class="db-chart" style="height:180px;">
+            <div class="db-chart__bar" style="height:45%;"></div>
+            <div class="db-chart__bar" style="height:62%;"></div>
+            <div class="db-chart__bar db-chart__bar--secondary" style="height:38%;"></div>
+            <div class="db-chart__bar" style="height:74%;"></div>
+            <div class="db-chart__bar" style="height:58%;"></div>
+            <div class="db-chart__bar db-chart__bar--secondary" style="height:49%;"></div>
+            <div class="db-chart__bar" style="height:88%;"></div>
+          </div>
+          <div class="db-chart__labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
         </div>
       </div>
 
@@ -745,7 +750,8 @@
     <!-- Recent orders table -->
     <div style="margin-top:24px;">
       <h4 class="db-h4">Recent Orders</h4>
-      <table class="db-table">
+      <div class="table-scroll">
+      <table class="db-data-table">
         <thead>
           <tr>
             <th data-db-sort aria-sort="descending">Order ID</th>
@@ -781,6 +787,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 </div>
@@ -863,7 +870,7 @@
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="field-row">
         <div class="db-field">
           <label class="db-field__label" for="s-fname">First Name</label>
           <input class="db-field__input" id="s-fname" value="Sarah">
@@ -1034,7 +1041,7 @@
   </div>
 
   <!-- Tabs for inbox categories -->
-  <div class="db-tabs" style="margin-bottom:16px;">
+  <div class="db-tabs db-tabs--static" style="margin-bottom:16px;">
     <div class="db-tabs__list" role="tablist">
       <button class="db-tabs__tab" role="tab" aria-selected="true">All</button>
       <button class="db-tabs__tab" role="tab">Unread</button>
@@ -1161,7 +1168,8 @@
   </div>
 
   <!-- Files table -->
-  <table class="db-table">
+  <div class="table-scroll">
+      <table class="db-data-table">
     <thead>
       <tr>
         <th data-db-sort aria-sort="ascending" style="width:40%;">Name</th>
@@ -1227,6 +1235,7 @@
       </tr>
     </tbody>
   </table>
+      </div>
 
   <!-- Pagination -->
   <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;">
@@ -1248,13 +1257,13 @@
 <!-- Footer -->
 <div class="db-divider"></div>
 <p style="text-align:center;padding:24px;font-family:var(--db-font-ui);font-size:0.75rem;color:var(--db-warm-gray);">
-  DAUB v3.19.14 — 84 Components, 21 Theme Families, Zero Build Step
+  DAUB v3.20.0 — 84 Components, 21 Theme Families, Zero Build Step
 </p>
 
 <!-- Theme Switcher (popover) -->
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher"></div>
 
-<script src="daub.js?v=3.19.14"></script>
+<script src="daub.js?v=3.20.0"></script>
 <script>
   lucide.createIcons();
 

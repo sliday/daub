@@ -73,6 +73,8 @@ function scanBlocks() {
         const id = file.replace('.json', '');
         const analysis = analyzeSpec(spec);
         const pngExists = fs.existsSync(path.join(catDir, `${id}.png`));
+        const thumbRel = `thumbs/${category}/${id}.webp`;
+        const thumbExists = fs.existsSync(path.join(BLOCKS_DIR, thumbRel));
 
         // Parse subcategory from id (e.g. "sidebar-layout-01" -> "sidebar-layout")
         const parts = id.split('-');
@@ -84,7 +86,7 @@ function scanBlocks() {
           category,
           subcategory: subcategory || id,
           file: `${category}/${file}`,
-          screenshot: pngExists ? `${category}/${id}.png` : undefined,
+          screenshot: thumbExists ? thumbRel : (pngExists ? `${category}/${id}.png` : undefined),
           element_count: analysis.element_count,
           components_used: analysis.components_used,
         });
@@ -100,16 +102,20 @@ function scanBlocks() {
 // ---- Merge with existing index (preserve descriptions, tags, etc.) ----
 
 function mergeIndex(diskBlocks, existingIndex) {
-  const existingMap = new Map(existingIndex.map(e => [e.id, e]));
+  const existingMap = new Map(existingIndex.map(e => [e.file, e]));
   const merged = [];
-
+  const seenIds = new Map();
   for (const block of diskBlocks) {
-    const existing = existingMap.get(block.id);
+    if (seenIds.has(block.id)) {
+      console.warn(`  ! Duplicate block id "${block.id}" (${seenIds.get(block.id)} vs ${block.file}) — rename one file to keep ids unique`);
+    }
+    seenIds.set(block.id, block.file);
+    const existing = existingMap.get(block.file);
     if (existing) {
       merged.push({
         ...existing,
         file: block.file,
-        screenshot: block.screenshot || existing.screenshot,
+        screenshot: existing.screenshot || block.screenshot,
         element_count: block.element_count,
         components_used: block.components_used,
       });

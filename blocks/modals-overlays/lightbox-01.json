@@ -26,7 +26,7 @@
     "lightbox-image": {
       "type": "AspectRatio",
       "props": {
-        "ratio": "16/9"
+        "ratio": "16-9"
       },
       "children": [
         "main-image"
@@ -35,7 +35,7 @@
     "main-image": {
       "type": "Image",
       "props": {
-        "src": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200",
+        "src": "https://picsum.photos/seed/lightbox-analytics/1200/675",
         "alt": "Dashboard analytics view showing revenue charts and user engagement metrics"
       }
     },

@@ -184,8 +184,23 @@ async function main() {
           el.classList.add('db-drawer--open');
           el.removeAttribute('aria-hidden');
         });
+        document.querySelectorAll('.db-command').forEach(el => {
+          el.classList.add('db-command--open');
+          el.removeAttribute('aria-hidden');
+        });
+        // Fixed-position bar: pull into flow so element capture includes it
+        document.querySelectorAll('.db-bottom-nav').forEach(el => {
+          el.classList.add('db-bottom-nav--always');
+          el.style.position = 'static';
+        });
       });
       await page.waitForTimeout(300);
+
+      // Report images that failed to load (network flake / bad src) so captures can be retried
+      const brokenImgs = await page.evaluate(() =>
+        [...document.images].filter(i => i.getAttribute('src') && !(i.complete && i.naturalWidth > 0)).length
+      );
+      if (brokenImgs > 0) console.log(`  ! [${block.id}] ${brokenImgs} broken image(s) in capture`);
 
       // Capture the #app container with aspect ratio constraints
       const app = await page.$('#app');

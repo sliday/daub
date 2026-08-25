@@ -73,7 +73,7 @@
     "ba-before-image": {
       "type": "AspectRatio",
       "props": {
-        "ratio": "16/9"
+        "ratio": "16-9"
       },
       "children": [
         "ba-before-img"
@@ -125,7 +125,7 @@
     "ba-after-image": {
       "type": "AspectRatio",
       "props": {
-        "ratio": "16/9"
+        "ratio": "16-9"
       },
       "children": [
         "ba-after-img"

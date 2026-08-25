@@ -77,7 +77,7 @@
     "video-thumbnail": {
       "type": "AspectRatio",
       "props": {
-        "ratio": "16/9"
+        "ratio": "16-9"
       },
       "children": [
         "video-thumb-img"

@@ -62,14 +62,15 @@
         "bento-card-playground",
         "bento-card-evals",
         "bento-card-deploy",
-        "bento-card-observability",
-        "bento-card-guardrails"
+        "bento-card-guardrails",
+        "bento-card-observability"
       ]
     },
     "bento-card-models": {
       "type": "Surface",
       "props": {
-        "variant": "bordered"
+        "variant": "bordered",
+        "span": 2
       },
       "children": [
         "models-inner"
@@ -229,7 +230,8 @@
     "bento-card-observability": {
       "type": "Surface",
       "props": {
-        "variant": "bordered"
+        "variant": "bordered",
+        "span": 3
       },
       "children": [
         "observability-inner"

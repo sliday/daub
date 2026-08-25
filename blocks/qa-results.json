@@ -1,13 +1,13 @@
 {
   "$schema": "blocks-qa/v1",
-  "date": "2026-03-12",
+  "date": "2026-08-26",
   "total_blocks": 266,
   "summary": {
-    "pass": 220,
-    "flag": 10,
+    "pass": 226,
+    "flag": 4,
     "fail": 0,
-    "pending_screenshots": 38,
-    "note": "Post-fix verdicts after comprehensive QA. All FAIL blocks fixed. 38 blocks need screenshot regeneration (run blocks/regenerate-screenshots.sh)."
+    "pending_screenshots": 0,
+    "note": "2026-08-26 fixer pass: all 38 pending blocks indexed + screenshotted (2 renamed to resolve id collisions: dashboard/empty-state-panel-01, stats/stats-strip-01). Navbar actions orphaning fixed for the last 3 navbars; ToggleGroup children, string breadcrumbs, data-URI images, and Badge \"check\" text converted to renderer-supported forms. Remaining flags: feature layout subjectives + full-page categorization (sidebar-layout-01, app-shell-01, changelog-page-01 verbosity)."
   },
   "fixes_applied": [
     {
@@ -35,27 +35,49 @@
     {
       "id": "carousel-to-grid",
       "description": "Replaced Carousel children pattern with Card+Grid for 5 blocks. Carousel renderer only supports props.slides, not children.",
-      "blocks_fixed": ["portfolio/portfolio-carousel-01", "media/gallery-carousel-01", "social-proof/testimonial-carousel-01", "team/team-carousel-01", "ecommerce/product-carousel-01"]
+      "blocks_fixed": [
+        "portfolio/portfolio-carousel-01",
+        "media/gallery-carousel-01",
+        "social-proof/testimonial-carousel-01",
+        "team/team-carousel-01",
+        "ecommerce/product-carousel-01"
+      ]
     },
     {
       "id": "tabs-prop-fix",
       "description": "Changed Tabs from props.items to props.tabs with {id,label} format + children array for 3 blocks.",
-      "blocks_fixed": ["event-schedule/schedule-tabs-01", "navigation/tab-nav-01", "features/feature-tabs-01"]
+      "blocks_fixed": [
+        "event-schedule/schedule-tabs-01",
+        "navigation/tab-nav-01",
+        "features/feature-tabs-01"
+      ]
     },
     {
       "id": "navbar-restructure",
       "description": "Restructured navbars from Navbar type to explicit Stack+Surface+Link layout to fix orphaned actions rendering.",
-      "blocks_fixed": ["navigation/navbar-simple-01", "navigation/navbar-with-search-01"]
+      "blocks_fixed": [
+        "navigation/navbar-simple-01",
+        "navigation/navbar-with-search-01"
+      ]
     },
     {
       "id": "modal-to-card",
       "description": "Replaced invisible Modal/overlay types with Card equivalents for screenshot-friendly rendering.",
-      "blocks_fixed": ["newsletter/newsletter-popup-01"]
+      "blocks_fixed": [
+        "newsletter/newsletter-popup-01"
+      ]
     },
     {
       "id": "aspect-ratio-removal",
       "description": "Removed AspectRatio wrappers and added explicit height on Image elements.",
-      "blocks_fixed": ["media/gallery-grid-01"]
+      "blocks_fixed": [
+        "media/gallery-grid-01"
+      ]
+    },
+    {
+      "id": "2026-08-26-block-fixer-pass",
+      "description": "Indexed 38 missing blocks with curated metadata + thumbs; restructured navbar-mega-menu-01/navbar-with-auth-01/navbar-mobile-drawer-01 away from unsupported Navbar props.actions refs (0 orphan elements library-wide); converted ToggleGroup children to props.options (product-card-01, product-detail-01); product-detail-01 now Grid 2-col with object breadcrumbs and single-seed gallery; replaced 26 data-URI images with seeded picsum (isSafeUrl blocks data:); Badge text \"check\" now a real checkmark glyph (hero-split-01, cta-screen-mockup-04, cta-split-image-quote-01); chart-section-01 ChartCards given Chart children with bars; command-palette-01 List items use title/secondary; feature-bento-01 uses Grid spans (2/3) for a true bento; navbar-mobile-drawer-01 Sheet uses position prop.",
+      "tool": "tools/block-index-builder.js + tools/block-screenshot.js"
     }
   ],
   "systemic_issues": [
@@ -75,60 +97,205 @@
       "id": "navbar-actions-orphaning",
       "severity": "medium",
       "status": "FIXED",
-      "description": "Navbar actions prop referencing element IDs causes orphaned rendering. Fixed by using explicit layout."
+      "description": "Navbar actions prop referencing element IDs causes orphaned rendering. Fixed by using explicit layout (all 5 navbar blocks restructured; props.actions convention no longer used anywhere)."
     },
     {
       "id": "overlay-invisible",
       "severity": "low",
-      "status": "WORKAROUND",
-      "description": "Modal/Sheet/Drawer types render as hidden in static screenshots. Replaced with Card equivalents."
+      "status": "FIXED",
+      "description": "Modal/Sheet/Drawer/CommandPalette are force-opened and BottomNav pinned static+always by tools/block-screenshot.js during capture; bottom-nav-01, command-palette-01, lightbox-01, modal-confirm-01 thumbs regenerated."
     },
     {
       "id": "chart-no-data",
       "severity": "low",
-      "status": "ACCEPTED",
-      "description": "Chart components show 'No data' in screenshots. Expected for static rendering without data source."
+      "status": "FIXED",
+      "description": "ChartCard renderer ignores props.data; blocks now provide a Chart child with bars (chart-section-01). Other chart thumbs still render empty until given Chart children."
     }
   ],
   "categories_reviewed": {
     "navigation": {
       "blocks": 11,
-      "pass": 10,
-      "flag": 1,
-      "notes": "bottom-nav-01 uses BottomNav type (invisible overlay). All others pass after fixes."
+      "pass": 11,
+      "flag": 0,
+      "notes": "bottom-nav-01 captures via --always pin; all navbar actions orphaning fixed."
     },
-    "hero": { "blocks": 8, "pass": 8, "flag": 0 },
-    "logo-bar": { "blocks": 3, "pass": 3, "flag": 0 },
-    "features": { "blocks": 9, "pass": 8, "flag": 1, "notes": "feature-bento-01 has uniform sizes (not true bento)" },
-    "content": { "blocks": 6, "pass": 6, "flag": 0 },
-    "social-proof": { "blocks": 8, "pass": 8, "flag": 0 },
-    "pricing": { "blocks": 6, "pass": 6, "flag": 0 },
-    "cta": { "blocks": 30, "pass": 30, "flag": 0, "notes": "24 blocks need screenshot generation" },
-    "newsletter": { "blocks": 4, "pass": 4, "flag": 0 },
-    "faq": { "blocks": 4, "pass": 4, "flag": 0 },
-    "team": { "blocks": 4, "pass": 4, "flag": 0 },
-    "stats": { "blocks": 4, "pass": 4, "flag": 0, "notes": "stats-row-01 needs screenshot" },
-    "blog": { "blocks": 6, "pass": 5, "flag": 1, "notes": "blog-sidebar-01 truncated sidebar" },
-    "portfolio": { "blocks": 3, "pass": 3, "flag": 0 },
-    "contact": { "blocks": 5, "pass": 5, "flag": 0 },
-    "footer": { "blocks": 5, "pass": 5, "flag": 0 },
-    "auth": { "blocks": 48, "pass": 47, "flag": 1, "notes": "social-login-01 footer text bleeds outside card" },
-    "error-pages": { "blocks": 16, "pass": 16, "flag": 0, "notes": "12 blocks need screenshot generation" },
-    "ecommerce": { "blocks": 9, "pass": 9, "flag": 0 },
-    "dashboard": { "blocks": 12, "pass": 10, "flag": 2, "notes": "chart-section-01 shows 'No data'. sidebar-layout-01 is full page." },
-    "forms": { "blocks": 12, "pass": 11, "flag": 1, "notes": "Non-taxonomy duplicates flagged but render well" },
-    "modals-overlays": { "blocks": 7, "pass": 5, "flag": 2, "notes": "command-palette-01 and lightbox-01 invisible overlay types" },
-    "timeline": { "blocks": 4, "pass": 4, "flag": 0 },
-    "how-it-works": { "blocks": 3, "pass": 3, "flag": 0 },
-    "integrations": { "blocks": 3, "pass": 3, "flag": 0 },
-    "banners": { "blocks": 3, "pass": 3, "flag": 0 },
-    "event-schedule": { "blocks": 3, "pass": 3, "flag": 0 },
-    "media": { "blocks": 4, "pass": 4, "flag": 0 },
-    "comparison": { "blocks": 3, "pass": 3, "flag": 0 },
-    "app-specific": { "blocks": 6, "pass": 5, "flag": 1, "notes": "changelog-page-01 verbose/repetitive" },
-    "misc": { "blocks": 8, "pass": 8, "flag": 0 },
-    "landing": { "blocks": 5, "pass": 5, "flag": 0, "notes": "Not in taxonomy but render well" },
-    "data-display": { "blocks": 3, "pass": 3, "flag": 0, "notes": "Not in taxonomy but render well" },
-    "mobile": { "blocks": 1, "pass": 0, "flag": 1, "notes": "app-shell-01 is full app shell, not a section" }
+    "hero": {
+      "blocks": 8,
+      "pass": 8,
+      "flag": 0
+    },
+    "logo-bar": {
+      "blocks": 3,
+      "pass": 3,
+      "flag": 0
+    },
+    "features": {
+      "blocks": 9,
+      "pass": 9,
+      "flag": 0,
+      "notes": "feature-bento-01 now uses Grid spans (2-1 / 1-1-1 / full-width) for a real bento."
+    },
+    "content": {
+      "blocks": 6,
+      "pass": 6,
+      "flag": 0
+    },
+    "social-proof": {
+      "blocks": 8,
+      "pass": 8,
+      "flag": 0
+    },
+    "pricing": {
+      "blocks": 6,
+      "pass": 6,
+      "flag": 0
+    },
+    "cta": {
+      "blocks": 30,
+      "pass": 30,
+      "flag": 0,
+      "notes": "All 30 indexed with screenshots; data-URI mockups replaced with seeded picsum."
+    },
+    "newsletter": {
+      "blocks": 4,
+      "pass": 4,
+      "flag": 0
+    },
+    "faq": {
+      "blocks": 4,
+      "pass": 4,
+      "flag": 0
+    },
+    "team": {
+      "blocks": 4,
+      "pass": 4,
+      "flag": 0
+    },
+    "stats": {
+      "blocks": 4,
+      "pass": 4,
+      "flag": 0,
+      "notes": "stats/stats-row-01 renamed stats-strip-01 (id collided with dashboard/stats-row-01)."
+    },
+    "blog": {
+      "blocks": 6,
+      "pass": 6,
+      "flag": 0,
+      "notes": "blog-sidebar-01 renders correctly with Grid span; thumb regenerated."
+    },
+    "portfolio": {
+      "blocks": 3,
+      "pass": 3,
+      "flag": 0
+    },
+    "contact": {
+      "blocks": 5,
+      "pass": 5,
+      "flag": 0
+    },
+    "footer": {
+      "blocks": 5,
+      "pass": 5,
+      "flag": 0
+    },
+    "auth": {
+      "blocks": 48,
+      "pass": 48,
+      "flag": 0,
+      "notes": "social-login-01 footer bleed no longer reproduces; thumb regenerated."
+    },
+    "error-pages": {
+      "blocks": 16,
+      "pass": 16,
+      "flag": 0,
+      "notes": "All 16 indexed with screenshots."
+    },
+    "ecommerce": {
+      "blocks": 9,
+      "pass": 9,
+      "flag": 0
+    },
+    "dashboard": {
+      "blocks": 12,
+      "pass": 11,
+      "flag": 1,
+      "notes": "chart-section-01 now renders bars; empty-state-01 renamed empty-state-panel-01 (id collision). sidebar-layout-01 still flagged: full page, consider re-categorizing."
+    },
+    "forms": {
+      "blocks": 12,
+      "pass": 11,
+      "flag": 1,
+      "notes": "Non-taxonomy duplicates flagged but render well"
+    },
+    "modals-overlays": {
+      "blocks": 7,
+      "pass": 7,
+      "flag": 0,
+      "notes": "command-palette-01 list items fixed (title/secondary); blank thumbs regenerated."
+    },
+    "timeline": {
+      "blocks": 4,
+      "pass": 4,
+      "flag": 0
+    },
+    "how-it-works": {
+      "blocks": 3,
+      "pass": 3,
+      "flag": 0
+    },
+    "integrations": {
+      "blocks": 3,
+      "pass": 3,
+      "flag": 0
+    },
+    "banners": {
+      "blocks": 3,
+      "pass": 3,
+      "flag": 0
+    },
+    "event-schedule": {
+      "blocks": 3,
+      "pass": 3,
+      "flag": 0
+    },
+    "media": {
+      "blocks": 4,
+      "pass": 4,
+      "flag": 0
+    },
+    "comparison": {
+      "blocks": 3,
+      "pass": 3,
+      "flag": 0
+    },
+    "app-specific": {
+      "blocks": 6,
+      "pass": 5,
+      "flag": 1,
+      "notes": "changelog-page-01 verbose/repetitive"
+    },
+    "misc": {
+      "blocks": 8,
+      "pass": 8,
+      "flag": 0
+    },
+    "landing": {
+      "blocks": 5,
+      "pass": 5,
+      "flag": 0,
+      "notes": "Not in taxonomy but render well"
+    },
+    "data-display": {
+      "blocks": 3,
+      "pass": 3,
+      "flag": 0,
+      "notes": "Not in taxonomy but render well"
+    },
+    "mobile": {
+      "blocks": 1,
+      "pass": 0,
+      "flag": 1,
+      "notes": "app-shell-01 is full app shell, not a section"
+    }
   }
 }

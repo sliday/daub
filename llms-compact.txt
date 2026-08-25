@@ -1,10 +1,10 @@
 # DAUB UI — Compact Reference
 
-> Version: 3.19.14
+> Version: 3.20.0
 > Full docs: https://daub.dev/llms.txt
 > CSS: https://daub.dev/daub.css | JS: https://daub.dev/daub.js
 > Classless: https://daub.dev/daub-classless.css
-> React: `npm install daub-react daub-ui` (80 typed JSX components)
+> React: `npm install daub-react daub-ui` (78 typed JSX components)
 > Prefix: `db-` (classes), `--db-` (CSS vars)
 
 ## Quick Start
@@ -57,7 +57,7 @@ Sizes: `db-input--sm`, `db-input--lg`. Error: `db-input--error`.
   <div class="db-tabs__panel" hidden>Content 2</div>
 </div>
 ```
-CSS-only: add `db-tabs--static` with radio inputs. No JS needed. Responsive built-in at ≤640px for navbar.
+CSS-only: add `db-tabs--static` with radio inputs. No JS needed.
 
 ### Modal — `.db-modal-overlay`
 ```html

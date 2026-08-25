@@ -71,6 +71,9 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Stack**: flexbox layout — `direction`, `gap`, `justify`, `align`, `wrap`, `container`
 - **Grid**: CSS grid layout — `columns` (2-6), `gap`, `align`, `container`; classes: `db-grid--2` through `--6`, `db-gap-3`
 - **Responsive**: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`
+- **Flex**: `db-flex` — flexbox utility; combine with `db-gap-*`
+- **Container**: `db-container` (960px) / `--wide` (1200px) / `--narrow` (640px)
+- **Divider**: `db-divider` — horizontal rule
 - **Utilities**: `db-sr-only`, `db-text-muted`, `db-rounded-*`
 
 ### Controls
@@ -95,6 +98,10 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Label**: `db-label` / `--required` / `--optional`
 - **Spinner**: `db-spinner` / `--sm` / `--lg` / `--xl`
 - **Input OTP**: `db-otp` > `db-otp__input` + `db-otp__separator`
+- **Checkbox Group**: `db-checkbox-group` > `__label` + `db-checkbox` items + `__helper`
+- **Number Field**: `db-number-field` > `db-number-field__btn` steppers + `db-input[type=number]`
+- **Fieldset**: `db-fieldset` > `db-fieldset__legend` + `db-fieldset__content`
+- **Accent Picker**: `db-accent-picker` > `db-accent-picker__dot[data-accent]` — JS sets accent color
 
 ### Navigation
 - **Tabs**: `db-tabs` > `db-tabs__list` > `db-tabs__tab` + `db-tabs__panel`
@@ -109,7 +116,7 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 
 ### Data Display
 - **Card**: `db-card` > `db-card__header` + `db-card__title` + `db-card__footer` / `--media` (edge-to-edge images)
-- **Table**: `db-table` (sortable with `data-db-sort` on th)
+- **Table**: `db-table` — static table styling (use Data Table for sorting)
 - **Data Table**: `db-data-table` — sortable, selectable rows
 - **List**: `db-list` > `db-list__item` > `db-list__title` + `db-list__secondary`
 - **Badge**: `db-badge` / `--new` / `--updated` / `--warning` / `--error`
@@ -126,6 +133,7 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Toast**: `DAUB.toast('Quick message')` or `DAUB.toast({ type: 'success', title: 'Done', message: '...' })`
 - **Alert**: `db-alert db-alert--warning` > `db-alert__icon` + `db-alert__content`
 - **Progress**: `db-progress` > `db-progress__bar` style="--db-progress: 65%"
+- **Meter**: `db-meter` role="meter" > `db-meter__bar` — set `--db-meter: 72%`
 - **Skeleton**: `db-skeleton--text` / `--heading` / `--avatar` / `--btn`
 - **Empty State**: `db-empty` > `db-empty__icon` + `db-empty__title` + `db-empty__message`
 - **Tooltip**: `db-tooltip` / `--top` / `--bottom` / `--left` / `--right`
@@ -153,11 +161,15 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Resizable**: `db-resizable` > `__handle--right` / `--bottom` / `--corner`
 - **Date Picker**: `db-date-picker` — wraps Calendar in popover
 - **Theme Switcher**: `db-theme-switcher` — toggle button + categorized popover with 21 families + scheme row
+- **Frame**: `db-frame` > `__header` + `__body` — embedded previews and panels
+- **Group**: `db-group` / `--attached` — generic control grouping
+- **Toolbar**: `db-toolbar` > `__group` + `__separator`
+- **Preview Card**: `db-preview-card` > `__trigger` + `__content` > `__title` + `__desc`
 
 ### Dashboard Primitives
-- **Stat Card**: `db-stat` > `db-stat__label` + `db-stat__value` + `db-stat__trend` / `--up` / `--down`
+- **Stat Card**: `db-stat` > `db-stat__label` + `db-stat__value` + `db-stat__change` / `--up` / `--down`
 - **Chart Card**: `db-chart-card` > `db-chart-card__header` + `db-chart-card__body`
-- **Table Utilities**: `db-table--compact`, `db-table--hover`, `db-td--number`, `db-td--actions`
+- **Numeric Tables**: `db-table--numeric` / `db-data-table--numeric` — tabular-nums alignment
 
 ### JS Helpers
 - **getColor**: `DAUB.getColor('primary')` — returns current theme's CSS variable value as hex

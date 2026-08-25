@@ -2,8 +2,8 @@
 
 **Considered CSS components for discerning interfaces.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.19.14-3D3832.svg)](https://daub.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-3.20.0-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-84-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -16,23 +16,22 @@
 
 A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 84 components, 21 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
-Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 230+ block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
+Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 266-block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
 
-## Playground Model Taxonomy
+## Why DAUB over shadcn/ui?
 
-The Playground uses a task-based model routing strategy:
+shadcn/ui is excellent — if you run React, Tailwind, and a build pipeline. DAUB targets everything else:
 
-| Tier | Model | Use |
-|------|-------|-----|
-| Planning/Reasoning | `gemini-3.1-pro-preview` | Architecture planning, review assembly, regression design |
-| Regular | `gemini-3-flash-preview` | Chunk execution, default backend, main generation |
-| Regular fallback | `kimi-k2.5` | Retry when Flash fails |
-| Quick/Granular | `gemini-3.1-flash-lite-preview` | Regression tests, yes/no decisions |
-| Decision Helper | `minimax-m2.5` | Alternative opinion tool (text only) |
+| | DAUB | shadcn/ui |
+|---|------|-----------|
+| Framework | None required (plain HTML) | React only |
+| Install | One `<link>` + one `<script>` | CLI, Tailwind, build step |
+| Components | 84 in one CSS file | Copy-in per component |
+| Themes | 21 families, 42 variants built in | Bring your own tokens |
+| Classless mode | Yes | No |
+| AI docs | `llms.txt`, `components.json`, MCP server | No |
 
-### Fast Mode
-
-Toggle in the Chat toolbar (on by default). Forces `gemini-3.1-flash-lite-preview` across all pipeline stages with reduced reasoning effort per stage complexity. Same orchestration, same flow — just faster and cheaper. Toggle off to restore the full multi-model routing above.
+Use shadcn/ui when you're deep in a React + Tailwind stack. Use DAUB when you want considered components on any stack — including static pages and AI-generated interfaces — with zero build step.
 
 ## Quick Start
 
@@ -337,29 +336,27 @@ This gives your agent full knowledge of all 84 components, class conventions, th
 
 ## Block Library
 
-DAUB includes **230+ pre-made layout patterns** across **34 categories**. Every block is a self-contained UI section with realistic data.
+DAUB includes **266 pre-made layout patterns** across **34 categories**. Every block is a self-contained UI section with realistic data.
 
 | Category | Count | Category | Count |
 |----------|-------|----------|-------|
-| Auth | 48 | Newsletter | 4 |
-| Dashboard | 12 | FAQ | 4 |
-| Forms | 12 | Team | 4 |
-| Navigation | 11 | Timeline | 4 |
-| Ecommerce | 9 | Media | 4 |
-| Features | 9 | Data Display | 4 |
+| Auth | 48 | Footer | 5 |
+| CTA | 30 | Landing | 5 |
+| Error Pages | 16 | FAQ | 4 |
+| Dashboard | 12 | Media | 4 |
+| Forms | 12 | Newsletter | 4 |
+| Navigation | 11 | Stats | 4 |
+| Ecommerce | 9 | Team | 4 |
+| Features | 9 | Timeline | 4 |
 | Hero | 8 | Banners | 3 |
-| Social Proof | 8 | Comparison | 3 |
-| Misc | 8 | Event Schedule | 3 |
-| Modals/Overlays | 7 | How It Works | 3 |
-| App Specific | 6 | Integrations | 3 |
-| Blog | 6 | Logo Bar | 3 |
-| Content | 6 | Portfolio | 3 |
-| CTA | 6 | Stats | 3 |
-| Pricing | 6 | Mobile | 1 |
-| Contact | 5 | | |
-| Footer | 5 | | |
-| Landing (legacy) | 5 | | |
-| Error Pages | 4 | | |
+| Misc | 8 | Comparison | 3 |
+| Social Proof | 8 | Data Display | 3 |
+| Modals/Overlays | 7 | Event Schedule | 3 |
+| App Specific | 6 | How It Works | 3 |
+| Blog | 6 | Integrations | 3 |
+| Content | 6 | Logo Bar | 3 |
+| Pricing | 6 | Portfolio | 3 |
+| Contact | 5 | Mobile | 1 |
 
 Blocks are automatically retrieved via **RAG** (Retrieval-Augmented Generation) during `generate_ui` calls. The system embeds user prompts with Gemini, finds the top-5 matching blocks by cosine similarity, and injects their full specs as few-shot examples.
 
@@ -560,13 +557,29 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.19.14** — Added the Monospace theme family (`monospace-light` / `monospace`) across CSS, JS theme APIs, gallery, and docs.
+**Latest: v3.20.0** — Added the Monospace theme family (`monospace-light` / `monospace`) across CSS, JS theme APIs, gallery, and docs.
 
 **v3.19.2** — SEO & AI discoverability: keyword-rich title/meta, FAQ schema, complete sitemap, consistent component count (76), llms.txt version sync. Mobile fixes: hamburger nav on all pages, configurator corner radius, toggle sizing, classless demo overflow, docs title responsiveness.
 
 **v3.19.1** — Fix playground renderer: add Icon and Link components, fix Field children prop passing, eliminate orphan elements. All 135 parser tests pass.
 
 **v3.19.0** — WCAG AA contrast pass, native `<dialog>` + `<progress>` support, docs page, classless demo, comparison table.
+
+## Playground Model Taxonomy
+
+The Playground uses a task-based model routing strategy:
+
+| Tier | Model | Use |
+|------|-------|-----|
+| Planning/Reasoning | `gemini-3.1-pro-preview` | Architecture planning, review assembly, regression design |
+| Regular | `gemini-3-flash-preview` | Chunk execution, default backend, main generation |
+| Regular fallback | `kimi-k2.5` | Retry when Flash fails |
+| Quick/Granular | `gemini-3.1-flash-lite-preview` | Regression tests, yes/no decisions |
+| Decision Helper | `minimax-m2.5` | Alternative opinion tool (text only) |
+
+### Fast Mode
+
+Toggle in the Chat toolbar (on by default). Forces `gemini-3.1-flash-lite-preview` across all pipeline stages with reduced reasoning effort per stage complexity. Same orchestration, same flow — just faster and cheaper. Toggle off to restore the full multi-model routing above.
 
 ## Star History
 

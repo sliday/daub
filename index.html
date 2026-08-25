@@ -51,9 +51,9 @@
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "license": "https://opensource.org/licenses/MIT",
-    "version": "3.19.14",
+    "version": "3.20.0",
     "dateCreated": "2026-02-01",
-    "dateModified": "2026-04-21",
+    "dateModified": "2026-08-26",
     "author": { "@type": "Person", "name": "Stas Kulesh", "url": "https://x.com/staskulesh" },
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "keywords": ["CSS components", "UI kit", "design system", "neo-skeuomorphic", "themes", "dark mode", "accessible", "AI-friendly", "llms.txt", "drop-in CSS", "no build step"],
@@ -128,7 +128,7 @@
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous" defer></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.19.14">
+  <link rel="stylesheet" href="daub.css?v=3.20.0">
 
   <style>
     /* Prevent horizontal overflow on mobile */
@@ -1148,8 +1148,8 @@
   <!-- Hero -->
   <section class="db-hero">
     <a class="db-hero__announce" href="https://github.com/sliday/daub" target="_blank" rel="noopener">
-      <span class="db-badge db-badge--new">v3.19.14</span>
-      Auto-temperature, block test suite, 230+ blocks — Star on GitHub
+      <span class="db-badge db-badge--new">v3.20.0</span>
+      Auto-temperature, block test suite, 266 blocks — Star on GitHub
       <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
     </a>
     <h1 class="db-hero__headline">UI for AI.</h1>
@@ -1322,7 +1322,7 @@
       <div class="db-quick-install__option" onclick="navigator.clipboard.writeText('npm install daub-react daub-ui').then(function(){DAUB.toast({type:'success',title:'Copied!',duration:1500})})">
         <button class="db-quick-install__copy" aria-label="Copy"><i data-lucide="copy" style="width:13px;height:13px;"></i></button>
         <div class="db-quick-install__label">React <span class="db-badge db-badge--info">TypeScript</span></div>
-        <div class="db-quick-install__desc">80 typed JSX components with IDE autocomplete</div>
+        <div class="db-quick-install__desc">78 typed JSX components with IDE autocomplete</div>
         <div class="db-quick-install__code">npm install daub-react daub-ui</div>
         <a class="db-quick-install__ai-link" href="https://www.npmjs.com/package/daub-react" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i data-lucide="package" style="width:11px;height:11px;"></i> npm</a>
       </div>
@@ -2046,7 +2046,7 @@
           <p class="db-body">Welcome to the overview panel. DAUB is a warm, tactile UI kit built with care for the 8px grid, organic typography, and the joy of physical materials translated to screen.</p>
         </div>
         <div class="db-tabs__panel">
-          <p class="db-body">28 production-ready components. Vanilla JS + CSS. No build step required. Accessible by default with full keyboard navigation and ARIA attributes.</p>
+          <p class="db-body">84 production-ready components. Vanilla JS + CSS. No build step required. Accessible by default with full keyboard navigation and ARIA attributes.</p>
         </div>
         <div class="db-tabs__panel">
           <p class="db-body">Free and open source. Drop into any project with just two files: <code>daub.css</code> and <code>daub.js</code>.</p>
@@ -3134,6 +3134,7 @@
           <tr>
             <th>Feature</th>
             <th>DAUB</th>
+            <th>shadcn/ui</th>
             <th>Pico CSS</th>
             <th>DaisyUI</th>
             <th>Tailwind</th>
@@ -3143,13 +3144,15 @@
           <tr>
             <td>Components</td>
             <td><strong>84</strong></td>
+            <td>~50 (copy-in)</td>
             <td>~20</td>
             <td>~50</td>
             <td>0 (utility)</td>
           </tr>
           <tr>
             <td>Theme variants</td>
-            <td><strong>40</strong></td>
+            <td><strong>42</strong></td>
+            <td>DIY (CSS vars)</td>
             <td>2</td>
             <td>32</td>
             <td>N/A</td>
@@ -3157,13 +3160,15 @@
           <tr>
             <td>Classless mode</td>
             <td><strong>Yes</strong></td>
+            <td>No</td>
             <td>Yes</td>
             <td>No</td>
             <td>No</td>
           </tr>
           <tr>
             <td>JS included</td>
-            <td><strong>Yes (2 KB)</strong></td>
+            <td><strong>Yes (~19 KB gz)</strong></td>
+            <td>React only</td>
             <td>No</td>
             <td>No</td>
             <td>No</td>
@@ -3171,6 +3176,7 @@
           <tr>
             <td>Build step</td>
             <td><strong>None</strong></td>
+            <td>CLI + Tailwind</td>
             <td>None</td>
             <td>Required</td>
             <td>Required</td>
@@ -3178,6 +3184,7 @@
           <tr>
             <td>AI docs (llms.txt)</td>
             <td><strong>Yes</strong></td>
+            <td>No</td>
             <td>No</td>
             <td>No</td>
             <td>No</td>
@@ -3214,7 +3221,7 @@
   </div>
 
   <!-- JS -->
-  <script src="daub.js?v=3.19.14"></script>
+  <script src="daub.js?v=3.20.0"></script>
   <script>
     // Initialize Lucide icons (Lucide script is deferred — wait for DOMContentLoaded)
     document.addEventListener('DOMContentLoaded', function(){ lucide.createIcons(); });
@@ -3549,6 +3556,18 @@
             setTimeout(function() { if (el.parentElement) el.remove(); }, 400);
           }
         }, 12000);
+        // Dismiss on first meaningful scroll after showing
+        var shownAt = window.scrollY;
+        var onScroll = function() {
+          if (Math.abs(window.scrollY - shownAt) < 400) return;
+          window.removeEventListener('scroll', onScroll);
+          if (el && el.parentElement) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(8px)';
+            setTimeout(function() { if (el.parentElement) el.remove(); }, 400);
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
       }, delay);
       // Cancel if user opens theme switcher before nudge
       var toggle = document.querySelector('.db-theme-switcher__toggle');

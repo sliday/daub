@@ -15,9 +15,25 @@
     "chart-revenue": {
       "type": "ChartCard",
       "props": {
-        "title": "Revenue Over Time",
-        "type_chart": "area",
-        "data": [
+        "title": "Revenue Over Time"
+      },
+      "children": [
+        "revenue-chart"
+      ]
+    },
+    "chart-traffic": {
+      "type": "ChartCard",
+      "props": {
+        "title": "Traffic by Source"
+      },
+      "children": [
+        "traffic-chart"
+      ]
+    },
+    "revenue-chart": {
+      "type": "Chart",
+      "props": {
+        "bars": [
           {
             "label": "Jan",
             "value": 18200
@@ -45,12 +61,10 @@
         ]
       }
     },
-    "chart-traffic": {
-      "type": "ChartCard",
+    "traffic-chart": {
+      "type": "Chart",
       "props": {
-        "title": "Traffic by Source",
-        "type_chart": "pie",
-        "data": [
+        "bars": [
           {
             "label": "Organic Search",
             "value": 4215

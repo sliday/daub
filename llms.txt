@@ -1,6 +1,6 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 3.19.14
+> Version: 3.20.0
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
@@ -10,7 +10,7 @@
 > Theme Families: 21 (42 variants total)
 > Components JSON: https://daub.dev/components.json
 > TypeScript: https://daub.dev/daub.d.ts
-> React: npm install daub-react daub-ui (80 typed JSX components)
+> React: npm install daub-react daub-ui (78 typed JSX components)
 
 ## Quick Start
 
@@ -404,11 +404,27 @@ Mobile-friendly bottom panel.
 ```
 Open: `DAUB.openDrawer('my-drawer')`. Close: `DAUB.closeDrawer('my-drawer')`.
 
-### 25. Toast — via JS API
+### 25. Toast — `.db-toast` / `.db-toast-stack`
+Created via the JS API — `DAUB.toast()` auto-creates the fixed bottom-right `.db-toast-stack` container.
 ```js
+DAUB.toast('Quick message');
 DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 4000 });
 ```
 Types: `success`, `error`, `warning`, `info`.
+Rendered markup (for styling reference):
+```html
+<div class="db-toast-stack" role="region" aria-live="polite" aria-label="Notifications">
+  <div class="db-toast db-toast--success">
+    <span class="db-toast__icon"><!-- icon --></span>
+    <div class="db-toast__content">
+      <div class="db-toast__title">Saved</div>
+      <div class="db-toast__message">Changes saved.</div>
+    </div>
+    <button class="db-toast__close" aria-label="Dismiss">&times;</button>
+  </div>
+</div>
+```
+Toast modifiers: `--success` / `--error` / `--warning` / `--removing`.
 
 ### 26. Alert — `.db-alert`
 ```html
@@ -455,7 +471,7 @@ Avatar Group: overlapping stack with overflow counter.
   <tbody><tr><td>Alice</td><td>Engineer</td></tr></tbody>
 </table>
 ```
-Sortable: add `data-db-sort` to `<th>`.
+Static styling only — for sortable columns use Data Table (`.db-data-table`) with `data-db-sort` on `<th>`.
 
 ### 30. Data Table — `.db-data-table`
 Enhanced table with checkbox selection and sortable headers.
@@ -566,7 +582,7 @@ React/Next.js: include `<script src="daub.js">` — no useState required for mob
 </div>
 ```
 
-### 37. Sidebar — `.db-sidebar`
+### 38. Sidebar — `.db-sidebar`
 Collapsible: add `db-sidebar--collapsed` class. Toggle: `db-sidebar__toggle` button.
 Items need `data-tooltip="Label"` for collapsed hover tooltips.
 JS: `DAUB.toggleSidebar(el)` or click `db-sidebar__toggle`.
@@ -585,7 +601,7 @@ JS: `DAUB.toggleSidebar(el)` or click `db-sidebar__toggle`.
 </aside>
 ```
 
-### 38. Tooltip — `.db-tooltip`
+### 39. Tooltip — `.db-tooltip`
 Positions: `db-tooltip__content--top`, `--bottom`, `--left`, `--right`.
 ```html
 <div class="db-tooltip">
@@ -594,7 +610,7 @@ Positions: `db-tooltip__content--top`, `--bottom`, `--left`, `--right`.
 </div>
 ```
 
-### 39. Popover — `.db-popover`
+### 40. Popover — `.db-popover`
 Positions: `db-popover__content--top`, `--bottom`, `--left`, `--right`.
 ```html
 <div class="db-popover">
@@ -605,7 +621,7 @@ Positions: `db-popover__content--top`, `--bottom`, `--left`, `--right`.
 </div>
 ```
 
-### 40. Hover Card — `.db-hover-card`
+### 41. Hover Card — `.db-hover-card`
 ```html
 <div class="db-hover-card">
   <a href="#">@username</a>
@@ -615,7 +631,7 @@ Positions: `db-popover__content--top`, `--bottom`, `--left`, `--right`.
 </div>
 ```
 
-### 41. Dropdown Menu — `.db-dropdown`
+### 42. Dropdown Menu — `.db-dropdown`
 ```html
 <div class="db-dropdown">
   <button class="db-btn db-dropdown__trigger">Options</button>
@@ -630,7 +646,7 @@ Positions: `db-popover__content--top`, `--bottom`, `--left`, `--right`.
 ```
 Right-aligned: add `db-dropdown__content--right`.
 
-### 42. Context Menu — `.db-context-menu`
+### 43. Context Menu — `.db-context-menu`
 ```html
 <div data-context-menu="my-ctx-menu">Right-click here</div>
 <div class="db-context-menu" id="my-ctx-menu">
@@ -642,7 +658,7 @@ Right-aligned: add `db-dropdown__content--right`.
 </div>
 ```
 
-### 43. Command Palette — `.db-command`
+### 44. Command Palette — `.db-command`
 Opens with Ctrl+K / Cmd+K globally.
 ```html
 <div class="db-command" id="cmd">
@@ -664,7 +680,7 @@ Opens with Ctrl+K / Cmd+K globally.
 ```
 Open: `DAUB.openCommand('cmd')`. Close: `DAUB.closeCommand('cmd')`.
 
-### 44. Accordion — `.db-accordion`
+### 45. Accordion — `.db-accordion`
 Single mode by default. Add `data-multi` for multi-open.
 ```html
 <div class="db-accordion">
@@ -685,7 +701,7 @@ Single mode by default. Add `data-multi` for multi-open.
 </div>
 ```
 
-### 45. Collapsible — `.db-collapsible`
+### 46. Collapsible — `.db-collapsible`
 ```html
 <div class="db-collapsible">
   <button class="db-collapsible__trigger" aria-expanded="false">
@@ -696,20 +712,20 @@ Single mode by default. Add `data-multi` for multi-open.
 </div>
 ```
 
-### 46. Progress — `.db-progress`
+### 47. Progress — `.db-progress`
 ```html
 <div class="db-progress"><div class="db-progress__bar" style="--db-progress: 65%;"></div></div>
 ```
 Indeterminate: add `db-progress--indeterminate`.
 
-### 47. Skeleton — `.db-skeleton`
+### 48. Skeleton — `.db-skeleton`
 ```html
 <div class="db-skeleton db-skeleton--text"></div>
 <div class="db-skeleton db-skeleton--heading"></div>
 <div class="db-skeleton db-skeleton--avatar"></div>
 ```
 
-### 48. Empty State — `.db-empty`
+### 49. Empty State — `.db-empty`
 ```html
 <div class="db-empty">
   <div class="db-empty__icon"><!-- icon --></div>
@@ -719,7 +735,7 @@ Indeterminate: add `db-progress--indeterminate`.
 </div>
 ```
 
-### 49. Calendar — `.db-calendar`
+### 50. Calendar — `.db-calendar`
 ```html
 <div class="db-calendar">
   <div class="db-calendar__header">
@@ -737,7 +753,7 @@ Indeterminate: add `db-progress--indeterminate`.
 </div>
 ```
 
-### 50. Date Picker — `.db-date-picker`
+### 51. Date Picker — `.db-date-picker`
 Wraps Calendar in a trigger/dropdown.
 ```html
 <div class="db-date-picker">
@@ -748,7 +764,7 @@ Wraps Calendar in a trigger/dropdown.
 </div>
 ```
 
-### 51. Carousel — `.db-carousel`
+### 52. Carousel — `.db-carousel`
 ```html
 <div class="db-carousel">
   <div class="db-carousel__track">
@@ -764,7 +780,7 @@ Wraps Calendar in a trigger/dropdown.
 </div>
 ```
 
-### 52. CSS Bar Chart — `.db-chart`
+### 53. CSS Bar Chart — `.db-chart`
 ```html
 <div class="db-chart">
   <div class="db-chart__bar" style="height:40%;"></div>
@@ -774,7 +790,7 @@ Wraps Calendar in a trigger/dropdown.
 <div class="db-chart__labels"><span>Mon</span><span>Tue</span><span>Wed</span></div>
 ```
 
-### 53. Stat Card — `.db-stat`
+### 54. Stat Card — `.db-stat`
 KPI/metric card with label, value, and change indicator.
 Slots: `__label`, `__value`, `__change` (`--up` green / `--down` red), `__icon` (40px).
 Layout: `--horizontal` for row layout with icon.
@@ -789,7 +805,7 @@ Layout: `--horizontal` for row layout with icon.
 </div>
 ```
 
-### 54. Chart Card — `.db-chart-card`
+### 55. Chart Card — `.db-chart-card`
 Card wrapper for any chart (Chart.js canvas, db-chart, etc.) with title/actions header.
 ```html
 <div class="db-chart-card">
@@ -805,7 +821,7 @@ Card wrapper for any chart (Chart.js canvas, db-chart, etc.) with title/actions 
 </div>
 ```
 
-### 55. Resizable — `.db-resizable`
+### 56. Resizable — `.db-resizable`
 ```html
 <div class="db-resizable" style="width:300px;height:200px;border:1px solid var(--db-sand);">
   Content
@@ -814,7 +830,7 @@ Card wrapper for any chart (Chart.js canvas, db-chart, etc.) with title/actions 
 </div>
 ```
 
-### 56. Separator — `.db-separator`
+### 57. Separator — `.db-separator`
 ```html
 <hr class="db-separator">
 <hr class="db-separator db-separator--dashed">
@@ -822,7 +838,7 @@ Card wrapper for any chart (Chart.js canvas, db-chart, etc.) with title/actions 
 <div class="db-separator__label">Or continue with</div>
 ```
 
-### 57. Scroll Area — `.db-scroll-area`
+### 58. Scroll Area — `.db-scroll-area`
 ```html
 <div class="db-scroll-area" style="max-height:200px;">
   <!-- long content -->
@@ -830,13 +846,13 @@ Card wrapper for any chart (Chart.js canvas, db-chart, etc.) with title/actions 
 ```
 Variants: `db-scroll-area--horizontal`, `db-scroll-area--vertical`.
 
-### 58. Aspect Ratio — `.db-aspect`
+### 59. Aspect Ratio — `.db-aspect`
 ```html
 <div class="db-aspect db-aspect--16-9"><img src="photo.jpg" alt=""></div>
 ```
 Ratios: `--16-9`, `--4-3`, `--1-1`, `--21-9`.
 
-### 59. Prose — `.db-prose`
+### 60. Prose — `.db-prose`
 Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2xl`.
 ```html
 <div class="db-prose">
@@ -847,7 +863,7 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 </div>
 ```
 
-### 60. Surface — `.db-surface`
+### 61. Surface — `.db-surface`
 ```html
 <div class="db-surface">Base</div>
 <div class="db-surface--raised">Raised</div>
@@ -855,7 +871,7 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 <div class="db-surface--pressed">Pressed</div>
 ```
 
-### 61. Typography — Heading/Body classes
+### 62. Typography — Heading/Body classes
 ```html
 <h1 class="db-h1">Heading 1</h1>
 <h2 class="db-h2">Heading 2</h2>
@@ -864,14 +880,14 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 <span class="db-caption">Caption</span>
 ```
 
-### 62. Elevation — `.db-elevation-*`
+### 63. Elevation — `.db-elevation-*`
 ```html
 <div class="db-elevation-1">Level 1</div>
 <div class="db-elevation-2">Level 2</div>
 <div class="db-elevation-3">Level 3</div>
 ```
 
-### 63. Stack — flexbox layout
+### 64. Stack — flexbox layout
 Use Stack for all flex-based layouts (vertical stacking, horizontal rows, toolbars, headers).
 Props: `direction` ("vertical"|"horizontal"), `gap` (0-6), `justify` ("center"|"end"|"between"|"evenly"), `align` ("center"|"end"|"start"|"stretch"), `wrap` (bool, default true for horizontal), `container` ("wide"|"narrow"|true).
 ```html
@@ -881,7 +897,7 @@ Props: `direction` ("vertical"|"horizontal"), `gap` (0-6), `justify` ("center"|"
 <div style="display:flex;flex-direction:row;gap:var(--db-space-2);justify-content:space-between;flex-wrap:wrap">...</div>
 ```
 
-### 64. Grid — CSS grid layout
+### 65. Grid — CSS grid layout
 Use Grid for equal-width column arrangements.
 Props: `columns` (2-6), `gap` (0-6), `align` ("center"|"end"), `container` ("wide"|"narrow"|true).
 Grid: `db-grid--2` through `db-grid--6`. Auto-responsive: 4-6 cols → 2 cols at tablet, all → 1 col at mobile.
@@ -895,21 +911,11 @@ Empty state: `.db-empty` inside `.db-grid` auto-spans all columns.
 ```
 For grid layouts with 3+ columns, use `db-container--wide` (1200px) to prevent cramped cards.
 
-### 65. Container — `.db-container`
+### 66. Container — `.db-container`
 Container: `db-container` (960px), `db-container--wide` (1200px), `db-container--narrow` (640px).
 Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`.
 
-## Responsive Breakpoints
-
-| Breakpoint | Width | Grid behavior |
-|------------|-------|---------------|
-| Mobile | `< 640px` | All grids collapse to 1 column |
-| Tablet | `640px – 1023px` | 4+ column grids collapse to 2 columns |
-| Desktop | `≥ 1024px` | All grid columns as specified |
-
-Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`.
-
-### 64. Theme Switcher — `.db-theme-switcher`
+### 67. Theme Switcher — `.db-theme-switcher`
 Toggle button + categorized popover with 21 families + scheme row.
 ```html
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher">
@@ -922,7 +928,18 @@ Toggle button + categorized popover with 21 families + scheme row.
 </div>
 ```
 
-### 65. Utilities
+### 68. Accent Picker — `.db-accent-picker`
+Row of color dots that live-switch the theme accent. JS auto-initializes; `data-accent="reset"` restores the theme default.
+```html
+<div class="db-accent-picker">
+  <button class="db-accent-picker__dot" data-accent="#C67B5C" style="background:#C67B5C" aria-label="Terracotta"></button>
+  <button class="db-accent-picker__dot" data-accent="#6B7C3E" style="background:#6B7C3E" aria-label="Olive"></button>
+  <button class="db-accent-picker__dot" data-accent="#5A6D8E" style="background:#5A6D8E" aria-label="Slate"></button>
+  <button class="db-accent-picker__dot db-accent-picker__dot--reset" data-accent="reset" aria-label="Reset accent"></button>
+</div>
+```
+
+### 69. Utilities
 ```html
 <span class="db-sr-only">Screen reader only</span>
 <span class="db-text-muted">Muted</span>
@@ -933,12 +950,12 @@ Toggle button + categorized popover with 21 families + scheme row.
 Spacing: `db-mt-1` through `db-mt-6`, `db-mb-4`, `db-mb-5`.
 Rounding: `db-rounded-0` through `db-rounded-full`.
 
-### 66. Divider — `.db-divider`
+### 70. Divider — `.db-divider`
 ```html
 <hr class="db-divider">
 ```
 
-### 67. Input with Icon — `.db-input-icon`
+### 71. Input with Icon — `.db-input-icon`
 Positions: left (default), `db-input-icon--right`
 Icon highlights on `:focus-within`.
 ```html
@@ -952,7 +969,7 @@ Icon highlights on `:focus-within`.
 </div>
 ```
 
-### 68. Search Input — `.db-search`
+### 72. Search Input — `.db-search`
 Search box with icon, clear button (auto-shows when input has text).
 ```html
 <div class="db-search">
@@ -962,7 +979,7 @@ Search box with icon, clear button (auto-shows when input has text).
 </div>
 ```
 
-### 69. Bottom Navigation — `.db-bottom-nav`
+### 73. Bottom Navigation — `.db-bottom-nav`
 Fixed mobile bottom bar. Hidden on desktop unless `db-bottom-nav--always`.
 Badge: `db-bottom-nav__badge`. Safe-area aware via `env(safe-area-inset-bottom)`.
 ```html
@@ -983,7 +1000,7 @@ Badge: `db-bottom-nav__badge`. Safe-area aware via `env(safe-area-inset-bottom)`
 </nav>
 ```
 
-### 70. Chip / Tag — `.db-chip`
+### 74. Chip / Tag — `.db-chip`
 Presets: `db-chip--red`, `--green`, `--blue`, `--purple`, `--amber`, `--pink`.
 Arbitrary color: `style="--db-chip-h:195; --db-chip-s:70%; --db-chip-l:42%"`.
 Active/selected: `db-chip--active` (deeper fill, stronger border, bold).
@@ -1006,6 +1023,91 @@ Toggle group: wrap chips in a container with `data-db-chip-toggle` — clicks to
 ```
 Toggle mode: wrap chips in `[data-db-chip-toggle]`. Add `data-db-chip-mode="single"` for radio-like behavior.
 Fires `db:chip:change` CustomEvent with `{ detail: { chip, value, active } }` — call `preventDefault()` to cancel.
+
+
+### 75. Checkbox Group — `.db-checkbox-group`
+```html
+<div class="db-checkbox-group" role="group" aria-labelledby="topics-label">
+  <span class="db-checkbox-group__label" id="topics-label">Topics</span>
+  <label class="db-checkbox"><input class="db-checkbox__input" type="checkbox"><span class="db-checkbox__box"></span><span>Design</span></label>
+  <span class="db-checkbox-group__helper">Choose all that apply.</span>
+</div>
+```
+
+### 76. Fieldset — `.db-fieldset`
+```html
+<fieldset class="db-fieldset">
+  <legend class="db-fieldset__legend">Profile</legend>
+  <div class="db-fieldset__content">
+    <label class="db-field"><span class="db-field__label">Name</span><input class="db-field__input" type="text"></label>
+  </div>
+</fieldset>
+```
+
+### 77. Frame — `.db-frame`
+```html
+<div class="db-frame">
+  <div class="db-frame__header">Preview</div>
+  <div class="db-frame__body">Framed content</div>
+</div>
+```
+
+### 78. Group — `.db-group`
+```html
+<div class="db-group db-group--attached" role="group" aria-label="Alignment">
+  <button class="db-btn db-btn--secondary">Left</button>
+  <button class="db-btn db-btn--secondary">Right</button>
+</div>
+```
+
+### 79. Meter — `.db-meter`
+```html
+<div class="db-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72" style="--db-meter:72%">
+  <div class="db-meter__bar"></div>
+</div>
+```
+
+### 80. Number Field — `.db-number-field`
+```html
+<div class="db-number-field" role="group" aria-label="Quantity">
+  <button class="db-btn db-btn--secondary db-number-field__btn" type="button" aria-label="Decrease">-</button>
+  <input class="db-input" type="number" value="3" min="0" aria-label="Quantity">
+  <button class="db-btn db-btn--secondary db-number-field__btn" type="button" aria-label="Increase">+</button>
+</div>
+```
+
+### 81. Preview Card — `.db-preview-card`
+```html
+<span class="db-preview-card">
+  <button class="db-btn db-btn--ghost db-preview-card__trigger">Account</button>
+  <span class="db-preview-card__content">
+    <strong class="db-preview-card__title">Ada Lovelace</strong>
+    <span class="db-preview-card__desc">Workspace owner and billing contact.</span>
+  </span>
+</span>
+```
+
+### 82. Toolbar — `.db-toolbar`
+```html
+<div class="db-toolbar" role="toolbar" aria-label="Editor tools">
+  <div class="db-toolbar__group">
+    <button class="db-btn db-btn--icon" aria-label="Bold">B</button>
+    <button class="db-btn db-btn--icon" aria-label="Italic">I</button>
+  </div>
+  <span class="db-toolbar__separator" aria-hidden="true"></span>
+  <button class="db-btn db-btn--secondary">Save</button>
+</div>
+```
+
+## Responsive Breakpoints
+
+| Breakpoint | Width | Grid behavior |
+|------------|-------|---------------|
+| Mobile | `< 640px` | All grids collapse to 1 column |
+| Tablet | `640px – 1023px` | 4+ column grids collapse to 2 columns |
+| Desktop | `≥ 1024px` | All grid columns as specified |
+
+Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-tablet`, `db-hide-desktop`, `db-show-desktop`.
 
 ## JS API Reference
 
@@ -1347,7 +1449,7 @@ Wrap the canvas inside `db-chart-card` for consistent card framing:
 
 ## React Integration (daub-react)
 
-80 typed JSX components wrapping DAUB's CSS classes. Full TypeScript, IDE autocomplete, forwardRef on all components.
+78 typed JSX components wrapping DAUB's CSS classes. Full TypeScript, IDE autocomplete, forwardRef on all components.
 
 ```bash
 npm install daub-react daub-ui
@@ -1376,83 +1478,7 @@ Hooks: useControllable, useToast, useEscapeKey, useOutsideClick, useFocusTrap.
 
 npm: https://www.npmjs.com/package/daub-react
 
-## COSS Particle Coverage Additions
-
-### Checkbox Group
-```html
-<div class="db-checkbox-group" role="group" aria-labelledby="topics-label">
-  <span class="db-checkbox-group__label" id="topics-label">Topics</span>
-  <label class="db-checkbox"><input class="db-checkbox__input" type="checkbox"><span class="db-checkbox__box"></span><span>Design</span></label>
-  <span class="db-checkbox-group__helper">Choose all that apply.</span>
-</div>
-```
-
-### Fieldset
-```html
-<fieldset class="db-fieldset">
-  <legend class="db-fieldset__legend">Profile</legend>
-  <div class="db-fieldset__content">
-    <label class="db-field"><span class="db-field__label">Name</span><input class="db-field__input" type="text"></label>
-  </div>
-</fieldset>
-```
-
-### Frame
-```html
-<div class="db-frame">
-  <div class="db-frame__header">Preview</div>
-  <div class="db-frame__body">Framed content</div>
-</div>
-```
-
-### Group
-```html
-<div class="db-group db-group--attached" role="group" aria-label="Alignment">
-  <button class="db-btn db-btn--secondary">Left</button>
-  <button class="db-btn db-btn--secondary">Right</button>
-</div>
-```
-
-### Meter
-```html
-<div class="db-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72" style="--db-meter:72%">
-  <div class="db-meter__bar"></div>
-</div>
-```
-
-### Number Field
-```html
-<div class="db-number-field" role="group" aria-label="Quantity">
-  <button class="db-btn db-btn--secondary db-number-field__btn" type="button" aria-label="Decrease">-</button>
-  <input class="db-input" type="number" value="3" min="0" aria-label="Quantity">
-  <button class="db-btn db-btn--secondary db-number-field__btn" type="button" aria-label="Increase">+</button>
-</div>
-```
-
-### Preview Card
-```html
-<span class="db-preview-card">
-  <button class="db-btn db-btn--ghost db-preview-card__trigger">Account</button>
-  <span class="db-preview-card__content">
-    <strong class="db-preview-card__title">Ada Lovelace</strong>
-    <span class="db-preview-card__desc">Workspace owner and billing contact.</span>
-  </span>
-</span>
-```
-
-### Toolbar
-```html
-<div class="db-toolbar" role="toolbar" aria-label="Editor tools">
-  <div class="db-toolbar__group">
-    <button class="db-btn db-btn--icon" aria-label="Bold">B</button>
-    <button class="db-btn db-btn--icon" aria-label="Italic">I</button>
-  </div>
-  <span class="db-toolbar__separator" aria-hidden="true"></span>
-  <button class="db-btn db-btn--secondary">Save</button>
-</div>
-```
-
-## Design Intelligence (v3.19.14)
+## Design Intelligence (v3.20.0)
 
 DAUB's MCP server and generation pipeline include industry-aware design intelligence that automatically adapts the system prompt based on prompt content.
 

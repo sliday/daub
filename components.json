@@ -1,5 +1,5 @@
 {
-  "version": "3.19.14",
+  "version": "3.20.0",
   "prefix": "db-",
   "cdn": {
     "css": "https://daub.dev/daub.css",
@@ -67,7 +67,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-field\">\n  <label class=\"db-field__label\">Email</label>\n  <input class=\"db-field__input\" type=\"email\" placeholder=\"you@example.com\">\n  <span class=\"db-field__helper\">We'll never share your email.</span>\n</div>",
+      "html": "<div class=\"db-field\">\n  <label class=\"db-field__label\" for=\"field-email\">Email</label>\n  <input class=\"db-field__input\" id=\"field-email\" type=\"email\" placeholder=\"you@example.com\">\n  <span class=\"db-field__helper\">We'll never share your email.</span>\n</div>",
       "notes": "Error state: add db-field--error to wrapper."
     },
     {
@@ -82,7 +82,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<input class=\"db-input\" type=\"text\" placeholder=\"Standalone input\">",
+      "html": "<input class=\"db-input\" type=\"text\" placeholder=\"Standalone input\" aria-label=\"Text input\">",
       "notes": "Standalone text input. Use db-field for label+helper combos."
     },
     {
@@ -99,7 +99,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-input-group\">\n  <span class=\"db-input-group__addon\">https://</span>\n  <input class=\"db-input\" type=\"text\" placeholder=\"example.com\">\n</div>",
+      "html": "<div class=\"db-input-group\">\n  <span class=\"db-input-group__addon\">https://</span>\n  <input class=\"db-input\" type=\"text\" placeholder=\"example.com\" aria-label=\"URL\">\n</div>",
       "notes": "Combine addon spans and db-input/db-btn children."
     },
     {
@@ -118,7 +118,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-input-icon\">\n  <span class=\"db-input-icon__icon\">🔍</span>\n  <input class=\"db-input\" placeholder=\"Search...\">\n</div>",
+      "html": "<div class=\"db-input-icon\">\n  <span class=\"db-input-icon__icon\">🔍</span>\n  <input class=\"db-input\" placeholder=\"Search...\" aria-label=\"Search\">\n</div>",
       "notes": "Icon highlights on :focus-within. Use --right for trailing icon."
     },
     {
@@ -140,7 +140,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-search\">\n  <svg class=\"db-search__icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg>\n  <input class=\"db-input\" type=\"search\" placeholder=\"Search...\">\n  <button class=\"db-search__clear\" aria-label=\"Clear\">&times;</button>\n</div>",
+      "html": "<div class=\"db-search\">\n  <svg class=\"db-search__icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg>\n  <input class=\"db-input\" type=\"search\" placeholder=\"Search...\" aria-label=\"Search\">\n  <button class=\"db-search__clear\" aria-label=\"Clear\">&times;</button>\n</div>",
       "notes": "Clear button auto-shows when input has text."
     },
     {
@@ -153,7 +153,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<textarea class=\"db-textarea\" placeholder=\"Write here...\"></textarea>",
+      "html": "<textarea class=\"db-textarea\" placeholder=\"Write here...\" aria-label=\"Message\"></textarea>",
       "notes": "Error state: add db-textarea--error."
     },
     {
@@ -176,7 +176,7 @@
       ],
       "js": true,
       "html": "<label class=\"db-checkbox\">\n  <input class=\"db-checkbox__input\" type=\"checkbox\">\n  <span class=\"db-checkbox__box\"><svg viewBox=\"0 0 24 24\"><polyline points=\"20 6 9 17 4 12\"/></svg></span>\n  Accept terms\n</label>",
-      "notes": "JS handles visual state sync."
+      "notes": "JS handles visual state sync. Indeterminate: set input.indeterminate = true \u2014 the box shows a dash (used by data-table select-all)."
     },
     {
       "name": "Radio",
@@ -258,7 +258,7 @@
       ],
       "js": true,
       "html": "<div class=\"db-slider\">\n  <div class=\"db-slider__label\"><span>Volume</span><span class=\"db-slider__value\">50</span></div>\n  <input class=\"db-slider__input\" type=\"range\" min=\"0\" max=\"100\" value=\"50\" aria-label=\"Volume\">\n</div>",
-      "notes": "JS syncs __value text with range input."
+      "notes": "JS syncs __value text with range input. Single-thumb only \u2014 for a dual-thumb range (e.g. price filter), compose two sliders for min/max."
     },
     {
       "name": "Toggle",
@@ -299,12 +299,13 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-select\">\n  <label class=\"db-label\">Framework</label>\n  <select class=\"db-select__input\">\n    <option value=\"\">Choose...</option>\n    <option>React</option>\n  </select>\n</div>",
+      "html": "<div class=\"db-select\">\n  <label class=\"db-label\" for=\"select-framework\">Framework</label>\n  <select class=\"db-select__input\" id=\"select-framework\">\n    <option value=\"\">Choose...</option>\n    <option>React</option>\n  </select>\n</div>",
       "notes": "Styled native select element."
     },
     {
       "name": "Custom Select",
       "class": "db-custom-select",
+      "aliases": ["combobox", "autocomplete"],
       "category": "controls",
       "element": "div",
       "modifiers": [
@@ -334,7 +335,7 @@
       ],
       "js": true,
       "html": "<div class=\"db-custom-select\">\n  <button class=\"db-custom-select__trigger\" type=\"button\">\n    <span class=\"db-custom-select__placeholder\">Select...</span>\n    <svg class=\"db-custom-select__icon\" viewBox=\"0 0 24 24\"><path d=\"m6 9 6 6 6-6\"/></svg>\n  </button>\n  <div class=\"db-custom-select__dropdown\">\n    <div class=\"db-custom-select__option\">Option A</div>\n    <div class=\"db-custom-select__option\">Option B</div>\n  </div>\n</div>",
-      "notes": "JS auto-initializes. Optional search filter via __search child."
+      "notes": "JS auto-initializes. Optional search filter via __search child turns it into a combobox / autocomplete."
     },
     {
       "name": "Label",
@@ -507,7 +508,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-modal-overlay\" id=\"my-modal\" aria-hidden=\"true\">\n  <div class=\"db-modal\">\n    <div class=\"db-modal__header\">\n      <h2 class=\"db-modal__title\">Title</h2>\n      <button class=\"db-modal__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-modal__body\">Content</div>\n    <div class=\"db-modal__footer\">\n      <button class=\"db-btn db-btn--primary\">Confirm</button>\n    </div>\n  </div>\n</div>",
+      "html": "<div class=\"db-modal-overlay\" id=\"my-modal\" aria-hidden=\"true\">\n  <div class=\"db-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"my-modal-title\">\n    <div class=\"db-modal__header\">\n      <h2 class=\"db-modal__title\" id=\"my-modal-title\">Title</h2>\n      <button class=\"db-modal__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-modal__body\">Content</div>\n    <div class=\"db-modal__footer\">\n      <button class=\"db-btn db-btn--primary\">Confirm</button>\n    </div>\n  </div>\n</div>",
       "skeleton": "db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer",
       "notes": "Wrap in db-modal-overlay with id. Open: DAUB.openModal('id'). Close: DAUB.closeModal('id')."
     },
@@ -808,9 +809,9 @@
           "required": false
         }
       ],
-      "js": false,
+      "js": true,
       "html": "<table class=\"db-data-table\">\n  <thead><tr>\n    <th><input class=\"db-data-table__check\" type=\"checkbox\" aria-label=\"Select all rows\"></th>\n    <th data-sortable>Name</th>\n  </tr></thead>\n  <tbody><tr>\n    <td><input class=\"db-data-table__check\" type=\"checkbox\" aria-label=\"Select row\"></td>\n    <td>Item</td>\n  </tr></tbody>\n</table>",
-      "notes": "Enhanced table with checkbox selection and sortable headers via data-sortable."
+      "notes": "JS wires the thead checkbox to row checkboxes (select-all with indeterminate state) and click-to-sort on th[data-sortable] / th[data-db-sort] (toggles aria-sort, reorders tbody rows)."
     },
     {
       "name": "List",
@@ -1135,7 +1136,7 @@
       ],
       "js": false,
       "html": "<div class=\"db-hover-card\">\n  <a href=\"#\">@username</a>\n  <div class=\"db-hover-card__content\">\n    <p>User profile info shown on hover.</p>\n  </div>\n</div>",
-      "notes": "Content appears on hover with smooth transition."
+      "notes": "Content appears on hover or keyboard focus (:focus-within)."
     },
     {
       "name": "Dropdown Menu",
@@ -1263,7 +1264,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-command\" id=\"cmd\">\n  <div class=\"db-command__overlay\"></div>\n  <div class=\"db-command__panel\">\n    <div class=\"db-command__input-wrap\">\n      <input class=\"db-command__input\" placeholder=\"Search...\">\n    </div>\n    <div class=\"db-command__list\">\n      <div class=\"db-command__group-label\">Navigation</div>\n      <div class=\"db-command__item\">Home</div>\n    </div>\n  </div>\n</div>",
+      "html": "<div class=\"db-command\" id=\"cmd\">\n  <div class=\"db-command__overlay\"></div>\n  <div class=\"db-command__panel\">\n    <div class=\"db-command__input-wrap\">\n      <input class=\"db-command__input\" placeholder=\"Search...\" aria-label=\"Search commands\">\n    </div>\n    <div class=\"db-command__list\">\n      <div class=\"db-command__group-label\">Navigation</div>\n      <div class=\"db-command__item\">Home</div>\n    </div>\n  </div>\n</div>",
       "skeleton": "db-command#id > __overlay + __panel > __input-wrap + __list",
       "notes": "Opens with Ctrl+K / Cmd+K. JS: DAUB.openCommand('id'), DAUB.closeCommand('id')."
     },
@@ -1344,7 +1345,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-progress\"><div class=\"db-progress__bar\" style=\"--db-progress: 65%;\"></div></div>",
+      "html": "<div class=\"db-progress\" role=\"progressbar\" aria-label=\"Progress\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"65\"><div class=\"db-progress__bar\" style=\"--db-progress: 65%;\"></div></div>",
       "notes": "Set progress via --db-progress custom property. Add --indeterminate for animated state."
     },
     {
@@ -1429,7 +1430,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-calendar\">\n  <div class=\"db-calendar__header\">\n    <button class=\"db-calendar__nav\">&lsaquo;</button>\n    <span class=\"db-calendar__title\">February 2026</span>\n    <button class=\"db-calendar__nav\">&rsaquo;</button>\n  </div>\n  <div class=\"db-calendar__grid\">\n    <span class=\"db-calendar__day-label\">Mo</span>\n    <button class=\"db-calendar__day\">1</button>\n    <button class=\"db-calendar__day db-calendar__day--today\">27</button>\n  </div>\n</div>",
+      "html": "<div class=\"db-calendar\">\n  <div class=\"db-calendar__header\">\n    <button class=\"db-calendar__nav\" aria-label=\"Previous month\">&lsaquo;</button>\n    <span class=\"db-calendar__title\">February 2026</span>\n    <button class=\"db-calendar__nav\" aria-label=\"Next month\">&rsaquo;</button>\n  </div>\n  <div class=\"db-calendar__grid\">\n    <span class=\"db-calendar__day-label\">Mo</span>\n    <button class=\"db-calendar__day\">1</button>\n    <button class=\"db-calendar__day db-calendar__day--today\">27</button>\n  </div>\n</div>",
       "notes": "Day states: --today, --selected, --outside. JS handles month navigation."
     },
     {

@@ -9,11 +9,15 @@
         "align": "center",
         "container": "narrow"
       },
-      "children": ["palette-card"]
+      "children": [
+        "palette-card"
+      ]
     },
     "palette-card": {
       "type": "Card",
-      "children": ["palette-inner"]
+      "children": [
+        "palette-inner"
+      ]
     },
     "palette-inner": {
       "type": "Stack",
@@ -21,7 +25,11 @@
         "direction": "vertical",
         "gap": 3
       },
-      "children": ["palette-search", "palette-divider", "palette-results"]
+      "children": [
+        "palette-search",
+        "palette-divider",
+        "palette-results"
+      ]
     },
     "palette-search": {
       "type": "Input",
@@ -32,24 +40,73 @@
     },
     "palette-divider": {
       "type": "Separator",
-      "props": { "orientation": "horizontal" }
+      "props": {
+        "orientation": "horizontal"
+      }
     },
     "palette-results": {
       "type": "List",
       "props": {
         "items": [
-          { "primary": "New Project", "icon": "plus", "meta": "Ctrl+N" },
-          { "primary": "Open File", "icon": "file", "meta": "Ctrl+O" },
-          { "primary": "Search Documentation", "icon": "search", "meta": "Ctrl+K" },
-          { "primary": "Toggle Dark Mode", "icon": "moon", "meta": "Ctrl+Shift+D" },
-          { "primary": "Invite Team Member", "icon": "user-plus", "meta": "Ctrl+I" },
-          { "primary": "Go to Dashboard", "icon": "layout-dashboard", "meta": "G D" },
-          { "primary": "Go to Settings", "icon": "settings", "meta": "G S" },
-          { "primary": "Go to Projects", "icon": "folder", "meta": "G P" },
-          { "primary": "Export Data", "icon": "download", "meta": "Ctrl+E" },
-          { "primary": "View Notifications", "icon": "bell", "meta": "Ctrl+Shift+N" },
-          { "primary": "Open Terminal", "icon": "terminal", "meta": "Ctrl+`" },
-          { "primary": "Sign Out", "icon": "log-out" }
+          {
+            "title": "New Project",
+            "icon": "plus",
+            "secondary": "Ctrl+N"
+          },
+          {
+            "title": "Open File",
+            "icon": "file",
+            "secondary": "Ctrl+O"
+          },
+          {
+            "title": "Search Documentation",
+            "icon": "search",
+            "secondary": "Ctrl+K"
+          },
+          {
+            "title": "Toggle Dark Mode",
+            "icon": "moon",
+            "secondary": "Ctrl+Shift+D"
+          },
+          {
+            "title": "Invite Team Member",
+            "icon": "user-plus",
+            "secondary": "Ctrl+I"
+          },
+          {
+            "title": "Go to Dashboard",
+            "icon": "layout-dashboard",
+            "secondary": "G D"
+          },
+          {
+            "title": "Go to Settings",
+            "icon": "settings",
+            "secondary": "G S"
+          },
+          {
+            "title": "Go to Projects",
+            "icon": "folder",
+            "secondary": "G P"
+          },
+          {
+            "title": "Export Data",
+            "icon": "download",
+            "secondary": "Ctrl+E"
+          },
+          {
+            "title": "View Notifications",
+            "icon": "bell",
+            "secondary": "Ctrl+Shift+N"
+          },
+          {
+            "title": "Open Terminal",
+            "icon": "terminal",
+            "secondary": "Ctrl+`"
+          },
+          {
+            "title": "Sign Out",
+            "icon": "log-out"
+          }
         ]
       }
     }

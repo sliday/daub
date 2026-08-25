@@ -33,8 +33,8 @@
   }
   </script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
-  <link rel="stylesheet" href="daub.css?v=3.19.14">
-  <script src="daub.js?v=3.19.14" defer></script>
+  <link rel="stylesheet" href="daub.css?v=3.20.0">
+  <script src="daub.js?v=3.20.0" defer></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -206,6 +206,16 @@
       overflow-x: auto;
     }
 
+    /* Keep fixed-position components contained inside their preview card */
+    .docs-component__preview .db-toast-stack {
+      position: static;
+      inset: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--db-space-2);
+      max-width: 360px;
+    }
+
     .docs-component__code-wrap {
       position: relative;
       background: var(--db-cream-dark);
@@ -319,6 +329,10 @@
   <aside class="docs-sidebar" id="sidebar">
     <a href="/" class="docs-sidebar__brand">DAUB</a>
     <a href="/" class="docs-sidebar__back">&larr; Back to homepage</a>
+    <a href="/themes.html" class="docs-sidebar__back">Themes</a>
+    <a href="/demo.html" class="docs-sidebar__back">Layouts</a>
+    <a href="/playground.html" class="docs-sidebar__back">Playground</a>
+    <a href="/llms.txt" class="docs-sidebar__back">AI Docs</a>
     <input type="search" class="docs-sidebar__search" id="search" placeholder="Search components..." autocomplete="off">
     <button class="docs-toggle" id="sidebarToggle">Browse categories</button>
     <nav class="docs-sidebar__nav" id="sidebarNav"></nav>
@@ -460,7 +474,12 @@
         // Live preview — trusted first-party HTML from components.json
         var preview = document.createElement('div');
         preview.className = 'docs-component__preview';
-        preview.innerHTML = c.html;
+        // Example image files (photo.jpg etc.) don't ship with the docs —
+        // substitute an inline SVG placeholder so previews never 404.
+        var placeholderImg = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="%23EDE5D8"/><circle cx="48" cy="38" r="14" fill="%23C67B5C"/><path d="M20 84c4-18 16-26 28-26s24 8 28 26z" fill="%23C67B5C"/></svg>'.replace(/%23/g, '#')
+        );
+        preview.innerHTML = c.html.replace(/src="(?:photo|user1|user2)\.jpg"/g, 'src="' + placeholderImg + '"');
         card.appendChild(preview);
 
         var codeWrap = document.createElement('div');

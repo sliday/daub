@@ -2,30 +2,97 @@
   "root": "navbar-auth",
   "elements": {
     "navbar-auth": {
-      "type": "Navbar",
+      "type": "Stack",
       "props": {
-        "brand": "Vaultwise",
-        "items": [
-          {
-            "label": "Features",
-            "href": "/features"
-          },
-          {
-            "label": "Security",
-            "href": "/security"
-          },
-          {
-            "label": "Docs",
-            "href": "/docs"
-          },
-          {
-            "label": "Blog",
-            "href": "/blog"
-          }
-        ],
-        "actions": [
-          "auth-actions"
-        ]
+        "direction": "vertical",
+        "gap": 0
+      },
+      "children": [
+        "nav-bar"
+      ]
+    },
+    "nav-bar": {
+      "type": "Surface",
+      "props": {
+        "variant": "card"
+      },
+      "children": [
+        "nav-inner"
+      ]
+    },
+    "nav-inner": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center",
+        "justify": "between"
+      },
+      "children": [
+        "nav-left",
+        "auth-actions"
+      ]
+    },
+    "nav-left": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 4,
+        "align": "center"
+      },
+      "children": [
+        "nav-brand",
+        "nav-links"
+      ]
+    },
+    "nav-brand": {
+      "type": "Text",
+      "props": {
+        "tag": "span",
+        "content": "Vaultwise",
+        "weight": "bold"
+      }
+    },
+    "nav-links": {
+      "type": "Stack",
+      "props": {
+        "direction": "horizontal",
+        "gap": 3,
+        "align": "center"
+      },
+      "children": [
+        "link-features",
+        "link-security",
+        "link-docs",
+        "link-blog"
+      ]
+    },
+    "link-features": {
+      "type": "Link",
+      "props": {
+        "label": "Features",
+        "href": "/features"
+      }
+    },
+    "link-security": {
+      "type": "Link",
+      "props": {
+        "label": "Security",
+        "href": "/security"
+      }
+    },
+    "link-docs": {
+      "type": "Link",
+      "props": {
+        "label": "Docs",
+        "href": "/docs"
+      }
+    },
+    "link-blog": {
+      "type": "Link",
+      "props": {
+        "label": "Blog",
+        "href": "/blog"
       }
     },
     "auth-actions": {

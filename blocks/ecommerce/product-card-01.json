@@ -98,7 +98,7 @@
       "type": "Text",
       "props": {
         "tag": "span",
-        "content": "★★★★★",
+        "content": "\u2605\u2605\u2605\u2605\u2605",
         "weight": "bold"
       }
     },
@@ -148,28 +148,22 @@
     },
     "color-options": {
       "type": "ToggleGroup",
-      "children": [
-        "color-black",
-        "color-silver",
-        "color-blue"
-      ]
-    },
-    "color-black": {
-      "type": "Toggle",
       "props": {
-        "label": "Black"
-      }
-    },
-    "color-silver": {
-      "type": "Toggle",
-      "props": {
-        "label": "Silver"
-      }
-    },
-    "color-blue": {
-      "type": "Toggle",
-      "props": {
-        "label": "Midnight Blue"
+        "selected": "black",
+        "options": [
+          {
+            "label": "Black",
+            "value": "black"
+          },
+          {
+            "label": "Silver",
+            "value": "silver"
+          },
+          {
+            "label": "Midnight Blue",
+            "value": "midnight-blue"
+          }
+        ]
       }
     },
     "action-buttons": {

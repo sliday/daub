@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Interactive Behaviors
-   Version 3.19.14
+   Version 3.20.0
    IIFE module exposing window.DAUB = { init, toast, theme API }
    ============================================================ */
 ;(function() {
@@ -619,6 +619,12 @@
         if (e.target === overlay) closeModal(overlay);
       });
 
+      var modalEl = overlay.querySelector('.db-modal');
+      if (modalEl) {
+        if (!modalEl.hasAttribute('role')) modalEl.setAttribute('role', 'dialog');
+        if (!modalEl.hasAttribute('aria-modal')) modalEl.setAttribute('aria-modal', 'true');
+      }
+
       var closeBtn = overlay.querySelector('.db-modal__close');
       if (closeBtn) {
         closeBtn.addEventListener('click', function() {
@@ -708,6 +714,15 @@
 
     var modal = overlay.querySelector('.db-modal');
     if (modal) {
+      if (!modal.hasAttribute('role')) modal.setAttribute('role', 'dialog');
+      if (!modal.hasAttribute('aria-modal')) modal.setAttribute('aria-modal', 'true');
+      if (!modal.hasAttribute('aria-labelledby')) {
+        var mTitle = modal.querySelector('.db-modal__title');
+        if (mTitle) {
+          if (!mTitle.id) mTitle.id = uid();
+          modal.setAttribute('aria-labelledby', mTitle.id);
+        }
+      }
       var FOCUSABLE_SEL = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])';
       var focusable = modal.querySelectorAll(FOCUSABLE_SEL);
       if (focusable.length) focusable[0].focus();
@@ -1540,6 +1555,9 @@
 
       var input = cmd.querySelector('.db-command__input');
       if (input) {
+        if (!input.hasAttribute('aria-label') && !input.hasAttribute('aria-labelledby')) {
+          input.setAttribute('aria-label', 'Search commands');
+        }
         input.addEventListener('input', function() {
           var q = input.value.toLowerCase();
           cmd.querySelectorAll('.db-command__item').forEach(function(item) {
@@ -1725,6 +1743,8 @@
       // Navigation
       var navBtns = cal.querySelectorAll('.db-calendar__nav');
       if (navBtns.length >= 2) {
+        if (!navBtns[0].hasAttribute('aria-label')) navBtns[0].setAttribute('aria-label', 'Previous month');
+        if (!navBtns[1].hasAttribute('aria-label')) navBtns[1].setAttribute('aria-label', 'Next month');
         navBtns[0].addEventListener('click', function(e) {
           e.stopPropagation();
           var m = cal._dbMonth - 1, y = cal._dbYear;
@@ -1844,6 +1864,72 @@
       if (next) next.addEventListener('click', function() { goTo(current + 1); });
       dots.forEach(function(d, i) {
         d.addEventListener('click', function() { goTo(i); });
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Data Table — select-all sync + click-to-sort
+     ---------------------------------------------------------- */
+  function initDataTables(root) {
+    root.querySelectorAll('.db-data-table').forEach(function(table) {
+      if (table._dbInit) return;
+      table._dbInit = true;
+
+      /* Row selection: keep the thead checkbox in sync with tbody rows */
+      var headCheck = table.querySelector('thead .db-data-table__check');
+      function rowChecks() {
+        return Array.prototype.slice.call(table.querySelectorAll('tbody .db-data-table__check'));
+      }
+      function syncRow(check) {
+        var row = check.closest('tr');
+        if (!row) return;
+        if (check.checked) row.setAttribute('data-selected', '');
+        else row.removeAttribute('data-selected');
+      }
+      function syncHead() {
+        if (!headCheck) return;
+        var checks = rowChecks();
+        var checked = checks.filter(function(c) { return c.checked; }).length;
+        headCheck.checked = checks.length > 0 && checked === checks.length;
+        headCheck.indeterminate = checked > 0 && checked < checks.length;
+      }
+      if (headCheck) {
+        headCheck.addEventListener('change', function() {
+          rowChecks().forEach(function(c) { c.checked = headCheck.checked; syncRow(c); });
+          headCheck.indeterminate = false;
+        });
+      }
+      table.addEventListener('change', function(e) {
+        var check = e.target && e.target.classList && e.target.classList.contains('db-data-table__check') ? e.target : null;
+        if (!check || !check.closest('tbody')) return;
+        syncRow(check);
+        syncHead();
+      });
+      rowChecks().forEach(syncRow);
+      syncHead();
+
+      /* Sortable headers: toggle aria-sort, reorder tbody rows */
+      var headers = table.querySelectorAll('th[data-sortable], th[data-db-sort]');
+      headers.forEach(function(th) {
+        th.addEventListener('click', function() {
+          var dir = th.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
+          headers.forEach(function(h) { h.removeAttribute('aria-sort'); });
+          th.setAttribute('aria-sort', dir);
+          var tbody = table.querySelector('tbody');
+          if (!tbody) return;
+          var col = Array.prototype.indexOf.call(th.parentNode.children, th);
+          var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+          rows.sort(function(a, b) {
+            var av = a.children[col] ? a.children[col].textContent.trim() : '';
+            var bv = b.children[col] ? b.children[col].textContent.trim() : '';
+            var an = parseFloat(av.replace(/[^0-9.\-]/g, ''));
+            var bn = parseFloat(bv.replace(/[^0-9.\-]/g, ''));
+            var cmp = (!isNaN(an) && !isNaN(bn) && av !== '' && bv !== '') ? an - bn : av.localeCompare(bv);
+            return dir === 'ascending' ? cmp : -cmp;
+          });
+          rows.forEach(function(r) { tbody.appendChild(r); });
+        });
       });
     });
   }
@@ -2110,6 +2196,7 @@
     initMenubars(root);
     initCalendars(root);
     initCarousels(root);
+    initDataTables(root);
     initOTP(root);
     initResizables(root);
     initChipClose(root);

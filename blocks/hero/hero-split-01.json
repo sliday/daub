@@ -77,7 +77,7 @@
     "hero-feat-check-1": {
       "type": "Badge",
       "props": {
-        "text": "check",
+        "text": "✓",
         "variant": "success"
       }
     },
@@ -103,7 +103,7 @@
     "hero-feat-check-2": {
       "type": "Badge",
       "props": {
-        "text": "check",
+        "text": "✓",
         "variant": "success"
       }
     },
@@ -129,7 +129,7 @@
     "hero-feat-check-3": {
       "type": "Badge",
       "props": {
-        "text": "check",
+        "text": "✓",
         "variant": "success"
       }
     },

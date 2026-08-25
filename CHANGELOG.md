@@ -2,6 +2,33 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.20.0
+
+**Deep multiagent review: 56 confirmed fixes across components, blocks, demo, docs (2026-08-26).**
+
+Full-library review (8 parallel reviewers, adversarial verification, 20 agents) toward the shadcn/ui-alternative bar.
+
+### Components (daub.css / daub.js / components.json / daub-render.js)
+- **Data table sorting implemented** — `th[data-sortable]` / `data-db-sort` now actually sorts (numeric-aware, `aria-sort` synced); previously documented but inert. Select-all header checkbox syncs tbody rows incl. indeterminate.
+- **Default accent WCAG fix** — `--db-terracotta` `#C67B5C` → `#B9704F` (3.36:1 on cream, was 2.89:1 failing 1.4.11); derived accent tokens re-tuned to keep gradient depth. wcag-audit: 44 themes, 0 failures.
+- **Focus-visible sweep** — rings added to modal/toast close, calendar days, carousel btns+dots, nav-menu/sidebar/bottom-nav items, theme-switcher internals, chip toggle/close, accent-picker.
+- **Disabled states** — checkbox, radio, toggle, slider (per-engine thumb cursors), toggle chips.
+- **Checkbox `:indeterminate`** styling (accent fill + dash).
+- **A11y examples fixed** — label/for pairing (field, select), `role=progressbar` on progress, `role=dialog aria-modal` on modal (asserted at runtime), aria-labels on calendar nav, command input, placeholder-only inputs; hover-card `:focus-within` reveal.
+- **Sidebar auto-collapses** to 64px icon rail ≤640px. Firefox slider focus ring (`::-moz-range-thumb`). Custom-select trigger `:focus` → `:focus-visible`.
+- **UX-law hardening** — `touch-action: manipulation` on all interactive controls (kills 300ms tap delay); `db-chip__close` hit area extended 16→28px (Fitts / WCAG 2.5.8); press feedback (`:active` nudge) on toggle, tabs, chips, accordion, nav items.
+
+### Blocks
+- **38 invisible blocks indexed** — all 24 `cta/*`, 12 `error-pages/*`, 2 dashboard/stats blocks now in `index.json` (266/266) with curated metadata + freshly captured webp thumbs; 2 id collisions resolved by rename (`empty-state-panel-01`, `stats-strip-01`).
+- Broken data-URI images in 27 cta/error-page blocks → seeded picsum URLs; ~15 blocks repaired (badge literal "check" text, broken hero thumb, navbar/mega-menu, product cards, lightbox, command palette, bento, before/after, video sections); 22 thumbs regenerated.
+- `ToggleGroup` block renderer now renders children; `Carousel` renderer wraps slides, syncs dots, adds aria-labels. Index builder + screenshot tools patched.
+
+### Demo & Docs
+- **demo.html mobile fixed** — dashboard/settings 1fr-1fr grids collapse, profile header wraps (Follow button was off-viewport at 390px), tables scroll in-panel.
+- **README: "Why DAUB instead of shadcn/ui?"** section — zero build step, no React required, one CSS file, 44 themes.
+- Landing comparison table corrected (real JS size, honest claims); stale "28 components" copy → 84; docs/llms.txt/SKILL.md synced with implemented behavior (sort, combobox aliases, slider range recipe).
+- Audit: **84/84 green**. Block index integrity: 266/266, 0 unresolved refs.
+
 ## v3.19.14
 
 **Toggle Group redesigned as segmented control (2026-08-26).**

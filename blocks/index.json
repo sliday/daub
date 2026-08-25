@@ -164,7 +164,8 @@
       "Button",
       "Separator",
       "Field",
-      "Switch"
+      "Switch",
+      "Link"
     ],
     "screenshot": "thumbs/auth/auth-page-01.webp"
   },
@@ -182,7 +183,8 @@
       "Input",
       "Button",
       "Separator",
-      "Text"
+      "Text",
+      "Link"
     ],
     "name": "Forgot Password",
     "description": "Forgot Password block for auth",
@@ -192,6 +194,94 @@
       "password"
     ],
     "screenshot": "thumbs/auth/forgot-password-01.webp"
+  },
+  {
+    "id": "forgot-password-check-email-01",
+    "name": "Forgot Password Check Email",
+    "category": "auth",
+    "description": "Forgot Password Check Email screen with 12 elements",
+    "tags": [
+      "auth",
+      "forgot-password",
+      "form"
+    ],
+    "file": "auth/forgot-password-check-email-01.json",
+    "element_count": 12,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Button",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/forgot-password-check-email-01.webp"
+  },
+  {
+    "id": "forgot-password-form-01",
+    "name": "Forgot Password Form",
+    "category": "auth",
+    "description": "Forgot Password Form screen with 11 elements",
+    "tags": [
+      "auth",
+      "forgot-password",
+      "form"
+    ],
+    "file": "auth/forgot-password-form-01.json",
+    "element_count": 11,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/forgot-password-form-01.webp"
+  },
+  {
+    "id": "forgot-password-new-password-01",
+    "name": "Forgot Password New Password",
+    "category": "auth",
+    "description": "Forgot Password New Password screen with 14 elements",
+    "tags": [
+      "auth",
+      "forgot-password",
+      "form"
+    ],
+    "file": "auth/forgot-password-new-password-01.json",
+    "element_count": 14,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/forgot-password-new-password-01.webp"
+  },
+  {
+    "id": "forgot-password-success-01",
+    "name": "Forgot Password Success",
+    "category": "auth",
+    "description": "Forgot Password Success screen with 9 elements",
+    "tags": [
+      "auth",
+      "forgot-password",
+      "form"
+    ],
+    "file": "auth/forgot-password-success-01.json",
+    "element_count": 9,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Button",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/forgot-password-success-01.webp"
   },
   {
     "id": "login-form-01",
@@ -205,6 +295,7 @@
       "Field",
       "Input",
       "Checkbox",
+      "Link",
       "Button",
       "Separator",
       "Text"
@@ -217,6 +308,380 @@
       "form"
     ],
     "screenshot": "thumbs/auth/login-form-01.webp"
+  },
+  {
+    "id": "login-page-card-01",
+    "name": "Login Page Card",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 20 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-card-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Card",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button",
+      "Separator"
+    ],
+    "screenshot": "thumbs/auth/login-page-card-01.webp"
+  },
+  {
+    "id": "login-page-card-02",
+    "name": "Login Page Card V2",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 18 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-card-02.json",
+    "element_count": 18,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Icon",
+      "Text",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button"
+    ],
+    "screenshot": "thumbs/auth/login-page-card-02.webp"
+  },
+  {
+    "id": "login-page-illustration-01",
+    "name": "Login Page Illustration",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 19 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-illustration-01.json",
+    "element_count": 19,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button"
+    ],
+    "screenshot": "thumbs/auth/login-page-illustration-01.webp"
+  },
+  {
+    "id": "login-page-minimal-01",
+    "name": "Login Page Minimal",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 18 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-minimal-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Input",
+      "Button",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/login-page-minimal-01.webp"
+  },
+  {
+    "id": "login-page-nav-01",
+    "name": "Login Page Nav",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 23 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-nav-01.json",
+    "element_count": 23,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Link",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Button"
+    ],
+    "screenshot": "thumbs/auth/login-page-nav-01.webp"
+  },
+  {
+    "id": "login-page-simple-01",
+    "name": "Login Page Simple",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 19 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-simple-01.json",
+    "element_count": 19,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button"
+    ],
+    "screenshot": "thumbs/auth/login-page-simple-01.webp"
+  },
+  {
+    "id": "login-page-social-01",
+    "name": "Login Page Social",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 17 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-social-01.json",
+    "element_count": 17,
+    "components_used": [
+      "Stack",
+      "Surface",
+      "Icon",
+      "Text",
+      "Input",
+      "Button",
+      "Separator",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/login-page-social-01.webp"
+  },
+  {
+    "id": "login-page-social-leading-01",
+    "name": "Login Page Social Leading",
+    "category": "auth",
+    "description": "Login page variant using Stack layout with 12 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-page-social-leading-01.json",
+    "element_count": 12,
+    "components_used": [
+      "Stack",
+      "Surface",
+      "Icon",
+      "Text",
+      "Button",
+      "Separator",
+      "Input"
+    ],
+    "screenshot": "thumbs/auth/login-page-social-leading-01.webp"
+  },
+  {
+    "id": "login-split-carousel-01",
+    "name": "Login Split Carousel",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 43 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-carousel-01.json",
+    "element_count": 55,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button",
+      "Surface",
+      "Badge"
+    ],
+    "screenshot": "thumbs/auth/login-split-carousel-01.webp"
+  },
+  {
+    "id": "login-split-geometric-01",
+    "name": "Login Split Geometric",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 28 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-geometric-01.json",
+    "element_count": 29,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button",
+      "Surface"
+    ],
+    "screenshot": "thumbs/auth/login-split-geometric-01.webp"
+  },
+  {
+    "id": "login-split-image-01",
+    "name": "Login Split Image",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 22 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-image-01.json",
+    "element_count": 26,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button",
+      "Surface",
+      "Icon"
+    ],
+    "screenshot": "thumbs/auth/login-split-image-01.webp"
+  },
+  {
+    "id": "login-split-image-quote-01",
+    "name": "Login Split Image Quote",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 31 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-image-quote-01.json",
+    "element_count": 31,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button",
+      "Surface"
+    ],
+    "screenshot": "thumbs/auth/login-split-image-quote-01.webp"
+  },
+  {
+    "id": "login-split-mockup-01",
+    "name": "Login Split Mockup",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 24 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-mockup-01.json",
+    "element_count": 39,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button",
+      "Surface"
+    ],
+    "screenshot": "thumbs/auth/login-split-mockup-01.webp"
+  },
+  {
+    "id": "login-split-mockup-quote-01",
+    "name": "Login Split Mockup Quote",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 31 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-mockup-quote-01.json",
+    "element_count": 46,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button",
+      "Surface",
+      "Avatar"
+    ],
+    "screenshot": "thumbs/auth/login-split-mockup-quote-01.webp"
+  },
+  {
+    "id": "login-split-quote-01",
+    "name": "Login Split Quote",
+    "category": "auth",
+    "description": "Login page variant using Grid layout with 31 elements",
+    "tags": [
+      "auth",
+      "login",
+      "form"
+    ],
+    "file": "auth/login-split-quote-01.json",
+    "element_count": 31,
+    "components_used": [
+      "Grid",
+      "Surface",
+      "Stack",
+      "Icon",
+      "Text",
+      "Avatar",
+      "Field",
+      "Input",
+      "Checkbox",
+      "Link",
+      "Button"
+    ],
+    "screenshot": "thumbs/auth/login-split-quote-01.webp"
   },
   {
     "id": "register-form-01",
@@ -233,7 +698,8 @@
       "Checkbox",
       "Button",
       "Separator",
-      "Text"
+      "Text",
+      "Link"
     ],
     "name": "Register Form",
     "description": "Register Form block for auth",
@@ -258,7 +724,8 @@
       "Progress",
       "Text",
       "Button",
-      "Separator"
+      "Separator",
+      "Link"
     ],
     "name": "Reset Password",
     "description": "Reset Password block for auth",
@@ -268,6 +735,535 @@
       "password"
     ],
     "screenshot": "thumbs/auth/reset-password-01.webp"
+  },
+  {
+    "id": "signup-card-01",
+    "name": "Signup Card",
+    "category": "auth",
+    "description": "Signup Card screen with 21 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-card-01.json",
+    "element_count": 21,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Icon",
+      "Text",
+      "Card",
+      "Field",
+      "Input",
+      "Button",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/signup-card-01.webp"
+  },
+  {
+    "id": "signup-card-02",
+    "name": "Signup Card",
+    "category": "auth",
+    "description": "Signup Card screen with 25 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-card-02.json",
+    "element_count": 25,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "Card",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/signup-card-02.webp"
+  },
+  {
+    "id": "signup-nav-01",
+    "name": "Signup Nav",
+    "category": "auth",
+    "description": "Signup Nav screen with 28 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-nav-01.json",
+    "element_count": 28,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Link",
+      "Field",
+      "Input",
+      "Button"
+    ],
+    "screenshot": "thumbs/auth/signup-nav-01.webp"
+  },
+  {
+    "id": "signup-progress-01",
+    "name": "Signup Progress",
+    "category": "auth",
+    "description": "Signup Progress screen with 20 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-progress-01.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Separator"
+    ],
+    "screenshot": "thumbs/auth/signup-progress-01.webp"
+  },
+  {
+    "id": "signup-progress-02",
+    "name": "Signup Progress",
+    "category": "auth",
+    "description": "Signup Progress screen with 32 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-progress-02.json",
+    "element_count": 32,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Surface",
+      "Grid"
+    ],
+    "screenshot": "thumbs/auth/signup-progress-02.webp"
+  },
+  {
+    "id": "signup-progress-03",
+    "name": "Signup Progress",
+    "category": "auth",
+    "description": "Signup Progress screen with 25 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-progress-03.json",
+    "element_count": 25,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Grid"
+    ],
+    "screenshot": "thumbs/auth/signup-progress-03.webp"
+  },
+  {
+    "id": "signup-sidebar-progress-01",
+    "name": "Signup Sidebar Progress",
+    "category": "auth",
+    "description": "Signup Sidebar Progress screen with 48 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-sidebar-progress-01.json",
+    "element_count": 48,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Avatar",
+      "Field",
+      "Input",
+      "Button",
+      "Separator"
+    ],
+    "screenshot": "thumbs/auth/signup-sidebar-progress-01.webp"
+  },
+  {
+    "id": "signup-sidebar-progress-02",
+    "name": "Signup Sidebar Progress",
+    "category": "auth",
+    "description": "Signup Sidebar Progress screen with 43 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-sidebar-progress-02.json",
+    "element_count": 43,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Separator",
+      "Avatar",
+      "Field",
+      "Input",
+      "Button"
+    ],
+    "screenshot": "thumbs/auth/signup-sidebar-progress-02.webp"
+  },
+  {
+    "id": "signup-sidebar-progress-03",
+    "name": "Signup Sidebar Progress",
+    "category": "auth",
+    "description": "Signup Sidebar Progress screen with 43 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-sidebar-progress-03.json",
+    "element_count": 43,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Badge",
+      "Separator",
+      "Avatar",
+      "Field",
+      "Input",
+      "Button"
+    ],
+    "screenshot": "thumbs/auth/signup-sidebar-progress-03.webp"
+  },
+  {
+    "id": "signup-simple-01",
+    "name": "Signup Simple",
+    "category": "auth",
+    "description": "Signup Simple screen with 19 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-simple-01.json",
+    "element_count": 19,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/signup-simple-01.webp"
+  },
+  {
+    "id": "signup-social-01",
+    "name": "Signup Social",
+    "category": "auth",
+    "description": "Signup Social screen with 19 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-social-01.json",
+    "element_count": 19,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Separator",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/signup-social-01.webp"
+  },
+  {
+    "id": "signup-social-leading-01",
+    "name": "Signup Social Leading",
+    "category": "auth",
+    "description": "Signup Social Leading screen with 18 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-social-leading-01.json",
+    "element_count": 18,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Button",
+      "Separator",
+      "Field",
+      "Input",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/signup-social-leading-01.webp"
+  },
+  {
+    "id": "signup-split-app-mockup-01",
+    "name": "Signup Split App Mockup",
+    "category": "auth",
+    "description": "Signup Split App Mockup screen with 26 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-app-mockup-01.json",
+    "element_count": 41,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link",
+      "Surface",
+      "List"
+    ],
+    "screenshot": "thumbs/auth/signup-split-app-mockup-01.webp"
+  },
+  {
+    "id": "signup-split-arrow-01",
+    "name": "Signup Split Arrow",
+    "category": "auth",
+    "description": "Signup Split Arrow screen with 37 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-arrow-01.json",
+    "element_count": 37,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link",
+      "Surface",
+      "Avatar"
+    ],
+    "screenshot": "thumbs/auth/signup-split-arrow-01.webp"
+  },
+  {
+    "id": "signup-split-carousel-01",
+    "name": "Signup Split Carousel",
+    "category": "auth",
+    "description": "Signup Split Carousel screen with 40 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-carousel-01.json",
+    "element_count": 52,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link",
+      "Surface",
+      "Badge"
+    ],
+    "screenshot": "thumbs/auth/signup-split-carousel-01.webp"
+  },
+  {
+    "id": "signup-split-gradient-01",
+    "name": "Signup Split Gradient",
+    "category": "auth",
+    "description": "Signup Split Gradient screen with 25 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-gradient-01.json",
+    "element_count": 29,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link",
+      "Surface",
+      "List"
+    ],
+    "screenshot": "thumbs/auth/signup-split-gradient-01.webp"
+  },
+  {
+    "id": "signup-split-image-bg-01",
+    "name": "Signup Split Image Bg",
+    "category": "auth",
+    "description": "Signup Split Image Bg screen with 37 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-image-bg-01.json",
+    "element_count": 37,
+    "components_used": [
+      "Grid",
+      "Surface",
+      "Stack",
+      "Icon",
+      "Text",
+      "Avatar",
+      "Field",
+      "Input",
+      "Button",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/signup-split-image-bg-01.webp"
+  },
+  {
+    "id": "signup-split-mockup-01",
+    "name": "Signup Split Mockup",
+    "category": "auth",
+    "description": "Signup Split Mockup screen with 27 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-mockup-01.json",
+    "element_count": 42,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link",
+      "Surface"
+    ],
+    "screenshot": "thumbs/auth/signup-split-mockup-01.webp"
+  },
+  {
+    "id": "signup-split-mockup-quote-01",
+    "name": "Signup Split Mockup Quote",
+    "category": "auth",
+    "description": "Signup Split Mockup Quote screen with 34 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-mockup-quote-01.json",
+    "element_count": 49,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link",
+      "Surface",
+      "Avatar"
+    ],
+    "screenshot": "thumbs/auth/signup-split-mockup-quote-01.webp"
+  },
+  {
+    "id": "signup-split-quote-carousel-01",
+    "name": "Signup Split Quote Carousel",
+    "category": "auth",
+    "description": "Signup Split Quote Carousel screen with 40 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-quote-carousel-01.json",
+    "element_count": 40,
+    "components_used": [
+      "Grid",
+      "Surface",
+      "Stack",
+      "Icon",
+      "Text",
+      "Avatar",
+      "Button",
+      "Badge",
+      "Field",
+      "Input",
+      "Link"
+    ],
+    "screenshot": "thumbs/auth/signup-split-quote-carousel-01.webp"
+  },
+  {
+    "id": "signup-split-quote-image-01",
+    "name": "Signup Split Quote Image",
+    "category": "auth",
+    "description": "Signup Split Quote Image screen with 29 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-quote-image-01.json",
+    "element_count": 29,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link",
+      "Surface",
+      "Avatar"
+    ],
+    "screenshot": "thumbs/auth/signup-split-quote-image-01.webp"
+  },
+  {
+    "id": "signup-split-quote-image-02",
+    "name": "Signup Split Quote Image",
+    "category": "auth",
+    "description": "Signup Split Quote Image screen with 34 elements",
+    "tags": [
+      "auth",
+      "signup"
+    ],
+    "file": "auth/signup-split-quote-image-02.json",
+    "element_count": 34,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Icon",
+      "Text",
+      "Field",
+      "Input",
+      "Button",
+      "Link",
+      "Surface",
+      "Card",
+      "Avatar"
+    ],
+    "screenshot": "thumbs/auth/signup-split-quote-image-02.webp"
   },
   {
     "id": "social-login-01",
@@ -282,7 +1278,8 @@
       "Separator",
       "Text",
       "Field",
-      "Input"
+      "Input",
+      "Link"
     ],
     "name": "Social Login",
     "description": "Social Login block for auth",
@@ -306,7 +1303,8 @@
       "Label",
       "InputOTP",
       "Separator",
-      "Text"
+      "Text",
+      "Link"
     ],
     "name": "Two Factor",
     "description": "Two Factor block for auth",
@@ -829,6 +1827,7 @@
       "AspectRatio",
       "Surface",
       "Image",
+      "Icon",
       "List",
       "Separator"
     ],
@@ -867,6 +1866,30 @@
     "screenshot": "thumbs/content/content-with-image-01.webp"
   },
   {
+    "id": "cta-abstract-images-01",
+    "category": "cta",
+    "subcategory": "cta-abstract-images",
+    "file": "cta/cta-abstract-images-01.json",
+    "element_count": 17,
+    "components_used": [
+      "Stack",
+      "Grid",
+      "Text",
+      "ButtonGroup",
+      "Button",
+      "Image"
+    ],
+    "name": "CTA Abstract Images",
+    "description": "Centered call to action flanked by an abstract image collage, with no-contract reassurance copy and dual buttons.",
+    "tags": [
+      "cta",
+      "abstract",
+      "collage",
+      "centered"
+    ],
+    "screenshot": "thumbs/cta/cta-abstract-images-01.webp"
+  },
+  {
     "id": "cta-banner-01",
     "category": "cta",
     "subcategory": "cta-banner",
@@ -888,12 +1911,83 @@
     "screenshot": "thumbs/cta/cta-banner-01.webp"
   },
   {
+    "id": "cta-card-horizontal-01",
+    "category": "cta",
+    "subcategory": "cta-card-horizontal",
+    "file": "cta/cta-card-horizontal-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "CTA Card Horizontal",
+    "description": "Horizontal card call to action with trial headline, supporting copy, and side-by-side action buttons.",
+    "tags": [
+      "cta",
+      "card",
+      "horizontal",
+      "trial"
+    ],
+    "screenshot": "thumbs/cta/cta-card-horizontal-01.webp"
+  },
+  {
+    "id": "cta-card-horizontal-split-01",
+    "category": "cta",
+    "subcategory": "cta-card-horizontal-split",
+    "file": "cta/cta-card-horizontal-split-01.json",
+    "element_count": 11,
+    "components_used": [
+      "Stack",
+      "Surface",
+      "Card",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "CTA Card Horizontal Split",
+    "description": "Two-tone horizontal card call to action splitting copy and actions across a raised surface.",
+    "tags": [
+      "cta",
+      "card",
+      "horizontal",
+      "split"
+    ],
+    "screenshot": "thumbs/cta/cta-card-horizontal-split-01.webp"
+  },
+  {
+    "id": "cta-card-vertical-01",
+    "category": "cta",
+    "subcategory": "cta-card-vertical",
+    "file": "cta/cta-card-vertical-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Card",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "CTA Card Vertical",
+    "description": "Compact vertical card call to action with centered trial headline and stacked buttons.",
+    "tags": [
+      "cta",
+      "card",
+      "vertical",
+      "centered"
+    ],
+    "screenshot": "thumbs/cta/cta-card-vertical-01.webp"
+  },
+  {
     "id": "cta-download-01",
     "category": "cta",
     "subcategory": "cta-download",
     "file": "cta/cta-download-01.json",
     "element_count": 17,
     "components_used": [
+      "Grid",
       "Stack",
       "Badge",
       "Text",
@@ -933,6 +2027,198 @@
     "screenshot": "thumbs/cta/cta-floating-01.webp"
   },
   {
+    "id": "cta-iphone-mockup-01",
+    "category": "cta",
+    "subcategory": "cta-iphone-mockup",
+    "file": "cta/cta-iphone-mockup-01.json",
+    "element_count": 14,
+    "components_used": [
+      "Stack",
+      "Grid",
+      "Text",
+      "List",
+      "ButtonGroup",
+      "Button",
+      "Image"
+    ],
+    "name": "CTA iPhone Mockup",
+    "description": "Split call to action pairing benefit list and buttons with an iPhone app mockup image.",
+    "tags": [
+      "cta",
+      "iphone",
+      "mockup",
+      "split"
+    ],
+    "screenshot": "thumbs/cta/cta-iphone-mockup-01.webp"
+  },
+  {
+    "id": "cta-iphone-mockup-02",
+    "category": "cta",
+    "subcategory": "cta-iphone-mockup",
+    "file": "cta/cta-iphone-mockup-02.json",
+    "element_count": 9,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button",
+      "Image"
+    ],
+    "name": "CTA iPhone Mockup Centered",
+    "description": "Centered call to action with headline, buttons, and an iPhone mockup image below.",
+    "tags": [
+      "cta",
+      "iphone",
+      "mockup",
+      "centered"
+    ],
+    "screenshot": "thumbs/cta/cta-iphone-mockup-02.webp"
+  },
+  {
+    "id": "cta-iphone-mockup-03",
+    "category": "cta",
+    "subcategory": "cta-iphone-mockup",
+    "file": "cta/cta-iphone-mockup-03.json",
+    "element_count": 9,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button",
+      "Image"
+    ],
+    "name": "CTA iPhone Mockup Minimal",
+    "description": "Minimal trial call to action above a cropped iPhone mockup image.",
+    "tags": [
+      "cta",
+      "iphone",
+      "mockup",
+      "minimal"
+    ],
+    "screenshot": "thumbs/cta/cta-iphone-mockup-03.webp"
+  },
+  {
+    "id": "cta-iphone-mockup-04",
+    "category": "cta",
+    "subcategory": "cta-iphone-mockup",
+    "file": "cta/cta-iphone-mockup-04.json",
+    "element_count": 14,
+    "components_used": [
+      "Stack",
+      "Grid",
+      "Image",
+      "Text",
+      "List",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "CTA iPhone Mockup Reversed",
+    "description": "Split call to action with iPhone mockup on the left and benefit list with buttons on the right.",
+    "tags": [
+      "cta",
+      "iphone",
+      "mockup",
+      "reversed"
+    ],
+    "screenshot": "thumbs/cta/cta-iphone-mockup-04.webp"
+  },
+  {
+    "id": "cta-screen-mockup-01",
+    "category": "cta",
+    "subcategory": "cta-screen-mockup",
+    "file": "cta/cta-screen-mockup-01.json",
+    "element_count": 14,
+    "components_used": [
+      "Stack",
+      "Grid",
+      "Text",
+      "List",
+      "ButtonGroup",
+      "Button",
+      "Image"
+    ],
+    "name": "CTA Screen Mockup",
+    "description": "Split call to action pairing benefit list and buttons with a desktop app screenshot.",
+    "tags": [
+      "cta",
+      "screen",
+      "mockup",
+      "split"
+    ],
+    "screenshot": "thumbs/cta/cta-screen-mockup-01.webp"
+  },
+  {
+    "id": "cta-screen-mockup-02",
+    "category": "cta",
+    "subcategory": "cta-screen-mockup",
+    "file": "cta/cta-screen-mockup-02.json",
+    "element_count": 9,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button",
+      "Image"
+    ],
+    "name": "CTA Screen Mockup Centered",
+    "description": "Centered call to action with headline and buttons above a desktop app screenshot.",
+    "tags": [
+      "cta",
+      "screen",
+      "mockup",
+      "centered"
+    ],
+    "screenshot": "thumbs/cta/cta-screen-mockup-02.webp"
+  },
+  {
+    "id": "cta-screen-mockup-03",
+    "category": "cta",
+    "subcategory": "cta-screen-mockup",
+    "file": "cta/cta-screen-mockup-03.json",
+    "element_count": 9,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button",
+      "Image"
+    ],
+    "name": "CTA Screen Mockup Minimal",
+    "description": "Minimal call to action with a full-width desktop app screenshot below the buttons.",
+    "tags": [
+      "cta",
+      "screen",
+      "mockup",
+      "minimal"
+    ],
+    "screenshot": "thumbs/cta/cta-screen-mockup-03.webp"
+  },
+  {
+    "id": "cta-screen-mockup-04",
+    "category": "cta",
+    "subcategory": "cta-screen-mockup",
+    "file": "cta/cta-screen-mockup-04.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Grid",
+      "Image",
+      "Text",
+      "Badge",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "CTA Screen Mockup Checklist",
+    "description": "Split call to action with desktop screenshot on the left and a check-marked feature list with buttons.",
+    "tags": [
+      "cta",
+      "screen",
+      "mockup",
+      "checklist"
+    ],
+    "screenshot": "thumbs/cta/cta-screen-mockup-04.webp"
+  },
+  {
     "id": "cta-simple-01",
     "category": "cta",
     "subcategory": "cta-simple",
@@ -952,6 +2238,96 @@
       "simple"
     ],
     "screenshot": "thumbs/cta/cta-simple-01.webp"
+  },
+  {
+    "id": "cta-simple-centered-01",
+    "category": "cta",
+    "subcategory": "cta-simple-centered",
+    "file": "cta/cta-simple-centered-01.json",
+    "element_count": 8,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "CTA Simple Centered",
+    "description": "Centered headline, supporting line, and button pair on a plain background.",
+    "tags": [
+      "cta",
+      "simple",
+      "centered"
+    ],
+    "screenshot": "thumbs/cta/cta-simple-centered-01.webp"
+  },
+  {
+    "id": "cta-simple-left-01",
+    "category": "cta",
+    "subcategory": "cta-simple-left",
+    "file": "cta/cta-simple-left-01.json",
+    "element_count": 8,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "CTA Simple Left",
+    "description": "Left-aligned call to action with headline, supporting copy, and inline buttons.",
+    "tags": [
+      "cta",
+      "simple",
+      "left-aligned"
+    ],
+    "screenshot": "thumbs/cta/cta-simple-left-01.webp"
+  },
+  {
+    "id": "cta-simple-logos-01",
+    "category": "cta",
+    "subcategory": "cta-simple-logos",
+    "file": "cta/cta-simple-logos-01.json",
+    "element_count": 17,
+    "components_used": [
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button",
+      "Separator",
+      "Icon"
+    ],
+    "name": "CTA Simple Logos",
+    "description": "Centered call to action followed by a separator and a row of customer logos.",
+    "tags": [
+      "cta",
+      "simple",
+      "logos",
+      "social-proof"
+    ],
+    "screenshot": "thumbs/cta/cta-simple-logos-01.webp"
+  },
+  {
+    "id": "cta-simple-logos-02",
+    "category": "cta",
+    "subcategory": "cta-simple-logos",
+    "file": "cta/cta-simple-logos-02.json",
+    "element_count": 25,
+    "components_used": [
+      "Stack",
+      "Grid",
+      "Text",
+      "ButtonGroup",
+      "Button",
+      "Icon"
+    ],
+    "name": "CTA Simple Logos Grid",
+    "description": "Call to action beside a grid of customer logos for lightweight social proof.",
+    "tags": [
+      "cta",
+      "simple",
+      "logos",
+      "grid"
+    ],
+    "screenshot": "thumbs/cta/cta-simple-logos-02.webp"
   },
   {
     "id": "cta-split-01",
@@ -978,19 +2354,219 @@
     "screenshot": "thumbs/cta/cta-split-01.webp"
   },
   {
+    "id": "cta-split-image-01",
+    "category": "cta",
+    "subcategory": "cta-split-image",
+    "file": "cta/cta-split-image-01.json",
+    "element_count": 9,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "List",
+      "ButtonGroup",
+      "Button",
+      "Image"
+    ],
+    "name": "CTA Split Image",
+    "description": "Split call to action with startup social-proof headline, benefit list, and a photo panel.",
+    "tags": [
+      "cta",
+      "split",
+      "image",
+      "social-proof"
+    ],
+    "screenshot": "thumbs/cta/cta-split-image-01.webp"
+  },
+  {
+    "id": "cta-split-image-02",
+    "category": "cta",
+    "subcategory": "cta-split-image",
+    "file": "cta/cta-split-image-02.json",
+    "element_count": 9,
+    "components_used": [
+      "Grid",
+      "Image",
+      "Stack",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "CTA Split Image Reversed",
+    "description": "Split call to action with photo on the left and trial copy with buttons on the right.",
+    "tags": [
+      "cta",
+      "split",
+      "image",
+      "reversed"
+    ],
+    "screenshot": "thumbs/cta/cta-split-image-02.webp"
+  },
+  {
+    "id": "cta-split-image-03",
+    "category": "cta",
+    "subcategory": "cta-split-image",
+    "file": "cta/cta-split-image-03.json",
+    "element_count": 11,
+    "components_used": [
+      "Stack",
+      "Image",
+      "Card",
+      "Text",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "CTA Split Image Card",
+    "description": "Card-framed call to action stacked over a full-width photo.",
+    "tags": [
+      "cta",
+      "split",
+      "image",
+      "card"
+    ],
+    "screenshot": "thumbs/cta/cta-split-image-03.webp"
+  },
+  {
+    "id": "cta-split-image-04",
+    "category": "cta",
+    "subcategory": "cta-split-image",
+    "file": "cta/cta-split-image-04.json",
+    "element_count": 10,
+    "components_used": [
+      "Grid",
+      "Image",
+      "Stack",
+      "Text",
+      "List",
+      "ButtonGroup",
+      "Button"
+    ],
+    "name": "CTA Split Image Checklist",
+    "description": "Split call to action pairing a benefit checklist with a photo panel.",
+    "tags": [
+      "cta",
+      "split",
+      "image",
+      "checklist"
+    ],
+    "screenshot": "thumbs/cta/cta-split-image-04.webp"
+  },
+  {
+    "id": "cta-split-image-quote-01",
+    "category": "cta",
+    "subcategory": "cta-split-image-quote",
+    "file": "cta/cta-split-image-quote-01.json",
+    "element_count": 27,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "Badge",
+      "Button",
+      "Image",
+      "Surface",
+      "Avatar"
+    ],
+    "name": "CTA Split Image Quote",
+    "description": "Split call to action with check-marked benefits and a customer quote card over the photo.",
+    "tags": [
+      "cta",
+      "split",
+      "image",
+      "quote",
+      "testimonial"
+    ],
+    "screenshot": "thumbs/cta/cta-split-image-quote-01.webp"
+  },
+  {
+    "id": "cta-split-image-quote-02",
+    "category": "cta",
+    "subcategory": "cta-split-image-quote",
+    "file": "cta/cta-split-image-quote-02.json",
+    "element_count": 18,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Image",
+      "Surface",
+      "Text",
+      "Avatar",
+      "Button"
+    ],
+    "name": "CTA Split Image Quote Reversed",
+    "description": "Split call to action with photo and overlaid customer quote on the left, trial copy on the right.",
+    "tags": [
+      "cta",
+      "split",
+      "image",
+      "quote",
+      "reversed"
+    ],
+    "screenshot": "thumbs/cta/cta-split-image-quote-02.webp"
+  },
+  {
+    "id": "cta-split-image-quote-03",
+    "category": "cta",
+    "subcategory": "cta-split-image-quote",
+    "file": "cta/cta-split-image-quote-03.json",
+    "element_count": 15,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "Button",
+      "Image",
+      "Avatar"
+    ],
+    "name": "CTA Split Image Quote Minimal",
+    "description": "Split call to action with inline customer quote and avatar under the buttons.",
+    "tags": [
+      "cta",
+      "split",
+      "image",
+      "quote",
+      "minimal"
+    ],
+    "screenshot": "thumbs/cta/cta-split-image-quote-03.webp"
+  },
+  {
+    "id": "cta-split-image-quote-04",
+    "category": "cta",
+    "subcategory": "cta-split-image-quote",
+    "file": "cta/cta-split-image-quote-04.json",
+    "element_count": 16,
+    "components_used": [
+      "Stack",
+      "Image",
+      "Surface",
+      "Text",
+      "Avatar",
+      "Button"
+    ],
+    "name": "CTA Split Image Quote Stacked",
+    "description": "Stacked call to action with photo, overlaid quote card, and closing buttons.",
+    "tags": [
+      "cta",
+      "split",
+      "image",
+      "quote",
+      "stacked"
+    ],
+    "screenshot": "thumbs/cta/cta-split-image-quote-04.webp"
+  },
+  {
     "id": "cta-with-form-01",
     "category": "cta",
     "subcategory": "cta-with-form",
     "file": "cta/cta-with-form-01.json",
-    "element_count": 15,
+    "element_count": 11,
     "components_used": [
       "Stack",
       "Text",
       "Field",
       "Input",
       "Button",
-      "AvatarGroup",
-      "Avatar"
+      "AvatarGroup"
     ],
     "name": "CTA With Form",
     "description": "Cta With Form block for cta",
@@ -1011,7 +2587,7 @@
     "components_used": [
       "Stack",
       "Text",
-      "Button",
+      "Link",
       "List"
     ],
     "name": "Activity Feed",
@@ -1056,10 +2632,11 @@
     "category": "dashboard",
     "subcategory": "chart-section",
     "file": "dashboard/chart-section-01.json",
-    "element_count": 3,
+    "element_count": 5,
     "components_used": [
       "Grid",
-      "ChartCard"
+      "ChartCard",
+      "Chart"
     ],
     "name": "Chart Section",
     "description": "Chart Section block for dashboard",
@@ -1114,6 +2691,28 @@
       "Pagination"
     ],
     "screenshot": "thumbs/dashboard/data-table-01.webp"
+  },
+  {
+    "id": "empty-state-panel-01",
+    "category": "dashboard",
+    "subcategory": "empty-state-panel",
+    "file": "dashboard/empty-state-panel-01.json",
+    "element_count": 6,
+    "components_used": [
+      "Surface",
+      "Stack",
+      "EmptyState",
+      "Button"
+    ],
+    "name": "Empty State Panel",
+    "description": "Dashboard panel empty state on a raised surface with icon, explanation, and primary and secondary actions.",
+    "tags": [
+      "dashboard",
+      "empty-state",
+      "panel",
+      "onboarding"
+    ],
+    "screenshot": "thumbs/dashboard/empty-state-panel-01.webp"
   },
   {
     "id": "header-01",
@@ -1246,12 +2845,11 @@
       "kpi",
       "metrics"
     ],
-    "file": "stats/stats-row-01.json",
-    "element_count": 16,
+    "file": "dashboard/stats-row-01.json",
+    "element_count": 5,
     "components_used": [
-      "Stack",
-      "Text",
-      "Separator"
+      "Grid",
+      "StatCard"
     ],
     "screenshot": "thumbs/dashboard/stats-row-01.webp"
   },
@@ -1403,7 +3001,7 @@
     "category": "ecommerce",
     "subcategory": "product-card",
     "file": "ecommerce/product-card-01.json",
-    "element_count": 23,
+    "element_count": 20,
     "components_used": [
       "Card",
       "Stack",
@@ -1412,7 +3010,6 @@
       "Badge",
       "Text",
       "ToggleGroup",
-      "Toggle",
       "Button"
     ],
     "name": "Product Card",
@@ -1429,17 +3026,16 @@
     "category": "ecommerce",
     "subcategory": "product-carousel",
     "file": "ecommerce/product-carousel-01.json",
-    "element_count": 30,
+    "element_count": 37,
     "components_used": [
       "Stack",
       "Text",
       "ButtonGroup",
       "Button",
-      "Carousel",
+      "Grid",
       "Card",
       "Image",
-      "Badge",
-      "Pagination"
+      "Badge"
     ],
     "name": "Product Carousel",
     "description": "Product Carousel block for ecommerce",
@@ -1455,19 +3051,20 @@
     "category": "ecommerce",
     "subcategory": "product-detail",
     "file": "ecommerce/product-detail-01.json",
-    "element_count": 35,
+    "element_count": 32,
     "components_used": [
+      "Grid",
       "Stack",
       "AspectRatio",
       "Image",
       "Breadcrumbs",
       "Text",
-      "Button",
+      "Link",
       "Badge",
       "Separator",
       "ToggleGroup",
-      "Toggle",
       "Select",
+      "Button",
       "Alert",
       "List"
     ],
@@ -1556,6 +3153,96 @@
     "screenshot": "thumbs/ecommerce/wishlist-01.webp"
   },
   {
+    "id": "404-illustration-01",
+    "category": "error-pages",
+    "subcategory": "404-illustration",
+    "file": "error-pages/404-illustration-01.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "Image"
+    ],
+    "name": "404 Illustration",
+    "description": "Not-found page with illustration, apologetic headline, and back-home button.",
+    "tags": [
+      "error-pages",
+      "404",
+      "illustration",
+      "not-found"
+    ],
+    "screenshot": "thumbs/error-pages/404-illustration-01.webp"
+  },
+  {
+    "id": "404-illustration-02",
+    "category": "error-pages",
+    "subcategory": "404-illustration",
+    "file": "error-pages/404-illustration-02.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Search",
+      "Button",
+      "Image"
+    ],
+    "name": "404 Illustration Search",
+    "description": "Not-found page with illustration plus a search field to recover the visitor.",
+    "tags": [
+      "error-pages",
+      "404",
+      "illustration",
+      "search"
+    ],
+    "screenshot": "thumbs/error-pages/404-illustration-02.webp"
+  },
+  {
+    "id": "404-illustration-03",
+    "category": "error-pages",
+    "subcategory": "404-illustration",
+    "file": "error-pages/404-illustration-03.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "Image"
+    ],
+    "name": "Maintenance Illustration",
+    "description": "Under-maintenance page with illustration, status headline, and return button.",
+    "tags": [
+      "error-pages",
+      "maintenance",
+      "illustration",
+      "status"
+    ],
+    "screenshot": "thumbs/error-pages/404-illustration-03.webp"
+  },
+  {
+    "id": "404-illustration-04",
+    "category": "error-pages",
+    "subcategory": "404-illustration",
+    "file": "error-pages/404-illustration-04.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Search",
+      "Button",
+      "Image"
+    ],
+    "name": "Maintenance Illustration Search",
+    "description": "Under-maintenance page with illustration and a search field for finding content meanwhile.",
+    "tags": [
+      "error-pages",
+      "maintenance",
+      "illustration",
+      "search"
+    ],
+    "screenshot": "thumbs/error-pages/404-illustration-04.webp"
+  },
+  {
     "id": "404-page-01",
     "category": "error-pages",
     "subcategory": "404-page",
@@ -1567,7 +3254,8 @@
       "Text",
       "Search",
       "Button",
-      "ButtonGroup"
+      "ButtonGroup",
+      "Link"
     ],
     "name": "404 Page",
     "description": "404 Page block for error-pages",
@@ -1577,6 +3265,191 @@
       "page"
     ],
     "screenshot": "thumbs/error-pages/404-page-01.webp"
+  },
+  {
+    "id": "404-simple-01",
+    "category": "error-pages",
+    "subcategory": "404-simple",
+    "file": "error-pages/404-simple-01.json",
+    "element_count": 8,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button"
+    ],
+    "name": "404 Simple",
+    "description": "Minimal not-found page with large headline, short explanation, and back-home button.",
+    "tags": [
+      "error-pages",
+      "404",
+      "simple",
+      "not-found"
+    ],
+    "screenshot": "thumbs/error-pages/404-simple-01.webp"
+  },
+  {
+    "id": "404-simple-02",
+    "category": "error-pages",
+    "subcategory": "404-simple",
+    "file": "error-pages/404-simple-02.json",
+    "element_count": 18,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "Link"
+    ],
+    "name": "404 Simple Links",
+    "description": "Minimal not-found page with back-home button and a support link.",
+    "tags": [
+      "error-pages",
+      "404",
+      "simple",
+      "links"
+    ],
+    "screenshot": "thumbs/error-pages/404-simple-02.webp"
+  },
+  {
+    "id": "404-simple-03",
+    "category": "error-pages",
+    "subcategory": "404-simple",
+    "file": "error-pages/404-simple-03.json",
+    "element_count": 8,
+    "components_used": [
+      "Stack",
+      "Icon",
+      "Text",
+      "Button"
+    ],
+    "name": "404 Simple Icon",
+    "description": "Minimal not-found page led by an icon above the headline and button.",
+    "tags": [
+      "error-pages",
+      "404",
+      "simple",
+      "icon"
+    ],
+    "screenshot": "thumbs/error-pages/404-simple-03.webp"
+  },
+  {
+    "id": "404-simple-04",
+    "category": "error-pages",
+    "subcategory": "404-simple",
+    "file": "error-pages/404-simple-04.json",
+    "element_count": 28,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "Card",
+      "Icon",
+      "Link"
+    ],
+    "name": "404 Simple Suggestions",
+    "description": "Not-found page with suggestion cards linking to popular destinations.",
+    "tags": [
+      "error-pages",
+      "404",
+      "simple",
+      "suggestions"
+    ],
+    "screenshot": "thumbs/error-pages/404-simple-04.webp"
+  },
+  {
+    "id": "404-split-image-01",
+    "category": "error-pages",
+    "subcategory": "404-split-image",
+    "file": "error-pages/404-split-image-01.json",
+    "element_count": 9,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "Button",
+      "Image"
+    ],
+    "name": "404 Split Image",
+    "description": "Split not-found page with copy and button beside a photo panel.",
+    "tags": [
+      "error-pages",
+      "404",
+      "split",
+      "image"
+    ],
+    "screenshot": "thumbs/error-pages/404-split-image-01.webp"
+  },
+  {
+    "id": "404-split-image-02",
+    "category": "error-pages",
+    "subcategory": "404-split-image",
+    "file": "error-pages/404-split-image-02.json",
+    "element_count": 9,
+    "components_used": [
+      "Grid",
+      "Stack",
+      "Text",
+      "Search",
+      "Button",
+      "Image"
+    ],
+    "name": "404 Split Image Search",
+    "description": "Split not-found page pairing a search field with a photo panel.",
+    "tags": [
+      "error-pages",
+      "404",
+      "split",
+      "image",
+      "search"
+    ],
+    "screenshot": "thumbs/error-pages/404-split-image-02.webp"
+  },
+  {
+    "id": "404-split-image-03",
+    "category": "error-pages",
+    "subcategory": "404-split-image",
+    "file": "error-pages/404-split-image-03.json",
+    "element_count": 10,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Button",
+      "Image"
+    ],
+    "name": "404 Split Image Stacked",
+    "description": "Not-found page with copy over a full-width photo.",
+    "tags": [
+      "error-pages",
+      "404",
+      "split",
+      "image",
+      "stacked"
+    ],
+    "screenshot": "thumbs/error-pages/404-split-image-03.webp"
+  },
+  {
+    "id": "404-split-image-04",
+    "category": "error-pages",
+    "subcategory": "404-split-image",
+    "file": "error-pages/404-split-image-04.json",
+    "element_count": 20,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Search",
+      "Button",
+      "Link",
+      "Image"
+    ],
+    "name": "404 Split Image Links",
+    "description": "Split not-found page with search, quick links, and a photo panel.",
+    "tags": [
+      "error-pages",
+      "404",
+      "split",
+      "image",
+      "links"
+    ],
+    "screenshot": "thumbs/error-pages/404-split-image-04.webp"
   },
   {
     "id": "500-page-01",
@@ -2410,7 +4283,8 @@
       "Grid",
       "Field",
       "Checkbox",
-      "Button"
+      "Button",
+      "Link"
     ],
     "name": "Signup",
     "description": "Signup block for forms",
@@ -2939,9 +4813,11 @@
     "components_used": [
       "Stack",
       "Text",
-      "Carousel",
-      "AspectRatio",
-      "Image"
+      "ButtonGroup",
+      "Button",
+      "Card",
+      "Image",
+      "Grid"
     ],
     "name": "Gallery Carousel",
     "description": "Gallery Carousel block for media",
@@ -2957,12 +4833,11 @@
     "category": "media",
     "subcategory": "gallery-grid",
     "file": "media/gallery-grid-01.json",
-    "element_count": 17,
+    "element_count": 11,
     "components_used": [
       "Stack",
       "Text",
       "Grid",
-      "AspectRatio",
       "Image"
     ],
     "name": "Gallery Grid",
@@ -3074,7 +4949,7 @@
     "element_count": 3,
     "components_used": [
       "Stack",
-      "Text",
+      "Icon",
       "Select"
     ],
     "name": "Language Switcher",
@@ -3171,9 +5046,11 @@
     "category": "misc",
     "subcategory": "theme-toggle",
     "file": "misc/theme-toggle-01.json",
-    "element_count": 4,
+    "element_count": 8,
     "components_used": [
       "Stack",
+      "Card",
+      "Icon",
       "Text",
       "Toggle"
     ],
@@ -3220,9 +5097,13 @@
     "category": "modals-overlays",
     "subcategory": "command-palette",
     "file": "modals-overlays/command-palette-01.json",
-    "element_count": 1,
+    "element_count": 6,
     "components_used": [
-      "CommandPalette"
+      "Stack",
+      "Card",
+      "Input",
+      "Separator",
+      "List"
     ],
     "name": "Command Palette",
     "description": "Command Palette block for modals-overlays",
@@ -3285,7 +5166,7 @@
     "file": "modals-overlays/lightbox-01.json",
     "element_count": 15,
     "components_used": [
-      "Modal",
+      "Card",
       "Stack",
       "AspectRatio",
       "Image",
@@ -3307,7 +5188,7 @@
     "file": "modals-overlays/modal-confirm-01.json",
     "element_count": 6,
     "components_used": [
-      "AlertDialog",
+      "Card",
       "Surface",
       "List",
       "Stack",
@@ -3329,7 +5210,7 @@
     "file": "modals-overlays/modal-dialog-01.json",
     "element_count": 19,
     "components_used": [
-      "Modal",
+      "Card",
       "Stack",
       "Avatar",
       "Button",
@@ -3409,14 +5290,14 @@
     "category": "navigation",
     "subcategory": "navbar-mega-menu",
     "file": "navigation/navbar-mega-menu-01.json",
-    "element_count": 21,
+    "element_count": 30,
     "components_used": [
-      "Navbar",
       "Stack",
-      "Button",
       "Surface",
-      "Grid",
-      "Text"
+      "Text",
+      "Link",
+      "Button",
+      "Grid"
     ],
     "name": "Navbar Mega Menu",
     "description": "Navbar Mega Menu block for navigation",
@@ -3433,10 +5314,10 @@
     "category": "navigation",
     "subcategory": "navbar-mobile-drawer",
     "file": "navigation/navbar-mobile-drawer-01.json",
-    "element_count": 12,
+    "element_count": 14,
     "components_used": [
       "Stack",
-      "Navbar",
+      "Surface",
       "Button",
       "Sheet",
       "Text",
@@ -3458,9 +5339,12 @@
     "category": "navigation",
     "subcategory": "navbar-simple",
     "file": "navigation/navbar-simple-01.json",
-    "element_count": 2,
+    "element_count": 12,
     "components_used": [
-      "Navbar",
+      "Stack",
+      "Surface",
+      "Text",
+      "Link",
       "Button"
     ],
     "name": "Navbar Simple",
@@ -3477,10 +5361,12 @@
     "category": "navigation",
     "subcategory": "navbar-with-auth",
     "file": "navigation/navbar-with-auth-01.json",
-    "element_count": 4,
+    "element_count": 13,
     "components_used": [
-      "Navbar",
       "Stack",
+      "Surface",
+      "Text",
+      "Link",
       "Button"
     ],
     "name": "Navbar With Auth",
@@ -3498,10 +5384,12 @@
     "category": "navigation",
     "subcategory": "navbar-with-search",
     "file": "navigation/navbar-with-search-01.json",
-    "element_count": 5,
+    "element_count": 13,
     "components_used": [
-      "Navbar",
       "Stack",
+      "Surface",
+      "Text",
+      "Link",
       "Search",
       "Button",
       "Avatar"
@@ -3559,7 +5447,7 @@
     "category": "navigation",
     "subcategory": "tab-nav",
     "file": "navigation/tab-nav-01.json",
-    "element_count": 18,
+    "element_count": 20,
     "components_used": [
       "Stack",
       "Text",
@@ -3590,7 +5478,7 @@
       "Stack",
       "Badge",
       "Text",
-      "Button"
+      "Link"
     ],
     "name": "Topbar Announcement",
     "description": "Topbar Announcement block for navigation",
@@ -3677,8 +5565,9 @@
     "file": "newsletter/newsletter-popup-01.json",
     "element_count": 10,
     "components_used": [
-      "Modal",
       "Stack",
+      "Card",
+      "Icon",
       "Text",
       "Input",
       "Button"
@@ -3697,17 +5586,16 @@
     "category": "portfolio",
     "subcategory": "portfolio-carousel",
     "file": "portfolio/portfolio-carousel-01.json",
-    "element_count": 42,
+    "element_count": 32,
     "components_used": [
       "Stack",
       "Text",
       "ButtonGroup",
       "Button",
-      "Carousel",
-      "Surface",
+      "Card",
       "Image",
       "Chip",
-      "Pagination"
+      "Grid"
     ],
     "name": "Portfolio Carousel",
     "description": "Portfolio Carousel block for portfolio",
@@ -4014,9 +5902,9 @@
     "components_used": [
       "Stack",
       "Text",
-      "Carousel",
-      "Surface",
+      "Card",
       "Avatar",
+      "Grid",
       "ButtonGroup",
       "Button"
     ],
@@ -4138,6 +6026,27 @@
     "screenshot": "thumbs/stats/stats-grid-01.webp"
   },
   {
+    "id": "stats-strip-01",
+    "category": "stats",
+    "subcategory": "stats-strip",
+    "file": "stats/stats-strip-01.json",
+    "element_count": 16,
+    "components_used": [
+      "Stack",
+      "Text",
+      "Separator"
+    ],
+    "name": "Stats Strip",
+    "description": "Slim horizontal strip of headline metrics divided by separators.",
+    "tags": [
+      "stats",
+      "strip",
+      "metrics",
+      "kpi"
+    ],
+    "screenshot": "thumbs/stats/stats-strip-01.webp"
+  },
+  {
     "id": "stats-with-description-01",
     "category": "stats",
     "subcategory": "stats-with-description",
@@ -4167,11 +6076,11 @@
     "category": "team",
     "subcategory": "team-carousel",
     "file": "team/team-carousel-01.json",
-    "element_count": 37,
+    "element_count": 25,
     "components_used": [
       "Stack",
       "Text",
-      "Carousel",
+      "Grid",
       "Card",
       "Avatar",
       "Chip",
@@ -4341,967 +6250,5 @@
       "vertical"
     ],
     "screenshot": "thumbs/timeline/timeline-vertical-01.webp"
-  },
-  {
-    "id": "login-split-quote-01",
-    "name": "Login Split Quote",
-    "category": "auth",
-    "description": "Login page variant using Grid layout with 31 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-split-quote-01.json",
-    "element_count": 31,
-    "components_used": [
-      "Avatar",
-      "Button",
-      "Checkbox",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-split-quote-01.webp"
-  },
-  {
-    "id": "login-page-card-01",
-    "name": "Login Page Card",
-    "category": "auth",
-    "description": "Login page variant using Stack layout with 20 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-page-card-01.json",
-    "element_count": 20,
-    "components_used": [
-      "Button",
-      "Card",
-      "Checkbox",
-      "Field",
-      "Icon",
-      "Input",
-      "Separator",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-page-card-01.webp"
-  },
-  {
-    "id": "login-page-card-02",
-    "name": "Login Page Card V2",
-    "category": "auth",
-    "description": "Login page variant using Stack layout with 18 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-page-card-02.json",
-    "element_count": 18,
-    "components_used": [
-      "Button",
-      "Card",
-      "Checkbox",
-      "Icon",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-page-card-02.webp"
-  },
-  {
-    "id": "login-page-illustration-01",
-    "name": "Login Page Illustration",
-    "category": "auth",
-    "description": "Login page variant using Stack layout with 19 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-page-illustration-01.json",
-    "element_count": 19,
-    "components_used": [
-      "Button",
-      "Checkbox",
-      "Field",
-      "Image",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-page-illustration-01.webp"
-  },
-  {
-    "id": "login-page-minimal-01",
-    "name": "Login Page Minimal",
-    "category": "auth",
-    "description": "Login page variant using Stack layout with 18 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-page-minimal-01.json",
-    "element_count": 18,
-    "components_used": [
-      "Button",
-      "Icon",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-page-minimal-01.webp"
-  },
-  {
-    "id": "login-page-nav-01",
-    "name": "Login Page Nav",
-    "category": "auth",
-    "description": "Login page variant using Stack layout with 23 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-page-nav-01.json",
-    "element_count": 23,
-    "components_used": [
-      "Button",
-      "Checkbox",
-      "Field",
-      "Icon",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-page-nav-01.webp"
-  },
-  {
-    "id": "login-page-simple-01",
-    "name": "Login Page Simple",
-    "category": "auth",
-    "description": "Login page variant using Stack layout with 19 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-page-simple-01.json",
-    "element_count": 19,
-    "components_used": [
-      "Button",
-      "Checkbox",
-      "Field",
-      "Icon",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-page-simple-01.webp"
-  },
-  {
-    "id": "login-page-social-01",
-    "name": "Login Page Social",
-    "category": "auth",
-    "description": "Login page variant using Stack layout with 17 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-page-social-01.json",
-    "element_count": 17,
-    "components_used": [
-      "Button",
-      "Icon",
-      "Input",
-      "Separator",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-page-social-01.webp"
-  },
-  {
-    "id": "login-page-social-leading-01",
-    "name": "Login Page Social Leading",
-    "category": "auth",
-    "description": "Login page variant using Stack layout with 12 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-page-social-leading-01.json",
-    "element_count": 12,
-    "components_used": [
-      "Button",
-      "Icon",
-      "Input",
-      "Separator",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-page-social-leading-01.webp"
-  },
-  {
-    "id": "login-split-carousel-01",
-    "name": "Login Split Carousel",
-    "category": "auth",
-    "description": "Login page variant using Grid layout with 43 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-split-carousel-01.json",
-    "element_count": 43,
-    "components_used": [
-      "Badge",
-      "Button",
-      "Checkbox",
-      "Field",
-      "Grid",
-      "Icon",
-      "Image",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-split-carousel-01.webp"
-  },
-  {
-    "id": "login-split-geometric-01",
-    "name": "Login Split Geometric",
-    "category": "auth",
-    "description": "Login page variant using Grid layout with 28 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-split-geometric-01.json",
-    "element_count": 28,
-    "components_used": [
-      "Button",
-      "Checkbox",
-      "Field",
-      "Grid",
-      "Icon",
-      "Image",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-split-geometric-01.webp"
-  },
-  {
-    "id": "login-split-image-01",
-    "name": "Login Split Image",
-    "category": "auth",
-    "description": "Login page variant using Grid layout with 22 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-split-image-01.json",
-    "element_count": 22,
-    "components_used": [
-      "Button",
-      "Checkbox",
-      "Field",
-      "Grid",
-      "Image",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-split-image-01.webp"
-  },
-  {
-    "id": "login-split-image-quote-01",
-    "name": "Login Split Image Quote",
-    "category": "auth",
-    "description": "Login page variant using Grid layout with 31 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-split-image-quote-01.json",
-    "element_count": 31,
-    "components_used": [
-      "Button",
-      "Checkbox",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-split-image-quote-01.webp"
-  },
-  {
-    "id": "login-split-mockup-01",
-    "name": "Login Split Mockup",
-    "category": "auth",
-    "description": "Login page variant using Grid layout with 24 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-split-mockup-01.json",
-    "element_count": 24,
-    "components_used": [
-      "Button",
-      "Checkbox",
-      "Field",
-      "Grid",
-      "Image",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-split-mockup-01.webp"
-  },
-  {
-    "id": "login-split-mockup-quote-01",
-    "name": "Login Split Mockup Quote",
-    "category": "auth",
-    "description": "Login page variant using Grid layout with 31 elements",
-    "tags": [
-      "auth",
-      "login",
-      "form"
-    ],
-    "file": "auth/login-split-mockup-quote-01.json",
-    "element_count": 31,
-    "components_used": [
-      "Avatar",
-      "Button",
-      "Checkbox",
-      "Field",
-      "Grid",
-      "Image",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/login-split-mockup-quote-01.webp"
-  },
-  {
-    "id": "forgot-password-check-email-01",
-    "name": "Forgot Password Check Email",
-    "category": "auth",
-    "description": "Forgot Password Check Email screen with 12 elements",
-    "tags": [
-      "auth",
-      "forgot-password",
-      "form"
-    ],
-    "file": "auth/forgot-password-check-email-01.json",
-    "element_count": 12,
-    "components_used": [
-      "Button",
-      "Icon",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/forgot-password-check-email-01.webp"
-  },
-  {
-    "id": "forgot-password-form-01",
-    "name": "Forgot Password Form",
-    "category": "auth",
-    "description": "Forgot Password Form screen with 11 elements",
-    "tags": [
-      "auth",
-      "forgot-password",
-      "form"
-    ],
-    "file": "auth/forgot-password-form-01.json",
-    "element_count": 11,
-    "components_used": [
-      "Button",
-      "Field",
-      "Icon",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/forgot-password-form-01.webp"
-  },
-  {
-    "id": "forgot-password-new-password-01",
-    "name": "Forgot Password New Password",
-    "category": "auth",
-    "description": "Forgot Password New Password screen with 14 elements",
-    "tags": [
-      "auth",
-      "forgot-password",
-      "form"
-    ],
-    "file": "auth/forgot-password-new-password-01.json",
-    "element_count": 14,
-    "components_used": [
-      "Button",
-      "Field",
-      "Icon",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/forgot-password-new-password-01.webp"
-  },
-  {
-    "id": "forgot-password-success-01",
-    "name": "Forgot Password Success",
-    "category": "auth",
-    "description": "Forgot Password Success screen with 9 elements",
-    "tags": [
-      "auth",
-      "forgot-password",
-      "form"
-    ],
-    "file": "auth/forgot-password-success-01.json",
-    "element_count": 9,
-    "components_used": [
-      "Button",
-      "Icon",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/forgot-password-success-01.webp"
-  },
-  {
-    "id": "signup-card-01",
-    "name": "Signup Card",
-    "category": "auth",
-    "description": "Signup Card screen with 21 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-card-01.json",
-    "element_count": 21,
-    "components_used": [
-      "Button",
-      "Card",
-      "Field",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-card-01.webp"
-  },
-  {
-    "id": "signup-card-02",
-    "name": "Signup Card",
-    "category": "auth",
-    "description": "Signup Card screen with 25 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-card-02.json",
-    "element_count": 25,
-    "components_used": [
-      "Button",
-      "Card",
-      "Field",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-card-02.webp"
-  },
-  {
-    "id": "signup-nav-01",
-    "name": "Signup Nav",
-    "category": "auth",
-    "description": "Signup Nav screen with 28 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-nav-01.json",
-    "element_count": 28,
-    "components_used": [
-      "Button",
-      "Field",
-      "Icon",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-nav-01.webp"
-  },
-  {
-    "id": "signup-progress-01",
-    "name": "Signup Progress",
-    "category": "auth",
-    "description": "Signup Progress screen with 20 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-progress-01.json",
-    "element_count": 20,
-    "components_used": [
-      "Button",
-      "Field",
-      "Icon",
-      "Input",
-      "Separator",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-progress-01.webp"
-  },
-  {
-    "id": "signup-progress-02",
-    "name": "Signup Progress",
-    "category": "auth",
-    "description": "Signup Progress screen with 32 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-progress-02.json",
-    "element_count": 32,
-    "components_used": [
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-progress-02.webp"
-  },
-  {
-    "id": "signup-progress-03",
-    "name": "Signup Progress",
-    "category": "auth",
-    "description": "Signup Progress screen with 25 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-progress-03.json",
-    "element_count": 25,
-    "components_used": [
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-progress-03.webp"
-  },
-  {
-    "id": "signup-sidebar-progress-01",
-    "name": "Signup Sidebar Progress",
-    "category": "auth",
-    "description": "Signup Sidebar Progress screen with 48 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-sidebar-progress-01.json",
-    "element_count": 48,
-    "components_used": [
-      "Avatar",
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Separator",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-sidebar-progress-01.webp"
-  },
-  {
-    "id": "signup-sidebar-progress-02",
-    "name": "Signup Sidebar Progress",
-    "category": "auth",
-    "description": "Signup Sidebar Progress screen with 43 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-sidebar-progress-02.json",
-    "element_count": 43,
-    "components_used": [
-      "Avatar",
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Separator",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-sidebar-progress-02.webp"
-  },
-  {
-    "id": "signup-sidebar-progress-03",
-    "name": "Signup Sidebar Progress",
-    "category": "auth",
-    "description": "Signup Sidebar Progress screen with 43 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-sidebar-progress-03.json",
-    "element_count": 43,
-    "components_used": [
-      "Avatar",
-      "Badge",
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Separator",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-sidebar-progress-03.webp"
-  },
-  {
-    "id": "signup-simple-01",
-    "name": "Signup Simple",
-    "category": "auth",
-    "description": "Signup Simple screen with 19 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-simple-01.json",
-    "element_count": 19,
-    "components_used": [
-      "Button",
-      "Field",
-      "Icon",
-      "Input",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-simple-01.webp"
-  },
-  {
-    "id": "signup-social-01",
-    "name": "Signup Social",
-    "category": "auth",
-    "description": "Signup Social screen with 19 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-social-01.json",
-    "element_count": 19,
-    "components_used": [
-      "Button",
-      "Field",
-      "Icon",
-      "Input",
-      "Separator",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-social-01.webp"
-  },
-  {
-    "id": "signup-social-leading-01",
-    "name": "Signup Social Leading",
-    "category": "auth",
-    "description": "Signup Social Leading screen with 18 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-social-leading-01.json",
-    "element_count": 18,
-    "components_used": [
-      "Button",
-      "Field",
-      "Icon",
-      "Input",
-      "Separator",
-      "Stack",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-social-leading-01.webp"
-  },
-  {
-    "id": "signup-split-app-mockup-01",
-    "name": "Signup Split App Mockup",
-    "category": "auth",
-    "description": "Signup Split App Mockup screen with 26 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-split-app-mockup-01.json",
-    "element_count": 26,
-    "components_used": [
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Image",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-split-app-mockup-01.webp"
-  },
-  {
-    "id": "signup-split-arrow-01",
-    "name": "Signup Split Arrow",
-    "category": "auth",
-    "description": "Signup Split Arrow screen with 37 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-split-arrow-01.json",
-    "element_count": 37,
-    "components_used": [
-      "Avatar",
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-split-arrow-01.webp"
-  },
-  {
-    "id": "signup-split-carousel-01",
-    "name": "Signup Split Carousel",
-    "category": "auth",
-    "description": "Signup Split Carousel screen with 40 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-split-carousel-01.json",
-    "element_count": 40,
-    "components_used": [
-      "Badge",
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Image",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-split-carousel-01.webp"
-  },
-  {
-    "id": "signup-split-gradient-01",
-    "name": "Signup Split Gradient",
-    "category": "auth",
-    "description": "Signup Split Gradient screen with 25 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-split-gradient-01.json",
-    "element_count": 25,
-    "components_used": [
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-split-gradient-01.webp"
-  },
-  {
-    "id": "signup-split-image-bg-01",
-    "name": "Signup Split Image Bg",
-    "category": "auth",
-    "description": "Signup Split Image Bg screen with 37 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-split-image-bg-01.json",
-    "element_count": 37,
-    "components_used": [
-      "Avatar",
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-split-image-bg-01.webp"
-  },
-  {
-    "id": "signup-split-mockup-01",
-    "name": "Signup Split Mockup",
-    "category": "auth",
-    "description": "Signup Split Mockup screen with 27 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-split-mockup-01.json",
-    "element_count": 27,
-    "components_used": [
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Image",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-split-mockup-01.webp"
-  },
-  {
-    "id": "signup-split-mockup-quote-01",
-    "name": "Signup Split Mockup Quote",
-    "category": "auth",
-    "description": "Signup Split Mockup Quote screen with 34 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-split-mockup-quote-01.json",
-    "element_count": 34,
-    "components_used": [
-      "Avatar",
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Image",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-split-mockup-quote-01.webp"
-  },
-  {
-    "id": "signup-split-quote-carousel-01",
-    "name": "Signup Split Quote Carousel",
-    "category": "auth",
-    "description": "Signup Split Quote Carousel screen with 40 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-split-quote-carousel-01.json",
-    "element_count": 40,
-    "components_used": [
-      "Avatar",
-      "Badge",
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-split-quote-carousel-01.webp"
-  },
-  {
-    "id": "signup-split-quote-image-01",
-    "name": "Signup Split Quote Image",
-    "category": "auth",
-    "description": "Signup Split Quote Image screen with 29 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-split-quote-image-01.json",
-    "element_count": 29,
-    "components_used": [
-      "Avatar",
-      "Button",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-split-quote-image-01.webp"
-  },
-  {
-    "id": "signup-split-quote-image-02",
-    "name": "Signup Split Quote Image",
-    "category": "auth",
-    "description": "Signup Split Quote Image screen with 34 elements",
-    "tags": [
-      "auth",
-      "signup"
-    ],
-    "file": "auth/signup-split-quote-image-02.json",
-    "element_count": 34,
-    "components_used": [
-      "Avatar",
-      "Button",
-      "Card",
-      "Field",
-      "Grid",
-      "Icon",
-      "Input",
-      "Stack",
-      "Surface",
-      "Text"
-    ],
-    "screenshot": "thumbs/auth/signup-split-quote-image-02.webp"
   }
 ]

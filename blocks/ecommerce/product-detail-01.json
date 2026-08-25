@@ -2,9 +2,9 @@
   "root": "product-detail",
   "elements": {
     "product-detail": {
-      "type": "Stack",
+      "type": "Grid",
       "props": {
-        "direction": "horizontal",
+        "columns": 2,
         "gap": 6,
         "container": true
       },
@@ -53,29 +53,37 @@
     "thumb-1": {
       "type": "Image",
       "props": {
-        "src": "https://picsum.photos/seed/bose1/120/120",
-        "alt": "Front view"
+        "src": "https://picsum.photos/seed/boseultra/120/120",
+        "alt": "Front view",
+        "width": 120,
+        "height": 120
       }
     },
     "thumb-2": {
       "type": "Image",
       "props": {
-        "src": "https://picsum.photos/seed/bose2/120/120",
-        "alt": "Side view"
+        "src": "https://picsum.photos/seed/boseultra/120/120?grayscale",
+        "alt": "Side view",
+        "width": 120,
+        "height": 120
       }
     },
     "thumb-3": {
       "type": "Image",
       "props": {
-        "src": "https://picsum.photos/seed/bose3/120/120",
-        "alt": "Folded view"
+        "src": "https://picsum.photos/seed/boseultra/120/120?blur=2",
+        "alt": "Folded view",
+        "width": 120,
+        "height": 120
       }
     },
     "thumb-4": {
       "type": "Image",
       "props": {
-        "src": "https://picsum.photos/seed/bose4/120/120",
-        "alt": "Case view"
+        "src": "https://picsum.photos/seed/boseultra/120/120?grayscale&blur=2",
+        "alt": "Case view",
+        "width": 120,
+        "height": 120
       }
     },
     "details-section": {
@@ -102,10 +110,21 @@
       "type": "Breadcrumbs",
       "props": {
         "items": [
-          "Home",
-          "Audio",
-          "Headphones",
-          "Bose QuietComfort Ultra"
+          {
+            "label": "Home",
+            "href": "#"
+          },
+          {
+            "label": "Audio",
+            "href": "#"
+          },
+          {
+            "label": "Headphones",
+            "href": "#"
+          },
+          {
+            "label": "Bose QuietComfort Ultra"
+          }
         ]
       }
     },
@@ -134,7 +153,7 @@
       "type": "Text",
       "props": {
         "tag": "span",
-        "content": "★★★★★ 4.8",
+        "content": "\u2605\u2605\u2605\u2605\u2605 4.8",
         "weight": "bold"
       }
     },
@@ -215,28 +234,22 @@
     },
     "color-options": {
       "type": "ToggleGroup",
-      "children": [
-        "color-black",
-        "color-white",
-        "color-sandstone"
-      ]
-    },
-    "color-black": {
-      "type": "Toggle",
       "props": {
-        "label": "Black"
-      }
-    },
-    "color-white": {
-      "type": "Toggle",
-      "props": {
-        "label": "White Smoke"
-      }
-    },
-    "color-sandstone": {
-      "type": "Toggle",
-      "props": {
-        "label": "Sandstone"
+        "selected": "black",
+        "options": [
+          {
+            "label": "Black",
+            "value": "black"
+          },
+          {
+            "label": "White Smoke",
+            "value": "white-smoke"
+          },
+          {
+            "label": "Sandstone",
+            "value": "sandstone"
+          }
+        ]
       }
     },
     "size-section": {
