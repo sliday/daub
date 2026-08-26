@@ -33,7 +33,7 @@ function contrastRatio(c1, c2) {
 }
 
 /* ---- Parse themes ---- */
-const themeRe = /\[data-theme="([^"]+)"\]\s*\{([^}]+)\}/g;
+const themeRe = /((?:\[data-theme="[^"]+"\]\s*,?\s*)+)\{([^}]+)\}/g;
 const rootMatch = css.match(/:root\s*\{([^}]+)\}/);
 
 function extractVars(block) {
@@ -48,10 +48,22 @@ function extractVars(block) {
 
 const rootVars = rootMatch ? extractVars(rootMatch[1]) : {};
 
-const themes = [{ name: 'default (light)', vars: rootVars }];
+// Merge every block a theme declares (colors, radii, textures live in
+// separate rules) and handle grouped selectors, so a theme is audited once
+// with its full var set instead of once per block seeded with :root defaults.
+const themeMap = new Map();
 let tm;
 while ((tm = themeRe.exec(css))) {
-  themes.push({ name: tm[1], vars: { ...rootVars, ...extractVars(tm[2]) } });
+  const names = [...tm[1].matchAll(/\[data-theme="([^"]+)"\]/g)].map((m) => m[1]);
+  const vars = extractVars(tm[2]);
+  for (const name of names) {
+    themeMap.set(name, { ...(themeMap.get(name) || {}), ...vars });
+  }
+}
+
+const themes = [{ name: 'default (light)', vars: rootVars }];
+for (const [name, vars] of themeMap) {
+  themes.push({ name, vars: { ...rootVars, ...vars } });
 }
 
 /* ---- Audit pairs ---- */

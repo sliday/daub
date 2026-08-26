@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Considered Component Library
-   Version 3.20.0 — 21 theme families × light/dark
+   Version 3.20.1 — 21 theme families × light/dark
    ============================================================ */
 
 /* ------------------------------------------------------------
@@ -6567,14 +6567,17 @@ meter.db-meter::-moz-meter-bar {
   border-color: rgba(255, 255, 255, 0.2);
 }
 @media (max-width: 640px) {
+  /* Bottom-right, not bottom-center: centered action rows (Cancel/Save)
+     are the most common bottom pattern and a centered FAB occludes them. */
   .db-theme-switcher {
-    left: 50%;
-    transform: translateX(-50%);
+    left: auto;
+    right: var(--db-space-3);
     bottom: var(--db-space-3);
   }
   .db-theme-switcher__popover {
-    left: 50%;
-    transform: translateX(-50%);
+    left: auto;
+    right: 0;
+    transform: none;
     bottom: calc(100% + 8px);
     width: calc(100vw - 32px);
     max-width: 320px;
@@ -6592,8 +6595,8 @@ meter.db-meter::-moz-meter-bar {
   }
 }
 @keyframes db-popover-in-mobile {
-  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ------------------------------------------------------------

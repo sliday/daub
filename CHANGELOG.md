@@ -2,6 +2,15 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.20.1
+
+**Mobile theme-switcher placement + WCAG audit accuracy (2026-08-26).**
+
+- **Theme switcher no longer occludes mobile actions** — the ≤640px rule centered the FAB at the bottom, landing it directly on centered `Cancel` / `Save Changes` rows (verified covering the Cancel button in the settings demo at 390px). Moved to bottom-right; the popover is now right-anchored (`right: 0`, `transform: none`) and its entrance keyframe updated to match. Measured at 390px: FAB 342–378, popover 58–378, both fully on-screen.
+- **`scripts/wcag-audit.mjs` counted phantom themes** — the parser pushed one entry per `[data-theme]` block, so themes that declare radii or textures in a second rule produced duplicate entries seeded with `:root` colors, auditing the default palette under another theme's name. It also skipped the first name in grouped selectors. Now merges every block per theme via a Map and reads all names from a selector list: **42 themes (41 + default), 0 failures, 49 warnings** — was a misleading 44/53.
+- Verified `daub-react`'s "78 typed JSX components" claim against source: 78 exported components, 78 `.tsx` files. Accurate, no change.
+- Live demo re-verified at 390px: zero unscrollable overflow across all six layouts.
+
 ## v3.20.0
 
 **Deep multiagent review: 56 confirmed fixes across components, blocks, demo, docs (2026-08-26).**
