@@ -219,12 +219,32 @@ async function runCDP(connectUrl, targetUrl) {
     }
   });
 
-  function send(method, params = {}) {
+  function rejectAll(reason) {
+    for (const { rej } of pending.values()) rej(new Error(reason));
+    pending.clear();
+  }
+  ws.addEventListener('close', () => rejectAll('CDP WebSocket closed'));
+  ws.addEventListener('error', () => rejectAll('CDP WebSocket error'));
+
+  function call(payload) {
     const id = msgId++;
     return new Promise((res, rej) => {
-      pending.set(id, { res, rej });
-      ws.send(JSON.stringify({ id, method, params }));
+      const timer = setTimeout(() => {
+        pending.delete(id);
+        const err = new Error('CDP ' + payload.method + ' timed out');
+        err.name = 'TimeoutError';
+        rej(err);
+      }, 20_000);
+      pending.set(id, {
+        res: (v) => { clearTimeout(timer); res(v); },
+        rej: (e) => { clearTimeout(timer); rej(e); },
+      });
+      ws.send(JSON.stringify(Object.assign({ id }, payload)));
     });
+  }
+
+  function send(method, params = {}) {
+    return call({ method, params });
   }
 
   function waitForEvent(name, timeoutMs = 15000) {
@@ -263,11 +283,7 @@ async function runCDP(connectUrl, targetUrl) {
     // Helper to send commands scoped to the page session
     function pageSend(method, params = {}) {
       if (sessionId) {
-        const id = msgId++;
-        return new Promise((res, rej) => {
-          pending.set(id, { res, rej });
-          ws.send(JSON.stringify({ id, method, params, sessionId }));
-        });
+        return call({ method, params, sessionId });
       }
       return send(method, params);
     }
@@ -280,11 +296,11 @@ async function runCDP(connectUrl, targetUrl) {
     // Small delay for JS rendering
     await new Promise(r => setTimeout(r, 1500));
 
-    const titleResult = await pageSend('Runtime.evaluate', { expression: 'document.title' });
+    const titleResult = await pageSend('Runtime.evaluate', { expression: 'document.title', timeout: 10_000 });
     const title = (titleResult && titleResult.result && titleResult.result.value) || '';
 
     // Extract AI-friendly markdown from the page DOM
-    const mdResult = await pageSend('Runtime.evaluate', { expression: DOM_TO_HTML_SCRIPT });
+    const mdResult = await pageSend('Runtime.evaluate', { expression: DOM_TO_HTML_SCRIPT, timeout: 10_000 });
     const content = (mdResult && mdResult.result && mdResult.result.value) || '';
 
     const ssResult = await pageSend('Page.captureScreenshot', { format: 'jpeg', quality: 70 });

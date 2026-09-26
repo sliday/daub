@@ -3,6 +3,13 @@
 // POST /api/figma          → { url, token } → design context extraction
 // POST /api/figma?refresh  → { refreshToken } → new access token
 
+function b64(buf) {
+  const bytes = new Uint8Array(buf);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+
 function getCorsHeaders(request) {
   const origin = request.headers.get('Origin') || '';
   const allowedOrigins = ['https://daub.dev', 'https://daub.pages.dev'];
@@ -365,7 +372,7 @@ async function handleRequest(request, env, corsHeaders) {
           if (pngRes.ok) {
             const buf = await pngRes.arrayBuffer();
             if (buf.byteLength <= 500 * 1024) {
-              screenshot = btoa(String.fromCharCode(...new Uint8Array(buf)));
+              screenshot = b64(buf);
             } else {
               // Retry at half scale
               const imgRes2 = await fetch(
@@ -380,7 +387,7 @@ async function handleRequest(request, env, corsHeaders) {
                   if (pngRes2.ok) {
                     const buf2 = await pngRes2.arrayBuffer();
                     if (buf2.byteLength <= 500 * 1024) {
-                      screenshot = btoa(String.fromCharCode(...new Uint8Array(buf2)));
+                      screenshot = b64(buf2);
                     }
                   }
                 }

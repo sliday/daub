@@ -2,6 +2,7 @@
 // GET /api/figma-callback?code=...&state=...
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const jsStr = s => JSON.stringify(String(s)).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -62,10 +63,7 @@ export async function onRequestGet(context) {
     });
   } catch (e) {
     if (e && (e.name === 'AbortError' || e.name === 'TimeoutError')) {
-      return new Response(JSON.stringify({ error: 'Gateway Timeout: Figma OAuth token exchange timed out' }), {
-        status: 504,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return htmlRedirect('Figma token exchange timed out');
     }
     return htmlRedirect('OAuth error: ' + e.message);
   }
@@ -73,7 +71,7 @@ export async function onRequestGet(context) {
 
 function htmlRedirect(errorMsg) {
   return new Response(`<!DOCTYPE html><html><body><script>
-    window.opener && window.opener.postMessage({ type: 'figma-oauth-error', error: ${JSON.stringify(errorMsg)} }, window.location.origin);
+    window.opener && window.opener.postMessage({ type: 'figma-oauth-error', error: ${jsStr(errorMsg)} }, window.location.origin);
     window.close();
   </script><p>${esc(errorMsg)}</p></body></html>`, {
     status: 200,
@@ -85,9 +83,9 @@ function tokenPage(accessToken, refreshToken, expiresIn) {
   return `<!DOCTYPE html><html><body><script>
     window.opener && window.opener.postMessage({
       type: 'figma-oauth-success',
-      accessToken: ${JSON.stringify(accessToken)},
-      refreshToken: ${JSON.stringify(refreshToken)},
-      expiresIn: ${expiresIn}
+      accessToken: ${jsStr(accessToken)},
+      refreshToken: ${jsStr(refreshToken)},
+      expiresIn: ${Number(expiresIn) || 0}
     }, window.location.origin);
     window.close();
   </script><p>Figma connected! This window should close automatically.</p></body></html>`;

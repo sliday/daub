@@ -49,7 +49,7 @@
           crossorigin="anonymous" defer></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.20.1">
+  <link rel="stylesheet" href="daub.css?v=3.20.2">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -999,7 +999,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.20.1"></script>
+<script src="daub.js?v=3.20.2"></script>
 <script src="daub-openui-parser.js"></script>
 <script>
 // ============================================================
@@ -1080,7 +1080,7 @@ function buildIframeSrcdoc(theme) {
   return '<!DOCTYPE html><html lang="en"' + themeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
     + '<base target="_blank">'
-    + '<link rel="stylesheet" href="daub.css?v=3.20.1">'
+    + '<link rel="stylesheet" href="daub.css?v=3.20.2">'
     + '<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" crossorigin="anonymous"><\/script>'
     + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
     + '<style>html,body{margin:0;min-height:100%;}'
@@ -1104,7 +1104,7 @@ function buildIframeSrcdoc(theme) {
     + '"\u201CThe best design is the simplest one that works.\u201D\\n\u2014 Albert Einstein",'
     + '"\u201CTypography is the craft of endowing human language with a durable visual form.\u201D\\n\u2014 Robert Bringhurst"'
     + '];document.getElementById("pg-iframe-root").setAttribute("data-quote",qs[Math.floor(Math.random()*qs.length)])})()<\/script>'
-    + '<script src="daub.js?v=3.20.1"><\/script>'
+    + '<script src="daub.js?v=3.20.2"><\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
     // ---- Declarative State Engine (iframe runtime) ----
@@ -2077,11 +2077,16 @@ $prompt.addEventListener('paste', function(e) {
 });
 
 // ---- AI API calls (blocking, accept messages array) ----
+// o-series / gpt-5 reasoning models reject max_tokens and non-default temperature
+function openAITokenParams() {
+  return /^(o\d|gpt-5)/.test($model.value) ? { max_completion_tokens: 16384 } : { temperature: 0.7, max_tokens: 16384 };
+}
+
 function callOpenAI(messages) {
   return fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
-    body: JSON.stringify(Object.assign({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384 }, OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}))
+    body: JSON.stringify(Object.assign({ model: $model.value, messages: messages }, openAITokenParams(), OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}))
   }).then(function(res) {
     if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
     return res.json();
@@ -2094,7 +2099,7 @@ function callAnthropic(messages) {
   return fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-api-key': $apikey.value.trim(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({ model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs, output_config: { format: { type: 'json' } } })
+    body: JSON.stringify({ model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs })
   }).then(function(res) {
     if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
     return res.json();
@@ -2186,7 +2191,7 @@ function streamOpenAI(messages, onText, onDone, onError, signal) {
   streamFetch(
     'https://api.openai.com/v1/chat/completions',
     { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
-    Object.assign({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, stream: true }, OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}),
+    Object.assign({ model: $model.value, messages: messages, stream: true }, openAITokenParams(), OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}),
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
@@ -2197,12 +2202,13 @@ function streamOpenAI(messages, onText, onDone, onError, signal) {
 }
 
 function streamAnthropic(messages, onText, onDone, onError, signal) {
+  _lastFinishReason = '';
   var sys = '', userMsgs = [];
   messages.forEach(function(m) { if (m.role === 'system') sys += m.content + '\n'; else userMsgs.push(m); });
   streamFetch(
     'https://api.anthropic.com/v1/messages',
     { 'Content-Type': 'application/json', 'x-api-key': $apikey.value.trim(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    { model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs, stream: true, output_config: { format: { type: 'json' } } },
+    { model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs, stream: true },
     function(chunk) {
       if (chunk.type === 'content_block_delta' && chunk.delta && chunk.delta.text) onText(chunk.delta.text);
       if (chunk.type === 'message_delta' && chunk.delta && chunk.delta.stop_reason === 'max_tokens') _lastFinishReason = 'length';
@@ -2459,6 +2465,55 @@ function selfCheck(spec, screenshotDataUrl, signal) {
     return fixed;
   })
   .catch(function(e) { if (e.name === 'AbortError') return null; return null; });
+}
+
+// ---- Component picker: Jev decision model (~typesafe/jev-latest) via /api/choose ----
+// Asks one yes/no question per component and resolves to the picked type list,
+// or null (use the full catalog) on any failure, timeout, or empty pick.
+var PICK_CORE = ['Stack', 'Grid', 'Text', 'Card', 'Button', 'Icon', 'Separator'];
+var PICK_THRESHOLD = 0.5;
+var PICK_TIMEOUT_MS = 4000;
+function chooseComponents(userPrompt, signal) {
+  var comps = {};
+  COMP_CATEGORIES.forEach(function(cat) {
+    cat[1].forEach(function(t) {
+      if (RENDERERS[t] && PICK_CORE.indexOf(t) === -1) comps[t] = COMP_PROPS[t] || '';
+    });
+  });
+  var ctrl = new AbortController();
+  var timer = setTimeout(function() { ctrl.abort(); }, PICK_TIMEOUT_MS);
+  function onAbort() { ctrl.abort(); }
+  if (signal) signal.addEventListener('abort', onAbort);
+  function cleanup() {
+    clearTimeout(timer);
+    if (signal) signal.removeEventListener('abort', onAbort);
+  }
+  return fetch('/api/choose', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt: userPrompt, components: comps }),
+    signal: ctrl.signal
+  })
+  .then(function(r) { return r.ok ? r.json() : null; })
+  .then(function(data) {
+    cleanup();
+    if (!data || !data.scores) return null;
+    var picked = PICK_CORE.slice();
+    Object.keys(data.scores).forEach(function(t) {
+      if (data.scores[t] >= PICK_THRESHOLD && comps.hasOwnProperty(t)) picked.push(t);
+    });
+    if (picked.length === PICK_CORE.length) return null;
+    // Keep every type already on the canvas so iterations can still edit it
+    if (currentSpec && currentSpec.elements) {
+      Object.keys(currentSpec.elements).forEach(function(id) {
+        var t = currentSpec.elements[id] && currentSpec.elements[id].type;
+        if (t && RENDERERS[t] && picked.indexOf(t) === -1) picked.push(t);
+      });
+    }
+    dlog('[chooseComponents] ' + data.model + ' picked ' + picked.length + ':', picked.join(', '));
+    return picked;
+  })
+  .catch(function(e) { cleanup(); dwarn('[chooseComponents] skipped:', e && e.message); return null; });
 }
 
 function analyzeLayout(userPrompt, images, webContexts, figmaContexts, signal) {
@@ -2809,13 +2864,17 @@ function planCodeArchitecture(spec, analysis, signal) {
 
 function executeChunk(spec, plan, chunk, modelOverride, signal) {
   var relevantEls = [];
-  if (spec.elements && chunk.elementIds) {
+  if (spec.elements && chunk.elementIds && Array.isArray(spec.elements)) {
     (function findEls(els) {
       for (var i = 0; i < els.length; i++) {
         if (chunk.elementIds.indexOf(els[i].id) !== -1) relevantEls.push(els[i]);
         if (els[i].children) findEls(els[i].children);
       }
     })(spec.elements);
+  } else if (spec.elements && chunk.elementIds) {
+    relevantEls = chunk.elementIds.filter(function(id) { return spec.elements[id]; }).map(function(id) {
+      return Object.assign({ id: id }, spec.elements[id]);
+    });
   }
 
   var effortMap = { trivial: 'low', low: 'low', medium: 'medium' };
@@ -2977,9 +3036,21 @@ function assembleChunkResults(spec, plan, chunkResults) {
         var target = elMap[cel.id].el;
         if (isObjFormat) {
           if (!target.props) target.props = {};
-          if (cel.js) target.props.js = (target.props.js ? target.props.js + '\n' : '') + cel.js;
+          // collectCustomJS only runs CustomHTML js, so route code for other types to a sibling CustomHTML
+          var codeTarget = target;
+          if (target.type !== 'CustomHTML' && (cel.js || cel.css)) {
+            var jsId = cel.id + '__js';
+            codeTarget = assembled.elements[jsId];
+            if (!codeTarget) {
+              codeTarget = assembled.elements[jsId] = { type: 'CustomHTML', props: {} };
+              var jsRoot = assembled.elements[assembled.root];
+              if (jsRoot && jsRoot.children) jsRoot.children.push(jsId);
+            }
+            if (!codeTarget.props) codeTarget.props = {};
+          }
+          if (cel.js) codeTarget.props.js = (codeTarget.props.js ? codeTarget.props.js + '\n' : '') + cel.js;
           if (cel.html) target.props.html = cel.html;
-          if (cel.css) target.props.css = (target.props.css ? target.props.css + '\n' : '') + cel.css;
+          if (cel.css) codeTarget.props.css = (codeTarget.props.css ? codeTarget.props.css + '\n' : '') + cel.css;
         } else {
           target.type = 'CustomHTML';
           if (cel.js) target.js = (target.js ? target.js + '\n' : '') + cel.js;
@@ -3191,8 +3262,11 @@ function tryProgressiveRender(text) {
 }
 
 // ---- Chat message helpers ----
-function buildMessages(userPrompt, images, webContexts, figmaContexts, analysisBrief) {
-  var sysPrompt = OUTPUT_FORMAT === 'openui' ? OPENUI_SYSTEM_PROMPT : SYSTEM_PROMPT;
+function buildMessages(userPrompt, images, webContexts, figmaContexts, analysisBrief, pickedTypes) {
+  var focused = pickedTypes && pickedTypes.length;
+  var sysPrompt = OUTPUT_FORMAT === 'openui'
+    ? (focused ? focusedOpenuiSystemPrompt(pickedTypes) : OPENUI_SYSTEM_PROMPT)
+    : (focused ? focusedSystemPrompt(pickedTypes) : SYSTEM_PROMPT);
   var msgs = [{ role: 'system', content: sysPrompt }];
   if (analysisBrief) {
     userPrompt = analysisBrief + '\n---\n' + userPrompt;
@@ -3563,6 +3637,9 @@ function generate() {
   } else {
     analysisPromise = Promise.resolve(null);
   }
+  var preSignal = _abortCtrl.signal;
+  if (currentSpec) $status.textContent = 'Choosing components\u2026';
+  var pickPromise = chooseComponents(prompt, preSignal);
   var messages; // set after analysis completes
   var accumulated = '';
   var continuations = 0;
@@ -3601,17 +3678,18 @@ function generate() {
 
   function doRetryOrFallback(reason) {
     clearInterval(renderTimer);
+    var retrySignal = _abortCtrl ? _abortCtrl.signal : null;
     retries++;
     accumulated = '';
     $json.value = '';
     if (retries <= MAX_RETRIES) {
       $status.textContent = 'Retry ' + retries + '/' + MAX_RETRIES + ' \u2014 ' + reason;
-      setTimeout(function() { startStream(messages); }, 500);
+      setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages); }, 500);
     } else if (useDefault && !usingFallback) {
       usingFallback = true;
       retries = 0;
       $status.textContent = 'Switching to fallback model\u2026';
-      setTimeout(function() { startStream(messages, FALLBACK_MODEL); }, 500);
+      setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages, FALLBACK_MODEL); }, 500);
     } else {
       clearInterval(renderTimer);
       $status.textContent = '';
@@ -3637,6 +3715,7 @@ function generate() {
         $json.scrollTop = $json.scrollHeight;
       },
       function onDone() {
+        if (signal.aborted) return; // streamFetch reports abort via onDone
         // Auto-continue if response was truncated (finish_reason: "length")
         if (_lastFinishReason === 'length' && continuations < MAX_CONTINUATIONS) {
           continuations++;
@@ -3676,7 +3755,7 @@ function generate() {
           updatePreviewToolbar();
           streamBubble.classList.remove('pg-chat__msg--streaming');
           buildResultBubble(streamBubble, spec);
-          chatHistory.push({ role: 'assistant', content: 'v' + specVersions.length + ' \u00B7 ' + countComponents(spec) + ' components', versionIdx: specVersions.length - 1 });
+          var _chatIdx = chatHistory.push({ role: 'assistant', content: 'v' + specVersions.length + ' \u00B7 ' + countComponents(spec) + ' components', versionIdx: specVersions.length - 1 }) - 1;
           saveChatState();
           // Interactivity pipeline: analyze → generate code → self-check
           var finalSpec = spec;
@@ -3789,6 +3868,7 @@ function generate() {
           }
 
           function _applySpec(s, suffix) {
+            if (signal.aborted) return;
             var issues = validateSpec(s);
             if (issues.length) {
               console.warn('[pipeline] Spec validation issues (' + suffix + '):', issues);
@@ -3804,7 +3884,7 @@ function generate() {
             updatePreviewToolbar();
             buildResultBubble(streamBubble, s);
             streamBubble.appendChild(pipeDetails);
-            chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(s) + ' components (' + suffix + ')';
+            if (chatHistory[_chatIdx]) chatHistory[_chatIdx].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(s) + ' components (' + suffix + ')';
             saveChatState();
           }
 
@@ -3813,6 +3893,7 @@ function generate() {
           $status.textContent = 'Analyzing interactivity\u2026';
           var _pipeSignal = _abortCtrl ? _abortCtrl.signal : null;
           analyzeInteractivity(spec, _pipeSignal).then(function(analysis) {
+            if (signal.aborted) return;
             _analysis = analysis;
             if (analysis && analysis.needed) {
               var desc = (analysis.description || 'yes');
@@ -3823,10 +3904,12 @@ function generate() {
               _pipeSkip(stepAnalyze, 'No custom code needed');
             }
           }).then(function() {
+            if (signal.aborted) return;
             // ---- Visual check / visual diff (runs on initial spec, before code gen) ----
             stepCheck.classList.add('pg-pipeline__step--active');
             $status.textContent = hasOriginalImage ? 'Comparing with target\u2026' : 'Visual check\u2026';
             return capturePreview().then(function(screenshot) {
+              if (signal.aborted) return;
               if (!screenshot) {
                 _pipeSkip(stepCheck, 'No screenshot');
                 return;
@@ -3835,6 +3918,7 @@ function generate() {
                 ? visualDiff(finalSpec, screenshot, originalImageUrl, _pipeSignal)
                 : selfCheck(finalSpec, screenshot, _pipeSignal);
               return checkPromise.then(function(fixedSpec) {
+                if (signal.aborted) return;
                 if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(finalSpec)) {
                   var merged = mergeSpecFixes(finalSpec, fixedSpec);
                   _pipeDone(stepCheck, hasOriginalImage ? 'Matched to target' : 'Applied fixes');
@@ -3845,6 +3929,7 @@ function generate() {
               });
             });
           }).then(function() {
+            if (signal.aborted) return;
             // ---- Code generation pipeline (complexity-routed) ----
             var _complexity = (_analysis && _analysis.complexity) || 'none';
             if (!_analysis || !_analysis.needed) _complexity = 'none';
@@ -3871,6 +3956,7 @@ function generate() {
               return generateInteractiveCode(finalSpec, _analysis, function(bytes, lines, secs) {
                 codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
               }).then(function(updatedSpec) {
+                if (signal.aborted) return;
                 _removeSkeleton(_analysis.elements);
                 if (updatedSpec) {
                   _pipeDone(stepExecute, 'Code added (single-shot)');
@@ -3890,6 +3976,7 @@ function generate() {
             if (_complexity === 'trivial') {
               _pipeSkip(stepPlan, 'Trivial');
               return _singleShotPath().then(function() {
+                if (signal.aborted) return;
                 _pipeFinish(); $status.textContent = ''; setLoading(false);
               });
             }
@@ -3899,6 +3986,7 @@ function generate() {
               stepPlan.classList.add('pg-pipeline__step--active');
               $status.textContent = 'Planning architecture\u2026';
               return planCodeArchitecture(finalSpec, _analysis, _pipeSignal).then(function(plan) {
+                if (signal.aborted) return;
                 if (!plan || !plan.chunks || plan.chunks.length <= 1) {
                   _pipeSkip(stepPlan, plan ? 'Single-shot' : 'Plan failed');
                   _pipeSkip(stepReview, 'Simple');
@@ -3912,6 +4000,7 @@ function generate() {
                   var sym = result.success ? '\u2713' : '\u2717';
                   codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
                 }, _pipeSignal).then(function(chunkResults) {
+                  if (signal.aborted) return;
                   _removeSkeleton(_analysis.elements);
                   var succeeded = chunkResults.filter(function(r) { return r.success; });
                   if (!succeeded.length) {
@@ -3927,6 +4016,7 @@ function generate() {
                   return _runVerifyLoop();
                 });
               }).then(function() {
+                if (signal.aborted) return;
                 _pipeFinish(); $status.textContent = ''; setLoading(false);
               });
             }
@@ -3935,6 +4025,7 @@ function generate() {
             stepPlan.classList.add('pg-pipeline__step--active');
             $status.textContent = 'Planning architecture\u2026';
             return planCodeArchitecture(finalSpec, _analysis, _pipeSignal).then(function(plan) {
+              if (signal.aborted) return;
               // Fallback: plan failed or ≤1 chunk
               if (!plan || !plan.chunks || plan.chunks.length <= 1) {
                 _pipeSkip(stepPlan, plan ? 'Single-shot' : 'Plan failed');
@@ -3951,6 +4042,7 @@ function generate() {
                 var tokStr = result.usage && result.usage.completion_tokens ? ' \u00B7 ' + result.usage.completion_tokens + 'tok' : '';
                 codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')' + tokStr;
               }, _pipeSignal).then(function(chunkResults) {
+                if (signal.aborted) return;
                 _removeSkeleton(_analysis.elements);
                 var succeeded = chunkResults.filter(function(r) { return r.success; });
                 var failed = chunkResults.filter(function(r) { return !r.success; });
@@ -3969,6 +4061,7 @@ function generate() {
                     var sym = result.success ? '\u2713' : '\u2717';
                     codeProgress.textContent = 'Retry: ' + sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
                   }, _pipeSignal).then(function(retryResults) {
+                    if (signal.aborted) return;
                     // Merge retry successes into main results
                     var retriedOk = 0;
                     retryResults.forEach(function(rr) {
@@ -3996,6 +4089,7 @@ function generate() {
                 }
 
                 return retryPromise.then(function(finalResults) {
+                if (signal.aborted) return;
                 // Collect remaining failed chunk definitions for Kimi to implement
                 var failedChunks = [];
                 finalResults.forEach(function(cr) {
@@ -4020,6 +4114,7 @@ function generate() {
                 _applySpec(assembled.spec, 'test-render');
                 var testFailures = [];
                 return runChunkTests(finalResults, 2000).then(function(testResults) {
+                  if (signal.aborted) return;
                   if (testResults.length) {
                     var passed = testResults.filter(function(t) { return t.pass; }).length;
                     var total = testResults.length;
@@ -4043,6 +4138,7 @@ function generate() {
                 return reviewAndAssemble(finalSpec, plan, assembled.spec, assembled.conflicts, failedChunks, function(bytes, lines, secs) {
                   codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
                 }, testFailures).then(function(reviewedSpec) {
+                  if (signal.aborted) return;
                   if (reviewedSpec) {
                     _pipeDone(stepReview, 'Review complete');
                     _applySpec(reviewedSpec, 'interactive');
@@ -4053,6 +4149,7 @@ function generate() {
 
                   return _runVerifyLoop();
                 }).catch(function(revErr) {
+                  if (signal.aborted) return;
                   console.error('[pipeline:review] error:', revErr);
                   _pipeDone(stepReview, 'Review errored');
                   _applySpec(assembled.spec, 'interactive (raw)');
@@ -4061,16 +4158,18 @@ function generate() {
               }); // retryPromise.then
               });
             }).then(function() {
+              if (signal.aborted) return;
               _pipeFinish();
               $status.textContent = '';
               setLoading(false);
             });
-          }).catch(function(err) { console.error('[pipeline] uncaught:', err); _pipeFinish(); $status.textContent = ''; setLoading(false); });
+          }).catch(function(err) { if (signal.aborted) return; console.error('[pipeline] uncaught:', err); _pipeFinish(); $status.textContent = ''; setLoading(false); });
         } else {
           doRetryOrFallback('Invalid or incomplete JSON response');
         }
       },
       function onError(err) {
+        if (signal.aborted) return;
         clearInterval(renderTimer);
         if (err === 'no-stream') {
           runBlockingGenerate(messages, streamBubble);
@@ -4080,10 +4179,12 @@ function generate() {
       }
     );
   }
-  analysisPromise.then(function(analysisBrief) {
+  Promise.all([analysisPromise, pickPromise]).then(function(res) {
+    if (preSignal.aborted) return; // stopped before streaming began
+    var analysisBrief = res[0];
     if (analysisBrief) dlog('[analyzeLayout] Brief:', analysisBrief.slice(0, 200));
     else if (!currentSpec) console.warn('[analyzeLayout] Skipped or failed');
-    messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief);
+    messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief, res[1]);
     $status.textContent = 'Streaming\u2026';
     startStream(messages);
   });
@@ -4729,7 +4830,7 @@ function sanitizeHtml(html) {
         if (aname.indexOf('on') === 0) continue;
         if (allowed.indexOf(aname) < 0) continue;
         var v = a.value;
-        if ((aname === 'href' || aname === 'src') && /^\s*javascript:/i.test(v)) continue;
+        if ((aname === 'href' || aname === 'src') && /^javascript:/i.test(v.replace(/[\u0000-\u0020]/g, ''))) continue;
         attrs += ' ' + aname + '="' + esc(v) + '"';
       }
       if (tag === 'a') attrs += ' rel="noopener" target="_blank"';
@@ -4757,7 +4858,7 @@ function mkEl(tag, cls, text) {
 // Guard against javascript: and data: URLs from AI-generated content
 function isSafeUrl(url) {
   if (!url || typeof url !== 'string') return false;
-  var trimmed = url.trim().toLowerCase();
+  var trimmed = url.replace(/[\u0000-\u0020]/g, '').toLowerCase();
   if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) return false;
   return true;
 }
@@ -5372,7 +5473,7 @@ RENDERERS.Breadcrumbs = function(p) {
       li.textContent = item.label || '';
     } else {
       var a = document.createElement('a');
-      a.href = item.href || '#';
+      a.href = isSafeUrl(item.href) ? item.href : '#';
       a.textContent = item.label || '';
       li.appendChild(a);
     }
@@ -5435,7 +5536,7 @@ RENDERERS.NavMenu = function(p) {
   (p.items || []).forEach(function(item) {
     var a = document.createElement('a');
     a.className = 'db-nav-menu__item' + (item.active ? ' db-nav-menu__item--active' : '');
-    a.href = item.href || '#';
+    a.href = isSafeUrl(item.href) ? item.href : '#';
     a.textContent = item.label || '';
     el.appendChild(a);
   });
@@ -5448,7 +5549,7 @@ RENDERERS.Navbar = function(p, ch, els, d) {
   el.className = 'db-navbar';
   var brand = document.createElement('a');
   brand.className = 'db-navbar__brand';
-  brand.href = p.brandHref || '#';
+  brand.href = isSafeUrl(p.brandHref) ? p.brandHref : '#';
   brand.textContent = p.brand || 'App';
   el.appendChild(brand);
   if (ch.length) {
@@ -5491,7 +5592,7 @@ RENDERERS.Sidebar = function(p) {
       var a = document.createElement('a');
       a.className = 'db-sidebar__item' + (item.active ? ' db-sidebar__item--active' : '');
       a.setAttribute('data-tooltip', item.label || '');
-      a.href = item.href || '#';
+      a.href = isSafeUrl(item.href) ? item.href : '#';
       if (item.icon) {
         var ico = document.createElement('i');
         ico.setAttribute('data-lucide', item.icon);
@@ -6028,6 +6129,16 @@ RENDERERS.Drawer = function(p, ch, els, d) {
 // -- Popover --
 RENDERERS.Popover = function(p, ch, els, d) {
   var el = mkEl('div', 'db-popover');
+  var trig = ch.length > 1 ? renderElement(els, ch[0], d + 1) : null;
+  if (trig && trig.classList) {
+    trig.classList.add('db-popover__trigger');
+    ch = ch.slice(1);
+  } else {
+    trig = document.createElement('button');
+    trig.className = 'db-btn db-popover__trigger';
+    trig.textContent = 'Open';
+  }
+  el.appendChild(trig);
   var content = mkEl('div', 'db-popover__content db-popover__content--' + (p.position || 'bottom'));
   content.appendChild(renderChildren(els, ch, d));
   el.appendChild(content);
@@ -6046,8 +6157,10 @@ RENDERERS.HoverCard = function(p, ch, els, d) {
 // -- DropdownMenu --
 RENDERERS.DropdownMenu = function(p, ch, els, d) {
   var el = mkEl('div', 'db-dropdown');
-  if (ch.length) {
-    el.appendChild(renderElement(els, ch[0], d + 1));
+  var childTrig = ch.length ? renderElement(els, ch[0], d + 1) : null;
+  if (childTrig && childTrig.classList) {
+    childTrig.classList.add('db-dropdown__trigger');
+    el.appendChild(childTrig);
   } else {
     var trigger = document.createElement('button');
     trigger.className = 'db-btn db-dropdown__trigger';
@@ -6457,6 +6570,7 @@ var VALID_TYPES_HINT = (function() {
 })();
 
 // ---- Dynamic system prompt (built from RENDERERS + COMP_PROPS) ----
+var focusedSystemPrompt; // (pickedTypes) -> SYSTEM_PROMPT variant with props only for picked components
 var SYSTEM_PROMPT = (function() {
   var preamble = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\n'
     + 'CRITICAL: You MUST return ONLY a single valid JSON object. No markdown fences, no explanation, no text before or after the JSON.\n'
@@ -6590,10 +6704,27 @@ var SYSTEM_PROMPT = (function() {
       + '- Default: "light" when no preference is detected\n';
   })();
 
+  focusedSystemPrompt = function(picked) {
+    var focus = 'PICKED FOR THIS REQUEST (prefer these):\n';
+    var others = [];
+    for (var i = 0; i < COMP_CATEGORIES.length; i++) {
+      var types = COMP_CATEGORIES[i][1];
+      for (var j = 0; j < types.length; j++) {
+        var t = types[j];
+        if (!RENDERERS[t]) continue;
+        if (picked.indexOf(t) !== -1) focus += '- ' + t + ': { ' + (COMP_PROPS[t] || '') + ' }\n';
+        else others.push(t);
+      }
+    }
+    if (others.length) focus += '\nALSO AVAILABLE (use only if clearly needed): ' + others.join(', ') + '\n';
+    return preamble + focus + '\n' + guidelines + themes;
+  };
+
   return preamble + sections + guidelines + themes;
 })();
 
 // ---- OpenUI Lang system prompt (token-efficient alternative to JSON) ----
+var focusedOpenuiSystemPrompt; // (pickedTypes) -> OPENUI_SYSTEM_PROMPT variant with signatures only for picked components
 var OPENUI_SYSTEM_PROMPT = (function() {
   var preamble = 'You are a UI generator. Output ONLY valid openui-lang code using DAUB components.\n\n'
     + 'SYNTAX:\n'
@@ -6666,6 +6797,22 @@ var OPENUI_SYSTEM_PROMPT = (function() {
     + 's1 = StatCard("Revenue", "$12,345", "up", "+12%")\n'
     + 's2 = StatCard("Users", "1,234", "up", "+5%")\n'
     + 'content = Card([], "Overview", "Dashboard content goes here")\n';
+
+  focusedOpenuiSystemPrompt = function(picked) {
+    var focus = 'COMPONENT SIGNATURES — PICKED FOR THIS REQUEST (positional arg order; prefer these):\n';
+    var others = [];
+    for (var i = 0; i < COMP_CATEGORIES.length; i++) {
+      var types = COMP_CATEGORIES[i][1];
+      for (var j = 0; j < types.length; j++) {
+        var t = types[j];
+        if (!RENDERERS[t]) continue;
+        if (picked.indexOf(t) !== -1) focus += '- ' + t + '(' + (COMP_PROPS[t] || '') + ')\n';
+        else others.push(t);
+      }
+    }
+    if (others.length) focus += '\nALSO AVAILABLE (use only if clearly needed, named args only): ' + others.join(', ') + '\n';
+    return preamble + focus + '\n' + guidelines + themes + example;
+  };
 
   return preamble + sigs + guidelines + themes + example;
 })();

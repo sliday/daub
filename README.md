@@ -557,7 +557,9 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.20.1** — Added the Monospace theme family (`monospace-light` / `monospace`) across CSS, JS theme APIs, gallery, and docs.
+**Latest: v3.20.2** — Playground picks components with Jev (`~typesafe/jev-latest`, OpenRouter Decisions API) before generating, plus security and reliability fixes from a full-repo review.
+
+**v3.20.1** — Mobile theme-switcher no longer covers centered actions; WCAG audit merges per-theme blocks (42 themes, 0 failures).
 
 **v3.19.2** — SEO & AI discoverability: keyword-rich title/meta, FAQ schema, complete sitemap, consistent component count (76), llms.txt version sync. Mobile fixes: hamburger nav on all pages, configurator corner radius, toggle sizing, classless demo overflow, docs title responsiveness.
 

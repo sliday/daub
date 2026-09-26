@@ -1,6 +1,6 @@
 /**
  * DAUB UI Kit — TypeScript Declarations
- * Version 3.19.13
+ * Version 3.20.2
  * https://daub.dev
  */
 
@@ -9,6 +9,12 @@ interface DAUBToastOptions {
   title?: string;
   message: string;
   duration?: number;
+}
+
+interface DAUBModalOptions {
+  title?: string;
+  body?: string;
+  footer?: string;
 }
 
 interface DAUBStatic {
@@ -58,14 +64,14 @@ interface DAUBStatic {
 
   // --- Overlay API ---
 
-  /** Open a modal by id or element */
-  openModal(id: string | Element): void;
+  /** Open a modal by id or element. Optionally pass a trigger element (focus returns to it) and/or content overrides. */
+  openModal(id: string | Element, triggerOrOpts?: Element | DAUBModalOptions, opts?: DAUBModalOptions): void;
   /** Close a modal by id or element */
   closeModal(id: string | Element): void;
   /** Open an alert dialog by id */
   openAlertDialog(id: string): void;
-  /** Close an alert dialog */
-  closeAlertDialog(el: string | Element): void;
+  /** Close an alert dialog by id */
+  closeAlertDialog(id: string): void;
   /** Open a sheet panel by id */
   openSheet(id: string): void;
   /** Close a sheet panel by id */
@@ -96,6 +102,13 @@ interface DAUBStatic {
   getTexture(): string;
   /** Array of available texture types */
   readonly TEXTURES: string[];
+
+  // --- Temperature API ---
+
+  /** Set color temperature (-1 cool to 1 warm), or 'auto' to follow time of day */
+  setTemperature(value: number | 'auto'): void;
+  /** Get current color temperature, or 'auto' */
+  getTemperature(): number | 'auto';
 
   // --- Icons ---
 

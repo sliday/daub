@@ -8,6 +8,10 @@ All references are to `playground.html` unless noted.
 User prompt
     |
     v
+[Phase 0: Component Picking] (parallel with layout analysis)
+    |  chooseComponents() -> /api/choose -> Jev (~typesafe/jev-latest)
+    |  One yes/no decision per component; picked ones get full props in the prompt
+    v
 [Phase 1: Streaming Generation]
     |  generate() -> buildMessages() -> streamFetch() -> SSE parse
     |  Progressive render every 300ms
@@ -37,6 +41,18 @@ Spec rendered in preview iframe
 - Default model: `google/gemini-3-flash-preview`
 - Passthrough params: `model`, `messages`, `max_tokens`, `reasoning`, `response_format`
 - Streams SSE responses back to the client
+
+## Phase 0: Component Picking
+
+`chooseComponents(prompt, signal)` runs in parallel with `analyzeLayout()` and resolves before `buildMessages()`.
+
+- Endpoint: `functions/api/choose.js` → OpenRouter `/api/alpha/decisions` (not chat/completions; Jev is a decisions model)
+- Model: `~typesafe/jev-latest` (pinned server-side; clients cannot override)
+- Request: `state = { request: prompt }`, one `noul` question per renderable component (core layout types excluded)
+- Picks: core set (`Stack`, `Grid`, `Text`, `Card`, `Button`, `Icon`, `Separator`) + every component with p(yes) ≥ 0.5 + every type already in `currentSpec`
+- Prompt: `focusedSystemPrompt()` / `focusedOpenuiSystemPrompt()` list full props for picked types and names only for the rest (~40% shorter system prompt)
+- Cost/latency: ~$0.00025 and 300–550ms per call (72 questions)
+- Fallback: any error, 4s timeout, abort, or empty pick → full catalog prompt (previous behavior)
 
 ## Phase 1: Streaming Generation (lines 3072–3203)
 

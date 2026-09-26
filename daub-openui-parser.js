@@ -389,6 +389,7 @@ function resolveStatements(stmts) {
   var theme = 'bone';
   var rootName = null;
   var state = null;
+  var stmtIds = [];
 
   // First pass: assign IDs
   for (var i = 0; i < stmts.length; i++) {
@@ -402,6 +403,7 @@ function resolveStatements(stmts) {
       continue;
     }
     var id = stmt.name || genId('auto');
+    stmtIds[i] = id;
     nameToId[id] = id;
     if (!rootName) rootName = id;
     if (stmt.name === 'root') rootName = id;
@@ -522,7 +524,7 @@ function resolveStatements(stmts) {
   for (var j = 0; j < stmts.length; j++) {
     var s = stmts[j];
     if (s.name === '__theme' || s.name === '__state') continue;
-    var name = s.name || genId('auto');
+    var name = stmtIds[j];
 
     if (s.value && s.value.__component) {
       // Resolve the component and use the statement name as the ID
