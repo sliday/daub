@@ -593,6 +593,12 @@ describe('openUItoSpec — edge cases', () => {
     assert.equal(spec.root, 'myPage');
   });
 
+  it('uses bare unnamed root statement as root, not its first child', () => {
+    const spec = openUItoSpec('Stack([Text("hi"), Button("Go")])');
+    assert.equal(spec.elements[spec.root].type, 'Stack');
+    assert.equal(spec.elements[spec.root].children.length, 2);
+  });
+
   it('handles special characters in strings', () => {
     const spec = openUItoSpec('root = Text("Price: $12.99 — 50% off!", "p")');
     assert.equal(spec.elements.root.props.content, 'Price: $12.99 — 50% off!');

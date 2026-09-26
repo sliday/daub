@@ -29,7 +29,7 @@
             if (aname.indexOf('on') === 0) continue;
             if (allowed.indexOf(aname) < 0) continue;
             var v = a.value;
-            if ((aname === 'href' || aname === 'src') && /^\s*javascript:/i.test(v)) continue;
+            if ((aname === 'href' || aname === 'src') && /^javascript:/i.test(v.replace(/[\u0000- ]/g, ''))) continue;
             attrs += ' ' + aname + '="' + esc(v) + '"';
           }
           if (tag === 'a') attrs += ' rel="noopener" target="_blank"';
@@ -57,7 +57,7 @@
     // Guard against javascript: and data: URLs from AI-generated content
     function isSafeUrl(url) {
       if (!url || typeof url !== 'string') return false;
-      var trimmed = url.trim().toLowerCase();
+      var trimmed = url.replace(/[\u0000- ]/g, '').toLowerCase();
       if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) return false;
       return true;
     }
@@ -745,7 +745,7 @@
           li.textContent = item.label || '';
         } else {
           var a = document.createElement('a');
-          a.href = item.href || '#';
+          a.href = isSafeUrl(item.href) ? item.href : '#';
           a.textContent = item.label || '';
           li.appendChild(a);
         }
@@ -808,7 +808,7 @@
       (p.items || []).forEach(function(item) {
         var a = document.createElement('a');
         a.className = 'db-nav-menu__item' + (item.active ? ' db-nav-menu__item--active' : '');
-        a.href = item.href || '#';
+        a.href = isSafeUrl(item.href) ? item.href : '#';
         a.textContent = item.label || '';
         el.appendChild(a);
       });
@@ -821,7 +821,7 @@
       el.className = 'db-navbar';
       var brand = document.createElement('a');
       brand.className = 'db-navbar__brand';
-      brand.href = p.brandHref || '#';
+      brand.href = isSafeUrl(p.brandHref) ? p.brandHref : '#';
       brand.textContent = p.brand || 'App';
       el.appendChild(brand);
       if (ch.length) {
@@ -864,7 +864,7 @@
           var a = document.createElement('a');
           a.className = 'db-sidebar__item' + (item.active ? ' db-sidebar__item--active' : '');
           a.setAttribute('data-tooltip', item.label || '');
-          a.href = item.href || '#';
+          a.href = isSafeUrl(item.href) ? item.href : '#';
           if (item.icon) {
             var ico = document.createElement('i');
             ico.setAttribute('data-lucide', item.icon);
@@ -1413,6 +1413,16 @@
     // -- Popover --
     RENDERERS.Popover = function(p, ch, els, d) {
       var el = mkEl('div', 'db-popover');
+      var trig = ch.length > 1 ? renderElement(els, ch[0], d + 1) : null;
+      if (trig && trig.classList) {
+        trig.classList.add('db-popover__trigger');
+        ch = ch.slice(1);
+      } else {
+        trig = document.createElement('button');
+        trig.className = 'db-btn db-popover__trigger';
+        trig.textContent = 'Open';
+      }
+      el.appendChild(trig);
       var content = mkEl('div', 'db-popover__content db-popover__content--' + (p.position || 'bottom'));
       content.appendChild(renderChildren(els, ch, d));
       el.appendChild(content);
@@ -1431,8 +1441,10 @@
     // -- DropdownMenu --
     RENDERERS.DropdownMenu = function(p, ch, els, d) {
       var el = mkEl('div', 'db-dropdown');
-      if (ch.length) {
-        el.appendChild(renderElement(els, ch[0], d + 1));
+      var childTrig = ch.length ? renderElement(els, ch[0], d + 1) : null;
+      if (childTrig && childTrig.classList) {
+        childTrig.classList.add('db-dropdown__trigger');
+        el.appendChild(childTrig);
       } else {
         var trigger = document.createElement('button');
         trigger.className = 'db-btn db-dropdown__trigger';
@@ -1695,7 +1707,7 @@
       var el = document.createElement('a');
       el.className = 'db-link';
       el.textContent = p.label || '';
-      if (p.href) el.href = p.href;
+      if (p.href) el.href = isSafeUrl(p.href) ? p.href : '#';
       return el;
     };
 

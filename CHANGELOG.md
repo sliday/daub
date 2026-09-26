@@ -2,6 +2,30 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.20.2
+
+**Playground picks components with Jev + full-repo review fixes (2026-09-26).**
+
+### Playground: Jev component picker
+- New `functions/api/choose.js` calls OpenRouter's Decisions API (`/api/alpha/decisions`) with `~typesafe/jev-latest`, TypeSafe's decision model. Jev rejects `chat/completions`; it answers typed questions with probabilities. The endpoint asks one yes/no question per component in one request. Model is pinned server-side.
+- `chooseComponents()` runs in parallel with layout analysis. Picked components (plus core layout types and any type already on the canvas) get full props in the system prompt; the rest appear by name only. Both JSON and OpenUI prompts support this. Measured: 300–550ms, ~$0.00025 per call, OpenUI system prompt 8.3k → 5.0k chars on a dashboard prompt.
+- Any failure, 4s timeout, or empty pick falls back to the full catalog.
+
+### Security
+- `figma-callback.js`: reflected XSS through `?error=` inside an inline script. Values now go through a `</script>`-safe JSON escaper; the timeout path returns the postMessage page instead of raw JSON.
+- `generate.js`: server key no longer accepts arbitrary `model`/`reasoning`. Allowlist covers every model the playground sends; others fall back to the default. Null bodies and network failures return JSON errors with CORS headers.
+- `mcp.js`: JSON-RPC batches capped at 10 and rate-limited per `tools/call`; null bodies/elements return `-32600` instead of an uncaught 500.
+- Renderers (`daub-render.js`, playground copy): Link, Breadcrumbs, NavMenu, Navbar, Sidebar hrefs go through `isSafeUrl`; scheme checks strip control characters and whitespace first (`java\tscript:` bypass).
+
+### Reliability
+- Playground Stop now stops: during layout analysis, mid-stream, during the retry wait, and during the interactivity pipeline. A stale pipeline can no longer overwrite a newer generation.
+- Playground chunk JS on non-CustomHTML targets moves to a sibling CustomHTML element so it runs; `executeChunk` reads id-keyed specs; Anthropic streams reset the finish reason; OpenAI o-series / GPT-5 get `max_completion_tokens` and no temperature; invalid Anthropic `output_config` removed.
+- `figma.js`: chunked base64 fixes `RangeError` on screenshots above ~120KB. `weblook.js`: 20s per-CDP-command timeout, pending commands reject on socket close.
+- `daub.js`: `DAUB.init()` re-runs now initialize dynamically added accordions, collapsibles, popovers, context menus, dropdowns, toggles, custom selects, menubars; temperature/noise/texture storage access survives blocked `localStorage`; Tabs ignore nested panels.
+- Renderer: Popover renders a trigger; DropdownMenu child trigger gets `db-dropdown__trigger` and survives a missing child.
+- OpenUI parser: bare root statement keeps its id (was falling back to the first leaf). Regression test added.
+- `daub.d.ts`: `setTemperature`/`getTemperature`, `openModal` options signature.
+
 ## v3.20.1
 
 **Mobile theme-switcher placement + WCAG audit accuracy (2026-08-26).**

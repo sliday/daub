@@ -1,6 +1,10 @@
 // Cloudflare Pages Function — OpenRouter SSE proxy
 // POST /api/generate  { messages: [{role, content}, ...] }
 
+const DEFAULT_MODEL = 'google/gemini-3-flash-preview';
+const ALLOWED_MODELS = [DEFAULT_MODEL, 'google/gemini-3.1-pro-preview', 'google/gemini-3.1-flash-lite', 'moonshotai/kimi-k2.5'];
+const ALLOWED_EFFORTS = ['low', 'medium', 'high'];
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -38,7 +42,7 @@ export async function onRequestPost(context) {
     });
   }
 
-  if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
+  if (!body || typeof body !== 'object' || !Array.isArray(body.messages) || body.messages.length === 0) {
     return new Response(JSON.stringify({ error: 'messages array required' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -71,12 +75,12 @@ export async function onRequestPost(context) {
         'X-Title': 'DAUB Playground',
       },
       body: JSON.stringify(Object.assign({
-        model: body.model || 'google/gemini-3-flash-preview',
+        model: ALLOWED_MODELS.includes(body.model) ? body.model : DEFAULT_MODEL,
         messages: body.messages,
         temperature: 0.7,
         max_tokens: Math.min(Math.max(parseInt(body.max_tokens) || 16384, 1), 32768),
         stream: true,
-        reasoning: body.reasoning || { effort: 'medium' },
+        reasoning: { effort: body.reasoning && ALLOWED_EFFORTS.includes(body.reasoning.effort) ? body.reasoning.effort : 'medium' },
       }, body.response_format !== false ? { response_format: { type: 'json_object' } } : {})),
       signal: AbortSignal.timeout(60_000),
     });
@@ -87,7 +91,10 @@ export async function onRequestPost(context) {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-    throw e;
+    return new Response(JSON.stringify({ error: 'Bad Gateway: upstream LLM request failed' }), {
+      status: 502,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 
   if (!upstream.ok) {

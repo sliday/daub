@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Interactive Behaviors
-   Version 3.20.1
+   Version 3.20.2
    IIFE module exposing window.DAUB = { init, toast, theme API }
    ============================================================ */
 ;(function() {
@@ -535,9 +535,11 @@
       if (tabs.classList.contains('db-tabs--static')) return;
       tabs._dbInit = true;
 
-      var tabList = tabs.querySelector('.db-tabs__list');
-      var tabBtns = Array.from(tabList.querySelectorAll('.db-tabs__tab'));
-      var panels = Array.from(tabs.querySelectorAll('.db-tabs__panel'));
+      function own(el) { return el.closest('.db-tabs') === tabs; }
+      var tabList = Array.from(tabs.querySelectorAll('.db-tabs__list')).filter(own)[0];
+      if (!tabList) return;
+      var tabBtns = Array.from(tabList.querySelectorAll('.db-tabs__tab')).filter(own);
+      var panels = Array.from(tabs.querySelectorAll('.db-tabs__panel')).filter(own);
 
       tabList.setAttribute('role', 'tablist');
 
@@ -1009,7 +1011,7 @@
 
   function setTemperature(val) {
     if (val === 'auto') {
-      localStorage.setItem('db-temperature', 'auto');
+      try { localStorage.setItem('db-temperature', 'auto'); } catch(e) {}
       startAutoTemperature();
     } else {
       stopAutoTemperature();
@@ -1017,18 +1019,20 @@
       if (isNaN(n)) n = 0;
       n = Math.max(-1, Math.min(1, n));
       document.documentElement.style.setProperty('--db-temperature', n);
-      localStorage.setItem('db-temperature', String(n));
+      try { localStorage.setItem('db-temperature', String(n)); } catch(e) {}
     }
   }
 
   function getTemperature() {
-    var saved = localStorage.getItem('db-temperature');
+    var saved = null;
+    try { saved = localStorage.getItem('db-temperature'); } catch(e) {}
     if (saved === 'auto') return 'auto';
     return parseFloat(document.documentElement.style.getPropertyValue('--db-temperature')) || 0;
   }
 
   function initTemperature() {
-    var saved = localStorage.getItem('db-temperature');
+    var saved = null;
+    try { saved = localStorage.getItem('db-temperature'); } catch(e) {}
     if (saved === 'auto') {
       startAutoTemperature();
     } else if (saved !== null) {
@@ -1057,7 +1061,7 @@
         stopAutoTemperature();
         var val = input.value / 100;
         document.documentElement.style.setProperty('--db-temperature', val);
-        localStorage.setItem('db-temperature', val);
+        try { localStorage.setItem('db-temperature', val); } catch(e) {}
         if (valueEl) valueEl.textContent = input.value;
       });
     });
@@ -1074,7 +1078,8 @@
   function noiseCSSToSlider(c) { return Math.round(Math.pow(c, 1 / 2.5) * 100); }
 
   function initNoise() {
-    var saved = localStorage.getItem('db-noise');
+    var saved = null;
+    try { saved = localStorage.getItem('db-noise'); } catch(e) {}
     if (saved !== null) {
       document.documentElement.style.setProperty('--db-noise', saved);
     }
@@ -1096,7 +1101,7 @@
         var cssVal = noiseSliderToCSS(parseInt(input.value));
         var rounded = Math.round(cssVal * 1000) / 1000;
         document.documentElement.style.setProperty('--db-noise', rounded);
-        localStorage.setItem('db-noise', rounded);
+        try { localStorage.setItem('db-noise', rounded); } catch(e) {}
         if (valueEl) valueEl.textContent = input.value;
       });
     });
@@ -1108,7 +1113,9 @@
      Persists via localStorage.
      ---------------------------------------------------------- */
   function initTexture() {
-    var saved = localStorage.getItem('db-texture') || 'grain';
+    var saved = null;
+    try { saved = localStorage.getItem('db-texture'); } catch(e) {}
+    saved = saved || 'grain';
     document.documentElement.setAttribute('data-db-texture', saved);
 
     document.querySelectorAll('[data-db-texture-btn]').forEach(function(btn) {
@@ -1119,7 +1126,7 @@
 
       btn.addEventListener('click', function() {
         document.documentElement.setAttribute('data-db-texture', type);
-        localStorage.setItem('db-texture', type);
+        try { localStorage.setItem('db-texture', type); } catch(e) {}
         document.querySelectorAll('[data-db-texture-btn]').forEach(function(b) {
           b.setAttribute('aria-pressed', b.getAttribute('data-db-texture-btn') === type ? 'true' : 'false');
         });
@@ -1200,9 +1207,7 @@
   /* ----------------------------------------------------------
      Accordion
      ---------------------------------------------------------- */
-  var _dbAccordionInit = false;
   function initAccordions(root) {
-    if (_dbAccordionInit && root === document) return;
     root.querySelectorAll('.db-accordion').forEach(function(acc) {
       if (acc._dbInit) return;
       acc._dbInit = true;
@@ -1228,15 +1233,12 @@
         });
       });
     });
-    if (root === document) _dbAccordionInit = true;
   }
 
   /* ----------------------------------------------------------
      Collapsible
      ---------------------------------------------------------- */
-  var _dbCollapsibleInit = false;
   function initCollapsibles(root) {
-    if (_dbCollapsibleInit && root === document) return;
     root.querySelectorAll('.db-collapsible').forEach(function(col) {
       if (col._dbInit) return;
       col._dbInit = true;
@@ -1248,7 +1250,6 @@
         trigger.setAttribute('aria-expanded', String(!isOpen));
       });
     });
-    if (root === document) _dbCollapsibleInit = true;
   }
 
   /* ----------------------------------------------------------
@@ -1341,10 +1342,8 @@
   /* ----------------------------------------------------------
      Popover
      ---------------------------------------------------------- */
-  var _dbPopoverInit = false;
   var _dbPopoverClickInit = false;
   function initPopovers(root) {
-    if (_dbPopoverInit && root === document) return;
     root.querySelectorAll('.db-popover').forEach(function(pop) {
       if (pop._dbInit) return;
       pop._dbInit = true;
@@ -1363,16 +1362,13 @@
         });
       });
     }
-    if (root === document) _dbPopoverInit = true;
   }
 
   /* ----------------------------------------------------------
      Context Menu
      ---------------------------------------------------------- */
-  var _dbCtxInit = false;
   var _dbCtxClickInit = false;
   function initContextMenus(root) {
-    if (_dbCtxInit && root === document) return;
     root.querySelectorAll('[data-context-menu]').forEach(function(el) {
       if (el._dbCtx) return;
       el._dbCtx = true;
@@ -1397,16 +1393,13 @@
         });
       });
     }
-    if (root === document) _dbCtxInit = true;
   }
 
   /* ----------------------------------------------------------
      Dropdown Menu
      ---------------------------------------------------------- */
-  var _dbDropInit = false;
   var _dbDropClickInit = false;
   function initDropdowns(root) {
-    if (_dbDropInit && root === document) return;
     root.querySelectorAll('.db-dropdown').forEach(function(drop) {
       if (drop._dbInit) return;
       drop._dbInit = true;
@@ -1431,15 +1424,12 @@
         });
       });
     }
-    if (root === document) _dbDropInit = true;
   }
 
   /* ----------------------------------------------------------
      Toggle / Toggle Group
      ---------------------------------------------------------- */
-  var _dbToggleInit = false;
   function initToggles(root) {
-    if (_dbToggleInit && root === document) return;
     root.querySelectorAll('.db-toggle').forEach(function(toggle) {
       if (toggle._dbInit) return;
       toggle._dbInit = true;
@@ -1456,16 +1446,13 @@
         toggle.classList.toggle('db-toggle--active');
       });
     });
-    if (root === document) _dbToggleInit = true;
   }
 
   /* ----------------------------------------------------------
      Custom Select
      ---------------------------------------------------------- */
-  var _dbCustomSelectInit = false;
   var _dbCustomSelectClickInit = false;
   function initCustomSelects(root) {
-    if (_dbCustomSelectInit && root === document) return;
     root.querySelectorAll('.db-custom-select').forEach(function(sel) {
       if (sel._dbInit) return;
       sel._dbInit = true;
@@ -1523,7 +1510,6 @@
         });
       });
     }
-    if (root === document) _dbCustomSelectInit = true;
   }
 
   /* ----------------------------------------------------------
@@ -1600,10 +1586,8 @@
   /* ----------------------------------------------------------
      Menubar
      ---------------------------------------------------------- */
-  var _dbMenubarInit = false;
   var _dbMenubarClickInit = false;
   function initMenubars(root) {
-    if (_dbMenubarInit && root === document) return;
     root.querySelectorAll('.db-menubar').forEach(function(bar) {
       if (bar._dbInit) return;
       bar._dbInit = true;
@@ -1634,7 +1618,6 @@
         });
       });
     }
-    if (root === document) _dbMenubarInit = true;
   }
 
   /* ----------------------------------------------------------
@@ -2254,7 +2237,7 @@
     fixNestedRadius: fixNestedRadius,
     setTexture: function(type) {
       document.documentElement.setAttribute('data-db-texture', type);
-      localStorage.setItem('db-texture', type);
+      try { localStorage.setItem('db-texture', type); } catch(e) {}
     },
     getTexture: function() {
       return document.documentElement.getAttribute('data-db-texture') || 'grain';

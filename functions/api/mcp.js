@@ -1570,6 +1570,9 @@ function jsonrpcError(id, code, message) {
 // ---- MCP Protocol Handler ----
 
 async function handleMcpRequest(body, env) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return { status: 400, body: jsonrpcError(null, -32600, 'Invalid Request') };
+  }
   const { method, id, params } = body;
 
   // Notifications (no id) — acknowledge with 202
@@ -1624,6 +1627,21 @@ async function handleMcpRequest(body, env) {
 // ---- Cloudflare Pages Function: POST ----
 
 export async function onRequestPost(context) {
+  try {
+    return await handlePost(context);
+  } catch (e) {
+    return new Response(JSON.stringify(jsonrpcError(null, -32603, 'Internal error')), {
+      status: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Expose-Headers': 'Mcp-Session-Id',
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+}
+
+async function handlePost(context) {
   const { request, env } = context;
 
   const corsHeaders = {
@@ -1658,8 +1676,27 @@ export async function onRequestPost(context) {
 
   // Handle batch requests
   if (Array.isArray(body)) {
+    if (body.length === 0 || body.length > 10) {
+      return new Response(JSON.stringify(jsonrpcError(null, -32600, 'Invalid Request')), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
     const results = [];
+    let toolCalls = 0;
     for (const req of body) {
+      // Count each tools/call after the first against the rate limit
+      if (req && req.method === 'tools/call' && ++toolCalls > 1 && env.RL_MCP) {
+        let allowed = true;
+        try {
+          const { success } = await env.RL_MCP.limit({ key: request.headers.get('CF-Connecting-IP') || 'unknown' });
+          allowed = success;
+        } catch {}
+        if (!allowed) {
+          results.push(jsonrpcError(req.id ?? null, -32000, 'Rate limit exceeded — 60 req/min per IP'));
+          continue;
+        }
+      }
       const res = await handleMcpRequest(req, env);
       if (res.body) results.push(res.body);
     }
