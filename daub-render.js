@@ -353,7 +353,7 @@
       var isH = p.direction === 'horizontal';
       el.style.display = 'flex';
       el.style.flexDirection = isH ? 'row' : 'column';
-      el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap || 2)) + ')';
+      el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap != null ? p.gap : 2)) + ')';
       if (isH && p.wrap !== false) el.style.flexWrap = 'wrap';
       if (p.justify === 'center') el.style.justifyContent = 'center';
       else if (p.justify === 'end') el.style.justifyContent = 'flex-end';
@@ -364,6 +364,14 @@
       else if (p.align === 'start') el.style.alignItems = 'flex-start';
       else if (p.align === 'stretch') el.style.alignItems = 'stretch';
       el.appendChild(renderChildren(els, ch, d));
+      // Sidebar rows: give the content a flex basis so it sits beside the sidebar instead of wrapping below it (still wraps on narrow screens)
+      if (isH && Array.isArray(ch) && ch.some(function(id) { return els[id] && els[id].type === 'Sidebar'; })) {
+        for (var si = 0; si < el.children.length; si++) {
+          var sc = el.children[si], sid = sc.getAttribute('data-spec-id');
+          if (sid && els[sid] && els[sid].type === 'Sidebar') sc.style.flex = '0 0 auto';
+          else { sc.style.flex = '1 1 480px'; sc.style.minWidth = '0'; }
+        }
+      }
       return el;
     };
     
