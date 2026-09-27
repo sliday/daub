@@ -25,6 +25,8 @@ All notable changes to DAUB are documented here.
 - OpenUI prompt signatures now follow the parser's positional order. 24 of 72 disagreed: `Text` had content and tag swapped, and 21 components (Card, Field, Modal, ChartCard, Tooltip…) take children first without saying so. Same fix in the MCP server prompt.
 - ChartCard: prompts say the chart goes inside as a Chart child, and a `bars` shortcut renders a chart when there are no children (fixes "No data" cards). Switch vs Toggle guidance fixes settings pages rendering toolbar buttons.
 - Sidebar/NavMenu accept child refs and plain-string items, which models often produce.
+- Sidebar layouts: a horizontal Stack holding a Sidebar keeps the content beside the sidebar on desktop (content gets a 480px flex basis) and still stacks on phones. Before, wide dashboards wrapped the content below the sidebar.
+- `gap: 0` on Stack now renders 0px in every renderer (`daub-render.js` and the MCP renderer treated it as the 8px default).
 
 ### Security
 - **Playground preview isolation.** A crafted `?s=` share link could run script on daub.dev and read saved provider API keys and Figma tokens: the preview iframe was same-origin (`allow-scripts allow-same-origin`) and CustomHTML markup was parsed in the main page. The preview now runs in an opaque origin, CustomHTML markup is only built inside the preview, and shared specs with custom JS render with the code held back until you click Run code.
