@@ -31,9 +31,9 @@ export const COMP_PROPS = {
   Textarea: 'placeholder: string, rows: number, error: bool',
   Checkbox: 'label: string, checked: bool',
   RadioGroup: 'options: [{label, value}], selected: string',
-  Switch: 'label: string, checked: bool',
+  Switch: 'label: string, checked: bool (on/off setting: notifications, preferences, feature flags)',
   Slider: 'min: number, max: number, value: number, step: number, label: string',
-  Toggle: 'label: string, pressed: bool, size: "sm"',
+  Toggle: 'label: string, pressed: bool, size: "sm" (pressable toolbar button: bold/italic, view filter — NOT for settings)',
   ToggleGroup: 'options: [{label, value}], selected: string',
   Select: 'label: string, options: [{label, value}], selected: string',
   CustomSelect: 'placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool',
@@ -73,7 +73,7 @@ export const COMP_PROPS = {
   AlertDialog: 'id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)',
   Sheet: 'id: string, position: "right"|"left"|"top"|"bottom"',
   Drawer: 'id: string',
-  Popover: 'position: "top"|"bottom"|"left"|"right"',
+  Popover: 'position: "top"|"bottom"|"left"|"right", children: [childIds] (first child becomes the trigger when it is a Button and there are 2+ children; other children are the content)',
   HoverCard: '',
   DropdownMenu: 'items: [{label, icon, separator, groupLabel, active: bool}]',
   ContextMenu: 'items: [{label, icon, separator}]',
@@ -83,7 +83,7 @@ export const COMP_PROPS = {
   Resizable: 'direction: "horizontal"|"vertical"',
   DatePicker: 'label: string, placeholder: string, selected: string',
   StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool',
-  ChartCard: 'title: string',
+  ChartCard: 'title: string, children: [Chart element] (empty ChartCard renders "No data"), bars: [{label, value, max}] (shortcut: renders a Chart when no children)',
   CustomHTML: 'html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector(\'[data-spec-id="someId"]\') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after)',
 };
 
@@ -150,6 +150,7 @@ export function buildSystemPrompt(ragBlocks, userPrompt) {
     + '- Do NOT use Layout — it is deprecated. Use Stack (flexbox) or Grid (CSS grid) instead\n'
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'
+    + '- Charts go inside ChartCard as a Chart child ("children":["chart-id"]) with 4-8 bars of realistic data unless the user specifies the data; use Switch (not Toggle) for on/off settings like notifications\n'
     + '- Keep element IDs descriptive and unique\n'
     + '- For standalone images use the Image component with a src URL. For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL\n'
     + '- CustomHTML is an ESCAPE HATCH — PREFER standard DAUB components for everything. Only use CustomHTML for: (a) inter-component interactions, (b) animations/transitions, (c) widgets not covered by DAUB components\n'

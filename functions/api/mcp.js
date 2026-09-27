@@ -1,6 +1,8 @@
 // Cloudflare Pages Function — Remote DAUB MCP Server (Streamable HTTP)
 // POST /api/mcp  — handles MCP JSON-RPC protocol
 
+import { decideComponents } from './choose.js';
+
 // ---- Component Catalog (inlined from mcp/lib/prompt.js) ----
 
 const COMP_PROPS = {
@@ -20,9 +22,9 @@ const COMP_PROPS = {
   Textarea: 'placeholder: string, rows: number, error: bool',
   Checkbox: 'label: string, checked: bool',
   RadioGroup: 'options: [{label, value}], selected: string',
-  Switch: 'label: string, checked: bool',
+  Switch: 'label: string, checked: bool (on/off setting: notifications, preferences, feature flags)',
   Slider: 'min: number, max: number, value: number, step: number, label: string',
-  Toggle: 'label: string, pressed: bool, size: "sm"',
+  Toggle: 'label: string, pressed: bool, size: "sm" (pressable toolbar button: bold/italic, view filter — NOT for settings)',
   ToggleGroup: 'options: [{label, value}], selected: string',
   Select: 'label: string, options: [{label, value}], selected: string',
   CustomSelect: 'placeholder: string, options: [{label, value, selected, disabled}], searchable: bool',
@@ -62,7 +64,7 @@ const COMP_PROPS = {
   AlertDialog: 'id: string, title: string, description: string, footer: [childIds]',
   Sheet: 'id: string, position: "right"|"left"|"top"|"bottom"',
   Drawer: 'id: string',
-  Popover: 'position: "top"|"bottom"|"left"|"right"',
+  Popover: 'position: "top"|"bottom"|"left"|"right", children: [childIds] (first child becomes the trigger when it is a Button and there are 2+ children; other children are the content)',
   HoverCard: '',
   DropdownMenu: 'items: [{label, icon, separator, groupLabel, active}]',
   ContextMenu: 'items: [{label, icon, separator}]',
@@ -72,7 +74,7 @@ const COMP_PROPS = {
   Resizable: 'direction: "horizontal"|"vertical"',
   DatePicker: 'label: string, placeholder: string, selected: string',
   StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool',
-  ChartCard: 'title: string',
+  ChartCard: 'title: string, children: [Chart element] (empty ChartCard renders "No data"), bars: [{label, value, max}] (shortcut: renders a Chart when no children)',
   CustomHTML: 'html: string, css: string, js: string, children: [childIds]',
 };
 
@@ -121,6 +123,9 @@ function validateSpec(spec) {
       }
       if (def.type === 'Card' && Array.isArray(def.props?.media)) {
         warnings.push(`Card "${id}" has media as array — media should be a URL string, use footer for child element IDs`);
+      }
+      if (def.type === 'ChartCard' && !def.children?.length && !(Array.isArray(def.props?.bars) && def.props.bars.length)) {
+        warnings.push(`ChartCard "${id}" has no Chart child or bars; it will render "No data"`);
       }
     }
   }
@@ -563,22 +568,37 @@ function openUItoSpec(input) {
     const elements = {};
     const nameToId = {};
     let theme = 'bone', rootName = null, state = null;
+    // Data statements (name = literal) resolve by value wherever they are defined; `resolving` guards cycles
+    const data = Object.create(null), resolving = Object.create(null);
+    const isData = n => Object.prototype.hasOwnProperty.call(data, n);
 
     for(let i=0;i<stmts.length;i++){
       const s=stmts[i];
       if(s.name==='__theme'){theme=typeof s.value==='string'?s.value:'bone';continue;}
       if(s.name==='__state'){state=s.value;continue;}
-      const id=s.name||genId('auto');nameToId[id]=id;
-      if(!rootName)rootName=id;
+      const id=s.name||genId('auto');nameToId[id]=id;s._id=id;
+      const v=s.value;
+      if(s.name&&v!=null&&(typeof v!=='object'||Array.isArray(v)||(!v.__ref&&!v.__component)))data[s.name]=v;
+      if(!rootName&&!isData(id))rootName=id;
       if(s.name==='root')rootName=id;
     }
 
     function resolveValue(v){
       if(v==null||typeof v==='string'||typeof v==='number'||typeof v==='boolean')return v;
       if(Array.isArray(v))return v.map(resolveValue);
-      if(v.__ref)return v.__ref;
+      if(v.__ref){
+        if(!isData(v.__ref)||resolving[v.__ref])return v.__ref;
+        resolving[v.__ref]=true;const out=resolveValue(data[v.__ref]);delete resolving[v.__ref];return out;
+      }
       if(v.__component)return resolveComponent(v);
       const o={};for(const k in v)if(v.hasOwnProperty(k))o[k]=resolveValue(v[k]);return o;
+    }
+
+    // Children: arrays and data-statement refs expand in place
+    function collectChildren(cv,out){
+      if(Array.isArray(cv)){cv.forEach(c=>collectChildren(c,out));return;}
+      if(cv&&cv.__ref&&isData(cv.__ref)&&!resolving[cv.__ref]){resolving[cv.__ref]=true;collectChildren(data[cv.__ref],out);delete resolving[cv.__ref];return;}
+      const id=processChild(cv);if(id)out.push(id);
     }
 
     function processChild(cv){
@@ -595,12 +615,12 @@ function openUItoSpec(input) {
       const schema=COMP_SCHEMA[typeName];const props={};const childIds=[];
       if(schema&&args.length){
         for(let a=0;a<args.length&&a<schema.length;a++){
-          if(schema[a]==='children'){const cv=args[a];if(Array.isArray(cv))cv.forEach(c=>{const id=processChild(c);if(id)childIds.push(id);});else{const id=processChild(cv);if(id)childIds.push(id);}}
+          if(schema[a]==='children')collectChildren(args[a],childIds);
           else props[schema[a]]=resolveValue(args[a]);
         }
       }
       if(hn)for(const k in named)if(named.hasOwnProperty(k)){
-        if(k==='children'){const cv=named[k];if(Array.isArray(cv))cv.forEach(c=>{const id=processChild(c);if(id)childIds.push(id);});else{const id=processChild(cv);if(id)childIds.push(id);}}
+        if(k==='children')collectChildren(named[k],childIds);
         else props[k]=resolveValue(named[k]);
       }
       const elId=genId(typeName);elements[elId]={type:typeName,props};if(childIds.length)elements[elId].children=childIds;return elId;
@@ -608,7 +628,7 @@ function openUItoSpec(input) {
 
     for(const s of stmts){
       if(s.name==='__theme'||s.name==='__state')continue;
-      const name=s.name||genId('auto');
+      const name=s._id; // reuse the first-pass id so rootName still points at it
       if(s.value&&s.value.__component){
         const compId=resolveComponent(s.value);
         if(compId!==name&&elements[compId]){
@@ -638,7 +658,61 @@ function detectOutputFormat(text) {
 
 // ---- OpenUI Lang System Prompt Builder ----
 
-function buildOpenUISystemPrompt(ragBlocks, userPrompt) {
+// Split a COMP_PROPS string on commas outside ()/[]/{}.
+function splitTopLevel(s) {
+  const parts = [];
+  let depth = 0, cur = '';
+  for (const ch of s) {
+    if (ch === '(' || ch === '[' || ch === '{') depth++;
+    else if (ch === ')' || ch === ']' || ch === '}') depth--;
+    if (ch === ',' && depth === 0) { parts.push(cur.trim()); cur = ''; } else cur += ch;
+  }
+  if (cur.trim()) parts.push(cur.trim());
+  return parts;
+}
+
+// OpenUI signature in the parser's positional order (COMP_SCHEMA), described from COMP_PROPS.
+// Props the parser can't take positionally are listed last as "(named only)".
+function openUISignature(t) {
+  const schema = COMP_SCHEMA[t];
+  const raw = COMP_PROPS[t] || '';
+  if (!schema) return t + '(' + raw + ')';
+  const noteAt = raw.indexOf(' | ');
+  const note = noteAt >= 0 ? raw.slice(noteAt) : '';
+  const segs = {};
+  const extras = [];
+  for (const seg of splitTopLevel(noteAt >= 0 ? raw.slice(0, noteAt) : raw)) {
+    const m = seg.match(/^([A-Za-z_]\w*)\s*:/);
+    if (m) segs[m[1]] = seg; else extras.push(seg);
+  }
+  const args = schema.map(k => segs[k] || (k === 'children' ? 'children: [refs]' : k));
+  for (const k of Object.keys(segs)) if (!schema.includes(k)) args.push(segs[k] + ' (named only)');
+  return t + '(' + args.join(', ') + ')' + (extras.length ? ' ' + extras.join(' ') : '') + note;
+}
+
+// Catalog section of a system prompt. With a Jev pick: full lines for picked types,
+// names only for the rest. Without: every type, grouped by category (original behavior).
+function catalogSection(lineFor, picked, othersNote) {
+  let out = '';
+  if (!picked) {
+    for (const [cat, types] of COMP_CATEGORIES) {
+      out += cat + ':\n';
+      for (const t of types) if (COMP_PROPS[t] !== undefined) out += lineFor(t);
+      out += '\n';
+    }
+    return out;
+  }
+  const others = [];
+  out += 'PICKED FOR THIS REQUEST (prefer these):\n';
+  for (const t of VALID_TYPES) {
+    if (COMP_PROPS[t] === undefined) continue;
+    if (picked.includes(t)) out += lineFor(t); else others.push(t);
+  }
+  if (others.length) out += '\nALSO AVAILABLE (' + othersNote + '): ' + others.join(', ') + '\n';
+  return out + '\n';
+}
+
+function buildOpenUISystemPrompt(ragBlocks, userPrompt, picked) {
   let prompt = 'You are a UI generator. Output ONLY valid openui-lang code using DAUB components.\n\n'
     + 'BE EXHAUSTIVE AND DETAILED. Generate complete, production-realistic UIs:\n'
     + '- Include ALL elements mentioned in the prompt\n'
@@ -661,15 +735,9 @@ function buildOpenUISystemPrompt(ragBlocks, userPrompt) {
     + 'Inline: Stack([Text("Hello", "h1"), Button("Go")])\n'
     + 'References: Stack([header, content]) where header/content are separate statements\n\n'
     + 'CRITICAL: Output ONLY openui-lang code. No markdown fences, no explanation.\n\n'
-    + 'COMPONENT SIGNATURES:\n\n';
+    + 'COMPONENT SIGNATURES (positional arg order; "(named only)" props must be passed by name):\n\n';
 
-  for (const [cat, types] of COMP_CATEGORIES) {
-    prompt += cat + ':\n';
-    for (const t of types) {
-      if (COMP_PROPS[t] !== undefined) prompt += '- ' + t + '(' + (COMP_PROPS[t] || '') + ')\n';
-    }
-    prompt += '\n';
-  }
+  prompt += catalogSection(t => '- ' + openUISignature(t) + '\n', picked, 'use only if clearly needed, named args only');
 
   prompt += 'GUIDELINES:\n'
     + '- Use Stack as root with direction:"vertical" for page layouts\n'
@@ -678,6 +746,7 @@ function buildOpenUISystemPrompt(ragBlocks, userPrompt) {
     + '- Gap tokens: 0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px\n'
     + '- Wrap related content in Card\n'
     + '- StatCard for KPI metrics\n'
+    + '- Charts go inside ChartCard as a Chart child with 4-8 bars of realistic data unless the user specifies the data: ChartCard([revenueChart], "Revenue"); use Switch (not Toggle) for on/off settings like notifications\n'
     + '- Use trigger:"overlay-id" on Button to open overlays\n'
     + '- There is NO "Icon" component type — icons are props on Button, Sidebar items, List items, etc.\n\n';
 
@@ -719,7 +788,7 @@ function buildOpenUISystemPrompt(ragBlocks, userPrompt) {
 
 // ---- System Prompt Builder ----
 
-function buildSystemPrompt(ragBlocks, userPrompt) {
+function buildSystemPrompt(ragBlocks, userPrompt, picked) {
   let prompt = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\n'
     + 'BE EXHAUSTIVE AND DETAILED. Generate complete, production-realistic UIs:\n'
     + '- Include ALL elements mentioned in the prompt\n'
@@ -740,13 +809,7 @@ function buildSystemPrompt(ragBlocks, userPrompt) {
     + 'VALID COMPONENT TYPES: ' + VALID_TYPES.join(', ') + '\n\n'
     + 'COMPONENT PROPS:\n\n';
 
-  for (const [cat, types] of COMP_CATEGORIES) {
-    prompt += cat + ':\n';
-    for (const t of types) {
-      if (COMP_PROPS[t] !== undefined) prompt += '- ' + t + ': { ' + (COMP_PROPS[t] || '') + ' }\n';
-    }
-    prompt += '\n';
-  }
+  prompt += catalogSection(t => '- ' + t + ': { ' + (COMP_PROPS[t] || '') + ' }\n', picked, 'use only if clearly needed');
 
   prompt += 'GUIDELINES:\n'
     + '- Use Stack as root with direction:"vertical" for page layouts\n'
@@ -755,6 +818,7 @@ function buildSystemPrompt(ragBlocks, userPrompt) {
     + '- Gap tokens: 0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px\n'
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'
+    + '- Charts go inside ChartCard as a Chart child ("children":["chart-id"]) with 4-8 bars of realistic data unless the user specifies the data; use Switch (not Toggle) for on/off settings like notifications\n'
     + '- Use trigger:"overlay-id" on Button to open overlays\n'
     + '- There is NO "Icon" component type — icons are props on Button, Sidebar items, List items, etc.\n\n';
 
@@ -957,11 +1021,45 @@ async function callOpenRouter(model, messages, apiKey, format) {
   return { rawContent, usage: data.usage || null };
 }
 
+// ---- Component picker: Jev decision model via choose.js (same rules as the playground) ----
+
+const PICK_CORE = ['Stack', 'Grid', 'Text', 'Card', 'Button', 'Icon', 'Separator'].filter(t => validTypeSet.has(t));
+const PICK_THRESHOLD = 0.5;
+const PICK_TIMEOUT_MS = 4000;
+
+// Resolves to the picked type list, or null (use the full catalog) on any failure, timeout, or empty pick.
+async function pickComponents(prompt, existingSpec, apiKey) {
+  try {
+    const comps = {};
+    for (const t of VALID_TYPES) if (!PICK_CORE.includes(t)) comps[t] = COMP_PROPS[t] || '';
+    const { scores } = await decideComponents({ prompt, components: comps, apiKey, timeoutMs: PICK_TIMEOUT_MS, title: 'DAUB MCP' });
+    const picked = PICK_CORE.slice();
+    for (const t of Object.keys(scores)) {
+      if (scores[t] >= PICK_THRESHOLD && Object.prototype.hasOwnProperty.call(comps, t)) picked.push(t);
+    }
+    if (picked.length === PICK_CORE.length) return null;
+    // Keep every type already in the spec being modified so the edit can still use it
+    const els = existingSpec && typeof existingSpec === 'object' ? existingSpec.elements : null;
+    if (els && typeof els === 'object') {
+      for (const def of Object.values(els)) {
+        const t = def && def.type;
+        if (validTypeSet.has(t) && !picked.includes(t)) picked.push(t);
+      }
+    }
+    return picked;
+  } catch {
+    return null;
+  }
+}
+
 async function generateSpecWithRouting(prompt, options, apiKey, env) {
   const format = options.format || 'json';
   const complexity = scorePromptComplexity(prompt);
   const tierConfig = MODEL_TIERS[complexity.tier];
   const modelsToTry = [tierConfig.primary, ...tierConfig.fallbacks.slice(0, MAX_FALLBACK_MODELS)];
+
+  // Runs in parallel with RAG retrieval below
+  const pickPromise = pickComponents(prompt, options.existing_spec, apiKey);
 
   // RAG: retrieve relevant blocks as few-shot examples
   let ragBlocks = null;
@@ -989,9 +1087,10 @@ async function generateSpecWithRouting(prompt, options, apiKey, env) {
     }
   }
 
+  const picked = await pickPromise;
   const sysPrompt = format === 'openui'
-    ? buildOpenUISystemPrompt(ragBlocks, prompt)
-    : buildSystemPrompt(ragBlocks, prompt);
+    ? buildOpenUISystemPrompt(ragBlocks, prompt, picked)
+    : buildSystemPrompt(ragBlocks, prompt, picked);
   const messages = [{ role: 'system', content: sysPrompt }];
   if (options.existing_spec) {
     messages.push({
@@ -1052,6 +1151,7 @@ async function generateSpecWithRouting(prompt, options, apiKey, env) {
             model_used: model,
             attempts: totalAttempts,
             rag_blocks: ragMeta || null,
+            picked_components: picked,
           },
           usage,
         };
@@ -1073,6 +1173,7 @@ async function generateSpecWithRouting(prompt, options, apiKey, env) {
       model_used: null,
       attempts: totalAttempts,
       rag_blocks: ragMeta || null,
+      picked_components: picked,
     },
     usage: null,
     parse_error: true,
@@ -1094,8 +1195,9 @@ function specSummary(spec) {
 // ---- Render spec to self-contained HTML ----
 
 function renderToHTML(spec) {
-  const theme = spec.theme || 'light';
-  const specJSON = JSON.stringify(spec);
+  const theme = String(spec.theme || 'light').replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
+  // Escape <, >, & and line separators so text like "</script>" can't close the inline script
+  const specJSON = JSON.stringify(spec).replace(/[<>&\u2028\u2029]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
   return `<!DOCTYPE html>
 <html data-theme="${theme}">
 <head>
@@ -1452,6 +1554,7 @@ const BLOCK_INDEX = [
 async function handleToolCall(name, args, env) {
   switch (name) {
     case 'generate_ui': {
+      if (typeof args.prompt !== 'string' || !args.prompt.trim()) throw new Error('generate_ui requires "prompt" as a non-empty string');
       const apiKey = env.OPENROUTER_API_KEY;
       if (!apiKey) throw new Error('Server misconfigured: missing OPENROUTER_API_KEY');
       const options = { theme: args.theme, format: args.format || 'json' };
@@ -1685,15 +1788,17 @@ async function handlePost(context) {
     const results = [];
     let toolCalls = 0;
     for (const req of body) {
-      // Count each tools/call after the first against the rate limit
-      if (req && req.method === 'tools/call' && ++toolCalls > 1 && env.RL_MCP) {
+      // Count each tools/call after the first against the rate limit. Notifications (no id)
+      // never run and get no response, so they neither count nor get a rate-limit entry.
+      const isCall = req && req.method === 'tools/call' && req.id !== undefined && req.id !== null;
+      if (isCall && ++toolCalls > 1 && env.RL_MCP) {
         let allowed = true;
         try {
           const { success } = await env.RL_MCP.limit({ key: request.headers.get('CF-Connecting-IP') || 'unknown' });
           allowed = success;
         } catch {}
         if (!allowed) {
-          results.push(jsonrpcError(req.id ?? null, -32000, 'Rate limit exceeded — 60 req/min per IP'));
+          results.push(jsonrpcError(req.id, -32000, 'Rate limit exceeded — 60 req/min per IP'));
           continue;
         }
       }

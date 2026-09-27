@@ -49,6 +49,9 @@ export function validateSpec(spec) {
       if (def.type === 'Card' && Array.isArray(def.props?.media)) {
         warnings.push(`Card "${id}" has media as array — media should be a URL string, use footer for child element IDs`);
       }
+      if (def.type === 'ChartCard' && (!def.children || def.children.length === 0) && !(Array.isArray(def.props?.bars) && def.props.bars.length > 0)) {
+        warnings.push(`ChartCard "${id}" has no Chart child or bars; it will render "No data"`);
+      }
       if (def.type === 'Button' && def.props?.variant === 'primary') {
         const parentId = Object.entries(spec.elements).find(([, p]) => p.children?.includes(id))?.[0] || 'root';
         (parentPrimaryButtons[parentId] = parentPrimaryButtons[parentId] || []).push(id);

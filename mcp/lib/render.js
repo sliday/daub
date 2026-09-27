@@ -15,9 +15,18 @@ export function buildPreviewURL(spec) {
   return `https://daub.dev/playground?s=${compressed}`;
 }
 
+// \u-escape chars that could close the inline <script> or break JS parsing
+function scriptSafeJSON(value) {
+  return JSON.stringify(value, null, 2).replace(/[<>&\u2028\u2029]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
+}
+
+function escAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 export function renderToHTML(spec, outputPath) {
-  const theme = spec.theme || 'light';
-  const specJSON = JSON.stringify(spec, null, 2);
+  const theme = escAttr(spec.theme || 'light');
+  const specJSON = scriptSafeJSON(spec);
 
   // Read the renderer template — it's the bulk of the file
   const rendererCode = fs.readFileSync(path.join(__dirname, 'renderers.js'), 'utf-8');

@@ -79,6 +79,12 @@
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
 
+/playground
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+
+/playground.html
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+
 /*.map
   Cache-Control: no-store
 

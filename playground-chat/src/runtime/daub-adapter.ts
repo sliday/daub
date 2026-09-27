@@ -31,22 +31,22 @@ export const daubAdapter: ChatModelAdapter = {
     let done = false;
     let error: Error | null = null;
 
-    const selectStream = bridge.isDefaultMode()
-      ? bridge.streamDefault
-      : config.provider === "anthropic"
-        ? bridge.streamAnthropic
-        : config.provider === "openrouter"
-          ? bridge.streamOpenRouter
-          : bridge.streamOpenAI;
+    const selectStream = config.provider === "anthropic"
+      ? bridge.streamAnthropic
+      : config.provider === "openrouter"
+        ? bridge.streamOpenRouter
+        : bridge.streamOpenAI;
 
     const streamPromise = new Promise<void>((resolve, reject) => {
-      selectStream(
-        apiMessages,
-        (chunk: string) => { accumulated += chunk; },
-        () => { done = true; resolve(); },
-        (err: any) => { error = new Error(String(err)); reject(error); },
-        abortSignal
-      );
+      const onChunk = (chunk: string) => { accumulated += chunk; };
+      const onDone = () => { done = true; resolve(); };
+      const onError = (err: any) => { error = new Error(String(err)); reject(error); };
+      // streamDefault takes (…, model, signal); passing the signal 5th would land in the model slot
+      if (bridge.isDefaultMode()) {
+        bridge.streamDefault(apiMessages, onChunk, onDone, onError, undefined, abortSignal);
+      } else {
+        selectStream(apiMessages, onChunk, onDone, onError, abortSignal);
+      }
     });
 
     while (!done && !error) {
