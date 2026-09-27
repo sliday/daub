@@ -557,7 +557,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.20.2** — Playground picks components with Jev (`~typesafe/jev-latest`, OpenRouter Decisions API) before generating, plus security and reliability fixes from a full-repo review.
+**Latest: v3.20.2** — Playground generates on OpenRouter's Auto Router (`openrouter/auto`) and picks components with Jev (`~typesafe/jev-latest`); the preview now runs in an isolated origin (share-link and postMessage exploits fixed); elements that fail to render no longer blank the page; plus fixes from a full-repo review.
 
 **v3.20.1** — Mobile theme-switcher no longer covers centered actions; WCAG audit merges per-theme blocks (42 themes, 0 failures).
 

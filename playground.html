@@ -181,37 +181,6 @@
     .pg-options-examples-trigger[aria-expanded="true"] .db-collapsible__icon {
       transform: rotate(90deg);
     }
-    .pg-options-sep {
-      width: 2px; height: 2px; border-radius: 50%;
-      background: var(--db-warm-gray); opacity: 0.5;
-      flex-shrink: 0;
-    }
-    .pg-pill-toggle {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 2px 8px; border-radius: 999px;
-      border: 1px solid var(--db-sand);
-      font-size: 0.6875rem; color: var(--db-warm-gray);
-      font-family: var(--db-font-ui); cursor: pointer;
-      user-select: none; transition: all 0.15s ease;
-      background: transparent;
-    }
-    .pg-pill-toggle input { display: none; }
-    .pg-pill-toggle:hover { border-color: var(--db-warm-gray); }
-    .pg-pill-toggle--active {
-      border-color: color-mix(in srgb, var(--db-terracotta) 40%, transparent);
-      background: color-mix(in srgb, var(--db-terracotta) 8%, transparent);
-      color: var(--db-terracotta);
-    }
-    .pg-zap-icon {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 14px; height: 14px; border-radius: 3px;
-      background: var(--db-sand); transition: all 0.15s ease;
-    }
-    .pg-zap-icon svg { stroke: var(--db-warm-gray); transition: all 0.15s ease; }
-    .pg-pill-toggle--active .pg-zap-icon {
-      background: var(--db-terracotta);
-    }
-    .pg-pill-toggle--active .pg-zap-icon svg { stroke: #fff; }
     .pg-byok-link {
       font-size: 0.6875rem; color: var(--db-warm-gray);
       text-decoration: none; font-family: var(--db-font-ui);
@@ -389,7 +358,6 @@
     .pg-chat__examples--open { display: block; }
     .pg-chat--has-messages .pg-chat__examples,
     .pg-chat--has-messages .pg-options-examples-trigger,
-    .pg-chat--has-messages .pg-options-examples-sep,
     .pg-chat--has-messages .pg-chat__empty { display: none; }
     .pg-chat__input-wrap {
       border: 1px solid var(--db-sand);
@@ -832,12 +800,6 @@
               <svg class="db-collapsible__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><path d="m9 18 6-6-6-6"/></svg>
               Examples
             </button>
-            <span class="pg-options-sep pg-options-examples-sep"></span>
-            <label class="pg-pill-toggle" id="pg-fast-pill" title="Fast: Gemini Flash Lite for all stages">
-              <input type="checkbox" id="pg-fast-mode" checked>
-              <span class="pg-zap-icon"><i data-lucide="zap" style="width:10px;height:10px;"></i></span>
-              Fast
-            </label>
             <span style="flex:1"></span>
             <a href="#" id="pg-byok-link" class="pg-byok-link">Own Key</a>
           </div>
@@ -916,7 +878,7 @@
       <div class="pg-panel__body" id="pg-preview-body" style="display:flex;flex-direction:column;padding:0;min-height:0;">
         <!-- Design mode (default) -->
         <div class="pg-preview-pane pg-preview-pane--active" data-pane="design">
-          <iframe class="pg-preview" id="pg-preview-frame" sandbox="allow-scripts allow-same-origin" style="border:none;width:100%;height:100%;"></iframe>
+          <iframe class="pg-preview" id="pg-preview-frame" sandbox="allow-scripts" style="border:none;width:100%;height:100%;"></iframe>
         </div>
         <!-- Structure mode -->
         <div class="pg-preview-pane" data-pane="structure">
@@ -1036,14 +998,17 @@ var $copyHtml   = document.getElementById('pg-copy-html');
 var $share      = document.getElementById('pg-share');
 var $download   = document.getElementById('pg-download');
 var $viewportToggle = document.getElementById('pg-viewport-toggle');
-var $fastMode = document.getElementById('pg-fast-mode');
-var FAST_MODEL = 'google/gemini-3.1-flash-lite';
+var AUTO_MODEL = 'openrouter/auto';
 
-function fastModel() { return $fastMode && $fastMode.checked ? FAST_MODEL : null; }
-function fastEffort(stage) {
-  if (!$fastMode || !$fastMode.checked) return null;
-  return ({ generate:'medium', selfCheck:'low', plan:'low', chunk:'low', code:'medium', review:'medium' })[stage] || 'low';
+// Auto Router session stickiness: one id per chat, sent only with the main generation
+function newChatSessionId() {
+  var a = new Uint8Array(16), s = 'pg-';
+  try { crypto.getRandomValues(a); } catch (e) { for (var k = 0; k < a.length; k++) a[k] = Math.random() * 256 | 0; }
+  for (var i = 0; i < a.length; i++) s += ('0' + a[i].toString(16)).slice(-2);
+  return s;
 }
+var _chatSessionId = newChatSessionId();
+function mainGenOpts() { return { session_id: _chatSessionId }; }
 var $panelPreviewBody = document.getElementById('pg-preview-body');
 var $status     = document.getElementById('pg-status');
 var $attach     = document.getElementById('pg-attach');
@@ -1076,13 +1041,14 @@ var $byokSave     = document.getElementById('pg-byok-save');
 
 // ---- Iframe preview bootstrap ----
 function buildIframeSrcdoc(theme) {
-  var themeAttr = theme ? ' data-theme="' + theme + '"' : '';
+  var themeAttr = theme ? ' data-theme="' + String(theme).replace(/[&<>"']/g, function(c) { return '&#' + c.charCodeAt(0) + ';'; }) + '"' : '';
   return '<!DOCTYPE html><html lang="en"' + themeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
     + '<base target="_blank">'
     + '<link rel="stylesheet" href="daub.css?v=3.20.2">'
     + '<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" crossorigin="anonymous"><\/script>'
-    + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
+    // html2canvas needs a same-origin clone iframe, which an opaque sandbox forbids; html-to-image uses SVG foreignObject
+    + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js" integrity="sha384-YAj4cGTKsNinHUzylwDJDDZEpC6gnqNubmrp9eerckq7+gwWjABe5s2plXl3uUKb" crossorigin="anonymous"><\/script>'
     + '<style>html,body{margin:0;min-height:100%;}'
     + '.pg-iframe-empty{display:flex;align-items:center;justify-content:center;min-height:100vh;}'
     + '.pg-iframe-empty::after{content:attr(data-quote);'
@@ -1107,6 +1073,8 @@ function buildIframeSrcdoc(theme) {
     + '<script src="daub.js?v=3.20.2"><\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
+    // Opaque-origin frame: reply only to the embedding origin
+    + 'var _po = ' + JSON.stringify(location.origin).replace(/[<>&\u2028\u2029]/g, function(c) { return '\\u' + ('000' + c.charCodeAt(0).toString(16)).slice(-4); }) + '; if (_po === "null") _po = "*";'
     // ---- Declarative State Engine (iframe runtime) ----
     + 'window.__initDaubState = function(root, sc) {'
     + '  var _ds = { _state: sc.initialState || {}, _subs: [] };'
@@ -1212,10 +1180,23 @@ function buildIframeSrcdoc(theme) {
     + '};'
     // ---- End Declarative State Engine ----
     + 'window.addEventListener("message", function(e) {'
+    + '  if (e.source !== window.parent) return;'
     + '  if (!e.data || !e.data.type) return;'
     + '  if (e.data.type === "render") {'
     + '    root.className = "pg-preview-body";'
     + '    root.innerHTML = e.data.html;'
+    // CustomHTML markup arrives as an attribute and is parsed only here, never in the parent
+    + '    root.querySelectorAll("template[data-pg-html]").forEach(function(slot) {'
+    + '      var t = document.createElement("template");'
+    + '      t.innerHTML = slot.getAttribute("data-pg-html").replace(/<script[\\s\\S]*?<\\/script>/gi, "");'
+    // Paused shared links: drop inline handlers, javascript: URLs and navigating elements too
+    + '      if (e.data.inert) t.content.querySelectorAll("*").forEach(function(n) {'
+    + '        if (/^(iframe|frame|object|embed|meta|base)$/i.test(n.localName)) { n.remove(); return; }'
+    + '        [].slice.call(n.attributes).forEach(function(a) { if (/^on/i.test(a.name) || /^javascript:/i.test(a.value.replace(/[\\u0000-\\u0020]/g, ""))) n.removeAttribute(a.name); });'
+    + '      });'
+    + '      slot.parentNode.replaceChild(t.content, slot);'
+    + '    });'
+    + '    parent.postMessage({ type: "html", data: root.innerHTML, seq: e.data.seq }, _po);'
     + '    if (window.DAUB) { DAUB.init(root); if (DAUB.fixNestedRadius) DAUB.fixNestedRadius(root); }'
     + '    if (window.lucide) lucide.createIcons({ nodes: root.querySelectorAll("[data-lucide]") });'
     + '    window.__daubState = null;'
@@ -1225,7 +1206,7 @@ function buildIframeSrcdoc(theme) {
     + '        try {'
     + '          var container = item.id ? root.querySelector("[data-spec-id=\\"" + item.id + "\\"]") : root;'
     // eslint-disable-line -- intentional: user-authored JS via AI chat in playground context
-    + '          (new Function("container", "preview", item.code))(container || root, root);'
+    + '          (new Function("container", "preview", "{\\n" + item.code + "\\n}"))(container || root, root);'
     + '        } catch(err) { console.error("CustomHTML JS error:", err); }'
     + '      });'
     + '    }'
@@ -1242,39 +1223,46 @@ function buildIframeSrcdoc(theme) {
     + '    document.documentElement.removeAttribute("data-theme");'
     + '  }'
     + '  if (e.data.type === "screenshot") {'
-    + '    if (!window.html2canvas) { parent.postMessage({ type: "screenshot", data: null }, "*"); return; }'
-    + '    html2canvas(root, { scale: 1, useCORS: true, logging: false })'
-    + '      .then(function(c) { parent.postMessage({ type: "screenshot", data: c.toDataURL("image/jpeg", 0.7) }, "*"); })'
-    + '      .catch(function() { parent.postMessage({ type: "screenshot", data: null }, "*"); });'
+    + '    if (!window.htmlToImage) { parent.postMessage({ type: "screenshot", data: null }, _po); return; }'
+    + '    var bg = getComputedStyle(document.body).backgroundColor;'
+    + '    if (!bg || bg === "transparent" || bg === "rgba(0, 0, 0, 0)") bg = getComputedStyle(document.documentElement).backgroundColor;'
+    + '    htmlToImage.toJpeg(root, { quality: 0.7, pixelRatio: 1, skipFonts: true, backgroundColor: bg })'
+    + '      .then(function(u) { parent.postMessage({ type: "screenshot", data: u }, _po); })'
+    + '      .catch(function() { parent.postMessage({ type: "screenshot", data: null }, _po); });'
     + '  }'
     + '  if (e.data.type === "test") {'
     + '    var tests = e.data.tests || [];'
     + '    var timeout = e.data.timeout || 2000;'
     + '    var results = [];'
     + '    var pending = tests.length;'
-    + '    if (!pending) { parent.postMessage({ type: "testResults", results: [] }, "*"); return; }'
+    + '    if (!pending) { parent.postMessage({ type: "testResults", results: [] }, _po); return; }'
     + '    tests.forEach(function(t) {'
     + '      try {'
     + '        var container = t.elementId ? root.querySelector("[data-spec-id=\\"" + t.elementId + "\\"]") : root;'
     // eslint-disable-line -- intentional: AI-generated test code in sandboxed iframe, same pattern as line 982
-    + '        var ret = (new Function("container", "preview", t.code))(container || root, root);'
+    + '        var ret = (new Function("container", "preview", "{\\n" + t.code + "\\n}"))(container || root, root);'
     + '        if (ret && typeof ret.then === "function") {'
     + '          var done = false;'
-    + '          var timer = setTimeout(function() { if (!done) { done = true; results.push({ chunkId: t.chunkId, pass: false, error: "timeout" }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*"); } }, timeout);'
-    + '          ret.then(function() { if (!done) { done = true; clearTimeout(timer); results.push({ chunkId: t.chunkId, pass: true, error: null }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*"); } })'
-    + '            .catch(function(err) { if (!done) { done = true; clearTimeout(timer); results.push({ chunkId: t.chunkId, pass: false, error: String(err) }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*"); } });'
+    + '          var timer = setTimeout(function() { if (!done) { done = true; results.push({ chunkId: t.chunkId, pass: false, error: "timeout" }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, _po); } }, timeout);'
+    + '          ret.then(function() { if (!done) { done = true; clearTimeout(timer); results.push({ chunkId: t.chunkId, pass: true, error: null }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, _po); } })'
+    + '            .catch(function(err) { if (!done) { done = true; clearTimeout(timer); results.push({ chunkId: t.chunkId, pass: false, error: String(err) }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, _po); } });'
     + '        } else {'
     + '          results.push({ chunkId: t.chunkId, pass: true, error: null });'
-    + '          if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*");'
+    + '          if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, _po);'
     + '        }'
     + '      } catch(err) {'
     + '        results.push({ chunkId: t.chunkId, pass: false, error: String(err) });'
-    + '        if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*");'
+    + '        if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, _po);'
     + '      }'
     + '    });'
     + '  }'
     + '  if (e.data.type === "getHtml") {'
-    + '    parent.postMessage({ type: "html", data: root.innerHTML }, "*");'
+    + '    parent.postMessage({ type: "html", data: root.innerHTML }, _po);'
+    + '  }'
+    + '  if (e.data.type === "skeleton") {'
+    + '    (e.data.ids || []).forEach(function(id) {'
+    + '      try { var el = root.querySelector("[data-spec-id=\\"" + id + "\\"]"); if (el) el.classList.toggle("db-skeleton", !!e.data.on); } catch(err) {}'
+    + '    });'
     + '  }'
     + '});'
     + '<\/script></body></html>';
@@ -1286,7 +1274,8 @@ function collectCustomJS(spec) {
   Object.keys(spec.elements).forEach(function(id) {
     var def = spec.elements[id];
     if (def.type === 'CustomHTML' && def.props && def.props.js) {
-      jsItems.push({ id: id, code: def.props.js });
+      var item = { id: def.props.forId || id, code: def.props.js };
+      if (id === '_shared_state') jsItems.unshift(item); else jsItems.push(item); // chunk code expects these globals to exist
     }
   });
   return jsItems;
@@ -1304,8 +1293,11 @@ function postToPreview(msg) {
 
 // Cache for iframe HTML (used by copy/download)
 var _iframeHtmlCache = '';
+var _renderSeq = 0;
 window.addEventListener('message', function(e) {
+  if (e.source !== $previewFrame.contentWindow) return;
   if (e.data && e.data.type === 'html') {
+    if (e.data.seq != null && e.data.seq !== _renderSeq) return; // stale echo of an older render
     _iframeHtmlCache = e.data.data || '';
   }
 });
@@ -1605,6 +1597,7 @@ var MODELS = {
     { value: 'claude-opus-4-6', label: 'Claude Opus 4.6' }
   ],
   openrouter: [
+    { value: 'openrouter/auto', label: 'Auto (OpenRouter router)' },
     { value: 'google/gemini-3-flash-preview', label: 'Gemini 3 Flash' },
     { value: 'google/gemini-3.1-pro-preview', label: 'Gemini 3.1 Pro' },
     { value: 'google/gemini-3.1-flash-lite', label: 'Gemini 3.1 Flash Lite' },
@@ -1624,7 +1617,7 @@ function loadSettings() {
     if (m && $model) $model.value = m;
     var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
     if (keys[p] && $apikey) $apikey.value = keys[p];
-    if (localStorage.getItem('pg-fast-mode') !== null) $fastMode.checked = localStorage.getItem('pg-fast-mode') !== 'false';
+    localStorage.removeItem('pg-fast-mode'); // Fast mode removed; drop the stale key
     updateFigmaStatus();
     // Chat state
     isDefaultMode = localStorage.getItem('pg-use-default') !== 'false';
@@ -1641,7 +1634,6 @@ function saveSettings() {
     if ($provider && $apikey) { keys[$provider.value] = $apikey.value; }
     localStorage.setItem('pg-apikeys', JSON.stringify(keys));
     localStorage.setItem('pg-use-default', isDefaultMode ? 'true' : 'false');
-    localStorage.setItem('pg-fast-mode', $fastMode.checked);
   } catch(e) {}
 }
 
@@ -1678,7 +1670,6 @@ $provider.addEventListener('change', function() {
 });
 $model.addEventListener('change', saveSettings);
 $apikey.addEventListener('change', saveSettings);
-$fastMode.addEventListener('change', saveSettings);
 
 // ---- Figma OAuth ----
 function getFigmaToken() { return localStorage.getItem('pg-figma-access-token') || ''; }
@@ -2154,7 +2145,7 @@ function streamFetch(url, headers, body, onChunk, onDone, onError, signal) {
           }
         }
         pump();
-      }).catch(function(err) { if (!doneOnce) { doneOnce = true; if (err.name === 'AbortError') { onDone(); } else { onError(err); } } });
+      }).catch(function(err) { if (!doneOnce) { doneOnce = true; if (err.name === 'AbortError') { onDone(); } else { onError(err); } } else { console.error('[streamFetch] onDone threw:', err); } });
     }
     pump();
   }).catch(function(err) {
@@ -2168,9 +2159,12 @@ var _lastFinishReason = '';
 
 var FALLBACK_MODEL = 'moonshotai/kimi-k2.5';
 
-function streamDefault(messages, onText, onDone, onError, model, signal) {
+var _lastRoutedModel = ''; // model Auto Router picked, from the SSE chunks
+
+function streamDefault(messages, onText, onDone, onError, model, signal, extra) {
   _lastFinishReason = '';
-  var body = { messages: messages };
+  _lastRoutedModel = '';
+  var body = Object.assign({ messages: messages }, extra);
   if (model) body.model = model;
   if (OUTPUT_FORMAT === 'openui') body.response_format = false;
   streamFetch(
@@ -2178,6 +2172,7 @@ function streamDefault(messages, onText, onDone, onError, model, signal) {
     { 'Content-Type': 'application/json' },
     body,
     function(chunk) {
+      if (chunk.model) _lastRoutedModel = chunk.model;
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
       if (c && c.finish_reason) _lastFinishReason = c.finish_reason;
@@ -2303,7 +2298,7 @@ function capturePreview() {
   return new Promise(function(resolve) {
     var timeout = setTimeout(function() { resolve(null); }, 5000);
     function onMessage(e) {
-      if (e.data && e.data.type === 'screenshot') {
+      if (e.source === $previewFrame.contentWindow && e.data && e.data.type === 'screenshot') {
         clearTimeout(timeout);
         window.removeEventListener('message', onMessage);
         resolve(e.data.data);
@@ -2434,9 +2429,9 @@ function selfCheck(spec, screenshotDataUrl, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: fastModel() || undefined,
+      model: AUTO_MODEL,
       messages: messages,
-      reasoning: { effort: fastEffort('selfCheck') || 'medium' }
+      reasoning: { effort: 'medium' }
     }),
     signal: signal
   })
@@ -2471,13 +2466,81 @@ function selfCheck(spec, screenshotDataUrl, signal) {
 // Asks one yes/no question per component and resolves to the picked type list,
 // or null (use the full catalog) on any failure, timeout, or empty pick.
 var PICK_CORE = ['Stack', 'Grid', 'Text', 'Card', 'Button', 'Icon', 'Separator'];
-var PICK_THRESHOLD = 0.5;
+var PICK_THRESHOLD = 0.45;
 var PICK_TIMEOUT_MS = 4000;
+// One-line purpose per type for Jev's yes/no question (tuned on a labeled eval)
+var COMP_PURPOSE = {
+  Surface: 'a raised or inset background panel that groups content',
+  Prose: 'long-form rich text such as an article body',
+  Link: 'an inline text hyperlink',
+  ButtonGroup: 'a row of joined buttons',
+  Field: 'a labeled form input with helper or error text',
+  Input: 'a single-line text input',
+  InputGroup: 'an input with a prefix or suffix addon such as $ or .com',
+  InputIcon: 'an input with an icon inside it',
+  Search: 'a search box',
+  Textarea: 'a multi-line text input for comments, bios or messages',
+  Checkbox: 'a checkbox for opting in, agreeing to terms or selecting items',
+  RadioGroup: 'a set of radio buttons to pick exactly one visible option',
+  Switch: 'an on/off switch for a setting',
+  Slider: 'a draggable range control for volume, price or another number',
+  Toggle: 'a single pressable on/off button',
+  ToggleGroup: 'a segmented control to pick one option, such as Monthly/Yearly or Grid/List',
+  Select: 'a dropdown to choose one option from a list',
+  CustomSelect: 'a searchable dropdown for long option lists',
+  Kbd: 'a keyboard shortcut hint such as Cmd+K',
+  Label: 'a standalone form label',
+  Spinner: 'a loading spinner',
+  InputOTP: 'one-time passcode boxes for entering a verification code',
+  Tabs: 'tabs that switch between panels of content',
+  Breadcrumbs: 'a breadcrumb trail showing the page hierarchy',
+  Pagination: 'page number controls for long lists or tables',
+  Stepper: 'a multi-step progress indicator for wizards or checkout',
+  NavMenu: 'a horizontal row of navigation links',
+  Navbar: 'a top header bar with brand and navigation',
+  Menubar: 'a desktop-app menu bar with File/Edit/View dropdowns',
+  Sidebar: 'a vertical side navigation with sections',
+  BottomNav: 'a mobile bottom tab bar',
+  Table: 'a data table with columns and rows',
+  DataTable: 'an interactive data table with selectable rows',
+  List: 'a vertical list of items with title, secondary text and icon',
+  Badge: 'a small status label or count',
+  Avatar: 'a user profile picture or initials',
+  AvatarGroup: 'a stacked row of several user avatars',
+  Calendar: 'a month calendar grid for picking or showing dates',
+  Chart: 'a bar chart',
+  Carousel: 'a sliding slideshow of images or cards',
+  AspectRatio: 'a fixed aspect-ratio frame for images or video',
+  Chip: 'a tag or filter pill',
+  ScrollArea: 'a scrollable region',
+  Image: 'an image or photo',
+  Alert: 'an inline callout banner for info, warning, error or success messages',
+  Progress: 'a progress bar',
+  Skeleton: 'loading placeholder shapes',
+  EmptyState: 'a placeholder message shown when there is no content or nothing was found',
+  Tooltip: 'a hint shown on hover',
+  Modal: 'a dialog window over the page for forms or content',
+  AlertDialog: 'a confirmation dialog for destructive actions',
+  Sheet: 'a side panel that slides over the page',
+  Drawer: 'a bottom drawer that slides up',
+  Popover: 'a small floating panel anchored to a button',
+  HoverCard: 'a preview card shown when hovering a link or user',
+  DropdownMenu: 'a menu of actions opened from a button',
+  ContextMenu: 'a right-click menu of actions',
+  CommandPalette: 'a Cmd+K searchable command launcher',
+  Accordion: 'stacked expandable sections such as an FAQ',
+  Collapsible: 'a single show/hide section',
+  Resizable: 'split panes with a draggable divider',
+  DatePicker: 'a date input with a calendar popup',
+  StatCard: 'a KPI metric card with a value and trend',
+  ChartCard: 'a titled card that holds a chart',
+  CustomHTML: 'custom HTML and JS for anything no built-in component covers'
+};
 function chooseComponents(userPrompt, signal) {
   var comps = {};
   COMP_CATEGORIES.forEach(function(cat) {
     cat[1].forEach(function(t) {
-      if (RENDERERS[t] && PICK_CORE.indexOf(t) === -1) comps[t] = COMP_PROPS[t] || '';
+      if (RENDERERS[t] && PICK_CORE.indexOf(t) === -1) comps[t] = COMP_PURPOSE[t] || '';
     });
   });
   var ctrl = new AbortController();
@@ -2580,7 +2643,7 @@ function analyzeLayout(userPrompt, images, webContexts, figmaContexts, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: fastModel() || undefined,
+      model: AUTO_MODEL,
       messages: messages,
       reasoning: { effort: 'low' },
       max_tokens: 800,
@@ -2623,9 +2686,9 @@ function visualDiff(spec, renderedScreenshot, originalImageDataUrl, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: fastModel() || undefined,
+      model: AUTO_MODEL,
       messages: messages,
-      reasoning: { effort: fastEffort('selfCheck') || 'medium' }
+      reasoning: { effort: 'medium' }
     }),
     signal: signal
   })
@@ -2678,7 +2741,7 @@ function analyzeInteractivity(spec, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'google/gemini-3.1-flash-lite',
+      model: AUTO_MODEL,
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: JSON.stringify(spec) }
@@ -2703,7 +2766,7 @@ function analyzeInteractivity(spec, signal) {
   .catch(function(e) { if (e.name === 'AbortError') return null; dwarn('[analyzeInteractivity] failed:', e); return null; });
 }
 
-function generateInteractiveCode(spec, analysis, onProgress) {
+function generateInteractiveCode(spec, analysis, onProgress, signal) {
   var prompt = 'You are a JavaScript developer. You receive a DAUB UI component spec and must add interactive code.\n\n'
     + 'TASK: ' + analysis.description + '\n\n'
     + 'CODE SCAFFOLD (structural guide, may have errors \u2014 use as starting point):\n'
@@ -2731,12 +2794,12 @@ function generateInteractiveCode(spec, analysis, onProgress) {
     var startTime = Date.now();
     streamFetch('/api/generate', { 'Content-Type': 'application/json' },
       {
-        model: fastModel() || 'google/gemini-3.1-pro-preview',
+        model: AUTO_MODEL,
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(spec) }
         ],
-        reasoning: { effort: fastEffort('code') || 'medium' },
+        reasoning: { effort: 'medium' },
         response_format: false,
         max_tokens: 16384
       },
@@ -2751,6 +2814,7 @@ function generateInteractiveCode(spec, analysis, onProgress) {
         }
       },
       function onDone() {
+        if (signal && signal.aborted) { resolve(null); return; } // streamFetch reports abort via onDone
         dlog('[generateInteractiveCode] raw length:', accumulated.length, 'preview:', accumulated.slice(0, 300));
         var clean = cleanJSON(accumulated);
         if (!clean) { dwarn('[generateInteractiveCode] cleanJSON returned empty'); resolve(null); return; }
@@ -2766,7 +2830,8 @@ function generateInteractiveCode(spec, analysis, onProgress) {
       function onError(err) {
         console.warn('[generateInteractiveCode] stream error:', err);
         resolve(null);
-      }
+      },
+      signal
     );
   });
 }
@@ -2822,12 +2887,12 @@ function planCodeArchitecture(spec, analysis, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: fastModel() || 'google/gemini-3.1-pro-preview',
+      model: AUTO_MODEL,
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: JSON.stringify(spec) }
       ],
-      reasoning: { effort: fastEffort('plan') || 'medium' },
+      reasoning: { effort: 'medium' },
       max_tokens: 8192
     }),
     signal: signal
@@ -2878,9 +2943,10 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
   }
 
   var effortMap = { trivial: 'low', low: 'low', medium: 'medium' };
-  var tokensMap = { trivial: 3072, low: 5120, medium: 10240 };
+  // Auto Router may pick a reasoning model, and reasoning tokens count against max_tokens
+  var tokensMap = { trivial: 6144, low: 10240, medium: 16384 };
   var effort = effortMap[chunk.effort] || 'low';
-  var maxTokens = tokensMap[chunk.effort] || 4096;
+  var maxTokens = tokensMap[chunk.effort] || 8192;
 
   var prompt = 'You are implementing ONE piece of an interactive UI. Focus ONLY on your assigned task.\n\n'
     + 'YOUR TASK: ' + chunk.description + '\n\n'
@@ -2920,7 +2986,7 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: modelOverride || fastModel() || 'google/gemini-3-flash-preview',
+      model: modelOverride || AUTO_MODEL,
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: 'Implement chunk "' + chunk.id + '" now.' }
@@ -2980,7 +3046,7 @@ function retryFailedChunks(spec, plan, failedResults, onRetryDone, signal) {
   if (!failedChunks.length) return Promise.resolve([]);
   var completed = 0;
   return Promise.all(failedChunks.map(function(chunk) {
-    return executeChunk(spec, plan, chunk, fastModel() || 'moonshotai/kimi-k2.5', signal).then(function(result) {
+    return executeChunk(spec, plan, chunk, AUTO_MODEL, signal).then(function(result) {
       completed++;
       if (onRetryDone) onRetryDone(result, completed, failedChunks.length);
       return result;
@@ -2993,6 +3059,12 @@ function assembleChunkResults(spec, plan, chunkResults) {
   var conflicts = [];
   var touchedIds = {};
   var isObjFormat = !Array.isArray(assembled.elements);
+  function rootChildren() { // created if missing so appended code nodes are not orphaned (props.children fallback as in renderElement)
+    var r = assembled.elements[assembled.root];
+    if (!r) return [];
+    if (!r.children) r.children = (r.props && Array.isArray(r.props.children)) ? r.props.children : [];
+    return r.children;
+  }
 
   // Build element lookup (flat)
   var elMap = {};
@@ -3043,10 +3115,10 @@ function assembleChunkResults(spec, plan, chunkResults) {
             codeTarget = assembled.elements[jsId];
             if (!codeTarget) {
               codeTarget = assembled.elements[jsId] = { type: 'CustomHTML', props: {} };
-              var jsRoot = assembled.elements[assembled.root];
-              if (jsRoot && jsRoot.children) jsRoot.children.push(jsId);
+              rootChildren().push(jsId);
             }
             if (!codeTarget.props) codeTarget.props = {};
+            codeTarget.props.forId = cel.id; // collectCustomJS runs this code with the real element as container
           }
           if (cel.js) codeTarget.props.js = (codeTarget.props.js ? codeTarget.props.js + '\n' : '') + cel.js;
           if (cel.html) target.props.html = cel.html;
@@ -3066,8 +3138,7 @@ function assembleChunkResults(spec, plan, chunkResults) {
           if (cel.css) newProps.css = cel.css;
           assembled.elements[cel.id] = { type: 'CustomHTML', props: newProps };
           // Add to root's children
-          var rootEl = assembled.elements[assembled.root];
-          if (rootEl && rootEl.children) rootEl.children.push(cel.id);
+          rootChildren().push(cel.id);
         } else {
           var newEl = { id: cel.id, type: 'CustomHTML' };
           if (cel.js) newEl.js = cel.js;
@@ -3082,9 +3153,8 @@ function assembleChunkResults(spec, plan, chunkResults) {
   // Inject shared state init
   if (plan.sharedStateInit) {
     if (isObjFormat) {
-      assembled.elements['_shared_state'] = { type: 'CustomHTML', props: { js: plan.sharedStateInit, html: '', css: '' } };
-      var rootEl = assembled.elements[assembled.root];
-      if (rootEl && rootEl.children) rootEl.children.unshift('_shared_state');
+      assembled.elements['_shared_state'] = { type: 'CustomHTML', props: { js: plan.sharedStateInit, html: '', css: '', forId: '_shared_state' } };
+      rootChildren().unshift('_shared_state');
     } else {
       assembled.elements.unshift({
         id: '_shared_state',
@@ -3096,6 +3166,7 @@ function assembleChunkResults(spec, plan, chunkResults) {
     }
   }
 
+  if (isObjFormat) Object.keys(assembled.elements).forEach(function(k) { delete assembled.elements[k]._id; });
   return { spec: assembled, conflicts: conflicts };
 }
 
@@ -3115,7 +3186,7 @@ function runChunkTests(chunkResults, timeout) {
   return new Promise(function(resolve) {
     var resolved = false;
     function onMessage(e) {
-      if (e.data && e.data.type === 'testResults' && !resolved) {
+      if (e.source === iframe.contentWindow && e.data && e.data.type === 'testResults' && !resolved) {
         resolved = true;
         window.removeEventListener('message', onMessage);
         resolve(e.data.results || []);
@@ -3133,7 +3204,7 @@ function runChunkTests(chunkResults, timeout) {
   });
 }
 
-function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedChunks, onProgress, testFailures) {
+function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedChunks, onProgress, testFailures, signal) {
   var failedSection = '';
   if (failedChunks && failedChunks.length) {
     failedSection = 'FAILED CHUNKS (junior agents could not implement these — YOU must implement them now):\n';
@@ -3176,12 +3247,12 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     var startTime = Date.now();
     streamFetch('/api/generate', { 'Content-Type': 'application/json' },
       {
-        model: fastModel() || 'google/gemini-3.1-pro-preview',
+        model: AUTO_MODEL,
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(assembledSpec) }
         ],
-        reasoning: { effort: fastEffort('review') || 'medium' },
+        reasoning: { effort: 'medium' },
         response_format: false,
         max_tokens: 16384
       },
@@ -3196,6 +3267,7 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
         }
       },
       function onDone() {
+        if (signal && signal.aborted) { resolve(null); return; }
         dlog('[reviewAndAssemble] raw length:', accumulated.length);
         var clean = cleanJSON(accumulated);
         if (!clean) { resolve(null); return; }
@@ -3205,7 +3277,8 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
         dlog('[reviewAndAssemble] success:', countComponents(reviewed), 'components');
         resolve(reviewed);
       },
-      function onError() { resolve(null); }
+      function onError() { resolve(null); },
+      signal
     );
   });
 }
@@ -3470,7 +3543,7 @@ function buildResultBubble(bubble, spec, verIdx) {
   // Meta: timestamp
   var meta = document.createElement('div');
   meta.className = 'pg-result-meta';
-  meta.textContent = fmtTime(ver ? ver.timestamp : Date.now());
+  meta.textContent = fmtTime(ver ? ver.timestamp : Date.now()) + (ver && ver.model ? ' \u00B7 via ' + ver.model : '');
   bubble.appendChild(meta);
 
   // Component type chips (collapsible)
@@ -3528,7 +3601,7 @@ function runBlockingGenerate(messages, streamBubble) {
     apiCall = fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: messages }),
+      body: JSON.stringify(Object.assign({ messages: messages, model: AUTO_MODEL }, mainGenOpts())),
       signal: blockSignal
     }).then(function(res) {
       if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
@@ -3638,8 +3711,10 @@ function generate() {
     analysisPromise = Promise.resolve(null);
   }
   var preSignal = _abortCtrl.signal;
-  if (currentSpec) $status.textContent = 'Choosing components\u2026';
-  var pickPromise = chooseComponents(prompt, preSignal);
+  // Jev only sees the typed text, so attachments skip the picker (full catalog)
+  var _hasAttachments = imagesForThisMsg.length || webContextsForThisMsg.length || figmaContextsForThisMsg.length;
+  if (currentSpec && !_hasAttachments) $status.textContent = 'Choosing components\u2026';
+  var pickPromise = _hasAttachments ? Promise.resolve(null) : chooseComponents(prompt, preSignal);
   var messages; // set after analysis completes
   var accumulated = '';
   var continuations = 0;
@@ -3651,7 +3726,8 @@ function generate() {
   var _detectedFormat = null;
   _currentStream.renderTimer = setInterval(function() {
     if (!accumulated) return;
-    if (!_detectedFormat) _detectedFormat = DaubOpenUI.detectFormat(accumulated);
+    // Only cache a decisive result: a first tick of "__theme" (no "=" yet) reads as 'unknown'
+    if (!_detectedFormat) { var _fmt = DaubOpenUI.detectFormat(accumulated); if (_fmt !== 'unknown') _detectedFormat = _fmt; }
     if (_detectedFormat === 'openui') {
       if (!_streamParser) _streamParser = DaubOpenUI.createStreamingOpenUIParser();
       var result = _streamParser.push(accumulated);
@@ -3681,10 +3757,11 @@ function generate() {
     var retrySignal = _abortCtrl ? _abortCtrl.signal : null;
     retries++;
     accumulated = '';
+    _detectedFormat = null; // the render timer is stopped, so onDone re-detects from the retry's text
     $json.value = '';
     if (retries <= MAX_RETRIES) {
       $status.textContent = 'Retry ' + retries + '/' + MAX_RETRIES + ' \u2014 ' + reason;
-      setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages); }, 500);
+      setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages, usingFallback ? FALLBACK_MODEL : undefined); }, 500);
     } else if (useDefault && !usingFallback) {
       usingFallback = true;
       retries = 0;
@@ -3705,7 +3782,7 @@ function generate() {
     _abortCtrl = new AbortController();
     var signal = _abortCtrl.signal;
     var callStreamFn = function(m, onT, onD, onE) {
-      if (useDefault) streamDefault(m, onT, onD, onE, model || fastModel(), signal);
+      if (useDefault) streamDefault(m, onT, onD, onE, model || AUTO_MODEL, signal, model ? null : mainGenOpts());
       else streamFn(m, onT, onD, onE, signal);
     };
     callStreamFn(msgs,
@@ -3720,7 +3797,7 @@ function generate() {
         if (_lastFinishReason === 'length' && continuations < MAX_CONTINUATIONS) {
           continuations++;
           $status.textContent = 'Continuing (' + continuations + '/' + MAX_CONTINUATIONS + ')\u2026';
-          var contMsg = _detectedFormat === 'openui'
+          var contMsg = (_detectedFormat || DaubOpenUI.detectFormat(accumulated)) === 'openui'
             ? 'Continue the openui-lang code from where you stopped. Output ONLY remaining statements, no repetition, no explanation.'
             : 'Continue the JSON exactly from where you stopped. Output ONLY the remaining JSON, no repetition, no explanation.';
           var contMsgs = msgs.concat([
@@ -3750,6 +3827,8 @@ function generate() {
           var prevSpec2 = progressivePrevSpec || currentSpec;
           currentSpec = spec;
           pushVersion(spec, prompt);
+          var _routedModel = useDefault ? _lastRoutedModel : '';
+          if (_routedModel) specVersions[specVersions.length - 1].model = _routedModel;
           renderSpec(spec, prevSpec2);
           refreshJsonTree();
           updatePreviewToolbar();
@@ -3824,21 +3903,11 @@ function generate() {
           }
           function _addSkeleton(elements) {
             if (!elements || !elements.length) return;
-            var iframe = document.getElementById('pg-preview-frame');
-            if (!iframe || !iframe.contentDocument) return;
-            elements.forEach(function(id) {
-              var el = iframe.contentDocument.querySelector('[data-spec-id="' + id + '"]');
-              if (el) el.classList.add('db-skeleton');
-            });
+            postToPreview({ type: 'skeleton', ids: elements, on: true });
           }
           function _removeSkeleton(elements) {
             if (!elements || !elements.length) return;
-            var iframe = document.getElementById('pg-preview-frame');
-            if (!iframe || !iframe.contentDocument) return;
-            elements.forEach(function(id) {
-              var el = iframe.contentDocument.querySelector('[data-spec-id="' + id + '"]');
-              if (el) el.classList.remove('db-skeleton');
-            });
+            postToPreview({ type: 'skeleton', ids: elements, on: false });
           }
           function _pipeFinish() {
             pipeSummary.textContent = 'Pipeline complete';
@@ -3879,6 +3948,7 @@ function generate() {
             var prev = currentSpec;
             currentSpec = s;
             pushVersion(s, prompt + ' (' + suffix + ')');
+            if (_routedModel) specVersions[specVersions.length - 1].model = _routedModel;
             renderSpec(s, prev);
             refreshJsonTree();
             updatePreviewToolbar();
@@ -3892,6 +3962,15 @@ function generate() {
 
           $status.textContent = 'Analyzing interactivity\u2026';
           var _pipeSignal = _abortCtrl ? _abortCtrl.signal : null;
+          if (_pipeSignal) _pipeSignal.addEventListener('abort', function() {
+            if (_analysis) _removeSkeleton(_analysis.elements);
+            if (pipeSummary.textContent === 'Pipeline complete') return;
+            pipeDetails.querySelectorAll('.pg-pipeline__step:not(.pg-pipeline__step--done):not(.pg-pipeline__step--skip)').forEach(function(s) {
+              var lbl = s.querySelector('.pg-pipeline__label').textContent;
+              _pipeSkip(s, s.classList.contains('pg-pipeline__step--active') ? 'Stopped' : lbl.replace(/\u2026$/, ''));
+            });
+            pipeSummary.textContent = 'Stopped';
+          });
           analyzeInteractivity(spec, _pipeSignal).then(function(analysis) {
             if (signal.aborted) return;
             _analysis = analysis;
@@ -3955,7 +4034,7 @@ function generate() {
               _addSkeleton(_analysis.elements);
               return generateInteractiveCode(finalSpec, _analysis, function(bytes, lines, secs) {
                 codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
-              }).then(function(updatedSpec) {
+              }, _pipeSignal).then(function(updatedSpec) {
                 if (signal.aborted) return;
                 _removeSkeleton(_analysis.elements);
                 if (updatedSpec) {
@@ -4137,7 +4216,7 @@ function generate() {
                   : 'Reviewing assembly\u2026';
                 return reviewAndAssemble(finalSpec, plan, assembled.spec, assembled.conflicts, failedChunks, function(bytes, lines, secs) {
                   codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
-                }, testFailures).then(function(reviewedSpec) {
+                }, testFailures, _pipeSignal).then(function(reviewedSpec) {
                   if (signal.aborted) return;
                   if (reviewedSpec) {
                     _pipeDone(stepReview, 'Review complete');
@@ -4319,7 +4398,7 @@ document.querySelectorAll('.pg-viewport-btn').forEach(function(btn) {
 // ---- Download HTML handler ----
 $download.addEventListener('click', function() {
   if (!currentSpec) return;
-  var themeAttr = currentSpec.theme ? ' data-theme="' + currentSpec.theme + '"' : '';
+  var themeAttr = currentSpec.theme ? ' data-theme="' + esc(String(currentSpec.theme)).replace(/"/g, '&quot;') + '"' : '';
   var html = '<!DOCTYPE html>\n<html lang="en"' + themeAttr + '>\n<head>\n<meta charset="UTF-8">\n'
     + '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
     + '<title>DAUB UI Export</title>\n'
@@ -4455,6 +4534,8 @@ $newChat.addEventListener('click', function() {
   updatePreviewToolbar();
   postToPreview({ type: 'clear' });
   _iframeHtmlCache = '';
+  _renderSeq++;
+  _chatSessionId = newChatSessionId();
   $prompt.value = '';
   $prompt.style.height = '';
   $status.textContent = '';
@@ -4556,6 +4637,8 @@ function computeSpecDiff(oldSpec, newSpec) {
 //  RENDERER — json-render spec to DAUB HTML
 // ============================================================
 var MAX_DEPTH = 20;
+var _renderFailures = []; // {id, type, message} per renderSpec pass; a throwing element renders a notice instead
+var _renderFailSig = '', _renderFailMsg = '';
 
 // ---- Spec Validation & Auto-Fix ----
 function validateSpec(spec) {
@@ -4570,6 +4653,7 @@ function validateSpec(spec) {
       if (!def.type) issues.push('Element "' + id + '" missing "type"');
       else if (!RENDERERS[def.type] && def.type !== 'CustomHTML') issues.push('Unknown type "' + def.type + '" on element "' + id + '"');
       var children = def.children || [];
+      if (!Array.isArray(children)) { issues.push('Element "' + id + '" has non-array children'); children = []; }
       children.forEach(function(cid) {
         if (!spec.elements[cid]) issues.push('Element "' + id + '" references missing child "' + cid + '"');
       });
@@ -4584,6 +4668,7 @@ function autoFixSpec(spec) {
   Object.keys(spec.elements).forEach(function(id) {
     var def = spec.elements[id];
     if (def.children) {
+      if (!Array.isArray(def.children)) def.children = typeof def.children === 'string' ? [def.children] : toArr(def.children); // "children": "id" would throw below and blank the page
       def.children = def.children.filter(function(cid) { return !!spec.elements[cid]; });
     }
   });
@@ -4627,7 +4712,7 @@ function autoFixSpec(spec) {
   return spec;
 }
 
-function renderSpec(spec, prevSpec) {
+function renderSpec(spec, prevSpec, inert) {
   if (!spec || !spec.root || !spec.elements) {
     showJsonError('Spec must have "root" and "elements"');
     return;
@@ -4638,6 +4723,7 @@ function renderSpec(spec, prevSpec) {
   if (issues.length) console.warn('[DAUB] Spec issues:', issues);
   // Render into a detached container
   var tempDiv = document.createElement('div');
+  _renderFailures = [];
 
   var el = renderElement(spec.elements, spec.root, 0);
   if (el) tempDiv.appendChild(el);
@@ -4660,6 +4746,14 @@ function renderSpec(spec, prevSpec) {
     }
   });
 
+  // Report guarded element failures once per distinct set (progressive renders repeat them)
+  var failSig = _renderFailures.length ? JSON.stringify(_renderFailures) : '';
+  if (failSig && failSig !== _renderFailSig) console.warn('[DAUB] ' + _renderFailures.length + ' element(s) failed to render:', _renderFailures);
+  _renderFailSig = failSig;
+  var failMsg = _renderFailures.length ? _renderFailures.length + (_renderFailures.length > 1 ? ' elements' : ' element') + ' couldn\'t render' : '';
+  if (!$status.textContent || $status.textContent === _renderFailMsg) $status.textContent = failMsg; // never clobber another status
+  _renderFailMsg = failMsg;
+
   // Set theme on iframe
   if (spec.theme) {
     postToPreview({ type: 'theme', value: spec.theme });
@@ -4669,7 +4763,7 @@ function renderSpec(spec, prevSpec) {
   var jsItems = collectCustomJS(spec);
   var stateConfig = collectStateConfig(spec);
   _iframeHtmlCache = tempDiv.innerHTML;
-  postToPreview({ type: 'render', html: tempDiv.innerHTML, js: jsItems, stateConfig: stateConfig });
+  postToPreview({ type: 'render', html: tempDiv.innerHTML, js: jsItems, stateConfig: stateConfig, seq: ++_renderSeq, inert: !!inert });
 }
 
 // Incremental diff: walk spec tree, find DOM nodes by data-spec-id, replace changed subtrees
@@ -4749,21 +4843,19 @@ function renderElement(elements, id, depth) {
   }
 
   var render = RENDERERS[def.type];
-  if (!render) {
-    var el = document.createElement('div');
-    el.className = 'db-alert db-alert--warning';
-    var content = document.createElement('div');
-    content.className = 'db-alert__content';
-    var title = document.createElement('div');
-    title.className = 'db-alert__title';
-    title.textContent = 'Unknown: ' + def.type;
-    content.appendChild(title);
-    el.appendChild(content);
-    return el;
-  }
+  if (!render) return renderNotice('Unknown: ' + def.type);
 
   var children = def.children || (def.props && def.props.children) || [];
-  var el = render(def.props || {}, children, elements, depth);
+  var el;
+  try {
+    el = render(def.props || {}, children, elements, depth);
+  } catch (err) {
+    // One bad element must not blank the page: show a notice in its place, siblings keep rendering
+    _renderFailures.push({ id: id, type: def.type, message: String((err && err.message) || err) });
+    el = renderNotice('Couldn\'t render ' + def.type);
+    el.setAttribute('data-spec-id', id);
+    return el;
+  }
   if (el && el.setAttribute) {
     el.setAttribute('data-spec-id', id);
     // Encode declarative state metadata as data attributes for iframe runtime
@@ -4789,6 +4881,14 @@ function renderElement(elements, id, depth) {
       }
     }
   }
+  return el;
+}
+
+function renderNotice(text) {
+  var el = mkEl('div', 'db-alert db-alert--warning');
+  var content = mkEl('div', 'db-alert__content');
+  content.appendChild(mkEl('div', 'db-alert__title', text));
+  el.appendChild(content);
   return el;
 }
 
@@ -4831,7 +4931,7 @@ function sanitizeHtml(html) {
         if (allowed.indexOf(aname) < 0) continue;
         var v = a.value;
         if ((aname === 'href' || aname === 'src') && /^javascript:/i.test(v.replace(/[\u0000-\u0020]/g, ''))) continue;
-        attrs += ' ' + aname + '="' + esc(v) + '"';
+        attrs += ' ' + aname + '="' + esc(v).replace(/"/g, '&quot;') + '"'; // esc() leaves quotes, which would end the attribute
       }
       if (tag === 'a') attrs += ' rel="noopener" target="_blank"';
       if (tag === 'br' || tag === 'hr' || tag === 'img') { out += '<' + tag + attrs + '>'; }
@@ -4861,6 +4961,63 @@ function isSafeUrl(url) {
   var trimmed = url.replace(/[\u0000-\u0020]/g, '').toLowerCase();
   if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) return false;
   return true;
+}
+
+// Model-supplied list props: arrays pass through, {items|data|rows: [...]} unwraps, anything else -> []
+function toArr(x) {
+  if (Array.isArray(x)) return x;
+  if (x && typeof x === 'object') {
+    if (Array.isArray(x.items)) return x.items;
+    if (Array.isArray(x.data)) return x.data;
+    if (Array.isArray(x.rows)) return x.rows;
+  }
+  return [];
+}
+
+// Chart bars: [{label, value}] as-is; {data|datasets, labels} objects and bare numbers -> [{label, value}]
+function chartBars(b) {
+  if (b && typeof b === 'object' && !Array.isArray(b)) {
+    var labels = toArr(b.labels);
+    var data = Array.isArray(b.data) ? b.data : toArr(toArr(b.datasets)[0]);
+    b = data.map(function(v, i) {
+      var o = v && typeof v === 'object' ? v : { value: v };
+      return { label: o.label != null ? o.label : (labels[i] != null ? labels[i] : ''), value: o.value, max: o.max };
+    });
+  }
+  return toArr(b).map(function(v) { return v && typeof v === 'object' ? v : { value: v }; });
+}
+
+// Numeric bar value: "$12k" -> 12, junk -> 0 (a NaN height would collapse the bar)
+function chartNum(v) {
+  if (typeof v === 'number') return v;
+  var n = parseFloat(String(v).replace(/[^0-9.\-]/g, ''));
+  return isNaN(n) ? 0 : n;
+}
+
+// Table/DataTable: unwrap a {columns, rows} object, string columns -> {key, label}, array rows -> keyed objects
+function tableShape(p) {
+  var cols = p.columns, rows = p.rows;
+  if (cols && typeof cols === 'object' && !Array.isArray(cols) && (cols.columns || cols.rows)) { if (rows == null) rows = cols.rows; cols = cols.columns; }
+  if (rows && typeof rows === 'object' && !Array.isArray(rows) && Array.isArray(rows.rows)) { if (cols == null) cols = rows.columns; rows = rows.rows; }
+  cols = toArr(cols);
+  rows = toArr(rows);
+  var first = rows[0];
+  if (cols.some(function(c) { return typeof c === 'string'; })) {
+    cols = cols.map(function(c, i) {
+      if (typeof c !== 'string') return c;
+      var byLabel = first && typeof first === 'object' && !Array.isArray(first) && Object.prototype.hasOwnProperty.call(first, c);
+      return { key: byLabel ? c : (c.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'c' + i), label: c };
+    });
+  }
+  if (rows.some(Array.isArray)) {
+    rows = rows.map(function(r) {
+      if (!Array.isArray(r)) return r;
+      var o = {};
+      cols.forEach(function(c, i) { if (c && c.key != null) o[c.key] = r[i]; });
+      return o;
+    });
+  }
+  return { cols: cols, rows: rows };
 }
 
 // ---- Declarative State Engine ----
@@ -5018,7 +5175,7 @@ RENDERERS.Stack = function(p, ch, els, d) {
   var isH = p.direction === 'horizontal';
   el.style.display = 'flex';
   el.style.flexDirection = isH ? 'row' : 'column';
-  el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap || 2)) + ')';
+  el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap != null ? p.gap : 2)) + ')';
   if (isH && p.wrap !== false) el.style.flexWrap = 'wrap';
   if (p.justify === 'center') el.style.justifyContent = 'center';
   else if (p.justify === 'end') el.style.justifyContent = 'flex-end';
@@ -5264,7 +5421,7 @@ RENDERERS.Checkbox = function(p) {
 RENDERERS.RadioGroup = function(p) {
   var el = mkEl('div', 'db-radio-group');
   var name = 'rg-' + Math.random().toString(36).slice(2,8);
-  (p.options || []).forEach(function(opt) {
+  toArr(p.options).forEach(function(opt) {
     var lbl = mkEl('label', 'db-radio');
     var inp = document.createElement('input');
     inp.className = 'db-radio__input';
@@ -5323,7 +5480,7 @@ RENDERERS.Toggle = function(p) {
 // -- ToggleGroup --
 RENDERERS.ToggleGroup = function(p) {
   var el = mkEl('div', 'db-toggle-group');
-  (p.options || []).forEach(function(opt) {
+  toArr(p.options).forEach(function(opt) {
     var btn = document.createElement('button');
     btn.className = 'db-toggle';
     btn.setAttribute('aria-pressed', opt.value === p.selected ? 'true' : 'false');
@@ -5339,7 +5496,7 @@ RENDERERS.Select = function(p) {
   if (p.label) el.appendChild(mkEl('label', 'db-label', p.label));
   var sel = document.createElement('select');
   sel.className = 'db-select__input';
-  (p.options || []).forEach(function(o) {
+  toArr(p.options).forEach(function(o) {
     var opt = document.createElement('option');
     opt.value = o.value || '';
     opt.textContent = o.label || '';
@@ -5356,7 +5513,7 @@ RENDERERS.CustomSelect = function(p) {
   var trigger = document.createElement('button');
   trigger.className = 'db-custom-select__trigger';
   trigger.type = 'button';
-  var selectedOpt = (p.options || []).filter(function(o) { return o.selected; })[0];
+  var selectedOpt = toArr(p.options).filter(function(o) { return o.selected; })[0];
   var triggerText = mkEl('span', 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
   trigger.appendChild(triggerText);
   var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -5376,7 +5533,7 @@ RENDERERS.CustomSelect = function(p) {
     searchDiv.appendChild(searchInp);
     dd.appendChild(searchDiv);
   }
-  (p.options || []).forEach(function(o) {
+  toArr(p.options).forEach(function(o) {
     var optCls = 'db-custom-select__option' + (o.selected ? ' db-custom-select__option--selected' : '') + (o.disabled ? ' db-custom-select__option--disabled' : '');
     dd.appendChild(mkEl('div', optCls, o.label || ''));
   });
@@ -5387,7 +5544,13 @@ RENDERERS.CustomSelect = function(p) {
 // -- Kbd --
 RENDERERS.Kbd = function(p) {
   var el = document.createElement('span');
-  (p.keys || []).forEach(function(k, i) {
+  var keys = p.keys;
+  if (typeof keys === 'string') {
+    // Kbd("Ctrl+K") / Kbd("⌘K"): split combos on "+", keep a lone key as-is
+    var parts = keys.split('+').map(function(s) { return s.trim(); }).filter(Boolean);
+    keys = parts.length ? parts : [keys];
+  }
+  toArr(keys).forEach(function(k, i) {
     if (i > 0) el.appendChild(document.createTextNode(' + '));
     el.appendChild(mkEl('kbd', 'db-kbd', k));
   });
@@ -5429,7 +5592,7 @@ RENDERERS.Tabs = function(p, ch, els, d) {
   var el = mkEl('div', 'db-tabs');
   var list = mkEl('div', 'db-tabs__list');
   list.setAttribute('role', 'tablist');
-  var tabs = p.tabs || [];
+  var tabs = toArr(p.tabs);
   var activeIdx = 0;
   tabs.forEach(function(t, i) {
     if (t.id === p.active) activeIdx = i;
@@ -5465,7 +5628,7 @@ RENDERERS.Breadcrumbs = function(p) {
   el.className = 'db-breadcrumbs';
   el.setAttribute('aria-label', 'Breadcrumb');
   var ol = document.createElement('ol');
-  var items = p.items || [];
+  var items = toArr(p.items);
   items.forEach(function(item, i) {
     var li = document.createElement('li');
     if (i === items.length - 1) {
@@ -5520,7 +5683,7 @@ RENDERERS.Pagination = function(p) {
 // -- Stepper --
 RENDERERS.Stepper = function(p) {
   var el = mkEl('div', 'db-stepper' + (p.vertical ? ' db-stepper--vertical' : ''));
-  (p.steps || []).forEach(function(s, i) {
+  toArr(p.steps).forEach(function(s, i) {
     var step = mkEl('div', 'db-stepper__step db-stepper__step--' + (s.status || 'pending'));
     step.appendChild(mkEl('div', 'db-stepper__indicator', String(i + 1)));
     step.appendChild(mkEl('div', 'db-stepper__label', s.label || ''));
@@ -5533,7 +5696,8 @@ RENDERERS.Stepper = function(p) {
 RENDERERS.NavMenu = function(p) {
   var el = document.createElement('nav');
   el.className = 'db-nav-menu';
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
+    if (typeof item === 'string') item = { label: item };
     var a = document.createElement('a');
     a.className = 'db-nav-menu__item' + (item.active ? ' db-nav-menu__item--active' : '');
     a.href = isSafeUrl(item.href) ? item.href : '#';
@@ -5563,13 +5727,13 @@ RENDERERS.Navbar = function(p, ch, els, d) {
 // -- Menubar --
 RENDERERS.Menubar = function(p) {
   var el = mkEl('div', 'db-menubar');
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
     var btn = document.createElement('button');
     btn.className = 'db-menubar__item';
     btn.textContent = item.label || '';
     if (item.dropdown) {
       var dd = mkEl('div', 'db-menubar__dropdown');
-      item.dropdown.forEach(function(dItem) {
+      toArr(item.dropdown).forEach(function(dItem) {
         dd.appendChild(mkEl('button', 'db-dropdown__item', dItem.label || ''));
       });
       btn.appendChild(dd);
@@ -5580,15 +5744,24 @@ RENDERERS.Menubar = function(p) {
 };
 
 // -- Sidebar --
-RENDERERS.Sidebar = function(p) {
+RENDERERS.Sidebar = function(p, ch, els, d) {
   var el = document.createElement('aside');
   el.className = 'db-sidebar' + (p.collapsed ? ' db-sidebar--collapsed' : '');
   el.style.position = 'relative';
   el.style.height = 'auto';
-  (p.sections || []).forEach(function(sec) {
+  toArr(p.sections).forEach(function(sec) {
+    // Models often pass a child ref (Sidebar([navMenu])): render that element in place
+    if (typeof sec === 'string' && els && els[sec]) {
+      var ref = renderElement(els, sec, d + 1);
+      if (ref && ref.classList && ref.classList.contains('db-nav-menu')) ref.classList.add('db-nav-menu--vertical');
+      if (ref) el.appendChild(ref);
+      return;
+    }
+    if (typeof sec === 'string') sec = { items: [sec] };
     var section = mkEl('div', 'db-sidebar__section');
     if (sec.title) section.appendChild(mkEl('div', 'db-sidebar__label', sec.title));
-    (sec.items || []).forEach(function(item) {
+    toArr(sec.items).forEach(function(item) {
+      if (typeof item === 'string') item = { label: item };
       var a = document.createElement('a');
       a.className = 'db-sidebar__item' + (item.active ? ' db-sidebar__item--active' : '');
       a.setAttribute('data-tooltip', item.label || '');
@@ -5612,7 +5785,7 @@ RENDERERS.Sidebar = function(p) {
 RENDERERS.BottomNav = function(p) {
   var el = document.createElement('nav');
   el.className = 'db-bottom-nav';
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
     var a = document.createElement('a');
     a.className = 'db-bottom-nav__item' + (item.active ? ' db-bottom-nav__item--active' : '');
     a.href = '#';
@@ -5647,7 +5820,7 @@ RENDERERS.Card = function(p, ch, els, d) {
     if (p.description) hdr.appendChild(mkEl('p', 'db-card__desc', p.description));
     el.appendChild(hdr);
   }
-  var footerIds = p.footer || [];
+  var footerIds = toArr(p.footer);
   var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
   if (bodyIds.length) {
     var body = mkEl('div', 'db-card__body');
@@ -5669,8 +5842,9 @@ RENDERERS.Card = function(p, ch, els, d) {
 RENDERERS.Table = function(p) {
   var el = document.createElement('table');
   el.className = 'db-table';
-  var cols = p.columns || [];
-  var rows = p.rows || [];
+  var shape = tableShape(p);
+  var cols = shape.cols;
+  var rows = shape.rows;
   var thead = document.createElement('thead');
   var headRow = document.createElement('tr');
   cols.forEach(function(c) {
@@ -5701,8 +5875,9 @@ RENDERERS.Table = function(p) {
 RENDERERS.DataTable = function(p) {
   var el = document.createElement('table');
   el.className = 'db-data-table';
-  var cols = p.columns || [];
-  var rows = p.rows || [];
+  var shape = tableShape(p);
+  var cols = shape.cols;
+  var rows = shape.rows;
   var thead = document.createElement('thead');
   var headRow = document.createElement('tr');
   if (p.selectable) {
@@ -5760,7 +5935,8 @@ RENDERERS.DataTable = function(p) {
 // -- List --
 RENDERERS.List = function(p) {
   var el = mkEl('div', 'db-list');
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
+    if (typeof item === 'string') item = { title: item }; // List(["a", "b"]) renders titles, as in daub-render.js
     var li = mkEl('div', 'db-list__item');
     if (item.icon) {
       var iconWrap = mkEl('div', 'db-list__icon');
@@ -5802,7 +5978,7 @@ RENDERERS.Avatar = function(p) {
 // -- AvatarGroup --
 RENDERERS.AvatarGroup = function(p) {
   var el = mkEl('div', 'db-avatar-group');
-  var avatars = p.avatars || [];
+  var avatars = toArr(p.avatars);
   var max = p.max || avatars.length;
   avatars.slice(0, max).forEach(function(a) {
     var av = mkEl('div', 'db-avatar db-avatar--md');
@@ -5896,13 +6072,13 @@ RENDERERS.Calendar = function(p) {
 // -- Chart --
 RENDERERS.Chart = function(p) {
   var wrap = document.createElement('div');
-  var bars = p.bars || [];
-  var maxVal = Math.max.apply(null, bars.map(function(b) { return b.max || b.value || 100; }));
+  var bars = chartBars(p.bars != null ? p.bars : p); // Chart({type, data, labels}) may land flat in props
+  var maxVal = Math.max.apply(null, bars.map(function(b) { return chartNum(b.max) || chartNum(b.value) || 100; }));
   if (maxVal <= 0) maxVal = 100;
   var chart = mkEl('div', 'db-chart');
   bars.forEach(function(b) {
     var bar = mkEl('div', 'db-chart__bar');
-    bar.style.height = Math.round(((b.value || 0) / maxVal) * 100) + '%';
+    bar.style.height = Math.round((chartNum(b.value) / maxVal) * 100) + '%';
     bar.title = (b.label || '') + ': ' + (b.value || 0);
     chart.appendChild(bar);
   });
@@ -5919,7 +6095,7 @@ RENDERERS.Chart = function(p) {
 RENDERERS.Carousel = function(p) {
   var el = mkEl('div', 'db-carousel');
   var track = mkEl('div', 'db-carousel__track');
-  var slides = p.slides || [];
+  var slides = toArr(p.slides);
   slides.forEach(function(s) {
     track.appendChild(mkEl('div', 'db-carousel__slide', s.content || ''));
   });
@@ -6043,7 +6219,7 @@ RENDERERS.Modal = function(p, ch, els, d) {
   closeBtn.textContent = '\u00D7';
   hdr.appendChild(closeBtn);
   modal.appendChild(hdr);
-  var footerIds = p.footer || [];
+  var footerIds = toArr(p.footer);
   var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
   var body = mkEl('div', 'db-modal__body');
   body.appendChild(renderChildren(els, bodyIds, d));
@@ -6073,7 +6249,7 @@ RENDERERS.AlertDialog = function(p, ch, els, d) {
   var panel = mkEl('div', 'db-alert-dialog__panel');
   panel.appendChild(mkEl('h3', 'db-alert-dialog__title', p.title || 'Confirm'));
   panel.appendChild(mkEl('p', 'db-alert-dialog__desc', p.description || ''));
-  var footerIds = p.footer || [];
+  var footerIds = toArr(p.footer);
   var actionIds = footerIds.length ? footerIds : ch;
   var actions = mkEl('div', 'db-alert-dialog__actions');
   if (actionIds.length) {
@@ -6129,7 +6305,8 @@ RENDERERS.Drawer = function(p, ch, els, d) {
 // -- Popover --
 RENDERERS.Popover = function(p, ch, els, d) {
   var el = mkEl('div', 'db-popover');
-  var trig = ch.length > 1 ? renderElement(els, ch[0], d + 1) : null;
+  var first = ch.length > 1 && els[ch[0]];
+  var trig = first && (first.type === 'Button' || first.type === 'Link') ? renderElement(els, ch[0], d + 1) : null;
   if (trig && trig.classList) {
     trig.classList.add('db-popover__trigger');
     ch = ch.slice(1);
@@ -6168,7 +6345,7 @@ RENDERERS.DropdownMenu = function(p, ch, els, d) {
     el.appendChild(trigger);
   }
   var content = mkEl('div', 'db-dropdown__content');
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
     if (item.separator) {
       content.appendChild(mkEl('hr', 'db-dropdown__separator'));
     } else if (item.groupLabel) {
@@ -6213,7 +6390,7 @@ RENDERERS.ContextMenu = function(p, ch, els, d) {
   wrapper.appendChild(target);
   var menu = mkEl('div', 'db-context-menu');
   menu.id = id;
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
     if (item.separator) {
       menu.appendChild(mkEl('hr', 'db-context-menu__separator'));
     } else {
@@ -6253,9 +6430,9 @@ RENDERERS.CommandPalette = function(p) {
   inputWrap.appendChild(inp);
   panel.appendChild(inputWrap);
   var list = mkEl('div', 'db-command__list');
-  (p.groups || []).forEach(function(g) {
+  toArr(p.groups).forEach(function(g) {
     list.appendChild(mkEl('div', 'db-command__group-label', g.label || ''));
-    (g.items || []).forEach(function(item) {
+    toArr(g.items).forEach(function(item) {
       var cmdItem = mkEl('div', 'db-command__item');
       if (item.icon) {
         var ico = document.createElement('i');
@@ -6286,7 +6463,7 @@ RENDERERS.CommandPalette = function(p) {
 RENDERERS.Accordion = function(p, ch, els, d) {
   var el = mkEl('div', 'db-accordion');
   if (p.multi) el.setAttribute('data-multi', '');
-  (p.items || []).forEach(function(item, i) {
+  toArr(p.items).forEach(function(item, i) {
     var open = i === 0;
     var accItem = mkEl('div', 'db-accordion__item' + (open ? ' db-accordion__item--open' : ''));
     var trigger = document.createElement('button');
@@ -6302,8 +6479,8 @@ RENDERERS.Accordion = function(p, ch, els, d) {
     trigger.appendChild(svg);
     accItem.appendChild(trigger);
     var content = mkEl('div', 'db-accordion__content');
-    if (item.children && item.children.length) {
-      content.appendChild(renderChildren(els, item.children, d));
+    if (toArr(item.children).length) {
+      content.appendChild(renderChildren(els, toArr(item.children), d));
     } else {
       content.textContent = item.content || '';
     }
@@ -6391,7 +6568,8 @@ RENDERERS.ChartCard = function(p, ch, els, d) {
   hdr.appendChild(mkEl('span', 'db-chart-card__title', p.title || ''));
   el.appendChild(hdr);
   var body = mkEl('div', 'db-chart-card__body');
-  body.appendChild(renderChildren(els, ch, d));
+  if ((!ch || !ch.length) && chartBars(p.bars).length) body.appendChild(RENDERERS.Chart({ bars: p.bars }));
+  else body.appendChild(renderChildren(els, ch, d));
   el.appendChild(body);
   return el;
 };
@@ -6406,14 +6584,16 @@ RENDERERS.CustomHTML = function(p, ch, els, d) {
     el.appendChild(style);
   }
   if (p.html) {
-    var frag = document.createRange().createContextualFragment(
-      p.html.replace(new RegExp('<script[\\s\\S]*?<\\/script>', 'gi'), '') // strip script tags from user HTML
-    );
-    el.appendChild(frag);
+    // setAttribute never parses; the preview frame swaps this slot for the markup
+    var slot = document.createElement('template');
+    slot.setAttribute('data-pg-html', String(p.html));
+    el.appendChild(slot);
   }
   if (ch && ch.length) {
     el.appendChild(renderChildren(els, ch, d));
   }
+  // Code-only node for another element (props.forId): keep its <style>, add no layout gap
+  if (p.forId && !p.html && !(ch && ch.length)) el.hidden = true;
   // JS is collected by collectCustomJS() and executed inside the iframe via postMessage
   return el;
 };
@@ -6486,9 +6666,9 @@ var COMP_PROPS = {
   Textarea: 'placeholder: string, rows: number, error: bool',
   Checkbox: 'label: string, checked: bool',
   RadioGroup: 'options: [{label, value}], selected: string',
-  Switch: 'label: string, checked: bool',
+  Switch: 'label: string, checked: bool (on/off setting: notifications, preferences, feature flags)',
   Slider: 'min: number, max: number, value: number, step: number, label: string',
-  Toggle: 'label: string, pressed: bool, size: "sm"',
+  Toggle: 'label: string, pressed: bool, size: "sm" (pressable toolbar button: bold/italic, view filter — NOT for settings)',
   ToggleGroup: 'options: [{label, value}], selected: string',
   Select: 'label: string, options: [{label, value}], selected: string',
   CustomSelect: 'placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool',
@@ -6532,7 +6712,7 @@ var COMP_PROPS = {
   AlertDialog: 'id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)',
   Sheet: 'id: string, position: "right"|"left"|"top"|"bottom"',
   Drawer: 'id: string',
-  Popover: 'position: "top"|"bottom"|"left"|"right"',
+  Popover: 'position: "top"|"bottom"|"left"|"right", children: [childIds] (first child becomes the trigger when it is a Button or Link and there are 2+ children; other children are the content)',
   HoverCard: '',
   DropdownMenu: 'items: [{label, icon, separator, groupLabel, active: bool}]',
   ContextMenu: 'items: [{label, icon, separator}]',
@@ -6544,7 +6724,7 @@ var COMP_PROPS = {
   DatePicker: 'label: string, placeholder: string, selected: string',
   // Dashboard
   StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool',
-  ChartCard: 'title: string',
+  ChartCard: 'title: string, children: [Chart element] (empty ChartCard renders "No data"), bars: [{label, value, max}] (shortcut: renders a Chart when no children)',
   // Custom
   CustomHTML: 'html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector(\'[data-spec-id="someId"]\') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after)'
 };
@@ -6610,6 +6790,8 @@ var SYSTEM_PROMPT = (function() {
     + '- Do NOT use Layout — it is deprecated. Use Stack (flexbox) or Grid (CSS grid) instead\n'
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'
+    + '- Charts go inside ChartCard as a Chart child ("children":["chart-id"]) with 4-8 bars of realistic data unless the user specifies the data; use Switch (not Toggle) for on/off settings like notifications\n'
+    + '- Sidebar and NavMenu take data arrays (sections / items of {label, icon, href, active}), not child element refs\n'
     + '- Keep element IDs descriptive and unique\n'
     + '- For standalone images use the Image component with a src URL. For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)\n'
     + '- Escape quotes properly in JSON strings: use \\" for double quotes inside string values\n'
@@ -6749,6 +6931,28 @@ var OPENUI_SYSTEM_PROMPT = (function() {
     + '- Every referenced name must be defined as a statement\n'
     + '- Use descriptive names for readability\n\n';
 
+  // Args in the parser's positional order (DaubOpenUI.COMP_SCHEMA); raw COMP_PROPS line when no schema
+  var schemaMap = (typeof DaubOpenUI !== 'undefined' && DaubOpenUI.COMP_SCHEMA) || {};
+  function sigArgs(t) {
+    var src = COMP_PROPS[t] || '', schema = schemaMap[t];
+    if (!schema) return src;
+    var segs = [], depth = 0, start = 0;
+    for (var k = 0; k <= src.length; k++) {
+      var c = src.charAt(k);
+      if (c === '(' || c === '[' || c === '{') depth++;
+      else if (c === ')' || c === ']' || c === '}') depth--;
+      else if ((c === ',' && depth === 0) || k === src.length) { segs.push(src.slice(start, k).trim()); start = k + 1; }
+    }
+    var byKey = {}, extra = [], notes = [];
+    segs.forEach(function(s) {
+      var m = s.match(/^(\w+)\s*:/);
+      if (m) { byKey[m[1]] = s; if (schema.indexOf(m[1]) === -1) extra.push(s + ' (named only)'); }
+      else if (s) notes.push(s);
+    });
+    var out = schema.map(function(key) { return byKey[key] || (key === 'children' ? 'children: [refs]' : key); });
+    return out.concat(extra).join(', ') + (notes.length ? ' ' + notes.join(' ') : '');
+  }
+
   // Component signatures from schema
   var sigs = 'COMPONENT SIGNATURES (positional arg order):\n\n';
   for (var i = 0; i < COMP_CATEGORIES.length; i++) {
@@ -6758,7 +6962,7 @@ var OPENUI_SYSTEM_PROMPT = (function() {
     for (var j = 0; j < types.length; j++) {
       var t = types[j];
       if (RENDERERS[t]) {
-        sigs += '- ' + t + '(' + (COMP_PROPS[t] || '') + ')\n';
+        sigs += '- ' + t + '(' + sigArgs(t) + ')\n';
       }
     }
     sigs += '\n';
@@ -6771,6 +6975,8 @@ var OPENUI_SYSTEM_PROMPT = (function() {
     + '- Gap tokens: 0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px\n'
     + '- Wrap related content in Card\n'
     + '- StatCard for KPI metrics\n'
+    + '- Charts go inside ChartCard as a Chart child with 4-8 bars of realistic data unless the user specifies the data: ChartCard([revenueChart], "Revenue"); use Switch (not Toggle) for on/off settings like notifications\n'
+    + '- Sidebar and NavMenu take data arrays (sections / items of {label, icon, href, active}), not child element refs\n'
     + '- Use trigger:"overlay-id" on Button to open overlays\n'
     + '- Generate 12-25+ elements for non-trivial UIs\n'
     + '- Use realistic sample data — no placeholders\n'
@@ -6806,7 +7012,7 @@ var OPENUI_SYSTEM_PROMPT = (function() {
       for (var j = 0; j < types.length; j++) {
         var t = types[j];
         if (!RENDERERS[t]) continue;
-        if (picked.indexOf(t) !== -1) focus += '- ' + t + '(' + (COMP_PROPS[t] || '') + ')\n';
+        if (picked.indexOf(t) !== -1) focus += '- ' + t + '(' + sigArgs(t) + ')\n';
         else others.push(t);
       }
     }
@@ -6909,16 +7115,6 @@ loadSettings();
 // Lucide is deferred — wait for DOMContentLoaded so the library is loaded
 document.addEventListener('DOMContentLoaded', function(){ if (window.lucide) lucide.createIcons(); });
 
-// ---- Pill toggle sync ----
-function syncPillToggle(checkbox, pillEl) {
-  function update() {
-    pillEl.classList.toggle('pg-pill-toggle--active', checkbox.checked);
-  }
-  update();
-  checkbox.addEventListener('change', update);
-}
-syncPillToggle($fastMode, document.getElementById('pg-fast-pill'));
-
 // ---- Examples trigger ----
 (function() {
   var trigger = document.getElementById('pg-examples-trigger');
@@ -6935,7 +7131,12 @@ renderChatHistory();
 if (currentSpec) {
   try {
     $json.value = JSON.stringify(currentSpec, null, 2);
-    renderSpec(currentSpec);
+    // A post before the srcdoc loads hits the discarded about:blank window, so render on load
+    var _restoredSpec = currentSpec;
+    $previewFrame.addEventListener('load', function onRestoreLoad() {
+      $previewFrame.removeEventListener('load', onRestoreLoad);
+      try { if (currentSpec === _restoredSpec) renderSpec(_restoredSpec); } catch(e) {}
+    });
     refreshJsonTree();
     updatePreviewToolbar();
   } catch(e) {}
@@ -6957,6 +7158,36 @@ if (presetPrompt) {
 
 // Load shared spec from ?s= param (LZString is deferred — defer the lookup too)
 var sharedSpec = urlParams.get('s');
+function _showSharedCodeNotice(spec) {
+  var wrap = mkEl('div', 'pg-chat__msg');
+  wrap.style.cssText = 'padding:0;max-width:100%;';
+  var alert = mkEl('div', 'db-alert db-alert--warning');
+  alert.setAttribute('role', 'status');
+  var content = mkEl('div', 'db-alert__content');
+  content.appendChild(mkEl('div', 'db-alert__title', 'This shared UI contains custom code'));
+  content.appendChild(mkEl('p', null, 'Its JavaScript is paused. HTML and CSS render in the sandboxed preview. Review it in the Structure tab, then run it only if you trust this link.'));
+  var btn = mkEl('button', 'db-btn db-btn--secondary db-btn--sm', 'Run code');
+  btn.type = 'button';
+  btn.style.marginTop = '8px';
+  btn.addEventListener('click', function() {
+    wrap.remove();
+    $status.textContent = '';
+    if (currentSpec === spec) renderSpec(spec); // skip if the user has moved on to another spec
+  });
+  content.appendChild(btn);
+  alert.appendChild(content);
+  wrap.appendChild(alert);
+  $chatMessages.insertBefore(wrap, $chatMessages.firstChild);
+  $status.textContent = 'Custom code paused';
+}
+// Notice trigger only: the inert render strips these in the frame even when this misses
+function _hasInlineCode(spec) {
+  return Object.keys(spec.elements).some(function(id) {
+    var d = spec.elements[id];
+    return d && d.type === 'CustomHTML' && d.props && typeof d.props.html === 'string'
+      && /[\s\/"']on[a-z]+\s*=|javascript:|<(i?frame|object|embed|meta|base)\b/i.test(d.props.html);
+  });
+}
 function _loadSharedSpec() {
   try {
     var json = LZString.decompressFromEncodedURIComponent(sharedSpec);
@@ -6966,10 +7197,20 @@ function _loadSharedSpec() {
       $json.value = JSON.stringify(spec, null, 2);
       refreshJsonTree();
       updatePreviewToolbar();
+      // Links can come from anyone: render without CustomHTML js until the user opts in
+      var safeSpec = spec;
+      if (collectCustomJS(spec).length || _hasInlineCode(spec)) {
+        safeSpec = JSON.parse(JSON.stringify(spec));
+        Object.keys(safeSpec.elements).forEach(function(id) {
+          var d = safeSpec.elements[id];
+          if (d && d.props) delete d.props.js;
+        });
+        _showSharedCodeNotice(spec);
+      }
       // Wait for iframe to be ready before rendering
       $previewFrame.addEventListener('load', function onShareLoad() {
         $previewFrame.removeEventListener('load', onShareLoad);
-        renderSpec(spec);
+        renderSpec(safeSpec, null, true);
       });
     }
   } catch(e) { console.warn('[share] failed to load shared spec:', e); }
@@ -6992,8 +7233,7 @@ if (new URLSearchParams(location.search).has('react-chat')) {
       return {
         provider: $provider ? $provider.value : 'default',
         model: $model ? $model.value : null,
-        apiKey: $apikey ? $apikey.value : null,
-        fastMode: $fastMode ? $fastMode.checked : false
+        apiKey: $apikey ? $apikey.value : null
       };
     },
     renderSpec: function(s, p) { renderSpec(s, p); },
@@ -7009,7 +7249,7 @@ if (new URLSearchParams(location.search).has('react-chat')) {
     refreshJsonTree: function() { refreshJsonTree(); },
     setJsonValue: function(v) { $json.value = v; },
     openByokModal: function() { openByokModal(); },
-    streamDefault: function(msgs, c, d, e, model, sig) { streamDefault(msgs, c, d, e, model, sig); },
+    streamDefault: function(msgs, c, d, e, model, sig) { streamDefault(msgs, c, d, e, model || AUTO_MODEL, sig, model ? null : mainGenOpts()); },
     streamOpenAI: function(msgs, c, d, e, sig) { streamOpenAI(msgs, c, d, e, sig); },
     streamAnthropic: function(msgs, c, d, e, sig) { streamAnthropic(msgs, c, d, e, sig); },
     streamOpenRouter: function(msgs, c, d, e, sig) { streamOpenRouter(msgs, c, d, e, sig); },

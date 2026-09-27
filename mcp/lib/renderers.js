@@ -29,7 +29,7 @@
             if (aname.indexOf('on') === 0) continue;
             if (allowed.indexOf(aname) < 0) continue;
             var v = a.value;
-            if ((aname === 'href' || aname === 'src') && /^\s*javascript:/i.test(v)) continue;
+            if ((aname === 'href' || aname === 'src') && /^javascript:/i.test(v.replace(/[\u0000- ]/g, ''))) continue;
             attrs += ' ' + aname + '="' + esc(v) + '"';
           }
           if (tag === 'a') attrs += ' rel="noopener" target="_blank"';
@@ -57,9 +57,68 @@
     // Guard against javascript: and data: URLs from AI-generated content
     function isSafeUrl(url) {
       if (!url || typeof url !== 'string') return false;
-      var trimmed = url.trim().toLowerCase();
+      var trimmed = url.replace(/[\u0000- ]/g, '').toLowerCase();
       if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) return false;
       return true;
+    }
+
+    // Coerce a list-like prop to an array: a keyed object of objects -> its values, any other object or scalar -> [value]
+    function toArr(v) {
+      if (Array.isArray(v)) return v;
+      if (!v) return [];
+      if (typeof v === 'object') {
+        var ks = Object.keys(v);
+        var allObj = ks.length > 0 && ks.every(function(k) { return v[k] && typeof v[k] === 'object'; });
+        return allObj ? ks.map(function(k) { return v[k]; }) : [v];
+      }
+      return [v];
+    }
+
+    // Number from a number or formatted string ("$1,200", "42%"); 0 when unparseable, so bar heights never go NaN%
+    function toNum(v) {
+      var n = typeof v === 'number' ? v : parseFloat(String(v == null ? '' : v).replace(/[^0-9.\-]/g, ''));
+      return isFinite(n) ? n : 0;
+    }
+
+    // Kbd keys: "Ctrl+K" -> ["Ctrl", "K"], "\u2318K" -> ["\u2318K"]
+    function kbdKeys(v) {
+      if (typeof v !== 'string') return toArr(v);
+      var parts = v.split('+').map(function(s) { return s.trim(); }).filter(Boolean);
+      return parts.length ? parts : [v];
+    }
+
+    // Chart bars from [{label, value}] or chart.js-style {labels, data} / {labels, datasets: [{data}]} / {type, data, labels}
+    function chartBars(p) {
+      var src = p.bars != null ? p.bars : (p.data != null || p.datasets != null ? p : null);
+      if (src && typeof src === 'object' && !Array.isArray(src) && (src.data != null || src.datasets != null)) {
+        var ds = toArr(src.datasets)[0];
+        var labels = toArr(src.labels);
+        src = toArr(src.data != null ? src.data : ds && ds.data).map(function(v, i) {
+          return v && typeof v === 'object' ? { label: v.label != null ? v.label : labels[i], value: v.value, max: v.max } : { label: labels[i], value: v };
+        });
+      }
+      return toArr(src).map(function(b) { return b && typeof b === 'object' ? b : { value: b }; });
+    }
+
+    // Table/DataTable: unwrap one {columns, rows} object, string columns -> {key, label}, array rows -> objects keyed by column
+    function tableShape(p) {
+      var cols = p.columns, rows = p.rows;
+      if (cols && typeof cols === 'object' && !Array.isArray(cols) && (cols.columns != null || cols.rows != null)) {
+        if (rows == null) rows = cols.rows;
+        cols = cols.columns;
+      }
+      cols = toArr(cols).map(function(c) {
+        if (c && typeof c === 'object') return c;
+        var s = c == null ? '' : String(c);
+        return { key: s, label: s };
+      });
+      rows = toArr(rows).map(function(r) {
+        if (!Array.isArray(r)) return r && typeof r === 'object' ? r : {};
+        var o = {};
+        cols.forEach(function(c, i) { o[c.key] = r[i]; });
+        return o;
+      });
+      return { cols: cols, rows: rows };
     }
     
     // ---- Declarative State Engine ----
@@ -232,8 +291,20 @@
         return el;
       }
     
-      var children = def.children || (def.props && def.props.children) || [];
-      var el = render(def.props || {}, children, elements, depth);
+      var children = toArr(def.children || (def.props && def.props.children));
+      var el;
+      try {
+        el = render(def.props || {}, children, elements, depth);
+      } catch (err) {
+        // One bad element must not blank the page: inline notice here, siblings keep rendering
+        var msg = String(err && err.message || err);
+        if (typeof console !== 'undefined') console.warn('[daub-render] ' + def.type + ' "' + id + '": ' + msg);
+        el = mkEl('div', 'db-alert db-alert--warning');
+        el.setAttribute('data-render-error', msg);
+        var errContent = mkEl('div', 'db-alert__content');
+        errContent.appendChild(mkEl('div', 'db-alert__title', "Couldn't render " + def.type));
+        el.appendChild(errContent);
+      }
       if (el && el.setAttribute) {
         el.setAttribute('data-spec-id', id);
         // Encode declarative state metadata as data attributes for iframe runtime
@@ -264,7 +335,7 @@
     
     function renderChildren(elements, childIds, depth) {
       var frag = document.createDocumentFragment();
-      (childIds || []).forEach(function(id) {
+      toArr(childIds).forEach(function(id) {
         var el = renderElement(elements, id, depth + 1);
         if (el) frag.appendChild(el);
       });
@@ -507,7 +578,7 @@
     RENDERERS.RadioGroup = function(p) {
       var el = mkEl('div', 'db-radio-group');
       var name = 'rg-' + Math.random().toString(36).slice(2,8);
-      (p.options || []).forEach(function(opt) {
+      toArr(p.options).forEach(function(opt) {
         var lbl = mkEl('label', 'db-radio');
         var inp = document.createElement('input');
         inp.className = 'db-radio__input';
@@ -566,7 +637,7 @@
     // -- ToggleGroup --
     RENDERERS.ToggleGroup = function(p) {
       var el = mkEl('div', 'db-toggle-group');
-      (p.options || []).forEach(function(opt) {
+      toArr(p.options).forEach(function(opt) {
         var btn = document.createElement('button');
         btn.className = 'db-toggle';
         btn.setAttribute('aria-pressed', opt.value === p.selected ? 'true' : 'false');
@@ -582,7 +653,7 @@
       if (p.label) el.appendChild(mkEl('label', 'db-label', p.label));
       var sel = document.createElement('select');
       sel.className = 'db-select__input';
-      (p.options || []).forEach(function(o) {
+      toArr(p.options).forEach(function(o) {
         var opt = document.createElement('option');
         opt.value = o.value || '';
         opt.textContent = o.label || '';
@@ -599,7 +670,7 @@
       var trigger = document.createElement('button');
       trigger.className = 'db-custom-select__trigger';
       trigger.type = 'button';
-      var selectedOpt = (p.options || []).filter(function(o) { return o.selected; })[0];
+      var selectedOpt = toArr(p.options).filter(function(o) { return o.selected; })[0];
       var triggerText = mkEl('span', 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
       trigger.appendChild(triggerText);
       var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -619,7 +690,7 @@
         searchDiv.appendChild(searchInp);
         dd.appendChild(searchDiv);
       }
-      (p.options || []).forEach(function(o) {
+      toArr(p.options).forEach(function(o) {
         var optCls = 'db-custom-select__option' + (o.selected ? ' db-custom-select__option--selected' : '') + (o.disabled ? ' db-custom-select__option--disabled' : '');
         dd.appendChild(mkEl('div', optCls, o.label || ''));
       });
@@ -630,7 +701,7 @@
     // -- Kbd --
     RENDERERS.Kbd = function(p) {
       var el = document.createElement('span');
-      (p.keys || []).forEach(function(k, i) {
+      kbdKeys(p.keys).forEach(function(k, i) {
         if (i > 0) el.appendChild(document.createTextNode(' + '));
         el.appendChild(mkEl('kbd', 'db-kbd', k));
       });
@@ -672,7 +743,7 @@
       var el = mkEl('div', 'db-tabs');
       var list = mkEl('div', 'db-tabs__list');
       list.setAttribute('role', 'tablist');
-      var tabs = p.tabs || [];
+      var tabs = toArr(p.tabs);
       var activeIdx = 0;
       tabs.forEach(function(t, i) {
         if (t.id === p.active) activeIdx = i;
@@ -708,7 +779,7 @@
       el.className = 'db-breadcrumbs';
       el.setAttribute('aria-label', 'Breadcrumb');
       var ol = document.createElement('ol');
-      var items = p.items || [];
+      var items = toArr(p.items);
       items.forEach(function(item, i) {
         var li = document.createElement('li');
         if (i === items.length - 1) {
@@ -716,7 +787,7 @@
           li.textContent = item.label || '';
         } else {
           var a = document.createElement('a');
-          a.href = item.href || '#';
+          a.href = isSafeUrl(item.href) ? item.href : '#';
           a.textContent = item.label || '';
           li.appendChild(a);
         }
@@ -763,7 +834,7 @@
     // -- Stepper --
     RENDERERS.Stepper = function(p) {
       var el = mkEl('div', 'db-stepper' + (p.vertical ? ' db-stepper--vertical' : ''));
-      (p.steps || []).forEach(function(s, i) {
+      toArr(p.steps).forEach(function(s, i) {
         var step = mkEl('div', 'db-stepper__step db-stepper__step--' + (s.status || 'pending'));
         step.appendChild(mkEl('div', 'db-stepper__indicator', String(i + 1)));
         step.appendChild(mkEl('div', 'db-stepper__label', s.label || ''));
@@ -776,10 +847,10 @@
     RENDERERS.NavMenu = function(p) {
       var el = document.createElement('nav');
       el.className = 'db-nav-menu' + (p.direction === 'vertical' ? ' db-nav-menu--vertical' : '');
-      (p.items || []).forEach(function(item) {
+      toArr(p.items).forEach(function(item) {
         var a = document.createElement('a');
         a.className = 'db-nav-menu__item' + (item.active ? ' db-nav-menu__item--active' : '');
-        a.href = item.href || '#';
+        a.href = isSafeUrl(item.href) ? item.href : '#';
         a.textContent = item.label || '';
         el.appendChild(a);
       });
@@ -792,7 +863,7 @@
       el.className = 'db-navbar';
       var brand = document.createElement('a');
       brand.className = 'db-navbar__brand';
-      brand.href = p.brandHref || '#';
+      brand.href = isSafeUrl(p.brandHref) ? p.brandHref : '#';
       brand.textContent = p.brand || 'App';
       el.appendChild(brand);
       if (ch.length) {
@@ -806,13 +877,13 @@
     // -- Menubar --
     RENDERERS.Menubar = function(p) {
       var el = mkEl('div', 'db-menubar');
-      (p.items || []).forEach(function(item) {
+      toArr(p.items).forEach(function(item) {
         var btn = document.createElement('button');
         btn.className = 'db-menubar__item';
         btn.textContent = item.label || '';
         if (item.dropdown) {
           var dd = mkEl('div', 'db-menubar__dropdown');
-          item.dropdown.forEach(function(dItem) {
+          toArr(item.dropdown).forEach(function(dItem) {
             dd.appendChild(mkEl('button', 'db-dropdown__item', dItem.label || ''));
           });
           btn.appendChild(dd);
@@ -828,14 +899,14 @@
       el.className = 'db-sidebar' + (p.collapsed ? ' db-sidebar--collapsed' : '');
       el.style.position = 'relative';
       el.style.height = 'auto';
-      (p.sections || []).forEach(function(sec) {
+      toArr(p.sections).forEach(function(sec) {
         var section = mkEl('div', 'db-sidebar__section');
         if (sec.title) section.appendChild(mkEl('div', 'db-sidebar__label', sec.title));
-        (sec.items || []).forEach(function(item) {
+        toArr(sec.items).forEach(function(item) {
           var a = document.createElement('a');
           a.className = 'db-sidebar__item' + (item.active ? ' db-sidebar__item--active' : '');
           a.setAttribute('data-tooltip', item.label || '');
-          a.href = item.href || '#';
+          a.href = isSafeUrl(item.href) ? item.href : '#';
           if (item.icon) {
             var ico = document.createElement('i');
             ico.setAttribute('data-lucide', item.icon);
@@ -855,7 +926,7 @@
     RENDERERS.BottomNav = function(p) {
       var el = document.createElement('nav');
       el.className = 'db-bottom-nav';
-      (p.items || []).forEach(function(item) {
+      toArr(p.items).forEach(function(item) {
         var a = document.createElement('a');
         a.className = 'db-bottom-nav__item' + (item.active ? ' db-bottom-nav__item--active' : '');
         a.href = '#';
@@ -890,7 +961,7 @@
         if (p.description) hdr.appendChild(mkEl('p', 'db-card__desc', p.description));
         el.appendChild(hdr);
       }
-      var footerIds = p.footer || [];
+      var footerIds = toArr(p.footer);
       var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
       if (bodyIds.length) {
         var body = mkEl('div', 'db-card__body');
@@ -912,8 +983,9 @@
     RENDERERS.Table = function(p) {
       var el = document.createElement('table');
       el.className = 'db-table';
-      var cols = p.columns || [];
-      var rows = p.rows || [];
+      var shape = tableShape(p);
+      var cols = shape.cols;
+      var rows = shape.rows;
       var thead = document.createElement('thead');
       var headRow = document.createElement('tr');
       cols.forEach(function(c) {
@@ -944,8 +1016,9 @@
     RENDERERS.DataTable = function(p) {
       var el = document.createElement('table');
       el.className = 'db-data-table';
-      var cols = p.columns || [];
-      var rows = p.rows || [];
+      var shape = tableShape(p);
+      var cols = shape.cols;
+      var rows = shape.rows;
       var thead = document.createElement('thead');
       var headRow = document.createElement('tr');
       if (p.selectable) {
@@ -1003,7 +1076,7 @@
     // -- List --
     RENDERERS.List = function(p) {
       var el = mkEl('div', 'db-list');
-      (p.items || []).forEach(function(item) {
+      toArr(p.items).forEach(function(item) {
         var li = mkEl('div', 'db-list__item');
         if (item.icon) {
           var iconWrap = mkEl('div', 'db-list__icon');
@@ -1045,7 +1118,7 @@
     // -- AvatarGroup --
     RENDERERS.AvatarGroup = function(p) {
       var el = mkEl('div', 'db-avatar-group');
-      var avatars = p.avatars || [];
+      var avatars = toArr(p.avatars);
       var max = p.max || avatars.length;
       avatars.slice(0, max).forEach(function(a) {
         var av = mkEl('div', 'db-avatar db-avatar--md');
@@ -1139,13 +1212,13 @@
     // -- Chart --
     RENDERERS.Chart = function(p) {
       var wrap = document.createElement('div');
-      var bars = p.bars || [];
-      var maxVal = Math.max.apply(null, bars.map(function(b) { return b.max || b.value || 100; }));
+      var bars = chartBars(p);
+      var maxVal = Math.max.apply(null, bars.map(function(b) { return toNum(b.max) || toNum(b.value) || 100; }));
       if (maxVal <= 0) maxVal = 100;
       var chart = mkEl('div', 'db-chart');
       bars.forEach(function(b) {
         var bar = mkEl('div', 'db-chart__bar');
-        bar.style.height = Math.round(((b.value || 0) / maxVal) * 100) + '%';
+        bar.style.height = Math.round((toNum(b.value) / maxVal) * 100) + '%';
         bar.title = (b.label || '') + ': ' + (b.value || 0);
         chart.appendChild(bar);
       });
@@ -1162,7 +1235,7 @@
     RENDERERS.Carousel = function(p) {
       var el = mkEl('div', 'db-carousel');
       var track = mkEl('div', 'db-carousel__track');
-      var slides = p.slides || [];
+      var slides = toArr(p.slides);
       slides.forEach(function(s) {
         track.appendChild(mkEl('div', 'db-carousel__slide', s.content || ''));
       });
@@ -1286,7 +1359,7 @@
       closeBtn.textContent = '\u00D7';
       hdr.appendChild(closeBtn);
       modal.appendChild(hdr);
-      var footerIds = p.footer || [];
+      var footerIds = toArr(p.footer);
       var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
       var body = mkEl('div', 'db-modal__body');
       body.appendChild(renderChildren(els, bodyIds, d));
@@ -1316,7 +1389,7 @@
       var panel = mkEl('div', 'db-alert-dialog__panel');
       panel.appendChild(mkEl('h3', 'db-alert-dialog__title', p.title || 'Confirm'));
       panel.appendChild(mkEl('p', 'db-alert-dialog__desc', p.description || ''));
-      var footerIds = p.footer || [];
+      var footerIds = toArr(p.footer);
       var actionIds = footerIds.length ? footerIds : ch;
       var actions = mkEl('div', 'db-alert-dialog__actions');
       if (actionIds.length) {
@@ -1372,6 +1445,17 @@
     // -- Popover --
     RENDERERS.Popover = function(p, ch, els, d) {
       var el = mkEl('div', 'db-popover');
+      var first = ch.length > 1 && els[ch[0]];
+      var trig = first && (first.type === 'Button' || first.type === 'Link') ? renderElement(els, ch[0], d + 1) : null;
+      if (trig && trig.classList) {
+        trig.classList.add('db-popover__trigger');
+        ch = ch.slice(1);
+      } else {
+        trig = document.createElement('button');
+        trig.className = 'db-btn db-popover__trigger';
+        trig.textContent = 'Open';
+      }
+      el.appendChild(trig);
       var content = mkEl('div', 'db-popover__content db-popover__content--' + (p.position || 'bottom'));
       content.appendChild(renderChildren(els, ch, d));
       el.appendChild(content);
@@ -1390,8 +1474,10 @@
     // -- DropdownMenu --
     RENDERERS.DropdownMenu = function(p, ch, els, d) {
       var el = mkEl('div', 'db-dropdown');
-      if (ch.length) {
-        el.appendChild(renderElement(els, ch[0], d + 1));
+      var childTrig = ch.length ? renderElement(els, ch[0], d + 1) : null;
+      if (childTrig && childTrig.classList) {
+        childTrig.classList.add('db-dropdown__trigger');
+        el.appendChild(childTrig);
       } else {
         var trigger = document.createElement('button');
         trigger.className = 'db-btn db-dropdown__trigger';
@@ -1399,7 +1485,7 @@
         el.appendChild(trigger);
       }
       var content = mkEl('div', 'db-dropdown__content');
-      (p.items || []).forEach(function(item) {
+      toArr(p.items).forEach(function(item) {
         if (item.separator) {
           content.appendChild(mkEl('hr', 'db-dropdown__separator'));
         } else if (item.groupLabel) {
@@ -1444,7 +1530,7 @@
       wrapper.appendChild(target);
       var menu = mkEl('div', 'db-context-menu');
       menu.id = id;
-      (p.items || []).forEach(function(item) {
+      toArr(p.items).forEach(function(item) {
         if (item.separator) {
           menu.appendChild(mkEl('hr', 'db-context-menu__separator'));
         } else {
@@ -1484,9 +1570,9 @@
       inputWrap.appendChild(inp);
       panel.appendChild(inputWrap);
       var list = mkEl('div', 'db-command__list');
-      (p.groups || []).forEach(function(g) {
+      toArr(p.groups).forEach(function(g) {
         list.appendChild(mkEl('div', 'db-command__group-label', g.label || ''));
-        (g.items || []).forEach(function(item) {
+        toArr(g.items).forEach(function(item) {
           var cmdItem = mkEl('div', 'db-command__item');
           if (item.icon) {
             var ico = document.createElement('i');
@@ -1517,7 +1603,7 @@
     RENDERERS.Accordion = function(p, ch, els, d) {
       var el = mkEl('div', 'db-accordion');
       if (p.multi) el.setAttribute('data-multi', '');
-      (p.items || []).forEach(function(item, i) {
+      toArr(p.items).forEach(function(item, i) {
         var open = i === 0;
         var accItem = mkEl('div', 'db-accordion__item' + (open ? ' db-accordion__item--open' : ''));
         var trigger = document.createElement('button');
@@ -1622,7 +1708,11 @@
       hdr.appendChild(mkEl('span', 'db-chart-card__title', p.title || ''));
       el.appendChild(hdr);
       var body = mkEl('div', 'db-chart-card__body');
-      body.appendChild(renderChildren(els, ch, d));
+      if (!(ch && ch.length) && p.bars != null && chartBars(p).length) {
+        body.appendChild(RENDERERS.Chart({ bars: p.bars }));
+      } else {
+        body.appendChild(renderChildren(els, ch, d));
+      }
       el.appendChild(body);
       return el;
     };

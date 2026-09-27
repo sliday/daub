@@ -390,6 +390,19 @@ function resolveStatements(stmts) {
   var rootName = null;
   var state = null;
   var stmtIds = [];
+  // Data statements (name = literal array/object/string/number/bool), keyed by name.
+  // References to them resolve to their value wherever they are defined in the file.
+  var dataStmts = Object.create(null);
+  var resolvingData = Object.create(null);
+
+  function isDataValue(v) {
+    if (v === null || v === undefined) return false;
+    if (typeof v !== 'object') return true;
+    return Array.isArray(v) || (!v.__ref && !v.__component);
+  }
+  function isData(name) {
+    return Object.prototype.hasOwnProperty.call(dataStmts, name);
+  }
 
   // First pass: assign IDs
   for (var i = 0; i < stmts.length; i++) {
@@ -405,8 +418,18 @@ function resolveStatements(stmts) {
     var id = stmt.name || genId('auto');
     stmtIds[i] = id;
     nameToId[id] = id;
-    if (!rootName) rootName = id;
+    if (stmt.name && isDataValue(stmt.value)) dataStmts[stmt.name] = stmt.value;
+    if (!rootName && !isData(id)) rootName = id;
     if (stmt.name === 'root') rootName = id;
+  }
+
+  // Resolve a data statement by name; a cycle falls back to the bare name (pre-resolution behavior)
+  function resolveData(name) {
+    if (resolvingData[name]) return name;
+    resolvingData[name] = true;
+    var out = resolveValue(dataStmts[name]);
+    delete resolvingData[name];
+    return out;
   }
 
   // Second pass: resolve component trees
@@ -417,6 +440,7 @@ function resolveStatements(stmts) {
 
     // Reference to another statement
     if (val.__ref) {
+      if (isData(val.__ref)) return resolveData(val.__ref);
       return val.__ref; // Return as string ID reference
     }
 
@@ -449,16 +473,7 @@ function resolveStatements(stmts) {
           var argVal = comp.__args[a];
           if (propName === 'children') {
             // Children are component calls or references
-            if (Array.isArray(argVal)) {
-              for (var c = 0; c < argVal.length; c++) {
-                var childVal = argVal[c];
-                var childId = processChild(childVal, typeName);
-                if (childId) childIds.push(childId);
-              }
-            } else {
-              var cid = processChild(argVal, typeName);
-              if (cid) childIds.push(cid);
-            }
+            collectChildren(argVal, childIds, typeName);
           } else {
             props[propName] = resolveValue(argVal);
           }
@@ -471,16 +486,7 @@ function resolveStatements(stmts) {
       for (var key in comp.__named) {
         if (comp.__named.hasOwnProperty(key)) {
           if (key === 'children') {
-            var cval = comp.__named[key];
-            if (Array.isArray(cval)) {
-              for (var ci = 0; ci < cval.length; ci++) {
-                var cid2 = processChild(cval[ci], typeName);
-                if (cid2) childIds.push(cid2);
-              }
-            } else {
-              var cid3 = processChild(cval, typeName);
-              if (cid3) childIds.push(cid3);
-            }
+            collectChildren(comp.__named[key], childIds, typeName);
           } else {
             props[key] = resolveValue(comp.__named[key]);
           }
@@ -494,6 +500,22 @@ function resolveStatements(stmts) {
     if (childIds.length > 0) elements[elId].children = childIds;
 
     return elId;
+  }
+
+  // Push child IDs for a children value; arrays and data-statement references are expanded in place
+  function collectChildren(val, out, parentType) {
+    if (Array.isArray(val)) {
+      for (var c = 0; c < val.length; c++) collectChildren(val[c], out, parentType);
+      return;
+    }
+    if (val && val.__ref && isData(val.__ref) && !resolvingData[val.__ref]) {
+      resolvingData[val.__ref] = true;
+      collectChildren(dataStmts[val.__ref], out, parentType);
+      delete resolvingData[val.__ref];
+      return;
+    }
+    var childId = processChild(val, parentType);
+    if (childId) out.push(childId);
   }
 
   function processChild(childVal, parentType) {

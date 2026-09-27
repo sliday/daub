@@ -17,7 +17,7 @@ export async function generateSpec(prompt, options = {}) {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error('OPENROUTER_API_KEY environment variable required');
 
-  const model = 'google/gemini-2.5-flash';
+  const model = 'google/gemini-3-flash-preview';
 
   const messages = [];
   messages.push({ role: 'system', content: SYSTEM_PROMPT });

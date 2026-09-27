@@ -44,6 +44,7 @@ export async function onRequestPost(context) {
   } catch {
     return json({ error: 'Invalid JSON body' }, 400);
   }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return json({ error: 'Invalid JSON body' }, 400);
 
   const prompt = typeof body.prompt === 'string' ? body.prompt.trim().slice(0, MAX_PROMPT) : '';
   if (!prompt) return json({ error: 'prompt string required' }, 400);
@@ -57,14 +58,31 @@ export async function onRequestPost(context) {
     return json({ error: `components must have 1-${MAX_COMPONENTS} entries` }, 400);
   }
 
+  try {
+    return json(await decideComponents({ prompt, components: comps, apiKey: env.OPENROUTER_API_KEY }), 200);
+  } catch (e) {
+    return json({ error: (e && e.message) || 'Upstream error' }, (e && e.status) || 502);
+  }
+}
+
+function fail(message, status) {
+  const e = new Error(message);
+  e.status = status;
+  return e;
+}
+
+// Reusable Jev call (also used by functions/api/mcp.js). Resolves to { model, scores, usage };
+// throws an Error with .status (400 bad name, 500 no key, 502/504 upstream, or upstream's status).
+export async function decideComponents({ prompt, components, apiKey, timeoutMs = 10_000, title = 'DAUB Playground' }) {
+  const names = Object.keys(components || {});
   const questions = {};
   for (const name of names) {
     // Names become question keys; keep them to plain component identifiers.
-    if (!/^[A-Za-z][A-Za-z0-9]{0,39}$/.test(name)) return json({ error: `invalid component name: ${name}` }, 400);
-    const desc = typeof comps[name] === 'string' ? comps[name].slice(0, MAX_DESC) : '';
+    if (!/^[A-Za-z][A-Za-z0-9]{0,39}$/.test(name)) throw fail(`invalid component name: ${name}`, 400);
+    const desc = typeof components[name] === 'string' ? components[name].slice(0, MAX_DESC) : '';
     questions[name] = {
       type: 'noul',
-      instructions: `Should the generated UI use the DAUB "${name}" component?` + (desc ? ` Props: ${desc}` : ''),
+      instructions: `Should the generated UI use the DAUB "${name}" component` + (desc ? ` (${desc})` : '') + '?',
       criteria: {
         true: `The requested UI clearly benefits from a ${name}.`,
         false: `A ${name} is not needed for this request.`,
@@ -72,8 +90,7 @@ export async function onRequestPost(context) {
     };
   }
 
-  const apiKey = env.OPENROUTER_API_KEY;
-  if (!apiKey) return json({ error: 'Server misconfigured: missing API key' }, 500);
+  if (!apiKey) throw fail('Server misconfigured: missing API key', 500);
 
   let upstream;
   try {
@@ -83,26 +100,26 @@ export async function onRequestPost(context) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
         'HTTP-Referer': 'https://daub.dev',
-        'X-Title': 'DAUB Playground',
+        'X-Title': title,
       },
-      body: JSON.stringify({ model: MODEL, state: { request: prompt }, questions }),
-      signal: AbortSignal.timeout(10_000),
+      body: JSON.stringify({ model: MODEL, state: { request: String(prompt).slice(0, MAX_PROMPT) }, questions }),
+      signal: AbortSignal.timeout(timeoutMs),
     });
   } catch (e) {
     if (e && (e.name === 'AbortError' || e.name === 'TimeoutError')) {
-      return json({ error: 'Gateway Timeout: decision model did not respond in time' }, 504);
+      throw fail('Gateway Timeout: decision model did not respond in time', 504);
     }
-    return json({ error: 'Upstream request failed' }, 502);
+    throw fail('Upstream request failed', 502);
   }
 
   let data;
   try {
     data = await upstream.json();
   } catch {
-    return json({ error: 'Invalid upstream response' }, 502);
+    throw fail('Invalid upstream response', 502);
   }
   if (!upstream.ok) {
-    return json({ error: (data && data.error && data.error.message) || 'Upstream error' }, upstream.status);
+    throw fail((data && data.error && data.error.message) || 'Upstream error', upstream.status);
   }
 
   const scores = {};
@@ -111,7 +128,7 @@ export async function onRequestPost(context) {
     const a = answers[name];
     if (a && typeof a.noul === 'number') scores[name] = a.noul;
   }
-  return json({ model: data.model || MODEL, scores, usage: data.usage || null }, 200);
+  return { model: (data && data.model) || MODEL, scores, usage: (data && data.usage) || null };
 }
 
 export async function onRequestOptions(context) {
