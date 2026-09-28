@@ -1,4 +1,5 @@
     var MAX_DEPTH = 20;
+    var RENDERING = Object.create(null); // element ids on the current render path (see specRef)
 
     // Safe HTML-entity escaping via textContent
     function esc(s) {
@@ -158,6 +159,25 @@
     // footer: [childIds] keeps only ids present in els ("Cancel | Save" is text, not a ref); none left = no footer
     function footerRefs(v, els) {
       return toArr(v).filter(function(id) { return !!els && Object.prototype.hasOwnProperty.call(els, id); });
+    }
+
+    // A data entry that names a spec element: OpenUI hoists inline components (Breadcrumbs([Text(..)]), Table([[Text(..)]]))
+    // to element ids. An id some element lists as a child stays text, so a cell that equals an id is not pulled out of its parent.
+    // So does an id on the current render path: a cell naming the root ("home") must not nest the page inside itself
+    function specRef(v, els) {
+      if (typeof v !== 'string' || !els || !Object.prototype.hasOwnProperty.call(els, v) || RENDERING[v]) return null;
+      for (var k in els) {
+        var e = els[k], c = e && (e.children || (e.props && e.props.children));
+        if (Array.isArray(c) && c.indexOf(v) >= 0) return null;
+      }
+      return v;
+    }
+
+    // Entries of a list-like renderer: its data items ({ref} for spec elements, else {data}), or its child elements when it has none
+    function entries(items, ch, els) {
+      items = toArr(items);
+      if (!items.length) return toArr(ch).map(function(id) { return { ref: id }; });
+      return items.map(function(v) { var id = specRef(v, els); return id ? { ref: id } : { data: v }; });
     }
 
     // Number from a number or formatted string ("$1,200", "42%"); 0 when unparseable, so bar heights never go NaN%
@@ -471,6 +491,7 @@
     
       var children = toArr(def.children || (def.props && def.props.children));
       var el;
+      RENDERING[id] = (RENDERING[id] || 0) + 1;
       try {
         el = render(normalizeProps(def.type, def.props || {}), children, elements, depth);
       } catch (err) {
@@ -482,6 +503,8 @@
         var errContent = mkEl('div', 'db-alert__content');
         errContent.appendChild(mkEl('div', 'db-alert__title', "Couldn't render " + def.type));
         el.appendChild(errContent);
+      } finally {
+        RENDERING[id]--;
       }
       if (el && el.setAttribute) {
         el.setAttribute('data-spec-id', id);
@@ -990,15 +1013,20 @@
     };
     
     // -- Breadcrumbs --
-    RENDERERS.Breadcrumbs = function(p) {
+    RENDERERS.Breadcrumbs = function(p, ch, els, d) {
       var el = document.createElement('nav');
       el.className = 'db-breadcrumbs';
       el.setAttribute('aria-label', 'Breadcrumb');
       var ol = document.createElement('ol');
-      var items = toArr(p.items);
-      items.forEach(function(item, i) {
+      var items = entries(p.items, ch, els);
+      items.forEach(function(e, i) {
         var li = document.createElement('li');
-        if (i === items.length - 1) {
+        var item = e.data;
+        if (e.ref) {
+          // Spec element (Text children, or Breadcrumbs([Text(..)])): it is the crumb
+          if (i === items.length - 1) li.setAttribute('aria-current', 'page');
+          li.appendChild(renderChildren(els, [e.ref], d));
+        } else if (i === items.length - 1) {
           li.setAttribute('aria-current', 'page');
           li.textContent = item.label || '';
         } else {
@@ -1204,10 +1232,12 @@
     };
     
     // -- Table --
-    RENDERERS.Table = function(p) {
+    RENDERERS.Table = function(p, ch, els, d) {
       var el = document.createElement('table');
       el.className = 'db-table';
-      var shape = tableShape(p);
+      // Table([[head, ..], [cell, ..], ..]): a matrix in columns is the header row, then the body rows
+      var matrix = !toArr(p.rows).length && Array.isArray(p.columns) && p.columns.length > 0 && p.columns.every(Array.isArray);
+      var shape = tableShape(matrix ? { columns: p.columns[0], rows: p.columns.slice(1) } : p);
       var cols = shape.cols;
       var rows = shape.rows;
       var thead = document.createElement('thead');
@@ -1216,7 +1246,9 @@
         var th = document.createElement('th');
         if (p.sortable) th.setAttribute('data-db-sort', '');
         if (c.numeric) th.className = 'db-numeric';
-        th.textContent = c.label || '';
+        var hRef = specRef(c.label, els);
+        if (hRef) th.appendChild(renderChildren(els, [hRef], d));
+        else th.textContent = c.label || '';
         headRow.appendChild(th);
       });
       thead.appendChild(headRow);
@@ -1227,9 +1259,20 @@
         cols.forEach(function(c) {
           var td = document.createElement('td');
           if (c.numeric) td.className = 'db-numeric';
-          td.textContent = r[c.key] == null ? '' : String(r[c.key]);
+          var cRef = specRef(r[c.key], els);
+          if (cRef) td.appendChild(renderChildren(els, [cRef], d));
+          else td.textContent = r[c.key] == null ? '' : String(r[c.key]);
           tr.appendChild(td);
         });
+        tbody.appendChild(tr);
+      });
+      // No data rows: each child element is a full-width row
+      if (!rows.length) toArr(ch).forEach(function(id) {
+        var tr = document.createElement('tr');
+        var td = document.createElement('td');
+        td.colSpan = Math.max(1, cols.length);
+        td.appendChild(renderChildren(els, [id], d));
+        tr.appendChild(td);
         tbody.appendChild(tr);
       });
       el.appendChild(tbody);
@@ -1298,10 +1341,17 @@
     };
     
     // -- List --
-    RENDERERS.List = function(p) {
+    RENDERERS.List = function(p, ch, els, d) {
       var el = mkEl('div', 'db-list');
-      toArr(p.items).forEach(function(item) {
+      entries(p.items, ch, els).forEach(function(e) {
         var li = mkEl('div', 'db-list__item');
+        // Spec element (Text children, or List([Text(..)])): it is the item content
+        if (e.ref) {
+          li.appendChild(mkEl('div', 'db-list__content')).appendChild(renderChildren(els, [e.ref], d));
+          el.appendChild(li);
+          return;
+        }
+        var item = e.data;
         var obj = typeof item === 'string' ? { title: item } : item;
         var ico = mkIcon(obj.icon, 16);
         if (ico) {
@@ -1326,7 +1376,7 @@
     };
     
     // -- Avatar --
-    RENDERERS.Avatar = function(p) {
+    RENDERERS.Avatar = function(p, ch, els, d) {
       var px = /^\d+(px)?$/.test(String(p.size)) ? parseInt(p.size, 10) : 0;
       var asz = px ? (px < 36 ? 'sm' : px < 48 ? 'md' : 'lg') : knownMod(p.size, ['sm', 'md', 'lg'], { xs: 'sm', xl: 'lg', '2xl': 'lg' });
       var el = mkEl('div', 'db-avatar db-avatar--' + (asz || 'md'));
@@ -1336,17 +1386,29 @@
         img.alt = '';
         el.appendChild(img);
       } else if (!p.src) {
-        el.textContent = p.initials || '?';
+        // No initials: child elements (a Text "DP") fill the circle instead of "?"
+        if (!p.initials && toArr(ch).length) el.appendChild(renderChildren(els, ch, d));
+        else el.textContent = p.initials || '?';
       }
       return el;
     };
     
     // -- AvatarGroup --
-    RENDERERS.AvatarGroup = function(p) {
+    RENDERERS.AvatarGroup = function(p, ch, els, d) {
       var el = mkEl('div', 'db-avatar-group');
-      var avatars = toArr(p.avatars);
+      var avatars = entries(p.avatars, ch, els);
       var max = p.max || avatars.length;
-      avatars.slice(0, max).forEach(function(a) {
+      avatars.forEach(function(e, i) {
+        // Spec element (Avatar children, or AvatarGroup([Avatar(..)])): rendered as is. Past max it stays hidden
+        // (counted in +N) rather than left for the page's orphan pass to append below
+        if (e.ref) {
+          var node = renderElement(els, e.ref, d + 1);
+          if (node && i >= max) node.style.display = 'none';
+          if (node) el.appendChild(node);
+          return;
+        }
+        if (i >= max) return;
+        var a = e.data;
         var av = mkEl('div', 'db-avatar db-avatar--md');
         if (a.src) {
           var img = document.createElement('img');
