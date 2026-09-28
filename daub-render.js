@@ -242,6 +242,14 @@
           signed = typeof tv === 'string' && /^[+\u2191\-\u2212\u2193]/.test(tv);
           q = withProp(withProp(withProp(p, 'icon', p.trend), 'trend', slid || signed ? tv : null), 'trendValue', slid && isText(p.icon) && p.icon !== p.trend ? p.icon : null);
           return slid || signed || !isText(tv) || isText(q.description) ? q : withProp(q, 'description', tv);
+        case 'CustomSelect':
+          // CustomSelect("Language", opts, "de"): a string in the searchable slot is the selection
+          if (typeof p.searchable === 'string' && !/^(true|false)$/.test(p.searchable)) p = withProp(fillAlias(p, 'selected', ['searchable']), 'searchable', false);
+          // A top-level selected (as Select and RadioGroup take it) marks the matching option; a label is the placeholder
+          p = fillAlias(fillAlias(p, 'selected', ['value', 'defaultValue']), 'placeholder', ['label']);
+          items = toOpts(p.options);
+          if (!isText(p.selected) || items.some(function(o) { return o && o.selected; })) return p;
+          return withProp(p, 'options', items.map(function(o) { return isPlain(o) && (String(o.value) === String(p.selected) || o.label === p.selected) ? withProp(o, 'selected', true) : o; }));
         case 'Avatar':
           // src holds only an image URL: Avatar("MC", "sm") is a size, Avatar("JD", "Jordan Diaz") a name, Avatar(url, "Name") swapped args
           if (isImgUrl(p.initials) && !isImgUrl(p.src)) p = withProp(withProp(p, 'src', p.initials), 'initials', '');
@@ -930,7 +938,7 @@
       trigger.className = 'db-custom-select__trigger';
       trigger.type = 'button';
       var selectedOpt = toOpts(p.options).filter(function(o) { return o.selected; })[0];
-      var triggerText = mkEl('span', 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
+      var triggerText = mkEl('span', selectedOpt ? 'db-custom-select__value' : 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
       trigger.appendChild(triggerText);
       var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       svg.setAttribute('class', 'db-custom-select__icon');

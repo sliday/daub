@@ -83,3 +83,20 @@ describe('StatCard: an icon name in the trend slot', () => {
     norm('StatCard', { title: 'Orders', value: '12' }, { label: 'Orders' });
   });
 });
+
+describe('CustomSelect: a top-level selection', () => {
+  const opts = [{ label: 'English', value: 'en' }, { label: 'Deutsch', value: 'de' }];
+  it('named selected marks the matching option; label becomes the placeholder', () => {
+    const got = norm('CustomSelect', { label: 'Display language', options: opts, selected: 'de' }, { placeholder: 'Display language' });
+    assert.deepEqual(got.options.map(o => !!o.selected), [false, true]);
+  });
+  it('a string in the searchable slot is the selection and turns search off', () => {
+    const got = norm('CustomSelect', { placeholder: 'Priority', options: ['High', 'Medium', 'Low'], searchable: 'Medium' }, { searchable: false, selected: 'Medium' });
+    assert.deepEqual(got.options.map(o => o.selected === true), [false, true, false]);
+  });
+  it('an explicit options[].selected wins; searchable booleans stay', () => {
+    norm('CustomSelect', { options: [{ label: 'A', value: 'a', selected: true }, { label: 'B', value: 'b' }], selected: 'b' },
+      { options: [{ label: 'A', value: 'a', selected: true }, { label: 'B', value: 'b' }] });
+    norm('CustomSelect', { options: ['One', 'Two'], searchable: true }, { searchable: true, options: ['One', 'Two'] });
+  });
+});

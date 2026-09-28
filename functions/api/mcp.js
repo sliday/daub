@@ -28,7 +28,7 @@ const COMP_PROPS = {
   Toggle: 'label: string, pressed: bool, size: "sm" (pressable toolbar button: bold/italic, view filter — NOT for settings)',
   ToggleGroup: 'options: [{label, value}], selected: string',
   Select: 'label: string, options: [{label, value}], selected: string',
-  CustomSelect: 'placeholder: string, options: [{label, value, selected, disabled}], searchable: bool',
+  CustomSelect: 'placeholder: string, options: [{label, value, selected, disabled}], searchable: bool, selected: string',
   Kbd: 'keys: [string]',
   Label: 'text: string, required: bool, optional: bool',
   Spinner: 'size: "sm"|"lg"|"xl"',
