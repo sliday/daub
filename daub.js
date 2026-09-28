@@ -673,11 +673,17 @@
 
     if (!_dbModalKeyInit) {
       _dbModalKeyInit = true;
+      /* Escape closes the open Modal, Alert Dialog, Sheet or Drawer on top */
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          var open = document.querySelector('.db-modal--open');
-          if (open) closeModal(open);
-        }
+        if (e.key === 'Escape') dismissOverlay(topOverlay());
+      });
+      /* [data-db-dismiss] closes the overlay it sits in, or the one whose id it names.
+         Delegated, so buttons rendered after init work too. */
+      document.addEventListener('click', function(e) {
+        var btn = e.target.closest && e.target.closest('[data-db-dismiss]');
+        if (!btn) return;
+        var id = btn.getAttribute('data-db-dismiss');
+        dismissOverlay(id ? document.getElementById(id) : btn.closest(OVERLAY_SEL));
       });
     }
   }
@@ -779,6 +785,27 @@
       _lastModalTrigger.focus();
       _lastModalTrigger = null;
     }
+  }
+
+  var OVERLAY_SEL = '.db-modal-overlay, dialog.db-modal, .db-alert-dialog, .db-sheet, .db-drawer';
+
+  /* Close a Modal (overlay or <dialog>), Alert Dialog, Sheet or Drawer element */
+  function dismissOverlay(el) {
+    if (!el || !el.classList) return;
+    if (el.classList.contains('db-modal-overlay') || _isDialog(el)) closeModal(el);
+    else if (el.classList.contains('db-alert-dialog')) el.classList.remove('db-alert-dialog--open');
+    else if (el.classList.contains('db-sheet')) el.classList.remove('db-sheet--open');
+    else if (el.classList.contains('db-drawer')) el.classList.remove('db-drawer--open');
+  }
+
+  /* The open overlay on top: highest z-index, the later one in the DOM on a tie */
+  function topOverlay() {
+    var top = null, topZ = -Infinity;
+    document.querySelectorAll('.db-modal--open, .db-alert-dialog--open, .db-sheet--open, .db-drawer--open').forEach(function(el) {
+      var z = parseInt(getComputedStyle(el).zIndex, 10) || 0;
+      if (z >= topZ) { top = el; topZ = z; }
+    });
+    return top;
   }
 
   /* ----------------------------------------------------------

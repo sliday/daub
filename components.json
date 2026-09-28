@@ -508,9 +508,9 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-modal-overlay\" id=\"my-modal\" aria-hidden=\"true\">\n  <div class=\"db-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"my-modal-title\">\n    <div class=\"db-modal__header\">\n      <h2 class=\"db-modal__title\" id=\"my-modal-title\">Title</h2>\n      <button class=\"db-modal__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-modal__body\">Content</div>\n    <div class=\"db-modal__footer\">\n      <button class=\"db-btn db-btn--primary\">Confirm</button>\n    </div>\n  </div>\n</div>",
+      "html": "<div class=\"db-modal-overlay\" id=\"my-modal\" aria-hidden=\"true\">\n  <div class=\"db-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"my-modal-title\">\n    <div class=\"db-modal__header\">\n      <h2 class=\"db-modal__title\" id=\"my-modal-title\">Title</h2>\n      <button class=\"db-modal__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-modal__body\">Content</div>\n    <div class=\"db-modal__footer\">\n      <button class=\"db-btn db-btn--primary\" data-db-dismiss>Confirm</button>\n    </div>\n  </div>\n</div>",
       "skeleton": "db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer",
-      "notes": "Wrap in db-modal-overlay with id. Open: DAUB.openModal('id'). Close: DAUB.closeModal('id')."
+      "notes": "Wrap in db-modal-overlay with id. Open: DAUB.openModal('id'). Close: DAUB.closeModal('id'). The close button, the backdrop, Escape and any button with data-db-dismiss close it too."
     },
     {
       "name": "Modal Overlay",
@@ -560,9 +560,9 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-alert-dialog\" id=\"confirm-delete\">\n  <div class=\"db-alert-dialog__overlay\"></div>\n  <div class=\"db-alert-dialog__panel\">\n    <h3 class=\"db-alert-dialog__title\">Are you sure?</h3>\n    <p class=\"db-alert-dialog__desc\">This action cannot be undone.</p>\n    <div class=\"db-alert-dialog__actions\">\n      <button class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Cancel</button>\n      <button class=\"db-btn db-btn--primary\">Continue</button>\n    </div>\n  </div>\n</div>",
+      "html": "<div class=\"db-alert-dialog\" id=\"confirm-delete\">\n  <div class=\"db-alert-dialog__overlay\"></div>\n  <div class=\"db-alert-dialog__panel\">\n    <h3 class=\"db-alert-dialog__title\">Are you sure?</h3>\n    <p class=\"db-alert-dialog__desc\">This action cannot be undone.</p>\n    <div class=\"db-alert-dialog__actions\">\n      <button class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Cancel</button>\n      <button class=\"db-btn db-btn--primary\" data-db-dismiss>Continue</button>\n    </div>\n  </div>\n</div>",
       "skeleton": "db-alert-dialog#id > __overlay + __panel > __title + __desc + __actions",
-      "notes": "Open: DAUB.openAlertDialog('id'). data-action=\"cancel\" auto-closes."
+      "notes": "Open: DAUB.openAlertDialog('id'). data-action=\"cancel\" auto-closes and takes focus on open. data-db-dismiss closes it from any button, a confirm action included; so do the backdrop and Escape."
     },
     {
       "name": "Sheet",
@@ -611,7 +611,7 @@
       "js": true,
       "html": "<div class=\"db-sheet db-sheet--right\" id=\"my-sheet\">\n  <div class=\"db-sheet__overlay\"></div>\n  <div class=\"db-sheet__panel\">\n    <div class=\"db-sheet__header\">\n      <span class=\"db-sheet__title\">Title</span>\n      <button class=\"db-sheet__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-sheet__body\">Content</div>\n  </div>\n</div>",
       "skeleton": "db-sheet.db-sheet--right#id > __overlay + __panel > __header + __body",
-      "notes": "Sides: --right (default), --left, --top, --bottom. Open: DAUB.openSheet('id')."
+      "notes": "Sides: --right (default), --left, --top, --bottom. Open: DAUB.openSheet('id'). The close button, the backdrop, Escape and any button with data-db-dismiss close it."
     },
     {
       "name": "Drawer",
@@ -646,7 +646,7 @@
       "js": true,
       "html": "<div class=\"db-drawer\" id=\"my-drawer\">\n  <div class=\"db-drawer__overlay\"></div>\n  <div class=\"db-drawer__panel\">\n    <div class=\"db-drawer__handle\"></div>\n    <div class=\"db-drawer__body\">Content</div>\n  </div>\n</div>",
       "skeleton": "db-drawer#id > __overlay + __panel > __handle + __body",
-      "notes": "Mobile-friendly bottom panel. Open: DAUB.openDrawer('id')."
+      "notes": "Mobile-friendly bottom panel. Open: DAUB.openDrawer('id'). The backdrop, Escape and any button with data-db-dismiss close it."
     },
     {
       "name": "Toast",

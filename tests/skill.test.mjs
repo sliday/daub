@@ -320,7 +320,7 @@ describe('daub-ui skill: examples render in a browser', () => {
     }
   });
 
-  it('the SKILL.md host page renders the OpenUI example and its footer wiring closes the dialog', async t => {
+  it('the SKILL.md host page renders the OpenUI example and its footer buttons and Escape close the dialog', async t => {
     if (skip) return t.skip(skip);
     const host = BLOCKS.find(b => b.file === 'SKILL.md' && b.lang === 'html' && b.body.includes('DaubOpenUI.openUItoSpec(openuiText)'));
     const example = BLOCKS.find(b => b.file === 'SKILL.md' && b.lang === 'openui');
@@ -338,6 +338,12 @@ describe('daub-ui skill: examples render in a browser', () => {
     assert.equal(await open(), true, 'Delete account opens the dialog');
     await page.click('[data-spec-id="keepBtn"]');
     assert.equal(await open(), false, 'Keep account closes it');
+    await page.click('[data-spec-id="deleteBtn"]');
+    await page.click('[data-spec-id="confirmBtn"]');
+    assert.equal(await open(), false, 'the primary Delete account closes it');
+    await page.click('[data-spec-id="deleteBtn"]');
+    await page.keyboard.press('Escape');
+    assert.equal(await open(), false, 'Escape closes it');
     await page.close();
   });
 

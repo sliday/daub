@@ -1787,6 +1787,15 @@
       return el;
     };
     
+    // Buttons in a dialog footer close the dialog (daub.js handles data-db-dismiss). A button that opens
+    // another overlay (trigger), a dropdown or a popover keeps that job; put a button that must not close in the body
+    function markDismiss(box) {
+      Array.prototype.forEach.call(box.querySelectorAll('.db-btn:not([data-db-trigger]):not(.db-dropdown__trigger):not(.db-popover__trigger)'), function(b) {
+        b.setAttribute('data-db-dismiss', '');
+      });
+      return box;
+    }
+
     // -- Modal --
     RENDERERS.Modal = function(p, ch, els, d) {
       var el = mkEl('div', 'db-modal-overlay');
@@ -1823,7 +1832,7 @@
         var confirmBtn = mkEl('button', 'db-btn db-btn--primary', 'Confirm');
         footer.appendChild(confirmBtn);
       }
-      modal.appendChild(footer);
+      modal.appendChild(markDismiss(footer));
       el.appendChild(modal);
       return el;
     };
@@ -1849,7 +1858,7 @@
         actions.appendChild(cancelBtn);
         actions.appendChild(mkEl('button', 'db-btn db-btn--primary', 'Continue'));
       }
-      panel.appendChild(actions);
+      panel.appendChild(markDismiss(actions));
       el.appendChild(panel);
       return el;
     };

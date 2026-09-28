@@ -138,11 +138,6 @@ Render either one in any page. The parser and renderer ship only on daub.dev (th
   for (const id in spec.elements) // elements the tree never reached render after it
     if (!app.querySelector('[data-spec-id="' + id + '"]')) app.appendChild(renderElement(spec.elements, id, 0));
   DAUB.init(); lucide.createIcons();
-  // Footer buttons in a Modal or AlertDialog do not close it on their own
-  app.querySelectorAll('.db-modal__footer .db-btn, .db-alert-dialog__actions .db-btn').forEach(b => b.addEventListener('click', () => {
-    const o = b.closest('.db-modal-overlay, .db-alert-dialog');
-    o.classList.contains('db-alert-dialog') ? DAUB.closeAlertDialog(o.id) : DAUB.closeModal(o.id);
-  }));
 </script>
 ```
 
