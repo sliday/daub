@@ -4985,6 +4985,62 @@ function mkEl(tag, cls, text) {
   return el;
 }
 
+// Icon names models borrow from other icon sets -> the lucide 0.576 name
+var ICON_ALIASES = {
+  refresh: 'refresh-cw', reload: 'refresh-cw', sync: 'refresh-cw', rotate: 'rotate-cw', replay: 'rotate-ccw',
+  chart: 'chart-bar', stats: 'chart-bar', analytics: 'chart-line', dashboard: 'layout-dashboard',
+  alert: 'circle-alert', error: 'circle-alert', warning: 'triangle-alert', success: 'circle-check', help: 'circle-help', question: 'circle-help',
+  close: 'x', cancel: 'circle-x', add: 'plus', more: 'ellipsis', sort: 'arrow-up-down', gear: 'settings',
+  cart: 'shopping-cart', bag: 'shopping-bag', dollar: 'dollar-sign', money: 'banknote', cash: 'banknote', payment: 'credit-card', ethereum: 'coins',
+  email: 'mail', message: 'message-square', chat: 'message-square', comment: 'message-square', notification: 'bell', notifications: 'bell',
+  profile: 'user', account: 'user', person: 'user', people: 'users', team: 'users', visitors: 'users', bounce: 'undo-2',
+  location: 'map-pin', document: 'file-text', doc: 'file-text', draft: 'file-pen', log: 'logs', flask: 'flask-conical',
+  time: 'clock', schedule: 'calendar', event: 'calendar', date: 'calendar', logout: 'log-out', login: 'log-in',
+  favorite: 'heart', like: 'thumbs-up', visibility: 'eye', back: 'arrow-left', previous: 'arrow-left', prev: 'arrow-left', next: 'arrow-right'
+};
+
+// Same PascalCase key lucide.createIcons() derives from data-lucide
+function lucideKey(n) {
+  var c = n.replace(/^([A-Z])|[\s-_]+(\w)/g, function(m, a, b) { return b ? b.toUpperCase() : a.toLowerCase(); });
+  return c.charAt(0).toUpperCase() + c.slice(1);
+}
+
+// Icon element for a spec icon name. Aliases map to lucide, "google" is an inline G in lucide's stroke style,
+// an emoji or symbol renders as text, and a name the loaded lucide build lacks (in any case) returns null (no empty slot)
+function mkIcon(name, size) {
+  name = typeof name === 'string' ? name.trim() : '';
+  if (!name) return null;
+  var px = (size || 16) + 'px', key = name.toLowerCase(), el;
+  if (!/[a-z]/.test(key)) {
+    el = mkEl('span', null, name);
+    el.setAttribute('aria-hidden', 'true');
+    el.style.fontSize = px;
+    el.style.lineHeight = '1';
+    return el;
+  }
+  if (key === 'google') {
+    var ns = 'http://www.w3.org/2000/svg', path = document.createElementNS(ns, 'path');
+    el = document.createElementNS(ns, 'svg');
+    var at = { 'class': 'lucide lucide-google', width: size || 16, height: size || 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor',
+      'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' };
+    for (var k in at) el.setAttribute(k, at[k]);
+    path.setAttribute('d', 'M18.4 5.6A9 9 0 1 0 21 12h-9');
+    el.appendChild(path);
+    return el;
+  }
+  if (Object.prototype.hasOwnProperty.call(ICON_ALIASES, key)) name = ICON_ALIASES[key];
+  var lib = typeof lucide !== 'undefined' && lucide.icons;
+  if (lib && !lib[lucideKey(name)]) {
+    if (!lib[lucideKey(key)]) return null;
+    name = key; // "GitHub" -> "github": lucide names are lowercase
+  }
+  el = document.createElement('i');
+  el.setAttribute('data-lucide', name);
+  el.style.width = px;
+  el.style.height = px;
+  return el;
+}
+
 // Guard against javascript: and data: URLs from AI-generated content
 function isSafeUrl(url) {
   if (!url || typeof url !== 'string') return false;
@@ -5320,11 +5376,8 @@ RENDERERS.Button = function(p) {
   if (p.size) cls += ' db-btn--' + p.size;
   if (p.loading) { cls += ' db-btn--loading'; el.disabled = true; }
   el.className = cls;
-  if (p.icon) {
-    var ico = document.createElement('i');
-    ico.setAttribute('data-lucide', p.icon);
-    ico.style.width = '16px';
-    ico.style.height = '16px';
+  var ico = mkIcon(p.icon, 16);
+  if (ico) {
     el.appendChild(ico);
     el.appendChild(document.createTextNode(' '));
   }
@@ -5405,13 +5458,8 @@ RENDERERS.InputGroup = function(p, ch, els, d) {
 // -- InputIcon --
 RENDERERS.InputIcon = function(p, ch, els, d) {
   var el = mkEl('div', 'db-input-icon' + (p.right ? ' db-input-icon--right' : ''));
-  if (p.icon) {
-    var ico = document.createElement('i');
-    ico.setAttribute('data-lucide', p.icon);
-    ico.style.width = '16px';
-    ico.style.height = '16px';
-    el.appendChild(ico);
-  }
+  var ico = mkIcon(p.icon, 16);
+  if (ico) el.appendChild(ico);
   el.appendChild(renderChildren(els, ch, d));
   return el;
 };
@@ -5828,13 +5876,8 @@ RENDERERS.Sidebar = function(p, ch, els, d) {
       a.className = 'db-sidebar__item' + (item.active ? ' db-sidebar__item--active' : '');
       a.setAttribute('data-tooltip', item.label || '');
       a.href = isSafeUrl(item.href) ? item.href : '#';
-      if (item.icon) {
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', item.icon);
-        ico.style.width = '16px';
-        ico.style.height = '16px';
-        a.appendChild(ico);
-      }
+      var ico = mkIcon(item.icon, 16);
+      if (ico) a.appendChild(ico);
       a.appendChild(document.createTextNode(' ' + (item.label || '')));
       section.appendChild(a);
     });
@@ -5851,13 +5894,8 @@ RENDERERS.BottomNav = function(p) {
     var a = document.createElement('a');
     a.className = 'db-bottom-nav__item' + (item.active ? ' db-bottom-nav__item--active' : '');
     a.href = '#';
-    if (item.icon) {
-      var ico = document.createElement('i');
-      ico.setAttribute('data-lucide', item.icon);
-      ico.style.width = '20px';
-      ico.style.height = '20px';
-      a.appendChild(ico);
-    }
+    var ico = mkIcon(item.icon, 20);
+    if (ico) a.appendChild(ico);
     a.appendChild(mkEl('span', null, item.label || ''));
     if (item.badge) a.appendChild(mkEl('span', 'db-bottom-nav__badge', item.badge));
     el.appendChild(a);
@@ -6000,12 +6038,9 @@ RENDERERS.List = function(p) {
   toArr(p.items).forEach(function(item) {
     if (typeof item === 'string') item = { title: item }; // List(["a", "b"]) renders titles, as in daub-render.js
     var li = mkEl('div', 'db-list__item');
-    if (item.icon) {
+    var ico = mkIcon(item.icon, 16);
+    if (ico) {
       var iconWrap = mkEl('div', 'db-list__icon');
-      var ico = document.createElement('i');
-      ico.setAttribute('data-lucide', item.icon);
-      ico.style.width = '16px';
-      ico.style.height = '16px';
       iconWrap.appendChild(ico);
       li.appendChild(iconWrap);
     }
@@ -6245,12 +6280,9 @@ RENDERERS.Skeleton = function(p) {
 // -- EmptyState --
 RENDERERS.EmptyState = function(p) {
   var el = mkEl('div', 'db-empty');
-  if (p.icon) {
+  var ico = mkIcon(p.icon, 48);
+  if (ico) {
     var iconWrap = mkEl('div', 'db-empty__icon');
-    var ico = document.createElement('i');
-    ico.setAttribute('data-lucide', p.icon);
-    ico.style.width = '48px';
-    ico.style.height = '48px';
     iconWrap.appendChild(ico);
     el.appendChild(iconWrap);
   }
@@ -6418,11 +6450,8 @@ RENDERERS.DropdownMenu = function(p, ch, els, d) {
     } else {
       var btn = document.createElement('button');
       btn.className = 'db-dropdown__item' + (item.active ? ' db-dropdown__item--active' : '');
-      if (item.icon) {
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', item.icon);
-        ico.style.width = '16px';
-        ico.style.height = '16px';
+      var ico = mkIcon(item.icon, 16);
+      if (ico) {
         btn.appendChild(ico);
         btn.appendChild(document.createTextNode(' '));
       }
@@ -6461,11 +6490,8 @@ RENDERERS.ContextMenu = function(p, ch, els, d) {
     } else {
       var btn = document.createElement('button');
       btn.className = 'db-context-menu__item';
-      if (item.icon) {
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', item.icon);
-        ico.style.width = '16px';
-        ico.style.height = '16px';
+      var ico = mkIcon(item.icon, 16);
+      if (ico) {
         btn.appendChild(ico);
         btn.appendChild(document.createTextNode(' '));
       }
@@ -6499,11 +6525,8 @@ RENDERERS.CommandPalette = function(p) {
     list.appendChild(mkEl('div', 'db-command__group-label', g.label || ''));
     toArr(g.items).forEach(function(item) {
       var cmdItem = mkEl('div', 'db-command__item');
-      if (item.icon) {
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', item.icon);
-        ico.style.width = '16px';
-        ico.style.height = '16px';
+      var ico = mkIcon(item.icon, 16);
+      if (ico) {
         cmdItem.appendChild(ico);
         cmdItem.appendChild(document.createTextNode(' '));
       }
@@ -6607,12 +6630,9 @@ RENDERERS.DatePicker = function(p) {
 // -- StatCard --
 RENDERERS.StatCard = function(p) {
   var el = mkEl('div', 'db-stat' + (p.horizontal ? ' db-stat--horizontal' : ''));
-  if (p.icon) {
+  var icoI = mkIcon(p.icon, 20);
+  if (icoI) {
     var ico = mkEl('div', 'db-stat__icon');
-    var icoI = document.createElement('i');
-    icoI.setAttribute('data-lucide', p.icon);
-    icoI.style.width = '20px';
-    icoI.style.height = '20px';
     ico.appendChild(icoI);
     el.appendChild(ico);
   }
@@ -6665,12 +6685,9 @@ RENDERERS.CustomHTML = function(p, ch, els, d) {
 
 // -- Icon (Lucide) --
 RENDERERS.Icon = function(p) {
-  var el = document.createElement('i');
-  el.setAttribute('data-lucide', p.name || 'circle');
   var sz = { xs: '12px', sm: '16px', md: '20px', lg: '24px', xl: '32px' };
   var s = sz[p.size] || sz.md;
-  el.style.width = s;
-  el.style.height = s;
+  var el = mkIcon(p.name, parseInt(s, 10)) || mkIcon('circle', parseInt(s, 10));
   el.style.flexShrink = '0';
   if (p.variant === 'branded') el.style.color = 'var(--db-terracotta)';
   else if (p.variant === 'success') el.style.color = 'var(--db-color-success, green)';
