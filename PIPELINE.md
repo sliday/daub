@@ -57,7 +57,6 @@ Spec rendered in preview iframe
 - Prompt: `focusedSystemPrompt()` / `focusedOpenuiSystemPrompt()` list full props for picked types and names only for the rest (~40% shorter system prompt)
 - Cost/latency: ~$0.00025 and 300–550ms per call (65 questions)
 - Fallback: any error, 4s timeout, abort, or empty pick → full catalog prompt (previous behavior)
-- Design packs (`DESIGN_PACKS_ON`, default `true`): the same request carries `packs: [{id, purpose}]` from `DESIGN_PLAYBOOK` (14 page-kind packs from the design eval, playbook v2), one `noul` per pack keyed by the id with `-` → `_`. `/api/choose` validates at most 20 packs, ids `^[a-z0-9-]{1,40}$`, purposes of 1-240 characters, and answers `picked_packs` (p(yes) ≥ 0.5) and `pack_scores`; a request without `packs` gets the old `{model, scores, usage}`. `buildMessages()` appends `\n\nDESIGN PLAYBOOK\n\n` + core rules + picked pack texts to the end of the system message (focused or full catalog, both formats); a failed or skipped pick appends the core rules only. With the flag `false` the request body and system prompt match the build without packs. The flag is a top-level `let` in its own script, so a harness flips it with `page.evaluate(() => { DESIGN_PACKS_ON = false })`
 
 ## Phase 1: Streaming Generation (lines 3072–3203)
 

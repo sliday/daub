@@ -964,11 +964,6 @@
 <script src="daub.js?v=3.20.3"></script>
 <script src="daub-openui-parser.js"></script>
 <script>
-// Design playbook in the generation system prompt (Jev-routed packs, see DESIGN_PLAYBOOK). false: no pack questions to
-// /api/choose and no DESIGN PLAYBOOK section. Top-level so a harness can flip it with page.evaluate; read per request
-let DESIGN_PACKS_ON = true;
-</script>
-<script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
 // ============================================================
@@ -2468,51 +2463,11 @@ function selfCheck(spec, screenshotDataUrl, signal) {
 }
 
 // ---- Component picker: Jev decision model (~typesafe/jev-latest) via /api/choose ----
-// Asks one yes/no question per component (and per design pack when DESIGN_PACKS_ON) and resolves to
-// { types: picked type list or null for the full catalog, packs: picked pack ids or null }, or null on any failure or timeout.
+// Asks one yes/no question per component and resolves to the picked type list,
+// or null (use the full catalog) on any failure, timeout, or empty pick.
 var PICK_CORE = ['Stack', 'Grid', 'Text', 'Card', 'Button', 'Icon', 'Separator'];
 var PICK_THRESHOLD = 0.45;
 var PICK_TIMEOUT_MS = 4000;
-// Design playbook (design eval, playbook v2): core rules for every page plus packs for page kinds. Jev picks the
-// packs in the same /api/choose request as the components; buildMessages appends the DESIGN PLAYBOOK section
-var DESIGN_PLAYBOOK = {
-  core: "DESIGN RULES:\n- Build every section, field and count the user names, in their words.\n- Root container:\"narrow\" for forms, auth, settings, articles; \"wide\" for dashboards, tables, landing pages.\n- Grid: one column per peer in a single row (2-4); more items wrap into full rows (6 in 3, 8 in 4). Never 5 columns.\n- Side-by-side Cards get the same parts and similar item counts, so no column stops short.\n- Each tab panel, overlay and Card holds real content. No title-only Card.\n- No EmptyState, Skeleton or Spinner unless the user asks for an empty or loading state.\n- StatCard is for numbers only; args run label, value, trend, trendValue; pass icon by name (icon: \"users\").\n- Numbers agree: a KPI matches its chart or table, trend \"up\" pairs with a \"+\" trendValue, counts match rows.\n- Images: real photo URLs sized to the slot, never dummyimage or gray boxes; siblings share one size; alt names the subject.\n- People get Avatar(initials: \"MC\", size: \"sm\"). src takes only an image URL.\n- Icons: Lucide kebab-case names, one icon per concept, no emoji.\n- Gap between Cards >= 4 (Card bodies use 12px).",
-  packs: [
-    { id: "dashboard", purpose: "a dashboard, admin home, analytics overview, or KPI summary screen",
-      text: "DASHBOARD:\n- Shell: Sidebar and the main Stack sit inside a horizontal Stack (or Grid columns:\"sidebar-main\"). Never put Sidebar in Grid columns:2.\n- Every StatCard in a row sets label, value, trend, trendValue and a named icon. Labels carry the unit or period (\"MRR (USD)\", \"Signups, 30d\"). The key metric goes first.\n- Pair a ChartCard with a Table or List of similar height in Grid columns:2, never with a lone StatCard.\n- The header names one date range (Select \"Last 30 days\"), and every figure on the page covers that range." },
-    { id: "landing-marketing", purpose: "a landing page, marketing site, product homepage, or promotional page",
-      text: "LANDING:\n- Order: Navbar, hero, product proof, features, social proof, closing CTA (repeats the hero's primary label), footer. Root Stack gap:6.\n- Hero: Text h1, one Text p, ButtonGroup (one primary, one ghost), one visual. No StatCard, Badge or Chip.\n- Visual: software gets a Surface variant:\"raised\" with mini product UI (StatCards, ChartCard); goods, places and events get a 1200x600 Image.\n- h1 names a concrete outcome (\"Close your books in 3 days\"), not \"Welcome to X\".\n- Each section: Stack gap:3 of Text h2, one Text p, content.\n- Testimonial Cards: Avatar, name, role, one specific claim." },
-    { id: "forms-auth", purpose: "a form, sign-in or sign-up screen, contact or application form, or other data-entry page",
-      text: "FORMS & AUTH:\n- Auth: one centered Card: h1, fields, one primary Button, then a Link to the other flow.\n- Placeholders show a sample value (\"jane@acme.com\").\n- Short pairs share a Grid columns:2 row (first/last name, city/postcode, expiry/CVC); long fields span full width.\n- Checkbox for independent opt-ins, RadioGroup for 2-5 exclusive options, Select for 6-15, CustomSelect searchable:true beyond.\n- Show one realistic error: Field error:true, helper states the fix (\"Use at least 8 characters\").\n- The submit Button names the action (\"Send message\"), never \"Submit\"." },
-    { id: "settings", purpose: "a settings, preferences, account, notifications, or configuration page",
-      text: "SETTINGS:\n- Group rows in Cards titled by area (\"Notifications\", \"Security\", \"Billing\").\n- Row: horizontal Stack justify:\"between\" align:\"center\" with a vertical Stack gap:1 (Text p label, Text class:\"db-text-muted\" description) and its control: a Switch with no label (the Text names it) or a Select. Separator between rows.\n- Controls show current state: some Switches checked:true; every Select sets selected (\"en\"); a CustomSelect marks one option selected:true.\n- End with a horizontal Stack justify:\"end\": \"Cancel\" (secondary), \"Save changes\" (primary).\n- Danger zone last, own Card: Button variant:\"icon-danger\" label:\"Delete account\" triggers an AlertDialog naming what is lost." },
-    { id: "data-tables-admin", purpose: "a data table, admin list, CRM, orders, users, inventory, or records management view",
-      text: "TABLES & ADMIN:\n- Over 4 records of one kind: Table or DataTable, not a Grid of Cards.\n- Set numeric:true on money, count, percent and duration columns.\n- 6-10 rows with varied name lengths and magnitudes, one pending and one failed. One date format (\"Sep 28, 2026\") and one money format (\"$1,240.00\").\n- Status cells use words (\"Paid\", \"Overdue\"), not color alone.\n- Toolbar above: horizontal Stack justify:\"between\" with Search, a filter Select, one primary Button. Below: Pagination whose total matches the stated count.\n- DataTable selectable:true only with bulk-action Buttons shown above it." },
-    { id: "ecommerce-product", purpose: "an online store, product catalog, product detail page, shopping cart, or checkout",
-      text: "E-COMMERCE:\n- Catalog: Grid columns:3 with 6 products or columns:4 with 8. Each Card: media: a 400x300 product photo URL, title, price as description, secondary Button \"Add to cart\".\n- Product detail: Grid columns:2. Left: AspectRatio ratio:\"1-1\" holding the Image. Right: Stack with h1, price, stock Badge, ToggleGroup for size or color, primary Button \"Add to cart\".\n- Cart and checkout: a summary Card with a List of line items, a Separator, then subtotal, shipping, tax and a total that adds up. The pay Button shows that total (\"Pay $52.80\")." },
-    { id: "pricing", purpose: "a pricing page, plan comparison, subscription tiers, or upgrade screen",
-      text: "PRICING:\n- Grid columns = plan count (2-4). Each plan Card: plan name as title, price as Text h2 (\"$29/mo\"), one-line audience, List of 4-6 features with icon \"check\", Button in footer.\n- Exactly one recommended plan gets Badge \"Most popular\" and the only primary Button; the others use secondary.\n- Prices rise with the tier. Higher tiers open their list with \"Everything in Pro, plus\".\n- A ToggleGroup (Monthly / Yearly) sits above the plans, and the prices shown match its selected period.\n- Follow with an Accordion FAQ of 4-6 real questions (billing, cancellation, seats)." },
-    { id: "content-docs-blog", purpose: "a blog, article, documentation, help center, changelog, or other long-form reading page",
-      text: "CONTENT & DOCS:\n- Article body: one Prose (HTML h2, p, ul, blockquote, pre/code), not many Text elements.\n- Article header: Text h1, then a meta row with Avatar size:\"sm\", author name and Text class:\"db-text-muted\" date and read time.\n- Docs: Grid columns:\"sidebar-main\" with a Sidebar of doc sections and the article; end with prev/next Links that name the pages.\n- Blog index: Cards with media, title, one-line excerpt and date (or a List for text-only posts), then Pagination.\n- Changelog: one section per release (Text h2 version and date), each entry with Badge \"New\" or \"Fixed\"." },
-    { id: "multi-step-flow", purpose: "a multi-step wizard, onboarding steps, step-by-step checkout, or progress tracker that the request explicitly names",
-      text: "MULTI-STEP FLOWS:\n- Stepper with 3-5 steps: completed first, exactly one active, the rest pending.\n- Show only the active step's panel, filled with real fields or choices.\n- A Progress value equals completed/total (2 of 4 = 50).\n- Footer: horizontal Stack justify:\"between\" with \"Back\" (ghost) and a primary Button naming the next step (\"Continue to billing\"). The last step names the outcome (\"Create workspace\").\n- Onboarding checklists: List items with icon \"circle-check\" for done and \"circle\" for open, plus a Badge count (\"2 of 5\")." },
-    { id: "mobile-app", purpose: "a screen the request explicitly calls mobile, phone, iOS, or Android",
-      text: "MOBILE:\n- One column in a narrow root. Grid columns at most 2. No Sidebar and no wide Table; use List rows (icon, title, secondary).\n- BottomNav with 3-5 items, each with icon and label, exactly one active. It replaces top navigation.\n- Top bar: horizontal Stack justify:\"between\" align:\"center\" with Text h2 and at most two universal icon Buttons (search, bell).\n- One main action as Button size:\"lg\".\n- Essential info stays visible; never hide it in HoverCard or Tooltip." },
-    { id: "empty-error-states", purpose: "an empty state, zero-data screen, error page, 404, or failure message that the request explicitly names",
-      text: "EMPTY & ERROR STATES:\n- Keep the page chrome (Navbar or Sidebar, h1) and put EmptyState inside the region it replaces.\n- EmptyState: icon, title naming what is missing (\"No invoices yet\"), message giving the next step, then one primary Button (\"Create invoice\") placed after it; EmptyState takes no children. No Search, filters, Tabs, Pagination or table headers around it.\n- Errors: Alert type:\"error\" whose title says what happened (\"Payment failed\") and whose message says how to recover, plus a retry Button.\n- 404 and offline pages: centered Stack with Text h1, one sentence, a primary Button home and a Link to help." },
-    { id: "charts-dataviz", purpose: "charts, graphs, trends, reports, or other data visualization",
-      text: "CHARTS:\n- Chart draws bars only and shows values on hover, so the ChartCard title names metric, unit and period (\"Revenue (USD), last 6 months\").\n- Bar labels are short real periods or categories (\"Apr\", \"Q3\", \"Chrome\"). Time runs oldest to newest; category bars sort largest first.\n- When exact values matter, place a Table with numeric columns next to or below the chart.\n- Share-of-total or line data goes in a Table with a numeric % column. Don't draw pies or lines in CustomHTML." },
-    { id: "navigation-ia", purpose: "an app shell, sidebar or top navigation, multi-page site, or menu structure",
-      text: "NAVIGATION:\n- Exactly one active item in Sidebar, NavMenu or BottomNav, and its label matches the page h1.\n- Sidebar: 2-3 sections of 3-6 items with icons. Work areas first; Settings and Help in the last section. Use the user's domain words (\"Invoices\", \"Payouts\"), not \"Data\" or \"Records\".\n- Navbar: brand, then children: a NavMenu of 3-5 links and one primary Button.\n- Detail and sub-pages get Breadcrumbs ending with the current page.\n- Page header: horizontal Stack justify:\"between\" align:\"center\" with Text h1 and at most two Buttons; extra actions go in a DropdownMenu." },
-    { id: "people-social", purpose: "a team directory, user profile, social feed, comments thread, or chat and messaging UI",
-      text: "PEOPLE & FEEDS:\n- Avatar initials match the name beside them.\n- Directory: Grid of Cards, each with Avatar size:\"lg\", name, role and location, and a status Badge (\"Available\", \"Out until Oct 3\").\n- Feed or comments: items with Avatar size:\"sm\", name, Text class:\"db-text-muted\" relative time (\"2h ago\"), then the content. Vary content length; include one reply or reaction count.\n- Chat: messages alternate between people, and a composer row (Input plus a send Button) sits at the bottom.\n- Profile: header row with Avatar size:\"lg\", h1 name, muted role and one primary action (\"Message\")." }
-  ]
-};
-// DESIGN PLAYBOOK section for the end of the system message: core, then the picked packs in playbook order
-function designPlaybookSection(packIds) {
-  var packs = DESIGN_PLAYBOOK.packs.filter(function(p) { return (packIds || []).indexOf(p.id) !== -1; });
-  return '\n\nDESIGN PLAYBOOK\n\n' + DESIGN_PLAYBOOK.core + (packs.length ? '\n\n' + packs.map(function(p) { return p.text; }).join('\n\n') : '') + '\n';
-}
 // One-line purpose per type for Jev's yes/no question (tuned on a labeled eval)
 var COMP_PURPOSE = {
   Surface: 'a raised or inset background panel that groups content',
@@ -2596,25 +2551,21 @@ function chooseComponents(userPrompt, signal) {
     clearTimeout(timer);
     if (signal) signal.removeEventListener('abort', onAbort);
   }
-  var body = { prompt: userPrompt, components: comps };
-  if (DESIGN_PACKS_ON) body.packs = DESIGN_PLAYBOOK.packs.map(function(p) { return { id: p.id, purpose: p.purpose }; });
   return fetch('/api/choose', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ prompt: userPrompt, components: comps }),
     signal: ctrl.signal
   })
   .then(function(r) { return r.ok ? r.json() : null; })
   .then(function(data) {
     cleanup();
     if (!data || !data.scores) return null;
-    var packs = body.packs && Array.isArray(data.picked_packs) ? data.picked_packs.filter(function(id) { return typeof id === 'string'; }) : null;
-    if (packs) dlog('[chooseComponents] packs:', packs.join(', ') || '(none)');
     var picked = PICK_CORE.slice();
     Object.keys(data.scores).forEach(function(t) {
       if (data.scores[t] >= PICK_THRESHOLD && comps.hasOwnProperty(t)) picked.push(t);
     });
-    if (picked.length === PICK_CORE.length) return { types: null, packs: packs };
+    if (picked.length === PICK_CORE.length) return null;
     // Keep every type already on the canvas so iterations can still edit it
     if (currentSpec && currentSpec.elements) {
       Object.keys(currentSpec.elements).forEach(function(id) {
@@ -2623,7 +2574,7 @@ function chooseComponents(userPrompt, signal) {
       });
     }
     dlog('[chooseComponents] ' + data.model + ' picked ' + picked.length + ':', picked.join(', '));
-    return { types: picked, packs: packs };
+    return picked;
   })
   .catch(function(e) { cleanup(); dwarn('[chooseComponents] skipped:', e && e.message); return null; });
 }
@@ -3404,13 +3355,11 @@ function tryProgressiveRender(text) {
 }
 
 // ---- Chat message helpers ----
-function buildMessages(userPrompt, images, webContexts, figmaContexts, analysisBrief, pickedTypes, pickedPacks) {
+function buildMessages(userPrompt, images, webContexts, figmaContexts, analysisBrief, pickedTypes) {
   var focused = pickedTypes && pickedTypes.length;
   var sysPrompt = OUTPUT_FORMAT === 'openui'
     ? (focused ? focusedOpenuiSystemPrompt(pickedTypes) : OPENUI_SYSTEM_PROMPT)
     : (focused ? focusedSystemPrompt(pickedTypes) : SYSTEM_PROMPT);
-  // Core playbook always; packs only when Jev picked them (a failed or skipped pick sends core only)
-  if (DESIGN_PACKS_ON) sysPrompt += designPlaybookSection(pickedPacks);
   var msgs = [{ role: 'system', content: sysPrompt }];
   if (analysisBrief) {
     userPrompt = analysisBrief + '\n---\n' + userPrompt;
@@ -4339,8 +4288,7 @@ function generate() {
     var analysisBrief = res[0];
     if (analysisBrief) dlog('[analyzeLayout] Brief:', analysisBrief.slice(0, 200));
     else if (!currentSpec) console.warn('[analyzeLayout] Skipped or failed');
-    var pick = res[1] || {};
-    messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief, pick.types, pick.packs);
+    messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief, res[1]);
     $status.textContent = 'Streaming\u2026';
     startStream(messages);
   });
