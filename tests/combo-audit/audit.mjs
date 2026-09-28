@@ -38,7 +38,7 @@ const SHOTS = join(OUT, 'shots');
 const THEMES = opt('themes', 'light,dark,synthwave,monospace-light').split(',').map(s => s.trim()).filter(Boolean);
 const VIEWPORTS = opt('viewports', '1280x900,390x844').split(',').map(s => { const [w, h] = s.split('x').map(Number); return { width: w, height: h, key: `${w}x${h}` }; });
 const WORKERS = Math.max(1, Number(opt('workers', Math.min(8, Math.max(2, cpus().length - 2)))));
-const SHELL = opt('shell', 'fixed'); // fixed | mcp  (see README: the hosted shell leaves body transparent)
+const SHELL = opt('shell', 'fixed'); // fixed | mcp  (mcp = the body rule functions/api/mcp.js ships; see README)
 const NET = opt('net', 'stub'); // stub | live
 const ONLY = opt('only', null);
 const EXTRA = opt('extra', null); // dir of saved specs (AI outputs): {root, elements} or {spec: {root, elements}}
@@ -94,10 +94,18 @@ async function ensureLucide() {
 
 // Mirrors renderToHTML() in functions/api/mcp.js with local assets. The only
 // deliberate differences: body tokens (see --shell) and zeroed transitions so
-// rects are measured at rest instead of mid-animation.
+// rects are measured at rest instead of mid-animation. --shell mcp copies the
+// body rule from renderToHTML() verbatim (read once at start), so it tracks
+// whatever the hosted page ships; --shell fixed pins the semantic tokens.
+function hostedBodyCss() {
+  const m = /function renderToHTML[\s\S]*?^\s*(body \{[^}]*\})/m.exec(readFileSync(join(ROOT, 'functions/api/mcp.js'), 'utf8'));
+  if (!m) throw new Error('combo-audit: no body rule found in renderToHTML() in functions/api/mcp.js');
+  return m[1];
+}
+const HOSTED_BODY_CSS = hostedBodyCss();
 function shellHtml(shell) {
   const bodyCss = shell === 'mcp'
-    ? 'body { margin: 0; padding: 16px; font-family: Inter, system-ui, sans-serif; background: var(--db-bg); color: var(--db-fg); }'
+    ? HOSTED_BODY_CSS
     : 'body { margin: 0; padding: 16px; font-family: Inter, system-ui, sans-serif; background: var(--db-color-bg); color: var(--db-color-text); }';
   return `<!DOCTYPE html>
 <html data-theme="light">
@@ -283,7 +291,7 @@ async function shotJob(page, job) {
 async function shellProbe(context, specs) {
   const sample = specs.find(s => s.kind === 'block' && /dashboard/.test(s.id)) || specs.find(s => s.kind === 'block') || specs[0];
   if (!sample) return null;
-  const out = { sample: sample.id, themes: {} };
+  const out = { sample: sample.id, body_css: HOSTED_BODY_CSS, themes: {} };
   const page = await context.newPage();
   await page.setViewportSize({ width: 1280, height: 900 });
   for (const shell of ['mcp', 'fixed']) {
@@ -380,7 +388,7 @@ function md(report) {
   L.push('Asset hashes: ' + Object.entries(meta.hashes).map(([k, v]) => `\`${k}\` ${v}`).join(', '), '');
   if (meta.shell_probe) {
     L.push('## Hosted shell probe', '');
-    L.push(`\`functions/api/mcp.js\` renderToHTML() styles body with \`var(--db-bg)\` / \`var(--db-fg)\`. Sample: \`${meta.shell_probe.sample}\` at 1280x900.`, '');
+    L.push(`\`functions/api/mcp.js\` renderToHTML() body rule: \`${meta.shell_probe.body_css}\`. Sample: \`${meta.shell_probe.sample}\` at 1280x900.`, '');
     L.push('| Theme | mcp body bg | mcp body color | mcp contrast findings | fixed body bg | fixed contrast findings |', '| --- | --- | --- | ---: | --- | ---: |');
     for (const [t, v] of Object.entries(meta.shell_probe.themes)) L.push(`| ${t} | ${v.mcp.body.bg} | ${v.mcp.body.color} | ${v.mcp.contrast}${v.mcp.shot ? ` ([shot](${v.mcp.shot}))` : ''} | ${v.fixed.body.bg} | ${v.fixed.contrast}${v.fixed.shot ? ` ([shot](${v.fixed.shot}))` : ''} |`);
     L.push('');
