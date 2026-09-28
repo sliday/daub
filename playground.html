@@ -5057,7 +5057,12 @@ function normalizeProps(type, p) {
       }));
     case 'ToggleGroup':
       p = fillAlias(p, 'selected', ['defaultValue', 'value']);
-      return p.options == null && p.items != null ? withProp(p, 'options', p.items) : p;
+      if (p.options != null || p.items == null) return p;
+      // Valueless items would all match an unset selected and render pressed; the item marked active is the selection
+      items = toArr(p.items).map(function(o) { return isPlainObj(o) ? fillAlias(o, 'value', ['id', 'label']) : o; });
+      p = withProp(p, 'options', items);
+      on = items.filter(function(o) { return o && o.active === true; })[0];
+      return p.selected == null && on ? withProp(p, 'selected', on.value) : p;
     case 'Tabs':
       if (p.tabs != null || p.items == null) return p;
       items = toArr(p.items).map(function(t) { return isPlainObj(t) ? fillAlias(t, 'id', ['value']) : t; });
