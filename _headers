@@ -64,6 +64,14 @@
 /llms.txt
   Access-Control-Allow-Origin: *
 
+/SKILL.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/references/*
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+
 /.well-known/ai-plugin.json
   Access-Control-Allow-Origin: *
 
