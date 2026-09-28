@@ -319,11 +319,11 @@ DAUB speaks both human and machine:
 - **`/.well-known/api-catalog`** — API catalog for MCP, generation, and web lookups
 - **`/.well-known/oauth-authorization-server`** — OAuth authorization server metadata
 - **`/.well-known/oauth-protected-resource`** — OAuth protected resource metadata for DAUB APIs
-- **`SKILL.md`** — Claude Code skill for DAUB development
+- **`SKILL.md`** + **`/references/`** — Agent skill for building with DAUB (HTML, json-render/OpenUI specs, MCP, verification, Jev recipes)
 
 Point your AI at `https://daub.dev/llms.txt` for complete component docs with HTML snippets, or fetch `https://daub.dev/components.json` for structured data.
 
-For **json-render** (Vercel Generative UI): see the [integration recipe in llms.txt](https://daub.dev/llms.txt#json-render-integration-vercel-generative-ui).
+For **json-render** and OpenUI Lang specs: see [references/json-render.md](https://daub.dev/references/json-render.md) and [references/openui.md](https://daub.dev/references/openui.md).
 
 ### Agent Skill
 
@@ -333,7 +333,7 @@ Install the DAUB skill into any AI coding agent ([40+ supported](https://skills.
 npx skills add sliday/daub
 ```
 
-This gives your agent full knowledge of all 84 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
+This gives your agent full knowledge of all 84 components, class conventions, theme API, and usage patterns, plus the spec formats, MCP tools, a verify loop and Jev recipes in `references/`. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
 
 ## Block Library
 

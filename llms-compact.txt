@@ -109,7 +109,7 @@ For grids with 3+ columns, use `db-container--wide`.
 
 ### Toast — JS only
 ```js
-DAUB.toast('Saved!', { type: 'success', duration: 3000 });
+DAUB.toast({ type: 'success', message: 'Saved!', duration: 3000 });
 ```
 
 ### Dropdown — `.db-dropdown`
