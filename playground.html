@@ -714,6 +714,8 @@
       border-radius: 0; font-weight: 500;
     }
     .pg-preview-tabs .db-tabs__tab[aria-selected="true"] { font-weight: 500; }
+    /* Status text shares the tab box so "Streaming…" sits on the tab baseline */
+    #pg-status { height: 36px; line-height: 34px; border-bottom: 2px solid transparent; box-sizing: border-box; font-weight: 500; }
     .pg-preview-pane { display: none; flex: 1; overflow: auto; min-height: 0; }
     .pg-preview-pane--active { display: flex; flex-direction: column; }
     .pg-code-view {
