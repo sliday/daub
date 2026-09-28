@@ -84,7 +84,6 @@ scaleCta = Button("Talk to sales", "ghost")
 | `Stack([a, b], "horizontal", 16)` | `Stack([a, b], "horizontal", 4)` | gap is a 0-6 token |
 | `Divider()` | `Separator()` | Divider is not a parser type |
 | `Button("Save", "outlined")` | `Button("Save", "secondary")` | Unknown variants render a plain button. Variants: primary, secondary, ghost, icon-danger, icon-success, icon-accent |
-| `Image(url, "Hero", 1200, 800)` | `Image(url, "Hero")` | width and height squash the image in a narrower column |
 | `Stack([a, b], "vertical", 5)` as the page root | `Stack([a, b], "vertical", 5, container: "wide")` | Without `container` the page has no side gutters |
 | `Button("Delete account", "secondary")` | `Button("Delete account", "icon-danger", icon: "trash-2")` | Destructive actions read red; `icon-danger` keeps its label |
 

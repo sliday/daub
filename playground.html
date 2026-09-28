@@ -7029,19 +7029,29 @@ RENDERERS.Image = function(p) {
   el.style.maxWidth = '100%';
   el.style.height = 'auto';
   el.style.borderRadius = 'var(--db-radius-md)';
+  // width/height in px: a number, "800" or "800px" (other units are ignored)
+  var px = function(v) { return /^\s*\d+(\.\d+)?(px)?\s*$/.test(String(v)) ? parseFloat(v) : 0; };
+  var w = px(p.width), h = px(p.height);
+  // As attributes they size the box before the image loads, while max-width:100% caps the width and height:auto
+  // keeps the ratio. A px height beside max-width squashed a 1200x800 image in a 564px column to 564x800.
+  if (w) el.setAttribute('width', w);
+  if (h) el.setAttribute('height', h);
   if (p.src && isSafeUrl(p.src)) {
     el.src = p.src;
+    // A height alone is a fixed height: crop to it rather than squash when max-width narrows the image
+    if (h && !w) { el.style.height = h + 'px'; el.style.objectFit = 'cover'; }
   } else {
-    // Placeholder when no valid src
+    // Placeholder when no valid src: fills the column up to its width, and with both sizes keeps their ratio.
+    // Without a src it has no image to shrink, so a px width would widen a grid column past the page.
     el.style.display = 'block';
-    el.style.width = p.width ? p.width + 'px' : '100%';
-    el.style.height = p.height ? p.height + 'px' : '200px';
+    el.style.width = '100%';
+    if (w) el.style.maxWidth = w + 'px';
+    if (w && h) el.style.aspectRatio = w + ' / ' + h;
+    else el.style.height = h ? h + 'px' : '200px';
     el.style.background = 'var(--db-muted)';
     el.style.objectFit = 'cover';
     el.removeAttribute('src');
   }
-  if (p.width) el.style.width = p.width + 'px';
-  if (p.height) el.style.height = p.height + 'px';
   return el;
 };
 
