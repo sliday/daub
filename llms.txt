@@ -730,7 +730,7 @@ Indeterminate: add `db-progress--indeterminate`.
 <div class="db-empty">
   <div class="db-empty__icon"><!-- icon --></div>
   <h3 class="db-empty__title">No items</h3>
-  <p class="db-empty__desc">Get started by creating your first item.</p>
+  <p class="db-empty__message">Get started by creating your first item.</p>
   <button class="db-btn db-btn--primary">Create</button>
 </div>
 ```

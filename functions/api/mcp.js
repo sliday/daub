@@ -21,14 +21,14 @@ const COMP_PROPS = {
   InputIcon: 'icon: string, right: bool (child is Input)',
   Search: 'placeholder: string',
   Textarea: 'placeholder: string, rows: number, error: bool',
-  Checkbox: 'label: string, checked: bool',
+  Checkbox: 'label: string (shown beside the box; leave it out when a Text in the same row names the item: Checkbox(checked: true)), checked: bool',
   RadioGroup: 'options: [{label, value}], selected: string',
-  Switch: 'label: string, checked: bool (on/off setting: notifications, preferences, feature flags)',
+  Switch: 'label: string (leave it out when a Text in the same row names the setting: Switch(checked: true)), checked: bool (on/off setting: notifications, preferences, feature flags)',
   Slider: 'min: number, max: number, value: number, step: number, label: string',
   Toggle: 'label: string, pressed: bool, size: "sm" (pressable toolbar button: bold/italic, view filter — NOT for settings)',
   ToggleGroup: 'options: [{label, value}], selected: string',
   Select: 'label: string, options: [{label, value}], selected: string',
-  CustomSelect: 'placeholder: string, options: [{label, value, selected, disabled}], searchable: bool',
+  CustomSelect: 'placeholder: string, options: [{label, value, selected, disabled}], searchable: bool, selected: string',
   Kbd: 'keys: [string]',
   Label: 'text: string, required: bool, optional: bool',
   Spinner: 'size: "sm"|"lg"|"xl"',
@@ -43,11 +43,11 @@ const COMP_PROPS = {
   Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}] (inline objects, NOT element ID references), collapsed: bool',
   BottomNav: 'items: [{label, icon, active, badge}]',
   Card: 'title: string, description: string, media: string (image URL only, NOT element IDs), footer: [childIds] (element IDs rendered in card footer area, NOT a boolean), interactive: bool, clip: bool | UX: footer is an array of element IDs not a boolean, media is a URL string not element IDs',
-  Table: 'columns: [{key, label, numeric}], rows: [{}], sortable: bool',
-  DataTable: 'columns: [{key, label}], rows: [{}], selectable: bool',
+  Table: 'columns: [{key, label, numeric}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), sortable: bool',
+  DataTable: 'columns: [{key, label}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), selectable: bool',
   List: 'items: [{title, secondary, icon}]',
   Badge: 'text: string, variant: "new"|"updated"|"success"|"warning"|"error"',
-  Avatar: 'initials: string, src: string, size: "sm"|"md"|"lg"',
+  Avatar: 'initials: string, src: string (image URL only; skip it with size: "sm"), size: "sm"|"md"|"lg"',
   AvatarGroup: 'avatars: [{initials, src}], max: number',
   Calendar: 'selected: "YYYY-MM-DD", today: "YYYY-MM-DD"',
   Chart: 'bars: [{label, value, max}]',
@@ -59,7 +59,7 @@ const COMP_PROPS = {
   Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
   Progress: 'value: number, indeterminate: bool',
   Skeleton: 'variant: "text"|"heading"|"avatar"|"btn", lines: number',
-  EmptyState: 'icon: string, title: string, message: string',
+  EmptyState: 'icon: string, title: string, message: string, children: [childIds] (action Buttons shown under the message)',
   Tooltip: 'text: string, position: "top"|"bottom"|"left"|"right"',
   Modal: 'id: string, title: string, footer: [childIds]',
   AlertDialog: 'id: string, title: string, description: string, footer: [childIds]',
@@ -74,7 +74,7 @@ const COMP_PROPS = {
   Collapsible: 'label: string',
   Resizable: 'direction: "horizontal"|"vertical"',
   DatePicker: 'label: string, placeholder: string, selected: string',
-  StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool',
+  StatCard: 'label: string, value: string, trend: "up"|"down" (direction only, never an icon), trendValue: string, icon: string (Lucide name, pass named: icon: "users"), horizontal: bool',
   ChartCard: 'title: string, children: [Chart element] (empty ChartCard renders "No data"), bars: [{label, value, max}] (shortcut: renders a Chart when no children)',
   CustomHTML: 'html: string, css: string, js: string, children: [childIds]',
 };
@@ -469,7 +469,7 @@ const COMP_SCHEMA = {
   Alert: ['type', 'title', 'message'],
   Progress: ['value', 'indeterminate'],
   Skeleton: ['variant', 'lines'],
-  EmptyState: ['icon', 'title', 'message'],
+  EmptyState: ['icon', 'title', 'message', 'children'],
   Tooltip: ['children', 'text', 'position'],
   Modal: ['children', 'id', 'title', 'footer'],
   AlertDialog: ['id', 'title', 'description', 'footer'],
@@ -572,6 +572,12 @@ function openUItoSpec(input) {
     // Data statements (name = literal) resolve by value wherever they are defined; `resolving` guards cycles
     const data = Object.create(null), resolving = Object.create(null);
     const isData = n => Object.prototype.hasOwnProperty.call(data, n);
+    // Alias statements (name = otherName) create no element: every use of the alias resolves to its target
+    const aliasOf = Object.create(null);
+    const canon = n => { const seen = Object.create(null); while (aliasOf[n] && !seen[n]) { seen[n] = true; n = aliasOf[n]; } return n; };
+    // Switch(webhook1) with __state = {webhook1: true}: a bare __state key sets the control's state instead of printing as its label
+    const STATE_PROP = { Switch: 'checked', Checkbox: 'checked', Toggle: 'pressed' };
+    const stateKey = v => { const k = v && v.__ref; return k && !nameToId[k] && state && typeof state === 'object' && !Array.isArray(state) && Object.prototype.hasOwnProperty.call(state, k) ? k : null; };
 
     for(let i=0;i<stmts.length;i++){
       const s=stmts[i];
@@ -580,6 +586,7 @@ function openUItoSpec(input) {
       const id=s.name||genId('auto');nameToId[id]=id;s._id=id;
       const v=s.value;
       if(s.name&&v!=null&&(typeof v!=='object'||Array.isArray(v)||(!v.__ref&&!v.__component)))data[s.name]=v;
+      else if(s.name&&v&&v.__ref&&v.__ref!==s.name)aliasOf[s.name]=v.__ref;
       if(!rootName&&!isData(id))rootName=id;
       if(s.name==='root')rootName=id;
     }
@@ -588,8 +595,9 @@ function openUItoSpec(input) {
       if(v==null||typeof v==='string'||typeof v==='number'||typeof v==='boolean')return v;
       if(Array.isArray(v))return v.map(resolveValue);
       if(v.__ref){
-        if(!isData(v.__ref)||resolving[v.__ref])return v.__ref;
-        resolving[v.__ref]=true;const out=resolveValue(data[v.__ref]);delete resolving[v.__ref];return out;
+        const r=canon(v.__ref);
+        if(!isData(r)||resolving[r])return r;
+        resolving[r]=true;const out=resolveValue(data[r]);delete resolving[r];return out;
       }
       if(v.__component)return resolveComponent(v);
       const o={};for(const k in v)if(v.hasOwnProperty(k))o[k]=resolveValue(v[k]);return o;
@@ -598,24 +606,43 @@ function openUItoSpec(input) {
     // Children: arrays and data-statement refs expand in place
     function collectChildren(cv,out){
       if(Array.isArray(cv)){cv.forEach(c=>collectChildren(c,out));return;}
-      if(cv&&cv.__ref&&isData(cv.__ref)&&!resolving[cv.__ref]){resolving[cv.__ref]=true;collectChildren(data[cv.__ref],out);delete resolving[cv.__ref];return;}
+      const dr=cv&&cv.__ref&&canon(cv.__ref);
+      if(dr&&isData(dr)&&!resolving[dr]){resolving[dr]=true;collectChildren(data[dr],out);delete resolving[dr];return;}
       const id=processChild(cv);if(id)out.push(id);
     }
 
     function processChild(cv){
       if(cv==null)return null;
-      if(typeof cv==='string'){if(nameToId[cv])return cv;const id=genId('text');elements[id]={type:'Text',props:{content:cv}};return id;}
+      if(typeof cv==='string'){if(nameToId[cv])return canon(cv);const id=genId('text');elements[id]={type:'Text',props:{content:cv}};return id;}
       if(typeof cv==='number'||typeof cv==='boolean'){const id=genId('text');elements[id]={type:'Text',props:{content:String(cv)}};return id;}
-      if(cv.__ref)return cv.__ref;
+      if(cv.__ref)return canon(cv.__ref);
       if(cv.__component)return resolveComponent(cv);
       return null;
     }
 
     function resolveComponent(comp){
-      const {__component:typeName,__args:args,__named:named,__hasNamed:hn}=comp;
-      const schema=COMP_SCHEMA[typeName];const props={};const childIds=[];
+      const {__component:typeName,__named:named,__hasNamed:hn}=comp;
+      let args=comp.__args;
+      let schema=COMP_SCHEMA[typeName];const props={};const childIds=[];
+      // Modal("upload-modal", "Upload files", "Drop files here", [footer]) or Modal("upload-modal", [body], "Upload files"):
+      // an id-first call (AlertDialog order). Text args are the title then the description; an array before them is the body,
+      // after them the footer. Modal("Body", "id", "Title") keeps the schema order (its 2nd arg is id-shaped)
+      const idLike=v=>typeof v==='string'&&/^[A-Za-z][\w-]*$/.test(v);
+      if((typeName==='Modal'||typeName==='Sheet'||typeName==='Drawer')&&idLike(args[0])&&args.length>1&&!idLike(args[1])){
+        props.id=args[0];let sawText=false;
+        for(let m=1;m<args.length;m++){
+          if(typeof args[m]==='string'){if(props.title==null)props.title=args[m];else if(props.description==null)props.description=args[m];sawText=true;}
+          else if(!sawText)collectChildren(args[m],childIds);
+          else props.footer=resolveValue(args[m]);
+        }
+        args=[];
+      }
+      // Tabs(["All", "Active"], "All"): a first arg of only quoted labels is the tab list, not the panels
+      if(typeName==='Tabs'&&Array.isArray(args[0])&&args[0].length&&args[0].every(x=>typeof x==='string'&&!nameToId[x]))schema=['tabs','active'];
+      const sk=STATE_PROP[typeName]&&stateKey(args[0]);
+      if(sk)props[STATE_PROP[typeName]]=state[sk];
       if(schema&&args.length){
-        for(let a=0;a<args.length&&a<schema.length;a++){
+        for(let a=sk?1:0;a<args.length&&a<schema.length;a++){
           if(schema[a]==='children')collectChildren(args[a],childIds);
           else props[schema[a]]=resolveValue(args[a]);
         }
@@ -638,7 +665,29 @@ function openUItoSpec(input) {
         }
       }
     }
+    if(rootName)rootName=canon(rootName); // root = page
     if(!rootName||!elements[rootName]){const ks=Object.keys(elements);if(ks.length)rootName=ks[0];}
+    // A named element listed under two parents renders once: the first placement in document order wins.
+    // A repeat in a sibling panel of the same Tabs stays (one panel shows at a time)
+    if(rootName){
+      const placed=Object.create(null),onPath=Object.create(null);
+      const walk=(id,panel)=>{
+        const el=elements[id];
+        if(!el||!Array.isArray(el.children)||onPath[id])return;
+        onPath[id]=true;
+        el.children=el.children.filter((cid,i)=>{
+          const ctx=el.type==='Tabs'?id+'#'+i:panel;
+          const prev=placed[cid];
+          if(!prev){placed[cid]=[ctx];walk(cid,ctx);return true;}
+          const tabs=ctx&&ctx.split('#')[0];
+          const sibling=tabs&&prev.every(p=>p&&p!==ctx&&p.split('#')[0]===tabs);
+          if(sibling)prev.push(ctx);
+          return !!sibling;
+        });
+        delete onPath[id];
+      };
+      walk(rootName,null);
+    }
     const spec={theme,root:rootName||'root',elements};if(state)spec.state=state;return spec;
   } catch(e) {
     try {
@@ -1233,14 +1282,17 @@ function renderToHTML(spec) {
       if (typeof renderElement === 'function') {
         var root = renderElement(spec.elements, spec.root, 0);
         if (root) document.getElementById('app').appendChild(root);
-        var rendered = {};
-        document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
-        Object.keys(spec.elements).forEach(function(id) {
-          if (id !== spec.root && !rendered[id]) {
-            var orphan = renderElement(spec.elements, id, 0);
-            if (orphan) document.getElementById('app').appendChild(orphan);
-          }
-        });
+        if (typeof renderOrphans === 'function') renderOrphans(spec, document.getElementById('app'));
+        else {
+          var rendered = {};
+          document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+          Object.keys(spec.elements).forEach(function(id) {
+            if (id !== spec.root && !rendered[id]) {
+              var orphan = renderElement(spec.elements, id, 0);
+              if (orphan) document.getElementById('app').appendChild(orphan);
+            }
+          });
+        }
         if (typeof DAUB !== 'undefined') DAUB.init();
         if (typeof lucide !== 'undefined') lucide.createIcons();
       }

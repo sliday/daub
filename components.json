@@ -1382,13 +1382,13 @@
           "required": false
         },
         {
-          "class": "db-empty__desc",
+          "class": "db-empty__message",
           "element": "p",
           "required": false
         }
       ],
       "js": false,
-      "html": "<div class=\"db-empty\">\n  <div class=\"db-empty__icon\"><!-- icon --></div>\n  <h3 class=\"db-empty__title\">No items</h3>\n  <p class=\"db-empty__desc\">Get started by creating your first item.</p>\n  <button class=\"db-btn db-btn--primary\">Create</button>\n</div>",
+      "html": "<div class=\"db-empty\">\n  <div class=\"db-empty__icon\"><!-- icon --></div>\n  <h3 class=\"db-empty__title\">No items</h3>\n  <p class=\"db-empty__message\">Get started by creating your first item.</p>\n  <button class=\"db-btn db-btn--primary\">Create</button>\n</div>",
       "notes": "Centered empty state with icon, title, description, and optional CTA."
     },
     {

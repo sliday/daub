@@ -14,8 +14,8 @@
       "type": "documentation",
       "description": "Full DAUB UI reference: all 84 components with classes, variants and HTML examples, 21 theme families, JS API.",
       "url": "https://daub.dev/llms.txt",
-      "digest": "sha256:9f836a03870abb734a2c600aba630363305f828d47a6875bdc32284e1d98d1ac",
-      "sha256": "9f836a03870abb734a2c600aba630363305f828d47a6875bdc32284e1d98d1ac"
+      "digest": "sha256:bb9e9e561ecec8eee5ec29481779132573659df2caba25bada9ade0af999fec2",
+      "sha256": "bb9e9e561ecec8eee5ec29481779132573659df2caba25bada9ade0af999fec2"
     },
     {
       "name": "daub-llms-compact",
@@ -30,8 +30,8 @@
       "type": "data",
       "description": "Structured JSON catalog of all 84 DAUB components: classes, modifiers, parts, JS needs and HTML.",
       "url": "https://daub.dev/components.json",
-      "digest": "sha256:61ac491ce24d051003bc47da68718408e1c83798a3d7d60c6aa9e2bd434f59b3",
-      "sha256": "61ac491ce24d051003bc47da68718408e1c83798a3d7d60c6aa9e2bd434f59b3"
+      "digest": "sha256:7242fc807248fa24c70f6f97adabc7e9d2bffbcd2b365b9c6220c5280dbb9221",
+      "sha256": "7242fc807248fa24c70f6f97adabc7e9d2bffbcd2b365b9c6220c5280dbb9221"
     },
     {
       "name": "daub-ui-ref-blocks",
@@ -46,8 +46,8 @@
       "type": "documentation",
       "description": "DAUB component catalog: spec types with purpose and props, plus every db-* HTML class with modifiers and parts.",
       "url": "https://daub.dev/references/components.md",
-      "digest": "sha256:dd01e7222f005745a72bb2a2302b51e3f3ee85a4624d06d0a3ae6487733eb997",
-      "sha256": "dd01e7222f005745a72bb2a2302b51e3f3ee85a4624d06d0a3ae6487733eb997"
+      "digest": "sha256:7115e0cfbc6d2405cf62c23e0eb55b36291b5b639dcf3848d43f3a246cdaad9a",
+      "sha256": "7115e0cfbc6d2405cf62c23e0eb55b36291b5b639dcf3848d43f3a246cdaad9a"
     },
     {
       "name": "daub-ui-ref-design",
@@ -86,8 +86,8 @@
       "type": "documentation",
       "description": "OpenUI Lang syntax for DAUB and every component signature in parser argument order.",
       "url": "https://daub.dev/references/openui.md",
-      "digest": "sha256:2d80339ed78011e99355534fd27227d16bf6f2dfccbab6cb93b8ebd24257cbf2",
-      "sha256": "2d80339ed78011e99355534fd27227d16bf6f2dfccbab6cb93b8ebd24257cbf2"
+      "digest": "sha256:606cbaef1a1f71ddc7560efc5abd23de7dbf1a34a4ff56b7cf48b604263c0c17",
+      "sha256": "606cbaef1a1f71ddc7560efc5abd23de7dbf1a34a4ff56b7cf48b604263c0c17"
     },
     {
       "name": "daub-ui-ref-themes",

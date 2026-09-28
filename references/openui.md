@@ -103,7 +103,7 @@ Positional order per type, with the prop types from the playground catalog. Prop
 Stack(children: [refs], direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true)
 Grid(children: [refs], columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true)
 Surface(children: [refs], variant: "raised"|"inset"|"pressed")
-Text(content: string, tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", class: string)
+Text(content: string, tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", class: string ("db-text-muted" for secondary text))
 Prose(content: string (HTML), size: "sm"|"lg"|"xl"|"2xl")
 Separator(vertical: bool, dashed: bool, label: string)
 Icon(name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success")
@@ -121,14 +121,14 @@ InputGroup(children: [refs], addonBefore: string, addonAfter: string (child is I
 InputIcon(children: [refs], icon: string, right: bool (child is Input))
 Search(placeholder: string)
 Textarea(placeholder: string, rows: number, error: bool)
-Checkbox(label: string, checked: bool)
+Checkbox(label: string (shown beside the box; leave it out when a Text in the same row names the item: Checkbox(checked: true)), checked: bool)
 RadioGroup(options: [{label, value}], selected: string)
-Switch(label: string, checked: bool (on/off setting: notifications, preferences, feature flags))
+Switch(label: string (leave it out when a Text in the same row names the setting: Switch(checked: true)), checked: bool (on/off setting: notifications, preferences, feature flags))
 Slider(min: number, max: number, value: number, step: number, label: string)
 Toggle(label: string, pressed: bool, size: "sm" (pressable toolbar button: bold/italic, view filter — NOT for settings))
 ToggleGroup(options: [{label, value}], selected: string)
 Select(label: string, options: [{label, value}], selected: string)
-CustomSelect(placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool)
+CustomSelect(placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool)  // named only: selected
 Kbd(keys: [string])
 Label(text: string, required: bool, optional: bool)
 Spinner(size: "sm"|"lg"|"xl")
@@ -153,11 +153,11 @@ BottomNav(items: [{label, icon, active, badge}])
 
 ```text
 Card(children: [refs], title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool)
-Table(columns: [{key, label, numeric}], rows: [{}], sortable: bool)
-DataTable(columns: [{key, label}], rows: [{}], selectable: bool)
+Table(columns: [{key, label, numeric}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), sortable: bool)
+DataTable(columns: [{key, label}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), selectable: bool)
 List(items: [{title, secondary, icon}])
 Badge(text: string, variant: "new"|"updated"|"warning"|"error")
-Avatar(initials: string, src: string, size: "sm"|"md"|"lg")
+Avatar(initials: string, src: string (image URL only; skip it with size: "sm"), size: "sm"|"md"|"lg")
 AvatarGroup(avatars: [{initials, src}], max: number)
 Calendar(selected: "YYYY-MM-DD" (date to highlight), today: "YYYY-MM-DD" (today override))
 Chart(bars: [{label, value, max}])
@@ -174,7 +174,7 @@ Image(src: string (URL), alt: string, width: number, height: number)
 Alert(type: "info"|"warning"|"error"|"success", title: string, message: string)
 Progress(value: number, indeterminate: bool)
 Skeleton(variant: "text"|"heading"|"avatar"|"btn", lines: number)
-EmptyState(icon: string, title: string, message: string)
+EmptyState(icon: string, title: string, message: string, children: [childIds] (action Buttons shown under the message))
 Tooltip(children: [refs], text: string, position: "top"|"bottom"|"left"|"right")
 ```
 
@@ -204,7 +204,7 @@ DatePicker(label: string, placeholder: string, selected: string)
 ### Dashboard
 
 ```text
-StatCard(label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool)
+StatCard(label: string, value: string, trend: "up"|"down" (direction only, never an icon), trendValue: string, icon: string (Lucide name, pass named: icon: "users"), horizontal: bool)
 ChartCard(children: [Chart element] (empty ChartCard renders "No data"), title: string)  // named only: bars
 ```
 
@@ -216,7 +216,7 @@ CustomHTML(html: string (raw HTML using DAUB classless CSS), css: string (CSS ru
 
 Children-first types (21): Stack, Grid, Surface, ButtonGroup, Field, InputGroup, InputIcon, Tabs, Navbar, Card, AspectRatio, ScrollArea, Tooltip, Modal, Sheet, Drawer, Popover, HoverCard, Collapsible, Resizable, ChartCard.
 
-Children elsewhere: CustomHTML (position 4).
+Children elsewhere: EmptyState (position 4), CustomHTML (position 4).
 
 Parser types: 72. Any other PascalCase name tokenizes as a plain identifier and becomes a dangling child reference.
 <!-- END GENERATED:signatures -->

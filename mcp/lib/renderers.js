@@ -158,7 +158,8 @@
 
     // footer: [childIds] keeps only ids present in els ("Cancel | Save" is text, not a ref); none left = no footer
     function footerRefs(v, els) {
-      return toArr(v).filter(function(id) { return !!els && Object.prototype.hasOwnProperty.call(els, id); });
+      // One nested level flattens: footer: [cardFooter] with cardFooter = [buyBtn] arrives as [["buyBtn"]]
+      return [].concat.apply([], toArr(v)).filter(function(id) { return typeof id === 'string' && !!els && Object.prototype.hasOwnProperty.call(els, id); });
     }
 
     // A data entry that names a spec element: OpenUI hoists inline components (Breadcrumbs([Text(..)]), Table([[Text(..)]]))
@@ -214,9 +215,14 @@
       return o;
     }
 
+    // Image-URL shape: http(s), protocol-relative, a path, blob:, or a filename with an image extension ("sm" and "Jordan Diaz" are not)
+    function isImgUrl(s) {
+      return typeof s === 'string' && /^((https?:)?\/\/|\.{0,2}\/|blob:)|^\S+\.(png|jpe?g|gif|webp|avif|svg)(\?|$)/i.test(s.trim());
+    }
+
     // AI-written prop names -> the names the renderers read (Badge label -> text, List items[].primary -> title)
     function normalizeProps(type, p) {
-      var items, on;
+      var items, on, tv, q, slid, signed;
       switch (type) {
         case 'Badge':
         case 'Label':
@@ -227,7 +233,34 @@
         case 'EmptyState':
           return fillAlias(p, 'message', ['description', 'text']);
         case 'StatCard':
-          return fillAlias(p, 'label', ['title']);
+          p = fillAlias(p, 'label', ['title']);
+          tv = p.trendValue;
+          // trend "neutral"/"flat": no direction word, the value shows uncoloured
+          if (/^(neutral|flat)$/.test(p.trend)) return withProp(withProp(p, 'trend', isText(tv) ? String(tv) : null), 'trendValue', null);
+          // StatCard("Keys", "14", "key-round", "up", "+2") / StatCard("Support", "24/7", "headset", "Replies in 2 min"): a Lucide name in the trend slot
+          if (typeof p.trend !== 'string' || !/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(p.trend) || /^(up|down)$/.test(p.trend) || !mkIcon(p.trend)) return p;
+          slid = /^(up|down)$/.test(tv);
+          signed = typeof tv === 'string' && /^[+\u2191\-\u2212\u2193]/.test(tv);
+          q = withProp(withProp(withProp(p, 'icon', p.trend), 'trend', slid || signed ? tv : null), 'trendValue', slid && isText(p.icon) && p.icon !== p.trend ? p.icon : null);
+          return slid || signed || !isText(tv) || isText(q.description) ? q : withProp(q, 'description', tv);
+        case 'Switch':
+        case 'Checkbox':
+          // Switch(true): a boolean in the label slot is the checked state, not text
+          return typeof p.label === 'boolean' && p.checked == null ? withProp(withProp(p, 'checked', p.label), 'label', '') : p;
+        case 'CustomSelect':
+          // CustomSelect("Language", opts, "de"): a string in the searchable slot is the selection
+          if (typeof p.searchable === 'string' && !/^(true|false)$/.test(p.searchable)) p = withProp(fillAlias(p, 'selected', ['searchable']), 'searchable', false);
+          // A top-level selected (as Select and RadioGroup take it) marks the matching option; a label is the placeholder
+          p = fillAlias(fillAlias(p, 'selected', ['value', 'defaultValue']), 'placeholder', ['label']);
+          items = toOpts(p.options);
+          if (!isText(p.selected) || items.some(function(o) { return o && o.selected; })) return p;
+          return withProp(p, 'options', items.map(function(o) { return isPlain(o) && (String(o.value) === String(p.selected) || o.label === p.selected) ? withProp(o, 'selected', true) : o; }));
+        case 'Avatar':
+          // src holds only an image URL: Avatar("MC", "sm") is a size, Avatar("JD", "Jordan Diaz") a name, Avatar(url, "Name") swapped args
+          if (isImgUrl(p.initials) && !isImgUrl(p.src)) p = withProp(withProp(p, 'src', p.initials), 'initials', '');
+          if (typeof p.src !== 'string' || !p.src || isImgUrl(p.src)) return p;
+          if (p.size == null && /^(xs|sm|md|lg|xl|2xl)$/i.test(p.src)) p = withProp(p, 'size', p.src);
+          return withProp(p, 'src', '');
         case 'List':
           if (p.items == null) return p;
           return withProp(p, 'items', toArr(p.items).map(function(it) {
@@ -242,6 +275,9 @@
           on = items.filter(function(o) { return o && o.active === true; })[0];
           return p.selected == null && on ? withProp(p, 'selected', on.value) : p;
         case 'Tabs':
+          // Tabs(tabs: ["All", "Done"]): a bare string tab is its own label and id
+          items = toArr(p.tabs != null ? p.tabs : p.items);
+          if (items.some(isText)) p = withProp(p, p.tabs != null ? 'tabs' : 'items', items.map(function(t) { return isText(t) ? { label: String(t), id: String(t) } : t; }));
           if (p.tabs != null || p.items == null) return p;
           items = toArr(p.items).map(function(t) { return isPlain(t) ? fillAlias(t, 'id', ['value']) : t; });
           p = withProp(p, 'tabs', items);
@@ -316,6 +352,40 @@
       var wrap = mkEl('div', 'db-table-scroll');
       wrap.appendChild(table);
       return wrap;
+    }
+
+    // Row-action verbs a model packs into one "Actions" cell ("copy,revoke", "Copy \u00b7 Revoke", "\u22ef") -> the icon each renders as
+    var ACTION_ICONS = { copy: 'copy', revoke: 'ban', 'delete': 'trash-2', remove: 'trash-2', edit: 'pencil', view: 'eye', open: 'external-link',
+      download: 'download', share: 'share-2', archive: 'archive', rotate: 'refresh-cw', menu: 'ellipsis', more: 'ellipsis', '\u22ef': 'ellipsis', '\u2026': 'ellipsis', '...': 'ellipsis' };
+
+    // An "Actions" column cell made only of action verbs -> ghost icon buttons; anything else stays text (null)
+    function actionCell(c, v) {
+      if (typeof v !== 'string' || !(/^actions?$/i.test(c.key || '') || /^actions?$/i.test(c.label || ''))) return null;
+      var names = v.split(/\s*[,\u00b7|\/]\s*/).filter(Boolean);
+      if (!names.length || !names.every(function(n) { return Object.prototype.hasOwnProperty.call(ACTION_ICONS, n.toLowerCase()); })) return null;
+      var box = mkEl('div');
+      box.style.cssText = 'display:inline-flex;align-items:center;gap:var(--db-space-1)';
+      names.forEach(function(n) {
+        var b = RENDERERS.Button({ variant: 'ghost', size: 'icon', icon: ACTION_ICONS[n.toLowerCase()] });
+        b.setAttribute('aria-label', n);
+        box.appendChild(b);
+      });
+      return box;
+    }
+
+    // A cell that names spec elements: one id, or a list of ids (row actions: [Button(..), Button(..)]); null when any entry is data
+    function cellRefs(v, els) {
+      var ids = toArr(v).map(function(x) { return specRef(x, els); });
+      return ids.length && ids.every(Boolean) ? ids : null;
+    }
+
+    // Several elements in one cell sit in a row
+    function cellElements(els, ids, d) {
+      if (ids.length === 1) return renderChildren(els, ids, d);
+      var box = mkEl('div');
+      box.style.cssText = 'display:inline-flex;align-items:center;gap:var(--db-space-1)';
+      box.appendChild(renderChildren(els, ids, d));
+      return box;
     }
     
     // ---- Declarative State Engine ----
@@ -467,6 +537,7 @@
       if (depth > MAX_DEPTH) return document.createTextNode('[max depth]');
       var def = elements[id];
       if (!def) return null;
+      if (RENDERING[id]) return null; // cycle: an element listed inside itself (or a descendant)
     
       // Encode visible expression as data attribute for iframe-side evaluation
       if (def.visible != null) {
@@ -543,8 +614,66 @@
       return frag;
     }
 
+    // Parent of each element some other element references (a children entry or a prop holding its id; trigger-like
+    // props excluded), for the orphan pass
+    function orphanParents(els) {
+      var parentOf = {};
+      Object.keys(els).forEach(function(pid) {
+        (function refs(v, depth) {
+          if (v == null || depth > 6) return;
+          if (typeof v === 'string') { if (v !== pid && Object.prototype.hasOwnProperty.call(els, v) && !parentOf[v]) parentOf[v] = pid; return; }
+          if (typeof v === 'object') for (var k in v) if (Object.prototype.hasOwnProperty.call(v, k) && !/^(trigger|target|for|controls|id|opens)$/.test(k)) refs(v[k], depth + 1);
+        })({ c: els[pid] && els[pid].children, p: els[pid] && els[pid].props }, 0);
+      });
+      return parentOf;
+    }
+
+    // Append what the root tree did not place (overlays opened by a trigger, unreferenced statements) to container.
+    // Each one renders through its top-most unplaced ancestor, so a Modal's inline children render inside the Modal
+    // instead of first standing alone and then again inside it. Returns [{id, node}] for each appended element
+    function renderOrphans(spec, container) {
+      var els = spec.elements, rendered = {}, out = [];
+      container.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+      var parentOf = orphanParents(els);
+      Object.keys(els).forEach(function(id) {
+        var top = id, hops = 0;
+        while (parentOf[top] && !rendered[parentOf[top]] && hops++ < 50) top = parentOf[top];
+        [top, id].forEach(function(oid) {
+          if (oid === spec.root || rendered[oid]) return;
+          rendered[oid] = true;
+          var node = renderElement(els, oid, 0);
+          if (!node) return;
+          container.appendChild(node);
+          out.push({ id: oid, node: node });
+          if (node.querySelectorAll) node.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+        });
+      });
+      return out;
+    }
+
     var RENDERERS = {};
     
+    // A Checkbox or Switch whose label repeats text beside it (Stack([Text("Email alerts"), Switch("Email alerts", true)])):
+    // the row shows the name once, and the control keeps it as its accessible name
+    function dedupeControlLabels(row) {
+      var kids = [].slice.call(row.children), seen = {};
+      var isCtl = function(k) { return k.classList && (k.classList.contains('db-checkbox') || k.classList.contains('db-switch')); };
+      kids.forEach(function(k) {
+        if (isCtl(k)) return;
+        [k].concat([].slice.call(k.querySelectorAll('h1,h2,h3,h4,p,span,label'))).forEach(function(n) {
+          var t = n.textContent.trim().toLowerCase();
+          if (t) seen[t] = true;
+        });
+      });
+      kids.forEach(function(k) {
+        if (!isCtl(k)) return;
+        var last = k.lastChild, t = last && last.nodeType === 3 ? last.nodeValue.trim() : '';
+        if (!t || !seen[t.toLowerCase()]) return;
+        k.removeChild(last);
+        (k.querySelector('input') || k).setAttribute('aria-label', t);
+      });
+    }
+
     // -- Stack (flexbox) --
     RENDERERS.Stack = function(p, ch, els, d) {
       var el = document.createElement('div');
@@ -565,6 +694,7 @@
       else if (p.align === 'start') el.style.alignItems = 'flex-start';
       else if (p.align === 'stretch') el.style.alignItems = 'stretch';
       el.appendChild(renderChildren(els, ch, d));
+      dedupeControlLabels(el);
       // Sidebar rows: give the content a flex basis so it sits beside the sidebar instead of wrapping below it (still wraps on narrow screens)
       if (isH && Array.isArray(ch) && ch.some(function(id) { return els[id] && els[id].type === 'Sidebar'; })) {
         for (var si = 0; si < el.children.length; si++) {
@@ -624,6 +754,10 @@
       var el = document.createElement(tag);
       var classMap = { h1:'db-h1', h2:'db-h2', h3:'db-h3', h4:'db-h4', p:'db-body', span:'' };
       el.className = (classMap[tag] || '') + (p.class ? ' ' + p.class : '');
+      // Utility names models borrow from Tailwind: line-through strikes the text, text-muted maps to the DAUB muted class
+      var cl = String(p.class || '').split(/\s+/);
+      if (cl.indexOf('line-through') >= 0) el.style.textDecoration = 'line-through';
+      if (cl.indexOf('text-muted') >= 0 || cl.indexOf('text-muted-foreground') >= 0) el.classList.add('db-text-muted');
       el.textContent = c || '';
       return el;
     };
@@ -881,7 +1015,7 @@
       trigger.className = 'db-custom-select__trigger';
       trigger.type = 'button';
       var selectedOpt = toOpts(p.options).filter(function(o) { return o.selected; })[0];
-      var triggerText = mkEl('span', 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
+      var triggerText = mkEl('span', selectedOpt ? 'db-custom-select__value' : 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
       trigger.appendChild(triggerText);
       var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       svg.setAttribute('class', 'db-custom-select__icon');
@@ -964,22 +1098,14 @@
         list.appendChild(btn);
       });
       el.appendChild(list);
-      if (ch.length) {
-        ch.forEach(function(cid, i) {
-          var panel = mkEl('div', 'db-tabs__panel');
-          if (i !== activeIdx) panel.hidden = true;
-          var child = renderElement(els, cid, d + 1);
-          if (child) panel.appendChild(child);
-          el.appendChild(panel);
-        });
-      } else {
-        tabs.forEach(function(t, i) {
-          var panel = mkEl('div', 'db-tabs__panel');
-          if (i !== activeIdx) panel.hidden = true;
-          panel.appendChild(mkEl('p', 'db-body', (t.label || '') + ' content'));
-          el.appendChild(panel);
-        });
-      }
+      // No children: a filter strip (Tabs(["All", "Done"], "All")) with no panels, not "All content" filler
+      ch.forEach(function(cid, i) {
+        var panel = mkEl('div', 'db-tabs__panel');
+        if (i !== activeIdx) panel.hidden = true;
+        var child = renderElement(els, cid, d + 1);
+        if (child) panel.appendChild(child);
+        el.appendChild(panel);
+      });
       return el;
     };
     
@@ -1233,8 +1359,9 @@
         cols.forEach(function(c) {
           var td = document.createElement('td');
           if (c.numeric) td.className = 'db-numeric';
-          var cRef = specRef(r[c.key], els);
-          if (cRef) td.appendChild(renderChildren(els, [cRef], d));
+          var cRefs = cellRefs(r[c.key], els), act = cRefs ? null : actionCell(c, r[c.key]);
+          if (cRefs) td.appendChild(cellElements(els, cRefs, d));
+          else if (act) td.appendChild(act);
           else td.textContent = r[c.key] == null ? '' : String(r[c.key]);
           tr.appendChild(td);
         });
@@ -1254,7 +1381,7 @@
     };
     
     // -- DataTable --
-    RENDERERS.DataTable = function(p) {
+    RENDERERS.DataTable = function(p, ch, els, d) {
       var el = document.createElement('table');
       el.className = 'db-data-table';
       var shape = tableShape(p);
@@ -1292,6 +1419,9 @@
         cols.forEach(function(c) {
           var td = document.createElement('td');
           var raw = r[c.key];
+          // A Button (or [Button, Button]) in a cell renders as elements; "copy,revoke" in an Actions column as icon buttons
+          var refs = cellRefs(raw, els), act = refs ? null : actionCell(c, raw);
+          if (refs || act) { td.appendChild(refs ? cellElements(els, refs, d) : act); tr.appendChild(td); return; }
           // Flatten object cell values (e.g. Badge specs) to string
           var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw == null ? '' : String(raw));
           // Auto-detect status badges
@@ -1494,12 +1624,16 @@
     };
     
     // -- Carousel --
-    RENDERERS.Carousel = function(p) {
+    RENDERERS.Carousel = function(p, ch, els, d) {
       var el = mkEl('div', 'db-carousel');
       var track = mkEl('div', 'db-carousel__track');
       var slides = toArr(p.slides);
       slides.forEach(function(s) {
-        track.appendChild(mkEl('div', 'db-carousel__slide', s.content || ''));
+        // {content: "w1"} names a spec element: render it in the slide instead of printing the id
+        var ref = specRef(s.content, els), node = ref && renderElement(els, ref, (d || 0) + 1);
+        var slide = mkEl('div', 'db-carousel__slide', node ? null : (s.content || ''));
+        if (node) slide.appendChild(node);
+        track.appendChild(slide);
       });
       el.appendChild(track);
       var prevBtn = document.createElement('button');
@@ -1585,7 +1719,7 @@
     };
     
     // -- EmptyState --
-    RENDERERS.EmptyState = function(p) {
+    RENDERERS.EmptyState = function(p, ch, els, d) {
       var el = mkEl('div', 'db-empty');
       var ico = mkIcon(p.icon, 48);
       if (ico) {
@@ -1594,7 +1728,9 @@
         el.appendChild(iconWrap);
       }
       el.appendChild(mkEl('h3', 'db-empty__title', p.title || 'No items'));
-      el.appendChild(mkEl('p', 'db-empty__desc', p.message || ''));
+      el.appendChild(mkEl('p', 'db-empty__message', p.message || ''));
+      // Action children (a Button) sit centered under the message
+      if (toArr(ch).length) el.appendChild(renderChildren(els, toArr(ch), d));
       return el;
     };
     
