@@ -1,6 +1,7 @@
 import { VALID_TYPES } from './prompt.js';
 
-const validTypeSet = new Set(VALID_TYPES);
+// Link/Icon stay out of the prompt's type list, but playground specs use them and renderers.js draws them
+const validTypeSet = new Set([...VALID_TYPES, 'Link', 'Icon']);
 
 export function validateSpec(spec) {
   const issues = [];

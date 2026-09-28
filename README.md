@@ -72,8 +72,8 @@ DAUB uses system font stacks by default. For richer typography:
   }
 </style>
 
-<!-- Lucide Icons (recommended — used in all demos) -->
-<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Lucide Icons (recommended — used in all demos). Keep the 0.576.0 pin: Lucide 1.x drops brand icons (github, twitter, linkedin) -->
+<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 ```
 
 ## Components (84)
@@ -557,7 +557,9 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.20.2** — Playground generates on OpenRouter's Auto Router (`openrouter/auto`) and picks components with Jev (`~typesafe/jev-latest`); the preview now runs in an isolated origin (share-link and postMessage exploits fixed); elements that fail to render no longer blank the page; plus fixes from a full-repo review.
+**Latest: v3.20.3** — Consistent rendering of malformed props across the playground, `daub-render.js` and the MCP renderer; share links move to `#s=`; preview keeps checkbox/radio/select/slider state; pinned lucide with integrity; hosted MCP pages load first-party assets; new combo visual audit (`tests/combo-audit/`).
+
+**v3.20.2** — Playground generates on OpenRouter's Auto Router (`openrouter/auto`) and picks components with Jev (`~typesafe/jev-latest`); the preview now runs in an isolated origin (share-link and postMessage exploits fixed); elements that fail to render no longer blank the page; plus fixes from a full-repo review.
 
 **v3.20.1** — Mobile theme-switcher no longer covers centered actions; WCAG audit merges per-theme blocks (42 themes, 0 failures).
 

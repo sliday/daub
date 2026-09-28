@@ -49,7 +49,7 @@
           crossorigin="anonymous" defer></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.20.2">
+  <link rel="stylesheet" href="daub.css?v=3.20.3">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -961,7 +961,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.20.2"></script>
+<script src="daub.js?v=3.20.3"></script>
 <script src="daub-openui-parser.js"></script>
 <script>
 // ============================================================
@@ -1045,8 +1045,8 @@ function buildIframeSrcdoc(theme) {
   return '<!DOCTYPE html><html lang="en"' + themeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
     + '<base target="_blank">'
-    + '<link rel="stylesheet" href="daub.css?v=3.20.2">'
-    + '<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" crossorigin="anonymous"><\/script>'
+    + '<link rel="stylesheet" href="daub.css?v=3.20.3">'
+    + '<script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"><\/script>'
     // html2canvas needs a same-origin clone iframe, which an opaque sandbox forbids; html-to-image uses SVG foreignObject
     + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js" integrity="sha384-YAj4cGTKsNinHUzylwDJDDZEpC6gnqNubmrp9eerckq7+gwWjABe5s2plXl3uUKb" crossorigin="anonymous"><\/script>'
     + '<style>html,body{margin:0;min-height:100%;}'
@@ -1070,7 +1070,7 @@ function buildIframeSrcdoc(theme) {
     + '"\u201CThe best design is the simplest one that works.\u201D\\n\u2014 Albert Einstein",'
     + '"\u201CTypography is the craft of endowing human language with a durable visual form.\u201D\\n\u2014 Robert Bringhurst"'
     + '];document.getElementById("pg-iframe-root").setAttribute("data-quote",qs[Math.floor(Math.random()*qs.length)])})()<\/script>'
-    + '<script src="daub.js?v=3.20.2"><\/script>'
+    + '<script src="daub.js?v=3.20.3"><\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
     // Opaque-origin frame: reply only to the embedding origin
@@ -2775,6 +2775,7 @@ function generateInteractiveCode(spec, analysis, onProgress, signal) {
     + '- Add or modify CustomHTML elements in the spec with "js", "html", and/or "css" props\n'
     + '- Target existing elements via: preview.querySelector(\'[data-spec-id="elementId"]\')\n'
     + '- "container" = this CustomHTML element, "preview" = the entire preview root\n'
+    + '- Never declare variables named container or preview (they are provided); query elements with preview.querySelector(\'[data-spec-id="id"]\')\n'
     + '- Use vanilla JS only. No frameworks, no imports, no fetch calls\n'
     + '- For games: use <canvas> inside CustomHTML html prop, game loop in js prop\n'
     + '- For quizzes: manage state in js, update DOM elements by data-spec-id\n'
@@ -2852,7 +2853,18 @@ function parseStateDefs(stateArray) {
     // String or complex value
     if (val.charAt(0) === '[' || val.charAt(0) === '{') return 'window.' + m[1] + ' = ' + val + ';';
     return 'window.' + m[1] + ' = ' + JSON.stringify(val) + ';';
-  }).join(' ');
+  }).join('\n'); // newline: a '// ' fallback entry must not comment out the entries after it
+}
+
+// sharedStateInit runs as CustomHTML js: '' when usable, else why it is not (prose seeds break every chunk)
+function stateInitProblem(code) {
+  if (code == null || code === '') return '';
+  if (typeof code !== 'string') return 'not a string';
+  try { new Function('container', 'preview', '{\n' + code + '\n}'); } catch (e) { return 'syntax error: ' + e.message; } // compiled only, never called
+  var strs = code.match(/(["'`])(?:\\[\s\S]|(?!\1)[^\\])*\1/g) || [];
+  // URLs (via.placeholder.com) and data like status 'todo' are real seeds; only marker text counts
+  if (strs.some(function(s) { return !/^.(?:https?:)?\/\//.test(s) && (/\(seed|\.\.\.\)|placeholder/i.test(s) || /\bTODO\b\s*:/.test(s)); })) return 'placeholder text in a string literal';
+  return '';
 }
 
 function planCodeArchitecture(spec, analysis, signal) {
@@ -2865,6 +2877,7 @@ function planCodeArchitecture(spec, analysis, signal) {
     + '- Chunks must be implementable independently by a junior developer\n'
     + '- Set chunk "effort" to match complexity: "trivial" (wire a click handler), "low" (simple state + DOM updates), "medium" (game loop, multi-step logic)\n'
     + '- "state" declares ALL shared variables as S-expressions: ["(score 0)", "(running false)", "(speed 500)"]\n'
+    + '- sharedStateInit must be executable JS that assigns literal seed data (real arrays/objects), never a description\n'
     + '- "wire" describes how chunks interact AFTER independent implementation\n'
     + '- Cross-chunk communication: use preview.dispatchEvent(new CustomEvent("daub:stateChange", {detail:{...}}))\n'
     + '- If the task is too simple for decomposition, return exactly 1 chunk\n'
@@ -2909,6 +2922,11 @@ function planCodeArchitecture(spec, analysis, signal) {
         // Normalize S-expr plan to legacy format for downstream compatibility
         if (plan.state && !plan.sharedStateInit) {
           plan.sharedStateInit = parseStateDefs(plan.state);
+        }
+        var stateProblem = stateInitProblem(plan.sharedStateInit);
+        if (stateProblem) {
+          dlog('[planCodeArchitecture] dropped sharedStateInit (' + stateProblem + '):', String(plan.sharedStateInit).slice(0, 200));
+          plan.sharedStateInit = '';
         }
         if (plan.wire && !plan.wiring) plan.wiring = plan.wire;
         for (var ci = 0; ci < plan.chunks.length; ci++) {
@@ -2955,6 +2973,7 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
     + 'RULES:\n'
     + '- Access elements: preview.querySelector(\'[data-spec-id="id"]\')\n'
     + '- "container" = this CustomHTML element, "preview" = entire preview root\n'
+    + '- Never declare variables named container or preview (they are provided); query elements with preview.querySelector(\'[data-spec-id="id"]\')\n'
     + '- Shared state vars are globals — read/write them directly\n'
     + '- For cross-chunk events: preview.dispatchEvent(new CustomEvent("daub:stateChange", {detail:{key:val}}))\n'
     + '- Listen for cross-chunk events: preview.addEventListener("daub:stateChange", function(e) {...})\n'
@@ -3236,6 +3255,7 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     + '- Verify shared state variables are used consistently\n'
     + '- Wire cross-chunk interactions (events, state updates)\n'
     + '- Fix broken element references (data-spec-id)\n'
+    + '- Never declare variables named container or preview (they are provided); query elements with preview.querySelector(\'[data-spec-id="id"]\')\n'
     + '- Make it fully functional — not stubs\n'
     + '- Keep the overall spec structure, just fix/improve the code\n'
     + '- Return the COMPLETE spec JSON\n\n'
@@ -3593,6 +3613,7 @@ function buildResultBubble(bubble, spec, verIdx) {
 }
 
 // ---- Blocking fallback ----
+// Reached only via streamFetch's 'no-stream' (no ReadableStream): the body is read whole with res.text()
 function runBlockingGenerate(messages, streamBubble) {
   var provider = isDefaultMode ? 'default' : ($provider ? $provider.value : 'openai');
   var blockSignal = _abortCtrl ? _abortCtrl.signal : null;
@@ -3601,19 +3622,23 @@ function runBlockingGenerate(messages, streamBubble) {
     apiCall = fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.assign({ messages: messages, model: AUTO_MODEL }, mainGenOpts())),
+      body: JSON.stringify(Object.assign({ messages: messages, model: AUTO_MODEL }, mainGenOpts(), OUTPUT_FORMAT === 'openui' ? { response_format: false } : {})),
       signal: blockSignal
     }).then(function(res) {
       if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
-      return res.json();
-    }).then(function(data) { return data.choices[0].message.content; });
+      return parseSseResponse(res); // /api/generate always answers with an SSE stream
+    }).then(function(sse) { return sse.content; });
   } else {
     apiCall = provider === 'anthropic' ? callAnthropic(messages) : provider === 'openrouter' ? callOpenRouter(messages) : callOpenAI(messages);
   }
   apiCall.then(function(raw) {
-    raw = cleanJSON(raw);
     var spec;
-    try { spec = JSON.parse(raw); } catch(e) { spec = repairJSON(raw); }
+    if (DaubOpenUI.detectFormat(raw) === 'openui') {
+      spec = DaubOpenUI.openUItoSpec(raw);
+    } else {
+      raw = cleanJSON(raw);
+      try { spec = JSON.parse(raw); } catch(e) { spec = repairJSON(raw); }
+    }
     if (!spec || !spec.root || !spec.elements) throw new Error('Invalid or incomplete JSON response');
     $json.value = JSON.stringify(spec, null, 2);
     $status.textContent = '';
@@ -4371,7 +4396,8 @@ $share.addEventListener('click', function() {
   if (!currentSpec) return;
   try {
     var compressed = LZString.compressToEncodedURIComponent(JSON.stringify(currentSpec));
-    var url = window.location.origin + window.location.pathname + '?s=' + compressed;
+    // Fragment, not query: the payload never reaches the server (long ?s= URLs hit HTTP 431)
+    var url = window.location.origin + window.location.pathname + '#s=' + compressed;
     navigator.clipboard.writeText(url).then(function() {
       DAUB.toast({ type: 'success', message: 'Share link copied!' });
     }).catch(function() {
@@ -4843,7 +4869,11 @@ function renderElement(elements, id, depth) {
   }
 
   var render = RENDERERS[def.type];
-  if (!render) return renderNotice('Unknown: ' + def.type);
+  if (!render) {
+    var unknown = renderNotice('Unknown: ' + def.type);
+    unknown.setAttribute('data-spec-id', id); // marks it rendered so the orphan pass skips it
+    return unknown;
+  }
 
   var children = def.children || (def.props && def.props.children) || [];
   var el;
@@ -4963,15 +4993,26 @@ function isSafeUrl(url) {
   return true;
 }
 
-// Model-supplied list props: arrays pass through, {items|data|rows: [...]} unwraps, anything else -> []
+function isPlainObj(x) { return !!x && typeof x === 'object' && !Array.isArray(x); }
+
+// Model-supplied list props: arrays pass through, {items|data|rows|options|list: [...]} unwraps,
+// an object of objects -> its values, a scalar -> [x], anything else -> []
 function toArr(x) {
   if (Array.isArray(x)) return x;
-  if (x && typeof x === 'object') {
-    if (Array.isArray(x.items)) return x.items;
-    if (Array.isArray(x.data)) return x.data;
-    if (Array.isArray(x.rows)) return x.rows;
+  if (x == null) return [];
+  if (isPlainObj(x)) {
+    var keys = ['items', 'data', 'rows', 'options', 'list'];
+    for (var i = 0; i < keys.length; i++) if (Array.isArray(x[keys[i]])) return x[keys[i]];
+    var vals = Object.keys(x).map(function(k) { return x[k]; });
+    return vals.every(isPlainObj) ? vals : [];
   }
-  return [];
+  var t = typeof x;
+  return t === 'string' || t === 'number' || t === 'boolean' ? [x] : [];
+}
+
+// Option lists: bare strings/numbers -> {label, value}
+function optArr(x) {
+  return toArr(x).map(function(o) { return typeof o === 'string' || typeof o === 'number' ? { label: String(o), value: String(o) } : o; });
 }
 
 // Chart bars: [{label, value}] as-is; {data|datasets, labels} objects and bare numbers -> [{label, value}]
@@ -4999,13 +5040,19 @@ function tableShape(p) {
   var cols = p.columns, rows = p.rows;
   if (cols && typeof cols === 'object' && !Array.isArray(cols) && (cols.columns || cols.rows)) { if (rows == null) rows = cols.rows; cols = cols.columns; }
   if (rows && typeof rows === 'object' && !Array.isArray(rows) && Array.isArray(rows.rows)) { if (cols == null) cols = rows.columns; rows = rows.rows; }
+  // A scalar is not a header or a row: a bare string is an unresolved variable name (Table(cols, rows) with no cols = [...])
+  if (cols != null && typeof cols !== 'object') cols = [];
+  if (rows != null && typeof rows !== 'object') rows = [];
+  // {name: 'Name', email: 'Email'} column map -> [{key, label}]
+  if (isPlainObj(cols) && Object.keys(cols).length && Object.keys(cols).every(function(k) { return typeof cols[k] === 'string'; })) {
+    cols = Object.keys(cols).map(function(k) { return { key: k, label: cols[k] }; });
+  }
   cols = toArr(cols);
   rows = toArr(rows);
-  var first = rows[0];
   if (cols.some(function(c) { return typeof c === 'string'; })) {
     cols = cols.map(function(c, i) {
       if (typeof c !== 'string') return c;
-      var byLabel = first && typeof first === 'object' && !Array.isArray(first) && Object.prototype.hasOwnProperty.call(first, c);
+      var byLabel = rows.some(function(r) { return isPlainObj(r) && Object.prototype.hasOwnProperty.call(r, c); });
       return { key: byLabel ? c : (c.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'c' + i), label: c };
     });
   }
@@ -5406,7 +5453,8 @@ RENDERERS.Checkbox = function(p) {
   var inp = document.createElement('input');
   inp.className = 'db-checkbox__input';
   inp.type = 'checkbox';
-  if (p.checked) inp.checked = true;
+  // The preview gets serialized HTML, so state lives in attributes; the property alone is dropped
+  if (p.checked) { inp.checked = true; inp.setAttribute('checked', ''); }
   el.appendChild(inp);
   var box = document.createElement('span');
   box.className = 'db-checkbox__box';
@@ -5429,14 +5477,14 @@ RENDERERS.Checkbox = function(p) {
 RENDERERS.RadioGroup = function(p) {
   var el = mkEl('div', 'db-radio-group');
   var name = 'rg-' + Math.random().toString(36).slice(2,8);
-  toArr(p.options).forEach(function(opt) {
+  optArr(p.options).forEach(function(opt) {
     var lbl = mkEl('label', 'db-radio');
     var inp = document.createElement('input');
     inp.className = 'db-radio__input';
     inp.type = 'radio';
     inp.name = name;
     inp.value = opt.value || '';
-    if (opt.value === p.selected) inp.checked = true;
+    if (opt.value === p.selected) { inp.checked = true; inp.setAttribute('checked', ''); }
     lbl.appendChild(inp);
     lbl.appendChild(mkEl('span', 'db-radio__circle'));
     lbl.appendChild(document.createTextNode(' ' + (opt.label || '')));
@@ -5471,6 +5519,7 @@ RENDERERS.Slider = function(p) {
   inp.min = p.min != null ? p.min : 0;
   inp.max = p.max != null ? p.max : 100;
   inp.value = p.value != null ? p.value : 50;
+  inp.setAttribute('value', inp.value); // the value property never reaches the serialized HTML
   if (p.step) inp.step = p.step;
   el.appendChild(inp);
   return el;
@@ -5488,7 +5537,7 @@ RENDERERS.Toggle = function(p) {
 // -- ToggleGroup --
 RENDERERS.ToggleGroup = function(p) {
   var el = mkEl('div', 'db-toggle-group');
-  toArr(p.options).forEach(function(opt) {
+  optArr(p.options).forEach(function(opt) {
     var btn = document.createElement('button');
     btn.className = 'db-toggle';
     btn.setAttribute('aria-pressed', opt.value === p.selected ? 'true' : 'false');
@@ -5504,11 +5553,11 @@ RENDERERS.Select = function(p) {
   if (p.label) el.appendChild(mkEl('label', 'db-label', p.label));
   var sel = document.createElement('select');
   sel.className = 'db-select__input';
-  toArr(p.options).forEach(function(o) {
+  optArr(p.options).forEach(function(o) {
     var opt = document.createElement('option');
     opt.value = o.value || '';
     opt.textContent = o.label || '';
-    if (o.value === p.selected) opt.selected = true;
+    if (o.value === p.selected) { opt.selected = true; opt.setAttribute('selected', ''); }
     sel.appendChild(opt);
   });
   el.appendChild(sel);
@@ -5521,7 +5570,7 @@ RENDERERS.CustomSelect = function(p) {
   var trigger = document.createElement('button');
   trigger.className = 'db-custom-select__trigger';
   trigger.type = 'button';
-  var selectedOpt = toArr(p.options).filter(function(o) { return o.selected; })[0];
+  var selectedOpt = optArr(p.options).filter(function(o) { return o.selected; })[0];
   var triggerText = mkEl('span', 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
   trigger.appendChild(triggerText);
   var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -5541,7 +5590,7 @@ RENDERERS.CustomSelect = function(p) {
     searchDiv.appendChild(searchInp);
     dd.appendChild(searchDiv);
   }
-  toArr(p.options).forEach(function(o) {
+  optArr(p.options).forEach(function(o) {
     var optCls = 'db-custom-select__option' + (o.selected ? ' db-custom-select__option--selected' : '') + (o.disabled ? ' db-custom-select__option--disabled' : '');
     dd.appendChild(mkEl('div', optCls, o.label || ''));
   });
@@ -5757,7 +5806,12 @@ RENDERERS.Sidebar = function(p, ch, els, d) {
   el.className = 'db-sidebar' + (p.collapsed ? ' db-sidebar--collapsed' : '');
   el.style.position = 'relative';
   el.style.height = 'auto';
-  toArr(p.sections).forEach(function(sec) {
+  var sections = toArr(p.sections);
+  // Flat nav items passed as sections ([{label, icon}]): wrap them in one untitled section
+  if (sections.length && sections.every(function(s) { return isPlainObj(s) && s.label != null && s.items == null && s.title == null; })) {
+    sections = [{ title: '', items: sections }];
+  }
+  sections.forEach(function(sec) {
     // Models often pass a child ref (Sidebar([navMenu])): render that element in place
     if (typeof sec === 'string' && els && els[sec]) {
       var ref = renderElement(els, sec, d + 1);
@@ -5828,7 +5882,7 @@ RENDERERS.Card = function(p, ch, els, d) {
     if (p.description) hdr.appendChild(mkEl('p', 'db-card__desc', p.description));
     el.appendChild(hdr);
   }
-  var footerIds = toArr(p.footer);
+  var footerIds = toArr(p.footer).filter(function(id) { return !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer
   var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
   if (bodyIds.length) {
     var body = mkEl('div', 'db-card__body');
@@ -5870,7 +5924,7 @@ RENDERERS.Table = function(p) {
     cols.forEach(function(c) {
       var td = document.createElement('td');
       if (c.numeric) td.className = 'db-numeric';
-      td.textContent = r[c.key] || '';
+      td.textContent = r[c.key] == null ? '' : String(r[c.key]); // 0 and false are real values
       tr.appendChild(td);
     });
     tbody.appendChild(tr);
@@ -5919,7 +5973,7 @@ RENDERERS.DataTable = function(p) {
       var td = document.createElement('td');
       var raw = r[c.key];
       // Flatten object cell values (e.g. Badge specs) to string
-      var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw || '');
+      var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw == null ? '' : String(raw));
       // Auto-detect status badges
       if (/^(active|completed|shipped|approved|paid|live|verified|published|resolved)$/i.test(val)) {
         td.appendChild(mkEl('span', 'db-badge db-badge--new', val));
@@ -6227,7 +6281,7 @@ RENDERERS.Modal = function(p, ch, els, d) {
   closeBtn.textContent = '\u00D7';
   hdr.appendChild(closeBtn);
   modal.appendChild(hdr);
-  var footerIds = toArr(p.footer);
+  var footerIds = toArr(p.footer).filter(function(id) { return !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer
   var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
   var body = mkEl('div', 'db-modal__body');
   body.appendChild(renderChildren(els, bodyIds, d));
@@ -6257,7 +6311,7 @@ RENDERERS.AlertDialog = function(p, ch, els, d) {
   var panel = mkEl('div', 'db-alert-dialog__panel');
   panel.appendChild(mkEl('h3', 'db-alert-dialog__title', p.title || 'Confirm'));
   panel.appendChild(mkEl('p', 'db-alert-dialog__desc', p.description || ''));
-  var footerIds = toArr(p.footer);
+  var footerIds = toArr(p.footer).filter(function(id) { return !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer
   var actionIds = footerIds.length ? footerIds : ch;
   var actions = mkEl('div', 'db-alert-dialog__actions');
   if (actionIds.length) {
@@ -6342,14 +6396,17 @@ RENDERERS.HoverCard = function(p, ch, els, d) {
 // -- DropdownMenu --
 RENDERERS.DropdownMenu = function(p, ch, els, d) {
   var el = mkEl('div', 'db-dropdown');
-  var childTrig = ch.length ? renderElement(els, ch[0], d + 1) : null;
-  if (childTrig && childTrig.classList) {
+  var trigDef = ch.length ? els[ch[0]] : null;
+  var childTrig = trigDef ? renderElement(els, ch[0], d + 1) : null;
+  if (childTrig && childTrig.classList && (trigDef.type === 'Button' || trigDef.type === 'Link')) {
     childTrig.classList.add('db-dropdown__trigger');
     el.appendChild(childTrig);
   } else {
     var trigger = document.createElement('button');
     trigger.className = 'db-btn db-dropdown__trigger';
-    trigger.textContent = 'Options';
+    // A non-button first child (Text, Avatar, Icon) becomes the trigger's label instead of being dropped
+    if (childTrig) trigger.appendChild(childTrig);
+    else trigger.textContent = 'Options';
     el.appendChild(trigger);
   }
   var content = mkEl('div', 'db-dropdown__content');
@@ -7164,10 +7221,19 @@ if (presetPrompt) {
   setTimeout(function(){ generate(); }, 500);
 }
 
-// Load shared spec from ?s= param (LZString is deferred — defer the lookup too)
-var sharedSpec = urlParams.get('s');
+// Load shared spec from #s= (legacy ?s= links still work). LZString is deferred, so defer the lookup too
+function _hashShare() {
+  var m = /^#(?:.*&)?s=([^&]*)/.exec(window.location.hash);
+  return m ? m[1] : '';
+}
+var sharedSpec = _hashShare() || urlParams.get('s');
+var _previewLoaded = false;
+$previewFrame.addEventListener('load', function() { _previewLoaded = true; });
 function _showSharedCodeNotice(spec) {
+  var stale = $chatMessages.querySelector('[data-share-notice]');
+  if (stale) stale.remove(); // an earlier link's notice would offer to run the wrong spec
   var wrap = mkEl('div', 'pg-chat__msg');
+  wrap.setAttribute('data-share-notice', '');
   wrap.style.cssText = 'padding:0;max-width:100%;';
   var alert = mkEl('div', 'db-alert db-alert--warning');
   alert.setAttribute('role', 'status');
@@ -7214,11 +7280,15 @@ function _loadSharedSpec() {
           if (d && d.props) delete d.props.js;
         });
         _showSharedCodeNotice(spec);
+      } else {
+        var staleNotice = $chatMessages.querySelector('[data-share-notice]');
+        if (staleNotice) { staleNotice.remove(); $status.textContent = ''; } // a code-free link replaced the paused one
       }
-      // Wait for iframe to be ready before rendering
-      $previewFrame.addEventListener('load', function onShareLoad() {
+      // Render now if the iframe is ready (hashchange, or it loaded before DOMContentLoaded), else on load
+      if (_previewLoaded) renderSpec(safeSpec, null, true);
+      else $previewFrame.addEventListener('load', function onShareLoad() {
         $previewFrame.removeEventListener('load', onShareLoad);
-        renderSpec(safeSpec, null, true);
+        if (currentSpec === spec) renderSpec(safeSpec, null, true);
       });
     }
   } catch(e) { console.warn('[share] failed to load shared spec:', e); }
@@ -7228,6 +7298,13 @@ if (sharedSpec) {
   if (typeof LZString !== 'undefined') _loadSharedSpec();
   else document.addEventListener('DOMContentLoaded', _loadSharedSpec, { once: true });
 }
+// A #s= link pasted into this tab changes only the hash: load it with the same gating
+window.addEventListener('hashchange', function() {
+  var s = _hashShare();
+  if (!s || typeof LZString === 'undefined') return;
+  sharedSpec = s;
+  _loadSharedSpec();
+});
 
 // ---- assistant-ui React Chat bridge (expose IIFE-scoped vars) ----
 if (new URLSearchParams(location.search).has('react-chat')) {

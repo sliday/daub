@@ -62,16 +62,38 @@
       return true;
     }
 
-    // Coerce a list-like prop to an array: a keyed object of objects -> its values, any other object or scalar -> [value]
+    // Cross-realm safe plain-object test (specs may come from a parent frame)
+    function isPlain(v) {
+      return Object.prototype.toString.call(v) === '[object Object]';
+    }
+
+    // Coerce a list-like prop to an array: {items|data|rows|options|list: [...]} unwraps, a keyed object of objects -> its values,
+    // a string/number/boolean -> [value], anything else -> []
     function toArr(v) {
       if (Array.isArray(v)) return v;
-      if (!v) return [];
-      if (typeof v === 'object') {
+      if (v == null) return [];
+      if (isPlain(v)) {
+        var wrap = ['items', 'data', 'rows', 'options', 'list'];
+        for (var i = 0; i < wrap.length; i++) {
+          if (Array.isArray(v[wrap[i]])) return v[wrap[i]];
+        }
         var ks = Object.keys(v);
-        var allObj = ks.length > 0 && ks.every(function(k) { return v[k] && typeof v[k] === 'object'; });
-        return allObj ? ks.map(function(k) { return v[k]; }) : [v];
+        return ks.every(function(k) { return isPlain(v[k]); }) ? ks.map(function(k) { return v[k]; }) : [];
       }
-      return [v];
+      var t = typeof v;
+      return t === 'string' || t === 'number' || t === 'boolean' ? [v] : [];
+    }
+
+    // Option lists: a bare "Small" or 3 -> {label: "Small", value: "Small"}
+    function toOpts(v) {
+      return toArr(v).map(function(o) {
+        return typeof o === 'string' || typeof o === 'number' ? { label: String(o), value: String(o) } : o;
+      });
+    }
+
+    // footer: [childIds] keeps only ids present in els ("Cancel | Save" is text, not a ref); none left = no footer
+    function footerRefs(v, els) {
+      return toArr(v).filter(function(id) { return !!els && Object.prototype.hasOwnProperty.call(els, id); });
     }
 
     // Number from a number or formatted string ("$1,200", "42%"); 0 when unparseable, so bar heights never go NaN%
@@ -107,12 +129,22 @@
         if (rows == null) rows = cols.rows;
         cols = cols.columns;
       }
-      cols = toArr(cols).map(function(c) {
+      // A scalar ("Name, Email", 3) is not a column/row list: render none rather than one bogus column/row
+      if (cols != null && typeof cols !== 'object') cols = [];
+      if (rows != null && typeof rows !== 'object') rows = [];
+      rows = toArr(rows);
+      // Column map {name: 'Name', email: 'Email'} -> [{key: 'name', label: 'Name'}, ...]
+      if (isPlain(cols) && Object.keys(cols).length && Object.keys(cols).every(function(k) { return typeof cols[k] === 'string'; })) {
+        cols = Object.keys(cols).map(function(k) { return { key: k, label: cols[k] }; });
+      }
+      cols = toArr(cols).map(function(c, i) {
         if (c && typeof c === 'object') return c;
         var s = c == null ? '' : String(c);
-        return { key: s, label: s };
+        // Key by the label when a row object has it, else by its slug ("Unit Price" -> unit_price)
+        var own = rows.some(function(r) { return isPlain(r) && Object.prototype.hasOwnProperty.call(r, s); });
+        return { key: own ? s : (s.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'c' + i), label: s };
       });
-      rows = toArr(rows).map(function(r) {
+      rows = rows.map(function(r) {
         if (!Array.isArray(r)) return r && typeof r === 'object' ? r : {};
         var o = {};
         cols.forEach(function(c, i) { o[c.key] = r[i]; });
@@ -288,6 +320,7 @@
         title.textContent = 'Unknown: ' + def.type;
         content.appendChild(title);
         el.appendChild(content);
+        el.setAttribute('data-spec-id', id); // so the orphan pass does not render it a second time
         return el;
       }
     
@@ -606,7 +639,7 @@
     RENDERERS.RadioGroup = function(p) {
       var el = mkEl('div', 'db-radio-group');
       var name = 'rg-' + Math.random().toString(36).slice(2,8);
-      toArr(p.options).forEach(function(opt) {
+      toOpts(p.options).forEach(function(opt) {
         var lbl = mkEl('label', 'db-radio');
         var inp = document.createElement('input');
         inp.className = 'db-radio__input';
@@ -665,7 +698,7 @@
     // -- ToggleGroup --
     RENDERERS.ToggleGroup = function(p, ch, els, d) {
       var el = mkEl('div', 'db-toggle-group');
-      toArr(p.options).forEach(function(opt) {
+      toOpts(p.options).forEach(function(opt) {
         var btn = document.createElement('button');
         btn.className = 'db-toggle';
         btn.setAttribute('aria-pressed', opt.value === p.selected ? 'true' : 'false');
@@ -690,7 +723,7 @@
         sel.id = 'db-select-' + Math.random().toString(36).slice(2, 8);
         lbl.htmlFor = sel.id;
       }
-      toArr(p.options).forEach(function(o) {
+      toOpts(p.options).forEach(function(o) {
         var opt = document.createElement('option');
         opt.value = o.value || '';
         opt.textContent = o.label || '';
@@ -707,7 +740,7 @@
       var trigger = document.createElement('button');
       trigger.className = 'db-custom-select__trigger';
       trigger.type = 'button';
-      var selectedOpt = toArr(p.options).filter(function(o) { return o.selected; })[0];
+      var selectedOpt = toOpts(p.options).filter(function(o) { return o.selected; })[0];
       var triggerText = mkEl('span', 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
       trigger.appendChild(triggerText);
       var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -727,7 +760,7 @@
         searchDiv.appendChild(searchInp);
         dd.appendChild(searchDiv);
       }
-      toArr(p.options).forEach(function(o) {
+      toOpts(p.options).forEach(function(o) {
         var optCls = 'db-custom-select__option' + (o.selected ? ' db-custom-select__option--selected' : '') + (o.disabled ? ' db-custom-select__option--disabled' : '');
         dd.appendChild(mkEl('div', optCls, o.label || ''));
       });
@@ -931,15 +964,29 @@
     };
     
     // -- Sidebar --
-    RENDERERS.Sidebar = function(p) {
+    RENDERERS.Sidebar = function(p, ch, els, d) {
       var el = document.createElement('aside');
       el.className = 'db-sidebar' + (p.collapsed ? ' db-sidebar--collapsed' : '');
       el.style.position = 'relative';
       el.style.height = 'auto';
-      toArr(p.sections).forEach(function(sec) {
+      var secs = toArr(p.sections);
+      // A flat list of nav items (sections: [{label, icon}]) -> one untitled section
+      if (secs.length && secs.every(function(s) { return isPlain(s) && s.label != null && s.items == null && s.title == null; })) {
+        secs = [{ title: '', items: secs }];
+      }
+      secs.forEach(function(sec) {
+        // Models often pass a child ref (Sidebar([navMenu])): render that element in place
+        if (typeof sec === 'string' && els && els[sec]) {
+          var ref = renderElement(els, sec, d + 1);
+          if (ref && ref.classList && ref.classList.contains('db-nav-menu')) ref.classList.add('db-nav-menu--vertical');
+          if (ref) el.appendChild(ref);
+          return;
+        }
+        if (typeof sec === 'string') sec = { items: [sec] };
         var section = mkEl('div', 'db-sidebar__section');
         if (sec.title) section.appendChild(mkEl('div', 'db-sidebar__label', sec.title));
         toArr(sec.items).forEach(function(item) {
+          if (typeof item === 'string') item = { label: item };
           var a = document.createElement('a');
           a.className = 'db-sidebar__item' + (item.active ? ' db-sidebar__item--active' : '');
           a.setAttribute('data-tooltip', item.label || '');
@@ -998,7 +1045,7 @@
         if (p.description) hdr.appendChild(mkEl('p', 'db-card__desc', p.description));
         el.appendChild(hdr);
       }
-      var footerIds = toArr(p.footer);
+      var footerIds = footerRefs(p.footer, els);
       var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
       if (bodyIds.length) {
         var body = mkEl('div', 'db-card__body');
@@ -1040,7 +1087,7 @@
         cols.forEach(function(c) {
           var td = document.createElement('td');
           if (c.numeric) td.className = 'db-numeric';
-          td.textContent = r[c.key] || '';
+          td.textContent = r[c.key] == null ? '' : String(r[c.key]);
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
@@ -1089,7 +1136,7 @@
           var td = document.createElement('td');
           var raw = r[c.key];
           // Flatten object cell values (e.g. Badge specs) to string
-          var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw || '');
+          var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw == null ? '' : String(raw));
           // Auto-detect status badges
           if (/^(active|completed|shipped|approved|paid|live|verified|published|resolved)$/i.test(val)) {
             td.appendChild(mkEl('span', 'db-badge db-badge--new', val));
@@ -1408,7 +1455,7 @@
       closeBtn.textContent = '\u00D7';
       hdr.appendChild(closeBtn);
       modal.appendChild(hdr);
-      var footerIds = toArr(p.footer);
+      var footerIds = footerRefs(p.footer, els);
       var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
       var body = mkEl('div', 'db-modal__body');
       body.appendChild(renderChildren(els, bodyIds, d));
@@ -1438,7 +1485,7 @@
       var panel = mkEl('div', 'db-alert-dialog__panel');
       panel.appendChild(mkEl('h3', 'db-alert-dialog__title', p.title || 'Confirm'));
       panel.appendChild(mkEl('p', 'db-alert-dialog__desc', p.description || ''));
-      var footerIds = toArr(p.footer);
+      var footerIds = footerRefs(p.footer, els);
       var actionIds = footerIds.length ? footerIds : ch;
       var actions = mkEl('div', 'db-alert-dialog__actions');
       if (actionIds.length) {
@@ -1523,14 +1570,17 @@
     // -- DropdownMenu --
     RENDERERS.DropdownMenu = function(p, ch, els, d) {
       var el = mkEl('div', 'db-dropdown');
-      var childTrig = ch.length ? renderElement(els, ch[0], d + 1) : null;
-      if (childTrig && childTrig.classList) {
+      var first = ch.length ? els[ch[0]] : null;
+      var childTrig = first ? renderElement(els, ch[0], d + 1) : null;
+      if (childTrig && childTrig.classList && (first.type === 'Button' || first.type === 'Link')) {
         childTrig.classList.add('db-dropdown__trigger');
         el.appendChild(childTrig);
       } else {
         var trigger = document.createElement('button');
         trigger.className = 'db-btn db-dropdown__trigger';
-        trigger.textContent = 'Options';
+        // Any other child (Avatar, Icon, Text) becomes the default trigger's label instead of being dropped
+        if (childTrig) trigger.appendChild(childTrig);
+        else trigger.textContent = 'Options';
         el.appendChild(trigger);
       }
       var content = mkEl('div', 'db-dropdown__content');

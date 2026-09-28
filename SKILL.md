@@ -178,7 +178,7 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 ## Notes
 
 - **Field inputs**: `db-field__input` goes on the wrapper element (not just `<input>`) — applies to input, textarea, select wrappers, or custom control elements.
-- **Icons**: DAUB pairs well with [Lucide](https://lucide.dev) icons (`<script src="https://unpkg.com/lucide@latest"></script>`). All demos use Lucide.
+- **Icons**: DAUB pairs well with [Lucide](https://lucide.dev) icons (`<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>`). All demos use Lucide. Keep the 0.576.0 pin: Lucide 1.x drops brand icons (github, twitter, linkedin).
 - **Overlay BEM**: Overlay components use hyphenated block names (e.g. `db-modal-overlay`, `db-alert-dialog`) with `__` children (e.g. `__panel`, `__body`). The outer wrapper gets the `id` and `aria-hidden` attributes that JS targets.
 
 ## MCP Server
