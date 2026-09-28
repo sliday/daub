@@ -57,3 +57,11 @@ describe('Tabs with a string list first', () => {
     }
   });
 });
+
+describe('EmptyState action children', () => {
+  it('a 4th positional arg is its children instead of being dropped', async () => {
+    const s = await parse('root = EmptyState("bell-off", "No notifications yet", "Alerts will appear here.", [emptyBtn])\nemptyBtn = Button("Notification settings", "primary", "sm")');
+    assert.deepEqual(s.elements.root.children, ['emptyBtn']);
+    assert.deepEqual(s.elements.root.props, { icon: 'bell-off', title: 'No notifications yet', message: 'Alerts will appear here.' });
+  });
+});

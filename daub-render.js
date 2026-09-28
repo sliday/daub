@@ -1678,7 +1678,7 @@
     };
     
     // -- EmptyState --
-    RENDERERS.EmptyState = function(p) {
+    RENDERERS.EmptyState = function(p, ch, els, d) {
       var el = mkEl('div', 'db-empty');
       var ico = mkIcon(p.icon, 48);
       if (ico) {
@@ -1687,7 +1687,9 @@
         el.appendChild(iconWrap);
       }
       el.appendChild(mkEl('h3', 'db-empty__title', p.title || 'No items'));
-      el.appendChild(mkEl('p', 'db-empty__desc', p.message || ''));
+      el.appendChild(mkEl('p', 'db-empty__message', p.message || ''));
+      // Action children (a Button) sit centered under the message
+      if (toArr(ch).length) el.appendChild(renderChildren(els, toArr(ch), d));
       return el;
     };
     

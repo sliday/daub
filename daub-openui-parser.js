@@ -66,7 +66,7 @@ var COMP_SCHEMA = {
   Alert: ['type', 'title', 'message'],
   Progress: ['value', 'indeterminate'],
   Skeleton: ['variant', 'lines'],
-  EmptyState: ['icon', 'title', 'message'],
+  EmptyState: ['icon', 'title', 'message', 'children'],
   Tooltip: ['children', 'text', 'position'],
   // Overlays
   Modal: ['children', 'id', 'title', 'footer'],

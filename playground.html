@@ -6505,7 +6505,7 @@ RENDERERS.Skeleton = function(p) {
 };
 
 // -- EmptyState --
-RENDERERS.EmptyState = function(p) {
+RENDERERS.EmptyState = function(p, ch, els, d) {
   var el = mkEl('div', 'db-empty');
   var ico = mkIcon(p.icon, 48);
   if (ico) {
@@ -6514,7 +6514,9 @@ RENDERERS.EmptyState = function(p) {
     el.appendChild(iconWrap);
   }
   el.appendChild(mkEl('h3', 'db-empty__title', p.title || 'No items'));
-  el.appendChild(mkEl('p', 'db-empty__desc', p.message || ''));
+  el.appendChild(mkEl('p', 'db-empty__message', p.message || ''));
+  // Action children (a Button) sit centered under the message
+  if (toArr(ch).length) el.appendChild(renderChildren(els, toArr(ch), d));
   return el;
 };
 
@@ -7031,7 +7033,7 @@ var COMP_PROPS = {
   Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
   Progress: 'value: number, indeterminate: bool',
   Skeleton: 'variant: "text"|"heading"|"avatar"|"btn", lines: number',
-  EmptyState: 'icon: string, title: string, message: string',
+  EmptyState: 'icon: string, title: string, message: string, children: [childIds] (action Buttons shown under the message)',
   Tooltip: 'text: string, position: "top"|"bottom"|"left"|"right"',
   // Overlays
   Modal: 'id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm)',

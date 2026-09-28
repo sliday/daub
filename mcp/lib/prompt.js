@@ -67,7 +67,7 @@ export const COMP_PROPS = {
   Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
   Progress: 'value: number, indeterminate: bool',
   Skeleton: 'variant: "text"|"heading"|"avatar"|"btn", lines: number',
-  EmptyState: 'icon: string, title: string, message: string',
+  EmptyState: 'icon: string, title: string, message: string, children: [childIds] (action Buttons shown under the message)',
   Tooltip: 'text: string, position: "top"|"bottom"|"left"|"right"',
   Modal: 'id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm) | UX: clear close affordance, confirm before dismiss with unsaved data',
   AlertDialog: 'id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)',
