@@ -13,6 +13,8 @@ const COMP_PROPS = {
   Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
+  Icon: 'name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"',
+  Link: 'label: string, class: string',
   Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId"',
   ButtonGroup: '(children are Buttons)',
   Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string',
@@ -80,7 +82,7 @@ const COMP_PROPS = {
 };
 
 const COMP_CATEGORIES = [
-  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator']],
+  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator', 'Icon', 'Link']],
   ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
   ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
   ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea', 'Image']],
@@ -423,6 +425,8 @@ const COMP_SCHEMA = {
   Text: ['content', 'tag', 'class'],
   Prose: ['content', 'size'],
   Separator: ['vertical', 'dashed', 'label'],
+  Icon: ['name', 'size', 'variant'],
+  Link: ['label', 'class'],
   Button: ['label', 'variant', 'size', 'loading', 'icon', 'trigger'],
   ButtonGroup: ['children'],
   Field: ['children', 'label', 'placeholder', 'type', 'error', 'helper'],
@@ -798,7 +802,7 @@ function buildOpenUISystemPrompt(ragBlocks, userPrompt, picked) {
     + '- StatCard for KPI metrics\n'
     + '- Charts go inside ChartCard as a Chart child with 4-8 bars of realistic data unless the user specifies the data: ChartCard([revenueChart], "Revenue"); use Switch (not Toggle) for on/off settings like notifications\n'
     + '- Use trigger:"overlay-id" on Button to open overlays\n'
-    + '- There is NO "Icon" component type — icons are props on Button, Sidebar items, List items, etc.\n\n';
+    + '- Put icons in props (Button icon, StatCard icon, Sidebar and List item icon); use Icon only for a standalone icon\n\n';
 
   prompt += LAYOUT_RULES_COMPACT + '\n\n';
   prompt += PAGE_FORMULAS + '\n\n';
@@ -870,7 +874,7 @@ function buildSystemPrompt(ragBlocks, userPrompt, picked) {
     + '- Use StatCard for KPI metrics\n'
     + '- Charts go inside ChartCard as a Chart child ("children":["chart-id"]) with 4-8 bars of realistic data unless the user specifies the data; use Switch (not Toggle) for on/off settings like notifications\n'
     + '- Use trigger:"overlay-id" on Button to open overlays\n'
-    + '- There is NO "Icon" component type — icons are props on Button, Sidebar items, List items, etc.\n\n';
+    + '- Put icons in props (Button icon, StatCard icon, Sidebar and List item icon); use Icon only for a standalone icon\n\n';
 
   prompt += LAYOUT_RULES_COMPACT + '\n\n';
   prompt += PAGE_FORMULAS + '\n\n';

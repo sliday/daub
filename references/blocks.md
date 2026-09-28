@@ -44,8 +44,6 @@ Page recipes that combine blocks well:
 <!-- BEGIN GENERATED:index (tools/build-skill.mjs) -->
 266 blocks in 34 categories. 228 of them are listed by the hosted MCP `get_block_library` (marked MCP); every file is served at `https://daub.dev/blocks/<file>`.
 
-67 blocks use `Link` or `Icon`, which render in the playground and with `daub-render.js` but fail the hosted MCP `validate_spec`. Before you send one of those to the MCP, move icons into props and turn links into ghost Buttons.
-
 ### app-specific (6)
 
 - `api-keys-page-01` 11 el, MCP: Stack, Text, Button, Alert, DataTable. File `blocks/app-specific/api-keys-page-01.json`

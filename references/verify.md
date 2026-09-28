@@ -23,11 +23,11 @@ Without local files, MCP `parse_openui` returns `spec`, `html` and `validation`.
 
 ## 2. Lint
 
-`validate_spec` checks types and ids only. This linter adds the golden rules from SKILL.md and the layout traps in `references/components.md`. Pass the parser's type list and the theme names; set `mcp: true` for specs you will send to the hosted MCP. Errors break the render; warnings mark a trap that renders badly.
+`validate_spec` checks types and ids only. This linter adds the golden rules from SKILL.md and the layout traps in `references/components.md`. Pass the parser's type list and the theme names. Errors break the render; warnings mark a trap that renders badly.
 
 ```js
-// lintSpec(spec, { types: Object.keys(DaubOpenUI.COMP_SCHEMA), themes: DAUB.THEMES, mcp }) -> { errors, warnings }
-function lintSpec(spec, { types = [], themes = [], mcp = false } = {}) {
+// lintSpec(spec, { types: Object.keys(DaubOpenUI.COMP_SCHEMA), themes: DAUB.THEMES }) -> { errors, warnings }
+function lintSpec(spec, { types = [], themes = [] } = {}) {
   const errors = [], warnings = [];
   const els = spec && spec.elements;
   if (!els || typeof els !== 'object') return { errors: ['spec has no elements'], warnings };
@@ -43,7 +43,6 @@ function lintSpec(spec, { types = [], themes = [], mcp = false } = {}) {
   for (const [id, e] of Object.entries(els)) {
     const p = e.props || {}, at = `${id} (${e.type})`, kids = e.children || [];
     if (!types.includes(e.type)) errors.push(`${at}: unknown type`);
-    if (mcp && /^(Icon|Link)$/.test(e.type)) errors.push(`${at}: the hosted MCP rejects this type; use icon props or a ghost Button`);
     for (const c of refs(e)) if (!isId(c)) errors.push(`${at}: "${c}" is not an element id`);
     if (!reached.has(id)) warnings.push(`${at}: not reachable from root, renders below the page`);
     if (e.type === 'Text' && p.content == null) errors.push(`${at}: Text reads "content"${p.text != null ? ', not "text"' : ''}`);
