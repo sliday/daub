@@ -2,6 +2,30 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.20.3
+
+**Consistent rendering across renderers, #s= share links, preview state, combo visual audit (2026-09-28).**
+
+### Rendering
+- The playground, `daub-render.js` and the MCP renderer now coerce malformed props the same way: string or number options become `{label, value}`, object-map table columns become `{key, label}`, table cells show `0` and `false`, flat Sidebar items wrap into one section, a footer given as one id works, and footer ids that name no element are dropped (Modal and AlertDialog keep their default buttons). A scalar table `columns`/`rows` (an unresolved variable name) renders an empty table instead of a header named after the variable.
+- DropdownMenu promotes its first child to trigger only when it is a Button or Link; any other child becomes the label of the default trigger.
+- Unknown-type and render-error notices carry `data-spec-id`, so they no longer render twice.
+- The MCP renderer gained Link, Icon and plain-string List items (67 of 386 corpus specs showed "Unknown: Link/Icon" there).
+- Playground preview keeps state: Checkbox `checked`, RadioGroup and Select `selected`, and Slider `value` survive into the sandboxed preview (they were set as DOM properties and lost when the HTML was serialized).
+
+### Playground
+- Share links use `#s=`, so the spec never reaches the server and long links no longer hit URL limits. Legacy `?s=` links still open, pasting a new `#s=` link into an open tab loads it, and shared custom code stays paused until you click Run code on every path.
+- The blocking fallback (browsers without streaming fetch) now reads the SSE response and parses OpenUI output; it could never succeed before.
+- Code generation: prompts forbid redeclaring `container`/`preview`, and the planner's shared state is validated (placeholder seeds such as `"(seed 8 items)"` are dropped instead of crashing every chunk).
+
+### Assets and docs
+- lucide is pinned to 0.576.0 with an SRI hash everywhere (preview, MCP output, README, SKILL.md, llms.txt, tools). lucide 1.x drops brand icons such as GitHub, Twitter and LinkedIn.
+- Hosted and npm MCP HTML load `daub.css`, `daub.js` and `daub-render.js` from daub.dev with a version query, so the output always matches the deployed renderer (the jsDelivr pin pointed at an unpublished npm version).
+- `demo.html` and the visual-QA tool build `#s=` links.
+
+### Tooling
+- New combo visual audit (`tests/combo-audit/`): renders container × child pairs, random nested trees, the block library and saved AI outputs across 4 themes and 2 viewports, and flags combination-only defects (overflow, clipping, overlap, contrast, dropped content, unknown variants, broken icons, orphans). First run: 1,633 specs, 13,064 renders, 18 fix clusters queued as separate PRs.
+
 ## v3.20.2
 
 **Playground: OpenRouter Auto Router + Jev component picker, preview isolation, full-repo review fixes (2026-09-28).**

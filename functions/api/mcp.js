@@ -2,6 +2,7 @@
 // POST /api/mcp  — handles MCP JSON-RPC protocol
 
 import { decideComponents } from './choose.js';
+import pkg from '../../package.json' with { type: 'json' };
 
 // ---- Component Catalog (inlined from mcp/lib/prompt.js) ----
 
@@ -1194,6 +1195,13 @@ function specSummary(spec) {
 
 // ---- Render spec to self-contained HTML ----
 
+// First-party daub.dev assets always match the deployed renderer (npm can lag a release). ?v= is the package.json
+// version inlined at build time, so each release busts caches; no SRI since their bytes change per deploy.
+// lucide build + SRI match the playground export
+const DAUB_ASSET = name => 'https://daub.dev/' + name + '?v=' + pkg.version;
+const LUCIDE_SRC = 'https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js';
+const LUCIDE_SRI = 'sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ';
+
 function renderToHTML(spec) {
   const theme = String(spec.theme || 'light').replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
   // Escape <, >, & and line separators so text like "</script>" can't close the inline script
@@ -1204,9 +1212,9 @@ function renderToHTML(spec) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB UI</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@3/daub.css">
+  <link rel="stylesheet" href="${DAUB_ASSET('daub.css')}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"><\/script>
+  <script src="${LUCIDE_SRC}" integrity="${LUCIDE_SRI}" crossorigin="anonymous"><\/script>
   <style>
     body { margin: 0; padding: 16px; font-family: Inter, system-ui, sans-serif; background: var(--db-bg); color: var(--db-fg); }
     #app { max-width: 1200px; margin: 0 auto; }
@@ -1214,13 +1222,13 @@ function renderToHTML(spec) {
 </head>
 <body>
   <div id="app"></div>
-  <script src="https://cdn.jsdelivr.net/npm/daub-ui@3/daub.js"><\/script>
+  <script src="${DAUB_ASSET('daub.js')}"><\/script>
   <script>
   (function() {
     var spec = ${specJSON};
     // Load renderer from playground and render spec
     var s = document.createElement('script');
-    s.src = 'https://daub.dev/daub-render.js';
+    s.src = '${DAUB_ASSET('daub-render.js')}';
     s.onload = function() {
       if (typeof renderElement === 'function') {
         var root = renderElement(spec.elements, spec.root, 0);

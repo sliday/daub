@@ -89,12 +89,33 @@ BYOK OpenRouter lists `openrouter/auto` first ("Auto (OpenRouter router)"). BYOK
 - On parse failure: retry (max 3), then fallback to the pinned `FALLBACK_MODEL` (`moonshotai/kimi-k2.5`), sent without `cost_tier` or `session_id`. The fallback gets its own 3 retries on the same pinned model.
 - Format detection (`openui` vs JSON) caches only a decisive result. A first tick like `__theme` reads as `unknown`, so the timer tries again on the next tick, and each retry re-detects from its own text.
 - Render guard: `renderElement()` wraps each renderer call in try/catch. A throwing element renders a `Couldn't render <Type>` notice that keeps its `data-spec-id`, and its siblings still render (its own children fall through to the orphan pass at the end of the page). `renderSpec()` logs the failures once per distinct set (`console.warn`) and shows the count in the status line when the line is free.
-- Prop coercions: `toArr()` for list props (arrays pass through, `{items|data|rows: [...]}` unwraps, anything else becomes `[]`), `Kbd` key strings split on `+`, `chartBars()` for `{type, data, labels}` and `{labels, datasets}` chart objects, `chartNum()` for values like `"$12k"`, and `tableShape()` for a `{columns, rows}` object, string columns and array rows. `List` string items render as titles (as `daub-render.js` does; several block-library specs use them), and `autoFixSpec()` wraps a string `children` in an array. Valid props render byte-identical HTML.
+- Prop coercions: `toArr()` for list props (arrays pass through, `{items|data|rows|options|list: [...]}` unwraps, an object whose values are all objects becomes its values, a string, number or boolean becomes `[x]`, anything else becomes `[]`), `optArr()` for `RadioGroup`, `Select`, `ToggleGroup` and `CustomSelect` options (a bare string or number becomes `{label, value}`), `Kbd` key strings split on `+`, `chartBars()` for `{type, data, labels}` and `{labels, datasets}` chart objects, `chartNum()` for values like `"$12k"`, and `tableShape()` for a `{columns, rows}` object, a `{key: 'Label'}` column map, string columns (key = the label when any row has it, else its slug) and array rows; a scalar `columns` or `rows` (an unresolved variable name such as `'compareColumns'`) renders no header or row. Table cells print `0` and `false`. A `Sidebar` given flat nav items (`[{label, icon}]`) wraps them in one untitled section. A string `footer` on `Card`, `Modal` or `AlertDialog` is one id; footer ids that name no element are dropped, and with none left the component renders as if it had no footer (`Modal` and `AlertDialog` get their default buttons back). `daub-render.js` and `mcp/lib/renderers.js` apply the same footer and table rules. The preview receives serialized HTML, so `Checkbox`, `RadioGroup`, `Select` and `Slider` write their state as attributes (`checked`, `selected`, `value`) as well as properties. A `DropdownMenu` promotes a `Button` or `Link` first child to the trigger; any other first child renders inside the default trigger button. `List` string items render as titles (as `daub-render.js` does; several block-library specs use them), and `autoFixSpec()` wraps a string `children` in an array. Unknown-type notices keep their `data-spec-id`, so the orphan pass draws each one once. Valid props render byte-identical HTML.
 - Parser: `daub-openui-parser.js` resolves a reference to a data statement (`cols = [...]`) wherever that statement sits in the file, so a forward reference reaches the renderer as data instead of a bare name. References to component statements stay string IDs. `functions/api/mcp.js` carries the same logic.
 
 ### JSON repair
 
 `cleanJSON()` -> `JSON.parse()` -> `repairJSON()` fallback
+
+### Blocking fallback
+
+`runBlockingGenerate()` runs only when `streamFetch()` reports `no-stream` (the browser has no `ReadableStream`). `/api/generate` always answers with SSE, so the default path reads the whole body with `res.text()` through `parseSseResponse()` and sends `response_format: false` in openui mode. The result goes through `DaubOpenUI.detectFormat()` like the streaming path.
+
+### Preview iframe
+
+`buildIframeSrcdoc()` loads lucide from a pinned, integrity-checked URL:
+
+```
+https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js
+integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"
+```
+
+To bump it, fetch the exact file and hash it: `curl -sSL <url> | openssl dgst -sha384 -binary | openssl base64 -A`. The playground page (`unpkg.com/lucide@0.576.0`, same bytes and hash) and the MCP HTML export (`functions/api/mcp.js`, `mcp/lib/render.js`) use the same version. Stay on 0.x: lucide 1.x dropped the brand icons (`github`, `twitter`, `linkedin`, `facebook`, `youtube`, `instagram`, `chrome`, `figma`) that block-library specs and the Figma attach button use.
+
+### Share links
+
+The Share button copies `<origin><path>#s=<LZString payload>` (`https://daub.dev/playground#s=…` in production). The payload sits in the fragment, so it never reaches the server; long `?s=` URLs failed with HTTP 431 around 10KB. On load the playground reads `#s=` first and falls back to a legacy `?s=`, then clears both with `history.replaceState`. A `#s=` link pasted into an open tab arrives through `hashchange` and loads the same way.
+
+Every shared spec renders inert: when it carries CustomHTML `js` or inline handlers (`_hasInlineCode()`), the preview drops the `js`, strips inline code in the frame, and the chat shows a "Run code" notice. The code runs only after you click it.
 
 ## Phase 2: Interactivity Pipeline (lines 3204–3635)
 
@@ -136,6 +157,7 @@ Skip all remaining steps, finish immediately.
 
 1. Plan via `planCodeArchitecture()` (line 2341)
    - Model: `openrouter/auto`, effort `medium`
+   - `stateInitProblem()` checks `sharedStateInit`: it must compile (`new Function`, never called) and carry no placeholder strings (`(seed`, `...)`, `TODO:`, `placeholder`; URL strings are exempt, and seed data such as `'todo'` passes). A failing value is dropped to `''` and logged with `dlog`.
    - If <= 1 chunk: fall back to single-shot
 2. Execute chunks in parallel via `executeChunksParallel()` (line 2506)
    - Model: `openrouter/auto`, effort per chunk (`low` or `medium`)
