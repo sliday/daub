@@ -2117,10 +2117,14 @@
     root.querySelectorAll('.db-navbar__toggle').forEach(function(btn) {
       if (btn._dbNavbar) return;
       btn._dbNavbar = true;
+      if (!btn.hasAttribute('aria-expanded')) {
+        var bar = btn.closest('.db-navbar');
+        btn.setAttribute('aria-expanded', String(!!bar && bar.classList.contains('db-navbar--open')));
+      }
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
         var navbar = btn.closest('.db-navbar');
-        if (navbar) navbar.classList.toggle('db-navbar--open');
+        if (navbar) toggleNavbar(navbar);
       });
     });
     // Close on outside click
@@ -2129,16 +2133,32 @@
       document.addEventListener('click', function(e) {
         if (!e.target.closest('.db-navbar')) {
           document.querySelectorAll('.db-navbar--open').forEach(function(n) {
-            n.classList.remove('db-navbar--open');
+            toggleNavbar(n, false);
           });
         }
+      });
+      // Escape closes an open menu; focus inside it goes back to the toggle
+      document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape') return;
+        document.querySelectorAll('.db-navbar--open').forEach(function(n) {
+          var t = n.querySelector('.db-navbar__toggle');
+          var inside = n.contains(document.activeElement);
+          toggleNavbar(n, false);
+          if (t && inside) t.focus();
+        });
       });
     }
   }
 
-  function toggleNavbar(el) {
+  /* Opens or closes the phone menu (open: true/false; omitted toggles) and keeps the toggle's aria-expanded in step */
+  function toggleNavbar(el, open) {
     if (typeof el === 'string') el = document.querySelector(el);
-    if (el) el.classList.toggle('db-navbar--open');
+    if (!el) return;
+    if (typeof open !== 'boolean') open = !el.classList.contains('db-navbar--open');
+    if (open) el.classList.add('db-navbar--open');
+    else el.classList.remove('db-navbar--open');
+    var t = el.querySelector('.db-navbar__toggle');
+    if (t) t.setAttribute('aria-expanded', String(open));
   }
 
   /* ----------------------------------------------------------

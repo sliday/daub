@@ -1222,6 +1222,18 @@
         var nav = mkEl('div', 'db-navbar__nav');
         nav.appendChild(ch.length ? renderChildren(els, ch, d) : RENDERERS.NavMenu({ items: links }));
         el.appendChild(nav);
+        // Phones (max-width 640px) hide the nav slot; this button opens it (daub.js toggles db-navbar--open and aria-expanded)
+        var tog = mkEl('button', 'db-navbar__toggle');
+        tog.setAttribute('type', 'button');
+        tog.setAttribute('aria-label', 'Menu');
+        tog.setAttribute('aria-expanded', 'false');
+        var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg'), bars = document.createElementNS(ns, 'path');
+        var at = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'aria-hidden': 'true' };
+        for (var k in at) svg.setAttribute(k, at[k]);
+        bars.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+        svg.appendChild(bars);
+        tog.appendChild(svg);
+        el.appendChild(tog);
       }
       return el;
     };

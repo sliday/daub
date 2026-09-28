@@ -6,16 +6,16 @@
       "type": "skill-md",
       "description": "Build, preview and verify UI with DAUB (daub.dev), a drop-in CSS + JS component library with 84 components and 21 theme families. Covers three paths: plain HTML with db-* classes, json-render or OpenUI Lang specs rendered by daub-render.js, and the hosted DAUB MCP server (generate_ui, validate_spec, render_spec, parse_openui, get_block_library). Includes the rules that prevent broken renders, 266 ready-made blocks, playground share links, a verify loop, and Jev recipes for picking components, blocks and themes. Use when the user mentions DAUB, daub.dev, daub-ui, db- classes, the DAUB playground or MCP, json-render or OpenUI specs, or asks for a themed dashboard, landing page, form or settings screen without a build step.",
       "url": "https://daub.dev/SKILL.md",
-      "digest": "sha256:34ca3628c771c921123e31c9b5c6efa39a267c18c4a1b6d392a15925d3aef31a",
-      "sha256": "34ca3628c771c921123e31c9b5c6efa39a267c18c4a1b6d392a15925d3aef31a"
+      "digest": "sha256:11a87061367f1f6c4113b47c230bc717c07258add74c5703f30cdd97e957bb1e",
+      "sha256": "11a87061367f1f6c4113b47c230bc717c07258add74c5703f30cdd97e957bb1e"
     },
     {
       "name": "daub-llms-full",
       "type": "documentation",
       "description": "Full DAUB UI reference: all 84 components with classes, variants and HTML examples, 21 theme families, JS API.",
       "url": "https://daub.dev/llms.txt",
-      "digest": "sha256:7c56f4bb8f3ce43c6f66a689d1eecc5011d2c9d7f014507797b28345a28ba26b",
-      "sha256": "7c56f4bb8f3ce43c6f66a689d1eecc5011d2c9d7f014507797b28345a28ba26b"
+      "digest": "sha256:34a069b92db2e54bb4b7c2674ced1b42c5bc0fce27e9a76bfb0904f17945806a",
+      "sha256": "34a069b92db2e54bb4b7c2674ced1b42c5bc0fce27e9a76bfb0904f17945806a"
     },
     {
       "name": "daub-llms-compact",
@@ -30,8 +30,8 @@
       "type": "data",
       "description": "Structured JSON catalog of all 84 DAUB components: classes, modifiers, parts, JS needs and HTML.",
       "url": "https://daub.dev/components.json",
-      "digest": "sha256:505cbaf7f81d2eb657273b513a4c5062e66667d7931b858cc42793330fd77433",
-      "sha256": "505cbaf7f81d2eb657273b513a4c5062e66667d7931b858cc42793330fd77433"
+      "digest": "sha256:dc6356889f00c834e4c354f4e14f84ebaa19db011e1373f085a48ef6db443c3f",
+      "sha256": "dc6356889f00c834e4c354f4e14f84ebaa19db011e1373f085a48ef6db443c3f"
     },
     {
       "name": "daub-ui-ref-blocks",
@@ -46,16 +46,16 @@
       "type": "documentation",
       "description": "DAUB component catalog: spec types with purpose and props, plus every db-* HTML class with modifiers and parts.",
       "url": "https://daub.dev/references/components.md",
-      "digest": "sha256:49775198e5525e21ef1dd3225aff3c9ee00c256210b4111188ed12d65ab265e8",
-      "sha256": "49775198e5525e21ef1dd3225aff3c9ee00c256210b4111188ed12d65ab265e8"
+      "digest": "sha256:29b0285514e62f9682fd9e5adf1b4e33199c0c1d3d27ed446221f30509946782",
+      "sha256": "29b0285514e62f9682fd9e5adf1b4e33199c0c1d3d27ed446221f30509946782"
     },
     {
       "name": "daub-ui-ref-design",
       "type": "documentation",
       "description": "Layout, density and hierarchy rules for DAUB pages.",
       "url": "https://daub.dev/references/design.md",
-      "digest": "sha256:fdef7449894b659c66c428ab8d50c29098c2852f2484ff07b9cdf97dfa769bd4",
-      "sha256": "fdef7449894b659c66c428ab8d50c29098c2852f2484ff07b9cdf97dfa769bd4"
+      "digest": "sha256:b55a1284871b7289aef938dc8501c059f73600a4ccc97e8a49f0b9490487b9fd",
+      "sha256": "b55a1284871b7289aef938dc8501c059f73600a4ccc97e8a49f0b9490487b9fd"
     },
     {
       "name": "daub-ui-ref-jev",
@@ -102,8 +102,8 @@
       "type": "documentation",
       "description": "How to verify DAUB output: parse, lint, render and visual review.",
       "url": "https://daub.dev/references/verify.md",
-      "digest": "sha256:b70b732b45fd89157dde4589ab675345750e4ff6485d9e64cd9f4659072bd2f2",
-      "sha256": "b70b732b45fd89157dde4589ab675345750e4ff6485d9e64cd9f4659072bd2f2"
+      "digest": "sha256:33cbebe27c61b481571cec3d06a689619aa76b1822aa37a46c64c9c49357dd84",
+      "sha256": "33cbebe27c61b481571cec3d06a689619aa76b1822aa37a46c64c9c49357dd84"
     }
   ]
 }

@@ -985,8 +985,8 @@
         }
       ],
       "js": true,
-      "html": "<nav class=\"db-navbar\">\n  <a class=\"db-navbar__brand\" href=\"/\">AppName</a>\n  <div class=\"db-navbar__nav\">\n    <div class=\"db-nav-menu\">\n      <a class=\"db-nav-menu__item db-nav-menu__item--active\" href=\"/\">Home</a>\n    </div>\n  </div>\n  <div class=\"db-navbar__spacer\"></div>\n  <div class=\"db-navbar__actions\">\n    <button class=\"db-btn db-btn--icon\" aria-label=\"Notifications\">Bell</button>\n  </div>\n  <button class=\"db-navbar__toggle\" aria-label=\"Menu\">Menu</button>\n</nav>",
-      "notes": "Sticky top bar. JS: DAUB.toggleNavbar(el). Mobile hamburger auto-close on outside click."
+      "html": "<nav class=\"db-navbar\">\n  <a class=\"db-navbar__brand\" href=\"/\">AppName</a>\n  <div class=\"db-navbar__nav\">\n    <div class=\"db-nav-menu\">\n      <a class=\"db-nav-menu__item db-nav-menu__item--active\" href=\"/\">Home</a>\n    </div>\n  </div>\n  <div class=\"db-navbar__spacer\"></div>\n  <div class=\"db-navbar__actions\">\n    <button class=\"db-btn db-btn--icon\" aria-label=\"Notifications\">Bell</button>\n  </div>\n  <button class=\"db-navbar__toggle\" aria-label=\"Menu\" aria-expanded=\"false\">Menu</button>\n</nav>",
+      "notes": "Sticky top bar. At 640px and below db-navbar__nav collapses and db-navbar__toggle opens it; daub.js keeps the toggle's aria-expanded in step. JS: DAUB.toggleNavbar(el) or DAUB.toggleNavbar(el, open). The menu closes on outside click and Escape."
     },
     {
       "name": "Menubar",

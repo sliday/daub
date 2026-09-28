@@ -5547,6 +5547,7 @@ meter.db-meter::-moz-meter-bar {
 }
 
 .db-nav-menu__item:focus-visible,
+.db-navbar__toggle:focus-visible,
 .db-sidebar__item:focus-visible,
 .db-bottom-nav__item:focus-visible {
   outline: none;
@@ -5614,7 +5615,7 @@ meter.db-meter::-moz-meter-bar {
 .db-navbar__toggle:hover { background: var(--db-cream-dark); }
 
 @media (max-width: 640px) {
-  .db-navbar__toggle { display: flex; }
+  .db-navbar__toggle { display: flex; margin-left: auto; }
   .db-navbar__nav {
     display: none;
     position: absolute;
