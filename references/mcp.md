@@ -74,7 +74,7 @@ To build without a model, call `get_component_catalog` (optionally with `categor
 ## Behavior to know
 
 - `validate_spec` and `render_spec` take the spec as a JSON string, not an object. `parse_openui` takes OpenUI Lang in `code`.
-- The hosted validator and parser know the playground's spec types except `Icon` and `Link` (v3.20.3). `parse_openui` turns `Icon(...)` into a stray Text and a dangling child id. Use icon props instead.
+- The hosted validator and parser know the playground's spec types except `Icon` and `Link` (v3.20.4). `parse_openui` turns `Icon(...)` into a stray Text and a dangling child id. Use icon props instead.
 - `render_spec` HTML loads `daub.css`, `daub.js` and `daub-render.js` from daub.dev at the deployed version, plus pinned Lucide 0.576.0. The page pads the body by 16 px and caps `#app` at 1200 px. It does not run declarative state (`references/json-render.md`).
 - `get_component_catalog` lists some theme names daub.js does not define (`references/themes.md`).
 - `generate_ui` retrieves up to 5 similar blocks as examples, asks Jev which components the prompt needs (threshold 0.5), routes the prompt to a model tier by complexity, retries and falls back to other models, and runs `autoFixSpec()` on the result. A failed run returns `error`, `routing` and the first 1000 characters of `raw_text`.
