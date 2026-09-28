@@ -42,7 +42,7 @@ Each of these renders without an error and still looks broken. They were measure
 - **Stack** _(core, children first)_: a flexbox row or column that lays out its children (the usual page root). Props: `direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true`
 - **Grid** _(core, children first)_: an equal-width CSS grid of 2-6 columns. Props: `columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true`
 - **Surface** _(children first)_: a raised or inset background panel that groups content. Props: `variant: "raised"|"inset"|"pressed"`
-- **Text** _(core)_: a heading, paragraph or inline text. Props: `tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string`
+- **Text** _(core)_: a heading, paragraph or inline text. Props: `tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string ("db-text-muted" for secondary text)`
 - **Prose**: long-form rich text such as an article body. Props: `content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"`
 - **Separator** _(core)_: a horizontal or vertical divider line. Props: `vertical: bool, dashed: bool, label: string`
 - **Icon** _(core, hosted MCP rejects)_: a standalone Lucide icon. Props: `name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"`
@@ -58,14 +58,14 @@ Each of these renders without an error and still looks broken. They were measure
 - **InputIcon** _(children first)_: an input with an icon inside it. Props: `icon: string, right: bool (child is Input)`
 - **Search**: a search box. Props: `placeholder: string`
 - **Textarea**: a multi-line text input for comments, bios or messages. Props: `placeholder: string, rows: number, error: bool`
-- **Checkbox**: a checkbox for opting in, agreeing to terms or selecting items. Props: `label: string, checked: bool`
+- **Checkbox**: a checkbox for opting in, agreeing to terms or selecting items. Props: `label: string (shown beside the box; leave it out when a Text in the same row names the item: Checkbox(checked: true)), checked: bool`
 - **RadioGroup**: a set of radio buttons to pick exactly one visible option. Props: `options: [{label, value}], selected: string`
-- **Switch**: an on/off switch for a setting. Props: `label: string, checked: bool (on/off setting: notifications, preferences, feature flags)`
+- **Switch**: an on/off switch for a setting. Props: `label: string (leave it out when a Text in the same row names the setting: Switch(checked: true)), checked: bool (on/off setting: notifications, preferences, feature flags)`
 - **Slider**: a draggable range control for volume, price or another number. Props: `min: number, max: number, value: number, step: number, label: string`
 - **Toggle**: a single pressable on/off button. Props: `label: string, pressed: bool, size: "sm" (pressable toolbar button: bold/italic, view filter — NOT for settings)`
 - **ToggleGroup**: a segmented control to pick one option, such as Monthly/Yearly or Grid/List. Props: `options: [{label, value}], selected: string`
 - **Select**: a dropdown to choose one option from a list. Props: `label: string, options: [{label, value}], selected: string`
-- **CustomSelect**: a searchable dropdown for long option lists. Props: `placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool`
+- **CustomSelect**: a searchable dropdown for long option lists. Props: `placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool, selected: string`
 - **Kbd**: a keyboard shortcut hint such as Cmd+K. Props: `keys: [string]`
 - **Label**: a standalone form label. Props: `text: string, required: bool, optional: bool`
 - **Spinner**: a loading spinner. Props: `size: "sm"|"lg"|"xl"`
@@ -86,11 +86,11 @@ Each of these renders without an error and still looks broken. They were measure
 ### Data Display
 
 - **Card** _(core, children first)_: a titled container for related content. Props: `title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool`
-- **Table**: a data table with columns and rows. Props: `columns: [{key, label, numeric}], rows: [{}], sortable: bool`
-- **DataTable**: an interactive data table with selectable rows. Props: `columns: [{key, label}], rows: [{}], selectable: bool`
+- **Table**: a data table with columns and rows. Props: `columns: [{key, label, numeric}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), sortable: bool`
+- **DataTable**: an interactive data table with selectable rows. Props: `columns: [{key, label}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), selectable: bool`
 - **List**: a vertical list of items with title, secondary text and icon. Props: `items: [{title, secondary, icon}]`
 - **Badge**: a small status label or count. Props: `text: string, variant: "new"|"updated"|"warning"|"error"`
-- **Avatar**: a user profile picture or initials. Props: `initials: string, src: string, size: "sm"|"md"|"lg"`
+- **Avatar**: a user profile picture or initials. Props: `initials: string, src: string (image URL only; skip it with size: "sm"), size: "sm"|"md"|"lg"`
 - **AvatarGroup**: a stacked row of several user avatars. Props: `avatars: [{initials, src}], max: number`
 - **Calendar**: a month calendar grid for picking or showing dates. Props: `selected: "YYYY-MM-DD" (date to highlight), today: "YYYY-MM-DD" (today override)`
 - **Chart**: a bar chart. Props: `bars: [{label, value, max}]`
@@ -105,7 +105,7 @@ Each of these renders without an error and still looks broken. They were measure
 - **Alert**: an inline callout banner for info, warning, error or success messages. Props: `type: "info"|"warning"|"error"|"success", title: string, message: string`
 - **Progress**: a progress bar. Props: `value: number, indeterminate: bool`
 - **Skeleton**: loading placeholder shapes. Props: `variant: "text"|"heading"|"avatar"|"btn", lines: number`
-- **EmptyState**: a placeholder message shown when there is no content or nothing was found. Props: `icon: string, title: string, message: string`
+- **EmptyState**: a placeholder message shown when there is no content or nothing was found. Props: `icon: string, title: string, message: string, children: [childIds] (action Buttons shown under the message)`
 - **Tooltip** _(children first)_: a hint shown on hover. Props: `text: string, position: "top"|"bottom"|"left"|"right"`
 
 ### Overlays
@@ -129,7 +129,7 @@ Each of these renders without an error and still looks broken. They were measure
 
 ### Dashboard
 
-- **StatCard**: a KPI metric card with a value and trend. Props: `label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool`
+- **StatCard**: a KPI metric card with a value and trend. Props: `label: string, value: string, trend: "up"|"down" (direction only, never an icon), trendValue: string, icon: string (Lucide name, pass named: icon: "users"), horizontal: bool`
 - **ChartCard** _(children first)_: a titled card that holds a chart. Props: `title: string, children: [Chart element] (empty ChartCard renders "No data"), bars: [{label, value, max}] (shortcut: renders a Chart when no children)`
 
 ### Custom
@@ -184,7 +184,7 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 - **Alert**: `.db-alert` on `<div>`; modifiers `--info` `--warning` `--error` `--success`; parts `db-alert__icon` `db-alert__content` `db-alert__title`. Static inline alert. Variants: --info, --warning, --error, --success.
 - **Progress**: `.db-progress` on `<div>`; modifiers `--indeterminate`; parts `db-progress__bar`*. Set progress via --db-progress custom property. Add --indeterminate for animated state.
 - **Skeleton**: `.db-skeleton` on `<div>`; modifiers `--text` `--heading` `--avatar` `--btn`. Placeholder loading shapes. Animated shimmer effect.
-- **Empty State**: `.db-empty` on `<div>`; parts `db-empty__icon` `db-empty__title` `db-empty__desc`. Centered empty state with icon, title, description, and optional CTA.
+- **Empty State**: `.db-empty` on `<div>`; parts `db-empty__icon` `db-empty__title` `db-empty__message`. Centered empty state with icon, title, description, and optional CTA.
 - **Meter**: `.db-meter` on `<div>`; modifiers `--warning` `--error`; parts `db-meter__bar`*. Use for bounded measurements such as quota, health, or strength.
 
 ### navigation (11)
