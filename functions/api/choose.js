@@ -11,7 +11,7 @@ const MAX_PROMPT = 4000;
 const MAX_COMPONENTS = 120;
 const MAX_DESC = 400;
 
-function corsFor(request) {
+export function corsFor(request) {
   const origin = request.headers.get('Origin') || '';
   const allowedOrigins = ['https://daub.dev', 'https://daub.pages.dev'];
   const isAllowed = allowedOrigins.some(o => origin === o || origin.endsWith('.daub.pages.dev'));
@@ -90,6 +90,20 @@ export async function decideComponents({ prompt, components, apiKey, timeoutMs =
     };
   }
 
+  const data = await jevDecide({ state: { request: String(prompt).slice(0, MAX_PROMPT) }, questions, apiKey, timeoutMs, title });
+
+  const scores = {};
+  const answers = (data && data.answers) || {};
+  for (const name of names) {
+    const a = answers[name];
+    if (a && typeof a.noul === 'number') scores[name] = a.noul;
+  }
+  return { model: (data && data.model) || MODEL, scores, usage: (data && data.usage) || null };
+}
+
+// One Decisions API round trip (also used by functions/api/assemble.js). Resolves to the
+// parsed response ({ model, answers, usage }); throws an Error with .status like decideComponents.
+export async function jevDecide({ state, questions, apiKey, timeoutMs = 10_000, title = 'DAUB Playground' }) {
   if (!apiKey) throw fail('Server misconfigured: missing API key', 500);
 
   let upstream;
@@ -102,7 +116,7 @@ export async function decideComponents({ prompt, components, apiKey, timeoutMs =
         'HTTP-Referer': 'https://daub.dev',
         'X-Title': title,
       },
-      body: JSON.stringify({ model: MODEL, state: { request: String(prompt).slice(0, MAX_PROMPT) }, questions }),
+      body: JSON.stringify({ model: MODEL, state, questions }),
       signal: AbortSignal.timeout(timeoutMs),
     });
   } catch (e) {
@@ -121,14 +135,7 @@ export async function decideComponents({ prompt, components, apiKey, timeoutMs =
   if (!upstream.ok) {
     throw fail((data && data.error && data.error.message) || 'Upstream error', upstream.status);
   }
-
-  const scores = {};
-  const answers = (data && data.answers) || {};
-  for (const name of names) {
-    const a = answers[name];
-    if (a && typeof a.noul === 'number') scores[name] = a.noul;
-  }
-  return { model: (data && data.model) || MODEL, scores, usage: (data && data.usage) || null };
+  return data;
 }
 
 export async function onRequestOptions(context) {
