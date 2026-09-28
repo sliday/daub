@@ -20,6 +20,20 @@ function jsonResponse(data, status, corsHeaders) {
   });
 }
 
+// Block requests to localhost, link-local, cloud metadata, and private network hosts (SSRF mitigation)
+function isBlockedHost(hostname) {
+  const h = (hostname || '').toLowerCase().replace(/^\[|\]$/g, '');
+  if (h === 'localhost' || h.endsWith('.localhost') || h === '::1' || h === '169.254.169.254') return true;
+  const ipv4 = h.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if (ipv4) {
+    const [a, b] = [Number(ipv4[1]), Number(ipv4[2])];
+    if (a === 127 || a === 10 || a === 0 || (a === 169 && b === 254)) return true;
+    if (a === 172 && b >= 16 && b <= 31) return true;
+    if (a === 192 && b === 168) return true;
+  }
+  return false;
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
   const corsHeaders = getCorsHeaders(request);
@@ -51,6 +65,16 @@ async function handleRequest(request, env, corsHeaders) {
   const url = (body.url || '').trim();
   if (!url || !/^https?:\/\//i.test(url)) {
     return jsonResponse({ error: 'Valid URL required (must start with http:// or https://)' }, 400, corsHeaders);
+  }
+
+  let parsedUrl;
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    return jsonResponse({ error: 'Invalid URL' }, 400, corsHeaders);
+  }
+  if (isBlockedHost(parsedUrl.hostname)) {
+    return jsonResponse({ error: 'URL host not allowed' }, 400, corsHeaders);
   }
 
   const apiKey = env.BROWSERBASE_API_KEY;
