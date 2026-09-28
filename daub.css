@@ -4078,6 +4078,12 @@ meter.db-meter::-moz-meter-bar {
 /* Empty state spans full grid */
 .db-grid > .db-empty { grid-column: 1 / -1; }
 
+/* Sidebar + main: a quarter-width first column; stacks on phones like the numbered grids */
+.db-grid--sidebar-main { grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); }
+@media (max-width: 640px) {
+  .db-grid--sidebar-main { grid-template-columns: 1fr; }
+}
+
 /* Responsive visibility utilities */
 @media (max-width: 640px)  { .db-hide-mobile  { display: none !important; } }
 @media (min-width: 641px)  { .db-show-mobile  { display: none !important; } }
