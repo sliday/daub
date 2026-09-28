@@ -1,7 +1,7 @@
 // Cloudflare Pages Function: instant first paint from the curated block library.
 // POST /api/assemble  { prompt: string }
 // -> { spec, archetype, archetype_confidence, theme, theme_family, picks: [{ id, p, slot, kind }],
-//      confidence, coverage, fallback, timing_ms: { jev, assemble, total }, jev_usage, model }
+//      confidence, coverage, fallback, preview, timing_ms: { jev, assemble, total }, jev_usage, model }
 //
 // One Jev request answers: which page archetype (choice), which theme family (choice),
 // dark or light (noul), and one yes/no per candidate block. Code then assembles the page
@@ -10,7 +10,9 @@
 //
 // spec is null (fallback: "llm") when Jev picks the "custom" archetype: the request needs
 // bespoke UI (chat, player, calculator), so the client should stream from the LLM instead.
-// Clients should also treat low confidence (< ~0.5) as "show it as a draft, keep streaming".
+// preview is true when the page is worth painting as a draft (confidence >= 0.6 and
+// coverage >= 0.5, see DEFAULTS). The copy belongs to other products, so clients keep
+// streaming the LLM draft and replace the preview when it lands.
 
 import { corsFor, jevDecide } from './choose.js';
 import { BLOCKS } from '../_lib/blocks-catalog.js';
@@ -73,10 +75,10 @@ export async function handleAssemble({ prompt, apiKey, t0 = Date.now(), timeoutM
 
   const answers = (data && data.answers) || {};
   const arch = answers.archetype;
-  if (!arch || !ARCHETYPES[arch.choice]) {
+  if (!arch || !Object.hasOwn(ARCHETYPES, arch.choice)) {
     return [{ error: 'Decision model failed: response had no usable archetype answer' }, 502];
   }
-  const theme = answers.theme && THEME_FAMILIES[answers.theme.choice] ? answers.theme.choice : 'default';
+  const theme = answers.theme && Object.hasOwn(THEME_FAMILIES, answers.theme.choice) ? answers.theme.choice : 'default';
   const darkP = answers.dark && typeof answers.dark.noul === 'number' ? answers.dark.noul : 0;
   const scores = {};
   for (const b of CANDIDATES) {
@@ -110,6 +112,7 @@ export async function handleAssemble({ prompt, apiKey, t0 = Date.now(), timeoutM
     confidence: r.confidence,
     coverage: r.coverage,
     fallback: r.fallback,
+    preview: r.preview,
     timing_ms: { jev: jevMs, assemble: asmMs, total: Date.now() - t0 },
     jev_usage: (data && data.usage) || null,
     model: (data && data.model) || null,

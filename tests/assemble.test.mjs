@@ -91,6 +91,18 @@ test('namespaceSpec prefixes ids and children, drops dangling children, copies p
   assert.equal(spec.elements.b.props.style.color, 'red');
 });
 
+test('validateSpec flags elements the root cannot reach', () => {
+  const spec = {
+    root: 'a',
+    elements: {
+      a: { type: 'Stack', props: {}, children: ['b'] },
+      b: { type: 'Text', props: { content: 'hi' } },
+      loose: { type: 'Text', props: { content: 'orphan' } },
+    },
+  };
+  assert.deepEqual(validateSpec(spec), ['orphan "loose"']);
+});
+
 test('blocks that share element ids never collide after assembly', () => {
   // Five blocks built from the same element ids ("wrap", "title", and even "page").
   const same = () => ({
@@ -209,6 +221,27 @@ test('every archetype assembles a valid spec (root exists, all children exist)',
   }
 });
 
+test('preview needs a real page, confidence >= 0.6 and coverage >= 0.5', () => {
+  const idx = slotIndex(BLOCKS);
+  const onlyCore = arch => {
+    const scores = all(0.1);
+    for (const [slot, kind] of ARCHETYPES[arch].sections) {
+      if (kind === 'core') for (const b of idx[slot]) scores[b.id] = 0.9;
+    }
+    return scores;
+  };
+  const login = assemble({ archetype: 'login', archetypeConfidence: 0.95, scores: onlyCore('login'), blocks: BLOCKS });
+  assert.equal(login.preview, true);
+  const lowConf = assemble({ archetype: 'login', archetypeConfidence: 0.55, scores: onlyCore('login'), blocks: BLOCKS });
+  assert.equal(lowConf.preview, false);
+  // Landing with only its 5 core sections: confident, but 5/11 of the recipe.
+  const thin = assemble({ archetype: 'landing', archetypeConfidence: 0.95, scores: onlyCore('landing'), blocks: BLOCKS });
+  assert.equal(thin.confidence, 0.9);
+  assert.equal(thin.coverage, 0.45);
+  assert.equal(thin.preview, false);
+  assert.equal(assemble({ archetype: 'custom', archetypeConfidence: 1, blocks: BLOCKS }).preview, false);
+});
+
 test('theme follows family and dark probability', () => {
   const base = { archetype: 'login', scores: {}, blocks: BLOCKS };
   assert.equal(assemble({ ...base, themeFamily: 'nord', darkP: 0.9 }).theme, 'nord');
@@ -216,6 +249,9 @@ test('theme follows family and dark probability', () => {
   assert.equal(assemble({ ...base, themeFamily: 'github', darkP: 0.2 }).spec.theme, 'github');
   assert.equal(assemble({ ...base, themeFamily: 'bogus', darkP: 0.9 }).theme, 'dark');
   assert.equal(assemble({ ...base }).theme, 'light');
+  // Object.prototype keys are not archetypes or theme families.
+  assert.equal(assemble({ ...base, themeFamily: 'toString', darkP: 0.9 }).theme, 'dark');
+  assert.equal(assemble({ ...base, archetype: 'constructor' }).fallback, 'llm');
 });
 
 test('assembly is deterministic', () => {
@@ -282,6 +318,7 @@ test('handler: one Jev request, assembled spec, picks, timing and usage', async 
     assert.equal(out.confidence, 0.97);
     assert.equal(out.coverage, 1);
     assert.equal(out.fallback, null);
+    assert.equal(out.preview, true);
     assert.deepEqual(validateSpec(out.spec), []);
     assert.equal(out.spec.theme, 'material');
     assert.deepEqual(out.jev_usage, { input_tokens: 21000, output_tokens: 0, cost: 0.0009 });
@@ -297,6 +334,23 @@ test('handler: custom archetype returns spec null with fallback llm', async () =
     const out = await res.json();
     assert.equal(out.spec, null);
     assert.equal(out.fallback, 'llm');
+    assert.equal(out.preview, false);
+  } finally { m.restore(); }
+});
+
+test('handler: prototype keys from Jev never resolve as archetype or theme', async () => {
+  const bad = mockJev(({ body }) => Response.json({ answers: jevAnswers(body.questions, { archetype: 'constructor', theme: 'default' }) }));
+  try {
+    const res = await post({ prompt: 'pricing page' });
+    assert.equal(res.status, 502);
+    assert.match((await res.json()).error, /no usable archetype/);
+  } finally { bad.restore(); }
+  const m = mockJev(({ body }) => Response.json({ answers: jevAnswers(body.questions, { archetype: 'login', theme: 'toString' }) }));
+  try {
+    const out = await (await post({ prompt: 'login page' })).json();
+    assert.equal(out.theme_family, 'default');
+    assert.equal(out.theme, 'light');
+    assert.equal(out.spec.theme, 'light');
   } finally { m.restore(); }
 });
 

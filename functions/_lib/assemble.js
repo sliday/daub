@@ -11,6 +11,11 @@ export const DEFAULTS = {
   extraThreshold: 0.85, // a slot outside the recipe joins the page only at this P or higher
   maxExtras: 2,
   darkThreshold: 0.5,
+  // preview: true when the page is worth painting as a draft while the LLM streams. Measured on
+  // the 34-prompt benchmark: shows all 11 good previews, hides all 3 wrong pages. Confidence
+  // alone is not enough (a docs page with only a navbar and a TOC scored 0.97).
+  previewConfidence: 0.6,
+  previewCoverage: 0.5,
 };
 
 // Page chrome fits nearly any page, so a low P there means "the user did not mention a
@@ -92,7 +97,8 @@ export function namespaceSpec(spec, prefix) {
   return { root: prefix + spec.root, elements };
 }
 
-// Returns a list of problems; empty means the root exists and every child reference resolves.
+// Returns a list of problems; empty means the root exists, every child reference resolves
+// and every element is reachable from the root (no orphans).
 export function validateSpec(spec) {
   if (!spec || typeof spec !== 'object' || !spec.elements) return ['spec must have elements'];
   const errors = [];
@@ -100,11 +106,20 @@ export function validateSpec(spec) {
   for (const [id, el] of Object.entries(spec.elements)) {
     for (const c of el.children || []) if (!spec.elements[c]) errors.push(`${id} -> missing child "${c}"`);
   }
+  const seen = new Set();
+  const stack = [spec.root];
+  while (stack.length) {
+    const id = stack.pop();
+    if (seen.has(id) || !spec.elements[id]) continue;
+    seen.add(id);
+    stack.push(...(spec.elements[id].children || []));
+  }
+  for (const id of Object.keys(spec.elements)) if (!seen.has(id)) errors.push(`orphan "${id}"`);
   return errors;
 }
 
 export function themeName(family, dark) {
-  const f = THEME_FAMILIES[family] || THEME_FAMILIES.default;
+  const f = Object.hasOwn(THEME_FAMILIES, family) ? THEME_FAMILIES[family] : THEME_FAMILIES.default;
   return dark ? f.dark : f.light;
 }
 
@@ -122,9 +137,10 @@ export function assemble({
   options = {},
 }) {
   const opts = { ...DEFAULTS, ...options };
-  const key = ARCHETYPES[archetype] ? archetype : 'custom';
+  // Own keys only: "constructor" or "toString" must not resolve through Object.prototype.
+  const key = Object.hasOwn(ARCHETYPES, archetype) ? archetype : 'custom';
   const arch = ARCHETYPES[key];
-  const family = THEME_FAMILIES[themeFamily] ? themeFamily : 'default';
+  const family = Object.hasOwn(THEME_FAMILIES, themeFamily) ? themeFamily : 'default';
   const theme = themeName(family, darkP >= opts.darkThreshold);
   const idx = slotIndex(blocks);
   const P = id => (typeof scores[id] === 'number' ? scores[id] : 0);
@@ -167,7 +183,7 @@ export function assemble({
   const base = { archetype: key, theme, themeFamily: family, picks };
   if (!placed.length) {
     // "custom" archetype, or a recipe with no blocks in the catalog: nothing honest to paint.
-    return { ...base, spec: null, confidence: 0, coverage: 0, fallback: 'llm' };
+    return { ...base, spec: null, confidence: 0, coverage: 0, fallback: 'llm', preview: false };
   }
 
   const core = picks.filter(x => x.kind === 'core' && !CHROME.has(x.slot));
@@ -188,5 +204,6 @@ export function assemble({
     confidence: round2(confidence),
     coverage: round2(coverage),
     fallback: null,
+    preview: round2(confidence) >= opts.previewConfidence && round2(coverage) >= opts.previewCoverage,
   };
 }
