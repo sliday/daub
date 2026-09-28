@@ -1337,7 +1337,7 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        spec: { type: 'string', description: 'DAUB spec JSON string to validate' },
+        spec: { type: 'string', description: 'DAUB spec JSON string to validate (a spec object also works)' },
       },
       required: ['spec'],
     },
@@ -1348,7 +1348,7 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        spec: { type: 'string', description: 'DAUB spec JSON string' },
+        spec: { type: 'string', description: 'DAUB spec JSON string (a spec object also works)' },
       },
       required: ['spec'],
     },
@@ -1611,6 +1611,13 @@ const BLOCK_INDEX = [
 
 // ---- MCP Tool Handlers ----
 
+// The schema asks for a JSON string, but some clients pass the spec object itself; take either
+function specArg(tool, spec) {
+  if (spec && typeof spec === 'object') return spec;
+  if (typeof spec !== 'string') throw new Error(`${tool} requires "spec" as a JSON string or object`);
+  return JSON.parse(spec);
+}
+
 async function handleToolCall(name, args, env) {
   switch (name) {
     case 'generate_ui': {
@@ -1673,12 +1680,12 @@ async function handleToolCall(name, args, env) {
     }
 
     case 'validate_spec': {
-      const spec = JSON.parse(args.spec);
+      const spec = specArg(name, args.spec);
       return JSON.stringify(validateSpec(spec), null, 2);
     }
 
     case 'render_spec': {
-      const spec = JSON.parse(args.spec);
+      const spec = specArg(name, args.spec);
       const validation = validateSpec(spec);
       const html = renderToHTML(spec);
       return JSON.stringify({ spec, html, validation }, null, 2);

@@ -40,13 +40,13 @@ Returns available DAUB components so you can construct specs directly without an
 
 Validate a DAUB spec JSON string. Returns validation status, issues, element count, and components used.
 
-- `spec` (string, required): DAUB spec JSON string to validate
+- `spec` (string, required): DAUB spec JSON string to validate (a spec object also works)
 
 ### `render_spec`
 
 Render an existing DAUB spec JSON into self-contained HTML. Returns the spec, rendered HTML, and validation results.
 
-- `spec` (string, required): DAUB spec JSON string
+- `spec` (string, required): DAUB spec JSON string (a spec object also works)
 
 ### `get_block_library`
 
@@ -73,7 +73,7 @@ To build without a model, call `get_component_catalog` (optionally with `categor
 
 ## Behavior to know
 
-- `validate_spec` and `render_spec` take the spec as a JSON string, not an object. `parse_openui` takes OpenUI Lang in `code`.
+- `validate_spec` and `render_spec` take the spec as a JSON string or as an object. `parse_openui` takes OpenUI Lang in `code`.
 - The hosted validator and parser know the playground's spec types except `Icon` and `Link` (v3.20.4). `parse_openui` turns `Icon(...)` into a stray Text and a dangling child id. Use icon props instead.
 - `render_spec` HTML loads `daub.css`, `daub.js` and `daub-render.js` from daub.dev at the deployed version, plus pinned Lucide 0.576.0. The page pads the body by 16 px and caps `#app` at 1200 px. It does not run declarative state (`references/json-render.md`).
 - `get_component_catalog` lists some theme names daub.js does not define (`references/themes.md`).

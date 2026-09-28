@@ -6,8 +6,8 @@
       "type": "skill-md",
       "description": "Build, preview and verify UI with DAUB (daub.dev), a drop-in CSS + JS component library with 84 components and 21 theme families. Covers three paths: plain HTML with db-* classes, json-render or OpenUI Lang specs rendered by daub-render.js, and the hosted DAUB MCP server (generate_ui, validate_spec, render_spec, parse_openui, get_block_library). Includes the rules that prevent broken renders, 266 ready-made blocks, playground share links, a verify loop, and Jev recipes for picking components, blocks and themes. Use when the user mentions DAUB, daub.dev, daub-ui, db- classes, the DAUB playground or MCP, json-render or OpenUI specs, or asks for a themed dashboard, landing page, form or settings screen without a build step.",
       "url": "https://daub.dev/SKILL.md",
-      "digest": "sha256:b4c6f2726f52c95409ffa3b947c08d5c10b5d098ed87145469198574f9f94de6",
-      "sha256": "b4c6f2726f52c95409ffa3b947c08d5c10b5d098ed87145469198574f9f94de6"
+      "digest": "sha256:430b39e0adfb14fde5b8ad31911d112f8692a759c4a0ce3808ce1f25b0acca3e",
+      "sha256": "430b39e0adfb14fde5b8ad31911d112f8692a759c4a0ce3808ce1f25b0acca3e"
     },
     {
       "name": "daub-llms-full",
@@ -78,8 +78,8 @@
       "type": "documentation",
       "description": "The hosted DAUB MCP server: tools, arguments, plain-HTTP calls and client setup.",
       "url": "https://daub.dev/references/mcp.md",
-      "digest": "sha256:c47dd131a9847b0731e62195419d3b29bb0ab369e55a40dfcd1bc31636df64f6",
-      "sha256": "c47dd131a9847b0731e62195419d3b29bb0ab369e55a40dfcd1bc31636df64f6"
+      "digest": "sha256:022c82e9e22e6092a50361a918ac20b749d635432bb756d5bdedeca57c372a7f",
+      "sha256": "022c82e9e22e6092a50361a918ac20b749d635432bb756d5bdedeca57c372a7f"
     },
     {
       "name": "daub-ui-ref-openui",

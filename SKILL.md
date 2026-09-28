@@ -155,7 +155,7 @@ Full formats: `references/json-render.md` (state, actions, visibility) and `refe
 - stdio-only clients: `npx -y mcp-remote https://daub.dev/api/mcp`
 - No MCP client (pi, scripts): POST JSON-RPC `tools/call` to the same URL (curl recipe in `references/mcp.md`).
 
-Tools: `generate_ui` (prompt to spec + HTML), `get_component_catalog`, `validate_spec`, `render_spec`, `parse_openui`, `get_block_library`. `validate_spec` and `render_spec` take the spec as a JSON string. `generate_ui` picks components with Jev first; `routing.picked_components` shows the pick. Rate limit: 60 requests per minute per IP.
+Tools: `generate_ui` (prompt to spec + HTML), `get_component_catalog`, `validate_spec`, `render_spec`, `parse_openui`, `get_block_library`. `validate_spec` and `render_spec` take the spec as a JSON string or an object. `generate_ui` picks components with Jev first; `routing.picked_components` shows the pick. Rate limit: 60 requests per minute per IP.
 
 ## Golden rules
 
