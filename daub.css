@@ -4635,7 +4635,10 @@ meter.db-meter::-moz-meter-bar {
    Toggle Group
    ------------------------------------------------------------ */
 .db-toggle-group {
-  display: inline-flex;
+  /* Equal 1fr segments sized to the widest label; labels wrap only when the container is narrower */
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 3px;
   padding: 3px;
   background: var(--db-cream-dark);
