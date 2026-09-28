@@ -837,6 +837,8 @@
         inp.className = 'db-field__input';
         inp.type = p.type || 'text';
         inp.placeholder = p.placeholder || '';
+        // value is the text the field holds (placeholder only hints); as an attribute it survives serialized HTML
+        if (isText(p.value)) inp.setAttribute('value', String(p.value));
         if (lbl) {
           inp.id = 'db-field-' + Math.random().toString(36).slice(2, 8);
           lbl.htmlFor = inp.id;
@@ -857,6 +859,7 @@
       el.className = 'db-input' + (isz ? ' db-input--' + isz : '') + (p.error ? ' db-input--error' : '');
       el.type = p.type || 'text';
       el.placeholder = p.placeholder || '';
+      if (isText(p.value)) el.setAttribute('value', String(p.value));
       return withLabel(el, p.label, true);
     };
     
@@ -910,6 +913,7 @@
       el.className = 'db-textarea' + (p.error ? ' db-textarea--error' : '');
       el.placeholder = p.placeholder || '';
       if (p.rows) el.rows = p.rows;
+      if (isText(p.value)) el.textContent = String(p.value);
       return el;
     };
     
@@ -919,7 +923,8 @@
       var inp = document.createElement('input');
       inp.className = 'db-checkbox__input';
       inp.type = 'checkbox';
-      if (p.checked) inp.checked = true;
+      // Serialized HTML keeps state only in attributes; the property alone is dropped
+      if (p.checked) { inp.checked = true; inp.setAttribute('checked', ''); }
       el.appendChild(inp);
       var box = document.createElement('span');
       box.className = 'db-checkbox__box';
@@ -949,7 +954,7 @@
         inp.type = 'radio';
         inp.name = name;
         inp.value = opt.value || '';
-        if (opt.value === p.selected) inp.checked = true;
+        if (opt.value === p.selected) { inp.checked = true; inp.setAttribute('checked', ''); }
         lbl.appendChild(inp);
         lbl.appendChild(mkEl('span', 'db-radio__circle'));
         lbl.appendChild(document.createTextNode(' ' + (opt.label || '')));

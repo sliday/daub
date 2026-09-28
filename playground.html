@@ -5666,6 +5666,8 @@ RENDERERS.Field = function(p, ch, els, d) {
     inp.className = 'db-field__input';
     inp.type = p.type || 'text';
     inp.placeholder = p.placeholder || '';
+    // value is the text the field holds (placeholder only hints); as an attribute it survives serialized HTML
+    if (isText(p.value)) inp.setAttribute('value', String(p.value));
     el.appendChild(inp);
   }
   if (p.helper) {
@@ -5682,6 +5684,7 @@ RENDERERS.Input = function(p) {
   el.className = 'db-input' + (isz ? ' db-input--' + isz : '') + (p.error ? ' db-input--error' : '');
   el.type = p.type || 'text';
   el.placeholder = p.placeholder || '';
+  if (isText(p.value)) el.setAttribute('value', String(p.value));
   return withLabel(el, p.label, true);
 };
 
@@ -5735,6 +5738,7 @@ RENDERERS.Textarea = function(p) {
   el.className = 'db-textarea' + (p.error ? ' db-textarea--error' : '');
   el.placeholder = p.placeholder || '';
   if (p.rows) el.rows = p.rows;
+  if (isText(p.value)) el.textContent = String(p.value);
   return el;
 };
 
@@ -7055,12 +7059,12 @@ var COMP_PROPS = {
   // Controls
   Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id)',
   ButtonGroup: '(children are Buttons)',
-  Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string',
-  Input: 'placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time"',
+  Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string, value: string (prefilled text; placeholder is only a hint)',
+  Input: 'placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time", value: string (prefilled text)',
   InputGroup: 'addonBefore: string, addonAfter: string (child is Input)',
   InputIcon: 'icon: string, right: bool (child is Input)',
   Search: 'placeholder: string',
-  Textarea: 'placeholder: string, rows: number, error: bool',
+  Textarea: 'placeholder: string, rows: number, error: bool, value: string (prefilled text)',
   Checkbox: 'label: string (shown beside the box; leave it out when a Text in the same row names the item: Checkbox(checked: true)), checked: bool',
   RadioGroup: 'options: [{label, value}], selected: string',
   Switch: 'label: string (leave it out when a Text in the same row names the setting: Switch(checked: true)), checked: bool (on/off setting: notifications, preferences, feature flags)',

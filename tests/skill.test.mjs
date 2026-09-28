@@ -158,15 +158,14 @@ describe('daub-ui skill: examples', () => {
       tgl: { type: 'ToggleGroup', props: { options: [{ label: 'Yearly (save 20%)', value: 'y' }], selected: 'y' } },
       sa: { type: 'ScrollArea', children: ['tbl'] },
       tbl: { type: 'Table', props: { columns: [{ key: 'a', label: 'A' }], rows: [{ a: '1' }] } },
-      fld: { type: 'Field', props: { label: 'Name', value: 'Maya' } },
       vis: { type: 'Text', props: { content: 'x', visible: { $state: '/tab', eq: 'a' } } },
       row: { type: 'Stack', props: { direction: 'horizontal', wrap: false }, children: ['ib'] },
       ib: { type: 'Button', props: { label: 'Export', icon: 'download' } },
     });
-    els.page.children.push('img', 'nb', 'tgl', 'sa', 'fld', 'vis', 'row');
+    els.page.children.push('img', 'nb', 'tgl', 'sa', 'vis', 'row');
     const r = lintSpec({ theme: 'paper', root: 'page', elements: els }, LINT_OPTS);
     const all = r.errors.concat(r.warnings).join('\n');
-    for (const needle of ['unknown theme "paper"', 'Text reads "content", not "text"', 'content and tag are swapped', 'renders "No data"', 'takes data objects', 'use Switch', 'hosted MCP rejects', 'gap is a 0-6 token', 'trigger "nope"', 'stray (Divider): unknown type', 'not reachable', 'root: no container', 'squashes the image', 'Navbar hides its children', 'use one word per option', 'hides the rows below', 'there is no value prop', 'belong on the element', 'its icon collapses']) {
+    for (const needle of ['unknown theme "paper"', 'Text reads "content", not "text"', 'content and tag are swapped', 'renders "No data"', 'takes data objects', 'use Switch', 'hosted MCP rejects', 'gap is a 0-6 token', 'trigger "nope"', 'stray (Divider): unknown type', 'not reachable', 'root: no container', 'squashes the image', 'Navbar hides its children', 'use one word per option', 'hides the rows below', 'belong on the element', 'its icon collapses']) {
       assert.ok(all.includes(needle), `lint should report: ${needle}\n${all}`);
     }
   });

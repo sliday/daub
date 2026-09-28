@@ -173,7 +173,7 @@ These rules prevent the failures seen most in generated DAUB UIs.
 10. Overlays (`Modal`, `AlertDialog`, `Sheet`, `Drawer`) need an `id`, and a `Button` with `trigger: "<id>"` opens one. They start hidden, so place them anywhere in the tree. `CommandPalette` also needs an `id`; it opens with Cmd+K or `DAUB.openCommand(id)`.
 11. `Card.footer` is an array of child ids and `Card.media` is an image URL. Use `Separator`, not `Divider`; `Layout` is deprecated (use `Stack` or `Grid`).
 12. Write real content: names, prices, dates, 5-8 table rows. No lorem ipsum, no "Item 1". `references/design.md` covers layout and density.
-13. Some specs render without errors and still look broken: `Image` with `width`/`height` squashes, a `Navbar` hides its children on phones, ToggleGroup labels with a space wrap, a ChartCard stretches beside a taller card, a ScrollArea around a Table hides rows, a Button icon collapses in a `wrap: false` row, and fields have no `value` prop. A destructive button uses variant `icon-danger`. Fixes: "Layout traps" in `references/components.md`.
+13. Some specs render without errors and still look broken: `Image` with `width`/`height` squashes, a `Navbar` hides its children on phones, ToggleGroup labels with a space wrap, a ChartCard stretches beside a taller card, a ScrollArea around a Table hides rows, a Button icon collapses in a `wrap: false` row, and an edit form written with placeholders instead of `value` looks empty. A destructive button uses variant `icon-danger`. Fixes: "Layout traps" in `references/components.md`.
 
 Renderers tolerate many malformed props (see `references/json-render.md`). Treat that as a safety net and write the canonical props.
 

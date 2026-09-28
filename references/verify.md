@@ -64,7 +64,6 @@ function lintSpec(spec, { types = [], themes = [], mcp = false } = {}) {
     if (e.type === 'Navbar' && kids.length) warnings.push(`${at}: on phones the Navbar hides its children and draws no menu button; use a horizontal Stack as the top bar`);
     if (e.type === 'ToggleGroup' && Array.isArray(p.options) && p.options.some(o => o && /\s/.test(String(o.label || '').trim()))) warnings.push(`${at}: option labels with a space wrap onto two lines; use one word per option`);
     if (e.type === 'ScrollArea' && kids.some(c => els[c] && /^(Table|DataTable)$/.test(els[c].type))) warnings.push(`${at}: ScrollArea caps its height at 300 px and hides the rows below; tables scroll sideways on their own`);
-    if (/^(Field|Input|Textarea)$/.test(e.type) && p.value != null) warnings.push(`${at}: there is no value prop, the field renders empty; use CustomHTML for prefilled fields`);
     if (e.type === 'Stack' && p.wrap === false && kids.some(c => els[c] && els[c].type === 'Button' && els[c].props && els[c].props.icon)) warnings.push(`${at}: in a wrap:false row a Button shrinks and its icon collapses; drop the icon or keep wrap on`);
     if (p.on != null || p.visible != null) warnings.push(`${at}: "on" and "visible" belong on the element, not in props (OpenUI Lang cannot express them)`);
   }
