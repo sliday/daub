@@ -1049,8 +1049,11 @@
     // -- Stepper --
     RENDERERS.Stepper = function(p) {
       var el = mkEl('div', 'db-stepper' + (p.vertical ? ' db-stepper--vertical' : ''));
+      // current: 0-based index of the active step; earlier steps are completed. An explicit step status wins
+      var cur = parseInt(p.current, 10);
       toArr(p.steps).forEach(function(s, i) {
-        var step = mkEl('div', 'db-stepper__step db-stepper__step--' + (s.status || 'pending'));
+        var st = s.status || (isNaN(cur) ? 'pending' : i < cur ? 'completed' : i === cur ? 'active' : 'pending');
+        var step = mkEl('div', 'db-stepper__step db-stepper__step--' + st);
         step.appendChild(mkEl('div', 'db-stepper__indicator', String(i + 1)));
         var label = mkEl('div', 'db-stepper__label', s.label || '');
         if (isText(s.description)) label.appendChild(mkEl('div', 'db-caption', String(s.description)));
