@@ -1282,14 +1282,17 @@ function renderToHTML(spec) {
       if (typeof renderElement === 'function') {
         var root = renderElement(spec.elements, spec.root, 0);
         if (root) document.getElementById('app').appendChild(root);
-        var rendered = {};
-        document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
-        Object.keys(spec.elements).forEach(function(id) {
-          if (id !== spec.root && !rendered[id]) {
-            var orphan = renderElement(spec.elements, id, 0);
-            if (orphan) document.getElementById('app').appendChild(orphan);
-          }
-        });
+        if (typeof renderOrphans === 'function') renderOrphans(spec, document.getElementById('app'));
+        else {
+          var rendered = {};
+          document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+          Object.keys(spec.elements).forEach(function(id) {
+            if (id !== spec.root && !rendered[id]) {
+              var orphan = renderElement(spec.elements, id, 0);
+              if (orphan) document.getElementById('app').appendChild(orphan);
+            }
+          });
+        }
         if (typeof DAUB !== 'undefined') DAUB.init();
         if (typeof lucide !== 'undefined') lucide.createIcons();
       }

@@ -68,14 +68,7 @@ ${rendererCode}
     if (root) document.getElementById('app').appendChild(root);
 
     // Render orphan elements (overlays etc.)
-    var rendered = {};
-    document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
-    Object.keys(spec.elements).forEach(function(id) {
-      if (id !== spec.root && !rendered[id]) {
-        var orphan = renderElement(spec.elements, id, 0);
-        if (orphan) document.getElementById('app').appendChild(orphan);
-      }
-    });
+    renderOrphans(spec, document.getElementById('app'));
 
     // Init DAUB + Lucide icons
     if (typeof DAUB !== 'undefined') DAUB.init();

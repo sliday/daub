@@ -158,7 +158,8 @@
 
     // footer: [childIds] keeps only ids present in els ("Cancel | Save" is text, not a ref); none left = no footer
     function footerRefs(v, els) {
-      return toArr(v).filter(function(id) { return !!els && Object.prototype.hasOwnProperty.call(els, id); });
+      // One nested level flattens: footer: [cardFooter] with cardFooter = [buyBtn] arrives as [["buyBtn"]]
+      return [].concat.apply([], toArr(v)).filter(function(id) { return typeof id === 'string' && !!els && Object.prototype.hasOwnProperty.call(els, id); });
     }
 
     // A data entry that names a spec element: OpenUI hoists inline components (Breadcrumbs([Text(..)]), Table([[Text(..)]]))
@@ -611,6 +612,43 @@
         if (el) frag.appendChild(el);
       });
       return frag;
+    }
+
+    // Parent of each element some other element references (a children entry or a prop holding its id; trigger-like
+    // props excluded), for the orphan pass
+    function orphanParents(els) {
+      var parentOf = {};
+      Object.keys(els).forEach(function(pid) {
+        (function refs(v, depth) {
+          if (v == null || depth > 6) return;
+          if (typeof v === 'string') { if (v !== pid && Object.prototype.hasOwnProperty.call(els, v) && !parentOf[v]) parentOf[v] = pid; return; }
+          if (typeof v === 'object') for (var k in v) if (Object.prototype.hasOwnProperty.call(v, k) && !/^(trigger|target|for|controls|id|opens)$/.test(k)) refs(v[k], depth + 1);
+        })({ c: els[pid] && els[pid].children, p: els[pid] && els[pid].props }, 0);
+      });
+      return parentOf;
+    }
+
+    // Append what the root tree did not place (overlays opened by a trigger, unreferenced statements) to container.
+    // Each one renders through its top-most unplaced ancestor, so a Modal's inline children render inside the Modal
+    // instead of first standing alone and then again inside it. Returns [{id, node}] for each appended element
+    function renderOrphans(spec, container) {
+      var els = spec.elements, rendered = {}, out = [];
+      container.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+      var parentOf = orphanParents(els);
+      Object.keys(els).forEach(function(id) {
+        var top = id, hops = 0;
+        while (parentOf[top] && !rendered[parentOf[top]] && hops++ < 50) top = parentOf[top];
+        [top, id].forEach(function(oid) {
+          if (oid === spec.root || rendered[oid]) return;
+          rendered[oid] = true;
+          var node = renderElement(els, oid, 0);
+          if (!node) return;
+          container.appendChild(node);
+          out.push({ id: oid, node: node });
+          if (node.querySelectorAll) node.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+        });
+      });
+      return out;
     }
 
     var RENDERERS = {};
@@ -1620,7 +1658,11 @@
       var track = mkEl('div', 'db-carousel__track');
       var slides = toArr(p.slides);
       slides.forEach(function(s) {
-        track.appendChild(mkEl('div', 'db-carousel__slide', s.content || ''));
+        // {content: "w1"} names a spec element: render it in the slide instead of printing the id
+        var ref = specRef(s.content, els), node = ref && renderElement(els, ref, (d || 0) + 1);
+        var slide = mkEl('div', 'db-carousel__slide', node ? null : (s.content || ''));
+        if (node) slide.appendChild(node);
+        track.appendChild(slide);
       });
       (ch || []).forEach(function(id) {
         var node = renderElement(els, id, (d || 0) + 1);
