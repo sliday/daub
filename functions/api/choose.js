@@ -1,6 +1,6 @@
 // Cloudflare Pages Function — component picker via Jev (TypeSafe decision model on OpenRouter)
-// POST /api/choose  { prompt: string, components: { TypeName: "props summary", ... } }
-// -> { model, scores: { TypeName: 0..1 }, usage }
+// POST /api/choose  { prompt: string, components: { TypeName: "props summary", ... }, packs?: [{ id, purpose }] }
+// -> { model, scores: { TypeName: 0..1 }, usage }, plus { pack_scores: { id: 0..1 }, picked_packs: [id] } when packs were sent
 //
 // Jev is a decisions model: it answers typed questions with probabilities instead of
 // generating text, so it only works on /api/alpha/decisions (not chat/completions).
@@ -10,6 +10,10 @@ const MODEL = '~typesafe/jev-latest';
 const MAX_PROMPT = 4000;
 const MAX_COMPONENTS = 120;
 const MAX_DESC = 400;
+// Design packs (playground DESIGN_PLAYBOOK): one question each, asked in the same request as the components
+const MAX_PACKS = 20;
+const MAX_PURPOSE = 240;
+const PACK_THRESHOLD = 0.5;
 
 function corsFor(request) {
   const origin = request.headers.get('Origin') || '';
@@ -59,7 +63,7 @@ export async function onRequestPost(context) {
   }
 
   try {
-    return json(await decideComponents({ prompt, components: comps, apiKey: env.OPENROUTER_API_KEY }), 200);
+    return json(await decideComponents({ prompt, components: comps, packs: body.packs, apiKey: env.OPENROUTER_API_KEY }), 200);
   } catch (e) {
     return json({ error: (e && e.message) || 'Upstream error' }, (e && e.status) || 502);
   }
@@ -71,9 +75,32 @@ function fail(message, status) {
   return e;
 }
 
-// Reusable Jev call (also used by functions/api/mcp.js). Resolves to { model, scores, usage };
-// throws an Error with .status (400 bad name, 500 no key, 502/504 upstream, or upstream's status).
-export async function decideComponents({ prompt, components, apiKey, timeoutMs = 10_000, title = 'DAUB Playground' }) {
+// Pack questions, worded as in the design-playbook eval. Keys are the pack id with "-" -> "_" (as evaluated).
+// Throws a 400 Error for a malformed list; `taken` holds the component keys a pack key must not reuse.
+export function packQuestions(packs, taken = {}) {
+  if (!Array.isArray(packs) || packs.length > MAX_PACKS) throw fail(`packs must be an array of at most ${MAX_PACKS}`, 400);
+  const questions = {};
+  for (const p of packs) {
+    if (!p || typeof p !== 'object' || typeof p.id !== 'string' || !/^[a-z0-9-]{1,40}$/.test(p.id)) throw fail('invalid pack id', 400);
+    if (typeof p.purpose !== 'string' || !p.purpose.trim() || p.purpose.length > MAX_PURPOSE) throw fail(`pack purpose must be 1-${MAX_PURPOSE} characters`, 400);
+    const key = p.id.replace(/-/g, '_');
+    if (Object.prototype.hasOwnProperty.call(questions, key) || Object.prototype.hasOwnProperty.call(taken, key)) throw fail(`duplicate question key: ${key}`, 400);
+    questions[key] = {
+      type: 'noul',
+      instructions: `Should the UI generator follow the design guidance for ${p.purpose} when building the requested UI?`,
+      criteria: {
+        true: `The requested UI is, or clearly contains, ${p.purpose}.`,
+        false: `The requested UI does not involve ${p.purpose}.`,
+      },
+    };
+  }
+  return questions;
+}
+
+// Reusable Jev call (also used by functions/api/mcp.js). Resolves to { model, scores, usage }, plus
+// { pack_scores, picked_packs } when packs are given; throws an Error with .status (400 bad name or pack,
+// 500 no key, 502/504 upstream, or upstream's status).
+export async function decideComponents({ prompt, components, packs, apiKey, timeoutMs = 10_000, title = 'DAUB Playground' }) {
   const names = Object.keys(components || {});
   const questions = {};
   for (const name of names) {
@@ -89,6 +116,9 @@ export async function decideComponents({ prompt, components, apiKey, timeoutMs =
       },
     };
   }
+
+  const packQs = packs == null ? null : packQuestions(packs, questions);
+  if (packQs) Object.assign(questions, packQs);
 
   if (!apiKey) throw fail('Server misconfigured: missing API key', 500);
 
@@ -128,7 +158,18 @@ export async function decideComponents({ prompt, components, apiKey, timeoutMs =
     const a = answers[name];
     if (a && typeof a.noul === 'number') scores[name] = a.noul;
   }
-  return { model: (data && data.model) || MODEL, scores, usage: (data && data.usage) || null };
+  const out = { model: (data && data.model) || MODEL, scores, usage: (data && data.usage) || null };
+  if (packQs) {
+    out.pack_scores = {};
+    out.picked_packs = [];
+    for (const p of packs) {
+      const a = answers[p.id.replace(/-/g, '_')];
+      if (!a || typeof a.noul !== 'number') continue;
+      out.pack_scores[p.id] = a.noul;
+      if (a.noul >= PACK_THRESHOLD) out.picked_packs.push(p.id);
+    }
+  }
+  return out;
 }
 
 export async function onRequestOptions(context) {
