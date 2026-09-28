@@ -5075,6 +5075,13 @@ function tableShape(p) {
   return { cols: cols, rows: rows };
 }
 
+// Table/DataTable: a scroll box, so a wide table scrolls inside its column instead of widening the page or a grid cell
+function tableScroll(table) {
+  var wrap = mkEl('div', 'db-table-scroll');
+  wrap.appendChild(table);
+  return wrap;
+}
+
 // ---- Declarative State Engine ----
 // Shared between main page (renderElement) and iframe (runtime).
 // The iframe gets a copy of this code injected via buildIframeSrcdoc().
@@ -5852,7 +5859,8 @@ RENDERERS.Sidebar = function(p, ch, els, d) {
         ico.style.height = '16px';
         a.appendChild(ico);
       }
-      a.appendChild(document.createTextNode(' ' + (item.label || '')));
+      // Label in a <span> (canonical markup) so the icon rail (<=640px, --collapsed) can hide it
+      a.appendChild(mkEl('span', null, item.label || ''));
       section.appendChild(a);
     });
     el.appendChild(section);
@@ -5947,7 +5955,7 @@ RENDERERS.Table = function(p) {
     tbody.appendChild(tr);
   });
   el.appendChild(tbody);
-  return el;
+  return tableScroll(el);
 };
 
 // -- DataTable --
@@ -6008,7 +6016,7 @@ RENDERERS.DataTable = function(p) {
     tbody.appendChild(tr);
   });
   el.appendChild(tbody);
-  return el;
+  return tableScroll(el);
 };
 
 // -- List --
