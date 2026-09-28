@@ -110,6 +110,14 @@
       return el;
     }
     
+    // Map a variant-like prop onto a modifier daub.css defines (aliases first); any other value -> '' so no dead class ships
+    function knownMod(v, known, alias) {
+      if (v == null || v === false || v === '') return '';
+      var k = String(v).trim().toLowerCase();
+      if (alias && Object.prototype.hasOwnProperty.call(alias, k)) k = alias[k];
+      return known.indexOf(k) >= 0 ? k : '';
+    }
+
     // Guard against javascript: and data: URLs from AI-generated content
     function isSafeUrl(url) {
       if (!url || typeof url !== 'string') return false;
@@ -165,6 +173,80 @@
       return parts.length ? parts : [v];
     }
 
+    // Renderable text: a non-empty string or a number ($state/$cond objects resolve later in the iframe)
+    function isText(v) {
+      return (typeof v === 'string' && v !== '') || typeof v === 'number';
+    }
+
+    function withProp(o, key, v) {
+      var c = {};
+      for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) c[k] = o[k];
+      c[key] = v;
+      return c;
+    }
+
+    // Fill an empty slot from the first alias that holds text; returns a copy, never touches the spec
+    function fillAlias(o, key, names) {
+      if (o[key] != null && o[key] !== '') return o;
+      for (var i = 0; i < names.length; i++) {
+        if (isText(o[names[i]])) return withProp(o, key, o[names[i]]);
+      }
+      return o;
+    }
+
+    // AI-written prop names -> the names the renderers read (Badge label -> text, List items[].primary -> title)
+    function normalizeProps(type, p) {
+      var items, on;
+      switch (type) {
+        case 'Badge':
+        case 'Label':
+          return fillAlias(p, 'text', ['label', 'content']);
+        case 'Alert':
+          p = fillAlias(p, 'message', ['description', 'content', 'text']);
+          return /^(info|success|warning|error)$/.test(p.variant) ? fillAlias(p, 'type', ['variant']) : p;
+        case 'EmptyState':
+          return fillAlias(p, 'message', ['description', 'text']);
+        case 'StatCard':
+          return fillAlias(p, 'label', ['title']);
+        case 'List':
+          if (p.items == null) return p;
+          return withProp(p, 'items', toArr(p.items).map(function(it) {
+            return isPlain(it) ? fillAlias(fillAlias(it, 'title', ['primary', 'label', 'text']), 'secondary', ['description', 'subtitle']) : it;
+          }));
+        case 'ToggleGroup':
+          p = fillAlias(p, 'selected', ['defaultValue', 'value']);
+          if (p.options != null || p.items == null) return p;
+          // Valueless items would all match an unset selected and render pressed; the item marked active is the selection
+          items = toArr(p.items).map(function(o) { return isPlain(o) ? fillAlias(o, 'value', ['id', 'label']) : o; });
+          p = withProp(p, 'options', items);
+          on = items.filter(function(o) { return o && o.active === true; })[0];
+          return p.selected == null && on ? withProp(p, 'selected', on.value) : p;
+        case 'Tabs':
+          if (p.tabs != null || p.items == null) return p;
+          items = toArr(p.items).map(function(t) { return isPlain(t) ? fillAlias(t, 'id', ['value']) : t; });
+          p = withProp(p, 'tabs', items);
+          on = items.filter(function(t) { return t && t.active === true; })[0];
+          return p.active == null && on ? withProp(p, 'active', on.id) : p;
+      }
+      return p;
+    }
+
+    // Visible label above a control whose markup has no label slot (Input, Progress, RadioGroup, ToggleGroup).
+    // fill: the control is width:100%, so the wrapper takes its place in a row the same way.
+    function withLabel(el, text, fill) {
+      if (!isText(text)) return el;
+      var wrap = mkEl('div');
+      wrap.style.cssText = 'display:flex;flex-direction:column;gap:var(--db-space-2);' + (fill ? 'width:100%;' : 'align-items:flex-start;');
+      var lbl = mkEl(el.tagName === 'INPUT' ? 'label' : 'span', 'db-label', String(text));
+      if (el.tagName === 'INPUT') {
+        el.id = 'db-input-' + Math.random().toString(36).slice(2, 8);
+        lbl.htmlFor = el.id;
+      }
+      wrap.appendChild(lbl);
+      wrap.appendChild(el);
+      return wrap;
+    }
+
     // Chart bars from [{label, value}] or chart.js-style {labels, data} / {labels, datasets: [{data}]} / {type, data, labels}
     function chartBars(p) {
       var src = p.bars != null ? p.bars : (p.data != null || p.datasets != null ? p : null);
@@ -207,6 +289,13 @@
         return o;
       });
       return { cols: cols, rows: rows };
+    }
+
+    // Table/DataTable: a scroll box, so a wide table scrolls inside its column instead of widening the page or a grid cell
+    function tableScroll(table) {
+      var wrap = mkEl('div', 'db-table-scroll');
+      wrap.appendChild(table);
+      return wrap;
     }
     
     // ---- Declarative State Engine ----
@@ -383,7 +472,7 @@
       var children = toArr(def.children || (def.props && def.props.children));
       var el;
       try {
-        el = render(def.props || {}, children, elements, depth);
+        el = render(normalizeProps(def.type, def.props || {}), children, elements, depth);
       } catch (err) {
         // One bad element must not blank the page: inline notice here, siblings keep rendering
         var msg = String(err && err.message || err);
@@ -470,7 +559,12 @@
       if (p.container) {
         el.className = 'db-container' + (p.container === 'wide' ? ' db-container--wide' : p.container === 'narrow' ? ' db-container--narrow' : '');
       }
-      el.classList.add('db-grid', 'db-grid--' + (p.columns || 2));
+      // columns 2-6 map to db-grid--N; 7-12 (week calendars) get an inline template; 1 or junk stays one column
+      var cols = parseInt(p.columns || 2, 10);
+      el.classList.add('db-grid');
+      if (p.columns === 'sidebar-main') el.classList.add('db-grid--sidebar-main');
+      else if (cols >= 2 && cols <= 6) el.classList.add('db-grid--' + cols);
+      else if (cols > 6) el.style.gridTemplateColumns = 'repeat(' + Math.min(cols, 12) + ', minmax(0, 1fr))';
       if (p.gap) el.classList.add('db-gap-' + Math.max(1, Math.min(6, p.gap)));
       if (p.align === 'center') el.style.justifyItems = 'center';
       else if (p.align === 'end') el.style.justifyItems = 'end';
@@ -498,7 +592,8 @@
     // -- Surface --
     RENDERERS.Surface = function(p, ch, els, d) {
       var el = document.createElement('div');
-      el.className = p.variant ? 'db-surface--' + p.variant : 'db-surface';
+      var sv = knownMod(p.variant, ['raised', 'inset', 'pressed'], { bordered: 'raised', card: 'raised', elevated: 'raised', sunken: 'inset' });
+      el.className = 'db-surface' + (sv ? ' db-surface--' + sv : '');
       el.style.padding = 'var(--db-space-4, 16px)';
       el.style.borderRadius = 'var(--db-radius-2, 8px)';
       el.appendChild(renderChildren(els, ch, d));
@@ -547,8 +642,10 @@
     RENDERERS.Button = function(p) {
       var el = document.createElement('button');
       var cls = 'db-btn';
-      if (p.variant) cls += ' db-btn--' + p.variant;
-      if (p.size) cls += ' db-btn--' + p.size;
+      var bv = knownMod(p.variant, ['primary', 'secondary', 'ghost', 'icon-danger', 'icon-success', 'icon-accent'], { outline: 'secondary', 'default': 'secondary', link: 'ghost', destructive: 'icon-danger', danger: 'icon-danger' });
+      var bs = knownMod(p.size, ['sm', 'lg', 'icon']);
+      if (bv) cls += ' db-btn--' + bv;
+      if (bs) cls += ' db-btn--' + bs;
       if (p.loading) { cls += ' db-btn--loading'; el.disabled = true; }
       el.className = cls;
       var ico = mkIcon(p.icon, 16);
@@ -599,10 +696,11 @@
     // -- Input --
     RENDERERS.Input = function(p) {
       var el = document.createElement('input');
-      el.className = 'db-input' + (p.size ? ' db-input--' + p.size : '') + (p.error ? ' db-input--error' : '');
+      var isz = knownMod(p.size, ['sm', 'lg']);
+      el.className = 'db-input' + (isz ? ' db-input--' + isz : '') + (p.error ? ' db-input--error' : '');
       el.type = p.type || 'text';
       el.placeholder = p.placeholder || '';
-      return el;
+      return withLabel(el, p.label, true);
     };
     
     // -- InputGroup --
@@ -700,7 +798,7 @@
         lbl.appendChild(document.createTextNode(' ' + (opt.label || '')));
         el.appendChild(lbl);
       });
-      return el;
+      return withLabel(el, p.label);
     };
     
     // -- Switch --
@@ -754,7 +852,7 @@
         el.appendChild(btn);
       });
       if (ch && ch.length) el.appendChild(renderChildren(els, ch, d));
-      return el;
+      return withLabel(el, p.label);
     };
     
     // -- Select --
@@ -955,7 +1053,9 @@
       toArr(p.steps).forEach(function(s, i) {
         var step = mkEl('div', 'db-stepper__step db-stepper__step--' + (s.status || 'pending'));
         step.appendChild(mkEl('div', 'db-stepper__indicator', String(i + 1)));
-        step.appendChild(mkEl('div', 'db-stepper__label', s.label || ''));
+        var label = mkEl('div', 'db-stepper__label', s.label || '');
+        if (isText(s.description)) label.appendChild(mkEl('div', 'db-caption', String(s.description)));
+        step.appendChild(label);
         el.appendChild(step);
       });
       return el;
@@ -984,9 +1084,10 @@
       brand.href = isSafeUrl(p.brandHref) ? p.brandHref : '#';
       brand.textContent = p.brand || 'App';
       el.appendChild(brand);
-      if (ch.length) {
+      var links = ch.length ? [] : toArr(p.links);
+      if (ch.length || links.length) {
         var nav = mkEl('div', 'db-navbar__nav');
-        nav.appendChild(renderChildren(els, ch, d));
+        nav.appendChild(ch.length ? renderChildren(els, ch, d) : RENDERERS.NavMenu({ items: links }));
         el.appendChild(nav);
       }
       return el;
@@ -1041,7 +1142,8 @@
           a.href = isSafeUrl(item.href) ? item.href : '#';
           var ico = mkIcon(item.icon, 16);
           if (ico) a.appendChild(ico);
-          a.appendChild(document.createTextNode(' ' + (item.label || '')));
+          // Label in a <span> (canonical markup) so the icon rail (<=640px, --collapsed) can hide it
+          a.appendChild(mkEl('span', null, item.label || ''));
           section.appendChild(a);
         });
         el.appendChild(section);
@@ -1131,7 +1233,7 @@
         tbody.appendChild(tr);
       });
       el.appendChild(tbody);
-      return el;
+      return tableScroll(el);
     };
     
     // -- DataTable --
@@ -1192,7 +1294,7 @@
         tbody.appendChild(tr);
       });
       el.appendChild(tbody);
-      return el;
+      return tableScroll(el);
     };
     
     // -- List --
@@ -1210,6 +1312,7 @@
         var content = mkEl('div', 'db-list__content');
         content.appendChild(mkEl('div', 'db-list__title', obj.title || ''));
         if (obj.secondary) content.appendChild(mkEl('div', 'db-list__secondary', obj.secondary));
+        if (isText(obj.meta)) content.appendChild(mkEl('div', 'db-caption', String(obj.meta)));
         li.appendChild(content);
         el.appendChild(li);
       });
@@ -1218,12 +1321,15 @@
     
     // -- Badge --
     RENDERERS.Badge = function(p) {
-      return mkEl('span', 'db-badge' + (p.variant ? ' db-badge--' + p.variant : ''), p.text || '');
+      var bv = knownMod(p.variant, ['new', 'updated', 'success', 'warning', 'error', 'danger', 'info', 'gray', 'red', 'green', 'blue', 'amber', 'purple'], { secondary: 'gray', 'default': 'gray', neutral: 'gray', muted: 'gray', outline: 'gray', primary: 'new', accent: 'new', destructive: 'red' });
+      return mkEl('span', 'db-badge' + (bv ? ' db-badge--' + bv : ''), p.text || '');
     };
     
     // -- Avatar --
     RENDERERS.Avatar = function(p) {
-      var el = mkEl('div', 'db-avatar' + (p.size ? ' db-avatar--' + p.size : ' db-avatar--md'));
+      var px = /^\d+(px)?$/.test(String(p.size)) ? parseInt(p.size, 10) : 0;
+      var asz = px ? (px < 36 ? 'sm' : px < 48 ? 'md' : 'lg') : knownMod(p.size, ['sm', 'md', 'lg'], { xs: 'sm', xl: 'lg', '2xl': 'lg' });
+      var el = mkEl('div', 'db-avatar db-avatar--' + (asz || 'md'));
       if (p.src && isSafeUrl(p.src)) {
         var img = document.createElement('img');
         img.src = p.src;
@@ -1398,7 +1504,8 @@
     
     // -- Chip --
     RENDERERS.Chip = function(p) {
-      var el = mkEl('span', 'db-chip' + (p.color ? ' db-chip--' + p.color : '') + (p.active ? ' db-chip--active' : ''), p.label || '');
+      var cc = knownMod(p.color, ['red', 'green', 'blue', 'purple', 'amber', 'pink']);
+      var el = mkEl('span', 'db-chip' + (cc ? ' db-chip--' + cc : '') + (p.active ? ' db-chip--active' : ''), p.label || '');
       if (p.closable) {
         var close = document.createElement('button');
         close.className = 'db-chip__close';
@@ -1418,7 +1525,8 @@
     
     // -- Alert --
     RENDERERS.Alert = function(p) {
-      var el = mkEl('div', 'db-alert' + (p.type ? ' db-alert--' + p.type : ''));
+      var at = knownMod(p.type, ['info', 'warning', 'error', 'success'], { danger: 'error', destructive: 'error', warn: 'warning' });
+      var el = mkEl('div', 'db-alert' + (at ? ' db-alert--' + at : ''));
       var content = mkEl('div', 'db-alert__content');
       if (p.title) content.appendChild(mkEl('div', 'db-alert__title', p.title));
       if (p.message) content.appendChild(mkEl('p', null, p.message));
@@ -1432,7 +1540,7 @@
       var bar = mkEl('div', 'db-progress__bar');
       bar.style.setProperty('--db-progress', (p.value || 0) + '%');
       el.appendChild(bar);
-      return el;
+      return withLabel(el, p.label, true);
     };
     
     // -- Skeleton --
@@ -1490,6 +1598,11 @@
       var footerIds = footerRefs(p.footer, els);
       var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
       var body = mkEl('div', 'db-modal__body');
+      if (isText(p.description)) {
+        var desc = mkEl('p', 'db-text-muted', String(p.description));
+        desc.style.marginBottom = 'var(--db-space-4)';
+        body.appendChild(desc);
+      }
       body.appendChild(renderChildren(els, bodyIds, d));
       modal.appendChild(body);
       var footer = mkEl('div', 'db-modal__footer');
@@ -1564,6 +1677,7 @@
       var panel = mkEl('div', 'db-drawer__panel');
       panel.appendChild(mkEl('div', 'db-drawer__handle'));
       var body = mkEl('div', 'db-drawer__body');
+      if (isText(p.title)) body.appendChild(mkEl('h3', 'db-h3', String(p.title)));
       body.appendChild(renderChildren(els, ch, d));
       panel.appendChild(body);
       el.appendChild(panel);
@@ -1813,10 +1927,13 @@
       el.appendChild(mkEl('span', 'db-stat__label', p.label || ''));
       el.appendChild(mkEl('span', 'db-stat__value', p.value || ''));
       if (p.trend) {
-        var change = mkEl('span', 'db-stat__change db-stat__change--' + p.trend);
-        change.textContent = (p.trend === 'up' ? '\u2191' : '\u2193') + ' ' + (p.trendValue || '');
+        // trend is "up"/"down"; free text ("+2.8% vs last month") shows as written, coloured by its leading sign or arrow
+        var tr = String(p.trend), dir = tr === 'up' || tr === 'down' ? tr : /^[+\u2191]/.test(tr) ? 'up' : /^[-\u2212\u2193]/.test(tr) ? 'down' : '';
+        var change = mkEl('span', 'db-stat__change' + (dir ? ' db-stat__change--' + dir : ''));
+        change.textContent = dir === tr ? (tr === 'up' ? '\u2191' : '\u2193') + ' ' + (p.trendValue || '') : tr + (p.trendValue ? ' ' + p.trendValue : '');
         el.appendChild(change);
       }
+      if (isText(p.description)) el.appendChild(mkEl('span', 'db-caption', String(p.description)));
       return el;
     };
     
@@ -1824,7 +1941,15 @@
     RENDERERS.ChartCard = function(p, ch, els, d) {
       var el = mkEl('div', 'db-chart-card');
       var hdr = mkEl('div', 'db-chart-card__header');
-      hdr.appendChild(mkEl('span', 'db-chart-card__title', p.title || ''));
+      var title = mkEl('span', 'db-chart-card__title', p.title || '');
+      if (isText(p.description)) {
+        var head = mkEl('div');
+        head.appendChild(title);
+        head.appendChild(mkEl('div', 'db-caption', String(p.description)));
+        hdr.appendChild(head);
+      } else {
+        hdr.appendChild(title);
+      }
       el.appendChild(hdr);
       var body = mkEl('div', 'db-chart-card__body');
       if (!(ch && ch.length) && p.bars != null && chartBars(p).length) {

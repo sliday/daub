@@ -1216,7 +1216,7 @@ function renderToHTML(spec) {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="${LUCIDE_SRC}" integrity="${LUCIDE_SRI}" crossorigin="anonymous"><\/script>
   <style>
-    body { margin: 0; padding: 16px; font-family: Inter, system-ui, sans-serif; background: var(--db-bg); color: var(--db-fg); }
+    body { margin: 0; padding: 16px; font-family: Inter, system-ui, sans-serif; background: var(--db-color-bg); color: var(--db-color-text); }
     #app { max-width: 1200px; margin: 0 auto; }
   </style>
 </head>
