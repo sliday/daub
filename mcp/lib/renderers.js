@@ -1,4 +1,5 @@
     var MAX_DEPTH = 20;
+    var RENDERING = Object.create(null); // element ids on the current render path (see specRef)
 
     // Safe HTML-entity escaping via textContent
     function esc(s) {
@@ -97,9 +98,10 @@
     }
 
     // A data entry that names a spec element: OpenUI hoists inline components (Breadcrumbs([Text(..)]), Table([[Text(..)]]))
-    // to element ids. An id some element lists as a child stays text, so a cell that equals an id is not pulled out of its parent
+    // to element ids. An id some element lists as a child stays text, so a cell that equals an id is not pulled out of its parent.
+    // So does an id on the current render path: a cell naming the root ("home") must not nest the page inside itself
     function specRef(v, els) {
-      if (typeof v !== 'string' || !els || !Object.prototype.hasOwnProperty.call(els, v)) return null;
+      if (typeof v !== 'string' || !els || !Object.prototype.hasOwnProperty.call(els, v) || RENDERING[v]) return null;
       for (var k in els) {
         var e = els[k], c = e && (e.children || (e.props && e.props.children));
         if (Array.isArray(c) && c.indexOf(v) >= 0) return null;
@@ -344,6 +346,7 @@
     
       var children = toArr(def.children || (def.props && def.props.children));
       var el;
+      RENDERING[id] = (RENDERING[id] || 0) + 1;
       try {
         el = render(def.props || {}, children, elements, depth);
       } catch (err) {
@@ -355,6 +358,8 @@
         var errContent = mkEl('div', 'db-alert__content');
         errContent.appendChild(mkEl('div', 'db-alert__title', "Couldn't render " + def.type));
         el.appendChild(errContent);
+      } finally {
+        RENDERING[id]--;
       }
       if (el && el.setAttribute) {
         el.setAttribute('data-spec-id', id);
