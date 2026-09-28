@@ -100,3 +100,14 @@ describe('CustomSelect: a top-level selection', () => {
     norm('CustomSelect', { options: ['One', 'Two'], searchable: true }, { searchable: true, options: ['One', 'Two'] });
   });
 });
+
+describe('Switch / Checkbox: a boolean in the label slot', () => {
+  it('Switch(true) is checked with no label text', () => {
+    norm('Switch', { label: true }, { checked: true, label: '' });
+    norm('Checkbox', { label: false }, { checked: false, label: '' });
+  });
+  it('real labels and an explicit checked stay', () => {
+    norm('Switch', { label: 'Email alerts', checked: true }, { label: 'Email alerts', checked: true });
+    norm('Checkbox', { label: true, checked: false }, { label: true, checked: false });
+  });
+});

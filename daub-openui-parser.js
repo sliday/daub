@@ -403,6 +403,12 @@ function resolveStatements(stmts) {
   function isData(name) {
     return Object.prototype.hasOwnProperty.call(dataStmts, name);
   }
+  // Switch(webhook1) with __state = {webhook1: true}: a bare __state key sets the control's state instead of printing as its label
+  var STATE_PROP = { Switch: 'checked', Checkbox: 'checked', Toggle: 'pressed' };
+  function stateKey(v) {
+    var k = v && v.__ref;
+    return k && !nameToId[k] && state && typeof state === 'object' && !Array.isArray(state) && Object.prototype.hasOwnProperty.call(state, k) ? k : null;
+  }
 
   // First pass: assign IDs
   for (var i = 0; i < stmts.length; i++) {
@@ -465,9 +471,12 @@ function resolveStatements(stmts) {
     var props = {};
     var childIds = [];
 
+    var stateArg = STATE_PROP[typeName] && stateKey(comp.__args[0]);
+    if (stateArg) props[STATE_PROP[typeName]] = state[stateArg];
+
     // Map positional args to named props using schema
     if (schema && comp.__args.length > 0) {
-      for (var a = 0; a < comp.__args.length; a++) {
+      for (var a = stateArg ? 1 : 0; a < comp.__args.length; a++) {
         if (a < schema.length) {
           var propName = schema[a];
           var argVal = comp.__args[a];

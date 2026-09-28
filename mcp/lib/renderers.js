@@ -242,6 +242,10 @@
           signed = typeof tv === 'string' && /^[+\u2191\-\u2212\u2193]/.test(tv);
           q = withProp(withProp(withProp(p, 'icon', p.trend), 'trend', slid || signed ? tv : null), 'trendValue', slid && isText(p.icon) && p.icon !== p.trend ? p.icon : null);
           return slid || signed || !isText(tv) || isText(q.description) ? q : withProp(q, 'description', tv);
+        case 'Switch':
+        case 'Checkbox':
+          // Switch(true): a boolean in the label slot is the checked state, not text
+          return typeof p.label === 'boolean' && p.checked == null ? withProp(withProp(p, 'checked', p.label), 'label', '') : p;
         case 'CustomSelect':
           // CustomSelect("Language", opts, "de"): a string in the searchable slot is the selection
           if (typeof p.searchable === 'string' && !/^(true|false)$/.test(p.searchable)) p = withProp(fillAlias(p, 'selected', ['searchable']), 'searchable', false);
@@ -573,6 +577,27 @@
 
     var RENDERERS = {};
     
+    // A Checkbox or Switch whose label repeats text beside it (Stack([Text("Email alerts"), Switch("Email alerts", true)])):
+    // the row shows the name once, and the control keeps it as its accessible name
+    function dedupeControlLabels(row) {
+      var kids = [].slice.call(row.children), seen = {};
+      var isCtl = function(k) { return k.classList && (k.classList.contains('db-checkbox') || k.classList.contains('db-switch')); };
+      kids.forEach(function(k) {
+        if (isCtl(k)) return;
+        [k].concat([].slice.call(k.querySelectorAll('h1,h2,h3,h4,p,span,label'))).forEach(function(n) {
+          var t = n.textContent.trim().toLowerCase();
+          if (t) seen[t] = true;
+        });
+      });
+      kids.forEach(function(k) {
+        if (!isCtl(k)) return;
+        var last = k.lastChild, t = last && last.nodeType === 3 ? last.nodeValue.trim() : '';
+        if (!t || !seen[t.toLowerCase()]) return;
+        k.removeChild(last);
+        (k.querySelector('input') || k).setAttribute('aria-label', t);
+      });
+    }
+
     // -- Stack (flexbox) --
     RENDERERS.Stack = function(p, ch, els, d) {
       var el = document.createElement('div');
@@ -593,6 +618,7 @@
       else if (p.align === 'start') el.style.alignItems = 'flex-start';
       else if (p.align === 'stretch') el.style.alignItems = 'stretch';
       el.appendChild(renderChildren(els, ch, d));
+      dedupeControlLabels(el);
       // Sidebar rows: give the content a flex basis so it sits beside the sidebar instead of wrapping below it (still wraps on narrow screens)
       if (isH && Array.isArray(ch) && ch.some(function(id) { return els[id] && els[id].type === 'Sidebar'; })) {
         for (var si = 0; si < el.children.length; si++) {

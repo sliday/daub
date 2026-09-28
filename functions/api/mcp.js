@@ -21,9 +21,9 @@ const COMP_PROPS = {
   InputIcon: 'icon: string, right: bool (child is Input)',
   Search: 'placeholder: string',
   Textarea: 'placeholder: string, rows: number, error: bool',
-  Checkbox: 'label: string, checked: bool',
+  Checkbox: 'label: string (shown beside the box; leave it out when a Text in the same row names the item: Checkbox(checked: true)), checked: bool',
   RadioGroup: 'options: [{label, value}], selected: string',
-  Switch: 'label: string, checked: bool (on/off setting: notifications, preferences, feature flags)',
+  Switch: 'label: string (leave it out when a Text in the same row names the setting: Switch(checked: true)), checked: bool (on/off setting: notifications, preferences, feature flags)',
   Slider: 'min: number, max: number, value: number, step: number, label: string',
   Toggle: 'label: string, pressed: bool, size: "sm" (pressable toolbar button: bold/italic, view filter — NOT for settings)',
   ToggleGroup: 'options: [{label, value}], selected: string',
@@ -572,6 +572,9 @@ function openUItoSpec(input) {
     // Data statements (name = literal) resolve by value wherever they are defined; `resolving` guards cycles
     const data = Object.create(null), resolving = Object.create(null);
     const isData = n => Object.prototype.hasOwnProperty.call(data, n);
+    // Switch(webhook1) with __state = {webhook1: true}: a bare __state key sets the control's state instead of printing as its label
+    const STATE_PROP = { Switch: 'checked', Checkbox: 'checked', Toggle: 'pressed' };
+    const stateKey = v => { const k = v && v.__ref; return k && !nameToId[k] && state && typeof state === 'object' && !Array.isArray(state) && Object.prototype.hasOwnProperty.call(state, k) ? k : null; };
 
     for(let i=0;i<stmts.length;i++){
       const s=stmts[i];
@@ -614,8 +617,10 @@ function openUItoSpec(input) {
     function resolveComponent(comp){
       const {__component:typeName,__args:args,__named:named,__hasNamed:hn}=comp;
       const schema=COMP_SCHEMA[typeName];const props={};const childIds=[];
+      const sk=STATE_PROP[typeName]&&stateKey(args[0]);
+      if(sk)props[STATE_PROP[typeName]]=state[sk];
       if(schema&&args.length){
-        for(let a=0;a<args.length&&a<schema.length;a++){
+        for(let a=sk?1:0;a<args.length&&a<schema.length;a++){
           if(schema[a]==='children')collectChildren(args[a],childIds);
           else props[schema[a]]=resolveValue(args[a]);
         }
