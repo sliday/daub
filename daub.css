@@ -4071,8 +4071,12 @@ meter.db-meter::-moz-meter-bar {
   .db-grid--4, .db-grid--5, .db-grid--6 { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
+  /* One column: minmax(0, 1fr) keeps a wide child from widening the column past the screen */
   .db-grid--2, .db-grid--3, .db-grid--4,
-  .db-grid--5, .db-grid--6 { grid-template-columns: 1fr; }
+  .db-grid--5, .db-grid--6 { grid-template-columns: minmax(0, 1fr); }
+  /* Drop spans (inline grid-column: span N) so they can't add implicit columns */
+  .db-grid--2 > *, .db-grid--3 > *, .db-grid--4 > *,
+  .db-grid--5 > *, .db-grid--6 > * { grid-column: auto !important; }
 }
 
 /* Empty state spans full grid */
