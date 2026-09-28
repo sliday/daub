@@ -53,6 +53,62 @@
       if (text != null) el.textContent = text;
       return el;
     }
+
+    // Icon names models borrow from other icon sets -> the lucide 0.576 name
+    var ICON_ALIASES = {
+      refresh: 'refresh-cw', reload: 'refresh-cw', sync: 'refresh-cw', rotate: 'rotate-cw', replay: 'rotate-ccw',
+      chart: 'chart-bar', stats: 'chart-bar', analytics: 'chart-line', dashboard: 'layout-dashboard',
+      alert: 'circle-alert', error: 'circle-alert', warning: 'triangle-alert', success: 'circle-check', help: 'circle-help', question: 'circle-help',
+      close: 'x', cancel: 'circle-x', add: 'plus', more: 'ellipsis', sort: 'arrow-up-down', gear: 'settings',
+      cart: 'shopping-cart', bag: 'shopping-bag', dollar: 'dollar-sign', money: 'banknote', cash: 'banknote', payment: 'credit-card', ethereum: 'coins',
+      email: 'mail', message: 'message-square', chat: 'message-square', comment: 'message-square', notification: 'bell', notifications: 'bell',
+      profile: 'user', account: 'user', person: 'user', people: 'users', team: 'users', visitors: 'users', bounce: 'undo-2',
+      location: 'map-pin', document: 'file-text', doc: 'file-text', draft: 'file-pen', log: 'logs', flask: 'flask-conical',
+      time: 'clock', schedule: 'calendar', event: 'calendar', date: 'calendar', logout: 'log-out', login: 'log-in',
+      favorite: 'heart', like: 'thumbs-up', visibility: 'eye', back: 'arrow-left', previous: 'arrow-left', prev: 'arrow-left', next: 'arrow-right'
+    };
+
+    // Same PascalCase key lucide.createIcons() derives from data-lucide
+    function lucideKey(n) {
+      var c = n.replace(/^([A-Z])|[\s-_]+(\w)/g, function(m, a, b) { return b ? b.toUpperCase() : a.toLowerCase(); });
+      return c.charAt(0).toUpperCase() + c.slice(1);
+    }
+
+    // Icon element for a spec icon name. Aliases map to lucide, "google" is an inline G in lucide's stroke style,
+    // an emoji or symbol renders as text, and a name the loaded lucide build lacks (in any case) returns null (no empty slot)
+    function mkIcon(name, size) {
+      name = typeof name === 'string' ? name.trim() : '';
+      if (!name) return null;
+      var px = (size || 16) + 'px', key = name.toLowerCase(), el;
+      if (!/[a-z]/.test(key)) {
+        el = mkEl('span', null, name);
+        el.setAttribute('aria-hidden', 'true');
+        el.style.fontSize = px;
+        el.style.lineHeight = '1';
+        return el;
+      }
+      if (key === 'google') {
+        var ns = 'http://www.w3.org/2000/svg', path = document.createElementNS(ns, 'path');
+        el = document.createElementNS(ns, 'svg');
+        var at = { 'class': 'lucide lucide-google', width: size || 16, height: size || 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor',
+          'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' };
+        for (var k in at) el.setAttribute(k, at[k]);
+        path.setAttribute('d', 'M18.4 5.6A9 9 0 1 0 21 12h-9');
+        el.appendChild(path);
+        return el;
+      }
+      if (Object.prototype.hasOwnProperty.call(ICON_ALIASES, key)) name = ICON_ALIASES[key];
+      var lib = typeof lucide !== 'undefined' && lucide.icons;
+      if (lib && !lib[lucideKey(name)]) {
+        if (!lib[lucideKey(key)]) return null;
+        name = key; // "GitHub" -> "github": lucide names are lowercase
+      }
+      el = document.createElement('i');
+      el.setAttribute('data-lucide', name);
+      el.style.width = px;
+      el.style.height = px;
+      return el;
+    }
     
     // Map a variant-like prop onto a modifier daub.css defines (aliases first); any other value -> '' so no dead class ships
     function knownMod(v, known, alias) {
@@ -581,11 +637,8 @@
       if (bs) cls += ' db-btn--' + bs;
       if (p.loading) { cls += ' db-btn--loading'; el.disabled = true; }
       el.className = cls;
-      if (p.icon) {
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', p.icon);
-        ico.style.width = '16px';
-        ico.style.height = '16px';
+      var ico = mkIcon(p.icon, 16);
+      if (ico) {
         el.appendChild(ico);
         el.appendChild(document.createTextNode(' '));
       }
@@ -646,13 +699,8 @@
     // -- InputIcon --
     RENDERERS.InputIcon = function(p, ch, els, d) {
       var el = mkEl('div', 'db-input-icon' + (p.right ? ' db-input-icon--right' : ''));
-      if (p.icon) {
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', p.icon);
-        ico.style.width = '16px';
-        ico.style.height = '16px';
-        el.appendChild(ico);
-      }
+      var ico = mkIcon(p.icon, 16);
+      if (ico) el.appendChild(ico);
       el.appendChild(renderChildren(els, ch, d));
       return el;
     };
@@ -1063,13 +1111,8 @@
           a.className = 'db-sidebar__item' + (item.active ? ' db-sidebar__item--active' : '');
           a.setAttribute('data-tooltip', item.label || '');
           a.href = isSafeUrl(item.href) ? item.href : '#';
-          if (item.icon) {
-            var ico = document.createElement('i');
-            ico.setAttribute('data-lucide', item.icon);
-            ico.style.width = '16px';
-            ico.style.height = '16px';
-            a.appendChild(ico);
-          }
+          var ico = mkIcon(item.icon, 16);
+          if (ico) a.appendChild(ico);
           // Label in a <span> (canonical markup) so the icon rail (<=640px, --collapsed) can hide it
           a.appendChild(mkEl('span', null, item.label || ''));
           section.appendChild(a);
@@ -1087,13 +1130,8 @@
         var a = document.createElement('a');
         a.className = 'db-bottom-nav__item' + (item.active ? ' db-bottom-nav__item--active' : '');
         a.href = '#';
-        if (item.icon) {
-          var ico = document.createElement('i');
-          ico.setAttribute('data-lucide', item.icon);
-          ico.style.width = '20px';
-          ico.style.height = '20px';
-          a.appendChild(ico);
-        }
+        var ico = mkIcon(item.icon, 20);
+        if (ico) a.appendChild(ico);
         a.appendChild(mkEl('span', null, item.label || ''));
         if (item.badge) a.appendChild(mkEl('span', 'db-bottom-nav__badge', item.badge));
         el.appendChild(a);
@@ -1236,12 +1274,9 @@
       toArr(p.items).forEach(function(item) {
         var li = mkEl('div', 'db-list__item');
         var obj = typeof item === 'string' ? { title: item } : item;
-        if (obj.icon) {
+        var ico = mkIcon(obj.icon, 16);
+        if (ico) {
           var iconWrap = mkEl('div', 'db-list__icon');
-          var ico = document.createElement('i');
-          ico.setAttribute('data-lucide', obj.icon);
-          ico.style.width = '16px';
-          ico.style.height = '16px';
           iconWrap.appendChild(ico);
           li.appendChild(iconWrap);
         }
@@ -1487,12 +1522,9 @@
     // -- EmptyState --
     RENDERERS.EmptyState = function(p) {
       var el = mkEl('div', 'db-empty');
-      if (p.icon) {
+      var ico = mkIcon(p.icon, 48);
+      if (ico) {
         var iconWrap = mkEl('div', 'db-empty__icon');
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', p.icon);
-        ico.style.width = '48px';
-        ico.style.height = '48px';
         iconWrap.appendChild(ico);
         el.appendChild(iconWrap);
       }
@@ -1666,11 +1698,8 @@
         } else {
           var btn = document.createElement('button');
           btn.className = 'db-dropdown__item' + (item.active ? ' db-dropdown__item--active' : '');
-          if (item.icon) {
-            var ico = document.createElement('i');
-            ico.setAttribute('data-lucide', item.icon);
-            ico.style.width = '16px';
-            ico.style.height = '16px';
+          var ico = mkIcon(item.icon, 16);
+          if (ico) {
             btn.appendChild(ico);
             btn.appendChild(document.createTextNode(' '));
           }
@@ -1709,11 +1738,8 @@
         } else {
           var btn = document.createElement('button');
           btn.className = 'db-context-menu__item';
-          if (item.icon) {
-            var ico = document.createElement('i');
-            ico.setAttribute('data-lucide', item.icon);
-            ico.style.width = '16px';
-            ico.style.height = '16px';
+          var ico = mkIcon(item.icon, 16);
+          if (ico) {
             btn.appendChild(ico);
             btn.appendChild(document.createTextNode(' '));
           }
@@ -1747,11 +1773,8 @@
         list.appendChild(mkEl('div', 'db-command__group-label', g.label || ''));
         toArr(g.items).forEach(function(item) {
           var cmdItem = mkEl('div', 'db-command__item');
-          if (item.icon) {
-            var ico = document.createElement('i');
-            ico.setAttribute('data-lucide', item.icon);
-            ico.style.width = '16px';
-            ico.style.height = '16px';
+          var ico = mkIcon(item.icon, 16);
+          if (ico) {
             cmdItem.appendChild(ico);
             cmdItem.appendChild(document.createTextNode(' '));
           }
@@ -1855,12 +1878,9 @@
     // -- StatCard --
     RENDERERS.StatCard = function(p) {
       var el = mkEl('div', 'db-stat' + (p.horizontal ? ' db-stat--horizontal' : ''));
-      if (p.icon) {
+      var icoI = mkIcon(p.icon, 20);
+      if (icoI) {
         var ico = mkEl('div', 'db-stat__icon');
-        var icoI = document.createElement('i');
-        icoI.setAttribute('data-lucide', p.icon);
-        icoI.style.width = '20px';
-        icoI.style.height = '20px';
         ico.appendChild(icoI);
         el.appendChild(ico);
       }
@@ -1936,10 +1956,7 @@
     RENDERERS.Icon = function(p) {
       var sizes = { xs: 14, sm: 16, md: 20, lg: 24, xl: 32 };
       var sz = sizes[p.size] || sizes.md;
-      var el = document.createElement('i');
-      el.setAttribute('data-lucide', p.name || 'circle');
-      el.style.width = sz + 'px';
-      el.style.height = sz + 'px';
+      var el = mkIcon(p.name, sz) || mkIcon('circle', sz);
       el.style.display = 'inline-flex';
       el.style.alignItems = 'center';
       el.style.justifyContent = 'center';
