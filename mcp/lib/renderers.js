@@ -54,6 +54,14 @@
       return el;
     }
     
+    // Map a variant-like prop onto a modifier daub.css defines (aliases first); any other value -> '' so no dead class ships
+    function knownMod(v, known, alias) {
+      if (v == null || v === false || v === '') return '';
+      var k = String(v).trim().toLowerCase();
+      if (alias && Object.prototype.hasOwnProperty.call(alias, k)) k = alias[k];
+      return known.indexOf(k) >= 0 ? k : '';
+    }
+
     // Guard against javascript: and data: URLs from AI-generated content
     function isSafeUrl(url) {
       if (!url || typeof url !== 'string') return false;
@@ -421,7 +429,12 @@
       if (p.container) {
         el.className = 'db-container' + (p.container === 'wide' ? ' db-container--wide' : p.container === 'narrow' ? ' db-container--narrow' : '');
       }
-      el.classList.add('db-grid', 'db-grid--' + (p.columns || 2));
+      // columns 2-6 map to db-grid--N; 7-12 (week calendars) get an inline template; 1 or junk stays one column
+      var cols = parseInt(p.columns || 2, 10);
+      el.classList.add('db-grid');
+      if (p.columns === 'sidebar-main') el.classList.add('db-grid--sidebar-main');
+      else if (cols >= 2 && cols <= 6) el.classList.add('db-grid--' + cols);
+      else if (cols > 6) el.style.gridTemplateColumns = 'repeat(' + Math.min(cols, 12) + ', minmax(0, 1fr))';
       if (p.gap) el.classList.add('db-gap-' + Math.max(1, Math.min(6, p.gap)));
       if (p.align === 'center') el.style.justifyItems = 'center';
       else if (p.align === 'end') el.style.justifyItems = 'end';
@@ -440,7 +453,8 @@
     // -- Surface --
     RENDERERS.Surface = function(p, ch, els, d) {
       var el = document.createElement('div');
-      el.className = p.variant ? 'db-surface--' + p.variant : 'db-surface';
+      var sv = knownMod(p.variant, ['raised', 'inset', 'pressed'], { bordered: 'raised', card: 'raised', elevated: 'raised', sunken: 'inset' });
+      el.className = 'db-surface' + (sv ? ' db-surface--' + sv : '');
       el.style.padding = 'var(--db-space-4, 16px)';
       el.style.borderRadius = 'var(--db-radius-2, 8px)';
       el.appendChild(renderChildren(els, ch, d));
@@ -487,8 +501,10 @@
     RENDERERS.Button = function(p) {
       var el = document.createElement('button');
       var cls = 'db-btn';
-      if (p.variant) cls += ' db-btn--' + p.variant;
-      if (p.size) cls += ' db-btn--' + p.size;
+      var bv = knownMod(p.variant, ['primary', 'secondary', 'ghost', 'icon-danger', 'icon-success', 'icon-accent'], { outline: 'secondary', 'default': 'secondary', link: 'ghost', destructive: 'icon-danger', danger: 'icon-danger' });
+      var bs = knownMod(p.size, ['sm', 'lg', 'icon']);
+      if (bv) cls += ' db-btn--' + bv;
+      if (bs) cls += ' db-btn--' + bs;
       if (p.loading) { cls += ' db-btn--loading'; el.disabled = true; }
       el.className = cls;
       if (p.icon) {
@@ -533,7 +549,8 @@
     // -- Input --
     RENDERERS.Input = function(p) {
       var el = document.createElement('input');
-      el.className = 'db-input' + (p.size ? ' db-input--' + p.size : '') + (p.error ? ' db-input--error' : '');
+      var isz = knownMod(p.size, ['sm', 'lg']);
+      el.className = 'db-input' + (isz ? ' db-input--' + isz : '') + (p.error ? ' db-input--error' : '');
       el.type = p.type || 'text';
       el.placeholder = p.placeholder || '';
       return el;
@@ -1162,12 +1179,15 @@
     
     // -- Badge --
     RENDERERS.Badge = function(p) {
-      return mkEl('span', 'db-badge' + (p.variant ? ' db-badge--' + p.variant : ''), p.text || '');
+      var bv = knownMod(p.variant, ['new', 'updated', 'success', 'warning', 'error', 'danger', 'info', 'gray', 'red', 'green', 'blue', 'amber', 'purple'], { secondary: 'gray', 'default': 'gray', neutral: 'gray', muted: 'gray', outline: 'gray', primary: 'new', accent: 'new', destructive: 'red' });
+      return mkEl('span', 'db-badge' + (bv ? ' db-badge--' + bv : ''), p.text || '');
     };
     
     // -- Avatar --
     RENDERERS.Avatar = function(p) {
-      var el = mkEl('div', 'db-avatar' + (p.size ? ' db-avatar--' + p.size : ' db-avatar--md'));
+      var px = /^\d+(px)?$/.test(String(p.size)) ? parseInt(p.size, 10) : 0;
+      var asz = px ? (px < 36 ? 'sm' : px < 48 ? 'md' : 'lg') : knownMod(p.size, ['sm', 'md', 'lg'], { xs: 'sm', xl: 'lg', '2xl': 'lg' });
+      var el = mkEl('div', 'db-avatar db-avatar--' + (asz || 'md'));
       if (p.src && isSafeUrl(p.src)) {
         var img = document.createElement('img');
         img.src = p.src;
@@ -1331,7 +1351,8 @@
     
     // -- Chip --
     RENDERERS.Chip = function(p) {
-      var el = mkEl('span', 'db-chip' + (p.color ? ' db-chip--' + p.color : '') + (p.active ? ' db-chip--active' : ''), p.label || '');
+      var cc = knownMod(p.color, ['red', 'green', 'blue', 'purple', 'amber', 'pink']);
+      var el = mkEl('span', 'db-chip' + (cc ? ' db-chip--' + cc : '') + (p.active ? ' db-chip--active' : ''), p.label || '');
       if (p.closable) {
         var close = document.createElement('button');
         close.className = 'db-chip__close';
@@ -1351,7 +1372,8 @@
     
     // -- Alert --
     RENDERERS.Alert = function(p) {
-      var el = mkEl('div', 'db-alert' + (p.type ? ' db-alert--' + p.type : ''));
+      var at = knownMod(p.type, ['info', 'warning', 'error', 'success'], { danger: 'error', destructive: 'error', warn: 'warning' });
+      var el = mkEl('div', 'db-alert' + (at ? ' db-alert--' + at : ''));
       var content = mkEl('div', 'db-alert__content');
       if (p.title) content.appendChild(mkEl('div', 'db-alert__title', p.title));
       if (p.message) content.appendChild(mkEl('p', null, p.message));
@@ -1761,8 +1783,10 @@
       el.appendChild(mkEl('span', 'db-stat__label', p.label || ''));
       el.appendChild(mkEl('span', 'db-stat__value', p.value || ''));
       if (p.trend) {
-        var change = mkEl('span', 'db-stat__change db-stat__change--' + p.trend);
-        change.textContent = (p.trend === 'up' ? '\u2191' : '\u2193') + ' ' + (p.trendValue || '');
+        // trend is "up"/"down"; free text ("+2.8% vs last month") shows as written, coloured by its leading sign or arrow
+        var tr = String(p.trend), dir = tr === 'up' || tr === 'down' ? tr : /^[+\u2191]/.test(tr) ? 'up' : /^[-\u2212\u2193]/.test(tr) ? 'down' : '';
+        var change = mkEl('span', 'db-stat__change' + (dir ? ' db-stat__change--' + dir : ''));
+        change.textContent = dir === tr ? (tr === 'up' ? '\u2191' : '\u2193') + ' ' + (p.trendValue || '') : tr + (p.trendValue ? ' ' + p.trendValue : '');
         el.appendChild(change);
       }
       return el;
