@@ -976,7 +976,8 @@
             ico.style.height = '16px';
             a.appendChild(ico);
           }
-          a.appendChild(document.createTextNode(' ' + (item.label || '')));
+          // Label in a <span> (canonical markup) so the icon rail (<=640px, --collapsed) can hide it
+          a.appendChild(mkEl('span', null, item.label || ''));
           section.appendChild(a);
         });
         el.appendChild(section);
