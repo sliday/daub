@@ -3511,6 +3511,15 @@ textarea.db-field__input {
   scrollbar-color: var(--db-sand) transparent;
 }
 
+/* Popover and HoverCard panels shrink to fit around a small trigger, so a min-content of 0
+   squeezed them to their min-width and hid most of the table. Inside them the table sets
+   the panel width, as it did before the scroll box, and scrolls only past the viewport. */
+.db-popover__content .db-table-scroll,
+.db-hover-card__content .db-table-scroll {
+  grid-template-columns: minmax(min-content, 1fr);
+  max-width: calc(100vw - 4rem);
+}
+
 .db-table {
   width: 100%;
   border-collapse: collapse;
