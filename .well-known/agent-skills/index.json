@@ -78,8 +78,8 @@
       "type": "documentation",
       "description": "The hosted DAUB MCP server: tools, arguments, plain-HTTP calls and client setup.",
       "url": "https://daub.dev/references/mcp.md",
-      "digest": "sha256:97799122e4600d68f89ec9d8089299bbbe75d86c9a01b2faae4f33ac4fa1ab69",
-      "sha256": "97799122e4600d68f89ec9d8089299bbbe75d86c9a01b2faae4f33ac4fa1ab69"
+      "digest": "sha256:a2b14eaafc5c3d08c2cf5e6eb97021d77e1e52c088f556904086a4c538f02a86",
+      "sha256": "a2b14eaafc5c3d08c2cf5e6eb97021d77e1e52c088f556904086a4c538f02a86"
     },
     {
       "name": "daub-ui-ref-openui",
@@ -94,8 +94,8 @@
       "type": "documentation",
       "description": "DAUB theme families, exact theme names, the theme API and selection heuristics.",
       "url": "https://daub.dev/references/themes.md",
-      "digest": "sha256:114dbdcca7688426e1ca372666fae18e1751454d5d5179fa66a17bc319709abb",
-      "sha256": "114dbdcca7688426e1ca372666fae18e1751454d5d5179fa66a17bc319709abb"
+      "digest": "sha256:9439115213fa79d7606f0ad6993466c7cc3942f9dd5436257eb9526ee227b515",
+      "sha256": "9439115213fa79d7606f0ad6993466c7cc3942f9dd5436257eb9526ee227b515"
     },
     {
       "name": "daub-ui-ref-verify",

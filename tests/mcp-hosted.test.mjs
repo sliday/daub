@@ -92,3 +92,29 @@ describe('Icon and Link parse and validate like the playground', () => {
     assert.deepEqual(unknown, []);
   });
 });
+
+describe('theme names match DAUB.THEME_FAMILIES in daub.js', () => {
+  const daub = readFileSync('daub.js', 'utf8');
+  const literal = name => new Function('return ' + new RegExp(`var ${name} = ([[{][\\s\\S]*?\\n  [\\]}]);`).exec(daub)[1])();
+  const FAMILIES = literal('THEME_FAMILIES'), THEMES = literal('THEMES');
+
+  it('get_component_catalog lists the light and dark theme of every family, in family order', async () => {
+    const { json } = await call('get_component_catalog', {});
+    const fams = Object.values(FAMILIES);
+    assert.deepEqual(json.themes, { light: fams.map(f => f.light), dark: fams.map(f => f.dark) });
+    assert.deepEqual([...json.themes.light, ...json.themes.dark].sort(), THEMES.slice().sort());
+  });
+
+  it('the THEME_FAMILIES copy in mcp.js equals the one in daub.js', () => {
+    const src = readFileSync('functions/api/mcp.js', 'utf8');
+    const hosted = new Function('return ' + /const THEME_FAMILIES = (\{[\s\S]*?\n\});/.exec(src)[1])();
+    assert.deepEqual(hosted, FAMILIES);
+  });
+
+  it('every theme literal in mcp.js (industry picks, example spec) is one daub.js defines', () => {
+    const src = readFileSync('functions/api/mcp.js', 'utf8');
+    const used = [...src.matchAll(/\btheme: '([^']+)'/g)].map(m => m[1]);
+    assert.ok(used.length >= 20, `only ${used.length} theme literals found`);
+    assert.deepEqual(used.filter(t => !THEMES.includes(t)), []);
+  });
+});
