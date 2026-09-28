@@ -61,3 +61,25 @@ describe('Avatar: src takes only an image URL', () => {
     }
   });
 });
+
+describe('StatCard: an icon name in the trend slot', () => {
+  it('slid args: icon, direction, delta each move one slot left', () => {
+    norm('StatCard', { label: 'Active keys', value: '14', trend: 'key-round', trendValue: 'up', icon: '+2 this month' },
+      { icon: 'key-round', trend: 'up', trendValue: '+2 this month' });
+  });
+  it('a signed delta after the icon becomes the trend text', () => {
+    norm('StatCard', { label: 'Users', value: '1,204', trend: 'users', trendValue: '+3%' }, { icon: 'users', trend: '+3%', trendValue: null });
+  });
+  it('a caption after the icon becomes the description', () => {
+    norm('StatCard', { label: 'Free cancellation', value: 'On 92% of stays', trend: 'circle-check', trendValue: 'Cancel up to 48h before check-in' },
+      { icon: 'circle-check', trend: null, trendValue: null, description: 'Cancel up to 48h before check-in' });
+  });
+  it('trend "neutral" drops the word and keeps the value', () => {
+    norm('StatCard', { label: 'Storage used', value: '68 GB', trend: 'neutral', trendValue: '53%' }, { trend: '53%', trendValue: null });
+  });
+  it('valid cards and non-icon words stay as written', () => {
+    norm('StatCard', { label: 'Revenue', value: '$12k', trend: 'up', trendValue: '+12%', icon: 'dollar-sign' }, { trend: 'up', trendValue: '+12%', icon: 'dollar-sign' });
+    norm('StatCard', { label: 'Uptime', value: '99.9%', trend: 'stable', trendValue: '30d' }, { trend: 'stable', trendValue: '30d' });
+    norm('StatCard', { title: 'Orders', value: '12' }, { label: 'Orders' });
+  });
+});

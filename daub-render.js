@@ -221,7 +221,7 @@
 
     // AI-written prop names -> the names the renderers read (Badge label -> text, List items[].primary -> title)
     function normalizeProps(type, p) {
-      var items, on;
+      var items, on, tv, q, slid, signed;
       switch (type) {
         case 'Badge':
         case 'Label':
@@ -232,7 +232,16 @@
         case 'EmptyState':
           return fillAlias(p, 'message', ['description', 'text']);
         case 'StatCard':
-          return fillAlias(p, 'label', ['title']);
+          p = fillAlias(p, 'label', ['title']);
+          tv = p.trendValue;
+          // trend "neutral"/"flat": no direction word, the value shows uncoloured
+          if (/^(neutral|flat)$/.test(p.trend)) return withProp(withProp(p, 'trend', isText(tv) ? String(tv) : null), 'trendValue', null);
+          // StatCard("Keys", "14", "key-round", "up", "+2") / StatCard("Support", "24/7", "headset", "Replies in 2 min"): a Lucide name in the trend slot
+          if (typeof p.trend !== 'string' || !/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(p.trend) || /^(up|down)$/.test(p.trend) || !mkIcon(p.trend)) return p;
+          slid = /^(up|down)$/.test(tv);
+          signed = typeof tv === 'string' && /^[+\u2191\-\u2212\u2193]/.test(tv);
+          q = withProp(withProp(withProp(p, 'icon', p.trend), 'trend', slid || signed ? tv : null), 'trendValue', slid && isText(p.icon) && p.icon !== p.trend ? p.icon : null);
+          return slid || signed || !isText(tv) || isText(q.description) ? q : withProp(q, 'description', tv);
         case 'Avatar':
           // src holds only an image URL: Avatar("MC", "sm") is a size, Avatar("JD", "Jordan Diaz") a name, Avatar(url, "Name") swapped args
           if (isImgUrl(p.initials) && !isImgUrl(p.src)) p = withProp(withProp(p, 'src', p.initials), 'initials', '');
