@@ -4074,9 +4074,10 @@ meter.db-meter::-moz-meter-bar {
   /* One column: minmax(0, 1fr) keeps a wide child from widening the column past the screen */
   .db-grid--2, .db-grid--3, .db-grid--4,
   .db-grid--5, .db-grid--6 { grid-template-columns: minmax(0, 1fr); }
-  /* Drop spans (inline grid-column: span N) so they can't add implicit columns */
+  /* Drop spans (inline grid-column: span N) so they can't add implicit columns.
+     max-width: a wide child under align center/end would otherwise overflow past the left edge */
   .db-grid--2 > *, .db-grid--3 > *, .db-grid--4 > *,
-  .db-grid--5 > *, .db-grid--6 > * { grid-column: auto !important; }
+  .db-grid--5 > *, .db-grid--6 > * { grid-column: auto !important; max-width: 100%; }
 }
 
 /* Empty state spans full grid */
