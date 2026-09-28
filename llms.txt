@@ -1164,6 +1164,7 @@ After dynamically adding HTML, call `DAUB.init()` or `DAUB.init(parentElement)` 
 
 Core: `--db-cream`, `--db-cream-dark`, `--db-sand`, `--db-terracotta`, `--db-clay`, `--db-warm-gray`, `--db-charcoal`, `--db-ink`, `--db-white`
 Accents: `--db-accent-dark`, `--db-accent-light`, `--db-accent-hover`, `--db-accent-pressed`
+Text variants (AA on bg; set `--db-terracotta-text` whenever you override `--db-terracotta`): `--db-terracotta-text` (links, active nav, tabs), `--db-success-text`, `--db-error-text` (falls back to `--db-error`)
 Status: `--db-error`, `--db-success`, `--db-warning`
 Semantic (theme-aware aliases): `--db-color-bg`, `--db-color-bg-alt`, `--db-color-surface`, `--db-color-text`, `--db-color-text-secondary`, `--db-color-text-muted`, `--db-color-border`, `--db-color-accent`, `--db-color-accent-hover`, `--db-color-success`, `--db-color-warning`, `--db-color-error`, `--db-color-overlay`
 RGB channels: `--db-color-bg-rgb`, `--db-color-text-rgb`, `--db-color-surface-rgb`, `--db-color-accent-rgb`, `--db-color-border-rgb`

@@ -81,6 +81,8 @@
     document.documentElement.setAttribute('data-theme', theme);
     try { localStorage.setItem('db-theme', theme); } catch(e) {}
     _userExplicitTheme = true;
+    var st = document.documentElement.style, acc = st.getPropertyValue('--db-terracotta').trim();
+    if (st.getPropertyValue('--db-terracotta-text') && /^#[0-9a-fA-F]{6}$/.test(acc)) st.setProperty('--db-terracotta-text', accentText(acc));
     if (theme.indexOf('grunge') !== -1) loadGrungeFont();
     updateSwitcherUI();
     requestAnimationFrame(function() { fixNestedRadius(); });
@@ -216,6 +218,13 @@
     var hsl=hexToHSL(hex);
     return hslToHex(hsl[0],hsl[1],Math.min(100,hsl[2]+pct));
   }
+  // Accent text must read on the ground: darker on light themes, at least 75% lightness on dark ones
+  function accentText(hex) {
+    var info=THEME_TO_FAMILY[getTheme()];
+    if (!info || info.mode !== 'dark') return darken(hex, 20);
+    var hsl=hexToHSL(hex);
+    return hslToHex(hsl[0],hsl[1],Math.max(75,hsl[2]));
+  }
 
   function setAccent(hex) {
     if (!hex || !/^#[0-9a-fA-F]{6}$/.test(hex)) return;
@@ -229,7 +238,7 @@
     root.style.setProperty('--db-accent-pressed', darken(hex, 20));
     root.style.setProperty('--db-accent-dark', darken(hex, 15));
     root.style.setProperty('--db-accent-light', lighten(hex, 10));
-    root.style.setProperty('--db-terracotta-text', darken(hex, 20));
+    root.style.setProperty('--db-terracotta-text', accentText(hex));
     try { localStorage.setItem('db-accent', hex); } catch(e) {}
     updateAccentPickerUI();
   }
