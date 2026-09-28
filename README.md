@@ -277,6 +277,7 @@ Override CSS custom properties:
 ```css
 :root {
   --db-terracotta: #E07A5F;
+  --db-terracotta-text: #B64223; /* accent as text (links, active nav): keep 4.5:1 on --db-cream */
   --db-cream: #FAF8F0;
   --db-font-heading: 'Your Font', serif;
   --db-btn-radius: 999px;       /* pill buttons */
