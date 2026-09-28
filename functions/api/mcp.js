@@ -572,6 +572,9 @@ function openUItoSpec(input) {
     // Data statements (name = literal) resolve by value wherever they are defined; `resolving` guards cycles
     const data = Object.create(null), resolving = Object.create(null);
     const isData = n => Object.prototype.hasOwnProperty.call(data, n);
+    // Alias statements (name = otherName) create no element: every use of the alias resolves to its target
+    const aliasOf = Object.create(null);
+    const canon = n => { const seen = Object.create(null); while (aliasOf[n] && !seen[n]) { seen[n] = true; n = aliasOf[n]; } return n; };
     // Switch(webhook1) with __state = {webhook1: true}: a bare __state key sets the control's state instead of printing as its label
     const STATE_PROP = { Switch: 'checked', Checkbox: 'checked', Toggle: 'pressed' };
     const stateKey = v => { const k = v && v.__ref; return k && !nameToId[k] && state && typeof state === 'object' && !Array.isArray(state) && Object.prototype.hasOwnProperty.call(state, k) ? k : null; };
@@ -583,6 +586,7 @@ function openUItoSpec(input) {
       const id=s.name||genId('auto');nameToId[id]=id;s._id=id;
       const v=s.value;
       if(s.name&&v!=null&&(typeof v!=='object'||Array.isArray(v)||(!v.__ref&&!v.__component)))data[s.name]=v;
+      else if(s.name&&v&&v.__ref&&v.__ref!==s.name)aliasOf[s.name]=v.__ref;
       if(!rootName&&!isData(id))rootName=id;
       if(s.name==='root')rootName=id;
     }
@@ -591,8 +595,9 @@ function openUItoSpec(input) {
       if(v==null||typeof v==='string'||typeof v==='number'||typeof v==='boolean')return v;
       if(Array.isArray(v))return v.map(resolveValue);
       if(v.__ref){
-        if(!isData(v.__ref)||resolving[v.__ref])return v.__ref;
-        resolving[v.__ref]=true;const out=resolveValue(data[v.__ref]);delete resolving[v.__ref];return out;
+        const r=canon(v.__ref);
+        if(!isData(r)||resolving[r])return r;
+        resolving[r]=true;const out=resolveValue(data[r]);delete resolving[r];return out;
       }
       if(v.__component)return resolveComponent(v);
       const o={};for(const k in v)if(v.hasOwnProperty(k))o[k]=resolveValue(v[k]);return o;
@@ -601,22 +606,37 @@ function openUItoSpec(input) {
     // Children: arrays and data-statement refs expand in place
     function collectChildren(cv,out){
       if(Array.isArray(cv)){cv.forEach(c=>collectChildren(c,out));return;}
-      if(cv&&cv.__ref&&isData(cv.__ref)&&!resolving[cv.__ref]){resolving[cv.__ref]=true;collectChildren(data[cv.__ref],out);delete resolving[cv.__ref];return;}
+      const dr=cv&&cv.__ref&&canon(cv.__ref);
+      if(dr&&isData(dr)&&!resolving[dr]){resolving[dr]=true;collectChildren(data[dr],out);delete resolving[dr];return;}
       const id=processChild(cv);if(id)out.push(id);
     }
 
     function processChild(cv){
       if(cv==null)return null;
-      if(typeof cv==='string'){if(nameToId[cv])return cv;const id=genId('text');elements[id]={type:'Text',props:{content:cv}};return id;}
+      if(typeof cv==='string'){if(nameToId[cv])return canon(cv);const id=genId('text');elements[id]={type:'Text',props:{content:cv}};return id;}
       if(typeof cv==='number'||typeof cv==='boolean'){const id=genId('text');elements[id]={type:'Text',props:{content:String(cv)}};return id;}
-      if(cv.__ref)return cv.__ref;
+      if(cv.__ref)return canon(cv.__ref);
       if(cv.__component)return resolveComponent(cv);
       return null;
     }
 
     function resolveComponent(comp){
-      const {__component:typeName,__args:args,__named:named,__hasNamed:hn}=comp;
+      const {__component:typeName,__named:named,__hasNamed:hn}=comp;
+      let args=comp.__args;
       let schema=COMP_SCHEMA[typeName];const props={};const childIds=[];
+      // Modal("upload-modal", "Upload files", "Drop files here", [footer]) or Modal("upload-modal", [body], "Upload files"):
+      // an id-first call (AlertDialog order). Text args are the title then the description; an array before them is the body,
+      // after them the footer. Modal("Body", "id", "Title") keeps the schema order (its 2nd arg is id-shaped)
+      const idLike=v=>typeof v==='string'&&/^[A-Za-z][\w-]*$/.test(v);
+      if((typeName==='Modal'||typeName==='Sheet'||typeName==='Drawer')&&idLike(args[0])&&args.length>1&&!idLike(args[1])){
+        props.id=args[0];let sawText=false;
+        for(let m=1;m<args.length;m++){
+          if(typeof args[m]==='string'){if(props.title==null)props.title=args[m];else if(props.description==null)props.description=args[m];sawText=true;}
+          else if(!sawText)collectChildren(args[m],childIds);
+          else props.footer=resolveValue(args[m]);
+        }
+        args=[];
+      }
       // Tabs(["All", "Active"], "All"): a first arg of only quoted labels is the tab list, not the panels
       if(typeName==='Tabs'&&Array.isArray(args[0])&&args[0].length&&args[0].every(x=>typeof x==='string'&&!nameToId[x]))schema=['tabs','active'];
       const sk=STATE_PROP[typeName]&&stateKey(args[0]);
@@ -645,7 +665,29 @@ function openUItoSpec(input) {
         }
       }
     }
+    if(rootName)rootName=canon(rootName); // root = page
     if(!rootName||!elements[rootName]){const ks=Object.keys(elements);if(ks.length)rootName=ks[0];}
+    // A named element listed under two parents renders once: the first placement in document order wins.
+    // A repeat in a sibling panel of the same Tabs stays (one panel shows at a time)
+    if(rootName){
+      const placed=Object.create(null),onPath=Object.create(null);
+      const walk=(id,panel)=>{
+        const el=elements[id];
+        if(!el||!Array.isArray(el.children)||onPath[id])return;
+        onPath[id]=true;
+        el.children=el.children.filter((cid,i)=>{
+          const ctx=el.type==='Tabs'?id+'#'+i:panel;
+          const prev=placed[cid];
+          if(!prev){placed[cid]=[ctx];walk(cid,ctx);return true;}
+          const tabs=ctx&&ctx.split('#')[0];
+          const sibling=tabs&&prev.every(p=>p&&p!==ctx&&p.split('#')[0]===tabs);
+          if(sibling)prev.push(ctx);
+          return !!sibling;
+        });
+        delete onPath[id];
+      };
+      walk(rootName,null);
+    }
     const spec={theme,root:rootName||'root',elements};if(state)spec.state=state;return spec;
   } catch(e) {
     try {

@@ -536,6 +536,7 @@
       if (depth > MAX_DEPTH) return document.createTextNode('[max depth]');
       var def = elements[id];
       if (!def) return null;
+      if (RENDERING[id]) return null; // cycle: an element listed inside itself (or a descendant)
     
       // Encode visible expression as data attribute for iframe-side evaluation
       if (def.visible != null) {
