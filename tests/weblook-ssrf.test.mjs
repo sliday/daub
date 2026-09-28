@@ -406,6 +406,15 @@ describe('onRequestPost: redirects checked through CDP', () => {
     assert.deepEqual(await res.json(), { error: 'URL host not allowed' });
   });
 
+  it('refuses with a load error, not a host error, when no web page committed', async (t) => {
+    mockBrowserbase(t, zone, () => page());
+    const res = await post('https://public.example/');
+    assert.equal(res.status, 502);
+    const body = await res.json();
+    assert.deepEqual(body, { error: 'Page capture failed: page did not load' });
+    assert.equal(body.screenshot, undefined);
+  });
+
   it('returns the capture when every page stayed public, resolving each host once', async (t) => {
     const calls = mockBrowserbase(t, zone, () => page('https://public.example/'));
     const res = await post('https://public.example/');

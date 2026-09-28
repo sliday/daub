@@ -29,6 +29,8 @@ function jsonResponse(data, status, corsHeaders) {
 
 const HOST_BLOCKED = { status: 400, error: 'URL host not allowed' };
 const HOST_UNRESOLVED = { status: 400, error: 'Could not resolve URL host' };
+// No web page committed (204, download, slow first byte): refuse without blaming the host
+const PAGE_NOT_LOADED = { status: 502, error: 'Page capture failed: page did not load' };
 
 // [network, prefix length]
 const BLOCKED_V4 = [
@@ -159,7 +161,7 @@ export async function checkHost(hostname) {
 // Hostnames of every web page the tab committed, from CDP Page.getNavigationHistory.
 // Entry URLs follow HTTP redirects, and a failed load keeps the URL it tried
 // (location.href would read chrome-error://chromewebdata/). Returns null when the
-// current entry is not an http(s) page, which the caller treats as blocked.
+// current entry is not an http(s) page, which the caller refuses as PAGE_NOT_LOADED.
 export function navigationHosts(history) {
   const entries = (history && history.entries) || [];
   const current = entries[history && history.currentIndex];
@@ -468,7 +470,7 @@ async function runCDP(connectUrl, targetUrl, verifyHost) {
     // host, so vet every page the tab has committed before handing anything back.
     async function assertNavigationAllowed() {
       const hosts = navigationHosts(await pageSend('Page.getNavigationHistory'));
-      const found = hosts ? (await Promise.all(hosts.map(verifyHost))).find(Boolean) : HOST_BLOCKED;
+      const found = hosts ? (await Promise.all(hosts.map(verifyHost))).find(Boolean) : PAGE_NOT_LOADED;
       if (found) throw Object.assign(new Error(found.error), { verdict: found });
     }
 
