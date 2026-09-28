@@ -2,6 +2,31 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.20.4
+
+**Combo-audit fixes, render fixes from the design eval, weblook SSRF hardening, daub-ui skill v2 (2026-09-28).**
+
+### Rendering (combo visual audit, #8-#18)
+- Hosted MCP pages follow the theme background (#8). Dark themes define the text-colour tokens, and links use the text colour instead of the fill (#14).
+- Grid tracks grow with content, and spans survive the mobile collapse (#13). Tables sit in a scroll container (#9). Sidebar labels render in a span (#11).
+- Popovers, dropdowns, hover cards and tooltips stay inside the viewport (`clampPanel` in `daub.js`) (#16).
+- Variant props map onto classes `daub.css` defines (#10). Each text slot reads one prop name through shared aliases, which ends dropped content (#15). Unknown icon names resolve through an alias map or leave no empty slot (#12).
+- Renderers render their children (List, Avatar, Table and others) with a recursion guard (#17). The Stepper completed indicator meets contrast and the current index is honoured (#18).
+
+### Rendering (design eval defects, #21)
+- Avatar keeps non-image strings out of `<img src>`: a size token becomes `size`, a name falls back to initials, and a swapped URL moves to `src`.
+- StatCard moves a Lucide icon name out of the trend slot. `neutral`/`flat` trends show the value without the word.
+- CustomSelect honours a top-level `selected`. Switch and Checkbox show one visible label per row, and a boolean in the label slot sets `checked`.
+- Tabs accept string tab lists. EmptyState renders action children. Table and DataTable row actions render as buttons, and cells can hold element ids.
+- The OpenUI spec tree places each element once: duplicate references, aliases, id-first overlays and cycles no longer render content twice. Orphans, nested footer arrays and carousel slides render once.
+- Prompts: a real-photo rule replaces the dummyimage recommendation, the filler-Card example is gone, and the prompts add tree rules (one parent, reachable from root).
+
+### Security
+- `weblook.js` blocks private, reserved and IPv6-mapped hosts, checks DNS answers over DoH (fail closed) and re-checks the final URL after navigation (#7, supersedes #5).
+
+### Agent skill
+- daub-ui skill v2 (#20): `SKILL.md` plus nine generated `references/*.md` (components, OpenUI, json-render, blocks, themes, MCP, Jev, verify, design), rebuilt by `node tools/build-skill.mjs` and checked by `tests/skill.test.mjs`. `.well-known/agent-skills/index.json` follows the discovery schema with sha256 digests.
+
 ## v3.20.3
 
 **Consistent rendering across renderers, #s= share links, preview state, combo visual audit (2026-09-28).**

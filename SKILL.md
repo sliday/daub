@@ -12,7 +12,7 @@ description: >-
 license: MIT
 compatibility: Any agent that reads files and runs shell or HTTP. The MCP path needs network access to daub.dev. Jev recipes need an OpenRouter API key.
 metadata:
-  daub-version: "3.20.3"
+  daub-version: "3.20.4"
   homepage: https://daub.dev
 ---
 
@@ -76,7 +76,7 @@ DAUB is a drop-in CSS + JS component library. `daub.css` styles 84 components th
 - `daub.js` runs `DAUB.init()` on load. After you insert markup later, call `DAUB.init(container)`.
 - Overlays (`db-modal-overlay`, `db-alert-dialog`, `db-sheet`, `db-drawer`, `db-command`) need an `id`. Open them with `DAUB.openModal('id')` and friends, or a `data-db-modal-trigger="id"` button.
 - Toasts are JS only: `DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes are live.' })`.
-- CDN copies: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css` and `/daub.js`. npm can lag the site; `https://daub.dev/daub.css?v=3.20.3` is the current build.
+- CDN copies: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css` and `/daub.js`. npm can lag the site; `https://daub.dev/daub.css?v=3.20.4` is the current build.
 
 ## Path 2: specs
 
@@ -124,12 +124,12 @@ confirmBtn = Button("Delete account", "primary")
 Render either one in any page. The parser and renderer ship only on daub.dev (the npm package has neither):
 
 ```html
-<link rel="stylesheet" href="https://daub.dev/daub.css?v=3.20.3">
+<link rel="stylesheet" href="https://daub.dev/daub.css?v=3.20.4">
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 <div id="app" style="padding-block: 24px"></div>
-<script src="https://daub.dev/daub.js?v=3.20.3"></script>
-<script src="https://daub.dev/daub-render.js?v=3.20.3"></script>
-<script src="https://daub.dev/daub-openui-parser.js?v=3.20.3"></script>
+<script src="https://daub.dev/daub.js?v=3.20.4"></script>
+<script src="https://daub.dev/daub-render.js?v=3.20.4"></script>
+<script src="https://daub.dev/daub-openui-parser.js?v=3.20.4"></script>
 <script>
   const spec = DaubOpenUI.openUItoSpec(openuiText); // or JSON.parse(jsonText)
   document.documentElement.dataset.theme = spec.theme || 'light';
@@ -167,7 +167,7 @@ These rules prevent the failures seen most in generated DAUB UIs.
 4. `ChartCard` needs a `Chart` child with 4-8 bars of realistic data, or a `bars` prop. An empty ChartCard renders "No data". `Chart` takes `bars: [{label, value, max?}]`.
 5. `Sidebar`, `NavMenu`, `BottomNav`, `Breadcrumbs`, `Menubar`, `DropdownMenu` and `CommandPalette` take data arrays of plain objects, not element ids: `Sidebar([{title: "Workspace", items: [{label: "Inbox", icon: "inbox", active: true}]}])`.
 6. Icons are Lucide 0.576.0 names in kebab-case (`layout-dashboard`, `circle-check`, `github`). Put them in props: `Button icon`, `StatCard icon`, `EmptyState icon`, and `icon` on List, Sidebar, BottomNav and menu items. Renderers map common aliases (`refresh` to `refresh-cw`) and drop unknown names. Stay on 0.x: Lucide 1.x removed brand icons.
-7. The `Icon` and `Link` types render in the playground and with `daub-render.js`, but the hosted MCP `parse_openui` and `validate_spec` reject them (v3.20.3). For MCP-bound specs, use icon props and `Button` with variant `ghost`.
+7. The `Icon` and `Link` types render in the playground and with `daub-render.js`, but the hosted MCP `parse_openui` and `validate_spec` reject them (v3.20.4). For MCP-bound specs, use icon props and `Button` with variant `ghost`.
 8. `gap` on Stack and Grid is a token 0-6 (0, 4, 8, 12, 16, 24, 32 px), never pixels. Grid `columns` is 2-6. Space between groups should be at least twice the space inside them. Give the root `container: "wide"` (dashboards, landing pages) or `"narrow"` (forms, settings); without it the page has no side gutters.
 9. Themes are exact names. Light and dark names differ per family: `solarized` is light, `ink` and `material` are dark. `paper`, `material-dark`, `solarized-light` and `gruvbox-dark` do not exist and fall back to the default light theme. Table: `references/themes.md`.
 10. Overlays (`Modal`, `AlertDialog`, `Sheet`, `Drawer`) need an `id`, and a `Button` with `trigger: "<id>"` opens one. They start hidden, so place them anywhere in the tree. `CommandPalette` also needs an `id`; it opens with Cmd+K or `DAUB.openCommand(id)`.
