@@ -468,6 +468,8 @@ function resolveStatements(stmts) {
   function resolveComponent(comp) {
     var typeName = comp.__component;
     var schema = COMP_SCHEMA[typeName];
+    // Tabs(["All", "Active"], "All"): a first arg of only quoted labels is the tab list, not the panels
+    if (typeName === 'Tabs' && Array.isArray(comp.__args[0]) && comp.__args[0].length && comp.__args[0].every(function(x) { return typeof x === 'string' && !nameToId[x]; })) schema = ['tabs', 'active'];
     var props = {};
     var childIds = [];
 

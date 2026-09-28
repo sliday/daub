@@ -274,6 +274,9 @@
           on = items.filter(function(o) { return o && o.active === true; })[0];
           return p.selected == null && on ? withProp(p, 'selected', on.value) : p;
         case 'Tabs':
+          // Tabs(tabs: ["All", "Done"]): a bare string tab is its own label and id
+          items = toArr(p.tabs != null ? p.tabs : p.items);
+          if (items.some(isText)) p = withProp(p, p.tabs != null ? 'tabs' : 'items', items.map(function(t) { return isText(t) ? { label: String(t), id: String(t) } : t; }));
           if (p.tabs != null || p.items == null) return p;
           items = toArr(p.items).map(function(t) { return isPlain(t) ? fillAlias(t, 'id', ['value']) : t; });
           p = withProp(p, 'tabs', items);
@@ -1022,22 +1025,14 @@
         list.appendChild(btn);
       });
       el.appendChild(list);
-      if (ch.length) {
-        ch.forEach(function(cid, i) {
-          var panel = mkEl('div', 'db-tabs__panel');
-          if (i !== activeIdx) panel.hidden = true;
-          var child = renderElement(els, cid, d + 1);
-          if (child) panel.appendChild(child);
-          el.appendChild(panel);
-        });
-      } else {
-        tabs.forEach(function(t, i) {
-          var panel = mkEl('div', 'db-tabs__panel');
-          if (i !== activeIdx) panel.hidden = true;
-          panel.appendChild(mkEl('p', 'db-body', (t.label || '') + ' content'));
-          el.appendChild(panel);
-        });
-      }
+      // No children: a filter strip (Tabs(["All", "Done"], "All")) with no panels, not "All content" filler
+      ch.forEach(function(cid, i) {
+        var panel = mkEl('div', 'db-tabs__panel');
+        if (i !== activeIdx) panel.hidden = true;
+        var child = renderElement(els, cid, d + 1);
+        if (child) panel.appendChild(child);
+        el.appendChild(panel);
+      });
       return el;
     };
     

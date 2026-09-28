@@ -111,3 +111,14 @@ describe('Switch / Checkbox: a boolean in the label slot', () => {
     norm('Checkbox', { label: true, checked: false }, { label: true, checked: false });
   });
 });
+
+describe('Tabs: bare string tabs', () => {
+  it('a string tab becomes {label, id}', () => {
+    norm('Tabs', { tabs: ['All', 'Active'], active: 'All' }, { tabs: [{ label: 'All', id: 'All' }, { label: 'Active', id: 'Active' }], active: 'All' });
+    norm('Tabs', { tabs: 'All' }, { tabs: [{ label: 'All', id: 'All' }] });
+  });
+  it('string items feed tabs the same way; object tabs stay', () => {
+    norm('Tabs', { items: ['One', 'Two'] }, { tabs: [{ label: 'One', id: 'One' }, { label: 'Two', id: 'Two' }] });
+    norm('Tabs', { tabs: [{ label: 'A', id: 'a' }], active: 'a' }, { tabs: [{ label: 'A', id: 'a' }] });
+  });
+});

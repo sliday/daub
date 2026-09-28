@@ -616,7 +616,9 @@ function openUItoSpec(input) {
 
     function resolveComponent(comp){
       const {__component:typeName,__args:args,__named:named,__hasNamed:hn}=comp;
-      const schema=COMP_SCHEMA[typeName];const props={};const childIds=[];
+      let schema=COMP_SCHEMA[typeName];const props={};const childIds=[];
+      // Tabs(["All", "Active"], "All"): a first arg of only quoted labels is the tab list, not the panels
+      if(typeName==='Tabs'&&Array.isArray(args[0])&&args[0].length&&args[0].every(x=>typeof x==='string'&&!nameToId[x]))schema=['tabs','active'];
       const sk=STATE_PROP[typeName]&&stateKey(args[0]);
       if(sk)props[STATE_PROP[typeName]]=state[sk];
       if(schema&&args.length){

@@ -43,3 +43,17 @@ describe('__state keys passed to controls', () => {
     assert.equal(c.label, 'lbl');
   });
 });
+
+describe('Tabs with a string list first', () => {
+  it('Tabs(["All", "Active", "Done"], "All") is the tab list and active tab, not three Text panels', async () => {
+    const s = await parse('root = Tabs(["All", "Active", "Done"], "All")');
+    assert.deepEqual(s.elements.root, { type: 'Tabs', props: { tabs: ['All', 'Active', 'Done'], active: 'All' } });
+    assert.equal(Object.keys(s.elements).length, 1);
+  });
+  it('panel refs (bare or quoted statement names) stay children', async () => {
+    for (const first of ['[a, b]', '["a", "b"]']) {
+      const s = await parse('root = Tabs(' + first + ', [{label: "A", id: "a"}, {label: "B", id: "b"}], "a")\na = Text("x")\nb = Text("y")');
+      assert.deepEqual(s.elements.root.children, ['a', 'b']);
+    }
+  });
+});
