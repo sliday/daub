@@ -5600,7 +5600,7 @@ meter.db-meter::-moz-meter-bar {
   .db-sidebar .db-sidebar__label { font-size: 0; overflow: hidden; }
   .db-sidebar .db-sidebar__item { justify-content: center; padding: var(--db-space-3); }
   .db-sidebar .db-sidebar__item span { display: none; }
-  .db-sidebar .db-sidebar__item:not(:has(svg)) span { display: inline; } /* no icon: keep the label, never an empty link */
+  .db-sidebar .db-sidebar__item:not(:has(svg, img, i:not([data-lucide]))) span { display: inline; } /* no icon (or an unresolved lucide <i>): keep the label, never an empty link */
   .db-sidebar .db-sidebar__item svg { width: 20px; height: 20px; }
 }
 
@@ -5610,7 +5610,7 @@ meter.db-meter::-moz-meter-bar {
 .db-sidebar--collapsed .db-sidebar__label { font-size: 0; overflow: hidden; }
 .db-sidebar--collapsed .db-sidebar__item { justify-content: center; padding: var(--db-space-3); }
 .db-sidebar--collapsed .db-sidebar__item span { display: none; }
-.db-sidebar--collapsed .db-sidebar__item:not(:has(svg)) span { display: inline; }
+.db-sidebar--collapsed .db-sidebar__item:not(:has(svg, img, i:not([data-lucide]))) span { display: inline; }
 .db-sidebar--collapsed .db-sidebar__item svg { width: 20px; height: 20px; }
 
 /* Tooltip on hover when collapsed */
