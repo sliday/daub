@@ -109,6 +109,75 @@
       return parts.length ? parts : [v];
     }
 
+    // Renderable text: a non-empty string or a number ($state/$cond objects resolve later in the iframe)
+    function isText(v) {
+      return (typeof v === 'string' && v !== '') || typeof v === 'number';
+    }
+
+    function withProp(o, key, v) {
+      var c = {};
+      for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) c[k] = o[k];
+      c[key] = v;
+      return c;
+    }
+
+    // Fill an empty slot from the first alias that holds text; returns a copy, never touches the spec
+    function fillAlias(o, key, names) {
+      if (o[key] != null && o[key] !== '') return o;
+      for (var i = 0; i < names.length; i++) {
+        if (isText(o[names[i]])) return withProp(o, key, o[names[i]]);
+      }
+      return o;
+    }
+
+    // AI-written prop names -> the names the renderers read (Badge label -> text, List items[].primary -> title)
+    function normalizeProps(type, p) {
+      var items, on;
+      switch (type) {
+        case 'Badge':
+        case 'Label':
+          return fillAlias(p, 'text', ['label', 'content']);
+        case 'Alert':
+          p = fillAlias(p, 'message', ['description', 'content', 'text']);
+          return /^(info|success|warning|error)$/.test(p.variant) ? fillAlias(p, 'type', ['variant']) : p;
+        case 'EmptyState':
+          return fillAlias(p, 'message', ['description', 'text']);
+        case 'StatCard':
+          return fillAlias(p, 'label', ['title']);
+        case 'List':
+          if (p.items == null) return p;
+          return withProp(p, 'items', toArr(p.items).map(function(it) {
+            return isPlain(it) ? fillAlias(fillAlias(it, 'title', ['primary', 'label', 'text']), 'secondary', ['description', 'subtitle']) : it;
+          }));
+        case 'ToggleGroup':
+          p = fillAlias(p, 'selected', ['defaultValue', 'value']);
+          return p.options == null && p.items != null ? withProp(p, 'options', p.items) : p;
+        case 'Tabs':
+          if (p.tabs != null || p.items == null) return p;
+          items = toArr(p.items).map(function(t) { return isPlain(t) ? fillAlias(t, 'id', ['value']) : t; });
+          p = withProp(p, 'tabs', items);
+          on = items.filter(function(t) { return t && t.active === true; })[0];
+          return p.active == null && on ? withProp(p, 'active', on.id) : p;
+      }
+      return p;
+    }
+
+    // Visible label above a control whose markup has no label slot (Input, Progress, RadioGroup, ToggleGroup).
+    // fill: the control is width:100%, so the wrapper takes its place in a row the same way.
+    function withLabel(el, text, fill) {
+      if (!isText(text)) return el;
+      var wrap = mkEl('div');
+      wrap.style.cssText = 'display:flex;flex-direction:column;gap:var(--db-space-2);' + (fill ? 'width:100%;' : 'align-items:flex-start;');
+      var lbl = mkEl(el.tagName === 'INPUT' ? 'label' : 'span', 'db-label', String(text));
+      if (el.tagName === 'INPUT') {
+        el.id = 'db-input-' + Math.random().toString(36).slice(2, 8);
+        lbl.htmlFor = el.id;
+      }
+      wrap.appendChild(lbl);
+      wrap.appendChild(el);
+      return wrap;
+    }
+
     // Chart bars from [{label, value}] or chart.js-style {labels, data} / {labels, datasets: [{data}]} / {type, data, labels}
     function chartBars(p) {
       var src = p.bars != null ? p.bars : (p.data != null || p.datasets != null ? p : null);
@@ -327,7 +396,7 @@
       var children = toArr(def.children || (def.props && def.props.children));
       var el;
       try {
-        el = render(def.props || {}, children, elements, depth);
+        el = render(normalizeProps(def.type, def.props || {}), children, elements, depth);
       } catch (err) {
         // One bad element must not blank the page: inline notice here, siblings keep rendering
         var msg = String(err && err.message || err);
@@ -549,7 +618,7 @@
       el.className = 'db-input' + (p.size ? ' db-input--' + p.size : '') + (p.error ? ' db-input--error' : '');
       el.type = p.type || 'text';
       el.placeholder = p.placeholder || '';
-      return el;
+      return withLabel(el, p.label, true);
     };
     
     // -- InputGroup --
@@ -652,7 +721,7 @@
         lbl.appendChild(document.createTextNode(' ' + (opt.label || '')));
         el.appendChild(lbl);
       });
-      return el;
+      return withLabel(el, p.label);
     };
     
     // -- Switch --
@@ -706,7 +775,7 @@
         el.appendChild(btn);
       });
       if (ch && ch.length) el.appendChild(renderChildren(els, ch, d));
-      return el;
+      return withLabel(el, p.label);
     };
     
     // -- Select --
@@ -907,7 +976,9 @@
       toArr(p.steps).forEach(function(s, i) {
         var step = mkEl('div', 'db-stepper__step db-stepper__step--' + (s.status || 'pending'));
         step.appendChild(mkEl('div', 'db-stepper__indicator', String(i + 1)));
-        step.appendChild(mkEl('div', 'db-stepper__label', s.label || ''));
+        var label = mkEl('div', 'db-stepper__label', s.label || '');
+        if (isText(s.description)) label.appendChild(mkEl('div', 'db-caption', String(s.description)));
+        step.appendChild(label);
         el.appendChild(step);
       });
       return el;
@@ -936,9 +1007,10 @@
       brand.href = isSafeUrl(p.brandHref) ? p.brandHref : '#';
       brand.textContent = p.brand || 'App';
       el.appendChild(brand);
-      if (ch.length) {
+      var links = ch.length ? [] : toArr(p.links);
+      if (ch.length || links.length) {
         var nav = mkEl('div', 'db-navbar__nav');
-        nav.appendChild(renderChildren(els, ch, d));
+        nav.appendChild(ch.length ? renderChildren(els, ch, d) : RENDERERS.NavMenu({ items: links }));
         el.appendChild(nav);
       }
       return el;
@@ -1175,6 +1247,7 @@
         var content = mkEl('div', 'db-list__content');
         content.appendChild(mkEl('div', 'db-list__title', obj.title || ''));
         if (obj.secondary) content.appendChild(mkEl('div', 'db-list__secondary', obj.secondary));
+        if (isText(obj.meta)) content.appendChild(mkEl('div', 'db-caption', String(obj.meta)));
         li.appendChild(content);
         el.appendChild(li);
       });
@@ -1397,7 +1470,7 @@
       var bar = mkEl('div', 'db-progress__bar');
       bar.style.setProperty('--db-progress', (p.value || 0) + '%');
       el.appendChild(bar);
-      return el;
+      return withLabel(el, p.label, true);
     };
     
     // -- Skeleton --
@@ -1458,6 +1531,11 @@
       var footerIds = footerRefs(p.footer, els);
       var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
       var body = mkEl('div', 'db-modal__body');
+      if (isText(p.description)) {
+        var desc = mkEl('p', 'db-text-muted', String(p.description));
+        desc.style.marginBottom = 'var(--db-space-4)';
+        body.appendChild(desc);
+      }
       body.appendChild(renderChildren(els, bodyIds, d));
       modal.appendChild(body);
       var footer = mkEl('div', 'db-modal__footer');
@@ -1532,6 +1610,7 @@
       var panel = mkEl('div', 'db-drawer__panel');
       panel.appendChild(mkEl('div', 'db-drawer__handle'));
       var body = mkEl('div', 'db-drawer__body');
+      if (isText(p.title)) body.appendChild(mkEl('h3', 'db-h3', String(p.title)));
       body.appendChild(renderChildren(els, ch, d));
       panel.appendChild(body);
       el.appendChild(panel);
@@ -1797,6 +1876,7 @@
         change.textContent = (p.trend === 'up' ? '\u2191' : '\u2193') + ' ' + (p.trendValue || '');
         el.appendChild(change);
       }
+      if (isText(p.description)) el.appendChild(mkEl('span', 'db-caption', String(p.description)));
       return el;
     };
     
@@ -1804,7 +1884,15 @@
     RENDERERS.ChartCard = function(p, ch, els, d) {
       var el = mkEl('div', 'db-chart-card');
       var hdr = mkEl('div', 'db-chart-card__header');
-      hdr.appendChild(mkEl('span', 'db-chart-card__title', p.title || ''));
+      var title = mkEl('span', 'db-chart-card__title', p.title || '');
+      if (isText(p.description)) {
+        var head = mkEl('div');
+        head.appendChild(title);
+        head.appendChild(mkEl('div', 'db-caption', String(p.description)));
+        hdr.appendChild(head);
+      } else {
+        hdr.appendChild(title);
+      }
       el.appendChild(hdr);
       var body = mkEl('div', 'db-chart-card__body');
       if (!(ch && ch.length) && p.bars != null && chartBars(p).length) {
