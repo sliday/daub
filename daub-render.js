@@ -352,6 +352,40 @@
       wrap.appendChild(table);
       return wrap;
     }
+
+    // Row-action verbs a model packs into one "Actions" cell ("copy,revoke", "Copy \u00b7 Revoke", "\u22ef") -> the icon each renders as
+    var ACTION_ICONS = { copy: 'copy', revoke: 'ban', 'delete': 'trash-2', remove: 'trash-2', edit: 'pencil', view: 'eye', open: 'external-link',
+      download: 'download', share: 'share-2', archive: 'archive', rotate: 'refresh-cw', menu: 'ellipsis', more: 'ellipsis', '\u22ef': 'ellipsis', '\u2026': 'ellipsis', '...': 'ellipsis' };
+
+    // An "Actions" column cell made only of action verbs -> ghost icon buttons; anything else stays text (null)
+    function actionCell(c, v) {
+      if (typeof v !== 'string' || !(/^actions?$/i.test(c.key || '') || /^actions?$/i.test(c.label || ''))) return null;
+      var names = v.split(/\s*[,\u00b7|\/]\s*/).filter(Boolean);
+      if (!names.length || !names.every(function(n) { return Object.prototype.hasOwnProperty.call(ACTION_ICONS, n.toLowerCase()); })) return null;
+      var box = mkEl('div');
+      box.style.cssText = 'display:inline-flex;align-items:center;gap:var(--db-space-1)';
+      names.forEach(function(n) {
+        var b = RENDERERS.Button({ variant: 'ghost', size: 'icon', icon: ACTION_ICONS[n.toLowerCase()] });
+        b.setAttribute('aria-label', n);
+        box.appendChild(b);
+      });
+      return box;
+    }
+
+    // A cell that names spec elements: one id, or a list of ids (row actions: [Button(..), Button(..)]); null when any entry is data
+    function cellRefs(v, els) {
+      var ids = toArr(v).map(function(x) { return specRef(x, els); });
+      return ids.length && ids.every(Boolean) ? ids : null;
+    }
+
+    // Several elements in one cell sit in a row
+    function cellElements(els, ids, d) {
+      if (ids.length === 1) return renderChildren(els, ids, d);
+      var box = mkEl('div');
+      box.style.cssText = 'display:inline-flex;align-items:center;gap:var(--db-space-1)';
+      box.appendChild(renderChildren(els, ids, d));
+      return box;
+    }
     
     // ---- Declarative State Engine ----
     // Shared between main page (renderElement) and iframe (runtime).
@@ -1315,8 +1349,9 @@
         cols.forEach(function(c) {
           var td = document.createElement('td');
           if (c.numeric) td.className = 'db-numeric';
-          var cRef = specRef(r[c.key], els);
-          if (cRef) td.appendChild(renderChildren(els, [cRef], d));
+          var cRefs = cellRefs(r[c.key], els), act = cRefs ? null : actionCell(c, r[c.key]);
+          if (cRefs) td.appendChild(cellElements(els, cRefs, d));
+          else if (act) td.appendChild(act);
           else td.textContent = r[c.key] == null ? '' : String(r[c.key]);
           tr.appendChild(td);
         });
@@ -1336,7 +1371,7 @@
     };
     
     // -- DataTable --
-    RENDERERS.DataTable = function(p) {
+    RENDERERS.DataTable = function(p, ch, els, d) {
       var el = document.createElement('table');
       el.className = 'db-data-table';
       var shape = tableShape(p);
@@ -1374,6 +1409,9 @@
         cols.forEach(function(c) {
           var td = document.createElement('td');
           var raw = r[c.key];
+          // A Button (or [Button, Button]) in a cell renders as elements; "copy,revoke" in an Actions column as icon buttons
+          var refs = cellRefs(raw, els), act = refs ? null : actionCell(c, raw);
+          if (refs || act) { td.appendChild(refs ? cellElements(els, refs, d) : act); tr.appendChild(td); return; }
           // Flatten object cell values (e.g. Badge specs) to string
           var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw == null ? '' : String(raw));
           // Auto-detect status badges
