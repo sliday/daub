@@ -3499,6 +3499,18 @@ textarea.db-field__input {
 /* ------------------------------------------------------------
    7e. DATA DISPLAY — Table Header
    ------------------------------------------------------------ */
+/* Scroll box around .db-table / .db-data-table. One minmax(0, 1fr) track gives it a
+   min-content width of 0, so a wide table scrolls here instead of widening the page,
+   a grid cell or the card around it. Max-content still follows the table. */
+.db-table-scroll {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--db-sand) transparent;
+}
+
 .db-table {
   width: 100%;
   border-collapse: collapse;

@@ -152,6 +152,13 @@
       });
       return { cols: cols, rows: rows };
     }
+
+    // Table/DataTable: a scroll box, so a wide table scrolls inside its column instead of widening the page or a grid cell
+    function tableScroll(table) {
+      var wrap = mkEl('div', 'db-table-scroll');
+      wrap.appendChild(table);
+      return wrap;
+    }
     
     // ---- Declarative State Engine ----
     // Shared between main page (renderElement) and iframe (runtime).
@@ -1064,7 +1071,7 @@
         tbody.appendChild(tr);
       });
       el.appendChild(tbody);
-      return el;
+      return tableScroll(el);
     };
     
     // -- DataTable --
@@ -1125,7 +1132,7 @@
         tbody.appendChild(tr);
       });
       el.appendChild(tbody);
-      return el;
+      return tableScroll(el);
     };
     
     // -- List --
