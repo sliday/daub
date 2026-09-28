@@ -47,7 +47,7 @@ const COMP_PROPS = {
   DataTable: 'columns: [{key, label}], rows: [{}], selectable: bool',
   List: 'items: [{title, secondary, icon}]',
   Badge: 'text: string, variant: "new"|"updated"|"success"|"warning"|"error"',
-  Avatar: 'initials: string, src: string, size: "sm"|"md"|"lg"',
+  Avatar: 'initials: string, src: string (image URL only; skip it with size: "sm"), size: "sm"|"md"|"lg"',
   AvatarGroup: 'avatars: [{initials, src}], max: number',
   Calendar: 'selected: "YYYY-MM-DD", today: "YYYY-MM-DD"',
   Chart: 'bars: [{label, value, max}]',

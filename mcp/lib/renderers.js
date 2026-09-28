@@ -214,6 +214,11 @@
       return o;
     }
 
+    // Image-URL shape: http(s), protocol-relative, a path, blob:, or a filename with an image extension ("sm" and "Jordan Diaz" are not)
+    function isImgUrl(s) {
+      return typeof s === 'string' && /^((https?:)?\/\/|\.{0,2}\/|blob:)|^\S+\.(png|jpe?g|gif|webp|avif|svg)(\?|$)/i.test(s.trim());
+    }
+
     // AI-written prop names -> the names the renderers read (Badge label -> text, List items[].primary -> title)
     function normalizeProps(type, p) {
       var items, on;
@@ -228,6 +233,12 @@
           return fillAlias(p, 'message', ['description', 'text']);
         case 'StatCard':
           return fillAlias(p, 'label', ['title']);
+        case 'Avatar':
+          // src holds only an image URL: Avatar("MC", "sm") is a size, Avatar("JD", "Jordan Diaz") a name, Avatar(url, "Name") swapped args
+          if (isImgUrl(p.initials) && !isImgUrl(p.src)) p = withProp(withProp(p, 'src', p.initials), 'initials', '');
+          if (typeof p.src !== 'string' || !p.src || isImgUrl(p.src)) return p;
+          if (p.size == null && /^(xs|sm|md|lg|xl|2xl)$/i.test(p.src)) p = withProp(p, 'size', p.src);
+          return withProp(p, 'src', '');
         case 'List':
           if (p.items == null) return p;
           return withProp(p, 'items', toArr(p.items).map(function(it) {
