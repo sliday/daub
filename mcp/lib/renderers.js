@@ -678,6 +678,10 @@
       var el = document.createElement(tag);
       var classMap = { h1:'db-h1', h2:'db-h2', h3:'db-h3', h4:'db-h4', p:'db-body', span:'' };
       el.className = (classMap[tag] || '') + (p.class ? ' ' + p.class : '');
+      // Utility names models borrow from Tailwind: line-through strikes the text, text-muted maps to the DAUB muted class
+      var cl = String(p.class || '').split(/\s+/);
+      if (cl.indexOf('line-through') >= 0) el.style.textDecoration = 'line-through';
+      if (cl.indexOf('text-muted') >= 0 || cl.indexOf('text-muted-foreground') >= 0) el.classList.add('db-text-muted');
       el.textContent = c || '';
       return el;
     };

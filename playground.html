@@ -5514,6 +5514,10 @@ RENDERERS.Text = function(p) {
   var el = document.createElement(tag);
   var classMap = { h1:'db-h1', h2:'db-h2', h3:'db-h3', h4:'db-h4', p:'db-body', span:'' };
   el.className = (classMap[tag] || '') + (p.class ? ' ' + p.class : '');
+  // Utility names models borrow from Tailwind: line-through strikes the text, text-muted maps to the DAUB muted class
+  var cl = String(p.class || '').split(/\s+/);
+  if (cl.indexOf('line-through') >= 0) el.style.textDecoration = 'line-through';
+  if (cl.indexOf('text-muted') >= 0 || cl.indexOf('text-muted-foreground') >= 0) el.classList.add('db-text-muted');
   el.textContent = c || '';
   return el;
 };
@@ -6977,7 +6981,7 @@ var COMP_PROPS = {
   Stack: 'direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true',
   Grid: 'columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true',
   Surface: 'variant: "raised"|"inset"|"pressed"',
-  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
+  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string ("db-text-muted" for secondary text)',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
   Icon: 'name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"',
