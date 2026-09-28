@@ -11,8 +11,8 @@ const spec = openUItoSpec(text); // { theme, root, elements, state? } or null
 
 - One statement per line: `name = Expression`. The name becomes the element id.
 - `root = ...` marks the root. Without it, the first component statement is the root.
-- `__theme = "github"` sets the theme. Without it the parser writes `"bone"`.
-- `__state = {tab: "overview", count: 0}` sets the initial state (see json-render.md).
+- `__theme = "github"` sets the theme. Without it the parser writes `"bone"`, while a JSON spec without `theme` renders `light`. Set it every time.
+- `__state = {tab: "overview", count: 0}` sets the initial state (see json-render.md). OpenUI Lang has no syntax for `on` or `visible`: `on:` and `visible:` arguments land in `props` and do nothing. For a UI that switches content, parse to JSON and add `on` and `visible` to the elements there.
 - Expressions: `Component(args)`, `"string"` or `'string'`, numbers, `true`, `false`, `null`, `[arrays]`, `{key: value}` objects (keys bare or quoted).
 - `// line comments` are allowed. Code fences around the whole text are stripped.
 
@@ -37,7 +37,7 @@ A dashboard with a sidebar, KPIs, charts, a table and a modal:
 
 ```openui
 __theme = "github"
-root = Stack([nav, main], "horizontal", 5)
+root = Stack([nav, main], "horizontal", 5, container: "wide")
 nav = Sidebar([{title: "Workspace", items: [{label: "Overview", icon: "layout-dashboard", active: true}, {label: "Customers", icon: "users"}, {label: "Invoices", icon: "receipt"}]}, {title: "Settings", items: [{label: "Billing", icon: "credit-card"}, {label: "Team", icon: "user-cog"}]}])
 main = Stack([top, kpis, charts, recent, newInvoice], "vertical", 5)
 top = Stack([Text("Overview", "h1"), Button("New invoice", "primary", icon: "plus", trigger: "new-invoice")], "horizontal", 3, "between", "center")
@@ -56,13 +56,13 @@ newInvoice = Modal([invoiceForm], "new-invoice", "New invoice")
 invoiceForm = Stack([Field([], "Customer", "Company name"), Field([], "Amount", "0.00", "number"), Field([], "Due date", type: "date")], "vertical", 3)
 ```
 
-A pricing section with a billing toggle and three plans:
+A pricing section with a billing toggle and three plans. The ToggleGroup shows yearly billing as selected; it does not change the prices, because OpenUI Lang cannot attach state actions:
 
 ```openui
 __theme = "bone"
 root = Stack([intro, period, plans], "vertical", 5, align: "center", container: "wide")
-intro = Stack([Text("Plans that grow with your team", "h2"), Text("Start free. Upgrade when you need more seats.", "p")], "vertical", 2, align: "center")
-period = ToggleGroup([{label: "Monthly", value: "month"}, {label: "Yearly (save 20%)", value: "year"}], "year")
+intro = Stack([Text("Plans that grow with your team", "h2"), Text("Start free. Save 20% when you pay yearly.", "p")], "vertical", 2, align: "center")
+period = ToggleGroup([{label: "Monthly", value: "month"}, {label: "Yearly", value: "year"}], "year")
 plans = Grid([starter, team, scale], 3, 4)
 starter = Card([Text("$0", "h2"), List([{title: "3 projects"}, {title: "1 GB storage"}, {title: "Community support"}])], "Starter", "For side projects", footer: [starterCta])
 starterCta = Button("Start free", "secondary")
@@ -84,6 +84,9 @@ scaleCta = Button("Talk to sales", "ghost")
 | `Stack([a, b], "horizontal", 16)` | `Stack([a, b], "horizontal", 4)` | gap is a 0-6 token |
 | `Divider()` | `Separator()` | Divider is not a parser type |
 | `Button("Save", "outlined")` | `Button("Save", "secondary")` | Unknown variants render a plain button. Variants: primary, secondary, ghost, icon-danger, icon-success, icon-accent |
+| `Image(url, "Hero", 1200, 800)` | `Image(url, "Hero")` | width and height squash the image in a narrower column |
+| `Stack([a, b], "vertical", 5)` as the page root | `Stack([a, b], "vertical", 5, container: "wide")` | Without `container` the page has no side gutters |
+| `Button("Delete account", "secondary")` | `Button("Delete account", "icon-danger", icon: "trash-2")` | Destructive actions read red; `icon-danger` keeps its label |
 
 ## Streaming
 
@@ -91,7 +94,7 @@ scaleCta = Button("Talk to sales", "ghost")
 
 ## Signatures
 
-Positional order per type, with the prop types from the playground catalog. Props after `// named only` exist but have no positional slot.
+Positional order per type, with the prop types from the playground catalog. Props after `// named only` exist but have no positional slot. Renderers accept more than some of these lists show: `Field` and `Input` take any HTML input `type` (`date`, `time`, `tel`), and `Badge` also takes `success`, `danger`, `info` and `gray`. `references/components.md` lists the layout traps.
 
 <!-- BEGIN GENERATED:signatures (tools/build-skill.mjs) -->
 ### Layout & Structure

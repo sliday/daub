@@ -11,10 +11,28 @@ Props that trip models up:
 
 - `Text` reads `content` and `tag`. A `text` prop renders nothing.
 - List-like props (`items`, `sections`, `tabs`, `options`, `steps`, `bars`, `columns`, `rows`, `avatars`, `slides`, `groups`) take arrays of plain objects, not element ids.
-- `footer` on Card, Modal and AlertDialog is an array of child element ids. Leave it off Modal and AlertDialog to get default Cancel/Confirm buttons.
+- `footer` on Card, Modal and AlertDialog is an array of child element ids. Leave it off to get the default buttons: Cancel and Confirm on a Modal, Cancel and Continue on an AlertDialog.
 - `Tabs` renders one panel per child, in the order of `tabs`.
 - `Grid` also accepts `columns: "sidebar-main"`, and a child with `props.span` spans that many columns.
-- `Stack` wraps horizontal rows unless `wrap: false`. A horizontal Stack holding a Sidebar keeps the content beside it on desktop and stacks it on phones.
+- `Stack` wraps horizontal rows unless `wrap: false`. A horizontal Stack holding a Sidebar keeps the content beside it on desktop; see the layout traps below for phones.
+- `Badge` variants: the signature lists `new`, `updated`, `warning` and `error`; renderers also accept `success`, `danger`, `info`, `gray` and the colors `red`, `green`, `blue`, `amber` and `purple`.
+- `Field` and `Input` pass `type` straight to the `<input>`, so `date`, `time`, `tel` and `url` work as well as the listed types.
+
+## Layout traps
+
+Each of these renders without an error and still looks broken. They were measured in Chromium at 1280 and 390 px with the current `daub-render.js`, and the linter in `references/verify.md` warns about most of them.
+
+- **No page gutters.** A root Stack or Grid without `container` runs edge to edge: text touches the screen edge on phones. Set `container: "wide"` (dashboards, landing pages) or `"narrow"` (forms, settings) on the root. It centers the page and adds 24 px side padding. Leave some top space in the host page too (`#app { padding-block: 24px }`); MCP `render_spec` pages add 16 px on their own.
+- **Squashed images.** `Image` `width` and `height` set a fixed pixel height while the width shrinks to the column, so a 1200x800 image in a half-width column renders 564x800. Omit both; the image keeps its aspect ratio at any width.
+- **Sidebar on phones.** Below 641 px the Sidebar turns into a 64 px icon rail with the labels hidden, and the content wraps below it, so the rail stands alone above the page. `Grid columns: "sidebar-main"` behaves the same way. That is fine for a desktop dashboard. For a phone-first screen use `BottomNav` instead.
+- **Navbar on phones.** Every Navbar child goes into its nav slot beside the brand, so action buttons cannot sit on the right, and below 641 px the slot hides with no menu button to open it. For a site header, use a horizontal Stack: `Stack([Text("Margin", "h3"), NavMenu([...]), Stack([Button("Sign in", "ghost"), Button("Start free", "primary")], "horizontal", 2)], "horizontal", 3, "between", "center")`. It spreads out on desktop and wraps on phones.
+- **Wide tables.** `Table` and `DataTable` scroll sideways inside their own box, so a 6-column table does not widen the page. On a phone only 3 or 4 columns show at once; put the columns that matter first. Do not wrap a table in `ScrollArea`: it caps its height at 300 px, and the rows below scroll out of sight. `Card clip: true` cuts off anything wider than the card.
+- **ChartCard in a mixed row.** In a Grid row next to a taller card, a ChartCard stretches to the row height while its chart stays 184 px tall, leaving an empty block inside the border. Wrap it, `Stack([chartCard], "vertical", span: 2)`, so it keeps its own height, or balance the row.
+- **ToggleGroup labels.** Options share the width equally and a label with a space wraps onto two lines ("30 days", "Yearly (save 20%)"). Use one word per option ("Week", "Month", "Yearly") and put the saving in the text next to it. A ToggleGroup shows the selected option; it does not switch any content (see json-render.md for state).
+- **Prefilled forms.** `Field`, `Input` and `Textarea` have no `value` prop; they render empty with the placeholder in muted text. For an edit form that must show current values, render the fields with `CustomHTML` (`<div class="db-field"><label class="db-field__label" for="first">First name</label><input class="db-field__input" id="first" value="Maya"></div>`) or write plain HTML (path 1). `Field` wraps any control: `Field([Textarea("Tell teammates about you", 3)], "Bio")`, `Field([Select("", options, "lisbon")], "Time zone")`.
+- **Rows that never wrap.** In a horizontal Stack with `wrap: false`, a Button shrinks before the text beside it and its icon collapses to a few pixels ("Request export" lost its download icon at 1280 px). Drop the icon on buttons in such rows, or leave `wrap` on so the button drops below the text when space runs out.
+- **Destructive buttons.** Use variant `icon-danger` for a destructive text button such as "Delete account": it keeps its label and icon, draws them in the error color and has no fill. `danger` and `destructive` map to it.
+- **Dialog buttons.** An AlertDialog's default footer is Cancel (closes it) and Continue (does nothing). A custom `footer` can say "Delete account", but in a `daub-render.js` page none of its buttons closes the dialog; the backdrop does, Escape does not. A Modal closes on its close button, the backdrop and Escape; its footer buttons, the default Cancel included, do not. Close either from page code with `DAUB.closeAlertDialog(id)` or `DAUB.closeModal(id)`; the host page in SKILL.md wires every footer button that way.
 
 ## Spec types
 

@@ -55,7 +55,7 @@ A spec is one JSON object with a flat element map. The playground, `daub-render.
 
 ## State, actions and visibility
 
-Declarative state covers tabs, filters, counters and show/hide without JavaScript.
+Declarative state covers tabs, filters, counters and show/hide without JavaScript. Only JSON can express it: OpenUI Lang sets `__state` but has no syntax for `on` or `visible`. To switch content (monthly and yearly prices, week and month stats), use Buttons with `on` handlers as below; a ToggleGroup only shows which option is selected.
 
 - `state` at the spec root holds initial values: `{ "tab": "week", "cart": [] }`.
 - Paths are slash paths into state: `/tab`, `/form/email`.
@@ -70,7 +70,7 @@ Declarative state covers tabs, filters, counters and show/hide without JavaScrip
   "state": { "tab": "week" },
   "root": "page",
   "elements": {
-    "page": { "type": "Stack", "props": { "direction": "vertical", "gap": 4 }, "children": ["switcher", "week", "month"] },
+    "page": { "type": "Stack", "props": { "direction": "vertical", "gap": 4, "container": "narrow" }, "children": ["switcher", "week", "month"] },
     "switcher": { "type": "ButtonGroup", "children": ["show-week", "show-month"] },
     "show-week": { "type": "Button", "props": { "label": "This week", "variant": "secondary" }, "on": { "click": { "action": "setState", "params": { "path": "/tab", "value": "week" } } } },
     "show-month": { "type": "Button", "props": { "label": "This month", "variant": "secondary" }, "on": { "click": { "action": "setState", "params": { "path": "/tab", "value": "month" } } } },
@@ -142,7 +142,7 @@ Neither checks props against the golden rules in SKILL.md. The linter in `refere
 - **Sidebar**: flat items `[{label, icon}]` become one untitled section; a child id renders that element in place.
 - **Footer**: a string footer is one id; ids that name no element are dropped, and Modal/AlertDialog fall back to default buttons.
 - **Prop aliases**: Badge and Label `label` or `content` fill `text`; Alert `description` fills `message` and a `variant` of info/success/warning/error fills `type`; EmptyState `description` fills `message`; StatCard `title` fills `label`; List item `primary`/`label`/`text` fill `title` and `description`/`subtitle` fill `secondary`; ToggleGroup `items` fill `options` and `defaultValue`/`value` fill `selected`; Tabs `items` fill `tabs`.
-- **Variant aliases**: Button `outline`/`default` to secondary, `link` to ghost, `destructive`/`danger` to icon-danger; Badge `secondary`/`default`/`neutral`/`muted`/`outline` to gray and `primary`/`accent` to new; Alert `danger`/`destructive` to error and `warn` to warning; Surface `bordered`/`card`/`elevated` to raised and `sunken` to inset; Avatar pixel sizes to sm/md/lg. Any other unknown value renders no modifier class.
+- **Variant aliases**: Button `outline`/`default` to secondary, `link` to ghost, `destructive`/`danger` to icon-danger; Badge takes `success`, `danger`, `info`, `gray`, `red`, `green`, `blue`, `amber` and `purple` besides its four listed variants, maps `secondary`/`default`/`neutral`/`muted`/`outline` to gray, `primary`/`accent` to new and `destructive` to red; Alert `danger`/`destructive` to error and `warn` to warning; Surface `bordered`/`card`/`elevated` to raised and `sunken` to inset; Avatar pixel sizes to sm/md/lg. Any other unknown value renders no modifier class.
 - **Children as content**: List, Avatar, AvatarGroup and Table render child elements when their data prop is empty.
 - **Icons**: common names from other sets map to Lucide (`refresh`, `chart`, `close`, `gear`, `email`, `profile`...); `google` draws an inline G; emoji render as text; unknown names render nothing.
 - **Guard**: an element whose renderer throws shows "Couldn't render <Type>" with `data-render-error`, and its siblings still render.

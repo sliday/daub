@@ -49,6 +49,9 @@ for (const b of BLOCKS) {
 // The linter published in references/verify.md is the one the examples must pass
 const lintBlock = BLOCKS.find(b => b.lang === 'js' && b.body.includes('function lintSpec('));
 const lintSpec = lintBlock && new Function(lintBlock.body + '\nreturn lintSpec;')();
+// So is the in-page render check: the browser tests run it as published
+const checkBlock = BLOCKS.find(b => b.file === 'references/verify.md' && b.lang === 'js' && b.body.includes('function renderAndCheck('));
+const renderAndCheck = checkBlock && new Function(checkBlock.body + '\nreturn renderAndCheck;')();
 const LINT_OPTS = { types: Object.keys(COMP_SCHEMA), themes: S.themes, mcp: true };
 
 describe('daub-ui skill: generated content', () => {
@@ -102,6 +105,7 @@ describe('daub-ui skill: SKILL.md', () => {
     for (const t of S.mcpTools) assert.ok(md.includes('`' + t.name + '`'), `SKILL.md should name MCP tool ${t.name}`);
     const lucide = /lucide@([\d.]+)\//.exec(read('functions/api/mcp.js'))[1];
     for (const d of DOCS) for (const m of d.text.matchAll(/lucide@([\d.]+)/g)) assert.equal(m[1], lucide, `${d.file} pins lucide ${m[1]}`);
+    for (const d of DOCS) for (const m of d.text.matchAll(/\?v=(\d+\.\d+\.\d+)/g)) assert.equal(m[1], S.version, `${d.file} pins ?v=${m[1]}, package.json is ${S.version}`);
   });
 
   it('links every reference file, and each link resolves', () => {
@@ -116,6 +120,8 @@ describe('daub-ui skill: SKILL.md', () => {
 describe('daub-ui skill: examples', () => {
   it('finds the examples', () => {
     assert.ok(lintSpec, 'references/verify.md must contain the lintSpec() block');
+    assert.ok(renderAndCheck, 'references/verify.md must contain the renderAndCheck() block');
+    assert.doesNotMatch(checkBlock.body, /ICON_ALIASES|lucideKey/, 'renderAndCheck must use only public globals so it runs against any deployed build');
     assert.ok(EXAMPLES.length >= 6, `only ${EXAMPLES.length} spec examples found`);
   });
 
@@ -146,11 +152,48 @@ describe('daub-ui skill: examples', () => {
       b: { type: 'Button', props: { label: 'Open', trigger: 'nope' } },
       stray: { type: 'Divider' },
     };
+    Object.assign(els, {
+      img: { type: 'Image', props: { src: 'https://dummyimage.com/1200x800', alt: 'Hero', width: 1200, height: 800 } },
+      nb: { type: 'Navbar', props: { brand: 'Acme' }, children: ['t'] },
+      tgl: { type: 'ToggleGroup', props: { options: [{ label: 'Yearly (save 20%)', value: 'y' }], selected: 'y' } },
+      sa: { type: 'ScrollArea', children: ['tbl'] },
+      tbl: { type: 'Table', props: { columns: [{ key: 'a', label: 'A' }], rows: [{ a: '1' }] } },
+      fld: { type: 'Field', props: { label: 'Name', value: 'Maya' } },
+      vis: { type: 'Text', props: { content: 'x', visible: { $state: '/tab', eq: 'a' } } },
+      row: { type: 'Stack', props: { direction: 'horizontal', wrap: false }, children: ['ib'] },
+      ib: { type: 'Button', props: { label: 'Export', icon: 'download' } },
+    });
+    els.page.children.push('img', 'nb', 'tgl', 'sa', 'fld', 'vis', 'row');
     const r = lintSpec({ theme: 'paper', root: 'page', elements: els }, LINT_OPTS);
     const all = r.errors.concat(r.warnings).join('\n');
-    for (const needle of ['unknown theme "paper"', 'Text reads "content", not "text"', 'content and tag are swapped', 'renders "No data"', 'takes data objects', 'use Switch', 'hosted MCP rejects', 'gap is a 0-6 token', 'trigger "nope"', 'stray (Divider): unknown type', 'not reachable']) {
+    for (const needle of ['unknown theme "paper"', 'Text reads "content", not "text"', 'content and tag are swapped', 'renders "No data"', 'takes data objects', 'use Switch', 'hosted MCP rejects', 'gap is a 0-6 token', 'trigger "nope"', 'stray (Divider): unknown type', 'not reachable', 'root: no container', 'squashes the image', 'Navbar hides its children', 'use one word per option', 'hides the rows below', 'there is no value prop', 'belong on the element', 'its icon collapses']) {
       assert.ok(all.includes(needle), `lint should report: ${needle}\n${all}`);
     }
+  });
+
+  it('examples and inline snippets use only types and props the catalog defines', () => {
+    const known = {};
+    for (const t of Object.keys(COMP_SCHEMA)) {
+      const named = S.props[t] ? [...S.props[t].matchAll(/(?:^|,\s*)([A-Za-z_]\w*)\s*:/g)].map(m => m[1]) : [];
+      known[t] = new Set([...COMP_SCHEMA[t], ...named, 'span']); // span: a Grid child prop
+    }
+    const bad = [];
+    const check = (spec, at) => {
+      for (const e of Object.values(spec.elements)) {
+        if (!known[e.type]) { bad.push(`${at}: type ${e.type}`); continue; }
+        for (const k of Object.keys(e.props || {})) if (!known[e.type].has(k)) bad.push(`${at}: ${e.type}.${k}`);
+      }
+    };
+    for (const ex of EXAMPLES) check(ex.spec, ex.where);
+    for (const d of DOCS) {
+      const prose = d.text.replace(/<!-- BEGIN GENERATED[\s\S]*?<!-- END GENERATED:[\w-]+ -->/g, '');
+      for (const m of prose.matchAll(/`([A-Z][A-Za-z]+\([^`]*\))`/g)) {
+        const spec = openUItoSpec('x = ' + m[1].replace(/\[\.\.\.\]/g, '[]'));
+        if (!spec) bad.push(`${d.file}: does not parse: ${m[1]}`);
+        else check(spec, `${d.file}: ${m[1].slice(0, 40)}`);
+      }
+    }
+    assert.deepEqual(bad, []);
   });
 
   it('html examples use only classes daub.css defines', () => {
@@ -180,6 +223,22 @@ describe('daub-ui skill: examples', () => {
         else assert.ok(S.themes.includes(m[1] || m[2]), `${d.file}: theme ${m[1] || m[2]}`);
       }
     }
+  });
+});
+
+describe('daub-ui skill: Jev recipe', () => {
+  const code = BLOCKS.find(b => b.file === 'references/jev.md' && b.lang === 'js' && b.body.includes('async function pickComponents')).body;
+  const setup = code.slice(0, code.indexOf('async function pickComponents'));
+
+  it('loads PURPOSE from the published jev.md and defines CORE as the playground core set', async () => {
+    const md = read('references/jev.md');
+    const fetchStub = async () => ({ text: async () => md });
+    const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+    const { PURPOSE, CORE } = await new AsyncFunction('fetch', setup + '\nreturn { PURPOSE, CORE };')(fetchStub);
+    const expected = {};
+    for (const [, types] of S.categories) for (const t of types) if (!S.pickCore.includes(t) && S.purpose[t]) expected[t] = S.purpose[t];
+    assert.deepEqual(PURPOSE, expected);
+    assert.deepEqual(CORE, [...S.pickCore]); // spread: S.pickCore comes from another vm realm
   });
 });
 
@@ -241,31 +300,9 @@ describe('daub-ui skill: examples render in a browser', () => {
     page.on('console', m => logs.push(m.text()));
     page.on('pageerror', e => logs.push('pageerror: ' + e.message));
     await page.setContent(SHELL, { waitUntil: 'load' });
-    const report = await page.evaluate(spec => {
-      document.documentElement.dataset.theme = spec.theme || 'light';
-      const app = document.getElementById('app');
-      const root = renderElement(spec.elements, spec.root, 0);
-      if (root) app.appendChild(root);
-      for (const id in spec.elements) {
-        if (!app.querySelector('[data-spec-id="' + CSS.escape(id) + '"]')) app.appendChild(renderElement(spec.elements, id, 0));
-      }
-      DAUB.init();
-      const hasLucide = typeof lucide !== 'undefined' && !!lucide.icons;
-      if (hasLucide) lucide.createIcons();
-      const icons = [];
-      (function scan(v) {
-        if (Array.isArray(v)) return v.forEach(scan);
-        if (v && typeof v === 'object') for (const k in v) (k === 'icon' && typeof v[k] === 'string' ? icons.push(v[k]) : scan(v[k]));
-      })(Object.values(spec.elements).map(e => e.props));
-      Object.values(spec.elements).forEach(e => { if (e.type === 'Icon' && e.props) icons.push(e.props.name); });
-      const known = n => { const k = String(n).toLowerCase(), a = ICON_ALIASES[k] || n; return k === 'google' || !/[a-z]/.test(k) || !!(lucide.icons[lucideKey(a)] || lucide.icons[lucideKey(k)]); };
-      return {
-        rootHeight: root ? root.getBoundingClientRect().height : 0,
-        unknownTypes: [...app.querySelectorAll('.db-alert__title')].map(n => n.textContent).filter(t => t.startsWith('Unknown: ')),
-        renderErrors: [...app.querySelectorAll('[data-render-error]')].map(n => n.getAttribute('data-render-error')),
-        missingIcons: hasLucide ? icons.filter(n => !known(n)) : null,
-      };
-    }, spec);
+    // No lucide build available: a stub that knows every name, so only the icon check is skipped
+    if (!lucide) await page.evaluate(() => { window.lucide = { createIcons() {}, icons: new Proxy({}, { get: () => true }) }; });
+    const report = await page.evaluate(renderAndCheck, spec);
     report.logs = logs.filter(l => /^\[daub-render\]|^pageerror/.test(l));
     return { page, report };
   }
@@ -276,12 +313,34 @@ describe('daub-ui skill: examples render in a browser', () => {
     for (const ex of EXAMPLES) {
       const { page, report } = await render(ex.spec);
       await page.close();
-      assert.ok(report.rootHeight > 0, `${ex.where}: root rendered empty`);
+      assert.ok(report.rootRendered, `${ex.where}: root rendered empty`);
+      assert.equal(report.emptyChartCards, 0, `${ex.where}: empty ChartCard`);
       assert.deepEqual(report.unknownTypes, [], `${ex.where}: unknown types`);
       assert.deepEqual(report.renderErrors, [], `${ex.where}: render errors`);
       assert.deepEqual(report.logs, [], `${ex.where}: renderer warnings`);
-      if (report.missingIcons) assert.deepEqual(report.missingIcons, [], `${ex.where}: icon names lucide ${LUCIDE_VERSION} lacks`);
+      assert.deepEqual(report.missingIcons, [], `${ex.where}: icon names lucide ${LUCIDE_VERSION} lacks`);
     }
+  });
+
+  it('the SKILL.md host page renders the OpenUI example and its footer wiring closes the dialog', async t => {
+    if (skip) return t.skip(skip);
+    const host = BLOCKS.find(b => b.file === 'SKILL.md' && b.lang === 'html' && b.body.includes('DaubOpenUI.openUItoSpec(openuiText)'));
+    const example = BLOCKS.find(b => b.file === 'SKILL.md' && b.lang === 'openui');
+    assert.ok(host && example, 'SKILL.md needs the host page and the OpenUI example');
+    const html = host.body
+      .replace(/<script src="https:\/\/cdn\.jsdelivr\.net\/npm\/lucide[^>]*><\/script>/, '<script src="http://daub.test/__lucide.js"></script>')
+      .replace(/https:\/\/daub\.dev\/([\w.-]+)\?v=[\d.]+/g, 'http://daub.test/$1');
+    const page = await context.newPage();
+    const errors = [];
+    page.on('pageerror', e => errors.push(e.message));
+    await page.setContent(`<script>const openuiText = ${JSON.stringify(example.body)};</script>` + html, { waitUntil: 'load' });
+    assert.deepEqual(errors, []);
+    const open = () => page.evaluate(() => document.getElementById('confirm-delete').classList.contains('db-alert-dialog--open'));
+    await page.click('[data-spec-id="deleteBtn"]');
+    assert.equal(await open(), true, 'Delete account opens the dialog');
+    await page.click('[data-spec-id="keepBtn"]');
+    assert.equal(await open(), false, 'Keep account closes it');
+    await page.close();
   });
 
   it('the state wiring snippet in json-render.md drives visibility', async t => {

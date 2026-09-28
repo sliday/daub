@@ -115,8 +115,10 @@ mentions = Switch("Email me when a teammate mentions me", true)
 push = Switch("Push notifications on this device", false)
 digest = Select("Weekly digest", [{label: "Monday 9:00", value: "mon"}, {label: "Friday 16:00", value: "fri"}, {label: "Never", value: "off"}], "mon")
 account = Card([deleteBtn], "Delete account", "Removes all 14 projects and their files.")
-deleteBtn = Button("Delete account", "secondary", icon: "trash-2", trigger: "confirm-delete")
-confirm = AlertDialog("confirm-delete", "Delete your account?", "You cannot undo this.")
+deleteBtn = Button("Delete account", "icon-danger", icon: "trash-2", trigger: "confirm-delete")
+confirm = AlertDialog("confirm-delete", "Delete your account?", "You cannot undo this.", footer: [keepBtn, confirmBtn])
+keepBtn = Button("Keep account", "secondary")
+confirmBtn = Button("Delete account", "primary")
 ```
 
 Render either one in any page. The parser and renderer ship only on daub.dev (the npm package has neither):
@@ -124,7 +126,7 @@ Render either one in any page. The parser and renderer ship only on daub.dev (th
 ```html
 <link rel="stylesheet" href="https://daub.dev/daub.css?v=3.20.3">
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
-<div id="app"></div>
+<div id="app" style="padding-block: 24px"></div>
 <script src="https://daub.dev/daub.js?v=3.20.3"></script>
 <script src="https://daub.dev/daub-render.js?v=3.20.3"></script>
 <script src="https://daub.dev/daub-openui-parser.js?v=3.20.3"></script>
@@ -136,6 +138,11 @@ Render either one in any page. The parser and renderer ship only on daub.dev (th
   for (const id in spec.elements) // elements the tree never reached render after it
     if (!app.querySelector('[data-spec-id="' + id + '"]')) app.appendChild(renderElement(spec.elements, id, 0));
   DAUB.init(); lucide.createIcons();
+  // Footer buttons in a Modal or AlertDialog do not close it on their own
+  app.querySelectorAll('.db-modal__footer .db-btn, .db-alert-dialog__actions .db-btn').forEach(b => b.addEventListener('click', () => {
+    const o = b.closest('.db-modal-overlay, .db-alert-dialog');
+    o.classList.contains('db-alert-dialog') ? DAUB.closeAlertDialog(o.id) : DAUB.closeModal(o.id);
+  }));
 </script>
 ```
 
@@ -161,17 +168,19 @@ These rules prevent the failures seen most in generated DAUB UIs.
 5. `Sidebar`, `NavMenu`, `BottomNav`, `Breadcrumbs`, `Menubar`, `DropdownMenu` and `CommandPalette` take data arrays of plain objects, not element ids: `Sidebar([{title: "Workspace", items: [{label: "Inbox", icon: "inbox", active: true}]}])`.
 6. Icons are Lucide 0.576.0 names in kebab-case (`layout-dashboard`, `circle-check`, `github`). Put them in props: `Button icon`, `StatCard icon`, `EmptyState icon`, and `icon` on List, Sidebar, BottomNav and menu items. Renderers map common aliases (`refresh` to `refresh-cw`) and drop unknown names. Stay on 0.x: Lucide 1.x removed brand icons.
 7. The `Icon` and `Link` types render in the playground and with `daub-render.js`, but the hosted MCP `parse_openui` and `validate_spec` reject them (v3.20.3). For MCP-bound specs, use icon props and `Button` with variant `ghost`.
-8. `gap` on Stack and Grid is a token 0-6 (0, 4, 8, 12, 16, 24, 32 px), never pixels. Grid `columns` is 2-6. Space between groups should be at least twice the space inside them.
+8. `gap` on Stack and Grid is a token 0-6 (0, 4, 8, 12, 16, 24, 32 px), never pixels. Grid `columns` is 2-6. Space between groups should be at least twice the space inside them. Give the root `container: "wide"` (dashboards, landing pages) or `"narrow"` (forms, settings); without it the page has no side gutters.
 9. Themes are exact names. Light and dark names differ per family: `solarized` is light, `ink` and `material` are dark. `paper`, `material-dark`, `solarized-light` and `gruvbox-dark` do not exist and fall back to the default light theme. Table: `references/themes.md`.
 10. Overlays (`Modal`, `AlertDialog`, `Sheet`, `Drawer`) need an `id`, and a `Button` with `trigger: "<id>"` opens one. They start hidden, so place them anywhere in the tree. `CommandPalette` also needs an `id`; it opens with Cmd+K or `DAUB.openCommand(id)`.
 11. `Card.footer` is an array of child ids and `Card.media` is an image URL. Use `Separator`, not `Divider`; `Layout` is deprecated (use `Stack` or `Grid`).
 12. Write real content: names, prices, dates, 5-8 table rows. No lorem ipsum, no "Item 1". `references/design.md` covers layout and density.
+13. Some specs render without errors and still look broken: `Image` with `width`/`height` squashes, a `Navbar` hides its children on phones, ToggleGroup labels with a space wrap, a ChartCard stretches beside a taller card, a ScrollArea around a Table hides rows, a Button icon collapses in a `wrap: false` row, and fields have no `value` prop. A destructive button uses variant `icon-danger`. Fixes: "Layout traps" in `references/components.md`.
 
 Renderers tolerate many malformed props (see `references/json-render.md`). Treat that as a safety net and write the canonical props.
 
 ## Preview
 
-- Playground link: `https://daub.dev/playground#s=` + `LZString.compressToEncodedURIComponent(JSON.stringify(spec))` (npm `lz-string`). Parse OpenUI to a spec first. Old `?s=` links still open. A shared spec with custom JS stays paused until the viewer clicks Run code.
+- Playground link: `https://daub.dev/playground#s=` + `LZString.compressToEncodedURIComponent(JSON.stringify(spec))` (npm `lz-string`). The payload must be a JSON spec; the playground does not read OpenUI text, so parse it first. One link per UI is enough. Old `?s=` links still open. A shared spec with custom JS stays paused until the viewer clicks Run code.
+- Set the theme in every spec (`"theme"` or `__theme`). Without it a JSON spec renders `light` and OpenUI parses to `bone`.
 - Static file: MCP `render_spec` returns self-contained HTML. Save it and open it or screenshot it.
 - Local: the page in path 2, served from any static server.
 
@@ -181,8 +190,8 @@ Run these before you hand a UI over. Details and a copy-paste linter: `reference
 
 1. Parse: `DaubOpenUI.openUItoSpec(text)` returns `null` when nothing parsed. MCP `parse_openui` does the same remotely.
 2. Check: every element's `type` is known, `root` and every child id exist, and the golden rules hold (`validate_spec` covers types and ids).
-3. Render: load the spec in a headless browser. Fail on an `Unknown: <Type>` notice, a `[data-render-error]` element, a `[daub-render]` console warning, or an empty root.
-4. Look: screenshot at 1280 and 390 px wide and review the pixels. In this project's benchmarks a cheap vision model with a rubric graded pages reliably; text-only judges, Jev on an outline included, did not.
+3. Render: load the spec in a headless browser at 1280 and 390 px. Fail on an `Unknown: <Type>` notice, a `[data-render-error]` element, a `[daub-render]` console warning, an empty root or ChartCard, an icon name Lucide lacks, a broken image, or a phone view that overflows or has text flush with the edge.
+4. Look: send the desktop screenshot to a vision model with the rubric in `references/verify.md` (validated here: gemini-3-flash-preview, temperature 0, flag a composite below 8). Text-only judges, Jev on an outline included, did not work.
 
 Fix hard failures (parse errors, unknown types, render errors, blank regions) in code, deterministically. Do not auto-repair on soft signals such as a middling score.
 
@@ -190,7 +199,7 @@ Fix hard failures (parse errors, unknown types, render errors, blank regions) in
 
 Jev (`~typesafe/jev-latest` on OpenRouter) answers typed questions with probabilities in about 300 ms. It cannot write text or specs. Use it to decide, then let a writer model or your own code produce the UI:
 
-- Pick components: one `noul` question per component with its one-line purpose, keep p(yes) >= 0.45 plus the core layout types. The playground uses this to shorten the prompt.
+- Pick components: one `noul` question per component with its one-line purpose, keep p(yes) >= 0.45 plus the core layout types and the types your page formula needs (Jev can miss Sidebar on a dashboard). The playground uses this to shorten the prompt.
 - Pick a block or a theme family: one `choice` question.
 
 Call `https://openrouter.ai/api/alpha/decisions` with your own OpenRouter key. Do not call `daub.dev/api/choose` or `/api/generate`: they accept only daub.dev origins and spend the site's quota. Request JSON, purpose map and limits: `references/jev.md`.

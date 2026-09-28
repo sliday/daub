@@ -6,8 +6,8 @@
       "type": "skill-md",
       "description": "Build, preview and verify UI with DAUB (daub.dev), a drop-in CSS + JS component library with 84 components and 21 theme families. Covers three paths: plain HTML with db-* classes, json-render or OpenUI Lang specs rendered by daub-render.js, and the hosted DAUB MCP server (generate_ui, validate_spec, render_spec, parse_openui, get_block_library). Includes the rules that prevent broken renders, 266 ready-made blocks, playground share links, a verify loop, and Jev recipes for picking components, blocks and themes. Use when the user mentions DAUB, daub.dev, daub-ui, db- classes, the DAUB playground or MCP, json-render or OpenUI specs, or asks for a themed dashboard, landing page, form or settings screen without a build step.",
       "url": "https://daub.dev/SKILL.md",
-      "digest": "sha256:2d295f04137b251e0c0fbbe3af13a74ab50441c987731c0375c0e50f6d30185f",
-      "sha256": "2d295f04137b251e0c0fbbe3af13a74ab50441c987731c0375c0e50f6d30185f"
+      "digest": "sha256:42c932fa0761b5b42651cdfc835b2e5304c717fd03c6be74d2bf28a8c4ff39ee",
+      "sha256": "42c932fa0761b5b42651cdfc835b2e5304c717fd03c6be74d2bf28a8c4ff39ee"
     },
     {
       "name": "daub-llms-full",
@@ -46,48 +46,48 @@
       "type": "documentation",
       "description": "DAUB component catalog: spec types with purpose and props, plus every db-* HTML class with modifiers and parts.",
       "url": "https://daub.dev/references/components.md",
-      "digest": "sha256:dbc47d540e8861d1ddcd117d9e3ee1d5839ac3f80014fec4026179397948f42b",
-      "sha256": "dbc47d540e8861d1ddcd117d9e3ee1d5839ac3f80014fec4026179397948f42b"
+      "digest": "sha256:dd01e7222f005745a72bb2a2302b51e3f3ee85a4624d06d0a3ae6487733eb997",
+      "sha256": "dd01e7222f005745a72bb2a2302b51e3f3ee85a4624d06d0a3ae6487733eb997"
     },
     {
       "name": "daub-ui-ref-design",
       "type": "documentation",
       "description": "Layout, density and hierarchy rules for DAUB pages.",
       "url": "https://daub.dev/references/design.md",
-      "digest": "sha256:21e6f5e5070d2944205c88ba76ee3e934b9f9badad9c72dede8270c7e5c785ed",
-      "sha256": "21e6f5e5070d2944205c88ba76ee3e934b9f9badad9c72dede8270c7e5c785ed"
+      "digest": "sha256:53598cd3bb7d3257060546615f4e64a0f67e04179829fbbb0dd9c0abf733037c",
+      "sha256": "53598cd3bb7d3257060546615f4e64a0f67e04179829fbbb0dd9c0abf733037c"
     },
     {
       "name": "daub-ui-ref-jev",
       "type": "documentation",
       "description": "Recipes for Jev (TypeSafe decision model on OpenRouter) in DAUB flows: component, block and theme picking.",
       "url": "https://daub.dev/references/jev.md",
-      "digest": "sha256:e5bf02d00060f2cae92bb7faecdc7fccca88105942b777a2437a3b9dcbe1bc70",
-      "sha256": "e5bf02d00060f2cae92bb7faecdc7fccca88105942b777a2437a3b9dcbe1bc70"
+      "digest": "sha256:227b0c1bc541f6571e3662d13c4db8ee01d6f38aa52e0f2711dadec88a02a7c3",
+      "sha256": "227b0c1bc541f6571e3662d13c4db8ee01d6f38aa52e0f2711dadec88a02a7c3"
     },
     {
       "name": "daub-ui-ref-json-render",
       "type": "documentation",
       "description": "DAUB json-render flat spec format: elements, children, state, actions, visibility, validation and renderer tolerance.",
       "url": "https://daub.dev/references/json-render.md",
-      "digest": "sha256:7c76022db4c9608b098c3eed0b26ddaa8c9d0239e688beb8d339994b45d6b71c",
-      "sha256": "7c76022db4c9608b098c3eed0b26ddaa8c9d0239e688beb8d339994b45d6b71c"
+      "digest": "sha256:da08ec5bd8ac4b9544a908abf029125b9ef7789b53843b3c8621a1adb10c55a4",
+      "sha256": "da08ec5bd8ac4b9544a908abf029125b9ef7789b53843b3c8621a1adb10c55a4"
     },
     {
       "name": "daub-ui-ref-mcp",
       "type": "documentation",
       "description": "The hosted DAUB MCP server: tools, arguments, plain-HTTP calls and client setup.",
       "url": "https://daub.dev/references/mcp.md",
-      "digest": "sha256:ee75d6d0921862883d947632ddb503648fb1e081d5f0f972485a2e2158d74551",
-      "sha256": "ee75d6d0921862883d947632ddb503648fb1e081d5f0f972485a2e2158d74551"
+      "digest": "sha256:bca7bc48f57783953da1d48a9ab90ff55d79c1c70b708ea8926a6f7c8af05422",
+      "sha256": "bca7bc48f57783953da1d48a9ab90ff55d79c1c70b708ea8926a6f7c8af05422"
     },
     {
       "name": "daub-ui-ref-openui",
       "type": "documentation",
       "description": "OpenUI Lang syntax for DAUB and every component signature in parser argument order.",
       "url": "https://daub.dev/references/openui.md",
-      "digest": "sha256:c5ab0f021a2c207a7d12687cce235849612d9ffdbc2082c39fd029ab66fc0cbe",
-      "sha256": "c5ab0f021a2c207a7d12687cce235849612d9ffdbc2082c39fd029ab66fc0cbe"
+      "digest": "sha256:2d80339ed78011e99355534fd27227d16bf6f2dfccbab6cb93b8ebd24257cbf2",
+      "sha256": "2d80339ed78011e99355534fd27227d16bf6f2dfccbab6cb93b8ebd24257cbf2"
     },
     {
       "name": "daub-ui-ref-themes",
@@ -102,8 +102,8 @@
       "type": "documentation",
       "description": "How to verify DAUB output: parse, lint, render and visual review.",
       "url": "https://daub.dev/references/verify.md",
-      "digest": "sha256:df0c8a68e490a9c1ef372b31b89d15598d00bbbbf6bfd7cccda396c76d7215ec",
-      "sha256": "df0c8a68e490a9c1ef372b31b89d15598d00bbbbf6bfd7cccda396c76d7215ec"
+      "digest": "sha256:16c4e1f6fcfdb767a31c6cbc91681e0a2a5c7380faefc0210783f1e06e4d9265",
+      "sha256": "16c4e1f6fcfdb767a31c6cbc91681e0a2a5c7380faefc0210783f1e06e4d9265"
     }
   ]
 }

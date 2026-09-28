@@ -22,7 +22,11 @@ Many questions fit in one request (the playground sends 65). Context limit: 32k 
 
 The playground and the hosted MCP ask one `noul` per component and put full props only for the picked ones into the writer's prompt. On a dashboard prompt that cut the OpenUI system prompt from 8.3k to 5.0k characters.
 
-Tuning, from 39 labeled prompts and about 990 Jev calls: describe each component by a one-line purpose (not its props), keep `p(yes) >= 0.45`. That reached 96% recall of must-have components at about 13 picks per prompt, with 0.2% wrong picks. Always keep the core layout types, which the questions leave out.
+Tuning, from 39 labeled prompts and about 990 Jev calls: describe each component by a one-line purpose (not its props), keep `p(yes) >= 0.45`. That reached 96% recall of must-have components at about 13 picks per prompt on average, with 0.2% wrong picks. Single prompts vary. On 2026-09-28, "Analytics dashboard with KPI cards, a revenue chart and a recent orders table" picked 17 types, Tooltip, Skeleton and Spinner among them, and left out Sidebar (0.44) and List (under 0.35). "Account settings page with profile form, notification switches and a danger zone" picked 19, with Toggle at 0.91 beside Switch at 0.94. So:
+
+- Always keep the core layout types, which the questions leave out.
+- Pass the types your page formula needs (`references/design.md`, for example Sidebar on a dashboard) in `keep`.
+- The picks set the menu the writer model sees. The golden rules still decide, for example Switch over Toggle for settings.
 
 Request shape (two of the 65 questions shown):
 
@@ -54,7 +58,12 @@ Request shape (two of the 65 questions shown):
 Response: `{ "answers": { "Switch": { "type": "noul", "noul": 0.97 }, "AlertDialog": { "type": "noul", "noul": 0.9 } }, "model": "...", "usage": { "cost": 0.00025, ... } }`.
 
 ```js
-// PURPOSE: the purpose map at the end of this file. CORE: the core set above it.
+// PURPOSE: the purpose map at the end of this file, the last json block. Read your local copy or fetch it.
+const md = await (await fetch('https://daub.dev/references/jev.md')).text();
+const tail = md.slice(md.lastIndexOf('```json') + 7);
+const PURPOSE = JSON.parse(tail.slice(0, tail.indexOf('```')));
+const CORE = ['Stack', 'Grid', 'Text', 'Card', 'Button', 'Icon', 'Separator']; // the core set, never asked
+
 async function pickComponents(request, apiKey, { threshold = 0.45, keep = [] } = {}) {
   const questions = {};
   for (const [name, purpose] of Object.entries(PURPOSE)) {
