@@ -927,6 +927,18 @@
       var trigger = wrap.querySelector('[data-db-tooltip]') || wrap.children[0];
       if (trigger) trigger.setAttribute('aria-describedby', tip.id);
       tip.setAttribute('role', 'tooltip');
+      watchHoverPanel(wrap, 'db-tooltip--open', tip);
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Hover Card
+     ---------------------------------------------------------- */
+  function initHoverCards(root) {
+    root.querySelectorAll('.db-hover-card').forEach(function(card) {
+      if (card._dbInit) return;
+      card._dbInit = true;
+      watchHoverPanel(card, 'db-hover-card--open', card.querySelector('.db-hover-card__content'));
     });
   }
 
@@ -1340,6 +1352,44 @@
   }
 
   /* ----------------------------------------------------------
+     Floating panels: shift an open popover, dropdown, hover card
+     or tooltip sideways so it stays inside the viewport. The shift
+     goes in --db-panel-shift, which daub.css applies as translate.
+     The panel always gets its own value, so a panel nested in a
+     shifted one does not inherit the ancestor's shift.
+     ---------------------------------------------------------- */
+  var PANEL_GUTTER = 8;
+  function clampPanel(panel) {
+    panel.style.setProperty('--db-panel-shift', '0px');
+    var r = panel.getBoundingClientRect();
+    if (!r.width) return;
+    var vw = document.documentElement.clientWidth;
+    var dx = 0;
+    if (r.right > vw - PANEL_GUTTER) dx = vw - PANEL_GUTTER - r.right;
+    if (r.left + dx < PANEL_GUTTER) dx = PANEL_GUTTER - r.left;
+    if (dx) panel.style.setProperty('--db-panel-shift', dx + 'px');
+  }
+  // Re-clamp on every class change of the wrapper, so programmatic opens
+  // (classList.add('db-popover--open')) are covered too. A closed panel measures
+  // 0 wide and keeps a zero shift.
+  function watchPanel(wrap, openClass, panel) {
+    if (!panel) return;
+    var sync = function() { clampPanel(panel); };
+    if (typeof MutationObserver === 'function') {
+      new MutationObserver(sync).observe(wrap, { attributes: true, attributeFilter: ['class'] });
+    }
+    if (wrap.classList.contains(openClass)) sync();
+  }
+  // Hover cards and tooltips open on :hover / :focus-within, or with an --open class.
+  function watchHoverPanel(wrap, openClass, panel) {
+    if (!panel) return;
+    var clamp = function() { clampPanel(panel); };
+    wrap.addEventListener('mouseenter', clamp);
+    wrap.addEventListener('focusin', clamp);
+    watchPanel(wrap, openClass, panel);
+  }
+
+  /* ----------------------------------------------------------
      Popover
      ---------------------------------------------------------- */
   var _dbPopoverClickInit = false;
@@ -1347,6 +1397,7 @@
     root.querySelectorAll('.db-popover').forEach(function(pop) {
       if (pop._dbInit) return;
       pop._dbInit = true;
+      watchPanel(pop, 'db-popover--open', pop.querySelector('.db-popover__content'));
       var trigger = pop.querySelector('.db-popover__trigger');
       if (!trigger) return;
       trigger.addEventListener('click', function(e) {
@@ -1407,6 +1458,7 @@
       if (!trigger) return;
       var content = drop.querySelector('.db-dropdown__content') || drop.querySelector('.db-dropdown__menu');
       if (!content) return;
+      watchPanel(drop, 'db-dropdown--open', content);
       trigger.addEventListener('click', function(e) {
         e.stopPropagation();
         var wasOpen = drop.classList.contains('db-dropdown--open');
@@ -2159,6 +2211,7 @@
     initModals(root);
     initSteppers(root);
     initTooltips(root);
+    initHoverCards(root);
     initSliders(root);
     initTemperature();
     initNoise();

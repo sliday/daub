@@ -4851,6 +4851,8 @@ meter.db-meter::-moz-meter-bar {
   position: absolute;
   z-index: 1040;
   min-width: 200px;
+  max-width: calc(100vw - 16px);
+  translate: var(--db-panel-shift, none);
   padding: var(--db-space-4);
   background: var(--db-white);
   border: 1px solid var(--db-sand);
@@ -4885,6 +4887,8 @@ meter.db-meter::-moz-meter-bar {
   left: 50%;
   transform: translateX(-50%);
   min-width: 260px;
+  max-width: calc(100vw - 16px);
+  translate: var(--db-panel-shift, none);
   padding: var(--db-space-4);
   background: var(--db-white);
   border: 1px solid var(--db-sand);
@@ -4977,6 +4981,8 @@ meter.db-meter::-moz-meter-bar {
   top: calc(100% + 4px);
   left: 0;
   min-width: 180px;
+  max-width: calc(100vw - 16px);
+  translate: var(--db-panel-shift, none);
   padding: var(--db-space-2) 0;
   background: var(--db-white);
   border: 1px solid var(--db-sand);
@@ -5089,6 +5095,7 @@ meter.db-meter::-moz-meter-bar {
   white-space: nowrap;
   pointer-events: none;
   box-shadow: var(--db-shadow-2);
+  translate: var(--db-panel-shift, none);
 }
 
 .db-tooltip:hover .db-tooltip__content,
@@ -5107,12 +5114,12 @@ meter.db-meter::-moz-meter-bar {
 }
 
 .db-tooltip__content--top::after {
-  top: 100%; left: 50%; transform: translateX(-50%);
+  top: 100%; left: calc(50% - var(--db-panel-shift, 0px)); transform: translateX(-50%);
   border-top-color: var(--db-ink);
 }
 
 .db-tooltip__content--bottom::after {
-  bottom: 100%; left: 50%; transform: translateX(-50%);
+  bottom: 100%; left: calc(50% - var(--db-panel-shift, 0px)); transform: translateX(-50%);
   border-bottom-color: var(--db-ink);
 }
 
