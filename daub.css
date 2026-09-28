@@ -3255,10 +3255,6 @@ textarea.db-field__input {
   transition: box-shadow var(--db-transition);
 }
 
-.db-card:hover {
-  box-shadow: var(--db-card-shadow-hover), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
-}
-
 .db-card__header {
   display: flex;
   flex-direction: column;
@@ -3297,16 +3293,22 @@ textarea.db-field__input {
 .db-card--media .db-card__body { padding: var(--db-space-4) var(--db-space-5); }
 .db-card--media .db-card__footer { padding: 0 var(--db-space-5) var(--db-space-5); margin-top: 0; border-top: none; }
 
-/* Card — interactive variant (clickable) */
-.db-card--interactive {
+/* Card — interactive variant (clickable). A plain card is a static container and never lifts;
+   only clickable cards (the modifier, or a card that is itself a link) rise on hover. */
+.db-card--interactive,
+a.db-card[href] {
   cursor: pointer;
   transition: box-shadow var(--db-transition), transform var(--db-transition);
 }
-.db-card--interactive:hover {
-  box-shadow: var(--db-shadow-3), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .db-card--interactive:hover,
+  a.db-card[href]:hover {
+    box-shadow: var(--db-card-shadow-hover), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
+    transform: translateY(-2px);
+  }
 }
-.db-card--interactive:active {
+.db-card--interactive:active,
+a.db-card[href]:active {
   transform: translateY(0);
   box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
   transition: none;
