@@ -3540,6 +3540,27 @@ textarea.db-field__input {
 /* ------------------------------------------------------------
    7e. DATA DISPLAY — Table Header
    ------------------------------------------------------------ */
+/* Scroll box around .db-table / .db-data-table. One minmax(0, 1fr) track gives it a
+   min-content width of 0, so a wide table scrolls here instead of widening the page,
+   a grid cell or the card around it. Max-content still follows the table. */
+.db-table-scroll {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--db-sand) transparent;
+}
+
+/* Popover and HoverCard panels shrink to fit around a small trigger, so a min-content of 0
+   squeezed them to their min-width and hid most of the table. Inside them the table sets
+   the panel width, as it did before the scroll box, and scrolls only past the viewport. */
+.db-popover__content .db-table-scroll,
+.db-hover-card__content .db-table-scroll {
+  grid-template-columns: minmax(min-content, 1fr);
+  max-width: calc(100vw - 4rem);
+}
+
 .db-table {
   width: 100%;
   border-collapse: collapse;
