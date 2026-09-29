@@ -89,8 +89,8 @@ interface DAUBStatic {
 
   /** Toggle sidebar collapsed state */
   toggleSidebar(id: string | Element): void;
-  /** Toggle mobile navbar menu */
-  toggleNavbar(id: string | Element): void;
+  /** Toggle the mobile navbar menu, or set it with open; keeps the toggle's aria-expanded in step */
+  toggleNavbar(id: string | Element, open?: boolean): void;
   /** Fix nested border-radius for inner elements */
   fixNestedRadius(el?: Element): void;
 

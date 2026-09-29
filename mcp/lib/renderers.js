@@ -822,6 +822,8 @@
       inp.className = 'db-field__input';
       inp.type = p.type || 'text';
       inp.placeholder = p.placeholder || '';
+      // value is the text the field holds (placeholder only hints); as an attribute it survives serialized HTML
+      if (isText(p.value)) inp.setAttribute('value', String(p.value));
       el.appendChild(inp);
       if (p.helper) {
         var help = mkEl('span', 'db-field__helper', p.helper);
@@ -837,6 +839,7 @@
       el.className = 'db-input' + (isz ? ' db-input--' + isz : '') + (p.error ? ' db-input--error' : '');
       el.type = p.type || 'text';
       el.placeholder = p.placeholder || '';
+      if (isText(p.value)) el.setAttribute('value', String(p.value));
       return withLabel(el, p.label, true);
     };
     
@@ -890,6 +893,7 @@
       el.className = 'db-textarea' + (p.error ? ' db-textarea--error' : '');
       el.placeholder = p.placeholder || '';
       if (p.rows) el.rows = p.rows;
+      if (isText(p.value)) el.textContent = String(p.value);
       return el;
     };
     
@@ -899,7 +903,8 @@
       var inp = document.createElement('input');
       inp.className = 'db-checkbox__input';
       inp.type = 'checkbox';
-      if (p.checked) inp.checked = true;
+      // Serialized HTML keeps state only in attributes; the property alone is dropped
+      if (p.checked) { inp.checked = true; inp.setAttribute('checked', ''); }
       el.appendChild(inp);
       var box = document.createElement('span');
       box.className = 'db-checkbox__box';
@@ -929,7 +934,7 @@
         inp.type = 'radio';
         inp.name = name;
         inp.value = opt.value || '';
-        if (opt.value === p.selected) inp.checked = true;
+        if (opt.value === p.selected) { inp.checked = true; inp.setAttribute('checked', ''); }
         lbl.appendChild(inp);
         lbl.appendChild(mkEl('span', 'db-radio__circle'));
         lbl.appendChild(document.createTextNode(' ' + (opt.label || '')));
@@ -1217,6 +1222,19 @@
         var nav = mkEl('div', 'db-navbar__nav');
         nav.appendChild(ch.length ? renderChildren(els, ch, d) : RENDERERS.NavMenu({ items: links }));
         el.appendChild(nav);
+        // Phones (max-width 640px) hide the nav slot; this button opens it (daub.js toggles db-navbar--open and aria-expanded)
+        var tog = mkEl('button', 'db-navbar__toggle');
+        tog.setAttribute('type', 'button');
+        tog.setAttribute('aria-label', 'Menu');
+        tog.setAttribute('aria-expanded', 'false');
+        var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg'), bars = document.createElementNS(ns, 'path');
+        var at = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'aria-hidden': 'true' };
+        for (var k in at) svg.setAttribute(k, at[k]);
+        bars.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+        svg.appendChild(bars);
+        tog.appendChild(svg);
+        // Before the nav slot, so Tab goes from the button into the open menu (CSS still puts it at the right edge)
+        el.insertBefore(tog, nav);
       }
       return el;
     };
@@ -1742,6 +1760,16 @@
       return el;
     };
     
+    // Buttons in a dialog footer close the dialog (daub.js handles data-db-dismiss). A button that opens
+    // another overlay (trigger), a dropdown or a popover keeps that job, and so does one with an "on" state action
+    // (a wizard's Back and Next); put any other button that must not close in the body
+    function markDismiss(box) {
+      Array.prototype.forEach.call(box.querySelectorAll('.db-btn:not([data-db-trigger]):not([data-ds-on]):not(.db-dropdown__trigger):not(.db-popover__trigger)'), function(b) {
+        b.setAttribute('data-db-dismiss', '');
+      });
+      return box;
+    }
+
     // -- Modal --
     RENDERERS.Modal = function(p, ch, els, d) {
       var el = mkEl('div', 'db-modal-overlay');
@@ -1778,7 +1806,7 @@
         var confirmBtn = mkEl('button', 'db-btn db-btn--primary', 'Confirm');
         footer.appendChild(confirmBtn);
       }
-      modal.appendChild(footer);
+      modal.appendChild(markDismiss(footer));
       el.appendChild(modal);
       return el;
     };
@@ -1804,7 +1832,7 @@
         actions.appendChild(cancelBtn);
         actions.appendChild(mkEl('button', 'db-btn db-btn--primary', 'Continue'));
       }
-      panel.appendChild(actions);
+      panel.appendChild(markDismiss(actions));
       el.appendChild(panel);
       return el;
     };
@@ -2172,19 +2200,31 @@
       el.style.maxWidth = '100%';
       el.style.height = 'auto';
       el.style.borderRadius = 'var(--db-radius-md)';
+      // width/height in px: a number, "800" or "800px" (other units are ignored)
+      var px = function(v) { return /^\s*\d+(\.\d+)?(px)?\s*$/.test(String(v)) ? parseFloat(v) : 0; };
+      var w = px(p.width), h = px(p.height);
+      // As attributes they size the box before the image loads, while max-width:100% caps the width and height:auto
+      // keeps the ratio. A px height beside max-width squashed a 1200x800 image in a 564px column to 564x800.
+      if (w) el.setAttribute('width', w);
+      if (h) el.setAttribute('height', h);
       if (p.src && isSafeUrl(p.src)) {
         el.src = p.src;
+        // A height alone is a fixed height: crop to it rather than squash when max-width narrows the image
+        if (h && !w) { el.style.height = h + 'px'; el.style.objectFit = 'cover'; }
+        // With a width, fit-content keeps the ratio in a flex row too: there height:auto lets a taller sibling stretch it
+        else if (w) el.style.height = 'fit-content';
       } else {
-        // Placeholder when no valid src
+        // Placeholder when no valid src: fills the column up to its width, and with both sizes keeps their ratio.
+        // Without a src it has no image to shrink, so a px width would widen a grid column past the page.
         el.style.display = 'block';
-        el.style.width = p.width ? p.width + 'px' : '100%';
-        el.style.height = p.height ? p.height + 'px' : '200px';
+        el.style.width = '100%';
+        if (w) el.style.maxWidth = w + 'px';
+        if (w && h) el.style.aspectRatio = w + ' / ' + h;
+        else el.style.height = h ? h + 'px' : '200px';
         el.style.background = 'var(--db-muted)';
         el.style.objectFit = 'cover';
         el.removeAttribute('src');
       }
-      if (p.width) el.style.width = p.width + 'px';
-      if (p.height) el.style.height = p.height + 'px';
       return el;
     };
     

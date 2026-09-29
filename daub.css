@@ -5579,6 +5579,7 @@ meter.db-meter::-moz-meter-bar {
 }
 
 .db-nav-menu__item:focus-visible,
+.db-navbar__toggle:focus-visible,
 .db-sidebar__item:focus-visible,
 .db-bottom-nav__item:focus-visible {
   outline: none;
@@ -5647,6 +5648,8 @@ meter.db-meter::-moz-meter-bar {
 
 @media (max-width: 640px) {
   .db-navbar__toggle { display: flex; }
+  /* After the brand the toggle goes to the right edge; a toggle placed before the brand stays on the left */
+  .db-navbar__brand ~ .db-navbar__toggle { margin-left: auto; }
   .db-navbar__nav {
     display: none;
     position: absolute;
