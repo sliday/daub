@@ -84,7 +84,6 @@ scaleCta = Button("Talk to sales", "ghost")
 | `Stack([a, b], "horizontal", 16)` | `Stack([a, b], "horizontal", 4)` | gap is a 0-6 token |
 | `Divider()` | `Separator()` | Divider is not a parser type |
 | `Button("Save", "outlined")` | `Button("Save", "secondary")` | Unknown variants render a plain button. Variants: primary, secondary, ghost, icon-danger, icon-success, icon-accent |
-| `Image(url, "Hero", 1200, 800)` | `Image(url, "Hero")` | width and height squash the image in a narrower column |
 | `Stack([a, b], "vertical", 5)` as the page root | `Stack([a, b], "vertical", 5, container: "wide")` | Without `container` the page has no side gutters |
 | `Button("Delete account", "secondary")` | `Button("Delete account", "icon-danger", icon: "trash-2")` | Destructive actions read red; `icon-danger` keeps its label |
 
@@ -115,12 +114,12 @@ Link(label: string, class: string)
 ```text
 Button(label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id))
 ButtonGroup(children: [refs])
-Field(children: [refs], label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string)
-Input(placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time")
+Field(children: [refs], label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string, value: string (prefilled text; placeholder is only a hint))
+Input(placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time", value: string (prefilled text))
 InputGroup(children: [refs], addonBefore: string, addonAfter: string (child is Input))
 InputIcon(children: [refs], icon: string, right: bool (child is Input))
 Search(placeholder: string)
-Textarea(placeholder: string, rows: number, error: bool)
+Textarea(placeholder: string, rows: number, error: bool, value: string (prefilled text))
 Checkbox(label: string (shown beside the box; leave it out when a Text in the same row names the item: Checkbox(checked: true)), checked: bool)
 RadioGroup(options: [{label, value}], selected: string)
 Switch(label: string (leave it out when a Text in the same row names the setting: Switch(checked: true)), checked: bool (on/off setting: notifications, preferences, feature flags))

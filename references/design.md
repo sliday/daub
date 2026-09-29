@@ -68,13 +68,13 @@ DAUB spaces on an 8-point grid. `gap` on Stack and Grid takes a token:
 
 - Label above the input, helper text below. One column.
 - Use the right input type: `email`, `password`, `number`, `date`.
-- Spec fields cannot show a current value (no `value` prop). An edit form that must look filled needs CustomHTML fields or plain HTML (`references/components.md`, layout traps).
+- Edit forms show current values with `value` (`Field([], "Email", value: "maya@lumen.studio")`); a `placeholder` is only a muted hint.
 - Group long forms into sections (Card or Separator with a label). One primary submit button.
 
 ## Mobile screens
 
 - Single column. Grid at most 2 columns.
-- BottomNav with up to 5 tabs for top-level sections; a horizontal Stack for the title, back arrow and at most 2 actions (a Navbar hides its children on phones).
+- BottomNav with up to 5 tabs for top-level sections; a horizontal Stack for the title, back arrow and at most 2 actions (a Navbar folds its children behind a menu button on phones).
 - Sheet (bottom) for filters and contextual actions instead of Modal; Drawer for settings menus.
 - Touch targets at least 48 px with 8 px between them; 16 px page gutters.
 
