@@ -3781,20 +3781,21 @@ function generate() {
   }
 
   _abortCtrl = new AbortController();
+  // Jev only sees the typed text, so attachments skip the picker (full catalog)
+  var _hasAttachments = imagesForThisMsg.length || webContextsForThisMsg.length || figmaContextsForThisMsg.length;
   var analysisPromise;
-  if (!currentSpec) {
+  // The layout brief runs only for attachments: on text asks it cost ~7 s of first paint with no quality gain (brief eval, 2026-09-29)
+  if (!currentSpec && _hasAttachments) {
     $status.textContent = 'Analyzing layout\u2026';
     analysisPromise = analyzeLayout(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, _abortCtrl.signal);
   } else {
     analysisPromise = Promise.resolve(null);
   }
   var preSignal = _abortCtrl.signal;
-  // Jev only sees the typed text, so attachments skip the picker (full catalog)
-  var _hasAttachments = imagesForThisMsg.length || webContextsForThisMsg.length || figmaContextsForThisMsg.length;
-  if (currentSpec && !_hasAttachments) $status.textContent = 'Choosing components\u2026';
+  if (!_hasAttachments) $status.textContent = 'Choosing components\u2026';
   var pickPromise = _hasAttachments ? Promise.resolve(null) : chooseComponents(prompt, preSignal);
-  if (!currentSpec) bubbleStep(streamBubble, _hasAttachments ? 'Planning the layout\u2026' : 'Planning the layout and choosing components\u2026');
-  else if (!_hasAttachments) bubbleStep(streamBubble, 'Choosing components\u2026');
+  if (!_hasAttachments) bubbleStep(streamBubble, 'Choosing components\u2026');
+  else if (!currentSpec) bubbleStep(streamBubble, 'Reading the attachments and planning the layout\u2026');
   var messages; // set after analysis completes
   var accumulated = '';
   var continuations = 0;
@@ -4355,7 +4356,7 @@ function generate() {
     var _picked = (res[1] || []).filter(function(t) { return PICK_CORE.indexOf(t) === -1; });
     var _planDone = [];
     if (analysisBrief) _planDone.push('Planned the layout');
-    else if (!currentSpec) _planDone.push('Layout planning skipped');
+    else if (!currentSpec && _hasAttachments) _planDone.push('Layout planning skipped');
     if (_picked.length) _planDone.push('Picked ' + _picked.length + ' components: ' + _picked.slice(0, 5).join(', ') + (_picked.length > 5 ? ' +' + (_picked.length - 5) + ' more' : ''));
     else if (!_hasAttachments) _planDone.push('Using the full component catalog');
     if (_planDone.length) {
