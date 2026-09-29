@@ -5615,7 +5615,9 @@ meter.db-meter::-moz-meter-bar {
 .db-navbar__toggle:hover { background: var(--db-cream-dark); }
 
 @media (max-width: 640px) {
-  .db-navbar__toggle { display: flex; margin-left: auto; }
+  .db-navbar__toggle { display: flex; }
+  /* After the brand the toggle goes to the right edge; a toggle placed before the brand stays on the left */
+  .db-navbar__brand ~ .db-navbar__toggle { margin-left: auto; }
   .db-navbar__nav {
     display: none;
     position: absolute;

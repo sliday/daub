@@ -46,8 +46,8 @@
       "type": "documentation",
       "description": "DAUB component catalog: spec types with purpose and props, plus every db-* HTML class with modifiers and parts.",
       "url": "https://daub.dev/references/components.md",
-      "digest": "sha256:29b0285514e62f9682fd9e5adf1b4e33199c0c1d3d27ed446221f30509946782",
-      "sha256": "29b0285514e62f9682fd9e5adf1b4e33199c0c1d3d27ed446221f30509946782"
+      "digest": "sha256:7ab59f5842214f109bec1828e0c8979996035a87df1556c133ac4e74b16f8d3e",
+      "sha256": "7ab59f5842214f109bec1828e0c8979996035a87df1556c133ac4e74b16f8d3e"
     },
     {
       "name": "daub-ui-ref-design",

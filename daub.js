@@ -610,6 +610,10 @@
      ---------------------------------------------------------- */
   var _dbModalKeyInit = false;
   function _isDialog(el) { return el && el.tagName === 'DIALOG'; }
+  /* An open modal <dialog> (a browser without :modal counts any open <dialog>) */
+  function _modalDialogOpen() {
+    try { return !!document.querySelector('dialog:modal'); } catch (err) { return !!document.querySelector('dialog[open]'); }
+  }
 
   function initModals(root) {
     root.querySelectorAll('[data-db-modal-trigger]').forEach(function(trigger) {
@@ -673,9 +677,10 @@
 
     if (!_dbModalKeyInit) {
       _dbModalKeyInit = true;
-      /* Escape closes the open Modal, Alert Dialog, Sheet or Drawer on top */
+      /* Escape closes the open Modal, Alert Dialog, Sheet or Drawer on top. A modal <dialog> sits above all of them
+         and the browser closes it on Escape itself, so the overlays under it stay open */
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') dismissOverlay(topOverlay());
+        if (e.key === 'Escape' && !_modalDialogOpen()) dismissOverlay(topOverlay());
       });
       /* [data-db-dismiss] closes the overlay it sits in, or the one whose id it names.
          Delegated, so buttons rendered after init work too. */

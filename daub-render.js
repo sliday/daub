@@ -1800,9 +1800,10 @@
     };
     
     // Buttons in a dialog footer close the dialog (daub.js handles data-db-dismiss). A button that opens
-    // another overlay (trigger), a dropdown or a popover keeps that job; put a button that must not close in the body
+    // another overlay (trigger), a dropdown or a popover keeps that job, and so does one with an "on" state action
+    // (a wizard's Back and Next); put any other button that must not close in the body
     function markDismiss(box) {
-      Array.prototype.forEach.call(box.querySelectorAll('.db-btn:not([data-db-trigger]):not(.db-dropdown__trigger):not(.db-popover__trigger)'), function(b) {
+      Array.prototype.forEach.call(box.querySelectorAll('.db-btn:not([data-db-trigger]):not([data-ds-on]):not(.db-dropdown__trigger):not(.db-popover__trigger)'), function(b) {
         b.setAttribute('data-db-dismiss', '');
       });
       return box;
