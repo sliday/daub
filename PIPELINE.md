@@ -9,7 +9,7 @@ User prompt
     |
     v
 [Phase 0: Component Picking] (parallel with layout analysis)
-    |  chooseComponents() -> /api/choose -> Jev (~typesafe/jev-latest)
+    |  chooseComponents() -> /api/choose -> Jev (typesafe/jev-1.13-20260917)
     |  One yes/no decision per component; picked ones get full props in the prompt
     v
 [Phase 1: Streaming Generation]
@@ -65,7 +65,7 @@ Spec rendered in preview iframe
 `chooseComponents(prompt, signal)` runs in parallel with `analyzeLayout()` and resolves before `buildMessages()`.
 
 - Endpoint: `functions/api/choose.js` → OpenRouter `/api/alpha/decisions` (not chat/completions; Jev is a decisions model)
-- Model: `~typesafe/jev-latest` (pinned server-side; clients cannot override)
+- Model: `typesafe/jev-1.13-20260917` (versioned id pinned server-side; clients cannot override)
 - Request: `state = { request: prompt }`, one `noul` question per renderable component (core layout types excluded), each described by its one-line `COMP_PURPOSE` entry
 - Picks: core set (`Stack`, `Grid`, `Text`, `Card`, `Button`, `Icon`, `Separator`) + every component with p(yes) ≥ 0.45 (`PICK_THRESHOLD`) + every type already in `currentSpec`
 - Skipped when the message has attachments (images, web or Figma context): Jev only sees the typed text, so those requests use the full catalog
@@ -207,7 +207,7 @@ Benchmark (34 prompts, 116 outputs, two blind frontier judges plus a critic): th
 
 | Stage | Function | Model | Reasoning effort | `cost_tier` | `session_id` |
 |-------|----------|-------|------------------|-------------|--------------|
-| Pick components | `chooseComponents()` → `/api/choose` | `~typesafe/jev-latest` | — | — | — |
+| Pick components | `chooseComponents()` → `/api/choose` | `typesafe/jev-1.13-20260917` | — | — | — |
 | Layout analysis | `analyzeLayout()` | `openrouter/auto` | low | — | — |
 | Generate (main chat, continuations, retries) | `startStream()` → `streamDefault()` | `openrouter/auto` | server default (medium) | — | per chat |
 | Fallback after 3 failed parses | `startStream(messages, FALLBACK_MODEL)` | `moonshotai/kimi-k2.5` | server default (medium) | — | — |

@@ -6,8 +6,8 @@
       "type": "skill-md",
       "description": "Build, preview and verify UI with DAUB (daub.dev), a drop-in CSS + JS component library with 84 components and 21 theme families. Covers three paths: plain HTML with db-* classes, json-render or OpenUI Lang specs rendered by daub-render.js, and the hosted DAUB MCP server (generate_ui, validate_spec, render_spec, parse_openui, get_block_library). Includes the rules that prevent broken renders, 266 ready-made blocks, playground share links, a verify loop, and Jev recipes for picking components, blocks and themes. Use when the user mentions DAUB, daub.dev, daub-ui, db- classes, the DAUB playground or MCP, json-render or OpenUI specs, or asks for a themed dashboard, landing page, form or settings screen without a build step.",
       "url": "https://daub.dev/SKILL.md",
-      "digest": "sha256:663fefff0d3dfa954ea08fd921702fc0dfd1646ab54898d7852fd70b7efe7017",
-      "sha256": "663fefff0d3dfa954ea08fd921702fc0dfd1646ab54898d7852fd70b7efe7017"
+      "digest": "sha256:701ac919e679d53da5252ae3dc4bb4c6669daeb9e19d5bcdd120e9821e27226e",
+      "sha256": "701ac919e679d53da5252ae3dc4bb4c6669daeb9e19d5bcdd120e9821e27226e"
     },
     {
       "name": "daub-llms-full",
@@ -62,8 +62,8 @@
       "type": "documentation",
       "description": "Recipes for Jev (TypeSafe decision model on OpenRouter) in DAUB flows: component, block and theme picking.",
       "url": "https://daub.dev/references/jev.md",
-      "digest": "sha256:68c85f52adf567e7a434461cd06954028b462fe714e2509583c0c8b1d9f063e8",
-      "sha256": "68c85f52adf567e7a434461cd06954028b462fe714e2509583c0c8b1d9f063e8"
+      "digest": "sha256:6db110f072ce4800a2f775fec8a81302143b9992f63c56e749defa46bac9dd5e",
+      "sha256": "6db110f072ce4800a2f775fec8a81302143b9992f63c56e749defa46bac9dd5e"
     },
     {
       "name": "daub-ui-ref-json-render",

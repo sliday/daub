@@ -1,6 +1,6 @@
 # Jev recipes for DAUB
 
-Jev is TypeSafe's decision model on OpenRouter (`~typesafe/jev-latest`, currently `typesafe/jev-1.13`). You send `state` (the context) and named `questions`; it returns a typed answer with probabilities for each question. It cannot write text, specs or code. In a DAUB flow, Jev makes the narrow calls (which components, which block, which theme) and a writer model or your code produces the UI.
+Jev is TypeSafe's decision model on OpenRouter (pin a versioned id, currently `typesafe/jev-1.13-20260917`; the `~typesafe/jev-latest` alias can move and shift probabilities). You send `state` (the context) and named `questions`; it returns a typed answer with probabilities for each question. It cannot write text, specs or code. In a DAUB flow, Jev makes the narrow calls (which components, which block, which theme) and a writer model or your code produces the UI.
 
 ## Call it
 
@@ -32,7 +32,7 @@ Request shape (two of the 65 questions shown):
 
 ```json
 {
-  "model": "~typesafe/jev-latest",
+  "model": "typesafe/jev-1.13-20260917",
   "state": { "request": "Account settings with email and push notification preferences and a delete-account confirmation" },
   "questions": {
     "Switch": {
@@ -77,7 +77,7 @@ async function pickComponents(request, apiKey, { threshold = 0.45, keep = [] } =
     const res = await fetch('https://openrouter.ai/api/alpha/decisions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({ model: '~typesafe/jev-latest', state: { request }, questions }),
+      body: JSON.stringify({ model: 'typesafe/jev-1.13-20260917', state: { request }, questions }),
       signal: AbortSignal.timeout(4000),
     });
     if (!res.ok) return null;
@@ -99,7 +99,7 @@ Two `choice` calls keep each option list short: first the category, then a block
 
 ```json
 {
-  "model": "~typesafe/jev-latest",
+  "model": "typesafe/jev-1.13-20260917",
   "state": { "request": "A pricing section with monthly and yearly plans for a note-taking app" },
   "questions": {
     "category": {
@@ -126,7 +126,7 @@ One `choice` over the 21 families, plus a `noul` for dark mode. Then take the li
 
 ```json
 {
-  "model": "~typesafe/jev-latest",
+  "model": "typesafe/jev-1.13-20260917",
   "state": { "request": "A cozy recipe journal for home bakers" },
   "questions": {
     "family": {
