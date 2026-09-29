@@ -1,6 +1,6 @@
 # DAUB UI — Compact Reference
 
-> Version: 3.20.4
+> Version: 3.20.5
 > Full docs: https://daub.dev/llms.txt
 > CSS: https://daub.dev/daub.css | JS: https://daub.dev/daub.js
 > Classless: https://daub.dev/daub-classless.css
@@ -65,11 +65,11 @@ CSS-only: add `db-tabs--static` with radio inputs. No JS needed.
   <div class="db-modal">
     <div class="db-modal__header"><h3 class="db-modal__title">Title</h3><button class="db-modal__close">&times;</button></div>
     <div class="db-modal__body">Content</div>
-    <div class="db-modal__footer"><button class="db-btn db-btn--primary">OK</button></div>
+    <div class="db-modal__footer"><button class="db-btn db-btn--primary" data-db-dismiss>OK</button></div>
   </div>
 </div>
 ```
-JS: `DAUB.openModal('my-modal')`, `DAUB.closeModal('my-modal')`
+JS: `DAUB.openModal('my-modal')`, `DAUB.closeModal('my-modal')`. A button with `data-db-dismiss` closes the Modal, Alert Dialog, Sheet or Drawer it sits in; Escape closes the one on top.
 Dynamic: `DAUB.openModal('my-modal', { title: '...', body: '...', footer: '...' })`
 
 ### Badge — `.db-badge`

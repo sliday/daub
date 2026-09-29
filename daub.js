@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Interactive Behaviors
-   Version 3.20.4
+   Version 3.20.5
    IIFE module exposing window.DAUB = { init, toast, theme API }
    ============================================================ */
 ;(function() {
@@ -610,6 +610,10 @@
      ---------------------------------------------------------- */
   var _dbModalKeyInit = false;
   function _isDialog(el) { return el && el.tagName === 'DIALOG'; }
+  /* An open modal <dialog> (a browser without :modal counts any open <dialog>) */
+  function _modalDialogOpen() {
+    try { return !!document.querySelector('dialog:modal'); } catch (err) { return !!document.querySelector('dialog[open]'); }
+  }
 
   function initModals(root) {
     root.querySelectorAll('[data-db-modal-trigger]').forEach(function(trigger) {
@@ -673,11 +677,18 @@
 
     if (!_dbModalKeyInit) {
       _dbModalKeyInit = true;
+      /* Escape closes the open Modal, Alert Dialog, Sheet or Drawer on top. A modal <dialog> sits above all of them
+         and the browser closes it on Escape itself, so the overlays under it stay open */
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          var open = document.querySelector('.db-modal--open');
-          if (open) closeModal(open);
-        }
+        if (e.key === 'Escape' && !_modalDialogOpen()) dismissOverlay(topOverlay());
+      });
+      /* [data-db-dismiss] closes the overlay it sits in, or the one whose id it names.
+         Delegated, so buttons rendered after init work too. */
+      document.addEventListener('click', function(e) {
+        var btn = e.target.closest && e.target.closest('[data-db-dismiss]');
+        if (!btn) return;
+        var id = btn.getAttribute('data-db-dismiss');
+        dismissOverlay(id ? document.getElementById(id) : btn.closest(OVERLAY_SEL));
       });
     }
   }
@@ -779,6 +790,27 @@
       _lastModalTrigger.focus();
       _lastModalTrigger = null;
     }
+  }
+
+  var OVERLAY_SEL = '.db-modal-overlay, dialog.db-modal, .db-alert-dialog, .db-sheet, .db-drawer';
+
+  /* Close a Modal (overlay or <dialog>), Alert Dialog, Sheet or Drawer element */
+  function dismissOverlay(el) {
+    if (!el || !el.classList) return;
+    if (el.classList.contains('db-modal-overlay') || _isDialog(el)) closeModal(el);
+    else if (el.classList.contains('db-alert-dialog')) el.classList.remove('db-alert-dialog--open');
+    else if (el.classList.contains('db-sheet')) el.classList.remove('db-sheet--open');
+    else if (el.classList.contains('db-drawer')) el.classList.remove('db-drawer--open');
+  }
+
+  /* The open overlay on top: highest z-index, the later one in the DOM on a tie */
+  function topOverlay() {
+    var top = null, topZ = -Infinity;
+    document.querySelectorAll('.db-modal--open, .db-alert-dialog--open, .db-sheet--open, .db-drawer--open').forEach(function(el) {
+      var z = parseInt(getComputedStyle(el).zIndex, 10) || 0;
+      if (z >= topZ) { top = el; topZ = z; }
+    });
+    return top;
   }
 
   /* ----------------------------------------------------------
@@ -2090,10 +2122,14 @@
     root.querySelectorAll('.db-navbar__toggle').forEach(function(btn) {
       if (btn._dbNavbar) return;
       btn._dbNavbar = true;
+      if (!btn.hasAttribute('aria-expanded')) {
+        var bar = btn.closest('.db-navbar');
+        btn.setAttribute('aria-expanded', String(!!bar && bar.classList.contains('db-navbar--open')));
+      }
       btn.addEventListener('click', function(e) {
         e.stopPropagation();
         var navbar = btn.closest('.db-navbar');
-        if (navbar) navbar.classList.toggle('db-navbar--open');
+        if (navbar) toggleNavbar(navbar);
       });
     });
     // Close on outside click
@@ -2102,16 +2138,32 @@
       document.addEventListener('click', function(e) {
         if (!e.target.closest('.db-navbar')) {
           document.querySelectorAll('.db-navbar--open').forEach(function(n) {
-            n.classList.remove('db-navbar--open');
+            toggleNavbar(n, false);
           });
         }
+      });
+      // Escape closes an open menu; focus inside it goes back to the toggle
+      document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape') return;
+        document.querySelectorAll('.db-navbar--open').forEach(function(n) {
+          var t = n.querySelector('.db-navbar__toggle');
+          var inside = n.contains(document.activeElement);
+          toggleNavbar(n, false);
+          if (t && inside) t.focus();
+        });
       });
     }
   }
 
-  function toggleNavbar(el) {
+  /* Opens or closes the phone menu (open: true/false; omitted toggles) and keeps the toggle's aria-expanded in step */
+  function toggleNavbar(el, open) {
     if (typeof el === 'string') el = document.querySelector(el);
-    if (el) el.classList.toggle('db-navbar--open');
+    if (!el) return;
+    if (typeof open !== 'boolean') open = !el.classList.contains('db-navbar--open');
+    if (open) el.classList.add('db-navbar--open');
+    else el.classList.remove('db-navbar--open');
+    var t = el.querySelector('.db-navbar__toggle');
+    if (t) t.setAttribute('aria-expanded', String(open));
   }
 
   /* ----------------------------------------------------------

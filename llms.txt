@@ -1,6 +1,6 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 3.20.4
+> Version: 3.20.5
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
@@ -101,10 +101,10 @@ Required HTML nesting for overlay and complex components. Use these as a startin
 
 | Component | Skeleton | JS API |
 |-----------|----------|--------|
-| Modal | `db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer` | `DAUB.openModal('id')` / `closeModal('id')`. Dynamic content: `DAUB.openModal('id', { title: 'New Title', body: '<p>Content</p>', footer: '<button class="db-btn db-btn--primary">OK</button>' })` |
-| Alert Dialog | `db-alert-dialog#id > __overlay + __panel > __title + __desc + __actions` | `DAUB.openAlertDialog('id')` |
-| Sheet | `db-sheet.--right#id > __overlay + __panel > __header + __body` | `DAUB.openSheet('id')` |
-| Drawer | `db-drawer#id > __overlay + __panel > __handle + __body` | `DAUB.openDrawer('id')` |
+| Modal | `db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer` | `DAUB.openModal('id')` / `closeModal('id')`. `data-db-dismiss` on a button closes it. Dynamic content: `DAUB.openModal('id', { title: 'New Title', body: '<p>Content</p>', footer: '<button class="db-btn db-btn--primary">OK</button>' })` |
+| Alert Dialog | `db-alert-dialog#id > __overlay + __panel > __title + __desc + __actions` | `DAUB.openAlertDialog('id')`. `data-db-dismiss` on a button closes it. |
+| Sheet | `db-sheet.--right#id > __overlay + __panel > __header + __body` | `DAUB.openSheet('id')`. `data-db-dismiss` on a button closes it. |
+| Drawer | `db-drawer#id > __overlay + __panel > __handle + __body` | `DAUB.openDrawer('id')`. `data-db-dismiss` on a button closes it. |
 | Command Palette | `db-command#id > __overlay + __panel > __input-wrap + __list` | `DAUB.openCommand('id')` |
 | Dropdown Menu | `db-dropdown > __trigger + __content > __item + __separator` | Auto-init on click |
 | Context Menu | `[data-context-menu='id'] + db-context-menu#id > __item + __separator` | Auto-init on right-click |
@@ -351,13 +351,13 @@ Interactive: `db-card--interactive` adds cursor pointer + hover lift.
     </div>
     <div class="db-modal__body">Content</div>
     <div class="db-modal__footer">
-      <button class="db-btn db-btn--secondary">Cancel</button>
-      <button class="db-btn db-btn--primary">Confirm</button>
+      <button class="db-btn db-btn--secondary" data-db-dismiss>Cancel</button>
+      <button class="db-btn db-btn--primary" data-db-dismiss>Confirm</button>
     </div>
   </div>
 </div>
 ```
-Open: `DAUB.openModal('my-modal')`. Close: `DAUB.closeModal('my-modal')` or `DAUB.closeModal(overlayEl)`.
+Open: `DAUB.openModal('my-modal')`. Close: `DAUB.closeModal('my-modal')` or `DAUB.closeModal(overlayEl)`. The close button, the backdrop, Escape and any button with `data-db-dismiss` close it too. A button's own click handler runs before `data-db-dismiss` closes the modal; a primary action that validates first can leave the attribute off and call `DAUB.closeModal('my-modal')` when it succeeds.
 
 ### 22. Alert Dialog — `.db-alert-dialog`
 ```html
@@ -368,12 +368,12 @@ Open: `DAUB.openModal('my-modal')`. Close: `DAUB.closeModal('my-modal')` or `DAU
     <p class="db-alert-dialog__desc">This action cannot be undone.</p>
     <div class="db-alert-dialog__actions">
       <button class="db-btn db-btn--secondary" data-action="cancel">Cancel</button>
-      <button class="db-btn db-btn--primary">Continue</button>
+      <button class="db-btn db-btn--primary" data-db-dismiss>Continue</button>
     </div>
   </div>
 </div>
 ```
-Open: `DAUB.openAlertDialog('confirm-delete')`. Close: `DAUB.closeAlertDialog('confirm-delete')`.
+Open: `DAUB.openAlertDialog('confirm-delete')`. Close: `DAUB.closeAlertDialog('confirm-delete')`. `data-action="cancel"` closes it and takes focus when it opens; `data-db-dismiss` closes it from any other button. The backdrop and Escape close it too.
 
 ### 23. Sheet — `.db-sheet`
 Sides: `db-sheet--right`, `db-sheet--left`, `db-sheet--top`, `db-sheet--bottom`.
@@ -389,7 +389,7 @@ Sides: `db-sheet--right`, `db-sheet--left`, `db-sheet--top`, `db-sheet--bottom`.
   </div>
 </div>
 ```
-Open: `DAUB.openSheet('my-sheet')`. Close: `DAUB.closeSheet('my-sheet')`.
+Open: `DAUB.openSheet('my-sheet')`. Close: `DAUB.closeSheet('my-sheet')`. The close button, the backdrop, Escape and any button with `data-db-dismiss` close it too.
 
 ### 24. Drawer — `.db-drawer`
 Mobile-friendly bottom panel.
@@ -402,7 +402,7 @@ Mobile-friendly bottom panel.
   </div>
 </div>
 ```
-Open: `DAUB.openDrawer('my-drawer')`. Close: `DAUB.closeDrawer('my-drawer')`.
+Open: `DAUB.openDrawer('my-drawer')`. Close: `DAUB.closeDrawer('my-drawer')`. The backdrop, Escape and any button with `data-db-dismiss` close it too.
 
 ### 25. Toast — `.db-toast` / `.db-toast-stack`
 Created via the JS API — `DAUB.toast()` auto-creates the fixed bottom-right `.db-toast-stack` container.
@@ -544,7 +544,7 @@ Table utilities: `db-data-table--numeric` for tabular-nums on whole table. `db-n
 
 ### 36. Navbar — `.db-navbar`
 Sticky top app bar with brand, nav links, spacer, and action buttons. Mobile hamburger toggle.
-JS: `DAUB.toggleNavbar(el)`. Mobile auto-close on outside click.
+JS: `DAUB.toggleNavbar(el)` toggles, `DAUB.toggleNavbar(el, true|false)` sets. Mobile auto-close on outside click and Escape.
 ```html
 <nav class="db-navbar">
   <a class="db-navbar__brand" href="/"><img src="logo.svg" alt=""> AppName</a>
@@ -559,14 +559,14 @@ JS: `DAUB.toggleNavbar(el)`. Mobile auto-close on outside click.
     <button class="db-btn db-btn--icon" aria-label="Notifications">🔔</button>
     <div class="db-avatar db-avatar--sm"><img src="photo.jpg" alt="User"></div>
   </div>
-  <button class="db-navbar__toggle" aria-label="Menu">
+  <button class="db-navbar__toggle" aria-label="Menu" aria-expanded="false">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
 </nav>
 ```
 **Responsive (built-in):** At ≤640px the `__toggle` button appears and `__nav` collapses.
-Clicking toggle adds `db-navbar--open` to show the mobile menu (vertical dropdown).
-Auto-closes on outside click. No framework code needed — `daub.js` auto-initializes.
+Clicking toggle adds `db-navbar--open` to show the mobile menu (vertical dropdown) and sets the toggle's `aria-expanded` (daub.js adds `aria-expanded="false"` when the markup lacks it).
+Auto-closes on outside click and Escape; Escape puts focus back on the toggle. No framework code needed — `daub.js` auto-initializes.
 React/Next.js: include `<script src="daub.js">` — no useState required for mobile nav.
 
 ### 37. Menubar — `.db-menubar`
@@ -1126,7 +1126,7 @@ DAUB.closeDrawer(id)           // Close drawer
 DAUB.openCommand(id)           // Open command palette
 DAUB.closeCommand(id)          // Close command palette
 DAUB.toggleSidebar(el)         // Toggle sidebar collapse
-DAUB.toggleNavbar(el)          // Toggle mobile navbar menu
+DAUB.toggleNavbar(el, open?)   // Toggle mobile navbar menu (open: true/false sets it)
 DAUB.refreshIcons()            // Re-init Lucide icons after dynamic content
 DAUB.setTheme(name)            // Set theme (direct)
 DAUB.getTheme()                // Get current theme
@@ -1187,6 +1187,7 @@ Shadows: `--db-shadow-1`, `--db-shadow-2`, `--db-shadow-3`, `--db-shadow-inset`
 | `data-tooltip` | sidebar item | Tooltip text shown when sidebar is collapsed |
 | `data-context-menu` | any element | ID of context menu to show on right-click |
 | `data-action="cancel"` | button | Auto-closes parent alert dialog |
+| `data-db-dismiss` | button | Closes the Modal, Alert Dialog, Sheet or Drawer it sits in; with a value, the one with that id |
 | `data-family` | button | Theme switcher family button (`default`, `grunge`, etc.) |
 | `data-scheme` | button | Theme switcher scheme button (`auto`, `light`, `dark`) |
 | `data-sortable` | `<th>` | Data table sortable column |

@@ -12,7 +12,7 @@ description: >-
 license: MIT
 compatibility: Any agent that reads files and runs shell or HTTP. The MCP path needs network access to daub.dev. Jev recipes need an OpenRouter API key.
 metadata:
-  daub-version: "3.20.4"
+  daub-version: "3.20.5"
   homepage: https://daub.dev
 ---
 
@@ -76,7 +76,7 @@ DAUB is a drop-in CSS + JS component library. `daub.css` styles 84 components th
 - `daub.js` runs `DAUB.init()` on load. After you insert markup later, call `DAUB.init(container)`.
 - Overlays (`db-modal-overlay`, `db-alert-dialog`, `db-sheet`, `db-drawer`, `db-command`) need an `id`. Open them with `DAUB.openModal('id')` and friends, or a `data-db-modal-trigger="id"` button.
 - Toasts are JS only: `DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes are live.' })`.
-- CDN copies: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css` and `/daub.js`. npm can lag the site; `https://daub.dev/daub.css?v=3.20.4` is the current build.
+- CDN copies: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css` and `/daub.js`. npm can lag the site; `https://daub.dev/daub.css?v=3.20.5` is the current build.
 
 ## Path 2: specs
 
@@ -124,12 +124,12 @@ confirmBtn = Button("Delete account", "primary")
 Render either one in any page. The parser and renderer ship only on daub.dev (the npm package has neither):
 
 ```html
-<link rel="stylesheet" href="https://daub.dev/daub.css?v=3.20.4">
+<link rel="stylesheet" href="https://daub.dev/daub.css?v=3.20.5">
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 <div id="app" style="padding-block: 24px"></div>
-<script src="https://daub.dev/daub.js?v=3.20.4"></script>
-<script src="https://daub.dev/daub-render.js?v=3.20.4"></script>
-<script src="https://daub.dev/daub-openui-parser.js?v=3.20.4"></script>
+<script src="https://daub.dev/daub.js?v=3.20.5"></script>
+<script src="https://daub.dev/daub-render.js?v=3.20.5"></script>
+<script src="https://daub.dev/daub-openui-parser.js?v=3.20.5"></script>
 <script>
   const spec = DaubOpenUI.openUItoSpec(openuiText); // or JSON.parse(jsonText)
   document.documentElement.dataset.theme = spec.theme || 'light';
@@ -138,11 +138,6 @@ Render either one in any page. The parser and renderer ship only on daub.dev (th
   for (const id in spec.elements) // elements the tree never reached render after it
     if (!app.querySelector('[data-spec-id="' + id + '"]')) app.appendChild(renderElement(spec.elements, id, 0));
   DAUB.init(); lucide.createIcons();
-  // Footer buttons in a Modal or AlertDialog do not close it on their own
-  app.querySelectorAll('.db-modal__footer .db-btn, .db-alert-dialog__actions .db-btn').forEach(b => b.addEventListener('click', () => {
-    const o = b.closest('.db-modal-overlay, .db-alert-dialog');
-    o.classList.contains('db-alert-dialog') ? DAUB.closeAlertDialog(o.id) : DAUB.closeModal(o.id);
-  }));
 </script>
 ```
 
@@ -155,7 +150,7 @@ Full formats: `references/json-render.md` (state, actions, visibility) and `refe
 - stdio-only clients: `npx -y mcp-remote https://daub.dev/api/mcp`
 - No MCP client (pi, scripts): POST JSON-RPC `tools/call` to the same URL (curl recipe in `references/mcp.md`).
 
-Tools: `generate_ui` (prompt to spec + HTML), `get_component_catalog`, `validate_spec`, `render_spec`, `parse_openui`, `get_block_library`. `validate_spec` and `render_spec` take the spec as a JSON string. `generate_ui` picks components with Jev first; `routing.picked_components` shows the pick. Rate limit: 60 requests per minute per IP.
+Tools: `generate_ui` (prompt to spec + HTML), `get_component_catalog`, `validate_spec`, `render_spec`, `parse_openui`, `get_block_library`. `validate_spec` and `render_spec` take the spec as a JSON string or an object. `generate_ui` picks components with Jev first; `routing.picked_components` shows the pick. Rate limit: 60 requests per minute per IP.
 
 ## Golden rules
 
@@ -167,13 +162,13 @@ These rules prevent the failures seen most in generated DAUB UIs.
 4. `ChartCard` needs a `Chart` child with 4-8 bars of realistic data, or a `bars` prop. An empty ChartCard renders "No data". `Chart` takes `bars: [{label, value, max?}]`.
 5. `Sidebar`, `NavMenu`, `BottomNav`, `Breadcrumbs`, `Menubar`, `DropdownMenu` and `CommandPalette` take data arrays of plain objects, not element ids: `Sidebar([{title: "Workspace", items: [{label: "Inbox", icon: "inbox", active: true}]}])`.
 6. Icons are Lucide 0.576.0 names in kebab-case (`layout-dashboard`, `circle-check`, `github`). Put them in props: `Button icon`, `StatCard icon`, `EmptyState icon`, and `icon` on List, Sidebar, BottomNav and menu items. Renderers map common aliases (`refresh` to `refresh-cw`) and drop unknown names. Stay on 0.x: Lucide 1.x removed brand icons.
-7. The `Icon` and `Link` types render in the playground and with `daub-render.js`, but the hosted MCP `parse_openui` and `validate_spec` reject them (v3.20.4). For MCP-bound specs, use icon props and `Button` with variant `ghost`.
+7. `Icon` draws one standalone Lucide icon, `Icon("star", "lg")`, and `Link` draws an inline text link. Both parse, validate and render in the playground, with `daub-render.js` and on the hosted MCP. An icon beside a label belongs in the owning component's icon prop (rule 6).
 8. `gap` on Stack and Grid is a token 0-6 (0, 4, 8, 12, 16, 24, 32 px), never pixels. Grid `columns` is 2-6. Space between groups should be at least twice the space inside them. Give the root `container: "wide"` (dashboards, landing pages) or `"narrow"` (forms, settings); without it the page has no side gutters.
 9. Themes are exact names. Light and dark names differ per family: `solarized` is light, `ink` and `material` are dark. `paper`, `material-dark`, `solarized-light` and `gruvbox-dark` do not exist and fall back to the default light theme. Table: `references/themes.md`.
 10. Overlays (`Modal`, `AlertDialog`, `Sheet`, `Drawer`) need an `id`, and a `Button` with `trigger: "<id>"` opens one. They start hidden, so place them anywhere in the tree. `CommandPalette` also needs an `id`; it opens with Cmd+K or `DAUB.openCommand(id)`.
 11. `Card.footer` is an array of child ids and `Card.media` is an image URL. Use `Separator`, not `Divider`; `Layout` is deprecated (use `Stack` or `Grid`).
 12. Write real content: names, prices, dates, 5-8 table rows. No lorem ipsum, no "Item 1". `references/design.md` covers layout and density.
-13. Some specs render without errors and still look broken: `Image` with `width`/`height` squashes, a `Navbar` hides its children on phones, ToggleGroup labels with a space wrap, a ChartCard stretches beside a taller card, a ScrollArea around a Table hides rows, a Button icon collapses in a `wrap: false` row, and fields have no `value` prop. A destructive button uses variant `icon-danger`. Fixes: "Layout traps" in `references/components.md`.
+13. Some specs render without errors and still look broken: ToggleGroup labels with a space wrap, a ChartCard stretches beside a taller card, a ScrollArea around a Table hides rows, a Button icon collapses in a `wrap: false` row, and an edit form written with placeholders instead of `value` looks empty. A destructive button uses variant `icon-danger`. Fixes: "Layout traps" in `references/components.md`.
 
 Renderers tolerate many malformed props (see `references/json-render.md`). Treat that as a safety net and write the canonical props.
 

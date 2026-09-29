@@ -568,7 +568,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.20.4** — Combo-audit fixes across the three renderers (dropped content, variant and icon aliases, children, table scroll, grid spans, popover clamping, dark-theme text tokens); render fixes from the design eval (Avatar, StatCard, CustomSelect, Tabs, EmptyState, table actions, content rendered twice); weblook SSRF hardening; daub-ui agent skill v2 (`SKILL.md` + `references/`).
+**Latest: v3.20.5** — Hover lifts and press flips (no hover shadow on plain cards, pointer-only hover); `data-db-dismiss` for dialogs, sheets and drawers; Navbar phone menu; `Image` keeps its aspect ratio; `Field` value; the hosted MCP accepts object specs, supports `Icon`/`Link` and lists only real themes.
 
 **v3.20.2** — Playground generates on OpenRouter's Auto Router (`openrouter/auto`) and picks components with Jev (`~typesafe/jev-latest`); the preview now runs in an isolated origin (share-link and postMessage exploits fixed); elements that fail to render no longer blank the page; plus fixes from a full-repo review.
 

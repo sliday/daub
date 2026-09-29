@@ -23,11 +23,11 @@ Without local files, MCP `parse_openui` returns `spec`, `html` and `validation`.
 
 ## 2. Lint
 
-`validate_spec` checks types and ids only. This linter adds the golden rules from SKILL.md and the layout traps in `references/components.md`. Pass the parser's type list and the theme names; set `mcp: true` for specs you will send to the hosted MCP. Errors break the render; warnings mark a trap that renders badly.
+`validate_spec` checks types and ids only. This linter adds the golden rules from SKILL.md and the layout traps in `references/components.md`. Pass the parser's type list and the theme names. Errors break the render; warnings mark a trap that renders badly.
 
 ```js
-// lintSpec(spec, { types: Object.keys(DaubOpenUI.COMP_SCHEMA), themes: DAUB.THEMES, mcp }) -> { errors, warnings }
-function lintSpec(spec, { types = [], themes = [], mcp = false } = {}) {
+// lintSpec(spec, { types: Object.keys(DaubOpenUI.COMP_SCHEMA), themes: DAUB.THEMES }) -> { errors, warnings }
+function lintSpec(spec, { types = [], themes = [] } = {}) {
   const errors = [], warnings = [];
   const els = spec && spec.elements;
   if (!els || typeof els !== 'object') return { errors: ['spec has no elements'], warnings };
@@ -43,7 +43,6 @@ function lintSpec(spec, { types = [], themes = [], mcp = false } = {}) {
   for (const [id, e] of Object.entries(els)) {
     const p = e.props || {}, at = `${id} (${e.type})`, kids = e.children || [];
     if (!types.includes(e.type)) errors.push(`${at}: unknown type`);
-    if (mcp && /^(Icon|Link)$/.test(e.type)) errors.push(`${at}: the hosted MCP rejects this type; use icon props or a ghost Button`);
     for (const c of refs(e)) if (!isId(c)) errors.push(`${at}: "${c}" is not an element id`);
     if (!reached.has(id)) warnings.push(`${at}: not reachable from root, renders below the page`);
     if (e.type === 'Text' && p.content == null) errors.push(`${at}: Text reads "content"${p.text != null ? ', not "text"' : ''}`);
@@ -60,11 +59,8 @@ function lintSpec(spec, { types = [], themes = [], mcp = false } = {}) {
     if (e.type === 'Button' && p.trigger && !overlays.has(p.trigger)) warnings.push(`${at}: trigger "${p.trigger}" names no Modal, AlertDialog, Sheet or Drawer id`);
     if (e.type === 'Tabs' && Array.isArray(p.tabs) && kids.length && kids.length !== p.tabs.length) warnings.push(`${at}: one child panel per tab`);
     // Layout traps (references/components.md)
-    if (e.type === 'Image' && (p.width != null || p.height != null)) warnings.push(`${at}: width/height fix the height in px while the width shrinks to the column, which squashes the image; omit both`);
-    if (e.type === 'Navbar' && kids.length) warnings.push(`${at}: on phones the Navbar hides its children and draws no menu button; use a horizontal Stack as the top bar`);
     if (e.type === 'ToggleGroup' && Array.isArray(p.options) && p.options.some(o => o && /\s/.test(String(o.label || '').trim()))) warnings.push(`${at}: option labels with a space wrap onto two lines; use one word per option`);
     if (e.type === 'ScrollArea' && kids.some(c => els[c] && /^(Table|DataTable)$/.test(els[c].type))) warnings.push(`${at}: ScrollArea caps its height at 300 px and hides the rows below; tables scroll sideways on their own`);
-    if (/^(Field|Input|Textarea)$/.test(e.type) && p.value != null) warnings.push(`${at}: there is no value prop, the field renders empty; use CustomHTML for prefilled fields`);
     if (e.type === 'Stack' && p.wrap === false && kids.some(c => els[c] && els[c].type === 'Button' && els[c].props && els[c].props.icon)) warnings.push(`${at}: in a wrap:false row a Button shrinks and its icon collapses; drop the icon or keep wrap on`);
     if (p.on != null || p.visible != null) warnings.push(`${at}: "on" and "visible" belong on the element, not in props (OpenUI Lang cannot express them)`);
   }
