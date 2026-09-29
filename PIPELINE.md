@@ -60,6 +60,18 @@ Spec rendered in preview iframe
 - Debug headers: `X-Photo-Status` (`hit`, `miss`, `miss-fallback`, `no-match`, `cached-empty`, `upstream-down`, `rate-limited`, `invalid`), `X-Photo-Source`, `X-Photo-License`, `X-Photo-Landing`.
 - Tests: `tests/photo-proxy.test.mjs` (mocked fetch and Cache API).
 
+## Smart Quota
+
+`functions/api/smart.js` holds the daily budget for the playground's Smart mode: 10 runs per caller per UTC day. The Smart pipeline and its toggle ship in a later change; this endpoint only counts.
+
+- `GET /api/smart` → `200 { limit: 10, used, remaining, resetAt }`. Read only.
+- `POST /api/smart` → `200 { granted: true, remaining, resetAt }` and spends one run, or `429 { granted: false, remaining: 0, resetAt }` with `Retry-After` in seconds. No request body.
+- `resetAt` is the next UTC midnight (ISO 8601). Responses send `Cache-Control: no-store`. `OPTIONS` answers the CORS preflight; other methods get 405.
+- Storage: KV binding `SMART_QUOTA` (namespace `DAUB_SMART_QUOTA`, declared in `wrangler.toml`). Key `q:<yyyy-mm-dd>:<sha256(salt|day|caller)>`, value the count as a string, `expirationTtl` 30 h. The raw IP never reaches KV. The caller is `CF-Connecting-IP`; IPv6 addresses count per /64. The optional `SMART_QUOTA_SALT` secret replaces the public default salt.
+- Fail closed: a missing binding or a KV error returns `503 { granted: false, reason: 'unavailable' }`, and the playground stays in normal mode.
+- Limits of the design: KV is eventually consistent and takes about one write per second per key, so parallel POSTs from one caller can slightly exceed 10. The quota budgets model spend in the UI. The zone WAF rate-limiting rule on `/api/*` (60 requests / 10 s per IP, 10 s block) handles abuse.
+- Tests: `tests/smart-quota.test.mjs` (in-memory KV, mocked clock).
+
 ## Phase 0: Component Picking
 
 `chooseComponents(prompt, signal)` runs in parallel with `analyzeLayout()` and resolves before `buildMessages()`.
