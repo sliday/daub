@@ -2353,9 +2353,10 @@ a:hover { color: var(--db-clay); }
   .db-btn--primary:hover {
     box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.15);
     transform: translateY(-1px);
-    color: var(--db-on-accent);
   }
 }
+/* Label colour stays global: a touch tap leaves :hover stuck, and a:hover would turn an <a> primary button's label clay */
+.db-btn--primary:hover { color: var(--db-on-accent); }
 
 .db-btn--primary:active,
 .db-btn--primary.db-btn--pressed {
