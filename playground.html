@@ -2473,7 +2473,7 @@ function selfCheck(spec, screenshotDataUrl, signal) {
   .catch(function(e) { if (e.name === 'AbortError') return null; return null; });
 }
 
-// ---- Component picker: Jev decision model (~typesafe/jev-latest) via /api/choose ----
+// ---- Component picker: Jev decision model (typesafe/jev-1.13-20260917) via /api/choose ----
 // Asks one yes/no question per component and resolves to the picked type list,
 // or null (use the full catalog) on any failure, timeout, or empty pick.
 var PICK_CORE = ['Stack', 'Grid', 'Text', 'Card', 'Button', 'Icon', 'Separator'];

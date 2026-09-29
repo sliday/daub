@@ -192,7 +192,7 @@ Fix hard failures (parse errors, unknown types, render errors, blank regions) in
 
 ## Jev
 
-Jev (`~typesafe/jev-latest` on OpenRouter) answers typed questions with probabilities in about 300 ms. It cannot write text or specs. Use it to decide, then let a writer model or your own code produce the UI:
+Jev (`typesafe/jev-1.13-20260917` on OpenRouter; pin a versioned id, not the `~typesafe/jev-latest` alias) answers typed questions with probabilities in about 300 ms. It cannot write text or specs. Use it to decide, then let a writer model or your own code produce the UI:
 
 - Pick components: one `noul` question per component with its one-line purpose, keep p(yes) >= 0.45 plus the core layout types and the types your page formula needs (Jev can miss Sidebar on a dashboard). The playground uses this to shorten the prompt.
 - Pick a block or a theme family: one `choice` question.
