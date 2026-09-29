@@ -2,6 +2,30 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.20.5
+
+**Hover lifts and press flips, dialog dismiss, Navbar phone menu, hosted MCP gaps closed (2026-09-29).**
+
+### Library (daub.css, daub.js)
+- Button hover keeps the resting gradient, lifts 1px and deepens the shadow; only press flips the fill and insets it. Before, primary and secondary hover already showed the pressed lighting (#24).
+- Plain `.db-card` no longer raises its shadow on hover; `.db-card--interactive` keeps its lift. Hover-only rules apply under `@media (hover: hover) and (pointer: fine)`, so taps on touch screens leave no stuck hover (#24).
+- Icons inside `.db-btn` no longer shrink in tight rows, and ToggleGroup labels no longer wrap (#24).
+- A button with `data-db-dismiss` closes the Modal, Alert Dialog, Sheet or Drawer it sits in, and Escape closes the one on top (#25).
+- Navbar gets a phone menu toggle (`.db-navbar__toggle`) so its links stay reachable at narrow widths (#25).
+
+### Rendering (playground, daub-render.js, MCP renderer)
+- `Image` keeps its aspect ratio instead of writing a fixed pixel height beside `max-width: 100%` (#25).
+- `Field`/`Input` accept a `value` prop (#25).
+- Dialog default buttons and footer buttons carry `data-db-dismiss`; footer buttons that run a state action (for example a wizard's Next) keep the dialog open (#25).
+
+### Hosted MCP (functions/api/mcp.js)
+- `render_spec` and `validate_spec` accept the spec as a JSON string or an object (#26).
+- `parse_openui` and `validate_spec` support `Icon` and `Link`; before, `Icon(...)` became a stray Text with a dangling id (#26).
+- `get_component_catalog` lists only themes `daub.js` defines, with a test that fails on drift (#26).
+
+### Playground
+- The "Streaming…" status lines up with the Design / Structure / Code tabs (#23).
+
 ## v3.20.4
 
 **Combo-audit fixes, render fixes from the design eval, weblook SSRF hardening, daub-ui skill v2 (2026-09-28).**

@@ -12,7 +12,7 @@ description: >-
 license: MIT
 compatibility: Any agent that reads files and runs shell or HTTP. The MCP path needs network access to daub.dev. Jev recipes need an OpenRouter API key.
 metadata:
-  daub-version: "3.20.4"
+  daub-version: "3.20.5"
   homepage: https://daub.dev
 ---
 
@@ -76,7 +76,7 @@ DAUB is a drop-in CSS + JS component library. `daub.css` styles 84 components th
 - `daub.js` runs `DAUB.init()` on load. After you insert markup later, call `DAUB.init(container)`.
 - Overlays (`db-modal-overlay`, `db-alert-dialog`, `db-sheet`, `db-drawer`, `db-command`) need an `id`. Open them with `DAUB.openModal('id')` and friends, or a `data-db-modal-trigger="id"` button.
 - Toasts are JS only: `DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes are live.' })`.
-- CDN copies: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css` and `/daub.js`. npm can lag the site; `https://daub.dev/daub.css?v=3.20.4` is the current build.
+- CDN copies: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css` and `/daub.js`. npm can lag the site; `https://daub.dev/daub.css?v=3.20.5` is the current build.
 
 ## Path 2: specs
 
@@ -124,12 +124,12 @@ confirmBtn = Button("Delete account", "primary")
 Render either one in any page. The parser and renderer ship only on daub.dev (the npm package has neither):
 
 ```html
-<link rel="stylesheet" href="https://daub.dev/daub.css?v=3.20.4">
+<link rel="stylesheet" href="https://daub.dev/daub.css?v=3.20.5">
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 <div id="app" style="padding-block: 24px"></div>
-<script src="https://daub.dev/daub.js?v=3.20.4"></script>
-<script src="https://daub.dev/daub-render.js?v=3.20.4"></script>
-<script src="https://daub.dev/daub-openui-parser.js?v=3.20.4"></script>
+<script src="https://daub.dev/daub.js?v=3.20.5"></script>
+<script src="https://daub.dev/daub-render.js?v=3.20.5"></script>
+<script src="https://daub.dev/daub-openui-parser.js?v=3.20.5"></script>
 <script>
   const spec = DaubOpenUI.openUItoSpec(openuiText); // or JSON.parse(jsonText)
   document.documentElement.dataset.theme = spec.theme || 'light';

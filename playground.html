@@ -49,7 +49,7 @@
           crossorigin="anonymous" defer></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.20.4">
+  <link rel="stylesheet" href="daub.css?v=3.20.5">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -963,7 +963,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.20.4"></script>
+<script src="daub.js?v=3.20.5"></script>
 <script src="daub-openui-parser.js"></script>
 <script>
 // ============================================================
@@ -1047,7 +1047,7 @@ function buildIframeSrcdoc(theme) {
   return '<!DOCTYPE html><html lang="en"' + themeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
     + '<base target="_blank">'
-    + '<link rel="stylesheet" href="daub.css?v=3.20.4">'
+    + '<link rel="stylesheet" href="daub.css?v=3.20.5">'
     + '<script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"><\/script>'
     // html2canvas needs a same-origin clone iframe, which an opaque sandbox forbids; html-to-image uses SVG foreignObject
     + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js" integrity="sha384-YAj4cGTKsNinHUzylwDJDDZEpC6gnqNubmrp9eerckq7+gwWjABe5s2plXl3uUKb" crossorigin="anonymous"><\/script>'
@@ -1072,7 +1072,7 @@ function buildIframeSrcdoc(theme) {
     + '"\u201CThe best design is the simplest one that works.\u201D\\n\u2014 Albert Einstein",'
     + '"\u201CTypography is the craft of endowing human language with a durable visual form.\u201D\\n\u2014 Robert Bringhurst"'
     + '];document.getElementById("pg-iframe-root").setAttribute("data-quote",qs[Math.floor(Math.random()*qs.length)])})()<\/script>'
-    + '<script src="daub.js?v=3.20.4"><\/script>'
+    + '<script src="daub.js?v=3.20.5"><\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
     // Opaque-origin frame: reply only to the embedding origin
