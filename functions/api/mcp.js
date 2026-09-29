@@ -13,6 +13,8 @@ const COMP_PROPS = {
   Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
+  Icon: 'name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"',
+  Link: 'label: string, class: string',
   Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId"',
   ButtonGroup: '(children are Buttons)',
   Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string, value: string (prefilled text; placeholder is only a hint)',
@@ -80,7 +82,7 @@ const COMP_PROPS = {
 };
 
 const COMP_CATEGORIES = [
-  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator']],
+  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator', 'Icon', 'Link']],
   ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
   ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
   ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea', 'Image']],
@@ -93,6 +95,34 @@ const COMP_CATEGORIES = [
 
 const VALID_TYPES = COMP_CATEGORIES.flatMap(([, types]) => types);
 const validTypeSet = new Set(VALID_TYPES);
+
+// ---- Themes (copied from THEME_FAMILIES in daub.js; tests/mcp-hosted.test.mjs fails on drift) ----
+
+const THEME_FAMILIES = {
+  'default':    { light: 'light',        dark: 'dark' },
+  'grunge':     { light: 'grunge-light',  dark: 'grunge-dark' },
+  'solarized':  { light: 'solarized',     dark: 'solarized-dark' },
+  'ink':        { light: 'ink-light',     dark: 'ink' },
+  'ember':      { light: 'ember-light',   dark: 'ember' },
+  'bone':       { light: 'bone',         dark: 'bone-dark' },
+  'dracula':    { light: 'dracula-light', dark: 'dracula' },
+  'nord':       { light: 'nord-light',    dark: 'nord' },
+  'one-dark':   { light: 'one-dark-light',dark: 'one-dark' },
+  'monokai':    { light: 'monokai-light', dark: 'monokai' },
+  'gruvbox':    { light: 'gruvbox-light', dark: 'gruvbox' },
+  'night-owl':  { light: 'night-owl-light',dark: 'night-owl' },
+  'github':     { light: 'github',        dark: 'github-dark' },
+  'catppuccin': { light: 'catppuccin',    dark: 'catppuccin-dark' },
+  'tokyo-night':{ light: 'tokyo-night-light',dark: 'tokyo-night' },
+  'material':   { light: 'material-light', dark: 'material' },
+  'monospace':  { light: 'monospace-light', dark: 'monospace' },
+  'synthwave':  { light: 'synthwave-light',dark: 'synthwave' },
+  'shades-of-purple':{ light: 'shades-of-purple-light',dark: 'shades-of-purple' },
+  'ayu':        { light: 'ayu',           dark: 'ayu-dark' },
+  'horizon':    { light: 'horizon-light', dark: 'horizon' }
+};
+const LIGHT_THEMES = Object.values(THEME_FAMILIES).map(f => f.light);
+const DARK_THEMES = Object.values(THEME_FAMILIES).map(f => f.dark);
 
 // ---- Validation (inlined from mcp/lib/validate.js) ----
 
@@ -380,14 +410,14 @@ const INDUSTRY_INTENTS = [
   { pattern: /health|medical|clinic|patient|pharma|wellness/i, theme: 'nord-light', rules: 'Calming, accessible. Clear hierarchy. Large text, high contrast. Whitespace-generous. Anti: dark mode default, playful animations, small text.' },
   { pattern: /education|learn|course|student|school|lms|tutor/i, theme: 'catppuccin', rules: 'Warm, inviting. Progress indicators (Stepper, Progress). Card-based content. Clear navigation. Anti: dense data tables, corporate tone.' },
   { pattern: /creative|portfolio|design\s*agency|studio|artist/i, theme: 'grunge-dark', rules: 'Expressive, bold. Large imagery. Minimal text. Full-bleed sections. Anti: corporate blue, dense forms, cookie-cutter layouts.' },
-  { pattern: /blog|news|magazine|editorial|article|content\s*site/i, theme: 'paper', rules: 'Typography-first. Prose component for body. Max 65ch line length. Clear reading hierarchy. Anti: sidebar clutter, small body text, low contrast.' },
+  { pattern: /blog|news|magazine|editorial|article|content\s*site/i, theme: 'bone', rules: 'Typography-first. Prose component for body. Max 65ch line length. Clear reading hierarchy. Anti: sidebar clutter, small body text, low contrast.' },
   { pattern: /social|community|forum|chat|messaging|feed/i, theme: 'light', rules: 'Card-based feeds. Avatar+name patterns. List for threads. BottomNav for mobile. Anti: dense tables, formal tone, no user presence indicators.' },
   { pattern: /dashboard|analytics|admin\s*panel|back.?office|monitoring/i, theme: 'github', rules: 'Data-dense. StatCards row + Charts + Tables. Sidebar navigation. Compact spacing. Anti: large hero sections, marketing copy, excessive whitespace.' },
   { pattern: /dev\s*tool|developer|api|code|terminal|ide|cli/i, theme: 'dracula', rules: 'Dark theme preferred. Monospace for code. Compact UI. Kbd for shortcuts. Anti: rounded playful shapes, pastel colors, large images.' },
   { pattern: /real\s*estate|property|listing|rental|housing/i, theme: 'bone', rules: 'Image-heavy cards. Grid layouts for listings. Filter chips. Anti: dark themes, dense tables without imagery.' },
   { pattern: /food|restaurant|recipe|delivery|menu|cafe/i, theme: 'gruvbox-light', rules: 'Warm tones. Image-heavy cards. Grid for menu items. Large CTAs for ordering. Anti: corporate blue, data-dense layouts.' },
   { pattern: /travel|booking|hotel|flight|tourism|vacation/i, theme: 'nord-light', rules: 'Image-forward. Search-first layout. Card grids for destinations. DatePicker for dates. Anti: text-heavy, dark themes, no imagery.' },
-  { pattern: /fitness|gym|workout|sport|exercise|training/i, theme: 'material-dark', rules: 'Bold, energetic. Progress bars, stat cards. Dark with accent pops. Charts for progress. Anti: pastel, formal corporate tone.' },
+  { pattern: /fitness|gym|workout|sport|exercise|training/i, theme: 'material', rules: 'Bold, energetic. Progress bars, stat cards. Dark with accent pops. Charts for progress. Anti: pastel, formal corporate tone.' },
   { pattern: /music|audio|podcast|streaming|playlist/i, theme: 'synthwave', rules: 'Dark with vibrant accents. List-based for tracks/episodes. Progress for playback. BottomNav for mobile. Anti: white themes, corporate layouts.' },
   { pattern: /gaming|game|esport|player|leaderboard/i, theme: 'tokyo-night', rules: 'Dark, immersive. StatCards for scores. Tables for leaderboards. Bold accent colors. Anti: light themes, formal business tone.' },
   { pattern: /hr|recruit|hiring|job\s*board|career|applicant/i, theme: 'material-light', rules: 'Clean, professional. Card-based job listings. Stepper for application flow. Filter sidebar. Anti: dark themes, playful tone.' },
@@ -423,6 +453,8 @@ const COMP_SCHEMA = {
   Text: ['content', 'tag', 'class'],
   Prose: ['content', 'size'],
   Separator: ['vertical', 'dashed', 'label'],
+  Icon: ['name', 'size', 'variant'],
+  Link: ['label', 'class'],
   Button: ['label', 'variant', 'size', 'loading', 'icon', 'trigger'],
   ButtonGroup: ['children'],
   Field: ['children', 'label', 'placeholder', 'type', 'error', 'helper', 'value'],
@@ -798,7 +830,7 @@ function buildOpenUISystemPrompt(ragBlocks, userPrompt, picked) {
     + '- StatCard for KPI metrics\n'
     + '- Charts go inside ChartCard as a Chart child with 4-8 bars of realistic data unless the user specifies the data: ChartCard([revenueChart], "Revenue"); use Switch (not Toggle) for on/off settings like notifications\n'
     + '- Use trigger:"overlay-id" on Button to open overlays\n'
-    + '- There is NO "Icon" component type — icons are props on Button, Sidebar items, List items, etc.\n\n';
+    + '- Put icons in props (Button icon, StatCard icon, Sidebar and List item icon); use Icon only for a standalone icon\n\n';
 
   prompt += LAYOUT_RULES_COMPACT + '\n\n';
   prompt += PAGE_FORMULAS + '\n\n';
@@ -819,8 +851,8 @@ function buildOpenUISystemPrompt(ragBlocks, userPrompt, picked) {
   }
 
   prompt += 'THEMES:\n'
-    + '- Light: light, bone, material-light, github, nord-light, solarized-light, catppuccin, gruvbox-light, paper, grunge-light\n'
-    + '- Dark: dark, material-dark, github-dark, nord, solarized-dark, catppuccin-dark, gruvbox-dark, dracula, grunge-dark, synthwave, tokyo-night\n\n';
+    + '- Light: ' + LIGHT_THEMES.join(', ') + '\n'
+    + '- Dark: ' + DARK_THEMES.join(', ') + '\n\n';
 
   if (industryIntentOUI) {
     prompt += 'DETECTED INDUSTRY CONTEXT — recommended theme: "' + industryIntentOUI.theme + '"\n'
@@ -870,7 +902,7 @@ function buildSystemPrompt(ragBlocks, userPrompt, picked) {
     + '- Use StatCard for KPI metrics\n'
     + '- Charts go inside ChartCard as a Chart child ("children":["chart-id"]) with 4-8 bars of realistic data unless the user specifies the data; use Switch (not Toggle) for on/off settings like notifications\n'
     + '- Use trigger:"overlay-id" on Button to open overlays\n'
-    + '- There is NO "Icon" component type — icons are props on Button, Sidebar items, List items, etc.\n\n';
+    + '- Put icons in props (Button icon, StatCard icon, Sidebar and List item icon); use Icon only for a standalone icon\n\n';
 
   prompt += LAYOUT_RULES_COMPACT + '\n\n';
   prompt += PAGE_FORMULAS + '\n\n';
@@ -914,8 +946,8 @@ function buildSystemPrompt(ragBlocks, userPrompt, picked) {
   }
 
   prompt += 'THEMES:\n'
-    + '- Light: light, bone, material-light, github, nord-light, solarized-light, catppuccin, gruvbox-light, paper, grunge-light\n'
-    + '- Dark: dark, material-dark, github-dark, nord, solarized-dark, catppuccin-dark, gruvbox-dark, dracula, grunge-dark, synthwave, tokyo-night\n\n';
+    + '- Light: ' + LIGHT_THEMES.join(', ') + '\n'
+    + '- Dark: ' + DARK_THEMES.join(', ') + '\n\n';
 
   if (industryIntent) {
     prompt += 'DETECTED INDUSTRY CONTEXT — recommended theme: "' + industryIntent.theme + '"\n'
@@ -1337,7 +1369,7 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        spec: { type: 'string', description: 'DAUB spec JSON string to validate' },
+        spec: { type: 'string', description: 'DAUB spec JSON string to validate (a spec object also works)' },
       },
       required: ['spec'],
     },
@@ -1348,7 +1380,7 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        spec: { type: 'string', description: 'DAUB spec JSON string' },
+        spec: { type: 'string', description: 'DAUB spec JSON string (a spec object also works)' },
       },
       required: ['spec'],
     },
@@ -1611,6 +1643,13 @@ const BLOCK_INDEX = [
 
 // ---- MCP Tool Handlers ----
 
+// The schema asks for a JSON string, but some clients pass the spec object itself; take either
+function specArg(tool, spec) {
+  if (spec && typeof spec === 'object') return spec;
+  if (typeof spec !== 'string') throw new Error(`${tool} requires "spec" as a JSON string or object`);
+  return JSON.parse(spec);
+}
+
 async function handleToolCall(name, args, env) {
   switch (name) {
     case 'generate_ui': {
@@ -1655,10 +1694,7 @@ async function handleToolCall(name, args, env) {
       return JSON.stringify({
         categories: catalog,
         all_types: VALID_TYPES,
-        themes: {
-          light: ['light', 'bone', 'material-light', 'github', 'nord-light', 'solarized-light', 'catppuccin', 'gruvbox-light', 'paper', 'grunge-light'],
-          dark: ['dark', 'material-dark', 'github-dark', 'nord', 'solarized-dark', 'catppuccin-dark', 'gruvbox-dark', 'dracula', 'grunge-dark', 'synthwave', 'tokyo-night'],
-        },
+        themes: { light: LIGHT_THEMES, dark: DARK_THEMES },
         spec_format: '{"theme":"<name>","root":"<id>","elements":{"<id>":{"type":"<Type>","props":{...},"children":["<child-id>"]}}}',
         example: {
           theme: 'bone',
@@ -1673,12 +1709,12 @@ async function handleToolCall(name, args, env) {
     }
 
     case 'validate_spec': {
-      const spec = JSON.parse(args.spec);
+      const spec = specArg(name, args.spec);
       return JSON.stringify(validateSpec(spec), null, 2);
     }
 
     case 'render_spec': {
-      const spec = JSON.parse(args.spec);
+      const spec = specArg(name, args.spec);
       const validation = validateSpec(spec);
       const html = renderToHTML(spec);
       return JSON.stringify({ spec, html, validation }, null, 2);

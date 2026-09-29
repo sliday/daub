@@ -91,7 +91,7 @@ async function pickComponents(request, apiKey, { threshold = 0.45, keep = [] } =
 }
 ```
 
-`null` means "use the full catalog". Then list full props for picked types and names only for the rest ("ALSO AVAILABLE, use only if clearly needed"). Specs bound for the hosted MCP should drop `Icon` from the core set, since its validator rejects that type.
+`null` means "use the full catalog". Then list full props for picked types and names only for the rest ("ALSO AVAILABLE, use only if clearly needed").
 
 ## Recipe 2: pick a block
 

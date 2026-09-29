@@ -52,7 +52,7 @@ const lintSpec = lintBlock && new Function(lintBlock.body + '\nreturn lintSpec;'
 // So is the in-page render check: the browser tests run it as published
 const checkBlock = BLOCKS.find(b => b.file === 'references/verify.md' && b.lang === 'js' && b.body.includes('function renderAndCheck('));
 const renderAndCheck = checkBlock && new Function(checkBlock.body + '\nreturn renderAndCheck;')();
-const LINT_OPTS = { types: Object.keys(COMP_SCHEMA), themes: S.themes, mcp: true };
+const LINT_OPTS = { types: Object.keys(COMP_SCHEMA), themes: S.themes };
 
 describe('daub-ui skill: generated content', () => {
   it('generated blocks and index digests are current (else run: node tools/build-skill.mjs)', () => {
@@ -163,7 +163,7 @@ describe('daub-ui skill: examples', () => {
     els.page.children.push('tgl', 'sa', 'vis', 'row');
     const r = lintSpec({ theme: 'paper', root: 'page', elements: els }, LINT_OPTS);
     const all = r.errors.concat(r.warnings).join('\n');
-    for (const needle of ['unknown theme "paper"', 'Text reads "content", not "text"', 'content and tag are swapped', 'renders "No data"', 'takes data objects', 'use Switch', 'hosted MCP rejects', 'gap is a 0-6 token', 'trigger "nope"', 'stray (Divider): unknown type', 'not reachable', 'root: no container', 'use one word per option', 'hides the rows below', 'belong on the element', 'its icon collapses']) {
+    for (const needle of ['unknown theme "paper"', 'Text reads "content", not "text"', 'content and tag are swapped', 'renders "No data"', 'takes data objects', 'use Switch', 'gap is a 0-6 token', 'trigger "nope"', 'stray (Divider): unknown type', 'not reachable', 'root: no container', 'use one word per option', 'hides the rows below', 'belong on the element', 'its icon collapses']) {
       assert.ok(all.includes(needle), `lint should report: ${needle}\n${all}`);
     }
   });

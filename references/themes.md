@@ -31,7 +31,7 @@ A theme is one value of the `data-theme` attribute on `<html>`. Each family has 
 <!-- END GENERATED:families -->
 
 <!-- BEGIN GENERATED:mcp-invalid (tools/build-skill.mjs) -->
-The hosted MCP `get_component_catalog` still lists `solarized-light`, `paper`, `material-dark`, `gruvbox-dark`. daub.js defines none of them, so a spec with that theme renders in the default light palette. Use the table above instead.
+Every theme name the hosted MCP catalog lists is valid.
 <!-- END GENERATED:mcp-invalid -->
 
 ## Set a theme

@@ -5,7 +5,7 @@ Two catalogs describe the same library:
 - **Spec types** are the element `type` values a json-render spec or OpenUI Lang can use. `daub-render.js`, the playground and the hosted MCP renderer turn them into DAUB markup. Props below come from `COMP_PROPS` in playground.html, the text the playground prompt shows a model.
 - **HTML classes** are the 84 CSS components in `components.json`. Use them when you write markup by hand. Full HTML for each one: `https://daub.dev/llms.txt`.
 
-Legend for spec types: _core_ means the Jev picker always keeps it, _children first_ means the OpenUI signature starts with `children`, and _hosted MCP rejects_ means `validate_spec` and `parse_openui` on daub.dev do not know the type yet.
+Legend for spec types: _core_ means the Jev picker always keeps it, and _children first_ means the OpenUI signature starts with `children`.
 
 Props that trip models up:
 
@@ -44,8 +44,8 @@ Each of these renders without an error and still looks broken. They were measure
 - **Text** _(core)_: a heading, paragraph or inline text. Props: `tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string ("db-text-muted" for secondary text)`
 - **Prose**: long-form rich text such as an article body. Props: `content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"`
 - **Separator** _(core)_: a horizontal or vertical divider line. Props: `vertical: bool, dashed: bool, label: string`
-- **Icon** _(core, hosted MCP rejects)_: a standalone Lucide icon. Props: `name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"`
-- **Link** _(hosted MCP rejects)_: an inline text hyperlink. Props: `label: string, class: string`
+- **Icon** _(core)_: a standalone Lucide icon. Props: `name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"`
+- **Link**: an inline text hyperlink. Props: `label: string, class: string`
 
 ### Controls
 

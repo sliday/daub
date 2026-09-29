@@ -150,7 +150,7 @@ Full formats: `references/json-render.md` (state, actions, visibility) and `refe
 - stdio-only clients: `npx -y mcp-remote https://daub.dev/api/mcp`
 - No MCP client (pi, scripts): POST JSON-RPC `tools/call` to the same URL (curl recipe in `references/mcp.md`).
 
-Tools: `generate_ui` (prompt to spec + HTML), `get_component_catalog`, `validate_spec`, `render_spec`, `parse_openui`, `get_block_library`. `validate_spec` and `render_spec` take the spec as a JSON string. `generate_ui` picks components with Jev first; `routing.picked_components` shows the pick. Rate limit: 60 requests per minute per IP.
+Tools: `generate_ui` (prompt to spec + HTML), `get_component_catalog`, `validate_spec`, `render_spec`, `parse_openui`, `get_block_library`. `validate_spec` and `render_spec` take the spec as a JSON string or an object. `generate_ui` picks components with Jev first; `routing.picked_components` shows the pick. Rate limit: 60 requests per minute per IP.
 
 ## Golden rules
 
@@ -162,7 +162,7 @@ These rules prevent the failures seen most in generated DAUB UIs.
 4. `ChartCard` needs a `Chart` child with 4-8 bars of realistic data, or a `bars` prop. An empty ChartCard renders "No data". `Chart` takes `bars: [{label, value, max?}]`.
 5. `Sidebar`, `NavMenu`, `BottomNav`, `Breadcrumbs`, `Menubar`, `DropdownMenu` and `CommandPalette` take data arrays of plain objects, not element ids: `Sidebar([{title: "Workspace", items: [{label: "Inbox", icon: "inbox", active: true}]}])`.
 6. Icons are Lucide 0.576.0 names in kebab-case (`layout-dashboard`, `circle-check`, `github`). Put them in props: `Button icon`, `StatCard icon`, `EmptyState icon`, and `icon` on List, Sidebar, BottomNav and menu items. Renderers map common aliases (`refresh` to `refresh-cw`) and drop unknown names. Stay on 0.x: Lucide 1.x removed brand icons.
-7. The `Icon` and `Link` types render in the playground and with `daub-render.js`, but the hosted MCP `parse_openui` and `validate_spec` reject them (v3.20.4). For MCP-bound specs, use icon props and `Button` with variant `ghost`.
+7. `Icon` draws one standalone Lucide icon, `Icon("star", "lg")`, and `Link` draws an inline text link. Both parse, validate and render in the playground, with `daub-render.js` and on the hosted MCP. An icon beside a label belongs in the owning component's icon prop (rule 6).
 8. `gap` on Stack and Grid is a token 0-6 (0, 4, 8, 12, 16, 24, 32 px), never pixels. Grid `columns` is 2-6. Space between groups should be at least twice the space inside them. Give the root `container: "wide"` (dashboards, landing pages) or `"narrow"` (forms, settings); without it the page has no side gutters.
 9. Themes are exact names. Light and dark names differ per family: `solarized` is light, `ink` and `material` are dark. `paper`, `material-dark`, `solarized-light` and `gruvbox-dark` do not exist and fall back to the default light theme. Table: `references/themes.md`.
 10. Overlays (`Modal`, `AlertDialog`, `Sheet`, `Drawer`) need an `id`, and a `Button` with `trigger: "<id>"` opens one. They start hidden, so place them anywhere in the tree. `CommandPalette` also needs an `id`; it opens with Cmd+K or `DAUB.openCommand(id)`.
