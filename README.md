@@ -466,6 +466,16 @@ This produces the same spec as the JSON example above. Both positional and named
 
 To use with the MCP server, pass `format: "openui"` to `generate_ui`. The `parse_openui` tool converts OpenUI Lang to JSON specs independently.
 
+## Photo Proxy
+
+`https://daub.dev/api/photo?q=pasta%20carbonara&w=640&h=480` redirects to a CC0 or public-domain photo of the subject, so you can use it as an `<img src>` in a generated page. Photos come from Openverse's curated stock sources (rawpixel, WordPress Photo Directory, StockSnap, Nappy), with Wikimedia Commons as the fallback. They need no attribution, and you need no API key.
+
+- `q`: 1-6 words; a 2-3 word noun phrase with the head noun last works best (`leather sneaker`, `hotel lobby`)
+- `w`, `h`: 16-2000, default 800x600; the proxy picks a photo whose orientation fits the slot
+- `i`: 0-9, picks a different photo of the same subject (for grids)
+
+The same URL returns the same photo while the search result is cached (7 days). If nothing matches or both sources are down, you get a neutral SVG placeholder, so the `<img>` never breaks. A page with a CSP must allow `daub.dev`, `api.openverse.org`, `thumb.wikimedia.org` and `upload.wikimedia.org` in `img-src`. Details: [PIPELINE.md](PIPELINE.md#photo-proxy).
+
 ## Use with AI
 
 Drop these prompts into Claude, ChatGPT, Cursor, or any AI assistant. Each produces a complete, working HTML page. Add "Fetch docs from daub.dev/llms.txt first" for best results.
