@@ -1233,7 +1233,8 @@
         bars.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
         svg.appendChild(bars);
         tog.appendChild(svg);
-        el.appendChild(tog);
+        // Before the nav slot, so Tab goes from the button into the open menu (CSS still puts it at the right edge)
+        el.insertBefore(tog, nav);
       }
       return el;
     };
@@ -2210,6 +2211,8 @@
         el.src = p.src;
         // A height alone is a fixed height: crop to it rather than squash when max-width narrows the image
         if (h && !w) { el.style.height = h + 'px'; el.style.objectFit = 'cover'; }
+        // With a width, fit-content keeps the ratio in a flex row too: there height:auto lets a taller sibling stretch it
+        else if (w) el.style.height = 'fit-content';
       } else {
         // Placeholder when no valid src: fills the column up to its width, and with both sizes keeps their ratio.
         // Without a src it has no image to shrink, so a px width would widen a grid column past the page.
