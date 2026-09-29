@@ -340,6 +340,15 @@
       vertical-align: middle;
     }
     @keyframes pg-blink { 0%,100%{opacity:.2} 50%{opacity:1} }
+    /* Live progress steps in the reply bubble: done steps get a check, the active one blinks */
+    .pg-chat__steps { list-style: none; margin: 0; padding: 0; font-size: 0.75rem; color: var(--db-warm-gray); }
+    .pg-chat__steps li { display: flex; gap: 6px; align-items: baseline; }
+    .pg-chat__steps li::before { content: '\2713'; flex: 0 0 0.75rem; text-align: center; color: var(--db-success, #2e7d32); }
+    .pg-chat__steps li.pg-chat__step--active { color: var(--db-ink); }
+    .pg-chat__steps li.pg-chat__step--active::before { content: '\25CF'; font-size: 0.625rem; color: var(--db-terracotta); animation: pg-blink 1s infinite; }
+    .pg-chat__msg--stopped .pg-chat__steps li.pg-chat__step--active::before { content: '\25A0'; animation: none; }
+    .pg-chat__msg--streaming:has(.pg-chat__steps)::after { content: none; }
+    .pg-result-summary { font-size: 0.75rem; color: var(--db-ink); margin-top: 4px; }
     .pg-chat__msg--error {
       align-self: flex-start;
       background: color-mix(in srgb, var(--db-error, #d32f2f) 10%, transparent);
@@ -2648,7 +2657,8 @@ function analyzeLayout(userPrompt, images, webContexts, figmaContexts, signal) {
       model: AUTO_MODEL,
       messages: messages,
       reasoning: { effort: 'low' },
-      max_tokens: 800,
+      // Reasoning tokens count against this: at 800, reasoning routes (deepseek) could spend it all and return no brief
+      max_tokens: 3000,
       response_format: false
     }),
     signal: signal
@@ -3502,10 +3512,36 @@ function addChatBubble(role, text, images) {
       setTimeout(function() { copyBtn.innerHTML = _svgCopy; }, 1500); // safe: static SVG constant
     });
   });
-  div.appendChild(copyBtn);
+  // Replies hold progress and results, not text worth copying
+  if (role !== 'ai') div.appendChild(copyBtn);
   $chatMessages.appendChild(div);
   $chatMessages.scrollTop = $chatMessages.scrollHeight;
   return div;
+}
+
+// Add a progress step to a reply bubble; the previous active step counts as done
+function bubbleStep(bubble, text) {
+  if (!bubble) return;
+  var list = bubble.querySelector('.pg-chat__steps');
+  if (!list) {
+    list = document.createElement('ul');
+    list.className = 'pg-chat__steps';
+    bubble.insertBefore(list, bubble.firstChild);
+  }
+  var active = list.querySelector('.pg-chat__step--active');
+  if (active) active.classList.remove('pg-chat__step--active');
+  if (text) {
+    var li = document.createElement('li');
+    li.className = 'pg-chat__step--active';
+    li.textContent = text;
+    list.appendChild(li);
+  }
+  $chatMessages.scrollTop = $chatMessages.scrollHeight;
+}
+// Rewrite the active step in place (live counters)
+function bubbleStepText(bubble, text) {
+  var active = bubble && bubble.querySelector('.pg-chat__step--active');
+  if (active) active.textContent = text;
 }
 
 function renderChatHistory() {
@@ -3565,8 +3601,22 @@ function buildResultBubble(bubble, spec, verIdx) {
   // Meta: timestamp
   var meta = document.createElement('div');
   meta.className = 'pg-result-meta';
-  meta.textContent = fmtTime(ver ? ver.timestamp : Date.now()) + (ver && ver.model ? ' \u00B7 via ' + ver.model : '');
+  meta.textContent = fmtTime(ver ? ver.timestamp : Date.now()) + (ver && ver.model ? ' \u00B7 via ' + ver.model : '') + (ver && ver.ms ? ' \u00B7 built in ' + Math.round(ver.ms / 1000) + 's' : '');
   bubble.appendChild(meta);
+
+  // Summary: the most-used content components, layout primitives left out
+  var _useCounts = {};
+  Object.keys((spec && spec.elements) || {}).forEach(function(id) {
+    var t = spec.elements[id].type;
+    if (t && ['Stack', 'Grid', 'Text', 'Separator'].indexOf(t) === -1) _useCounts[t] = (_useCounts[t] || 0) + 1;
+  });
+  var _top = Object.keys(_useCounts).sort(function(a, b) { return _useCounts[b] - _useCounts[a]; });
+  if (_top.length) {
+    var summary = document.createElement('div');
+    summary.className = 'pg-result-summary';
+    summary.textContent = _top.slice(0, 5).map(function(t) { return _useCounts[t] > 1 ? t + ' \u00D7' + _useCounts[t] : t; }).join(', ') + (_top.length > 5 ? ' +' + (_top.length - 5) + ' more' : '');
+    bubble.appendChild(summary);
+  }
 
   // Component type chips (collapsible)
   var detail = document.createElement('div');
@@ -3707,6 +3757,7 @@ function generate() {
   _currentStream.streamBubble = addChatBubble('ai', '');
   _currentStream.streamBubble.classList.add('pg-chat__msg--streaming');
   var streamBubble = _currentStream.streamBubble;
+  var _genStart = Date.now();
 
   // Auto-switch to mobile viewport for mobile app prompts
   var _promptLower = prompt.toLowerCase();
@@ -3742,6 +3793,8 @@ function generate() {
   var _hasAttachments = imagesForThisMsg.length || webContextsForThisMsg.length || figmaContextsForThisMsg.length;
   if (currentSpec && !_hasAttachments) $status.textContent = 'Choosing components\u2026';
   var pickPromise = _hasAttachments ? Promise.resolve(null) : chooseComponents(prompt, preSignal);
+  if (!currentSpec) bubbleStep(streamBubble, _hasAttachments ? 'Planning the layout\u2026' : 'Planning the layout and choosing components\u2026');
+  else if (!_hasAttachments) bubbleStep(streamBubble, 'Choosing components\u2026');
   var messages; // set after analysis completes
   var accumulated = '';
   var continuations = 0;
@@ -3762,6 +3815,8 @@ function generate() {
         renderSpec(result.spec, progressivePrevSpec);
         progressivePrevSpec = result.spec;
         $status.textContent = 'Rendering\u2026';
+        var _n = countComponents(result.spec);
+        if (_n) bubbleStepText(streamBubble, 'Building the UI\u2026 ' + _n + (_n === 1 ? ' element' : ' elements') + ' so far');
       }
     } else {
       tryProgressiveRender(accumulated);
@@ -3788,11 +3843,13 @@ function generate() {
     $json.value = '';
     if (retries <= MAX_RETRIES) {
       $status.textContent = 'Retry ' + retries + '/' + MAX_RETRIES + ' \u2014 ' + reason;
+      bubbleStep(streamBubble, 'Retry ' + retries + ' of ' + MAX_RETRIES + ': ' + reason);
       setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages, usingFallback ? FALLBACK_MODEL : undefined); }, 500);
     } else if (useDefault && !usingFallback) {
       usingFallback = true;
       retries = 0;
       $status.textContent = 'Switching to fallback model\u2026';
+      bubbleStep(streamBubble, 'Switching to the fallback model\u2026');
       setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages, FALLBACK_MODEL); }, 500);
     } else {
       clearInterval(renderTimer);
@@ -3824,6 +3881,7 @@ function generate() {
         if (_lastFinishReason === 'length' && continuations < MAX_CONTINUATIONS) {
           continuations++;
           $status.textContent = 'Continuing (' + continuations + '/' + MAX_CONTINUATIONS + ')\u2026';
+          bubbleStep(streamBubble, 'Output hit the length limit, continuing (' + continuations + ' of ' + MAX_CONTINUATIONS + ')\u2026');
           var contMsg = (_detectedFormat || DaubOpenUI.detectFormat(accumulated)) === 'openui'
             ? 'Continue the openui-lang code from where you stopped. Output ONLY remaining statements, no repetition, no explanation.'
             : 'Continue the JSON exactly from where you stopped. Output ONLY the remaining JSON, no repetition, no explanation.';
@@ -3856,6 +3914,7 @@ function generate() {
           pushVersion(spec, prompt);
           var _routedModel = useDefault ? _lastRoutedModel : '';
           if (_routedModel) specVersions[specVersions.length - 1].model = _routedModel;
+          specVersions[specVersions.length - 1].ms = Date.now() - _genStart;
           renderSpec(spec, prevSpec2);
           refreshJsonTree();
           updatePreviewToolbar();
@@ -4292,6 +4351,18 @@ function generate() {
     else if (!currentSpec) console.warn('[analyzeLayout] Skipped or failed');
     messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief, res[1]);
     $status.textContent = 'Streaming\u2026';
+    // Swap the planning step for what it produced, then show the build step
+    var _picked = (res[1] || []).filter(function(t) { return PICK_CORE.indexOf(t) === -1; });
+    var _planDone = [];
+    if (analysisBrief) _planDone.push('Planned the layout');
+    else if (!currentSpec) _planDone.push('Layout planning skipped');
+    if (_picked.length) _planDone.push('Picked ' + _picked.length + ' components: ' + _picked.slice(0, 5).join(', ') + (_picked.length > 5 ? ' +' + (_picked.length - 5) + ' more' : ''));
+    else if (!_hasAttachments) _planDone.push('Using the full component catalog');
+    if (_planDone.length) {
+      bubbleStepText(streamBubble, _planDone[0]);
+      for (var _pi = 1; _pi < _planDone.length; _pi++) bubbleStep(streamBubble, _planDone[_pi]);
+    }
+    bubbleStep(streamBubble, 'Building the UI\u2026');
     startStream(messages);
   });
 }
