@@ -442,9 +442,10 @@ body::before {
   border-color: rgba(var(--db-accent-rgb), 0.3);
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
-[data-db-texture="glass"] .db-btn--primary:hover {
-  background: rgba(var(--db-accent-rgb), 0.9);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+@media (hover: hover) and (pointer: fine) {
+  [data-db-texture="glass"] .db-btn--primary:hover:not(:active):not(.db-btn--pressed) {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
 }
 
 /* Glass: secondary button — frosted */
@@ -455,9 +456,10 @@ body::before {
   border-color: rgba(var(--db-glow-rgb), 0.15);
   box-shadow: 0 1px 4px rgba(0,0,0,0.06), inset 0 1px 0 rgba(var(--db-glow-rgb), 0.3);
 }
-[data-db-texture="glass"] .db-btn--secondary:hover {
-  background: rgba(var(--db-white-rgb), 0.55);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(var(--db-glow-rgb), 0.3);
+@media (hover: hover) and (pointer: fine) {
+  [data-db-texture="glass"] .db-btn--secondary:hover:not(:active):not(.db-btn--pressed) {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(var(--db-glow-rgb), 0.3);
+  }
 }
 
 /* Glass: inputs — subtle frost */
@@ -2327,6 +2329,10 @@ a:hover { color: var(--db-clay); }
   text-shadow: var(--db-text-emboss-subtle);
 }
 
+/* Icons keep their size when a no-wrap row squeezes the button */
+.db-btn svg,
+.db-btn img { flex-shrink: 0; }
+
 .db-btn:focus-visible {
   outline: none;
   box-shadow: var(--db-focus-ring);
@@ -2341,11 +2347,16 @@ a:hover { color: var(--db-clay); }
   text-shadow: 0 -1px 0 rgba(var(--db-shadow-rgb), 0.35);
 }
 
-.db-btn--primary:hover {
-  background: linear-gradient(180deg, var(--db-accent-hover) 0%, var(--db-terracotta) 100%);
-  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.15);
-  color: var(--db-on-accent);
+/* Hover lifts (same convex fill, higher shadow); press flips (flat fill, inset shadow).
+   Pointer devices only, so touch never gets a sticky hover. */
+@media (hover: hover) and (pointer: fine) {
+  .db-btn--primary:hover {
+    box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.2), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.15);
+    transform: translateY(-1px);
+  }
 }
+/* Label colour stays global: a touch tap leaves :hover stuck, and a:hover would turn an <a> primary button's label clay */
+.db-btn--primary:hover { color: var(--db-on-accent); }
 
 .db-btn--primary:active,
 .db-btn--primary.db-btn--pressed {
@@ -2365,12 +2376,15 @@ a:hover { color: var(--db-clay); }
   text-shadow: var(--db-text-emboss-subtle);
 }
 
-.db-btn--secondary:hover {
-  background: linear-gradient(180deg, rgba(var(--db-white-rgb),1) 0%, var(--db-cream-dark) 100%);
-  box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.06);
+@media (hover: hover) and (pointer: fine) {
+  .db-btn--secondary:hover {
+    box-shadow: var(--db-shadow-2), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.06);
+    transform: translateY(-1px);
+  }
 }
 
-.db-btn--secondary:active {
+.db-btn--secondary:active,
+.db-btn--secondary.db-btn--pressed {
   background: var(--db-cream-dark);
   box-shadow: var(--db-shadow-inset);
   transform: translateY(1px);
@@ -2441,12 +2455,17 @@ a:hover { color: var(--db-clay); }
   border: 1px solid transparent;
   box-shadow: none;
 }
-.db-btn--ghost:hover {
-  background: rgba(var(--db-shadow-rgb), 0.06);
-  color: var(--db-ink);
+@media (hover: hover) and (pointer: fine) {
+  .db-btn--ghost:hover {
+    background: rgba(var(--db-shadow-rgb), 0.06);
+    color: var(--db-ink);
+  }
 }
-.db-btn--ghost:active {
+.db-btn--ghost:active,
+.db-btn--ghost.db-btn--pressed {
   background: rgba(var(--db-shadow-rgb), 0.1);
+  transform: translateY(1px);
+  transition: none;
 }
 
 /* Link (inline text CTA) */
@@ -2475,9 +2494,17 @@ a:hover { color: var(--db-clay); }
 .db-btn--icon-danger  { color: var(--db-error); }
 .db-btn--icon-success { color: var(--db-success); }
 .db-btn--icon-accent  { color: var(--db-terracotta); }
-.db-btn--icon-danger:hover  { background: rgba(var(--db-error-rgb), 0.1); }
-.db-btn--icon-success:hover { background: rgba(var(--db-success-rgb), 0.1); }
-.db-btn--icon-accent:hover  { background: rgba(var(--db-accent-rgb), 0.1); }
+@media (hover: hover) and (pointer: fine) {
+  .db-btn--icon-danger:hover  { background: rgba(var(--db-error-rgb), 0.1); }
+  .db-btn--icon-success:hover { background: rgba(var(--db-success-rgb), 0.1); }
+  .db-btn--icon-accent:hover  { background: rgba(var(--db-accent-rgb), 0.1); }
+}
+.db-btn--icon-danger:active  { background: rgba(var(--db-error-rgb), 0.16); }
+.db-btn--icon-success:active { background: rgba(var(--db-success-rgb), 0.16); }
+.db-btn--icon-accent:active  { background: rgba(var(--db-accent-rgb), 0.16); }
+.db-btn--icon-danger:active,
+.db-btn--icon-success:active,
+.db-btn--icon-accent:active { transform: translateY(1px); transition: none; }
 
 /* ------------------------------------------------------------
    5b. CONTROLS — Text Fields
@@ -3233,10 +3260,6 @@ textarea.db-field__input {
   transition: box-shadow var(--db-transition);
 }
 
-.db-card:hover {
-  box-shadow: var(--db-card-shadow-hover), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
-}
-
 .db-card__header {
   display: flex;
   flex-direction: column;
@@ -3275,16 +3298,22 @@ textarea.db-field__input {
 .db-card--media .db-card__body { padding: var(--db-space-4) var(--db-space-5); }
 .db-card--media .db-card__footer { padding: 0 var(--db-space-5) var(--db-space-5); margin-top: 0; border-top: none; }
 
-/* Card — interactive variant (clickable) */
-.db-card--interactive {
+/* Card — interactive variant (clickable). A plain card is a static container and never lifts;
+   only clickable cards (the modifier, or a card that is itself a link) rise on hover. */
+.db-card--interactive,
+a.db-card[href] {
   cursor: pointer;
   transition: box-shadow var(--db-transition), transform var(--db-transition);
 }
-.db-card--interactive:hover {
-  box-shadow: var(--db-shadow-3), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .db-card--interactive:hover,
+  a.db-card[href]:hover {
+    box-shadow: var(--db-card-shadow-hover), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
+    transform: translateY(-2px);
+  }
 }
-.db-card--interactive:active {
+.db-card--interactive:active,
+a.db-card[href]:active {
   transform: translateY(0);
   box-shadow: var(--db-shadow-1), inset 0 1px 0 rgba(var(--db-glow-rgb),0.6), inset 0 -1px 0 rgba(var(--db-shadow-rgb),0.08);
   transition: none;
@@ -4607,7 +4636,10 @@ meter.db-meter::-moz-meter-bar {
    Toggle Group
    ------------------------------------------------------------ */
 .db-toggle-group {
-  display: inline-flex;
+  /* Equal 1fr segments sized to the widest label; labels wrap only when the container is narrower */
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 3px;
   padding: 3px;
   background: var(--db-cream-dark);
