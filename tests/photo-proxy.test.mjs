@@ -247,6 +247,45 @@ describe('redirects and determinism', () => {
     const r = await mod.onRequestGet(ctx('?q=cake&w=640&h=480'));
     assert.equal(r.headers.get('location'), ovThumb(3, true));
   });
+
+  it('drops Openverse hits flagged mature or titled or tagged with nudity or gore', async t => {
+    const mod = await load();
+    mockCaches(t);
+    mockFetch(t, upstream({ openverse: () => json({ results: [
+      ovHit(1, 1200, 800, { title: 'Body Nude', tags: [{ name: 'body' }] }),
+      ovHit(2, 1200, 800, { title: 'Body', tags: [{ name: 'smooth' }, { name: 'naked' }] }),
+      ovHit(4, 1200, 800, { mature: true }),
+      ovHit(6, 1200, 800, { title: 'Body lotion', tags: [{ name: 'skincare' }, null] }),
+    ] }) }));
+    const r = await mod.onRequestGet(ctx('?q=body&w=640&h=480'));
+    assert.equal(r.headers.get('location'), ovThumb(6, true));
+  });
+});
+
+describe('content safety', () => {
+  it('rejects queries that ask for nudity or gore, with no upstream call', async t => {
+    const mod = await load();
+    for (const q of ['nude woman', 'NAKED man', 'topless beach', 'corpses', 'porn star']) assert.equal(mod.normalizeQuery(q), null, q);
+    for (const q of ['body lotion', 'bath towel', 'swimsuit', 'noodles']) assert.equal(mod.normalizeQuery(q), q, q);
+    mockCaches(t);
+    const calls = mockFetch(t, upstream({ openverse: () => json({ results: OV }) }));
+    const r = await mod.onRequestGet(ctx('?q=nude%20woman&w=640&h=480'));
+    assert.ok(isSvg(r));
+    assert.equal(r.headers.get('x-photo-status'), 'invalid');
+    assert.equal(calls.length, 0);
+  });
+
+  it('drops Commons files titled or categorised with nudity or gore', async t => {
+    const mod = await load();
+    mockCaches(t);
+    const nude = { ...cmPage(1), title: 'File:Nude woman on beach by rocks.jpg' };
+    const degas = { ...cmPage(2), title: 'File:After the Bath.jpg', categories: [{ ns: 14, title: 'Category:Nude women in art' }] };
+    const war = { ...cmPage(3), title: 'File:Antwerp 1944.jpg', categories: [{ ns: 14, title: 'Category:Corpses in Belgium' }] };
+    const ok = { ...cmPage(4), title: 'File:Woman walking on sand beach.jpg', categories: [{ ns: 14, title: 'Category:Beaches' }, null] };
+    mockFetch(t, upstream({ commons: () => json({ query: { pages: [nude, degas, war, ok] } }) }));
+    const r = await mod.onRequestGet(ctx('?q=woman%20beach&w=640&h=480'));
+    assert.equal(r.headers.get('location'), cmThumb(4, 960));
+  });
 });
 
 describe('Commons fallback and allowlist', () => {
@@ -263,6 +302,7 @@ describe('Commons fallback and allowlist', () => {
     assert.equal(r.headers.get('cache-control'), `public, max-age=${DAY}`);
     const gsr = new URL(cmCalls(calls)[0].url).searchParams.get('gsrsearch');
     assert.match(gsr, /^chocolate layer cake filemime:image\/jpeg filew:>799 haswbstatement:P275=Q6938433\|P6216=Q19652$/);
+    assert.equal(new URL(cmCalls(calls)[0].url).searchParams.get('prop'), 'imageinfo|categories');
     const entry = JSON.parse([...stores.get('daub-photo-v1').values()][0].body);
     assert.equal(entry.ttl, WEEK);
 

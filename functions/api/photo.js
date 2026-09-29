@@ -19,6 +19,10 @@ const CACHE_NAME = 'daub-photo-v1';
 const STOP = new Set(['a', 'an', 'the', 'and', 'or', 'with', 'in', 'on', 'at', 'of', 'for', 'to', 'from', 'by', 'photo', 'photograph', 'image', 'picture', 'product', 'shot', 'stock']);
 const PREP = new Set(['with', 'in', 'on', 'at', 'of', 'for', 'from', 'by', 'to']);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+// Explicit nudity and gore. Openverse mature=false and the Commons licence filter let both through
+// (q=body -> StockSnap "Body Nude"; Commons q=woman beach -> "Nude woman on beach by rocks").
+const UNSAFE_TERMS = ['nude', 'nudity', 'naked', 'topless', 'erotic', 'erotica', 'porn', 'porno', 'pornographic', 'pornography', 'nsfw', 'genital', 'genitalia', 'penis', 'vagina', 'nipple', 'corpse', 'cadaver'];
+const UNSAFE = new RegExp(`\\b(${UNSAFE_TERMS.join('|')})s?\\b`, 'i');
 
 const BASE_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -33,6 +37,7 @@ export function normalizeQuery(raw) {
   const s = raw.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9\s-]+/g, ' ').replace(/\s+/g, ' ').trim();
   const words = s.split(' ').filter(Boolean).slice(0, 6);
   if (!words.some(w => !STOP.has(w) && w.length > 1)) return null;
+  if (UNSAFE.test(s)) return null;
   return words.join(' ');
 }
 
@@ -89,7 +94,8 @@ async function searchOpenverse(q, env) {
     if (r.status === 401) ovToken = null; // expired or revoked app token: fetch a new one next time
     if (!r.ok) throw Object.assign(new Error('openverse ' + r.status), { status: r.status });
     const j = await r.json();
-    const hits = (j.results || []).filter(x => UUID.test(x.id) && ['cc0', 'pdm'].includes(x.license)).map(x => ({
+    const hits = (j.results || []).filter(x => UUID.test(x.id) && ['cc0', 'pdm'].includes(x.license) && !x.mature
+      && !UNSAFE.test([x.title, ...(Array.isArray(x.tags) ? x.tags : []).map(t => t && t.name)].join(' '))).map(x => ({
       src: 'openverse', id: x.id, w: x.width || 0, h: x.height || 0, license: x.license, landing: x.foreign_landing_url,
     }));
     if (hits.length) return { src: 'openverse', rung, hits };
@@ -102,7 +108,8 @@ async function searchCommons(q) {
     const u = COMMONS + '?' + new URLSearchParams({
       action: 'query', format: 'json', formatversion: '2', generator: 'search', gsrnamespace: '6', gsrlimit: '20',
       gsrsearch: `${rung} filemime:image/jpeg filew:>799 haswbstatement:P275=Q6938433|P6216=Q19652`,
-      prop: 'imageinfo', iiprop: 'url|size', iiurlwidth: '960',
+      // categories feed the UNSAFE check (a Degas nude and a V-2 casualty photo match only there); negated search terms cost 2-4 s
+      prop: 'imageinfo|categories', iiprop: 'url|size', iiurlwidth: '960', cllimit: 'max',
     });
     const r = await fetch(u, { headers: { 'User-Agent': UA, Accept: 'application/json' }, signal: AbortSignal.timeout(COMMONS_WAIT_MS) });
     if (!r.ok) throw new Error('commons ' + r.status);
@@ -110,7 +117,8 @@ async function searchCommons(q) {
     const hits = (j.query?.pages || []).sort((a, b) => a.index - b.index).map(p => {
       const ii = p.imageinfo?.[0] || {};
       const t = safeUrl(ii.thumburl);
-      return t && /\/960px-/.test(t) ? { src: 'commons', id: String(p.pageid), w: ii.width || 0, h: ii.height || 0, license: 'cc0-or-pd', thumb: t.split('?')[0], landing: ii.descriptionurl } : null;
+      const unsafe = UNSAFE.test([p.title, ...(Array.isArray(p.categories) ? p.categories : []).map(c => c && c.title)].join(' '));
+      return t && /\/960px-/.test(t) && !unsafe ? { src: 'commons', id: String(p.pageid), w: ii.width || 0, h: ii.height || 0, license: 'cc0-or-pd', thumb: t.split('?')[0], landing: ii.descriptionurl } : null;
     }).filter(Boolean);
     if (hits.length) return { src: 'commons', rung, hits };
   }

@@ -470,7 +470,7 @@ To use with the MCP server, pass `format: "openui"` to `generate_ui`. The `parse
 
 `https://daub.dev/api/photo?q=pasta%20carbonara&w=640&h=480` redirects to a CC0 or public-domain photo of the subject, so you can use it as an `<img src>` in a generated page. Photos come from Openverse's curated stock sources (rawpixel, WordPress Photo Directory, StockSnap, Nappy), with Wikimedia Commons as the fallback. They need no attribution, and you need no API key.
 
-- `q`: 1-6 words; a 2-3 word noun phrase with the head noun last works best (`leather sneaker`, `hotel lobby`)
+- `q`: 1-6 words; a 2-3 word noun phrase with the head noun last works best (`leather sneaker`, `hotel lobby`). A `q` that names nudity or gore gets the placeholder.
 - `w`, `h`: 16-2000, default 800x600; the proxy picks a photo whose orientation fits the slot
 - `i`: 0-9, picks a different photo of the same subject (for grids)
 
