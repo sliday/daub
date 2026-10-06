@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Interactive Behaviors
-   Version 3.20.1
+   Version 3.20.5
    IIFE module exposing window.DAUB = { init, toast, theme API }
    ============================================================ */
 ;(function() {
@@ -82,6 +82,8 @@
     document.documentElement.setAttribute('data-theme', theme);
     try { localStorage.setItem('db-theme', theme); } catch(e) {}
     _userExplicitTheme = true;
+    var st = document.documentElement.style, acc = st.getPropertyValue('--db-terracotta').trim();
+    if (st.getPropertyValue('--db-terracotta-text') && /^#[0-9a-fA-F]{6}$/.test(acc)) st.setProperty('--db-terracotta-text', accentText(acc));
     if (theme.indexOf('grunge') !== -1) loadGrungeFont();
     updateSwitcherUI();
     requestAnimationFrame(function() { fixNestedRadius(); });
@@ -219,6 +221,13 @@
     var hsl=hexToHSL(hex);
     return hslToHex(hsl[0],hsl[1],Math.min(100,hsl[2]+pct));
   }
+  // Accent text must read on the ground: darker on light themes, at least 75% lightness on dark ones
+  function accentText(hex) {
+    var info=THEME_TO_FAMILY[getTheme()];
+    if (!info || info.mode !== 'dark') return darken(hex, 20);
+    var hsl=hexToHSL(hex);
+    return hslToHex(hsl[0],hsl[1],Math.max(75,hsl[2]));
+  }
 
   function setAccentButtonContrast(root, colors) {
     function luminance(channels) {
@@ -265,7 +274,7 @@
     root.style.setProperty('--db-accent-pressed', darken(hex, 20));
     root.style.setProperty('--db-accent-dark', darken(hex, 15));
     root.style.setProperty('--db-accent-light', lighten(hex, 10));
-    root.style.setProperty('--db-terracotta-text', darken(hex, 20));
+    root.style.setProperty('--db-terracotta-text', accentText(hex));
     setAccentButtonContrast(root, [hex, darken(hex, 15), darken(hex, 10), darken(hex, 20)]);
     try { localStorage.setItem('db-accent', hex); } catch(e) {}
     updateAccentPickerUI();
@@ -607,10 +616,11 @@
       if (tabs.classList.contains('db-tabs--static')) return;
       tabs._dbInit = true;
 
-      var tabList = nativeElement(tabs, '.db-tabs__list');
+      function own(el) { return el.closest('.db-tabs') === tabs; }
+      var tabList = nativeElements(tabs, '.db-tabs__list').filter(own)[0];
       if (!tabList) { tabs._dbInit = false; return; }
-      var tabBtns = Array.from(nativeElements(tabList, '.db-tabs__tab'));
-      var panels = Array.from(nativeElements(tabs, '.db-tabs__panel'));
+      var tabBtns = nativeElements(tabList, '.db-tabs__tab').filter(own);
+      var panels = nativeElements(tabs, '.db-tabs__panel').filter(own);
       var selected = tabBtns.findIndex(function(btn) { return !isDisabled(btn) && btn.getAttribute('aria-selected') === 'true'; });
       if (selected < 0) selected = tabBtns.findIndex(function(btn) { return !isDisabled(btn); });
 
@@ -672,7 +682,12 @@
   /* ----------------------------------------------------------
      Modal
      ---------------------------------------------------------- */
+  var _dbModalKeyInit = false;
   function _isDialog(el) { return el && el.tagName === 'DIALOG'; }
+  /* An open modal <dialog> (a browser without :modal counts any open <dialog>) */
+  function _modalDialogOpen() {
+    try { return !!document.querySelector('dialog:modal'); } catch (err) { return !!document.querySelector('dialog[open]'); }
+  }
 
   function initModals(root) {
     nativeElements(root, '[data-db-modal-trigger]').forEach(function(trigger) {
@@ -731,6 +746,25 @@
         if (!dialog.open) finishOverlayClose(dialog);
       });
     });
+
+    if (!_dbModalKeyInit) {
+      _dbModalKeyInit = true;
+      /* Escape closes the open Modal, Alert Dialog, Sheet or Drawer on top. A modal <dialog> sits above all of them
+         and the browser closes it on Escape itself, so the overlays under it stay open */
+      document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape' || e.defaultPrevented || isReactOwned(e.target) || _overlayStack.length || _modalDialogOpen()) return;
+        var top = topOverlay();
+        if (top) { e.preventDefault(); dismissOverlay(top); }
+      });
+      /* [data-db-dismiss] closes the overlay it sits in, or the one whose id it names.
+         Delegated, so buttons rendered after init work too. */
+      document.addEventListener('click', function(e) {
+        var btn = e.target.closest && e.target.closest('[data-db-dismiss]');
+        if (!btn || isReactOwned(btn) || isDisabled(btn)) return;
+        var id = btn.getAttribute('data-db-dismiss');
+        dismissOverlay(id ? document.getElementById(id) : btn.closest(OVERLAY_SEL));
+      });
+    }
   }
 
   function openModal(id, triggerOrOpts, opts) {
@@ -768,6 +802,31 @@
     if (!overlay) return;
 
     closeOverlay(overlay);
+  }
+
+  var OVERLAY_SEL = '.db-modal-overlay, dialog.db-modal, .db-alert-dialog, .db-sheet, .db-drawer';
+
+  /* Close a Modal (overlay or <dialog>), Alert Dialog, Sheet or Drawer element */
+  function dismissOverlay(el) {
+    if (!el || !el.classList || isReactOwned(el)) return;
+    if (!el._dbOverlay) {
+      if (el.classList.contains('db-alert-dialog')) prepareOverlay(el, '.db-alert-dialog__panel', 'db-alert-dialog--open');
+      else if (el.classList.contains('db-sheet')) prepareOverlay(el, '.db-sheet__panel', 'db-sheet--open');
+      else if (el.classList.contains('db-drawer')) prepareOverlay(el, '.db-drawer__panel', 'db-drawer--open');
+      else if (el.classList.contains('db-modal-overlay') || _isDialog(el)) prepareOverlay(el, '.db-modal', 'db-modal--open');
+    }
+    if (el.classList.contains('db-modal-overlay') || _isDialog(el)) closeModal(el);
+    else closeOverlay(el);
+  }
+
+  /* The open overlay on top: highest z-index, the later one in the DOM on a tie */
+  function topOverlay() {
+    var top = null, topZ = -Infinity;
+    nativeElements(document, '.db-modal--open, .db-alert-dialog--open, .db-sheet--open, .db-drawer--open').forEach(function(el) {
+      var z = parseInt(getComputedStyle(el).zIndex, 10) || 0;
+      if (z >= topZ) { top = el; topZ = z; }
+    });
+    return top;
   }
 
   /* ----------------------------------------------------------
@@ -947,6 +1006,18 @@
         wrap.addEventListener('mouseleave', resetTip);
       }
       tip.setAttribute('role', 'tooltip');
+      watchHoverPanel(wrap, 'db-tooltip--open', tip);
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Hover Card
+     ---------------------------------------------------------- */
+  function initHoverCards(root) {
+    nativeElements(root, '.db-hover-card').forEach(function(card) {
+      if (card._dbInit) return;
+      card._dbInit = true;
+      watchHoverPanel(card, 'db-hover-card--open', nativeElement(card, '.db-hover-card__content'));
     });
   }
 
@@ -1321,6 +1392,9 @@
     document.addEventListener('keydown', function(e) {
       var top = _overlayStack[_overlayStack.length - 1];
       if (!top || e.defaultPrevented || (isReactOwned(e.target) && !top.contains(e.target))) return;
+      var modal = null;
+      try { modal = document.querySelector('dialog:modal'); } catch (err) { modal = document.querySelector('dialog[open]'); }
+      if (modal && modal !== top) return;
       if (e.key === 'Escape') {
         e.preventDefault();
         closeOverlay(top);
@@ -1602,6 +1676,44 @@
   }
 
   /* ----------------------------------------------------------
+     Floating panels: shift an open popover, dropdown, hover card
+     or tooltip sideways so it stays inside the viewport. The shift
+     goes in --db-panel-shift, which daub.css applies as translate.
+     The panel always gets its own value, so a panel nested in a
+     shifted one does not inherit the ancestor's shift.
+     ---------------------------------------------------------- */
+  var PANEL_GUTTER = 8;
+  function clampPanel(panel) {
+    panel.style.setProperty('--db-panel-shift', '0px');
+    var r = panel.getBoundingClientRect();
+    if (!r.width) return;
+    var vw = document.documentElement.clientWidth;
+    var dx = 0;
+    if (r.right > vw - PANEL_GUTTER) dx = vw - PANEL_GUTTER - r.right;
+    if (r.left + dx < PANEL_GUTTER) dx = PANEL_GUTTER - r.left;
+    if (dx) panel.style.setProperty('--db-panel-shift', dx + 'px');
+  }
+  // Re-clamp on every class change of the wrapper, so programmatic opens
+  // (classList.add('db-popover--open')) are covered too. A closed panel measures
+  // 0 wide and keeps a zero shift.
+  function watchPanel(wrap, openClass, panel) {
+    if (!panel) return;
+    var sync = function() { clampPanel(panel); };
+    if (typeof MutationObserver === 'function') {
+      new MutationObserver(sync).observe(wrap, { attributes: true, attributeFilter: ['class'] });
+    }
+    if (wrap.classList.contains(openClass)) sync();
+  }
+  // Hover cards and tooltips open on :hover / :focus-within, or with an --open class.
+  function watchHoverPanel(wrap, openClass, panel) {
+    if (!panel) return;
+    var clamp = function() { clampPanel(panel); };
+    wrap.addEventListener('mouseenter', clamp);
+    wrap.addEventListener('focusin', clamp);
+    watchPanel(wrap, openClass, panel);
+  }
+
+  /* ----------------------------------------------------------
      Popover
      ---------------------------------------------------------- */
   var _dbPopoverClickInit = false;
@@ -1609,6 +1721,7 @@
     nativeElements(root, '.db-popover').forEach(function(pop) {
       if (pop._dbInit) return;
       pop._dbInit = true;
+      watchPanel(pop, 'db-popover--open', nativeElement(pop, '.db-popover__content'));
       var trigger = nativeElement(pop, '.db-popover__trigger');
       if (!trigger) return;
       initPopup(pop, trigger, nativeElement(pop, '.db-popover__content'), 'db-popover--open');
@@ -1701,6 +1814,7 @@
       var content = nativeElement(drop, '.db-dropdown__content') || nativeElement(drop, '.db-dropdown__menu');
       if (!content) return;
       initPopup(drop, trigger, content, 'db-dropdown--open', '.db-dropdown__item', 'menuitem');
+      watchPanel(drop, 'db-dropdown--open', content);
       trigger.addEventListener('click', function(e) {
         e.stopPropagation();
         var wasOpen = drop.classList.contains('db-dropdown--open');
@@ -2555,20 +2669,30 @@
       document.addEventListener('click', function(e) {
         if (!e.target.closest('.db-navbar')) {
           nativeElements(document, '.db-navbar--open').forEach(function(n) {
-            n.classList.remove('db-navbar--open');
-            nativeElements(n, '.db-navbar__toggle').forEach(function(btn) { btn.setAttribute('aria-expanded', 'false'); });
+            toggleNavbar(n, false);
           });
         }
+      });
+      // Escape closes an open menu; focus inside it goes back to the toggle
+      document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape' || e.defaultPrevented || isReactOwned(e.target)) return;
+        nativeElements(document, '.db-navbar--open').forEach(function(n) {
+          var t = nativeElement(n, '.db-navbar__toggle');
+          var inside = n.contains(document.activeElement);
+          toggleNavbar(n, false);
+          if (t && inside) t.focus();
+        });
       });
     }
   }
 
-  function toggleNavbar(el) {
+  function toggleNavbar(el, open) {
     if (typeof el === 'string') el = nativeElement(document, el);
-    if (el) {
-      el.classList.toggle('db-navbar--open');
-      nativeElements(el, '.db-navbar__toggle').forEach(function(btn) { btn.setAttribute('aria-expanded', String(el.classList.contains('db-navbar--open'))); });
-    }
+    if (!el || isReactOwned(el)) return;
+    if (typeof open !== 'boolean') open = !el.classList.contains('db-navbar--open');
+    if (open) el.classList.add('db-navbar--open');
+    else el.classList.remove('db-navbar--open');
+    nativeElements(el, '.db-navbar__toggle').forEach(function(btn) { btn.setAttribute('aria-expanded', String(open)); });
   }
 
   /* ----------------------------------------------------------
@@ -3021,6 +3145,7 @@
     initModals(root);
     initSteppers(root);
     initTooltips(root);
+    initHoverCards(root);
     initSliders(root);
     initTemperature();
     initNoise();

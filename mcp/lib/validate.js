@@ -1,6 +1,7 @@
 import { RENDERER_TYPES as VALID_TYPES, THEMES } from './renderers.js';
 
-const validTypeSet = new Set(VALID_TYPES);
+// Link/Icon stay out of the prompt's type list, but playground specs use them and renderers.js draws them
+const validTypeSet = new Set([...VALID_TYPES, 'Link', 'Icon']);
 
 export function validateSpec(spec) {
   const issues = [];
@@ -58,6 +59,9 @@ export function validateSpec(spec) {
       }
       if (def.type === 'Card' && Array.isArray(def.props?.media)) {
         warnings.push(`Card "${id}" has media as array — media should be a URL string, use footer for child element IDs`);
+      }
+      if (def.type === 'ChartCard' && (!def.children || def.children.length === 0) && !(Array.isArray(def.props?.bars) && def.props.bars.length > 0)) {
+        warnings.push(`ChartCard "${id}" has no Chart child or bars; it will render "No data"`);
       }
       if (def.type === 'Button' && def.props?.variant === 'primary') {
         const parentId = Object.entries(spec.elements).find(([, p]) => Array.isArray(p?.children) && p.children.includes(id))?.[0] || 'root';

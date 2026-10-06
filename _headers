@@ -64,6 +64,14 @@
 /llms.txt
   Access-Control-Allow-Origin: *
 
+/SKILL.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/references/*
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+
 /.well-known/ai-plugin.json
   Access-Control-Allow-Origin: *
 
@@ -78,6 +86,12 @@
 
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
+
+/playground
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+
+/playground.html
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
 
 /*.map
   Cache-Control: no-store

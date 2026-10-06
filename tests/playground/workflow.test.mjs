@@ -72,7 +72,7 @@ test('the live JSON prompt exposes all canonical props and supported types', asy
   assert.deepEqual(await page.evaluate(() => Object.keys(window.RENDERERS)), VALID_TYPES);
 });
 
-test('the OpenUI prompt exposes the same canonical component props', async (t) => {
+test('the OpenUI prompt exposes canonical props in parser positional order', async (t) => {
   const page = await open(t);
   const html = await readFile(new URL('../../playground.html', import.meta.url), 'utf8');
   const source = html.slice(html.indexOf('var OPENUI_SYSTEM_PROMPT ='), html.indexOf('// ---- Output format toggle'));
@@ -80,7 +80,24 @@ test('the OpenUI prompt exposes the same canonical component props', async (t) =
     const build = new Function('COMP_PROPS', 'COMP_CATEGORIES', 'RENDERERS', 'DAUB', source + ';return OPENUI_SYSTEM_PROMPT;');
     return build(props, categories, window.RENDERERS, window.DAUB);
   }, { source, props: COMP_PROPS, categories: COMP_CATEGORIES });
-  for (const type of VALID_TYPES) assert.ok(prompt.includes('- ' + type + '(' + COMP_PROPS[type] + ')'), type + ' props missing from OpenUI prompt');
+  const schema = await page.evaluate(() => window.DaubOpenUI.COMP_SCHEMA);
+  for (const type of VALID_TYPES) {
+    const signature = prompt.split('\n').find(line => line.startsWith('- ' + type + '('));
+    assert.ok(signature, type + ' missing from OpenUI prompt');
+    for (const match of (COMP_PROPS[type] || '').matchAll(/(?:^|,\s*)(\w+)\s*:/g)) {
+      assert.ok(signature.includes(match[1] + ':'), type + '.' + match[1] + ' missing from OpenUI prompt');
+    }
+    const args = signature.slice(('- ' + type + '(').length, -1);
+    const parts = [];
+    let depth = 0, start = 0;
+    for (let index = 0; index <= args.length; index++) {
+      const character = args[index];
+      if (['(', '[', '{'].includes(character)) depth++;
+      else if ([')', ']', '}'].includes(character)) depth--;
+      else if ((character === ',' && depth === 0) || index === args.length) { parts.push(args.slice(start, index).trim()); start = index + 1; }
+    }
+    assert.deepEqual(parts.slice(0, (schema[type] || []).length).map(part => /^\w+/.exec(part)?.[0]), schema[type] || [], type + ' positional order');
+  }
 });
 
 const addedTypes = {
@@ -297,7 +314,8 @@ test('copies an edited share spec and runnable HTML', async (t) => {
   await page.locator('[data-tab="design"]').click();
   await page.locator('#pg-share').click();
   const url = new URL(await page.evaluate(() => window.copied[0]));
-  assert.equal(JSON.parse(url.searchParams.get('s')).elements.title.props.content, 'Shared edit');
+  assert.ok(url.hash.startsWith('#s='));
+  assert.equal(JSON.parse(decodeURIComponent(url.hash.slice(3))).elements.title.props.content, 'Shared edit');
   await page.locator('[data-tab="code"]').click();
   await page.locator('#pg-copy-html').click();
   assert.ok((await page.evaluate(() => window.copied[1])).startsWith('<!DOCTYPE html>'));

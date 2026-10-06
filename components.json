@@ -1,5 +1,5 @@
 {
-  "version": "3.20.1",
+  "version": "3.20.5",
   "prefix": "db-",
   "cdn": {
     "css": "https://daub.dev/daub.css",
@@ -508,9 +508,9 @@
         }
       ],
       "js": true,
-      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-modal-trigger=\"my-modal\">Open project details</button>\n<div class=\"db-modal-overlay\" id=\"my-modal\" aria-hidden=\"true\">\n  <div class=\"db-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"my-modal-title\">\n    <div class=\"db-modal__header\"><h2 class=\"db-modal__title\" id=\"my-modal-title\">Project details</h2><button type=\"button\" class=\"db-modal__close\" aria-label=\"Close dialog\">&times;</button></div>\n    <div class=\"db-modal__body\">Project Aurora has 3 tasks ready for review.</div>\n    <div class=\"db-modal__footer\"><button type=\"button\" class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Close</button></div>\n  </div>\n</div>",
+      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-modal-trigger=\"my-modal\">Open project details</button>\n<div class=\"db-modal-overlay\" id=\"my-modal\" aria-hidden=\"true\">\n  <div class=\"db-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"my-modal-title\">\n    <div class=\"db-modal__header\"><h2 class=\"db-modal__title\" id=\"my-modal-title\">Project details</h2><button type=\"button\" class=\"db-modal__close\" aria-label=\"Close dialog\">&times;</button></div>\n    <div class=\"db-modal__body\">Project Aurora has 3 tasks ready for review.</div>\n    <div class=\"db-modal__footer\"><button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-dismiss>Close</button></div>\n  </div>\n</div>",
       "skeleton": "db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer",
-      "notes": "Wrap in db-modal-overlay with id. Open: DAUB.openModal('id'). Close: DAUB.closeModal('id')."
+      "notes": "Wrap in db-modal-overlay with id. Open: DAUB.openModal('id'). Close: DAUB.closeModal('id'). The close button, the backdrop, Escape and any button with data-db-dismiss close it too."
     },
     {
       "name": "Modal Overlay",
@@ -560,9 +560,9 @@
         }
       ],
       "js": true,
-      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-trigger=\"confirm-delete\">Delete draft</button>\n<div class=\"db-alert-dialog\" id=\"confirm-delete\">\n  <div class=\"db-alert-dialog__overlay\"></div>\n  <div class=\"db-alert-dialog__panel\" role=\"alertdialog\" aria-modal=\"true\" aria-labelledby=\"confirm-delete-title\" aria-describedby=\"confirm-delete-desc\">\n    <h3 class=\"db-alert-dialog__title\" id=\"confirm-delete-title\">Delete this draft?</h3>\n    <p class=\"db-alert-dialog__desc\" id=\"confirm-delete-desc\">This action cannot be undone.</p>\n    <div class=\"db-alert-dialog__actions\">\n      <button type=\"button\" class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Cancel</button>\n      <button type=\"button\" class=\"db-btn db-btn--primary\" onclick=\"DAUB.closeAlertDialog('confirm-delete')\">Delete draft</button>\n    </div>\n  </div>\n</div>",
+      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-trigger=\"confirm-delete\">Delete draft</button>\n<div class=\"db-alert-dialog\" id=\"confirm-delete\">\n  <div class=\"db-alert-dialog__overlay\"></div>\n  <div class=\"db-alert-dialog__panel\" role=\"alertdialog\" aria-modal=\"true\" aria-labelledby=\"confirm-delete-title\" aria-describedby=\"confirm-delete-desc\">\n    <h3 class=\"db-alert-dialog__title\" id=\"confirm-delete-title\">Delete this draft?</h3>\n    <p class=\"db-alert-dialog__desc\" id=\"confirm-delete-desc\">This action cannot be undone.</p>\n    <div class=\"db-alert-dialog__actions\">\n      <button type=\"button\" class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Cancel</button>\n      <button type=\"button\" class=\"db-btn db-btn--primary\" data-db-dismiss onclick=\"DAUB.closeAlertDialog('confirm-delete')\">Delete draft</button>\n    </div>\n  </div>\n</div>",
       "skeleton": "db-alert-dialog#id > __overlay + __panel > __title + __desc + __actions",
-      "notes": "Open: DAUB.openAlertDialog('id'). data-action=\"cancel\" auto-closes."
+      "notes": "Open: DAUB.openAlertDialog('id'). data-action=\"cancel\" auto-closes and takes focus on open. data-db-dismiss closes it from any button, a confirm action included; so do the backdrop and Escape."
     },
     {
       "name": "Sheet",
@@ -611,7 +611,7 @@
       "js": true,
       "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-trigger=\"my-sheet\">Project settings</button>\n<div class=\"db-sheet db-sheet--right\" id=\"my-sheet\">\n  <div class=\"db-sheet__overlay\"></div>\n  <div class=\"db-sheet__panel\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"my-sheet-title\">\n    <div class=\"db-sheet__header\">\n      <span class=\"db-sheet__title\" id=\"my-sheet-title\">Project settings</span>\n      <button type=\"button\" class=\"db-sheet__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-sheet__body\">Notifications are enabled for this project.</div>\n  </div>\n</div>",
       "skeleton": "db-sheet.db-sheet--right#id > __overlay + __panel > __header + __body",
-      "notes": "Sides: --right (default), --left, --top, --bottom. Open: DAUB.openSheet('id')."
+      "notes": "Sides: --right (default), --left, --top, --bottom. Open: DAUB.openSheet('id'). The close button, the backdrop, Escape and any button with data-db-dismiss close it."
     },
     {
       "name": "Drawer",
@@ -646,7 +646,7 @@
       "js": true,
       "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-trigger=\"my-drawer\">View order</button>\n<div class=\"db-drawer\" id=\"my-drawer\">\n  <div class=\"db-drawer__overlay\"></div>\n  <div class=\"db-drawer__panel\" role=\"dialog\" aria-modal=\"true\" aria-label=\"Order summary\">\n    <div class=\"db-drawer__handle\"></div>\n    <div class=\"db-drawer__body\"><h3 class=\"db-h3\">Order summary</h3><p>3 items. Total: $42.00.</p><button type=\"button\" class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Close</button></div>\n  </div>\n</div>",
       "skeleton": "db-drawer#id > __overlay + __panel > __handle + __body",
-      "notes": "Mobile-friendly bottom panel. Open: DAUB.openDrawer('id')."
+      "notes": "Mobile-friendly bottom panel. Open: DAUB.openDrawer('id'). The backdrop, Escape and any button with data-db-dismiss close it."
     },
     {
       "name": "Toast",
@@ -985,8 +985,8 @@
         }
       ],
       "js": true,
-      "html": "<nav class=\"db-navbar\">\n  <a class=\"db-navbar__brand\" href=\"/\">AppName</a>\n  <div class=\"db-navbar__nav\">\n    <div class=\"db-nav-menu\">\n      <a class=\"db-nav-menu__item db-nav-menu__item--active\" href=\"/\">Home</a>\n    </div>\n  </div>\n  <div class=\"db-navbar__spacer\"></div>\n  <div class=\"db-navbar__actions\">\n    <button type=\"button\" class=\"db-btn db-btn--icon\" aria-label=\"Notifications\"><i data-lucide=\"bell\" aria-hidden=\"true\"></i></button>\n  </div>\n  <button type=\"button\" class=\"db-navbar__toggle\" aria-label=\"Menu\"><i data-lucide=\"menu\" aria-hidden=\"true\"></i></button>\n</nav>",
-      "notes": "Sticky top bar. JS: DAUB.toggleNavbar(el). Mobile hamburger auto-close on outside click."
+      "html": "<nav class=\"db-navbar\">\n  <a class=\"db-navbar__brand\" href=\"/\">AppName</a>\n  <div class=\"db-navbar__nav\">\n    <div class=\"db-nav-menu\">\n      <a class=\"db-nav-menu__item db-nav-menu__item--active\" href=\"/\">Home</a>\n    </div>\n  </div>\n  <div class=\"db-navbar__spacer\"></div>\n  <div class=\"db-navbar__actions\">\n    <button type=\"button\" class=\"db-btn db-btn--icon\" aria-label=\"Notifications\"><i data-lucide=\"bell\" aria-hidden=\"true\"></i></button>\n  </div>\n  <button type=\"button\" class=\"db-navbar__toggle\" aria-label=\"Menu\" aria-expanded=\"false\"><i data-lucide=\"menu\" aria-hidden=\"true\"></i></button>\n</nav>",
+      "notes": "Sticky top bar. At 640px and below db-navbar__nav collapses and db-navbar__toggle opens it; daub.js keeps the toggle's aria-expanded in step. JS: DAUB.toggleNavbar(el) or DAUB.toggleNavbar(el, open). The menu closes on outside click and Escape."
     },
     {
       "name": "Menubar",
@@ -1382,7 +1382,7 @@
           "required": false
         },
         {
-          "class": "db-empty__desc",
+          "class": "db-empty__message",
           "element": "p",
           "required": false
         }

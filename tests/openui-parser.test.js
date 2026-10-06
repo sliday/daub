@@ -229,6 +229,101 @@ describe('openUItoSpec — children and references', () => {
 });
 
 // ============================================================
+// Parser: Data Variable References
+// ============================================================
+describe('openUItoSpec — data variable references', () => {
+  it('resolves array data defined after use (named args)', () => {
+    const spec = openUItoSpec(
+      'root = Table(columns: cols, rows: rowsData, sortable: true)\n'
+      + 'cols = [{key: "a", label: "A"}, {key: "b", label: "B"}]\n'
+      + 'rowsData = [{a: "1", b: "2"}]'
+    );
+    assert.deepEqual(spec.elements.root.props.columns, [{ key: 'a', label: 'A' }, { key: 'b', label: 'B' }]);
+    assert.deepEqual(spec.elements.root.props.rows, [{ a: '1', b: '2' }]);
+    assert.equal(spec.elements.root.props.sortable, true);
+  });
+
+  it('resolves data defined before use (positional args)', () => {
+    const spec = openUItoSpec(
+      'cols = [{key: "a", label: "A"}]\n'
+      + 'root = Table(cols, [{a: "x"}])'
+    );
+    assert.equal(spec.root, 'root', 'data statement must not become the root');
+    assert.deepEqual(spec.elements.root.props.columns, [{ key: 'a', label: 'A' }]);
+    assert.ok(!spec.elements.cols, 'data statements do not create elements');
+  });
+
+  it('resolves object, string and number data', () => {
+    const spec = openUItoSpec(
+      'root = Stack([chart, stat], "vertical")\n'
+      + 'chart = Chart(series)\n'
+      + 'stat = StatCard(statLabel, statValue)\n'
+      + 'series = {labels: ["Mon", "Tue"], data: [3, 5]}\n'
+      + 'statLabel = "Revenue"\n'
+      + 'statValue = 42'
+    );
+    assert.deepEqual(spec.elements.chart.props.bars, { labels: ['Mon', 'Tue'], data: [3, 5] });
+    assert.equal(spec.elements.stat.props.label, 'Revenue');
+    assert.equal(spec.elements.stat.props.value, 42);
+  });
+
+  it('resolves references nested inside arrays and objects', () => {
+    const spec = openUItoSpec(
+      'root = Table(columns: [colA, {key: "b", label: bLabel}], rows: [{a: cellA, b: "y"}])\n'
+      + 'colA = {key: "a", label: "A"}\n'
+      + 'bLabel = "B"\n'
+      + 'cellA = "x"'
+    );
+    assert.deepEqual(spec.elements.root.props.columns, [{ key: 'a', label: 'A' }, { key: 'b', label: 'B' }]);
+    assert.deepEqual(spec.elements.root.props.rows, [{ a: 'x', b: 'y' }]);
+  });
+
+  it('expands a data array passed as children', () => {
+    const spec = openUItoSpec(
+      'root = Stack(kids, "vertical")\n'
+      + 'kids = [a, b]\n'
+      + 'a = Text("A")\n'
+      + 'b = Button("B")'
+    );
+    assert.deepEqual(spec.elements.root.children, ['a', 'b']);
+    const v = validateSpec(spec);
+    assert.ok(v.valid, 'Validation failed: ' + v.issues.join(', '));
+  });
+
+  it('guards against reference cycles', () => {
+    const spec = openUItoSpec(
+      'root = Stack([chart], "vertical")\n'
+      + 'chart = Chart(bars: a)\n'
+      + 'a = [b]\n'
+      + 'b = {next: a}'
+    );
+    assert.ok(spec);
+    assert.deepEqual(spec.elements.chart.props.bars, [{ next: 'a' }]);
+    const spec2 = openUItoSpec('root = Stack(a, "vertical")\na = [b]\nb = [a]');
+    assert.ok(spec2);
+  });
+
+  it('keeps component references as element IDs', () => {
+    const spec = openUItoSpec(
+      'root = Card([body], "Title", footer: [saveBtn])\n'
+      + 'body = Text("Hello")\n'
+      + 'saveBtn = Button("Save", "primary")\n'
+      + 'open = Button(label: "Open", trigger: dlg)\n'
+      + 'dlg = Modal([Text("Hi")], "dlg", "Dialog")'
+    );
+    assert.deepEqual(spec.elements.root.children, ['body']);
+    assert.deepEqual(spec.elements.root.props.footer, ['saveBtn']);
+    assert.equal(spec.elements.open.props.trigger, 'dlg');
+    assert.equal(spec.elements.saveBtn.type, 'Button');
+  });
+
+  it('leaves unknown identifiers as strings', () => {
+    const spec = openUItoSpec('root = Tabs([], [{id: "a", label: "A"}], active: missing)');
+    assert.equal(spec.elements.root.props.active, 'missing');
+  });
+});
+
+// ============================================================
 // Parser: Named Arguments
 // ============================================================
 describe('openUItoSpec — named arguments', () => {
@@ -591,6 +686,12 @@ describe('openUItoSpec — edge cases', () => {
   it('uses first non-meta statement as root when no "root" name', () => {
     const spec = openUItoSpec('__theme = "dark"\nmyPage = Stack([Text("Hi")])');
     assert.equal(spec.root, 'myPage');
+  });
+
+  it('uses bare unnamed root statement as root, not its first child', () => {
+    const spec = openUItoSpec('Stack([Text("hi"), Button("Go")])');
+    assert.equal(spec.elements[spec.root].type, 'Stack');
+    assert.equal(spec.elements[spec.root].children.length, 2);
   });
 
   it('handles special characters in strings', () => {

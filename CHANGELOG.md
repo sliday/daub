@@ -23,6 +23,127 @@ All notable changes to DAUB are documented here.
   class hooks, social image counts, and stale React documentation.
 - Add regression and visual-contract coverage. See [QUALITY-REVIEW.md](QUALITY-REVIEW.md).
 
+## v3.20.5
+
+**Hover lifts and press flips, dialog dismiss, Navbar phone menu, hosted MCP gaps closed (2026-09-29).**
+
+### Library (daub.css, daub.js)
+- Button hover keeps the resting gradient, lifts 1px and deepens the shadow; only press flips the fill and insets it. Before, primary and secondary hover already showed the pressed lighting (#24).
+- Plain `.db-card` no longer raises its shadow on hover; `.db-card--interactive` keeps its lift. Hover-only rules apply under `@media (hover: hover) and (pointer: fine)`, so taps on touch screens leave no stuck hover (#24).
+- Icons inside `.db-btn` no longer shrink in tight rows, and ToggleGroup labels no longer wrap (#24).
+- A button with `data-db-dismiss` closes the Modal, Alert Dialog, Sheet or Drawer it sits in, and Escape closes the one on top (#25).
+- Navbar gets a phone menu toggle (`.db-navbar__toggle`) so its links stay reachable at narrow widths (#25).
+
+### Rendering (playground, daub-render.js, MCP renderer)
+- `Image` keeps its aspect ratio instead of writing a fixed pixel height beside `max-width: 100%` (#25).
+- `Field`/`Input` accept a `value` prop (#25).
+- Dialog default buttons and footer buttons carry `data-db-dismiss`; footer buttons that run a state action (for example a wizard's Next) keep the dialog open (#25).
+
+### Hosted MCP (functions/api/mcp.js)
+- `render_spec` and `validate_spec` accept the spec as a JSON string or an object (#26).
+- `parse_openui` and `validate_spec` support `Icon` and `Link`; before, `Icon(...)` became a stray Text with a dangling id (#26).
+- `get_component_catalog` lists only themes `daub.js` defines, with a test that fails on drift (#26).
+
+### Playground
+- The "Streaming…" status lines up with the Design / Structure / Code tabs (#23).
+
+## v3.20.4
+
+**Combo-audit fixes, render fixes from the design eval, weblook SSRF hardening, daub-ui skill v2 (2026-09-28).**
+
+### Rendering (combo visual audit, #8-#18)
+- Hosted MCP pages follow the theme background (#8). Dark themes define the text-colour tokens, and links use the text colour instead of the fill (#14).
+- Grid tracks grow with content, and spans survive the mobile collapse (#13). Tables sit in a scroll container (#9). Sidebar labels render in a span (#11).
+- Popovers, dropdowns, hover cards and tooltips stay inside the viewport (`clampPanel` in `daub.js`) (#16).
+- Variant props map onto classes `daub.css` defines (#10). Each text slot reads one prop name through shared aliases, which ends dropped content (#15). Unknown icon names resolve through an alias map or leave no empty slot (#12).
+- Renderers render their children (List, Avatar, Table and others) with a recursion guard (#17). The Stepper completed indicator meets contrast and the current index is honoured (#18).
+
+### Rendering (design eval defects, #21)
+- Avatar keeps non-image strings out of `<img src>`: a size token becomes `size`, a name falls back to initials, and a swapped URL moves to `src`.
+- StatCard moves a Lucide icon name out of the trend slot. `neutral`/`flat` trends show the value without the word.
+- CustomSelect honours a top-level `selected`. Switch and Checkbox show one visible label per row, and a boolean in the label slot sets `checked`.
+- Tabs accept string tab lists. EmptyState renders action children. Table and DataTable row actions render as buttons, and cells can hold element ids.
+- The OpenUI spec tree places each element once: duplicate references, aliases, id-first overlays and cycles no longer render content twice. Orphans, nested footer arrays and carousel slides render once.
+- Prompts: a real-photo rule replaces the dummyimage recommendation, the filler-Card example is gone, and the prompts add tree rules (one parent, reachable from root).
+
+### Security
+- `weblook.js` blocks private, reserved and IPv6-mapped hosts, checks DNS answers over DoH (fail closed) and re-checks the final URL after navigation (#7, supersedes #5).
+
+### Agent skill
+- daub-ui skill v2 (#20): `SKILL.md` plus nine generated `references/*.md` (components, OpenUI, json-render, blocks, themes, MCP, Jev, verify, design), rebuilt by `node tools/build-skill.mjs` and checked by `tests/skill.test.mjs`. `.well-known/agent-skills/index.json` follows the discovery schema with sha256 digests.
+
+## v3.20.3
+
+**Consistent rendering across renderers, #s= share links, preview state, combo visual audit (2026-09-28).**
+
+### Rendering
+- The playground, `daub-render.js` and the MCP renderer now coerce malformed props the same way: string or number options become `{label, value}`, object-map table columns become `{key, label}`, table cells show `0` and `false`, flat Sidebar items wrap into one section, a footer given as one id works, and footer ids that name no element are dropped (Modal and AlertDialog keep their default buttons). A scalar table `columns`/`rows` (an unresolved variable name) renders an empty table instead of a header named after the variable.
+- DropdownMenu promotes its first child to trigger only when it is a Button or Link; any other child becomes the label of the default trigger.
+- Unknown-type and render-error notices carry `data-spec-id`, so they no longer render twice.
+- The MCP renderer gained Link, Icon and plain-string List items (67 of 386 corpus specs showed "Unknown: Link/Icon" there).
+- Playground preview keeps state: Checkbox `checked`, RadioGroup and Select `selected`, and Slider `value` survive into the sandboxed preview (they were set as DOM properties and lost when the HTML was serialized).
+
+### Playground
+- Share links use `#s=`, so the spec never reaches the server and long links no longer hit URL limits. Legacy `?s=` links still open, pasting a new `#s=` link into an open tab loads it, and shared custom code stays paused until you click Run code on every path.
+- The blocking fallback (browsers without streaming fetch) now reads the SSE response and parses OpenUI output; it could never succeed before.
+- Code generation: prompts forbid redeclaring `container`/`preview`, and the planner's shared state is validated (placeholder seeds such as `"(seed 8 items)"` are dropped instead of crashing every chunk).
+
+### Assets and docs
+- lucide is pinned to 0.576.0 with an SRI hash everywhere (preview, MCP output, README, SKILL.md, llms.txt, tools). lucide 1.x drops brand icons such as GitHub, Twitter and LinkedIn.
+- Hosted and npm MCP HTML load `daub.css`, `daub.js` and `daub-render.js` from daub.dev with a version query, so the output always matches the deployed renderer (the jsDelivr pin pointed at an unpublished npm version).
+- `demo.html` and the visual-QA tool build `#s=` links.
+
+### Tooling
+- New combo visual audit (`tests/combo-audit/`): renders container × child pairs, random nested trees, the block library and saved AI outputs across 4 themes and 2 viewports, and flags combination-only defects (overflow, clipping, overlap, contrast, dropped content, unknown variants, broken icons, orphans). First run: 1,633 specs, 13,064 renders, 18 fix clusters queued as separate PRs.
+
+## v3.20.2
+
+**Playground: OpenRouter Auto Router + Jev component picker, preview isolation, full-repo review fixes (2026-09-28).**
+
+### Playground: model routing
+- Every playground stage runs on OpenRouter's Auto Router (`openrouter/auto`) on its default cost band. A blind benchmark (34 prompts, 116 outputs, two frontier judges scoring screenshots) found the default band drafts as well as or better than the `medium` band (+0.53 composite on non-crashing prompts), at 3.4× lower cost and a better p90 (21s vs 32s).
+- `functions/api/generate.js` defaults to `openrouter/auto`, clamps any `cost_tier` to `low`/`medium` on the server key, and passes a per-chat `session_id` so iterations stay on the same routed model. The version card shows which model the router picked.
+- The Fast toggle is gone; the router makes the speed/quality call per prompt. A pinned fallback model still takes over after repeated parse failures.
+- BYOK OpenRouter users get `openrouter/auto` as the first model option.
+- The same benchmark tested Jev as an output verifier (draft → Jev check → repair). It did not improve blind-judged quality (+0.01, CI −0.16 to +0.15), because Jev reads a text outline and judges read pixels, so the playground does not run a verify/repair loop. Jev stays on component picking, where it measurably helps.
+
+### Playground: Jev component picker
+- New `functions/api/choose.js` calls OpenRouter's Decisions API (`/api/alpha/decisions`) with `~typesafe/jev-latest`, TypeSafe's decision model. Jev rejects `chat/completions`; it answers typed questions with probabilities. The endpoint asks one yes/no question per component in one request. Model is pinned server-side.
+- `chooseComponents()` runs in parallel with layout analysis. Picked components (plus core layout types and any type already on the canvas) get full props in the system prompt; the rest appear by name only. Both JSON and OpenUI prompts support this. Measured: 300–550ms, ~$0.00025 per call, OpenUI system prompt 8.3k → 5.0k chars on a dashboard prompt.
+- Any failure, 4s timeout, or empty pick falls back to the full catalog.
+- Tuned on 39 labeled prompts (~990 Jev calls): each component is described by a one-line purpose instead of its props, threshold 0.45 → 96% must-have recall at ~13 picks, 0.2% wrong picks. Requests with images, web or Figma context skip the picker (Jev only sees text).
+- The hosted MCP server's `generate_ui` uses the same picker (`routing.picked_components` shows the pick).
+
+### Generation quality
+- **No more blank previews.** Each element renders inside its own guard: an element that throws shows a small "Couldn't render" notice while the rest of the page renders (playground, `daub-render.js`, MCP renderers). Renderers also accept the prop shapes models commonly emit (Kbd keys as a string, Chart/Table data passed as one object, string table columns, array rows, non-numeric bar values, List items as plain strings, `children` given as a single id). The parser (and the MCP server's inline copy) resolves data variables defined anywhere in the file, so a table whose columns are declared below it gets real data. These code fixes cover every blank page in the benchmark at $0; a blind judge scored them equal to an LLM repair.
+- OpenUI prompt signatures now follow the parser's positional order. 24 of 72 disagreed: `Text` had content and tag swapped, and 21 components (Card, Field, Modal, ChartCard, Tooltip…) take children first without saying so. Same fix in the MCP server prompt.
+- ChartCard: prompts say the chart goes inside as a Chart child, and a `bars` shortcut renders a chart when there are no children (fixes "No data" cards). Switch vs Toggle guidance fixes settings pages rendering toolbar buttons.
+- Sidebar/NavMenu accept child refs and plain-string items, which models often produce.
+- Sidebar layouts: a horizontal Stack holding a Sidebar keeps the content beside the sidebar on desktop (content gets a 480px flex basis) and still stacks on phones. Before, wide dashboards wrapped the content below the sidebar.
+- `gap: 0` on Stack now renders 0px in every renderer (`daub-render.js` and the MCP renderer treated it as the 8px default).
+
+### Security
+- **Playground preview isolation.** A crafted `?s=` share link could run script on daub.dev and read saved provider API keys and Figma tokens: the preview iframe was same-origin (`allow-scripts allow-same-origin`) and CustomHTML markup was parsed in the main page. The preview now runs in an opaque origin, CustomHTML markup is only built inside the preview, and shared specs with custom JS render with the code held back until you click Run code.
+- **Prose attribute breakout.** `sanitizeHtml` did not escape quotes in allowed attribute values, so Prose content such as `<img src='x" onerror="…'>` ran script in the main page. Attribute values are now fully escaped, and paused shared links render CustomHTML with inline handlers, `javascript:` URLs and embedded frames stripped.
+- **Preview message checks.** The preview runtime executed any `postMessage` it received, so a page that opened the playground could run code in it. Both sides now check the message source; `/playground` also sends `Cross-Origin-Opener-Policy: same-origin-allow-popups` (Figma login popup still works).
+- MCP `render_spec`/`generate_ui` HTML (hosted and npm): spec JSON is escaped for inline scripts and the theme attribute is escaped. npm renderer gets the href and sanitizer fixes.
+- `mcp/` dependencies: `npm audit` 8 → 0 with in-range updates only (includes `fast-uri` 3.1.8 for CVE-2026-13676; supersedes PR #2 without a major-version override).
+- `figma-callback.js`: reflected XSS through `?error=` inside an inline script. Values now go through a `</script>`-safe JSON escaper; the timeout path returns the postMessage page instead of raw JSON.
+- `generate.js`: server key no longer accepts arbitrary `model`/`reasoning`. Allowlist covers every model the playground sends; others fall back to the default. Null bodies and network failures return JSON errors with CORS headers.
+- `mcp.js`: JSON-RPC batches capped at 10 and rate-limited per `tools/call`; null bodies/elements return `-32600` instead of an uncaught 500.
+- Renderers (`daub-render.js`, playground copy): Link, Breadcrumbs, NavMenu, Navbar, Sidebar hrefs go through `isSafeUrl`; scheme checks strip control characters and whitespace first (`java\tscript:` bypass).
+
+### Reliability
+- Playground Stop now stops: during layout analysis, mid-stream, during the retry wait, and during the interactivity pipeline. A stale pipeline can no longer overwrite a newer generation.
+- Playground chunk JS on non-CustomHTML targets moves to a sibling CustomHTML element so it runs; `executeChunk` reads id-keyed specs; Anthropic streams reset the finish reason; OpenAI o-series / GPT-5 get `max_completion_tokens` and no temperature; invalid Anthropic `output_config` removed.
+- `figma.js`: chunked base64 fixes `RangeError` on screenshots above ~120KB. `weblook.js`: 20s per-CDP-command timeout, pending commands reject on socket close.
+- `daub.js`: `DAUB.init()` re-runs now initialize dynamically added accordions, collapsibles, popovers, context menus, dropdowns, toggles, custom selects, menubars; temperature/noise/texture storage access survives blocked `localStorage`; Tabs ignore nested panels.
+- Renderer: Popover renders a trigger; DropdownMenu child trigger gets `db-dropdown__trigger` and survives a missing child.
+- OpenUI parser: bare root statement keeps its id (was falling back to the first leaf). Regression test added; same fix in the MCP server's inline parser.
+- Popover promotes its first child to trigger only when it is a Button (or Link in the playground); other children stay in the content.
+- Stop now also cancels in-flight interactive-code and review requests, clears skeletons, and marks the pipeline Stopped. `choose.js` and MCP `generate_ui` reject malformed input with proper errors.
+- `daub.d.ts`: `setTemperature`/`getTemperature`, `openModal` options signature.
+
 ## v3.20.1
 
 **Mobile theme-switcher placement + WCAG audit accuracy (2026-08-26).**

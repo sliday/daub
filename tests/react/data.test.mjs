@@ -388,7 +388,7 @@ test('StatCard trend values use native change typography and up/down colors', as
 
 test('Stepper indicators use native size and completed, active, pending treatments', async () => {
   for (const vertical of [false, true]) {
-    await mount('Stepper', { vertical, steps: [{ label: 'Done', completed: true }, { label: 'Now', active: true }, { label: 'Later' }], style: { '--db-success-dark': '#116633', '--db-terracotta': '#cc5522', '--db-accent-dark': '#993311', '--db-cream-dark': '#ddeeff', '--db-sand': '#aabbcc' } });
+    await mount('Stepper', { vertical, steps: [{ label: 'Done', completed: true }, { label: 'Now', active: true }, { label: 'Later' }], style: { '--db-success-dark': '#116633', '--db-stepper-completed-bg': '#116633', '--db-terracotta': '#cc5522', '--db-accent-dark': '#993311', '--db-cream-dark': '#ddeeff', '--db-sand': '#aabbcc' } });
     const indicators = await page.locator('.db-stepper__indicator').evaluateAll(nodes => nodes.map(node => {
       const style = getComputedStyle(node);
       return { width: node.getBoundingClientRect().width, height: node.getBoundingClientRect().height, display: style.display, radius: style.borderRadius, border: style.borderTopWidth, background: style.backgroundColor, image: style.backgroundImage };

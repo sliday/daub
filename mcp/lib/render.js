@@ -9,11 +9,22 @@ const TMP_DIR = path.join(process.env.TMPDIR || '/tmp', 'daub-mcp');
 // Ensure tmp directory exists
 try { fs.mkdirSync(TMP_DIR, { recursive: true }); } catch {}
 
+// First-party daub.dev assets always match the deployed site (npm can lag a release); ?v= busts caches per release.
+// Version comes from the repo's package.json; outside the repo (no root package.json) fall back to the last known release
+let DAUB_VERSION = '3.20.5';
+try {
+  const pkg = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf-8'));
+  if (pkg.name === 'daub-ui' && pkg.version) DAUB_VERSION = pkg.version;
+} catch {}
+// Same pinned build + SRI as the playground export
+const LUCIDE_SRC = 'https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js';
+const LUCIDE_SRI = 'sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ';
+
 export function buildPreviewURL(spec) {
   const LZString = require('lz-string');
   const json = typeof spec === 'string' ? spec : JSON.stringify(spec);
   const compressed = LZString.compressToEncodedURIComponent(json);
-  return `https://daub.dev/playground?s=${compressed}`;
+  return `https://daub.dev/playground#s=${compressed}`;
 }
 
 export function renderToHTML(spec, outputPath) {
@@ -26,9 +37,9 @@ export function renderToHTML(spec, outputPath) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB UI</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@3/daub.css">
+  <link rel="stylesheet" href="https://daub.dev/daub.css?v=${DAUB_VERSION}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js"><\/script>
+  <script src="${LUCIDE_SRC}" integrity="${LUCIDE_SRI}" crossorigin="anonymous"><\/script>
   <style>
     body { margin: 0; padding: 16px; font-family: Inter, system-ui, sans-serif; background: var(--db-color-bg); color: var(--db-color-text); }
     #app { max-width: 1200px; margin: 0 auto; }
@@ -36,7 +47,7 @@ export function renderToHTML(spec, outputPath) {
 </head>
 <body>
   <div id="app"></div>
-  <script src="https://cdn.jsdelivr.net/npm/daub-ui@3/daub.js"><\/script>
+  <script src="https://daub.dev/daub.js?v=${DAUB_VERSION}"><\/script>
   <script>
   (function() {
     var spec = ${specJSON};
@@ -46,17 +57,7 @@ ${DAUB_RENDER_BODY}
     if (root) document.getElementById('app').appendChild(root);
 
     // Render orphan elements (overlays etc.)
-    var rendered = Object.create(null);
-    document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
-    Object.keys(spec.elements).forEach(function(id) {
-      if (id !== spec.root && !rendered[id]) {
-        var orphan = renderElement(spec.elements, id, 0);
-        if (orphan) {
-          document.getElementById('app').appendChild(orphan);
-          document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
-        }
-      }
-    });
+    renderOrphans(spec, document.getElementById('app'));
 
     // Init DAUB + Lucide icons
     if (typeof DAUB !== 'undefined') DAUB.init(document.getElementById('app'));

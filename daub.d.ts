@@ -1,6 +1,6 @@
 /**
  * DAUB UI Kit — TypeScript Declarations
- * Version 3.20.1
+ * Version 3.20.5
  * https://daub.dev
  */
 
@@ -9,6 +9,12 @@ interface DAUBToastOptions {
   title?: string;
   message: string;
   duration?: number;
+}
+
+interface DAUBModalOptions {
+  title?: string;
+  body?: string;
+  footer?: string;
 }
 
 interface DAUBStatic {
@@ -61,14 +67,14 @@ interface DAUBStatic {
 
   // --- Overlay API ---
 
-  /** Open a modal by id or element */
-  openModal(id: string | Element): void;
+  /** Open a modal by id or element. Optionally pass a trigger element (focus returns to it) and/or content overrides. */
+  openModal(id: string | Element, triggerOrOpts?: Element | DAUBModalOptions, opts?: DAUBModalOptions): void;
   /** Close a modal by id or element */
   closeModal(id: string | Element): void;
   /** Open an alert dialog by id */
   openAlertDialog(id: string): void;
-  /** Close an alert dialog */
-  closeAlertDialog(el: string | Element): void;
+  /** Close an alert dialog by id */
+  closeAlertDialog(id: string): void;
   /** Open a sheet panel by id */
   openSheet(id: string): void;
   /** Close a sheet panel by id */
@@ -86,8 +92,8 @@ interface DAUBStatic {
 
   /** Toggle sidebar collapsed state */
   toggleSidebar(id: string | Element): void;
-  /** Toggle mobile navbar menu */
-  toggleNavbar(id: string | Element): void;
+  /** Toggle the mobile navbar menu, or set it with open; keeps the toggle's aria-expanded in step */
+  toggleNavbar(id: string | Element, open?: boolean): void;
   /** Fix nested border-radius for inner elements */
   fixNestedRadius(el?: Element): void;
 
@@ -97,12 +103,15 @@ interface DAUBStatic {
   setTexture(type: string): void;
   /** Get current background texture type */
   getTexture(): string;
-  /** Set lighting temperature from -1 to 1, or follow the time of day. */
-  setTemperature(value: number | 'auto'): void;
-  /** Get the lighting temperature or automatic mode. */
-  getTemperature(): number | 'auto';
   /** Array of available texture types */
   readonly TEXTURES: string[];
+
+  // --- Temperature API ---
+
+  /** Set color temperature (-1 cool to 1 warm), or 'auto' to follow time of day */
+  setTemperature(value: number | 'auto'): void;
+  /** Get current color temperature, or 'auto' */
+  getTemperature(): number | 'auto';
 
   // --- Icons ---
 

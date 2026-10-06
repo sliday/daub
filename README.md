@@ -3,7 +3,7 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-3.20.1-3D3832.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.20.5-3D3832.svg)](https://daub.dev)
 [![Components](https://img.shields.io/badge/components-89-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
@@ -52,6 +52,18 @@ Alternative CDNs (npm package: `daub-ui`):
 <script src="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js"></script>
 ```
 
+### React
+
+Install `daub-react` and `daub-ui` in an app with React and React DOM 19 or later:
+
+```bash
+npm install daub-react daub-ui
+```
+
+Import `daub-ui/daub.css` in your app. The React package depends on `@shadcn/react` 0.3.1 for the chat scroll engine. Your bundler builds the React app; plain HTML needs no build step.
+
+To build the React package from this checkout, install its dependencies in `react/`, then run `npm --prefix react run typecheck` and `npm --prefix react run build`.
+
 ### Download
 
 ```bash
@@ -72,8 +84,8 @@ DAUB uses system font stacks by default. For richer typography:
   }
 </style>
 
-<!-- Lucide Icons (recommended — used in all demos) -->
-<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Lucide Icons (recommended — used in all demos). Keep the 0.576.0 pin: Lucide 1.x drops brand icons (github, twitter, linkedin) -->
+<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 ```
 
 ## Components (89)
@@ -293,6 +305,7 @@ Override CSS custom properties:
 ```css
 :root {
   --db-terracotta: #E07A5F;
+  --db-terracotta-text: #B64223; /* accent as text (links, active nav): keep 4.5:1 on --db-cream */
   --db-cream: #FAF8F0;
   --db-font-heading: 'Your Font', serif;
   --db-btn-radius: 999px;       /* pill buttons */
@@ -334,11 +347,11 @@ DAUB speaks both human and machine:
 - **`/.well-known/api-catalog`** — API catalog for MCP, generation, and web lookups
 - **`/.well-known/oauth-authorization-server`** — OAuth authorization server metadata
 - **`/.well-known/oauth-protected-resource`** — OAuth protected resource metadata for DAUB APIs
-- **`SKILL.md`** — Claude Code skill for DAUB development
+- **`SKILL.md`** + **`/references/`** — Agent skill for building with DAUB (HTML, json-render/OpenUI specs, MCP, verification, Jev recipes)
 
 Point your AI at `https://daub.dev/llms.txt` for complete component docs with HTML snippets, or fetch `https://daub.dev/components.json` for structured data.
 
-For **json-render** (Vercel Generative UI): see the [integration recipe in llms.txt](https://daub.dev/llms.txt#json-render-integration-vercel-generative-ui).
+For **json-render** and OpenUI Lang specs: see [references/json-render.md](https://daub.dev/references/json-render.md) and [references/openui.md](https://daub.dev/references/openui.md).
 
 ### Agent Skill
 
@@ -348,7 +361,7 @@ Install the DAUB skill into any AI coding agent ([40+ supported](https://skills.
 npx skills add sliday/daub
 ```
 
-This gives your agent full knowledge of all 89 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
+This gives your agent full knowledge of all 89 components, class conventions, theme API, and usage patterns, plus the spec formats, MCP tools, a verify loop and Jev recipes in `references/`. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
 
 ## Block Library
 
@@ -481,6 +494,16 @@ This produces the same spec as the JSON example above. Both positional and named
 
 To use with the MCP server, pass `format: "openui"` to `generate_ui`. The `parse_openui` tool converts OpenUI Lang to JSON specs independently.
 
+## Photo Proxy
+
+`https://daub.dev/api/photo?q=pasta%20carbonara&w=640&h=480` redirects to a CC0 or public-domain photo of the subject, so you can use it as an `<img src>` in a generated page. Photos come from Openverse's curated stock sources (rawpixel, WordPress Photo Directory, StockSnap, Nappy), with Wikimedia Commons as the fallback. They need no attribution, and you need no API key.
+
+- `q`: 1-6 words; a 2-3 word noun phrase with the head noun last works best (`leather sneaker`, `hotel lobby`). A `q` that names nudity or gore gets the placeholder.
+- `w`, `h`: 16-2000, default 800x600; the proxy picks a photo whose orientation fits the slot
+- `i`: 0-9, picks a different photo of the same subject (for grids)
+
+The same URL returns the same photo while the search result is cached (7 days). If nothing matches or both sources are down, you get a neutral SVG placeholder, so the `<img>` never breaks. A page with a CSP must allow `daub.dev`, `api.openverse.org`, `thumb.wikimedia.org` and `upload.wikimedia.org` in `img-src`. Details: [PIPELINE.md](PIPELINE.md#photo-proxy).
+
 ## Use with AI
 
 Drop these prompts into Claude, ChatGPT, Cursor, or any AI assistant. Each produces a complete, working HTML page. Add "Fetch docs from daub.dev/llms.txt first" for best results.
@@ -573,7 +596,11 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.20.1** — Added the Monospace theme family (`monospace-light` / `monospace`) across CSS, JS theme APIs, gallery, and docs.
+**Latest: v3.20.5** — Hover lifts and press flips (no hover shadow on plain cards, pointer-only hover); `data-db-dismiss` for dialogs, sheets and drawers; Navbar phone menu; `Image` keeps its aspect ratio; `Field` value; the hosted MCP accepts object specs, supports `Icon`/`Link` and lists only real themes.
+
+**v3.20.2** — Playground generates on OpenRouter's Auto Router (`openrouter/auto`) and picks components with Jev (`~typesafe/jev-latest`); the preview now runs in an isolated origin (share-link and postMessage exploits fixed); elements that fail to render no longer blank the page; plus fixes from a full-repo review.
+
+**v3.20.1** — Mobile theme-switcher no longer covers centered actions; WCAG audit merges per-theme blocks (42 themes, 0 failures).
 
 **v3.19.2** — SEO & AI discoverability: keyword-rich title/meta, FAQ schema, complete sitemap, consistent component count (76), llms.txt version sync. Mobile fixes: hamburger nav on all pages, configurator corner radius, toggle sizing, classless demo overflow, docs title responsiveness.
 

@@ -158,9 +158,17 @@ test('table cells preserve zero and false values', async () => {
 });
 
 test('default tabs select the first tab, pagination includes the current page', async () => {
-  await render('Tabs', fixtures.Tabs);
+  await render('Tabs', fixtures.Tabs, ['body', 'body2']);
   assert.equal(await page.locator('[aria-selected="true"]').textContent(), 'Overview');
   assert.equal(await page.locator('.db-tabs__panel:not([hidden])').count(), 1);
+  const selected = page.getByRole('tab', { selected: true });
+  const visiblePanel = page.getByRole('tabpanel');
+  assert.equal(await selected.getAttribute('aria-controls'), await visiblePanel.getAttribute('id'));
+  assert.equal(await visiblePanel.getAttribute('aria-labelledby'), await selected.getAttribute('id'));
+  assert.equal(await visiblePanel.textContent(), 'Three tasks are ready for review.');
+  await render('Tabs', fixtures.Tabs);
+  assert.equal(await page.locator('.db-tabs__panel').count(), 0);
+  assert.equal(await page.locator('[aria-controls]').count(), 0);
   await render('Pagination', fixtures.Pagination);
   assert.equal(await page.locator('[aria-current="page"]').textContent(), '9');
 });
@@ -232,7 +240,14 @@ test('ChartCard renders bars or an explicit empty state', async () => {
 test('collapsed sidebar hides visible text and keeps link names', async () => {
   await render('Sidebar', { ...fixtures.Sidebar, collapsed: true });
   assert.equal(await page.locator('.db-sidebar__item').getAttribute('aria-label'), 'Projects');
-  assert.equal(await page.locator('.db-sidebar__item span').isVisible(), false);
+  const label = page.locator('.db-sidebar__item > span');
+  assert.equal(await label.textContent(), 'Projects');
+  assert.equal(await label.isVisible(), true);
+  await page.addScriptTag({ content: await readFile(new URL('assets/lucide.min.js', root), 'utf8') });
+  await page.evaluate(() => lucide.createIcons());
+  assert.equal(await label.isVisible(), false);
+  assert.equal(await page.locator('.db-sidebar__item > svg').isVisible(), true);
+  assert.equal(await page.getByRole('link', { name: 'Projects' }).count(), 1);
 });
 
 test('renderer image fixtures load real repository assets', async () => {

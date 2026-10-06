@@ -6,8 +6,26 @@ Objective: improve the project and review each component against the reference's
 component discovery, working examples, clear states, and desktop/mobile behavior.
 Preserve DAUB's theme families and tactile visual identity.
 
-Status: reference-based component quality acceptance verified in the current worktree.
-Changes remain unpublished.
+Status: local verification complete for the quality review, chat kit, and upstream merge.
+
+## Release Integration
+
+- Preserved the 29 upstream commits through `4591bea`, including photo licensing,
+  SSRF guards, model routing, renderer coercions, and OpenUI positional contracts.
+- The merged catalog contains 89 components and 87 spec renderer types, with
+  MessageScroller, Message, Bubble, Attachment, and Marker.
+- Added compact chat controls, local attachments, streaming cancellation, and
+  position-preserving history. React chat components use the shadcn headless engine
+  and require React 19 or later.
+- Merged integration suite: 1,171 tests passed, zero failures and skips.
+- Chat contrast: 1,302 checks across 42 themes, zero failures. Minimum text ratio
+  4.60:1; minimum focus-ring ratio 5.21:1, including busy-state text colors.
+- The Pages Function bundle, canonical renderer snapshot, and generated skill
+  reference/digest checks passed. Deploy from the committed archive, excluding
+  development artifacts and retaining the compiled server bundle.
+
+Final merged log: `/private/tmp/daub-merged-release-final.log`. The initial review
+results below describe the 84-component library before adding the chat kit.
 
 ## Acceptance Criteria
 

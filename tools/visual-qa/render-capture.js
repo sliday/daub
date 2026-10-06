@@ -108,7 +108,7 @@ async function main() {
       const specJson = fs.readFileSync(spec.path, 'utf-8');
       const specObj = JSON.parse(specJson);
       const compressed = LZString.compressToEncodedURIComponent(specJson);
-      const url = `${baseUrl}/playground?s=${compressed}`;
+      const url = `${baseUrl}/playground#s=${compressed}`;
 
       // Open page
       const page = await context.newPage();

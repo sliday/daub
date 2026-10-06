@@ -49,7 +49,7 @@
           crossorigin="anonymous" defer></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.20.1">
+  <link rel="stylesheet" href="daub.css?v=3.20.5">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -380,6 +380,15 @@
       vertical-align: middle;
     }
     @keyframes pg-blink { 0%,100%{opacity:.2} 50%{opacity:1} }
+    /* Live progress steps in the reply bubble: done steps get a check, the active one blinks */
+    .pg-chat__steps { list-style: none; margin: 0; padding: 0; font-size: 0.75rem; color: var(--db-warm-gray); }
+    .pg-chat__steps li { display: flex; gap: 6px; align-items: baseline; }
+    .pg-chat__steps li::before { content: '\2713'; flex: 0 0 0.75rem; text-align: center; color: var(--db-success, #2e7d32); }
+    .pg-chat__steps li.pg-chat__step--active { color: var(--db-ink); }
+    .pg-chat__steps li.pg-chat__step--active::before { content: '\25CF'; font-size: 0.625rem; color: var(--db-terracotta); animation: pg-blink 1s infinite; }
+    .pg-chat__msg--stopped .pg-chat__steps li.pg-chat__step--active::before { content: '\25A0'; animation: none; }
+    .pg-chat__msg--streaming:has(.pg-chat__steps)::after { content: none; }
+    .pg-result-summary { font-size: 0.75rem; color: var(--db-ink); margin-top: 4px; }
     .pg-chat__msg--error {
       align-self: flex-start;
       background: color-mix(in srgb, var(--db-error, #d32f2f) 10%, transparent);
@@ -398,7 +407,6 @@
     .pg-chat__examples--open { display: block; }
     .pg-chat--has-messages .pg-chat__examples,
     .pg-chat--has-messages .pg-options-examples-trigger,
-    .pg-chat--has-messages .pg-options-examples-sep,
     .pg-chat--has-messages .pg-chat__empty { display: none; }
     .pg-chat__input-wrap {
       border: 1px solid var(--db-sand);
@@ -758,6 +766,8 @@
       border-radius: 0; font-weight: 500;
     }
     .pg-preview-tabs .db-tabs__tab[aria-selected="true"] { font-weight: 500; }
+    /* Status text shares the tab box so "Streaming…" sits on the tab baseline */
+    #pg-status { height: 36px; line-height: 34px; border-bottom: 2px solid transparent; box-sizing: border-box; font-weight: 500; }
     .pg-preview-pane { display: none; flex: 1; overflow: auto; min-height: 0; }
     .pg-preview-pane--active { display: flex; flex-direction: column; }
     .pg-code-view {
@@ -847,12 +857,6 @@
               <svg class="db-collapsible__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><path d="m9 18 6-6-6-6"/></svg>
               Examples
             </button>
-            <span class="pg-options-sep pg-options-examples-sep"></span>
-            <label class="pg-pill-toggle" id="pg-fast-pill" title="Fast: Gemini Flash Lite for all stages">
-              <input type="checkbox" id="pg-fast-mode" checked>
-              <span class="pg-zap-icon"><i data-lucide="zap" style="width:10px;height:10px;"></i></span>
-              Fast
-            </label>
             <span style="flex:1"></span>
             <a href="#" id="pg-byok-link" class="pg-byok-link">Own Key</a>
           </div>
@@ -861,7 +865,7 @@
               <button class="db-chip db-chip--sm" data-example="Stripe-style analytics dashboard: Breadcrumbs (Home > Analytics > Overview). Row of 4 horizontal StatCards: Gross Volume ($142.8K, up 14.2%, icon dollar-sign), Successful Payments (3,847, up 8.1%, icon credit-card), New Customers (284, down 3.2%, icon users), Net Revenue ($128.6K, up 11.4%, icon trending-up). Two-column layout below. Left (4 cols): ChartCard titled 'Revenue Over Time' with a 12-bar chart (Jan–Dec values 85,92,78,105,118,96,110,125,134,128,138,143 max 150). Right (2 cols): Card titled 'Top Products' with a sortable DataTable — columns Product, Revenue, Sales, Status — 5 rows: Pro Plan/$48.2K/1240/active-green, Team Plan/$32.1K/890/active-green, Starter/$24.8K/2100/active-green, Enterprise/$18.4K/42/active-green, Add-ons/$8.6K/680/updated-Badge. Below the columns: Card titled 'Recent Activity' with a List of 5 items: 'Payment received from Acme Corp' (icon check-circle, secondary '2 min ago'), 'Subscription upgraded — Pro to Team' (icon arrow-up-circle, '14 min ago'), 'Refund processed #RF-2847' (icon rotate-ccw, '1 hour ago'), 'New customer signup' (icon user-plus, '3 hours ago'), 'Invoice #INV-1923 sent' (icon send, '5 hours ago'). Pagination at the bottom: page 1 of 12, 10 per page.">Dashboard</button>
               <button class="db-chip db-chip--sm" data-example="Sign-in page inspired by Linear/Notion: centered narrow layout with a clipped Card on a raised Surface. Top: heading 'Welcome back' with caption 'Sign in to continue to your workspace'. Field label 'Email address' with email-type input placeholder 'you@company.com'. Field label 'Password' with password-type input. Row: Checkbox 'Remember this device' on the left, ghost Button 'Forgot password?' on the right. Full-width primary Button 'Sign in'. Separator with label 'or'. Row of 3 ghost Buttons with icons: 'Google' (icon chrome), 'GitHub' (icon github), 'SSO' (icon key-round). Below the card: small text 'New to the platform? Create an account'. At the very bottom: small muted text 'By continuing, you agree to our Terms of Service and Privacy Policy'.">Sign In</button>
               <button class="db-chip db-chip--sm" data-example="Account settings page like GitHub/GitLab: heading 'Settings' with caption 'Manage your account and preferences'. Tabs: Profile, Notifications, Appearance, Security (Profile active). Profile tab content: Card titled 'Public Profile'. Inside: two-column horizontal layout. Left (4 cols): Field label 'Display name' text input value 'Sarah Chen', Field label 'Username' with InputGroup addonBefore '@' and input value 'sarahchen', Field label 'Bio' with Textarea (3 rows) value 'Design engineer building tools for developers', searchable CustomSelect label 'Timezone' with options (UTC-8 Los Angeles selected, UTC-5 New York, UTC+0 London, UTC+1 Berlin, UTC+8 Singapore, UTC+9 Tokyo). Right (2 cols): Avatar (initials SC, size lg), ghost Button 'Change photo' with icon camera. Switch 'Make profile public' (checked). Separator. Card footer: secondary Button 'Cancel', primary Button 'Save changes'. Below: Card titled 'Danger Zone' on a pressed Surface. Inside: horizontal layout with Text 'Delete your account and all associated data permanently' on the left, a Button variant 'icon-danger' label 'Delete account' with icon trash-2 on the right. An AlertDialog (id 'delete-confirm') titled 'Delete account?' description 'This will permanently delete your account, all projects, and data. This action cannot be undone.' with footer containing a secondary Button 'Cancel' and a danger-variant Button 'Yes, delete my account'.">Settings</button>
-              <button class="db-chip db-chip--sm" data-example="User profile page like Dribbble/Behance: two-column horizontal layout. Left sidebar (2 cols): Card with large Avatar (initials SC, size lg), heading 'Sarah Chen', caption 'Staff Design Engineer at Vercel'. Row of 3 horizontal StatCards: Projects (47), Followers (12.4K), Following (328). Two Buttons side by side: primary 'Follow' with icon user-plus, secondary 'Message' with icon mail. Separator. Card titled 'Skills' with Chips: Systems Design (blue), React (green), TypeScript (purple), Figma (amber), Motion Design (pink), Accessibility (red). Card titled 'Links' with a List: 'sarahchen.design' (icon globe), '@sarahchen' (icon twitter), 'github.com/sarahchen' (icon github). Right content area (4 cols): Tabs: Projects, Activity, About (Projects active). Card with a 3-column layout of 3 interactive clipped Cards, each with media image (use dummyimage.com 400x240/e0e0e0/999.png with labels 'Design System', 'Dashboard Kit', 'Mobile App'), title, description text, and a footer row with a Badge ('Figma' new-variant) and small muted text '2 days ago'.">Profile</button>
+              <button class="db-chip db-chip--sm" data-example="User profile page like Dribbble/Behance: two-column horizontal layout. Left sidebar (2 cols): Card with large Avatar (initials SC, size lg), heading 'Sarah Chen', caption 'Staff Design Engineer at Vercel'. Row of 3 horizontal StatCards: Projects (47), Followers (12.4K), Following (328). Two Buttons side by side: primary 'Follow' with icon user-plus, secondary 'Message' with icon mail. Separator. Card titled 'Skills' with Chips: Systems Design (blue), React (green), TypeScript (purple), Figma (amber), Motion Design (pink), Accessibility (red). Card titled 'Links' with a List: 'sarahchen.design' (icon globe), '@sarahchen' (icon twitter), 'github.com/sarahchen' (icon github). Right content area (4 cols): Tabs: Projects, Activity, About (Projects active). Card with a 3-column layout of 3 interactive clipped Cards, each with media image (https://picsum.photos/seed/design-system/400/240, https://picsum.photos/seed/dashboard-kit/400/240 and https://picsum.photos/seed/mobile-app/400/240, with alt text naming each project: 'Design System', 'Dashboard Kit', 'Mobile App'), title, description text, and a footer row with a Badge ('Figma' new-variant) and small muted text '2 days ago'.">Profile</button>
               <button class="db-chip db-chip--sm" data-example="Team management page like Slack/Linear admin: heading 'Team Members' with caption '24 members across 5 departments'. Row: Search input placeholder 'Search by name, email, or role...', CustomSelect placeholder 'All Roles' with options (All Roles selected, Engineering, Design, Product, Marketing, Sales), CustomSelect placeholder 'Status' with options (All selected, Active, Away, Offline), DropdownMenu trigger Button (icon more-horizontal, size icon) with items: 'Export as CSV' (icon download), 'Import members' (icon upload), separator, 'Manage roles' (icon shield), 'Bulk actions' (icon layers). Card: selectable DataTable columns Name, Email, Role, Department, Joined, Status — 6 rows of realistic data where Role uses Chips (Engineering blue, Design purple, Product green, Marketing amber) and Status uses Badges (Active green, Away amber). Pagination: page 1 of 4, 25 per page. A Sheet (id 'invite-sheet', position right) containing heading 'Invite New Member', Field 'Email address' email-type, CustomSelect 'Role' with options (Engineering, Design, Product, Marketing, Sales), CustomSelect 'Department' with options (Platform, Growth, Enterprise), Switch 'Send welcome email' checked, footer with secondary Button 'Cancel' and primary Button 'Send Invite'. A primary Button 'Invite Member' with icon user-plus that has trigger 'invite-sheet'.">Team</button>
               <button class="db-chip db-chip--sm" data-example="SaaS pricing page like Vercel/Supabase: centered heading 'Simple, transparent pricing' with caption 'Start building for free. Scale with confidence.'. ToggleGroup: Monthly / Annual (Monthly selected). Three-column layout of interactive clipped Cards. Free ($0/mo): 5 features with check icons (Up to 3 projects, 1GB storage, Community support, Basic analytics, 100K API calls/mo), ghost Button 'Get Started'. Pro ($25/mo): Badge 'Popular' (new variant) at top, raised Surface, 6 features (Unlimited projects, 50GB storage, Priority email support, Advanced analytics, 2M API calls/mo, Custom domains), primary Button 'Start Free Trial'. Enterprise (Custom): 6 features (Everything in Pro, Unlimited storage, Dedicated support engineer, SSO and SAML, Unlimited API calls, 99.99% SLA), secondary Button 'Contact Sales'. Separator. Accordion titled 'Frequently Asked Questions' with 4 items: 'Can I switch plans at any time?' / 'Yes — upgrades are immediate, downgrades take effect at next billing cycle.', 'What happens when I hit my usage limit?' / 'We will notify you at 80% and 100%. Your service continues with overage billing at standard rates.', 'Do you offer discounts for startups?' / 'Yes — eligible startups get 50% off Pro for the first year through our Startup Program.', 'How does the 14-day free trial work?' / 'Full access to Pro features, no credit card required. Your projects persist if you upgrade.'.">Pricing</button>
             </div>
@@ -1012,7 +1016,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.20.1"></script>
+<script src="daub.js?v=3.20.5"></script>
 <script src="daub-render.js"></script>
 <script src="daub-openui-parser.js"></script>
 <script>
@@ -1050,14 +1054,17 @@ var $copyHtml   = document.getElementById('pg-copy-html');
 var $share      = document.getElementById('pg-share');
 var $download   = document.getElementById('pg-download');
 var $viewportToggle = document.getElementById('pg-viewport-toggle');
-var $fastMode = document.getElementById('pg-fast-mode');
-var FAST_MODEL = 'google/gemini-3.1-flash-lite';
+var AUTO_MODEL = 'openrouter/auto';
 
-function fastModel() { return $fastMode && $fastMode.checked ? FAST_MODEL : null; }
-function fastEffort(stage) {
-  if (!$fastMode || !$fastMode.checked) return null;
-  return ({ generate:'medium', selfCheck:'low', plan:'low', chunk:'low', code:'medium', review:'medium' })[stage] || 'low';
+// Auto Router session stickiness: one id per chat, sent only with the main generation
+function newChatSessionId() {
+  var a = new Uint8Array(16), s = 'pg-';
+  try { crypto.getRandomValues(a); } catch (e) { for (var k = 0; k < a.length; k++) a[k] = Math.random() * 256 | 0; }
+  for (var i = 0; i < a.length; i++) s += ('0' + a[i].toString(16)).slice(-2);
+  return s;
 }
+var _chatSessionId = newChatSessionId();
+function mainGenOpts() { return { session_id: _chatSessionId }; }
 var $panelPreviewBody = document.getElementById('pg-preview-body');
 var $status     = document.getElementById('pg-status');
 var $attach     = document.getElementById('pg-attach');
@@ -1095,8 +1102,8 @@ function buildIframeSrcdoc(theme, scheme) {
   return '<!DOCTYPE html><html lang="en"' + themeAttr + schemeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
     + '<base target="_blank">'
-    + '<link rel="stylesheet" href="daub.css?v=3.20.1">'
-    + '<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" crossorigin="anonymous"><\/script>'
+    + '<link rel="stylesheet" href="daub.css?v=3.20.5">'
+    + '<script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"><\/script>'
     + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
     + '<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js" integrity="sha384-Tha/42qsYmpYmQ07pX+nJzkKumO0BzKJxK/uzVc7xyBQxVCUgQBhQIG8L7vXK+9C" crossorigin="anonymous"><\/script>'
     + '<style>html,body{margin:0;min-height:100%;}'
@@ -1120,10 +1127,12 @@ function buildIframeSrcdoc(theme, scheme) {
     + '"\u201CThe best design is the simplest one that works.\u201D\\n\u2014 Albert Einstein",'
     + '"\u201CTypography is the craft of endowing human language with a durable visual form.\u201D\\n\u2014 Robert Bringhurst"'
     + '];document.getElementById("pg-iframe-root").setAttribute("data-quote",qs[Math.floor(Math.random()*qs.length)])})()<\/script>'
-    + '<script src="daub.js?v=3.20.1"><\/script>'
+    + '<script src="daub.js?v=3.20.5"><\/script>'
     + '<script>' + DAUB_RENDER_BODY.replace(/<\/script/gi, '<\\/script') + '<\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
+    // Opaque-origin frame: reply only to the embedding origin
+    + 'var _po = ' + JSON.stringify(location.origin).replace(/[<>&\u2028\u2029]/g, function(c) { return '\\u' + ('000' + c.charCodeAt(0).toString(16)).slice(-4); }) + '; if (_po === "null") _po = "*";'
     // ---- Declarative State Engine (iframe runtime) ----
     + 'window.__initDaubState = function(root, sc) {'
     + '  var _ds = { _state: sc.initialState || {}, _subs: [] };'
@@ -1244,6 +1253,7 @@ function buildIframeSrcdoc(theme, scheme) {
     + '      root.replaceChildren();'
     + '      var first = renderElement(spec.elements, spec.root, 0);'
     + '      if (first) root.appendChild(first);'
+    + '      if (typeof renderOrphans === "function") renderOrphans(spec, root);'
     + '      var rendered = Object.create(null);'
     + '      function markRendered() { root.querySelectorAll("[data-spec-id]").forEach(function(el) { rendered[el.getAttribute("data-spec-id")] = true; }); }'
     + '      markRendered();'
@@ -1254,6 +1264,18 @@ function buildIframeSrcdoc(theme, scheme) {
     + '        }'
     + '      });'
     + '    }'
+    // CustomHTML markup arrives as an attribute and is parsed only here, never in the parent
+    + '    root.querySelectorAll("template[data-pg-html]").forEach(function(slot) {'
+    + '      var t = document.createElement("template");'
+    + '      t.innerHTML = slot.getAttribute("data-pg-html").replace(/<script[\\s\\S]*?<\\/script>/gi, "");'
+    // Paused shared links: drop inline handlers, javascript: URLs and navigating elements too
+    + '      if (e.data.inert) t.content.querySelectorAll("*").forEach(function(n) {'
+    + '        if (/^(iframe|frame|object|embed|meta|base)$/i.test(n.localName)) { n.remove(); return; }'
+    + '        [].slice.call(n.attributes).forEach(function(a) { if (/^on/i.test(a.name) || /^javascript:/i.test(a.value.replace(/[\\u0000-\\u0020]/g, ""))) n.removeAttribute(a.name); });'
+    + '      });'
+    + '      slot.parentNode.replaceChild(t.content, slot);'
+    + '    });'
+    + '    parent.postMessage({ type: "html", data: root.innerHTML, seq: e.data.seq }, _po);'
     + '    if (window.DAUB) { DAUB.init(root); if (DAUB.fixNestedRadius) DAUB.fixNestedRadius(root); }'
     + '    if (window.lucide) lucide.createIcons({ nodes: root.querySelectorAll("[data-lucide]") });'
     + '    window.__daubState = null;'
@@ -1263,7 +1285,7 @@ function buildIframeSrcdoc(theme, scheme) {
     + '        try {'
     + '          var container = item.id ? root.querySelector("[data-spec-id=\\"" + item.id + "\\"]") : root;'
     // eslint-disable-line -- intentional: user-authored JS via AI chat in playground context
-    + '          (new Function("container", "preview", item.code))(container || root, root);'
+    + '          (new Function("container", "preview", "{\\n" + item.code + "\\n}"))(container || root, root);'
     + '        } catch(err) { console.error("CustomHTML JS error:", err); }'
     + '      });'
     + '    }'
@@ -1280,41 +1302,48 @@ function buildIframeSrcdoc(theme, scheme) {
     + '    document.documentElement.removeAttribute("data-theme");'
     + '  }'
     + '  if (e.data.type === "screenshot") {'
+    + '    var bg = getComputedStyle(document.body).backgroundColor;'
+    + '    if (!bg || bg === "transparent" || bg === "rgba(0, 0, 0, 0)") bg = getComputedStyle(document.documentElement).backgroundColor;'
     + '    var fallback = function() {'
-    + '      return window.htmlToImage ? htmlToImage.toJpeg(root, { quality: 0.7, pixelRatio: 1, backgroundColor: getComputedStyle(document.body).backgroundColor }) : Promise.resolve(null);'
+    + '      return window.htmlToImage ? htmlToImage.toJpeg(root, { quality: 0.7, pixelRatio: 1, skipFonts: true, backgroundColor: bg }) : Promise.resolve(null);'
     + '    };'
     + '    var capture = window.html2canvas ? html2canvas(root, { scale: 1, useCORS: true, logging: false }).then(function(c) { return c.toDataURL("image/jpeg", 0.7); }).catch(fallback) : fallback();'
-    + '    capture.then(function(data) { parent.postMessage({ type: "screenshot", data: data }, "*"); })'
-    + '      .catch(function() { parent.postMessage({ type: "screenshot", data: null }, "*"); });'
+    + '    capture.then(function(data) { parent.postMessage({ type: "screenshot", data: data }, _po); })'
+    + '      .catch(function() { parent.postMessage({ type: "screenshot", data: null }, _po); });'
     + '  }'
     + '  if (e.data.type === "test") {'
     + '    var tests = e.data.tests || [];'
     + '    var timeout = e.data.timeout || 2000;'
     + '    var results = [];'
     + '    var pending = tests.length;'
-    + '    if (!pending) { parent.postMessage({ type: "testResults", results: [] }, "*"); return; }'
+    + '    if (!pending) { parent.postMessage({ type: "testResults", results: [] }, _po); return; }'
     + '    tests.forEach(function(t) {'
     + '      try {'
     + '        var container = t.elementId ? root.querySelector("[data-spec-id=\\"" + t.elementId + "\\"]") : root;'
     // eslint-disable-line -- intentional: AI-generated test code in sandboxed iframe, same pattern as line 982
-    + '        var ret = (new Function("container", "preview", t.code))(container || root, root);'
+    + '        var ret = (new Function("container", "preview", "{\\n" + t.code + "\\n}"))(container || root, root);'
     + '        if (ret && typeof ret.then === "function") {'
     + '          var done = false;'
-    + '          var timer = setTimeout(function() { if (!done) { done = true; results.push({ chunkId: t.chunkId, pass: false, error: "timeout" }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*"); } }, timeout);'
-    + '          ret.then(function() { if (!done) { done = true; clearTimeout(timer); results.push({ chunkId: t.chunkId, pass: true, error: null }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*"); } })'
-    + '            .catch(function(err) { if (!done) { done = true; clearTimeout(timer); results.push({ chunkId: t.chunkId, pass: false, error: String(err) }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*"); } });'
+    + '          var timer = setTimeout(function() { if (!done) { done = true; results.push({ chunkId: t.chunkId, pass: false, error: "timeout" }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, _po); } }, timeout);'
+    + '          ret.then(function() { if (!done) { done = true; clearTimeout(timer); results.push({ chunkId: t.chunkId, pass: true, error: null }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, _po); } })'
+    + '            .catch(function(err) { if (!done) { done = true; clearTimeout(timer); results.push({ chunkId: t.chunkId, pass: false, error: String(err) }); if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, _po); } });'
     + '        } else {'
     + '          results.push({ chunkId: t.chunkId, pass: true, error: null });'
-    + '          if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*");'
+    + '          if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, _po);'
     + '        }'
     + '      } catch(err) {'
     + '        results.push({ chunkId: t.chunkId, pass: false, error: String(err) });'
-    + '        if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, "*");'
+    + '        if (--pending === 0) parent.postMessage({ type: "testResults", results: results }, _po);'
     + '      }'
     + '    });'
     + '  }'
     + '  if (e.data.type === "getHtml") {'
-    + '    parent.postMessage({ type: "html", data: root.innerHTML }, "*");'
+    + '    parent.postMessage({ type: "html", data: root.innerHTML }, _po);'
+    + '  }'
+    + '  if (e.data.type === "skeleton") {'
+    + '    (e.data.ids || []).forEach(function(id) {'
+    + '      try { var el = root.querySelector("[data-spec-id=\\"" + id + "\\"]"); if (el) el.classList.toggle("db-skeleton", !!e.data.on); } catch(err) {}'
+    + '    });'
     + '  }'
     + '});'
     + '<\/script></body></html>';
@@ -1326,7 +1355,8 @@ function collectCustomJS(spec) {
   Object.keys(spec.elements).forEach(function(id) {
     var def = spec.elements[id];
     if (def.type === 'CustomHTML' && def.props && def.props.js) {
-      jsItems.push({ id: id, code: def.props.js });
+      var item = { id: def.props.forId || id, code: def.props.js };
+      if (id === '_shared_state') jsItems.unshift(item); else jsItems.push(item); // chunk code expects these globals to exist
     }
   });
   return jsItems;
@@ -1354,8 +1384,11 @@ function postToPreview(msg) {
 
 // Cache for iframe HTML (used by copy/download)
 var _iframeHtmlCache = '';
+var _renderSeq = 0;
 window.addEventListener('message', function(e) {
-  if (e.source === $previewFrame.contentWindow && e.data && e.data.type === 'html') {
+  if (e.source !== $previewFrame.contentWindow) return;
+  if (e.data && e.data.type === 'html') {
+    if (e.data.seq != null && e.data.seq !== _renderSeq) return; // stale echo of an older render
     _iframeHtmlCache = e.data.data || '';
   }
 });
@@ -1656,6 +1689,7 @@ var MODELS = {
     { value: 'claude-opus-4-6', label: 'Claude Opus 4.6' }
   ],
   openrouter: [
+    { value: 'openrouter/auto', label: 'Auto (OpenRouter router)' },
     { value: 'google/gemini-3-flash-preview', label: 'Gemini 3 Flash' },
     { value: 'google/gemini-3.1-pro-preview', label: 'Gemini 3.1 Pro' },
     { value: 'google/gemini-3.1-flash-lite', label: 'Gemini 3.1 Flash Lite' },
@@ -1675,7 +1709,7 @@ function loadSettings() {
     if (m && $model) $model.value = m;
     var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
     if (keys[p] && $apikey) $apikey.value = keys[p];
-    if (localStorage.getItem('pg-fast-mode') !== null) $fastMode.checked = localStorage.getItem('pg-fast-mode') !== 'false';
+    localStorage.removeItem('pg-fast-mode'); // Fast mode removed; drop the stale key
     updateFigmaStatus();
     // Chat state
     isDefaultMode = localStorage.getItem('pg-use-default') !== 'false';
@@ -1692,7 +1726,6 @@ function saveSettings() {
     if ($provider && $apikey) { keys[$provider.value] = $apikey.value; }
     localStorage.setItem('pg-apikeys', JSON.stringify(keys));
     localStorage.setItem('pg-use-default', isDefaultMode ? 'true' : 'false');
-    localStorage.setItem('pg-fast-mode', $fastMode.checked);
   } catch(e) {}
 }
 
@@ -1729,7 +1762,6 @@ $provider.addEventListener('change', function() {
 });
 $model.addEventListener('change', saveSettings);
 $apikey.addEventListener('change', saveSettings);
-$fastMode.addEventListener('change', saveSettings);
 
 // ---- Figma OAuth ----
 function getFigmaToken() { return localStorage.getItem('pg-figma-access-token') || ''; }
@@ -2128,11 +2160,16 @@ $prompt.addEventListener('paste', function(e) {
 });
 
 // ---- AI API calls (blocking, accept messages array) ----
+// o-series / gpt-5 reasoning models reject max_tokens and non-default temperature
+function openAITokenParams() {
+  return /^(o\d|gpt-5)/.test($model.value) ? { max_completion_tokens: 16384 } : { temperature: 0.7, max_tokens: 16384 };
+}
+
 function callOpenAI(messages) {
   return fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
-    body: JSON.stringify(Object.assign({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384 }, OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}))
+    body: JSON.stringify(Object.assign({ model: $model.value, messages: messages }, openAITokenParams(), OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}))
   }).then(function(res) {
     if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
     return res.json();
@@ -2145,7 +2182,7 @@ function callAnthropic(messages) {
   return fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-api-key': $apikey.value.trim(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({ model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs, output_config: { format: { type: 'json' } } })
+    body: JSON.stringify({ model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs })
   }).then(function(res) {
     if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
     return res.json();
@@ -2200,7 +2237,7 @@ function streamFetch(url, headers, body, onChunk, onDone, onError, signal) {
           }
         }
         pump();
-      }).catch(function(err) { if (!doneOnce) { doneOnce = true; if (err.name === 'AbortError') { onDone(); } else { onError(err); } } });
+      }).catch(function(err) { if (!doneOnce) { doneOnce = true; if (err.name === 'AbortError') { onDone(); } else { onError(err); } } else { console.error('[streamFetch] onDone threw:', err); } });
     }
     pump();
   }).catch(function(err) {
@@ -2214,9 +2251,12 @@ var _lastFinishReason = '';
 
 var FALLBACK_MODEL = 'moonshotai/kimi-k2.5';
 
-function streamDefault(messages, onText, onDone, onError, model, signal) {
+var _lastRoutedModel = ''; // model Auto Router picked, from the SSE chunks
+
+function streamDefault(messages, onText, onDone, onError, model, signal, extra) {
   _lastFinishReason = '';
-  var body = { messages: messages };
+  _lastRoutedModel = '';
+  var body = Object.assign({ messages: messages }, extra);
   if (model) body.model = model;
   if (OUTPUT_FORMAT === 'openui') body.response_format = false;
   streamFetch(
@@ -2224,6 +2264,7 @@ function streamDefault(messages, onText, onDone, onError, model, signal) {
     { 'Content-Type': 'application/json' },
     body,
     function(chunk) {
+      if (chunk.model) _lastRoutedModel = chunk.model;
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
       if (c && c.finish_reason) _lastFinishReason = c.finish_reason;
@@ -2237,7 +2278,7 @@ function streamOpenAI(messages, onText, onDone, onError, signal) {
   streamFetch(
     'https://api.openai.com/v1/chat/completions',
     { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + $apikey.value.trim() },
-    Object.assign({ model: $model.value, messages: messages, temperature: 0.7, max_tokens: 16384, stream: true }, OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}),
+    Object.assign({ model: $model.value, messages: messages, stream: true }, openAITokenParams(), OUTPUT_FORMAT === 'json' ? { response_format: { type: 'json_object' } } : {}),
     function(chunk) {
       var c = chunk.choices && chunk.choices[0];
       if (c && c.delta && c.delta.content) onText(c.delta.content);
@@ -2248,12 +2289,13 @@ function streamOpenAI(messages, onText, onDone, onError, signal) {
 }
 
 function streamAnthropic(messages, onText, onDone, onError, signal) {
+  _lastFinishReason = '';
   var sys = '', userMsgs = [];
   messages.forEach(function(m) { if (m.role === 'system') sys += m.content + '\n'; else userMsgs.push(m); });
   streamFetch(
     'https://api.anthropic.com/v1/messages',
     { 'Content-Type': 'application/json', 'x-api-key': $apikey.value.trim(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    { model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs, stream: true, output_config: { format: { type: 'json' } } },
+    { model: $model.value, max_tokens: 16384, system: sys.trim(), messages: userMsgs, stream: true },
     function(chunk) {
       if (chunk.type === 'content_block_delta' && chunk.delta && chunk.delta.text) onText(chunk.delta.text);
       if (chunk.type === 'message_delta' && chunk.delta && chunk.delta.stop_reason === 'max_tokens') _lastFinishReason = 'length';
@@ -2480,9 +2522,9 @@ function selfCheck(spec, screenshotDataUrl, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: fastModel() || undefined,
+      model: AUTO_MODEL,
       messages: messages,
-      reasoning: { effort: fastEffort('selfCheck') || 'medium' }
+      reasoning: { effort: 'medium' }
     }),
     signal: signal
   })
@@ -2511,6 +2553,128 @@ function selfCheck(spec, screenshotDataUrl, signal) {
     return fixed;
   })
   .catch(function(e) { if (e.name === 'AbortError') return null; return null; });
+}
+
+// ---- Component picker: Jev decision model (typesafe/jev-1.13-20260917) via /api/choose ----
+// Asks one yes/no question per component and resolves to the picked type list,
+// or null (use the full catalog) on any failure, timeout, or empty pick.
+var PICK_CORE = ['Stack', 'Grid', 'Text', 'Card', 'Button', 'Icon', 'Separator'];
+var PICK_THRESHOLD = 0.45;
+var PICK_TIMEOUT_MS = 4000;
+// One-line purpose per type for Jev's yes/no question (tuned on a labeled eval)
+var COMP_PURPOSE = {
+  Surface: 'a raised or inset background panel that groups content',
+  Prose: 'long-form rich text such as an article body',
+  Link: 'an inline text hyperlink',
+  ButtonGroup: 'a row of joined buttons',
+  Field: 'a labeled form input with helper or error text',
+  Input: 'a single-line text input',
+  InputGroup: 'an input with a prefix or suffix addon such as $ or .com',
+  InputIcon: 'an input with an icon inside it',
+  Search: 'a search box',
+  Textarea: 'a multi-line text input for comments, bios or messages',
+  Checkbox: 'a checkbox for opting in, agreeing to terms or selecting items',
+  RadioGroup: 'a set of radio buttons to pick exactly one visible option',
+  Switch: 'an on/off switch for a setting',
+  Slider: 'a draggable range control for volume, price or another number',
+  Toggle: 'a single pressable on/off button',
+  ToggleGroup: 'a segmented control to pick one option, such as Monthly/Yearly or Grid/List',
+  Select: 'a dropdown to choose one option from a list',
+  CustomSelect: 'a searchable dropdown for long option lists',
+  Kbd: 'a keyboard shortcut hint such as Cmd+K',
+  Label: 'a standalone form label',
+  Spinner: 'a loading spinner',
+  InputOTP: 'one-time passcode boxes for entering a verification code',
+  Tabs: 'tabs that switch between panels of content',
+  Breadcrumbs: 'a breadcrumb trail showing the page hierarchy',
+  Pagination: 'page number controls for long lists or tables',
+  Stepper: 'a multi-step progress indicator for wizards or checkout',
+  NavMenu: 'a horizontal row of navigation links',
+  Navbar: 'a top header bar with brand and navigation',
+  Menubar: 'a desktop-app menu bar with File/Edit/View dropdowns',
+  Sidebar: 'a vertical side navigation with sections',
+  BottomNav: 'a mobile bottom tab bar',
+  Table: 'a data table with columns and rows',
+  DataTable: 'an interactive data table with selectable rows',
+  List: 'a vertical list of items with title, secondary text and icon',
+  Badge: 'a small status label or count',
+  Avatar: 'a user profile picture or initials',
+  AvatarGroup: 'a stacked row of several user avatars',
+  Calendar: 'a month calendar grid for picking or showing dates',
+  Chart: 'a bar chart',
+  Carousel: 'a sliding slideshow of images or cards',
+  AspectRatio: 'a fixed aspect-ratio frame for images or video',
+  Chip: 'a tag or filter pill',
+  ScrollArea: 'a scrollable region',
+  MessageScroller: 'a streaming-aware conversation viewport that preserves history and reader position',
+  Message: 'a chat message row with sender, avatar, content, and footer',
+  Bubble: 'a conversational text surface with user and assistant variants and reactions',
+  Attachment: 'a file or image attachment with metadata, upload status, and separate actions',
+  Marker: 'a chat activity status, system note, or date separator',
+  Image: 'an image or photo',
+  Alert: 'an inline callout banner for info, warning, error or success messages',
+  Progress: 'a progress bar',
+  Skeleton: 'loading placeholder shapes',
+  EmptyState: 'a placeholder message shown when there is no content or nothing was found',
+  Tooltip: 'a hint shown on hover',
+  Modal: 'a dialog window over the page for forms or content',
+  AlertDialog: 'a confirmation dialog for destructive actions',
+  Sheet: 'a side panel that slides over the page',
+  Drawer: 'a bottom drawer that slides up',
+  Popover: 'a small floating panel anchored to a button',
+  HoverCard: 'a preview card shown when hovering a link or user',
+  DropdownMenu: 'a menu of actions opened from a button',
+  ContextMenu: 'a right-click menu of actions',
+  CommandPalette: 'a Cmd+K searchable command launcher',
+  Accordion: 'stacked expandable sections such as an FAQ',
+  Collapsible: 'a single show/hide section',
+  Resizable: 'split panes with a draggable divider',
+  DatePicker: 'a date input with a calendar popup',
+  StatCard: 'a KPI metric card with a value and trend',
+  ChartCard: 'a titled card that holds a chart',
+  CustomHTML: 'custom HTML and JS for anything no built-in component covers'
+};
+function chooseComponents(userPrompt, signal) {
+  var comps = {};
+  COMP_CATEGORIES.forEach(function(cat) {
+    cat[1].forEach(function(t) {
+      if (RENDERERS[t] && PICK_CORE.indexOf(t) === -1) comps[t] = COMP_PURPOSE[t] || '';
+    });
+  });
+  var ctrl = new AbortController();
+  var timer = setTimeout(function() { ctrl.abort(); }, PICK_TIMEOUT_MS);
+  function onAbort() { ctrl.abort(); }
+  if (signal) signal.addEventListener('abort', onAbort);
+  function cleanup() {
+    clearTimeout(timer);
+    if (signal) signal.removeEventListener('abort', onAbort);
+  }
+  return fetch('/api/choose', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt: userPrompt, components: comps }),
+    signal: ctrl.signal
+  })
+  .then(function(r) { return r.ok ? r.json() : null; })
+  .then(function(data) {
+    cleanup();
+    if (!data || !data.scores) return null;
+    var picked = PICK_CORE.slice();
+    Object.keys(data.scores).forEach(function(t) {
+      if (data.scores[t] >= PICK_THRESHOLD && comps.hasOwnProperty(t)) picked.push(t);
+    });
+    if (picked.length === PICK_CORE.length) return null;
+    // Keep every type already on the canvas so iterations can still edit it
+    if (currentSpec && currentSpec.elements) {
+      Object.keys(currentSpec.elements).forEach(function(id) {
+        var t = currentSpec.elements[id] && currentSpec.elements[id].type;
+        if (t && RENDERERS[t] && picked.indexOf(t) === -1) picked.push(t);
+      });
+    }
+    dlog('[chooseComponents] ' + data.model + ' picked ' + picked.length + ':', picked.join(', '));
+    return picked;
+  })
+  .catch(function(e) { cleanup(); dwarn('[chooseComponents] skipped:', e && e.message); return null; });
 }
 
 function analyzeLayout(userPrompt, images, webContexts, figmaContexts, signal) {
@@ -2577,10 +2741,11 @@ function analyzeLayout(userPrompt, images, webContexts, figmaContexts, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: fastModel() || undefined,
+      model: AUTO_MODEL,
       messages: messages,
       reasoning: { effort: 'low' },
-      max_tokens: 800,
+      // Reasoning tokens count against this: at 800, reasoning routes (deepseek) could spend it all and return no brief
+      max_tokens: 3000,
       response_format: false
     }),
     signal: signal
@@ -2620,9 +2785,9 @@ function visualDiff(spec, renderedScreenshot, originalImageDataUrl, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: fastModel() || undefined,
+      model: AUTO_MODEL,
       messages: messages,
-      reasoning: { effort: fastEffort('selfCheck') || 'medium' }
+      reasoning: { effort: 'medium' }
     }),
     signal: signal
   })
@@ -2675,7 +2840,7 @@ function analyzeInteractivity(spec, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'google/gemini-3.1-flash-lite',
+      model: AUTO_MODEL,
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: JSON.stringify(spec) }
@@ -2700,7 +2865,7 @@ function analyzeInteractivity(spec, signal) {
   .catch(function(e) { if (e.name === 'AbortError') return null; dwarn('[analyzeInteractivity] failed:', e); return null; });
 }
 
-function generateInteractiveCode(spec, analysis, onProgress) {
+function generateInteractiveCode(spec, analysis, onProgress, signal) {
   var prompt = 'You are a JavaScript developer. You receive a DAUB UI component spec and must add interactive code.\n\n'
     + 'TASK: ' + analysis.description + '\n\n'
     + 'CODE SCAFFOLD (structural guide, may have errors \u2014 use as starting point):\n'
@@ -2709,6 +2874,7 @@ function generateInteractiveCode(spec, analysis, onProgress) {
     + '- Add or modify CustomHTML elements in the spec with "js", "html", and/or "css" props\n'
     + '- Target existing elements via: preview.querySelector(\'[data-spec-id="elementId"]\')\n'
     + '- "container" = this CustomHTML element, "preview" = the entire preview root\n'
+    + '- Never declare variables named container or preview (they are provided); query elements with preview.querySelector(\'[data-spec-id="id"]\')\n'
     + '- Use vanilla JS only. No frameworks, no imports, no fetch calls\n'
     + '- For games: use <canvas> inside CustomHTML html prop, game loop in js prop\n'
     + '- For quizzes: manage state in js, update DOM elements by data-spec-id\n'
@@ -2728,12 +2894,12 @@ function generateInteractiveCode(spec, analysis, onProgress) {
     var startTime = Date.now();
     streamFetch('/api/generate', { 'Content-Type': 'application/json' },
       {
-        model: fastModel() || 'google/gemini-3.1-pro-preview',
+        model: AUTO_MODEL,
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(spec) }
         ],
-        reasoning: { effort: fastEffort('code') || 'medium' },
+        reasoning: { effort: 'medium' },
         response_format: false,
         max_tokens: 16384
       },
@@ -2748,6 +2914,7 @@ function generateInteractiveCode(spec, analysis, onProgress) {
         }
       },
       function onDone() {
+        if (signal && signal.aborted) { resolve(null); return; } // streamFetch reports abort via onDone
         dlog('[generateInteractiveCode] raw length:', accumulated.length, 'preview:', accumulated.slice(0, 300));
         var clean = cleanJSON(accumulated);
         if (!clean) { dwarn('[generateInteractiveCode] cleanJSON returned empty'); resolve(null); return; }
@@ -2763,7 +2930,8 @@ function generateInteractiveCode(spec, analysis, onProgress) {
       function onError(err) {
         console.warn('[generateInteractiveCode] stream error:', err);
         resolve(null);
-      }
+      },
+      signal
     );
   });
 }
@@ -2784,7 +2952,18 @@ function parseStateDefs(stateArray) {
     // String or complex value
     if (val.charAt(0) === '[' || val.charAt(0) === '{') return 'window.' + m[1] + ' = ' + val + ';';
     return 'window.' + m[1] + ' = ' + JSON.stringify(val) + ';';
-  }).join(' ');
+  }).join('\n'); // newline: a '// ' fallback entry must not comment out the entries after it
+}
+
+// sharedStateInit runs as CustomHTML js: '' when usable, else why it is not (prose seeds break every chunk)
+function stateInitProblem(code) {
+  if (code == null || code === '') return '';
+  if (typeof code !== 'string') return 'not a string';
+  try { new Function('container', 'preview', '{\n' + code + '\n}'); } catch (e) { return 'syntax error: ' + e.message; } // compiled only, never called
+  var strs = code.match(/(["'`])(?:\\[\s\S]|(?!\1)[^\\])*\1/g) || [];
+  // URLs (via.placeholder.com) and data like status 'todo' are real seeds; only marker text counts
+  if (strs.some(function(s) { return !/^.(?:https?:)?\/\//.test(s) && (/\(seed|\.\.\.\)|placeholder/i.test(s) || /\bTODO\b\s*:/.test(s)); })) return 'placeholder text in a string literal';
+  return '';
 }
 
 function planCodeArchitecture(spec, analysis, signal) {
@@ -2797,6 +2976,7 @@ function planCodeArchitecture(spec, analysis, signal) {
     + '- Chunks must be implementable independently by a junior developer\n'
     + '- Set chunk "effort" to match complexity: "trivial" (wire a click handler), "low" (simple state + DOM updates), "medium" (game loop, multi-step logic)\n'
     + '- "state" declares ALL shared variables as S-expressions: ["(score 0)", "(running false)", "(speed 500)"]\n'
+    + '- sharedStateInit must be executable JS that assigns literal seed data (real arrays/objects), never a description\n'
     + '- "wire" describes how chunks interact AFTER independent implementation\n'
     + '- Cross-chunk communication: use preview.dispatchEvent(new CustomEvent("daub:stateChange", {detail:{...}}))\n'
     + '- If the task is too simple for decomposition, return exactly 1 chunk\n'
@@ -2819,12 +2999,12 @@ function planCodeArchitecture(spec, analysis, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: fastModel() || 'google/gemini-3.1-pro-preview',
+      model: AUTO_MODEL,
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: JSON.stringify(spec) }
       ],
-      reasoning: { effort: fastEffort('plan') || 'medium' },
+      reasoning: { effort: 'medium' },
       max_tokens: 8192
     }),
     signal: signal
@@ -2841,6 +3021,11 @@ function planCodeArchitecture(spec, analysis, signal) {
         // Normalize S-expr plan to legacy format for downstream compatibility
         if (plan.state && !plan.sharedStateInit) {
           plan.sharedStateInit = parseStateDefs(plan.state);
+        }
+        var stateProblem = stateInitProblem(plan.sharedStateInit);
+        if (stateProblem) {
+          dlog('[planCodeArchitecture] dropped sharedStateInit (' + stateProblem + '):', String(plan.sharedStateInit).slice(0, 200));
+          plan.sharedStateInit = '';
         }
         if (plan.wire && !plan.wiring) plan.wiring = plan.wire;
         for (var ci = 0; ci < plan.chunks.length; ci++) {
@@ -2861,19 +3046,24 @@ function planCodeArchitecture(spec, analysis, signal) {
 
 function executeChunk(spec, plan, chunk, modelOverride, signal) {
   var relevantEls = [];
-  if (spec.elements && chunk.elementIds) {
+  if (spec.elements && chunk.elementIds && Array.isArray(spec.elements)) {
     (function findEls(els) {
       for (var i = 0; i < els.length; i++) {
         if (chunk.elementIds.indexOf(els[i].id) !== -1) relevantEls.push(els[i]);
         if (els[i].children) findEls(els[i].children);
       }
     })(spec.elements);
+  } else if (spec.elements && chunk.elementIds) {
+    relevantEls = chunk.elementIds.filter(function(id) { return spec.elements[id]; }).map(function(id) {
+      return Object.assign({ id: id }, spec.elements[id]);
+    });
   }
 
   var effortMap = { trivial: 'low', low: 'low', medium: 'medium' };
-  var tokensMap = { trivial: 3072, low: 5120, medium: 10240 };
+  // Auto Router may pick a reasoning model, and reasoning tokens count against max_tokens
+  var tokensMap = { trivial: 6144, low: 10240, medium: 16384 };
   var effort = effortMap[chunk.effort] || 'low';
-  var maxTokens = tokensMap[chunk.effort] || 4096;
+  var maxTokens = tokensMap[chunk.effort] || 8192;
 
   var prompt = 'You are implementing ONE piece of an interactive UI. Focus ONLY on your assigned task.\n\n'
     + 'YOUR TASK: ' + chunk.description + '\n\n'
@@ -2882,6 +3072,7 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
     + 'RULES:\n'
     + '- Access elements: preview.querySelector(\'[data-spec-id="id"]\')\n'
     + '- "container" = this CustomHTML element, "preview" = entire preview root\n'
+    + '- Never declare variables named container or preview (they are provided); query elements with preview.querySelector(\'[data-spec-id="id"]\')\n'
     + '- Shared state vars are globals — read/write them directly\n'
     + '- For cross-chunk events: preview.dispatchEvent(new CustomEvent("daub:stateChange", {detail:{key:val}}))\n'
     + '- Listen for cross-chunk events: preview.addEventListener("daub:stateChange", function(e) {...})\n'
@@ -2913,7 +3104,7 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: modelOverride || fastModel() || 'google/gemini-3-flash-preview',
+      model: modelOverride || AUTO_MODEL,
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: 'Implement chunk "' + chunk.id + '" now.' }
@@ -2973,7 +3164,7 @@ function retryFailedChunks(spec, plan, failedResults, onRetryDone, signal) {
   if (!failedChunks.length) return Promise.resolve([]);
   var completed = 0;
   return Promise.all(failedChunks.map(function(chunk) {
-    return executeChunk(spec, plan, chunk, fastModel() || 'moonshotai/kimi-k2.5', signal).then(function(result) {
+    return executeChunk(spec, plan, chunk, AUTO_MODEL, signal).then(function(result) {
       completed++;
       if (onRetryDone) onRetryDone(result, completed, failedChunks.length);
       return result;
@@ -2986,6 +3177,12 @@ function assembleChunkResults(spec, plan, chunkResults) {
   var conflicts = [];
   var touchedIds = {};
   var isObjFormat = !Array.isArray(assembled.elements);
+  function rootChildren() { // created if missing so appended code nodes are not orphaned (props.children fallback as in renderElement)
+    var r = assembled.elements[assembled.root];
+    if (!r) return [];
+    if (!r.children) r.children = (r.props && Array.isArray(r.props.children)) ? r.props.children : [];
+    return r.children;
+  }
 
   // Build element lookup (flat)
   var elMap = {};
@@ -3029,9 +3226,21 @@ function assembleChunkResults(spec, plan, chunkResults) {
         var target = elMap[cel.id].el;
         if (isObjFormat) {
           if (!target.props) target.props = {};
-          if (cel.js) target.props.js = (target.props.js ? target.props.js + '\n' : '') + cel.js;
+          // collectCustomJS only runs CustomHTML js, so route code for other types to a sibling CustomHTML
+          var codeTarget = target;
+          if (target.type !== 'CustomHTML' && (cel.js || cel.css)) {
+            var jsId = cel.id + '__js';
+            codeTarget = assembled.elements[jsId];
+            if (!codeTarget) {
+              codeTarget = assembled.elements[jsId] = { type: 'CustomHTML', props: {} };
+              rootChildren().push(jsId);
+            }
+            if (!codeTarget.props) codeTarget.props = {};
+            codeTarget.props.forId = cel.id; // collectCustomJS runs this code with the real element as container
+          }
+          if (cel.js) codeTarget.props.js = (codeTarget.props.js ? codeTarget.props.js + '\n' : '') + cel.js;
           if (cel.html) target.props.html = cel.html;
-          if (cel.css) target.props.css = (target.props.css ? target.props.css + '\n' : '') + cel.css;
+          if (cel.css) codeTarget.props.css = (codeTarget.props.css ? codeTarget.props.css + '\n' : '') + cel.css;
         } else {
           target.type = 'CustomHTML';
           if (cel.js) target.js = (target.js ? target.js + '\n' : '') + cel.js;
@@ -3047,8 +3256,7 @@ function assembleChunkResults(spec, plan, chunkResults) {
           if (cel.css) newProps.css = cel.css;
           assembled.elements[cel.id] = { type: 'CustomHTML', props: newProps };
           // Add to root's children
-          var rootEl = assembled.elements[assembled.root];
-          if (rootEl && rootEl.children) rootEl.children.push(cel.id);
+          rootChildren().push(cel.id);
         } else {
           var newEl = { id: cel.id, type: 'CustomHTML' };
           if (cel.js) newEl.js = cel.js;
@@ -3063,9 +3271,8 @@ function assembleChunkResults(spec, plan, chunkResults) {
   // Inject shared state init
   if (plan.sharedStateInit) {
     if (isObjFormat) {
-      assembled.elements['_shared_state'] = { type: 'CustomHTML', props: { js: plan.sharedStateInit, html: '', css: '' } };
-      var rootEl = assembled.elements[assembled.root];
-      if (rootEl && rootEl.children) rootEl.children.unshift('_shared_state');
+      assembled.elements['_shared_state'] = { type: 'CustomHTML', props: { js: plan.sharedStateInit, html: '', css: '', forId: '_shared_state' } };
+      rootChildren().unshift('_shared_state');
     } else {
       assembled.elements.unshift({
         id: '_shared_state',
@@ -3077,6 +3284,7 @@ function assembleChunkResults(spec, plan, chunkResults) {
     }
   }
 
+  if (isObjFormat) Object.keys(assembled.elements).forEach(function(k) { delete assembled.elements[k]._id; });
   return { spec: assembled, conflicts: conflicts };
 }
 
@@ -3115,7 +3323,7 @@ function runChunkTests(chunkResults, timeout) {
   });
 }
 
-function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedChunks, onProgress, testFailures) {
+function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedChunks, onProgress, testFailures, signal) {
   var failedSection = '';
   if (failedChunks && failedChunks.length) {
     failedSection = 'FAILED CHUNKS (junior agents could not implement these — YOU must implement them now):\n';
@@ -3147,6 +3355,7 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     + '- Verify shared state variables are used consistently\n'
     + '- Wire cross-chunk interactions (events, state updates)\n'
     + '- Fix broken element references (data-spec-id)\n'
+    + '- Never declare variables named container or preview (they are provided); query elements with preview.querySelector(\'[data-spec-id="id"]\')\n'
     + '- Make it fully functional — not stubs\n'
     + '- Keep the overall spec structure, just fix/improve the code\n'
     + '- Return the COMPLETE spec JSON\n\n'
@@ -3158,12 +3367,12 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     var startTime = Date.now();
     streamFetch('/api/generate', { 'Content-Type': 'application/json' },
       {
-        model: fastModel() || 'google/gemini-3.1-pro-preview',
+        model: AUTO_MODEL,
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(assembledSpec) }
         ],
-        reasoning: { effort: fastEffort('review') || 'medium' },
+        reasoning: { effort: 'medium' },
         response_format: false,
         max_tokens: 16384
       },
@@ -3178,6 +3387,7 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
         }
       },
       function onDone() {
+        if (signal && signal.aborted) { resolve(null); return; }
         dlog('[reviewAndAssemble] raw length:', accumulated.length);
         var clean = cleanJSON(accumulated);
         if (!clean) { resolve(null); return; }
@@ -3187,7 +3397,8 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
         dlog('[reviewAndAssemble] success:', countComponents(reviewed), 'components');
         resolve(reviewed);
       },
-      function onError() { resolve(null); }
+      function onError() { resolve(null); },
+      signal
     );
   });
 }
@@ -3244,8 +3455,11 @@ function tryProgressiveRender(text) {
 }
 
 // ---- Chat message helpers ----
-function buildMessages(userPrompt, images, webContexts, figmaContexts, analysisBrief) {
-  var sysPrompt = OUTPUT_FORMAT === 'openui' ? OPENUI_SYSTEM_PROMPT : SYSTEM_PROMPT;
+function buildMessages(userPrompt, images, webContexts, figmaContexts, analysisBrief, pickedTypes) {
+  var focused = pickedTypes && pickedTypes.length;
+  var sysPrompt = OUTPUT_FORMAT === 'openui'
+    ? (focused ? focusedOpenuiSystemPrompt(pickedTypes) : OPENUI_SYSTEM_PROMPT)
+    : (focused ? focusedSystemPrompt(pickedTypes) : SYSTEM_PROMPT);
   var msgs = [{ role: 'system', content: sysPrompt }];
   if (analysisBrief) {
     userPrompt = analysisBrief + '\n---\n' + userPrompt;
@@ -3386,10 +3600,36 @@ function addChatBubble(role, text, images) {
       setTimeout(function() { copyBtn.innerHTML = _svgCopy; }, 1500); // safe: static SVG constant
     });
   });
-  div.appendChild(copyBtn);
+  // Replies hold progress and results, not text worth copying
+  if (role !== 'ai') div.appendChild(copyBtn);
   $chatMessages.appendChild(div);
   $chatMessages.scrollTop = $chatMessages.scrollHeight;
   return div;
+}
+
+// Add a progress step to a reply bubble; the previous active step counts as done
+function bubbleStep(bubble, text) {
+  if (!bubble) return;
+  var list = bubble.querySelector('.pg-chat__steps');
+  if (!list) {
+    list = document.createElement('ul');
+    list.className = 'pg-chat__steps';
+    bubble.insertBefore(list, bubble.firstChild);
+  }
+  var active = list.querySelector('.pg-chat__step--active');
+  if (active) active.classList.remove('pg-chat__step--active');
+  if (text) {
+    var li = document.createElement('li');
+    li.className = 'pg-chat__step--active';
+    li.textContent = text;
+    list.appendChild(li);
+  }
+  $chatMessages.scrollTop = $chatMessages.scrollHeight;
+}
+// Rewrite the active step in place (live counters)
+function bubbleStepText(bubble, text) {
+  var active = bubble && bubble.querySelector('.pg-chat__step--active');
+  if (active) active.textContent = text;
 }
 
 function renderChatHistory() {
@@ -3449,8 +3689,22 @@ function buildResultBubble(bubble, spec, verIdx) {
   // Meta: timestamp
   var meta = document.createElement('div');
   meta.className = 'pg-result-meta';
-  meta.textContent = fmtTime(ver ? ver.timestamp : Date.now());
+  meta.textContent = fmtTime(ver ? ver.timestamp : Date.now()) + (ver && ver.model ? ' \u00B7 via ' + ver.model : '') + (ver && ver.ms ? ' \u00B7 built in ' + Math.round(ver.ms / 1000) + 's' : '');
   bubble.appendChild(meta);
+
+  // Summary: the most-used content components, layout primitives left out
+  var _useCounts = {};
+  Object.keys((spec && spec.elements) || {}).forEach(function(id) {
+    var t = spec.elements[id].type;
+    if (t && ['Stack', 'Grid', 'Text', 'Separator'].indexOf(t) === -1) _useCounts[t] = (_useCounts[t] || 0) + 1;
+  });
+  var _top = Object.keys(_useCounts).sort(function(a, b) { return _useCounts[b] - _useCounts[a]; });
+  if (_top.length) {
+    var summary = document.createElement('div');
+    summary.className = 'pg-result-summary';
+    summary.textContent = _top.slice(0, 5).map(function(t) { return _useCounts[t] > 1 ? t + ' \u00D7' + _useCounts[t] : t; }).join(', ') + (_top.length > 5 ? ' +' + (_top.length - 5) + ' more' : '');
+    bubble.appendChild(summary);
+  }
 
   // Component type chips (collapsible)
   var detail = document.createElement('div');
@@ -3499,6 +3753,7 @@ function buildResultBubble(bubble, spec, verIdx) {
 }
 
 // ---- Blocking fallback ----
+// Reached only via streamFetch's 'no-stream' (no ReadableStream): the body is read whole with res.text()
 function runBlockingGenerate(messages, streamBubble) {
   var provider = isDefaultMode ? 'default' : ($provider ? $provider.value : 'openai');
   var blockSignal = _abortCtrl ? _abortCtrl.signal : null;
@@ -3507,19 +3762,23 @@ function runBlockingGenerate(messages, streamBubble) {
     apiCall = fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: messages }),
+      body: JSON.stringify(Object.assign({ messages: messages, model: AUTO_MODEL }, mainGenOpts(), OUTPUT_FORMAT === 'openui' ? { response_format: false } : {})),
       signal: blockSignal
     }).then(function(res) {
       if (!res.ok) return res.json().catch(function() { return {}; }).then(function(err) { throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); });
-      return res.json();
-    }).then(function(data) { return data.choices[0].message.content; });
+      return parseSseResponse(res); // /api/generate always answers with an SSE stream
+    }).then(function(sse) { return sse.content; });
   } else {
     apiCall = provider === 'anthropic' ? callAnthropic(messages) : provider === 'openrouter' ? callOpenRouter(messages) : callOpenAI(messages);
   }
   apiCall.then(function(raw) {
-    raw = cleanJSON(raw);
     var spec;
-    try { spec = JSON.parse(raw); } catch(e) { spec = repairJSON(raw); }
+    if (DaubOpenUI.detectFormat(raw) === 'openui') {
+      spec = DaubOpenUI.openUItoSpec(raw);
+    } else {
+      raw = cleanJSON(raw);
+      try { spec = JSON.parse(raw); } catch(e) { spec = repairJSON(raw); }
+    }
     if (!spec || !spec.root || !spec.elements) throw new Error('Invalid or incomplete JSON response');
     $json.value = JSON.stringify(spec, null, 2);
     $status.textContent = '';
@@ -3586,6 +3845,7 @@ function generate() {
   _currentStream.streamBubble = addChatBubble('ai', '');
   _currentStream.streamBubble.classList.add('pg-chat__msg--streaming');
   var streamBubble = _currentStream.streamBubble;
+  var _genStart = Date.now();
 
   // Auto-switch to mobile viewport for mobile app prompts
   var _promptLower = prompt.toLowerCase();
@@ -3609,13 +3869,21 @@ function generate() {
   }
 
   _abortCtrl = new AbortController();
+  // Jev only sees the typed text, so attachments skip the picker (full catalog)
+  var _hasAttachments = imagesForThisMsg.length || webContextsForThisMsg.length || figmaContextsForThisMsg.length;
   var analysisPromise;
-  if (!currentSpec) {
+  // The layout brief runs only for attachments: on text asks it cost ~7 s of first paint with no quality gain (brief eval, 2026-09-29)
+  if (!currentSpec && _hasAttachments) {
     $status.textContent = 'Analyzing layout\u2026';
     analysisPromise = analyzeLayout(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, _abortCtrl.signal);
   } else {
     analysisPromise = Promise.resolve(null);
   }
+  var preSignal = _abortCtrl.signal;
+  if (!_hasAttachments) $status.textContent = 'Choosing components\u2026';
+  var pickPromise = _hasAttachments ? Promise.resolve(null) : chooseComponents(prompt, preSignal);
+  if (!_hasAttachments) bubbleStep(streamBubble, 'Choosing components\u2026');
+  else if (!currentSpec) bubbleStep(streamBubble, 'Reading the attachments and planning the layout\u2026');
   var messages; // set after analysis completes
   var accumulated = '';
   var continuations = 0;
@@ -3627,7 +3895,8 @@ function generate() {
   var _detectedFormat = null;
   _currentStream.renderTimer = setInterval(function() {
     if (!accumulated) return;
-    if (!_detectedFormat) _detectedFormat = DaubOpenUI.detectFormat(accumulated);
+    // Only cache a decisive result: a first tick of "__theme" (no "=" yet) reads as 'unknown'
+    if (!_detectedFormat) { var _fmt = DaubOpenUI.detectFormat(accumulated); if (_fmt !== 'unknown') _detectedFormat = _fmt; }
     if (_detectedFormat === 'openui') {
       if (!_streamParser) _streamParser = DaubOpenUI.createStreamingOpenUIParser();
       var result = _streamParser.push(accumulated);
@@ -3635,6 +3904,8 @@ function generate() {
         renderSpec(result.spec, progressivePrevSpec);
         progressivePrevSpec = result.spec;
         $status.textContent = 'Rendering\u2026';
+        var _n = countComponents(result.spec);
+        if (_n) bubbleStepText(streamBubble, 'Building the UI\u2026 ' + _n + (_n === 1 ? ' element' : ' elements') + ' so far');
       }
     } else {
       tryProgressiveRender(accumulated);
@@ -3654,17 +3925,21 @@ function generate() {
 
   function doRetryOrFallback(reason) {
     clearInterval(renderTimer);
+    var retrySignal = _abortCtrl ? _abortCtrl.signal : null;
     retries++;
     accumulated = '';
+    _detectedFormat = null; // the render timer is stopped, so onDone re-detects from the retry's text
     $json.value = '';
     if (retries <= MAX_RETRIES) {
       $status.textContent = 'Retry ' + retries + '/' + MAX_RETRIES + ' \u2014 ' + reason;
-      setTimeout(function() { startStream(messages); }, 500);
+      bubbleStep(streamBubble, 'Retry ' + retries + ' of ' + MAX_RETRIES + ': ' + reason);
+      setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages, usingFallback ? FALLBACK_MODEL : undefined); }, 500);
     } else if (useDefault && !usingFallback) {
       usingFallback = true;
       retries = 0;
       $status.textContent = 'Switching to fallback model\u2026';
-      setTimeout(function() { startStream(messages, FALLBACK_MODEL); }, 500);
+      bubbleStep(streamBubble, 'Switching to the fallback model\u2026');
+      setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages, FALLBACK_MODEL); }, 500);
     } else {
       clearInterval(renderTimer);
       $status.textContent = '';
@@ -3680,7 +3955,7 @@ function generate() {
     _abortCtrl = new AbortController();
     var signal = _abortCtrl.signal;
     var callStreamFn = function(m, onT, onD, onE) {
-      if (useDefault) streamDefault(m, onT, onD, onE, model || fastModel(), signal);
+      if (useDefault) streamDefault(m, onT, onD, onE, model || AUTO_MODEL, signal, model ? null : mainGenOpts());
       else streamFn(m, onT, onD, onE, signal);
     };
     callStreamFn(msgs,
@@ -3690,11 +3965,13 @@ function generate() {
         $json.scrollTop = $json.scrollHeight;
       },
       function onDone() {
+        if (signal.aborted) return; // streamFetch reports abort via onDone
         // Auto-continue if response was truncated (finish_reason: "length")
         if (_lastFinishReason === 'length' && continuations < MAX_CONTINUATIONS) {
           continuations++;
           $status.textContent = 'Continuing (' + continuations + '/' + MAX_CONTINUATIONS + ')\u2026';
-          var contMsg = _detectedFormat === 'openui'
+          bubbleStep(streamBubble, 'Output hit the length limit, continuing (' + continuations + ' of ' + MAX_CONTINUATIONS + ')\u2026');
+          var contMsg = (_detectedFormat || DaubOpenUI.detectFormat(accumulated)) === 'openui'
             ? 'Continue the openui-lang code from where you stopped. Output ONLY remaining statements, no repetition, no explanation.'
             : 'Continue the JSON exactly from where you stopped. Output ONLY the remaining JSON, no repetition, no explanation.';
           var contMsgs = msgs.concat([
@@ -3724,12 +4001,15 @@ function generate() {
           var prevSpec2 = progressivePrevSpec || currentSpec;
           currentSpec = spec;
           pushVersion(spec, prompt);
+          var _routedModel = useDefault ? _lastRoutedModel : '';
+          if (_routedModel) specVersions[specVersions.length - 1].model = _routedModel;
+          specVersions[specVersions.length - 1].ms = Date.now() - _genStart;
           renderSpec(spec, prevSpec2);
           refreshJsonTree();
           updatePreviewToolbar();
           streamBubble.classList.remove('pg-chat__msg--streaming');
           buildResultBubble(streamBubble, spec);
-          chatHistory.push({ role: 'assistant', content: 'v' + specVersions.length + ' \u00B7 ' + countComponents(spec) + ' components', versionIdx: specVersions.length - 1 });
+          var _chatIdx = chatHistory.push({ role: 'assistant', content: 'v' + specVersions.length + ' \u00B7 ' + countComponents(spec) + ' components', versionIdx: specVersions.length - 1 }) - 1;
           saveChatState();
           // Interactivity pipeline: analyze → generate code → self-check
           var finalSpec = spec;
@@ -3832,6 +4112,7 @@ function generate() {
           }
 
           function _applySpec(s, suffix) {
+            if (signal.aborted) return;
             var issues = validateSpec(s);
             if (issues.length) {
               console.warn('[pipeline] Spec validation issues (' + suffix + '):', issues);
@@ -3842,12 +4123,13 @@ function generate() {
             var prev = currentSpec;
             currentSpec = s;
             pushVersion(s, prompt + ' (' + suffix + ')');
+            if (_routedModel) specVersions[specVersions.length - 1].model = _routedModel;
             renderSpec(s, prev);
             refreshJsonTree();
             updatePreviewToolbar();
             buildResultBubble(streamBubble, s);
             streamBubble.appendChild(pipeDetails);
-            chatHistory[chatHistory.length - 1].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(s) + ' components (' + suffix + ')';
+            if (chatHistory[_chatIdx]) chatHistory[_chatIdx].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(s) + ' components (' + suffix + ')';
             saveChatState();
           }
 
@@ -3855,7 +4137,17 @@ function generate() {
 
           $status.textContent = 'Analyzing interactivity\u2026';
           var _pipeSignal = _abortCtrl ? _abortCtrl.signal : null;
+          if (_pipeSignal) _pipeSignal.addEventListener('abort', function() {
+            if (_analysis) _removeSkeleton(_analysis.elements);
+            if (pipeSummary.textContent === 'Pipeline complete') return;
+            pipeDetails.querySelectorAll('.pg-pipeline__step:not(.pg-pipeline__step--done):not(.pg-pipeline__step--skip)').forEach(function(s) {
+              var lbl = s.querySelector('.pg-pipeline__label').textContent;
+              _pipeSkip(s, s.classList.contains('pg-pipeline__step--active') ? 'Stopped' : lbl.replace(/\u2026$/, ''));
+            });
+            pipeSummary.textContent = 'Stopped';
+          });
           analyzeInteractivity(spec, _pipeSignal).then(function(analysis) {
+            if (signal.aborted) return;
             _analysis = analysis;
             if (analysis && analysis.needed) {
               var desc = (analysis.description || 'yes');
@@ -3866,10 +4158,12 @@ function generate() {
               _pipeSkip(stepAnalyze, 'No custom code needed');
             }
           }).then(function() {
+            if (signal.aborted) return;
             // ---- Visual check / visual diff (runs on initial spec, before code gen) ----
             stepCheck.classList.add('pg-pipeline__step--active');
             $status.textContent = hasOriginalImage ? 'Comparing with target\u2026' : 'Visual check\u2026';
             return capturePreview().then(function(screenshot) {
+              if (signal.aborted) return;
               if (!screenshot) {
                 _pipeSkip(stepCheck, 'No screenshot');
                 return;
@@ -3878,6 +4172,7 @@ function generate() {
                 ? visualDiff(finalSpec, screenshot, originalImageUrl, _pipeSignal)
                 : selfCheck(finalSpec, screenshot, _pipeSignal);
               return checkPromise.then(function(fixedSpec) {
+                if (signal.aborted) return;
                 if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(finalSpec)) {
                   var merged = mergeSpecFixes(finalSpec, fixedSpec);
                   _pipeDone(stepCheck, hasOriginalImage ? 'Matched to target' : 'Applied fixes');
@@ -3888,6 +4183,7 @@ function generate() {
               });
             });
           }).then(function() {
+            if (signal.aborted) return;
             // ---- Code generation pipeline (complexity-routed) ----
             var _complexity = (_analysis && _analysis.complexity) || 'none';
             if (!_analysis || !_analysis.needed) _complexity = 'none';
@@ -3913,7 +4209,8 @@ function generate() {
               _addSkeleton(_analysis.elements);
               return generateInteractiveCode(finalSpec, _analysis, function(bytes, lines, secs) {
                 codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
-              }).then(function(updatedSpec) {
+              }, _pipeSignal).then(function(updatedSpec) {
+                if (signal.aborted) return;
                 _removeSkeleton(_analysis.elements);
                 if (updatedSpec) {
                   _pipeDone(stepExecute, 'Code added (single-shot)');
@@ -3933,6 +4230,7 @@ function generate() {
             if (_complexity === 'trivial') {
               _pipeSkip(stepPlan, 'Trivial');
               return _singleShotPath().then(function() {
+                if (signal.aborted) return;
                 _pipeFinish(); $status.textContent = ''; setLoading(false);
               });
             }
@@ -3942,6 +4240,7 @@ function generate() {
               stepPlan.classList.add('pg-pipeline__step--active');
               $status.textContent = 'Planning architecture\u2026';
               return planCodeArchitecture(finalSpec, _analysis, _pipeSignal).then(function(plan) {
+                if (signal.aborted) return;
                 if (!plan || !plan.chunks || plan.chunks.length <= 1) {
                   _pipeSkip(stepPlan, plan ? 'Single-shot' : 'Plan failed');
                   _pipeSkip(stepReview, 'Simple');
@@ -3955,6 +4254,7 @@ function generate() {
                   var sym = result.success ? '\u2713' : '\u2717';
                   codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
                 }, _pipeSignal).then(function(chunkResults) {
+                  if (signal.aborted) return;
                   _removeSkeleton(_analysis.elements);
                   var succeeded = chunkResults.filter(function(r) { return r.success; });
                   if (!succeeded.length) {
@@ -3970,6 +4270,7 @@ function generate() {
                   return _runVerifyLoop();
                 });
               }).then(function() {
+                if (signal.aborted) return;
                 _pipeFinish(); $status.textContent = ''; setLoading(false);
               });
             }
@@ -3978,6 +4279,7 @@ function generate() {
             stepPlan.classList.add('pg-pipeline__step--active');
             $status.textContent = 'Planning architecture\u2026';
             return planCodeArchitecture(finalSpec, _analysis, _pipeSignal).then(function(plan) {
+              if (signal.aborted) return;
               // Fallback: plan failed or ≤1 chunk
               if (!plan || !plan.chunks || plan.chunks.length <= 1) {
                 _pipeSkip(stepPlan, plan ? 'Single-shot' : 'Plan failed');
@@ -3994,6 +4296,7 @@ function generate() {
                 var tokStr = result.usage && result.usage.completion_tokens ? ' \u00B7 ' + result.usage.completion_tokens + 'tok' : '';
                 codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')' + tokStr;
               }, _pipeSignal).then(function(chunkResults) {
+                if (signal.aborted) return;
                 _removeSkeleton(_analysis.elements);
                 var succeeded = chunkResults.filter(function(r) { return r.success; });
                 var failed = chunkResults.filter(function(r) { return !r.success; });
@@ -4012,6 +4315,7 @@ function generate() {
                     var sym = result.success ? '\u2713' : '\u2717';
                     codeProgress.textContent = 'Retry: ' + sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
                   }, _pipeSignal).then(function(retryResults) {
+                    if (signal.aborted) return;
                     // Merge retry successes into main results
                     var retriedOk = 0;
                     retryResults.forEach(function(rr) {
@@ -4039,6 +4343,7 @@ function generate() {
                 }
 
                 return retryPromise.then(function(finalResults) {
+                if (signal.aborted) return;
                 // Collect remaining failed chunk definitions for Kimi to implement
                 var failedChunks = [];
                 finalResults.forEach(function(cr) {
@@ -4063,6 +4368,7 @@ function generate() {
                 _applySpec(assembled.spec, 'test-render');
                 var testFailures = [];
                 return runChunkTests(finalResults, 2000).then(function(testResults) {
+                  if (signal.aborted) return;
                   if (testResults.length) {
                     var passed = testResults.filter(function(t) { return t.pass; }).length;
                     var total = testResults.length;
@@ -4085,7 +4391,8 @@ function generate() {
                   : 'Reviewing assembly\u2026';
                 return reviewAndAssemble(finalSpec, plan, assembled.spec, assembled.conflicts, failedChunks, function(bytes, lines, secs) {
                   codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
-                }, testFailures).then(function(reviewedSpec) {
+                }, testFailures, _pipeSignal).then(function(reviewedSpec) {
+                  if (signal.aborted) return;
                   if (reviewedSpec) {
                     _pipeDone(stepReview, 'Review complete');
                     _applySpec(reviewedSpec, 'interactive');
@@ -4096,6 +4403,7 @@ function generate() {
 
                   return _runVerifyLoop();
                 }).catch(function(revErr) {
+                  if (signal.aborted) return;
                   console.error('[pipeline:review] error:', revErr);
                   _pipeDone(stepReview, 'Review errored');
                   _applySpec(assembled.spec, 'interactive (raw)');
@@ -4104,16 +4412,18 @@ function generate() {
               }); // retryPromise.then
               });
             }).then(function() {
+              if (signal.aborted) return;
               _pipeFinish();
               $status.textContent = '';
               setLoading(false);
             });
-          }).catch(function(err) { console.error('[pipeline] uncaught:', err); _pipeFinish(); $status.textContent = ''; setLoading(false); });
+          }).catch(function(err) { if (signal.aborted) return; console.error('[pipeline] uncaught:', err); _pipeFinish(); $status.textContent = ''; setLoading(false); });
         } else {
           doRetryOrFallback('Invalid or incomplete JSON response');
         }
       },
       function onError(err) {
+        if (signal.aborted) return;
         clearInterval(renderTimer);
         if (err === 'no-stream') {
           runBlockingGenerate(messages, streamBubble);
@@ -4126,11 +4436,25 @@ function generate() {
       }
     );
   }
-  analysisPromise.then(function(analysisBrief) {
+  Promise.all([analysisPromise, pickPromise]).then(function(res) {
+    if (preSignal.aborted) return; // stopped before streaming began
+    var analysisBrief = res[0];
     if (analysisBrief) dlog('[analyzeLayout] Brief:', analysisBrief.slice(0, 200));
     else if (!currentSpec) console.warn('[analyzeLayout] Skipped or failed');
-    messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief);
+    messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief, res[1]);
     $status.textContent = 'Streaming\u2026';
+    // Swap the planning step for what it produced, then show the build step
+    var _picked = (res[1] || []).filter(function(t) { return PICK_CORE.indexOf(t) === -1; });
+    var _planDone = [];
+    if (analysisBrief) _planDone.push('Planned the layout');
+    else if (!currentSpec && _hasAttachments) _planDone.push('Layout planning skipped');
+    if (_picked.length) _planDone.push('Picked ' + _picked.length + ' components: ' + _picked.slice(0, 5).join(', ') + (_picked.length > 5 ? ' +' + (_picked.length - 5) + ' more' : ''));
+    else if (!_hasAttachments) _planDone.push('Using the full component catalog');
+    if (_planDone.length) {
+      bubbleStepText(streamBubble, _planDone[0]);
+      for (var _pi = 1; _pi < _planDone.length; _pi++) bubbleStep(streamBubble, _planDone[_pi]);
+    }
+    bubbleStep(streamBubble, 'Building the UI\u2026');
     startStream(messages);
   });
 }
@@ -4268,7 +4592,8 @@ $share.addEventListener('click', function() {
   if (!currentSpec) return;
   try {
     var compressed = LZString.compressToEncodedURIComponent(JSON.stringify(currentSpec));
-    var url = window.location.origin + window.location.pathname + '?s=' + compressed;
+    // Fragment, not query: the payload never reaches the server (long ?s= URLs hit HTTP 431)
+    var url = window.location.origin + window.location.pathname + '#s=' + compressed;
     navigator.clipboard.writeText(url).then(function() {
       DAUB.toast({ type: 'success', message: 'Share link copied!' });
     }).catch(function() {
@@ -4437,7 +4762,8 @@ $newChat.addEventListener('click', function() {
   postToPreview({ type: 'clear' });
   _iframeHtmlCache = '';
   updateCodeView();
-  hideJsonError();
+  _renderSeq++;
+  _chatSessionId = newChatSessionId();
   $prompt.value = '';
   $prompt.style.height = '';
   $status.textContent = '';
@@ -4539,6 +4865,9 @@ function computeSpecDiff(oldSpec, newSpec) {
 //  RENDERER — json-render spec to DAUB HTML
 // ============================================================
 var MAX_DEPTH = 20;
+var RENDERING = Object.create(null); // element ids on the current render path (see specRef)
+var _renderFailures = []; // {id, type, message} per renderSpec pass; a throwing element renders a notice instead
+var _renderFailSig = '', _renderFailMsg = '';
 
 // ---- Spec Validation & Auto-Fix ----
 function validateSpec(spec) {
@@ -4569,6 +4898,7 @@ function autoFixSpec(spec) {
   Object.keys(spec.elements).forEach(function(id) {
     var def = spec.elements[id];
     if (def.children) {
+      if (!Array.isArray(def.children)) def.children = typeof def.children === 'string' ? [def.children] : toArr(def.children); // "children": "id" would throw below and blank the page
       def.children = def.children.filter(function(cid) { return !!spec.elements[cid]; });
     }
   });
@@ -4609,10 +4939,12 @@ function autoFixSpec(spec) {
     var ids = Object.keys(spec.elements);
     if (ids.length) spec.root = ids[0];
   }
+  // A named element listed under two parents renders once (the OpenUI parser already does this for its specs)
+  if (window.DaubOpenUI && DaubOpenUI.dedupeRefs && spec.elements[spec.root]) DaubOpenUI.dedupeRefs(spec.elements, spec.root);
   return spec;
 }
 
-function renderSpec(spec, prevSpec) {
+function renderSpec(spec, prevSpec, inert) {
   if (!spec || !spec.root || !spec.elements) {
     showJsonError('Spec must have "root" and "elements"');
     return;
@@ -4623,27 +4955,21 @@ function renderSpec(spec, prevSpec) {
   if (issues.length) console.warn('[DAUB] Spec issues:', issues);
   // Render into a detached container
   var tempDiv = document.createElement('div');
+  _renderFailures = [];
 
   var el = renderElement(spec.elements, spec.root, 0);
   if (el) tempDiv.appendChild(el);
 
   // Render orphan elements (overlays not in any children array)
-  var rendered = {};
-  tempDiv.querySelectorAll('[data-spec-id]').forEach(function(n) {
-    rendered[n.getAttribute('data-spec-id')] = true;
-  });
-  Object.keys(spec.elements).forEach(function(id) {
-    if (id !== spec.root && !rendered[id]) {
-      var orphan = renderElement(spec.elements, id, 0);
-      if (orphan) {
-        tempDiv.appendChild(orphan);
-        orphan.querySelectorAll('[data-spec-id]').forEach(function(n) {
-          rendered[n.getAttribute('data-spec-id')] = true;
-        });
-        rendered[id] = true;
-      }
-    }
-  });
+  renderOrphans(spec, tempDiv);
+
+  // Report guarded element failures once per distinct set (progressive renders repeat them)
+  var failSig = _renderFailures.length ? JSON.stringify(_renderFailures) : '';
+  if (failSig && failSig !== _renderFailSig) console.warn('[DAUB] ' + _renderFailures.length + ' element(s) failed to render:', _renderFailures);
+  _renderFailSig = failSig;
+  var failMsg = _renderFailures.length ? _renderFailures.length + (_renderFailures.length > 1 ? ' elements' : ' element') + ' couldn\'t render' : '';
+  if (!$status.textContent || $status.textContent === _renderFailMsg) $status.textContent = failMsg; // never clobber another status
+  _renderFailMsg = failMsg;
 
   // Set theme on iframe
   if (spec.theme) {
@@ -4654,7 +4980,7 @@ function renderSpec(spec, prevSpec) {
   var jsItems = collectCustomJS(spec);
   var stateConfig = collectStateConfig(spec);
   _iframeHtmlCache = tempDiv.innerHTML;
-  postToPreview({ type: 'render', html: tempDiv.innerHTML, spec: spec, js: jsItems, stateConfig: stateConfig });
+  postToPreview({ type: 'render', html: tempDiv.innerHTML, spec: spec, js: jsItems, stateConfig: stateConfig, seq: ++_renderSeq, inert: !!inert });
 }
 
 // Incremental diff: walk spec tree, find DOM nodes by data-spec-id, replace changed subtrees
@@ -4726,6 +5052,7 @@ function renderElement(elements, id, depth) {
   if (depth > MAX_DEPTH) return document.createTextNode('[max depth]');
   var def = elements[id];
   if (!def) return null;
+  if (RENDERING[id]) return null; // cycle: an element listed inside itself (or a descendant)
 
   // Encode visible expression as data attribute for iframe-side evaluation
   if (def.visible != null) {
@@ -4735,20 +5062,25 @@ function renderElement(elements, id, depth) {
 
   var render = RENDERERS[def.type];
   if (!render) {
-    var el = document.createElement('div');
-    el.className = 'db-alert db-alert--warning';
-    var content = document.createElement('div');
-    content.className = 'db-alert__content';
-    var title = document.createElement('div');
-    title.className = 'db-alert__title';
-    title.textContent = 'Unknown: ' + def.type;
-    content.appendChild(title);
-    el.appendChild(content);
-    return el;
+    var unknown = renderNotice('Unknown: ' + def.type);
+    unknown.setAttribute('data-spec-id', id); // marks it rendered so the orphan pass skips it
+    return unknown;
   }
 
   var children = def.children || (def.props && def.props.children) || [];
-  var el = render(def.props || {}, children, elements, depth);
+  var el;
+  RENDERING[id] = (RENDERING[id] || 0) + 1;
+  try {
+    el = render(normalizeProps(def.type, def.props || {}), children, elements, depth);
+  } catch (err) {
+    // One bad element must not blank the page: show a notice in its place, siblings keep rendering
+    _renderFailures.push({ id: id, type: def.type, message: String((err && err.message) || err) });
+    el = renderNotice('Couldn\'t render ' + def.type);
+    el.setAttribute('data-spec-id', id);
+    return el;
+  } finally {
+    RENDERING[id]--;
+  }
   if (el && el.setAttribute) {
     el.setAttribute('data-spec-id', id);
     // Encode declarative state metadata as data attributes for iframe runtime
@@ -4777,6 +5109,14 @@ function renderElement(elements, id, depth) {
   return el;
 }
 
+function renderNotice(text) {
+  var el = mkEl('div', 'db-alert db-alert--warning');
+  var content = mkEl('div', 'db-alert__content');
+  content.appendChild(mkEl('div', 'db-alert__title', text));
+  el.appendChild(content);
+  return el;
+}
+
 function renderChildren(elements, childIds, depth) {
   var frag = document.createDocumentFragment();
   (childIds || []).forEach(function(id) {
@@ -4784,6 +5124,43 @@ function renderChildren(elements, childIds, depth) {
     if (el) frag.appendChild(el);
   });
   return frag;
+}
+
+// Parent of each element some other element references (a children entry or a prop holding its id; trigger-like
+// props excluded), for the orphan pass
+function orphanParents(els) {
+  var parentOf = {};
+  Object.keys(els).forEach(function(pid) {
+    (function refs(v, depth) {
+      if (v == null || depth > 6) return;
+      if (typeof v === 'string') { if (v !== pid && Object.prototype.hasOwnProperty.call(els, v) && !parentOf[v]) parentOf[v] = pid; return; }
+      if (typeof v === 'object') for (var k in v) if (Object.prototype.hasOwnProperty.call(v, k) && !/^(trigger|target|for|controls|id|opens)$/.test(k)) refs(v[k], depth + 1);
+    })({ c: els[pid] && els[pid].children, p: els[pid] && els[pid].props }, 0);
+  });
+  return parentOf;
+}
+
+// Append what the root tree did not place (overlays opened by a trigger, unreferenced statements) to container.
+// Each one renders through its top-most unplaced ancestor, so a Modal's inline children render inside the Modal
+// instead of first standing alone and then again inside it. Returns [{id, node}] for each appended element
+function renderOrphans(spec, container) {
+  var els = spec.elements, rendered = {}, out = [];
+  container.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+  var parentOf = orphanParents(els);
+  Object.keys(els).forEach(function(id) {
+    var top = id, hops = 0;
+    while (parentOf[top] && !rendered[parentOf[top]] && hops++ < 50) top = parentOf[top];
+    [top, id].forEach(function(oid) {
+      if (oid === spec.root || rendered[oid]) return;
+      rendered[oid] = true;
+      var node = renderElement(els, oid, 0);
+      if (!node) return;
+      container.appendChild(node);
+      out.push({ id: oid, node: node });
+      if (node.querySelectorAll) node.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+    });
+  });
+  return out;
 }
 
 // Safe HTML-entity escaping via textContent
@@ -4815,8 +5192,8 @@ function sanitizeHtml(html) {
         if (aname.indexOf('on') === 0) continue;
         if (allowed.indexOf(aname) < 0) continue;
         var v = a.value;
-        if ((aname === 'href' || aname === 'src') && /^\s*javascript:/i.test(v)) continue;
-        attrs += ' ' + aname + '="' + esc(v) + '"';
+        if ((aname === 'href' || aname === 'src') && /^javascript:/i.test(v.replace(/[\u0000-\u0020]/g, ''))) continue;
+        attrs += ' ' + aname + '="' + esc(v).replace(/"/g, '&quot;') + '"'; // esc() leaves quotes, which would end the attribute
       }
       if (tag === 'a') attrs += ' rel="noopener" target="_blank"';
       if (tag === 'br' || tag === 'hr' || tag === 'img') { out += '<' + tag + attrs + '>'; }
@@ -4840,12 +5217,319 @@ function mkEl(tag, cls, text) {
   return el;
 }
 
+// Icon names models borrow from other icon sets -> the lucide 0.576 name
+var ICON_ALIASES = {
+  refresh: 'refresh-cw', reload: 'refresh-cw', sync: 'refresh-cw', rotate: 'rotate-cw', replay: 'rotate-ccw',
+  chart: 'chart-bar', stats: 'chart-bar', analytics: 'chart-line', dashboard: 'layout-dashboard',
+  alert: 'circle-alert', error: 'circle-alert', warning: 'triangle-alert', success: 'circle-check', help: 'circle-help', question: 'circle-help',
+  close: 'x', cancel: 'circle-x', add: 'plus', more: 'ellipsis', sort: 'arrow-up-down', gear: 'settings',
+  cart: 'shopping-cart', bag: 'shopping-bag', dollar: 'dollar-sign', money: 'banknote', cash: 'banknote', payment: 'credit-card', ethereum: 'coins',
+  email: 'mail', message: 'message-square', chat: 'message-square', comment: 'message-square', notification: 'bell', notifications: 'bell',
+  profile: 'user', account: 'user', person: 'user', people: 'users', team: 'users', visitors: 'users', bounce: 'undo-2',
+  location: 'map-pin', document: 'file-text', doc: 'file-text', draft: 'file-pen', log: 'logs', flask: 'flask-conical',
+  time: 'clock', schedule: 'calendar', event: 'calendar', date: 'calendar', logout: 'log-out', login: 'log-in',
+  favorite: 'heart', like: 'thumbs-up', visibility: 'eye', back: 'arrow-left', previous: 'arrow-left', prev: 'arrow-left', next: 'arrow-right'
+};
+
+// Same PascalCase key lucide.createIcons() derives from data-lucide
+function lucideKey(n) {
+  var c = n.replace(/^([A-Z])|[\s-_]+(\w)/g, function(m, a, b) { return b ? b.toUpperCase() : a.toLowerCase(); });
+  return c.charAt(0).toUpperCase() + c.slice(1);
+}
+
+// Icon element for a spec icon name. Aliases map to lucide, "google" is an inline G in lucide's stroke style,
+// an emoji or symbol renders as text, and a name the loaded lucide build lacks (in any case) returns null (no empty slot)
+function mkIcon(name, size) {
+  name = typeof name === 'string' ? name.trim() : '';
+  if (!name) return null;
+  var px = (size || 16) + 'px', key = name.toLowerCase(), el;
+  if (!/[a-z]/.test(key)) {
+    el = mkEl('span', null, name);
+    el.setAttribute('aria-hidden', 'true');
+    el.style.fontSize = px;
+    el.style.lineHeight = '1';
+    return el;
+  }
+  if (key === 'google') {
+    var ns = 'http://www.w3.org/2000/svg', path = document.createElementNS(ns, 'path');
+    el = document.createElementNS(ns, 'svg');
+    var at = { 'class': 'lucide lucide-google', width: size || 16, height: size || 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor',
+      'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' };
+    for (var k in at) el.setAttribute(k, at[k]);
+    path.setAttribute('d', 'M18.4 5.6A9 9 0 1 0 21 12h-9');
+    el.appendChild(path);
+    return el;
+  }
+  if (Object.prototype.hasOwnProperty.call(ICON_ALIASES, key)) name = ICON_ALIASES[key];
+  var lib = typeof lucide !== 'undefined' && lucide.icons;
+  if (lib && !lib[lucideKey(name)]) {
+    if (!lib[lucideKey(key)]) return null;
+    name = key; // "GitHub" -> "github": lucide names are lowercase
+  }
+  el = document.createElement('i');
+  el.setAttribute('data-lucide', name);
+  el.style.width = px;
+  el.style.height = px;
+  return el;
+}
+
+// Map a variant-like prop onto a modifier daub.css defines (aliases first); any other value -> '' so no dead class ships
+function knownMod(v, known, alias) {
+  if (v == null || v === false || v === '') return '';
+  var k = String(v).trim().toLowerCase();
+  if (alias && Object.prototype.hasOwnProperty.call(alias, k)) k = alias[k];
+  return known.indexOf(k) >= 0 ? k : '';
+}
+
 // Guard against javascript: and data: URLs from AI-generated content
 function isSafeUrl(url) {
   if (!url || typeof url !== 'string') return false;
-  var trimmed = url.trim().toLowerCase();
+  var trimmed = url.replace(/[\u0000-\u0020]/g, '').toLowerCase();
   if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) return false;
   return true;
+}
+
+function isPlainObj(x) { return !!x && typeof x === 'object' && !Array.isArray(x); }
+
+// Model-supplied list props: arrays pass through, {items|data|rows|options|list: [...]} unwraps,
+// an object of objects -> its values, a scalar -> [x], anything else -> []
+function toArr(x) {
+  if (Array.isArray(x)) return x;
+  if (x == null) return [];
+  if (isPlainObj(x)) {
+    var keys = ['items', 'data', 'rows', 'options', 'list'];
+    for (var i = 0; i < keys.length; i++) if (Array.isArray(x[keys[i]])) return x[keys[i]];
+    var vals = Object.keys(x).map(function(k) { return x[k]; });
+    return vals.every(isPlainObj) ? vals : [];
+  }
+  var t = typeof x;
+  return t === 'string' || t === 'number' || t === 'boolean' ? [x] : [];
+}
+
+// Option lists: bare strings/numbers -> {label, value}
+function optArr(x) {
+  return toArr(x).map(function(o) { return typeof o === 'string' || typeof o === 'number' ? { label: String(o), value: String(o) } : o; });
+}
+
+// A data entry that names a spec element: OpenUI hoists inline components (Breadcrumbs([Text(..)]), Table([[Text(..)]]))
+// to element ids. An id some element lists as a child stays text, so a cell that equals an id is not pulled out of its parent.
+// So does an id on the current render path: a cell naming the root ("home") must not nest the page inside itself
+function specRef(v, els) {
+  if (typeof v !== 'string' || !els || !Object.prototype.hasOwnProperty.call(els, v) || RENDERING[v]) return null;
+  for (var k in els) {
+    var e = els[k], c = e && (e.children || (e.props && e.props.children));
+    if (Array.isArray(c) && c.indexOf(v) >= 0) return null;
+  }
+  return v;
+}
+
+// Entries of a list-like renderer: its data items ({ref} for spec elements, else {data}), or its child elements when it has none
+function entries(items, ch, els) {
+  items = toArr(items);
+  if (!items.length) return toArr(ch).map(function(id) { return { ref: id }; });
+  return items.map(function(v) { var id = specRef(v, els); return id ? { ref: id } : { data: v }; });
+}
+
+// Renderable text: a non-empty string or a number ($state/$cond objects resolve later in the iframe)
+function isText(v) {
+  return (typeof v === 'string' && v !== '') || typeof v === 'number';
+}
+
+function withProp(o, key, v) {
+  var c = {};
+  for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) c[k] = o[k];
+  c[key] = v;
+  return c;
+}
+
+// Fill an empty slot from the first alias that holds text; returns a copy, never touches the spec
+function fillAlias(o, key, names) {
+  if (o[key] != null && o[key] !== '') return o;
+  for (var i = 0; i < names.length; i++) {
+    if (isText(o[names[i]])) return withProp(o, key, o[names[i]]);
+  }
+  return o;
+}
+
+// Image-URL shape: http(s), protocol-relative, a path, blob:, or a filename with an image extension ("sm" and "Jordan Diaz" are not)
+function isImgUrl(s) {
+  return typeof s === 'string' && /^((https?:)?\/\/|\.{0,2}\/|blob:)|^\S+\.(png|jpe?g|gif|webp|avif|svg)(\?|$)/i.test(s.trim());
+}
+
+// AI-written prop names -> the names the renderers read (Badge label -> text, List items[].primary -> title)
+function normalizeProps(type, p) {
+  var items, on, tv, q, slid, signed;
+  switch (type) {
+    case 'Badge':
+    case 'Label':
+      return fillAlias(p, 'text', ['label', 'content']);
+    case 'Alert':
+      p = fillAlias(p, 'message', ['description', 'content', 'text']);
+      return /^(info|success|warning|error)$/.test(p.variant) ? fillAlias(p, 'type', ['variant']) : p;
+    case 'EmptyState':
+      return fillAlias(p, 'message', ['description', 'text']);
+    case 'StatCard':
+      p = fillAlias(p, 'label', ['title']);
+      tv = p.trendValue;
+      // trend "neutral"/"flat": no direction word, the value shows uncoloured
+      if (/^(neutral|flat)$/.test(p.trend)) return withProp(withProp(p, 'trend', isText(tv) ? String(tv) : null), 'trendValue', null);
+      // StatCard("Keys", "14", "key-round", "up", "+2") / StatCard("Support", "24/7", "headset", "Replies in 2 min"): a Lucide name in the trend slot
+      if (typeof p.trend !== 'string' || !/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(p.trend) || /^(up|down)$/.test(p.trend) || !mkIcon(p.trend)) return p;
+      slid = /^(up|down)$/.test(tv);
+      signed = typeof tv === 'string' && /^[+\u2191\-\u2212\u2193]/.test(tv);
+      q = withProp(withProp(withProp(p, 'icon', p.trend), 'trend', slid || signed ? tv : null), 'trendValue', slid && isText(p.icon) && p.icon !== p.trend ? p.icon : null);
+      return slid || signed || !isText(tv) || isText(q.description) ? q : withProp(q, 'description', tv);
+    case 'Switch':
+    case 'Checkbox':
+      // Switch(true): a boolean in the label slot is the checked state, not text
+      return typeof p.label === 'boolean' && p.checked == null ? withProp(withProp(p, 'checked', p.label), 'label', '') : p;
+    case 'CustomSelect':
+      // CustomSelect("Language", opts, "de"): a string in the searchable slot is the selection
+      if (typeof p.searchable === 'string' && !/^(true|false)$/.test(p.searchable)) p = withProp(fillAlias(p, 'selected', ['searchable']), 'searchable', false);
+      // A top-level selected (as Select and RadioGroup take it) marks the matching option; a label is the placeholder
+      p = fillAlias(fillAlias(p, 'selected', ['value', 'defaultValue']), 'placeholder', ['label']);
+      items = optArr(p.options);
+      if (!isText(p.selected) || items.some(function(o) { return o && o.selected; })) return p;
+      return withProp(p, 'options', items.map(function(o) { return isPlainObj(o) && (String(o.value) === String(p.selected) || o.label === p.selected) ? withProp(o, 'selected', true) : o; }));
+    case 'Avatar':
+      // src holds only an image URL: Avatar("MC", "sm") is a size, Avatar("JD", "Jordan Diaz") a name, Avatar(url, "Name") swapped args
+      if (isImgUrl(p.initials) && !isImgUrl(p.src)) p = withProp(withProp(p, 'src', p.initials), 'initials', '');
+      if (typeof p.src !== 'string' || !p.src || isImgUrl(p.src)) return p;
+      if (p.size == null && /^(xs|sm|md|lg|xl|2xl)$/i.test(p.src)) p = withProp(p, 'size', p.src);
+      return withProp(p, 'src', '');
+    case 'List':
+      if (p.items == null) return p;
+      return withProp(p, 'items', toArr(p.items).map(function(it) {
+        return isPlainObj(it) ? fillAlias(fillAlias(it, 'title', ['primary', 'label', 'text']), 'secondary', ['description', 'subtitle']) : it;
+      }));
+    case 'ToggleGroup':
+      p = fillAlias(p, 'selected', ['defaultValue', 'value']);
+      if (p.options != null || p.items == null) return p;
+      // Valueless items would all match an unset selected and render pressed; the item marked active is the selection
+      items = toArr(p.items).map(function(o) { return isPlainObj(o) ? fillAlias(o, 'value', ['id', 'label']) : o; });
+      p = withProp(p, 'options', items);
+      on = items.filter(function(o) { return o && o.active === true; })[0];
+      return p.selected == null && on ? withProp(p, 'selected', on.value) : p;
+    case 'Tabs':
+      // Tabs(tabs: ["All", "Done"]): a bare string tab is its own label and id
+      items = toArr(p.tabs != null ? p.tabs : p.items);
+      if (items.some(isText)) p = withProp(p, p.tabs != null ? 'tabs' : 'items', items.map(function(t) { return isText(t) ? { label: String(t), id: String(t) } : t; }));
+      if (p.tabs != null || p.items == null) return p;
+      items = toArr(p.items).map(function(t) { return isPlainObj(t) ? fillAlias(t, 'id', ['value']) : t; });
+      p = withProp(p, 'tabs', items);
+      on = items.filter(function(t) { return t && t.active === true; })[0];
+      return p.active == null && on ? withProp(p, 'active', on.id) : p;
+  }
+  return p;
+}
+
+// Visible label above a control whose markup has no label slot (Input, Progress, RadioGroup, ToggleGroup).
+// fill: the control is width:100%, so the wrapper takes its place in a row the same way.
+function withLabel(el, text, fill) {
+  if (!isText(text)) return el;
+  var wrap = mkEl('div');
+  wrap.style.cssText = 'display:flex;flex-direction:column;gap:var(--db-space-2);' + (fill ? 'width:100%;' : 'align-items:flex-start;');
+  var lbl = mkEl(el.tagName === 'INPUT' ? 'label' : 'span', 'db-label', String(text));
+  if (el.tagName === 'INPUT') {
+    el.id = 'db-input-' + Math.random().toString(36).slice(2, 8);
+    lbl.htmlFor = el.id;
+  }
+  wrap.appendChild(lbl);
+  wrap.appendChild(el);
+  return wrap;
+}
+
+// Chart bars: [{label, value}] as-is; {data|datasets, labels} objects and bare numbers -> [{label, value}]
+function chartBars(b) {
+  if (b && typeof b === 'object' && !Array.isArray(b)) {
+    var labels = toArr(b.labels);
+    var data = Array.isArray(b.data) ? b.data : toArr(toArr(b.datasets)[0]);
+    b = data.map(function(v, i) {
+      var o = v && typeof v === 'object' ? v : { value: v };
+      return { label: o.label != null ? o.label : (labels[i] != null ? labels[i] : ''), value: o.value, max: o.max };
+    });
+  }
+  return toArr(b).map(function(v) { return v && typeof v === 'object' ? v : { value: v }; });
+}
+
+// Numeric bar value: "$12k" -> 12, junk -> 0 (a NaN height would collapse the bar)
+function chartNum(v) {
+  if (typeof v === 'number') return v;
+  var n = parseFloat(String(v).replace(/[^0-9.\-]/g, ''));
+  return isNaN(n) ? 0 : n;
+}
+
+// Table/DataTable: unwrap a {columns, rows} object, string columns -> {key, label}, array rows -> keyed objects
+function tableShape(p) {
+  var cols = p.columns, rows = p.rows;
+  if (cols && typeof cols === 'object' && !Array.isArray(cols) && (cols.columns || cols.rows)) { if (rows == null) rows = cols.rows; cols = cols.columns; }
+  if (rows && typeof rows === 'object' && !Array.isArray(rows) && Array.isArray(rows.rows)) { if (cols == null) cols = rows.columns; rows = rows.rows; }
+  // A scalar is not a header or a row: a bare string is an unresolved variable name (Table(cols, rows) with no cols = [...])
+  if (cols != null && typeof cols !== 'object') cols = [];
+  if (rows != null && typeof rows !== 'object') rows = [];
+  // {name: 'Name', email: 'Email'} column map -> [{key, label}]
+  if (isPlainObj(cols) && Object.keys(cols).length && Object.keys(cols).every(function(k) { return typeof cols[k] === 'string'; })) {
+    cols = Object.keys(cols).map(function(k) { return { key: k, label: cols[k] }; });
+  }
+  cols = toArr(cols);
+  rows = toArr(rows);
+  if (cols.some(function(c) { return typeof c === 'string'; })) {
+    cols = cols.map(function(c, i) {
+      if (typeof c !== 'string') return c;
+      var byLabel = rows.some(function(r) { return isPlainObj(r) && Object.prototype.hasOwnProperty.call(r, c); });
+      return { key: byLabel ? c : (c.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'c' + i), label: c };
+    });
+  }
+  if (rows.some(Array.isArray)) {
+    rows = rows.map(function(r) {
+      if (!Array.isArray(r)) return r;
+      var o = {};
+      cols.forEach(function(c, i) { if (c && c.key != null) o[c.key] = r[i]; });
+      return o;
+    });
+  }
+  return { cols: cols, rows: rows };
+}
+
+// Table/DataTable: a scroll box, so a wide table scrolls inside its column instead of widening the page or a grid cell
+function tableScroll(table) {
+  var wrap = mkEl('div', 'db-table-scroll');
+  wrap.appendChild(table);
+  return wrap;
+}
+
+// Row-action verbs a model packs into one "Actions" cell ("copy,revoke", "Copy \u00b7 Revoke", "\u22ef") -> the icon each renders as
+var ACTION_ICONS = { copy: 'copy', revoke: 'ban', 'delete': 'trash-2', remove: 'trash-2', edit: 'pencil', view: 'eye', open: 'external-link',
+  download: 'download', share: 'share-2', archive: 'archive', rotate: 'refresh-cw', menu: 'ellipsis', more: 'ellipsis', '\u22ef': 'ellipsis', '\u2026': 'ellipsis', '...': 'ellipsis' };
+
+// An "Actions" column cell made only of action verbs -> ghost icon buttons; anything else stays text (null)
+function actionCell(c, v) {
+  if (typeof v !== 'string' || !(/^actions?$/i.test(c.key || '') || /^actions?$/i.test(c.label || ''))) return null;
+  var names = v.split(/\s*[,\u00b7|\/]\s*/).filter(Boolean);
+  if (!names.length || !names.every(function(n) { return Object.prototype.hasOwnProperty.call(ACTION_ICONS, n.toLowerCase()); })) return null;
+  var box = mkEl('div');
+  box.style.cssText = 'display:inline-flex;align-items:center;gap:var(--db-space-1)';
+  names.forEach(function(n) {
+    var b = RENDERERS.Button({ variant: 'ghost', size: 'icon', icon: ACTION_ICONS[n.toLowerCase()] });
+    b.setAttribute('aria-label', n);
+    box.appendChild(b);
+  });
+  return box;
+}
+
+// A cell that names spec elements: one id, or a list of ids (row actions: [Button(..), Button(..)]); null when any entry is data
+function cellRefs(v, els) {
+  var ids = toArr(v).map(function(x) { return specRef(x, els); });
+  return ids.length && ids.every(Boolean) ? ids : null;
+}
+
+// Several elements in one cell sit in a row
+function cellElements(els, ids, d) {
+  if (ids.length === 1) return renderChildren(els, ids, d);
+  var box = mkEl('div');
+  box.style.cssText = 'display:inline-flex;align-items:center;gap:var(--db-space-1)';
+  box.appendChild(renderChildren(els, ids, d));
+  return box;
 }
 
 // ---- Declarative State Engine ----
@@ -4994,6 +5678,27 @@ function collectStateConfig(spec) {
 // ---- Component Renderers (67 types) ----
 var RENDERERS = {};
 
+// A Checkbox or Switch whose label repeats text beside it (Stack([Text("Email alerts"), Switch("Email alerts", true)])):
+// the row shows the name once, and the control keeps it as its accessible name
+function dedupeControlLabels(row) {
+  var kids = [].slice.call(row.children), seen = {};
+  var isCtl = function(k) { return k.classList && (k.classList.contains('db-checkbox') || k.classList.contains('db-switch')); };
+  kids.forEach(function(k) {
+    if (isCtl(k)) return;
+    [k].concat([].slice.call(k.querySelectorAll('h1,h2,h3,h4,p,span,label'))).forEach(function(n) {
+      var t = n.textContent.trim().toLowerCase();
+      if (t) seen[t] = true;
+    });
+  });
+  kids.forEach(function(k) {
+    if (!isCtl(k)) return;
+    var last = k.lastChild, t = last && last.nodeType === 3 ? last.nodeValue.trim() : '';
+    if (!t || !seen[t.toLowerCase()]) return;
+    k.removeChild(last);
+    (k.querySelector('input') || k).setAttribute('aria-label', t);
+  });
+}
+
 // -- Stack (flexbox) --
 RENDERERS.Stack = function(p, ch, els, d) {
   var el = document.createElement('div');
@@ -5003,7 +5708,7 @@ RENDERERS.Stack = function(p, ch, els, d) {
   var isH = p.direction === 'horizontal';
   el.style.display = 'flex';
   el.style.flexDirection = isH ? 'row' : 'column';
-  el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap || 2)) + ')';
+  el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap != null ? p.gap : 2)) + ')';
   if (isH && p.wrap !== false) el.style.flexWrap = 'wrap';
   if (p.justify === 'center') el.style.justifyContent = 'center';
   else if (p.justify === 'end') el.style.justifyContent = 'flex-end';
@@ -5014,6 +5719,15 @@ RENDERERS.Stack = function(p, ch, els, d) {
   else if (p.align === 'start') el.style.alignItems = 'flex-start';
   else if (p.align === 'stretch') el.style.alignItems = 'stretch';
   el.appendChild(renderChildren(els, ch, d));
+  dedupeControlLabels(el);
+  // Sidebar rows: give the content a flex basis so it sits beside the sidebar instead of wrapping below it (still wraps on narrow screens)
+  if (isH && Array.isArray(ch) && ch.some(function(id) { return els[id] && els[id].type === 'Sidebar'; })) {
+    for (var si = 0; si < el.children.length; si++) {
+      var sc = el.children[si], sid = sc.getAttribute('data-spec-id');
+      if (sid && els[sid] && els[sid].type === 'Sidebar') sc.style.flex = '0 0 auto';
+      else { sc.style.flex = '1 1 480px'; sc.style.minWidth = '0'; }
+    }
+  }
   return el;
 };
 
@@ -5023,7 +5737,12 @@ RENDERERS.Grid = function(p, ch, els, d) {
   if (p.container) {
     el.className = 'db-container' + (p.container === 'wide' ? ' db-container--wide' : p.container === 'narrow' ? ' db-container--narrow' : '');
   }
-  el.classList.add('db-grid', 'db-grid--' + (p.columns || 2));
+  // columns 2-6 map to db-grid--N; 7-12 (week calendars) get an inline template; 1 or junk stays one column
+  var cols = parseInt(p.columns || 2, 10);
+  el.classList.add('db-grid');
+  if (p.columns === 'sidebar-main') el.classList.add('db-grid--sidebar-main');
+  else if (cols >= 2 && cols <= 6) el.classList.add('db-grid--' + cols);
+  else if (cols > 6) el.style.gridTemplateColumns = 'repeat(' + Math.min(cols, 12) + ', minmax(0, 1fr))';
   if (p.gap) el.classList.add('db-gap-' + Math.max(1, Math.min(6, p.gap)));
   if (p.align === 'center') el.style.justifyItems = 'center';
   else if (p.align === 'end') el.style.justifyItems = 'end';
@@ -5042,7 +5761,8 @@ RENDERERS.Layout = function(p, ch, els, d) {
 // -- Surface --
 RENDERERS.Surface = function(p, ch, els, d) {
   var el = document.createElement('div');
-  el.className = p.variant ? 'db-surface--' + p.variant : 'db-surface';
+  var sv = knownMod(p.variant, ['raised', 'inset', 'pressed'], { bordered: 'raised', card: 'raised', elevated: 'raised', sunken: 'inset' });
+  el.className = 'db-surface' + (sv ? ' db-surface--' + sv : '');
   el.style.padding = 'var(--db-space-4, 16px)';
   el.style.borderRadius = 'var(--db-radius-2, 8px)';
   el.appendChild(renderChildren(els, ch, d));
@@ -5059,6 +5779,10 @@ RENDERERS.Text = function(p) {
   var el = document.createElement(tag);
   var classMap = { h1:'db-h1', h2:'db-h2', h3:'db-h3', h4:'db-h4', p:'db-body', span:'' };
   el.className = (classMap[tag] || '') + (p.class ? ' ' + p.class : '');
+  // Utility names models borrow from Tailwind: line-through strikes the text, text-muted maps to the DAUB muted class
+  var cl = String(p.class || '').split(/\s+/);
+  if (cl.indexOf('line-through') >= 0) el.style.textDecoration = 'line-through';
+  if (cl.indexOf('text-muted') >= 0 || cl.indexOf('text-muted-foreground') >= 0) el.classList.add('db-text-muted');
   el.textContent = c || '';
   return el;
 };
@@ -5089,15 +5813,14 @@ RENDERERS.Divider = RENDERERS.Separator;
 RENDERERS.Button = function(p) {
   var el = document.createElement('button');
   var cls = 'db-btn';
-  if (p.variant) cls += ' db-btn--' + p.variant;
-  if (p.size) cls += ' db-btn--' + p.size;
+  var bv = knownMod(p.variant, ['primary', 'secondary', 'ghost', 'icon-danger', 'icon-success', 'icon-accent'], { outline: 'secondary', 'default': 'secondary', link: 'ghost', destructive: 'icon-danger', danger: 'icon-danger' });
+  var bs = knownMod(p.size, ['sm', 'lg', 'icon']);
+  if (bv) cls += ' db-btn--' + bv;
+  if (bs) cls += ' db-btn--' + bs;
   if (p.loading) { cls += ' db-btn--loading'; el.disabled = true; }
   el.className = cls;
-  if (p.icon) {
-    var ico = document.createElement('i');
-    ico.setAttribute('data-lucide', p.icon);
-    ico.style.width = '16px';
-    ico.style.height = '16px';
+  var ico = mkIcon(p.icon, 16);
+  if (ico) {
     el.appendChild(ico);
     el.appendChild(document.createTextNode(' '));
   }
@@ -5144,6 +5867,8 @@ RENDERERS.Field = function(p, ch, els, d) {
     inp.className = 'db-field__input';
     inp.type = p.type || 'text';
     inp.placeholder = p.placeholder || '';
+    // value is the text the field holds (placeholder only hints); as an attribute it survives serialized HTML
+    if (isText(p.value)) inp.setAttribute('value', String(p.value));
     el.appendChild(inp);
   }
   if (p.helper) {
@@ -5156,10 +5881,12 @@ RENDERERS.Field = function(p, ch, els, d) {
 // -- Input --
 RENDERERS.Input = function(p) {
   var el = document.createElement('input');
-  el.className = 'db-input' + (p.size ? ' db-input--' + p.size : '') + (p.error ? ' db-input--error' : '');
+  var isz = knownMod(p.size, ['sm', 'lg']);
+  el.className = 'db-input' + (isz ? ' db-input--' + isz : '') + (p.error ? ' db-input--error' : '');
   el.type = p.type || 'text';
   el.placeholder = p.placeholder || '';
-  return el;
+  if (isText(p.value)) el.setAttribute('value', String(p.value));
+  return withLabel(el, p.label, true);
 };
 
 // -- InputGroup --
@@ -5178,13 +5905,8 @@ RENDERERS.InputGroup = function(p, ch, els, d) {
 // -- InputIcon --
 RENDERERS.InputIcon = function(p, ch, els, d) {
   var el = mkEl('div', 'db-input-icon' + (p.right ? ' db-input-icon--right' : ''));
-  if (p.icon) {
-    var ico = document.createElement('i');
-    ico.setAttribute('data-lucide', p.icon);
-    ico.style.width = '16px';
-    ico.style.height = '16px';
-    el.appendChild(ico);
-  }
+  var ico = mkIcon(p.icon, 16);
+  if (ico) el.appendChild(ico);
   el.appendChild(renderChildren(els, ch, d));
   return el;
 };
@@ -5217,6 +5939,7 @@ RENDERERS.Textarea = function(p) {
   el.className = 'db-textarea' + (p.error ? ' db-textarea--error' : '');
   el.placeholder = p.placeholder || '';
   if (p.rows) el.rows = p.rows;
+  if (isText(p.value)) el.textContent = String(p.value);
   return el;
 };
 
@@ -5226,7 +5949,8 @@ RENDERERS.Checkbox = function(p) {
   var inp = document.createElement('input');
   inp.className = 'db-checkbox__input';
   inp.type = 'checkbox';
-  if (p.checked) inp.checked = true;
+  // The preview gets serialized HTML, so state lives in attributes; the property alone is dropped
+  if (p.checked) { inp.checked = true; inp.setAttribute('checked', ''); }
   el.appendChild(inp);
   var box = document.createElement('span');
   box.className = 'db-checkbox__box';
@@ -5249,20 +5973,20 @@ RENDERERS.Checkbox = function(p) {
 RENDERERS.RadioGroup = function(p) {
   var el = mkEl('div', 'db-radio-group');
   var name = 'rg-' + Math.random().toString(36).slice(2,8);
-  (p.options || []).forEach(function(opt) {
+  optArr(p.options).forEach(function(opt) {
     var lbl = mkEl('label', 'db-radio');
     var inp = document.createElement('input');
     inp.className = 'db-radio__input';
     inp.type = 'radio';
     inp.name = name;
     inp.value = opt.value || '';
-    if (opt.value === p.selected) inp.checked = true;
+    if (opt.value === p.selected) { inp.checked = true; inp.setAttribute('checked', ''); }
     lbl.appendChild(inp);
     lbl.appendChild(mkEl('span', 'db-radio__circle'));
     lbl.appendChild(document.createTextNode(' ' + (opt.label || '')));
     el.appendChild(lbl);
   });
-  return el;
+  return withLabel(el, p.label);
 };
 
 // -- Switch --
@@ -5291,6 +6015,7 @@ RENDERERS.Slider = function(p) {
   inp.min = p.min != null ? p.min : 0;
   inp.max = p.max != null ? p.max : 100;
   inp.value = p.value != null ? p.value : 50;
+  inp.setAttribute('value', inp.value); // the value property never reaches the serialized HTML
   if (p.step) inp.step = p.step;
   el.appendChild(inp);
   return el;
@@ -5308,14 +6033,14 @@ RENDERERS.Toggle = function(p) {
 // -- ToggleGroup --
 RENDERERS.ToggleGroup = function(p) {
   var el = mkEl('div', 'db-toggle-group');
-  (p.options || []).forEach(function(opt) {
+  optArr(p.options).forEach(function(opt) {
     var btn = document.createElement('button');
     btn.className = 'db-toggle';
     btn.setAttribute('aria-pressed', opt.value === p.selected ? 'true' : 'false');
     btn.textContent = opt.label || '';
     el.appendChild(btn);
   });
-  return el;
+  return withLabel(el, p.label);
 };
 
 // -- Select --
@@ -5324,11 +6049,11 @@ RENDERERS.Select = function(p) {
   if (p.label) el.appendChild(mkEl('label', 'db-label', p.label));
   var sel = document.createElement('select');
   sel.className = 'db-select__input';
-  (p.options || []).forEach(function(o) {
+  optArr(p.options).forEach(function(o) {
     var opt = document.createElement('option');
     opt.value = o.value || '';
     opt.textContent = o.label || '';
-    if (o.value === p.selected) opt.selected = true;
+    if (o.value === p.selected) { opt.selected = true; opt.setAttribute('selected', ''); }
     sel.appendChild(opt);
   });
   el.appendChild(sel);
@@ -5341,8 +6066,8 @@ RENDERERS.CustomSelect = function(p) {
   var trigger = document.createElement('button');
   trigger.className = 'db-custom-select__trigger';
   trigger.type = 'button';
-  var selectedOpt = (p.options || []).filter(function(o) { return o.selected; })[0];
-  var triggerText = mkEl('span', 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
+  var selectedOpt = optArr(p.options).filter(function(o) { return o.selected; })[0];
+  var triggerText = mkEl('span', selectedOpt ? 'db-custom-select__value' : 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
   trigger.appendChild(triggerText);
   var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('class', 'db-custom-select__icon');
@@ -5361,7 +6086,7 @@ RENDERERS.CustomSelect = function(p) {
     searchDiv.appendChild(searchInp);
     dd.appendChild(searchDiv);
   }
-  (p.options || []).forEach(function(o) {
+  optArr(p.options).forEach(function(o) {
     var optCls = 'db-custom-select__option' + (o.selected ? ' db-custom-select__option--selected' : '') + (o.disabled ? ' db-custom-select__option--disabled' : '');
     dd.appendChild(mkEl('div', optCls, o.label || ''));
   });
@@ -5372,7 +6097,13 @@ RENDERERS.CustomSelect = function(p) {
 // -- Kbd --
 RENDERERS.Kbd = function(p) {
   var el = document.createElement('span');
-  (p.keys || []).forEach(function(k, i) {
+  var keys = p.keys;
+  if (typeof keys === 'string') {
+    // Kbd("Ctrl+K") / Kbd("⌘K"): split combos on "+", keep a lone key as-is
+    var parts = keys.split('+').map(function(s) { return s.trim(); }).filter(Boolean);
+    keys = parts.length ? parts : [keys];
+  }
+  toArr(keys).forEach(function(k, i) {
     if (i > 0) el.appendChild(document.createTextNode(' + '));
     el.appendChild(mkEl('kbd', 'db-kbd', k));
   });
@@ -5414,7 +6145,7 @@ RENDERERS.Tabs = function(p, ch, els, d) {
   var el = mkEl('div', 'db-tabs');
   var list = mkEl('div', 'db-tabs__list');
   list.setAttribute('role', 'tablist');
-  var tabs = p.tabs || [];
+  var tabs = toArr(p.tabs);
   var activeIdx = 0;
   tabs.forEach(function(t, i) {
     if (t.id === p.active) activeIdx = i;
@@ -5425,40 +6156,37 @@ RENDERERS.Tabs = function(p, ch, els, d) {
     list.appendChild(btn);
   });
   el.appendChild(list);
-  if (ch.length) {
-    ch.forEach(function(cid, i) {
-      var panel = mkEl('div', 'db-tabs__panel');
-      if (i !== activeIdx) panel.hidden = true;
-      var child = renderElement(els, cid, d + 1);
-      if (child) panel.appendChild(child);
-      el.appendChild(panel);
-    });
-  } else {
-    tabs.forEach(function(t, i) {
-      var panel = mkEl('div', 'db-tabs__panel');
-      if (i !== activeIdx) panel.hidden = true;
-      panel.appendChild(mkEl('p', 'db-body', (t.label || '') + ' content'));
-      el.appendChild(panel);
-    });
-  }
+  // No children: a filter strip (Tabs(["All", "Done"], "All")) with no panels, not "All content" filler
+  ch.forEach(function(cid, i) {
+    var panel = mkEl('div', 'db-tabs__panel');
+    if (i !== activeIdx) panel.hidden = true;
+    var child = renderElement(els, cid, d + 1);
+    if (child) panel.appendChild(child);
+    el.appendChild(panel);
+  });
   return el;
 };
 
 // -- Breadcrumbs --
-RENDERERS.Breadcrumbs = function(p) {
+RENDERERS.Breadcrumbs = function(p, ch, els, d) {
   var el = document.createElement('nav');
   el.className = 'db-breadcrumbs';
   el.setAttribute('aria-label', 'Breadcrumb');
   var ol = document.createElement('ol');
-  var items = p.items || [];
-  items.forEach(function(item, i) {
+  var items = entries(p.items, ch, els);
+  items.forEach(function(e, i) {
     var li = document.createElement('li');
-    if (i === items.length - 1) {
+    var item = e.data;
+    if (e.ref) {
+      // Spec element (Text children, or Breadcrumbs([Text(..)])): it is the crumb
+      if (i === items.length - 1) li.setAttribute('aria-current', 'page');
+      li.appendChild(renderChildren(els, [e.ref], d));
+    } else if (i === items.length - 1) {
       li.setAttribute('aria-current', 'page');
       li.textContent = item.label || '';
     } else {
       var a = document.createElement('a');
-      a.href = item.href || '#';
+      a.href = isSafeUrl(item.href) ? item.href : '#';
       a.textContent = item.label || '';
       li.appendChild(a);
     }
@@ -5505,10 +6233,15 @@ RENDERERS.Pagination = function(p) {
 // -- Stepper --
 RENDERERS.Stepper = function(p) {
   var el = mkEl('div', 'db-stepper' + (p.vertical ? ' db-stepper--vertical' : ''));
-  (p.steps || []).forEach(function(s, i) {
-    var step = mkEl('div', 'db-stepper__step db-stepper__step--' + (s.status || 'pending'));
+  // current: 0-based index of the active step; earlier steps are completed. An explicit step status wins
+  var cur = parseInt(p.current, 10);
+  toArr(p.steps).forEach(function(s, i) {
+    var st = s.status || (isNaN(cur) ? 'pending' : i < cur ? 'completed' : i === cur ? 'active' : 'pending');
+    var step = mkEl('div', 'db-stepper__step db-stepper__step--' + st);
     step.appendChild(mkEl('div', 'db-stepper__indicator', String(i + 1)));
-    step.appendChild(mkEl('div', 'db-stepper__label', s.label || ''));
+    var label = mkEl('div', 'db-stepper__label', s.label || '');
+    if (isText(s.description)) label.appendChild(mkEl('div', 'db-caption', String(s.description)));
+    step.appendChild(label);
     el.appendChild(step);
   });
   return el;
@@ -5518,10 +6251,11 @@ RENDERERS.Stepper = function(p) {
 RENDERERS.NavMenu = function(p) {
   var el = document.createElement('nav');
   el.className = 'db-nav-menu';
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
+    if (typeof item === 'string') item = { label: item };
     var a = document.createElement('a');
     a.className = 'db-nav-menu__item' + (item.active ? ' db-nav-menu__item--active' : '');
-    a.href = item.href || '#';
+    a.href = isSafeUrl(item.href) ? item.href : '#';
     a.textContent = item.label || '';
     el.appendChild(a);
   });
@@ -5534,13 +6268,27 @@ RENDERERS.Navbar = function(p, ch, els, d) {
   el.className = 'db-navbar';
   var brand = document.createElement('a');
   brand.className = 'db-navbar__brand';
-  brand.href = p.brandHref || '#';
+  brand.href = isSafeUrl(p.brandHref) ? p.brandHref : '#';
   brand.textContent = p.brand || 'App';
   el.appendChild(brand);
-  if (ch.length) {
+  var links = ch.length ? [] : toArr(p.links);
+  if (ch.length || links.length) {
     var nav = mkEl('div', 'db-navbar__nav');
-    nav.appendChild(renderChildren(els, ch, d));
+    nav.appendChild(ch.length ? renderChildren(els, ch, d) : RENDERERS.NavMenu({ items: links }));
     el.appendChild(nav);
+    // Phones (max-width 640px) hide the nav slot; this button opens it (daub.js toggles db-navbar--open and aria-expanded)
+    var tog = mkEl('button', 'db-navbar__toggle');
+    tog.setAttribute('type', 'button');
+    tog.setAttribute('aria-label', 'Menu');
+    tog.setAttribute('aria-expanded', 'false');
+    var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg'), bars = document.createElementNS(ns, 'path');
+    var at = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'aria-hidden': 'true' };
+    for (var k in at) svg.setAttribute(k, at[k]);
+    bars.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+    svg.appendChild(bars);
+    tog.appendChild(svg);
+    // Before the nav slot, so Tab goes from the button into the open menu (CSS still puts it at the right edge)
+    el.insertBefore(tog, nav);
   }
   return el;
 };
@@ -5548,13 +6296,13 @@ RENDERERS.Navbar = function(p, ch, els, d) {
 // -- Menubar --
 RENDERERS.Menubar = function(p) {
   var el = mkEl('div', 'db-menubar');
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
     var btn = document.createElement('button');
     btn.className = 'db-menubar__item';
     btn.textContent = item.label || '';
     if (item.dropdown) {
       var dd = mkEl('div', 'db-menubar__dropdown');
-      item.dropdown.forEach(function(dItem) {
+      toArr(item.dropdown).forEach(function(dItem) {
         dd.appendChild(mkEl('button', 'db-dropdown__item', dItem.label || ''));
       });
       btn.appendChild(dd);
@@ -5565,27 +6313,37 @@ RENDERERS.Menubar = function(p) {
 };
 
 // -- Sidebar --
-RENDERERS.Sidebar = function(p) {
+RENDERERS.Sidebar = function(p, ch, els, d) {
   var el = document.createElement('aside');
   el.className = 'db-sidebar' + (p.collapsed ? ' db-sidebar--collapsed' : '');
   el.style.position = 'relative';
   el.style.height = 'auto';
-  (p.sections || []).forEach(function(sec) {
+  var sections = toArr(p.sections);
+  // Flat nav items passed as sections ([{label, icon}]): wrap them in one untitled section
+  if (sections.length && sections.every(function(s) { return isPlainObj(s) && s.label != null && s.items == null && s.title == null; })) {
+    sections = [{ title: '', items: sections }];
+  }
+  sections.forEach(function(sec) {
+    // Models often pass a child ref (Sidebar([navMenu])): render that element in place
+    if (typeof sec === 'string' && els && els[sec]) {
+      var ref = renderElement(els, sec, d + 1);
+      if (ref && ref.classList && ref.classList.contains('db-nav-menu')) ref.classList.add('db-nav-menu--vertical');
+      if (ref) el.appendChild(ref);
+      return;
+    }
+    if (typeof sec === 'string') sec = { items: [sec] };
     var section = mkEl('div', 'db-sidebar__section');
     if (sec.title) section.appendChild(mkEl('div', 'db-sidebar__label', sec.title));
-    (sec.items || []).forEach(function(item) {
+    toArr(sec.items).forEach(function(item) {
+      if (typeof item === 'string') item = { label: item };
       var a = document.createElement('a');
       a.className = 'db-sidebar__item' + (item.active ? ' db-sidebar__item--active' : '');
       a.setAttribute('data-tooltip', item.label || '');
-      a.href = item.href || '#';
-      if (item.icon) {
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', item.icon);
-        ico.style.width = '16px';
-        ico.style.height = '16px';
-        a.appendChild(ico);
-      }
-      a.appendChild(document.createTextNode(' ' + (item.label || '')));
+      a.href = isSafeUrl(item.href) ? item.href : '#';
+      var ico = mkIcon(item.icon, 16);
+      if (ico) a.appendChild(ico);
+      // Label in a <span> (canonical markup) so the icon rail (<=640px, --collapsed) can hide it
+      a.appendChild(mkEl('span', null, item.label || ''));
       section.appendChild(a);
     });
     el.appendChild(section);
@@ -5597,17 +6355,12 @@ RENDERERS.Sidebar = function(p) {
 RENDERERS.BottomNav = function(p) {
   var el = document.createElement('nav');
   el.className = 'db-bottom-nav';
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
     var a = document.createElement('a');
     a.className = 'db-bottom-nav__item' + (item.active ? ' db-bottom-nav__item--active' : '');
     a.href = '#';
-    if (item.icon) {
-      var ico = document.createElement('i');
-      ico.setAttribute('data-lucide', item.icon);
-      ico.style.width = '20px';
-      ico.style.height = '20px';
-      a.appendChild(ico);
-    }
+    var ico = mkIcon(item.icon, 20);
+    if (ico) a.appendChild(ico);
     a.appendChild(mkEl('span', null, item.label || ''));
     if (item.badge) a.appendChild(mkEl('span', 'db-bottom-nav__badge', item.badge));
     el.appendChild(a);
@@ -5632,7 +6385,7 @@ RENDERERS.Card = function(p, ch, els, d) {
     if (p.description) hdr.appendChild(mkEl('p', 'db-card__desc', p.description));
     el.appendChild(hdr);
   }
-  var footerIds = p.footer || [];
+  var footerIds = [].concat.apply([], toArr(p.footer)).filter(function(id) { return typeof id === 'string' && !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer; [["id"]] (a data-statement footer) flattens
   var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
   if (bodyIds.length) {
     var body = mkEl('div', 'db-card__body');
@@ -5651,18 +6404,23 @@ RENDERERS.Card = function(p, ch, els, d) {
 };
 
 // -- Table --
-RENDERERS.Table = function(p) {
+RENDERERS.Table = function(p, ch, els, d) {
   var el = document.createElement('table');
   el.className = 'db-table';
-  var cols = p.columns || [];
-  var rows = p.rows || [];
+  // Table([[head, ..], [cell, ..], ..]): a matrix in columns is the header row, then the body rows
+  var matrix = !toArr(p.rows).length && Array.isArray(p.columns) && p.columns.length > 0 && p.columns.every(Array.isArray);
+  var shape = tableShape(matrix ? { columns: p.columns[0], rows: p.columns.slice(1) } : p);
+  var cols = shape.cols;
+  var rows = shape.rows;
   var thead = document.createElement('thead');
   var headRow = document.createElement('tr');
   cols.forEach(function(c) {
     var th = document.createElement('th');
     if (p.sortable) th.setAttribute('data-db-sort', '');
     if (c.numeric) th.className = 'db-numeric';
-    th.textContent = c.label || '';
+    var hRef = specRef(c.label, els);
+    if (hRef) th.appendChild(renderChildren(els, [hRef], d));
+    else th.textContent = c.label || '';
     headRow.appendChild(th);
   });
   thead.appendChild(headRow);
@@ -5673,21 +6431,34 @@ RENDERERS.Table = function(p) {
     cols.forEach(function(c) {
       var td = document.createElement('td');
       if (c.numeric) td.className = 'db-numeric';
-      td.textContent = r[c.key] || '';
+      var cRefs = cellRefs(r[c.key], els), act = cRefs ? null : actionCell(c, r[c.key]);
+      if (cRefs) td.appendChild(cellElements(els, cRefs, d));
+      else if (act) td.appendChild(act);
+      else td.textContent = r[c.key] == null ? '' : String(r[c.key]); // 0 and false are real values
       tr.appendChild(td);
     });
     tbody.appendChild(tr);
   });
+  // No data rows: each child element is a full-width row
+  if (!rows.length) toArr(ch).forEach(function(id) {
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    td.colSpan = Math.max(1, cols.length);
+    td.appendChild(renderChildren(els, [id], d));
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  });
   el.appendChild(tbody);
-  return el;
+  return tableScroll(el);
 };
 
 // -- DataTable --
-RENDERERS.DataTable = function(p) {
+RENDERERS.DataTable = function(p, ch, els, d) {
   var el = document.createElement('table');
   el.className = 'db-data-table';
-  var cols = p.columns || [];
-  var rows = p.rows || [];
+  var shape = tableShape(p);
+  var cols = shape.cols;
+  var rows = shape.rows;
   var thead = document.createElement('thead');
   var headRow = document.createElement('tr');
   if (p.selectable) {
@@ -5720,8 +6491,11 @@ RENDERERS.DataTable = function(p) {
     cols.forEach(function(c) {
       var td = document.createElement('td');
       var raw = r[c.key];
+      // A Button (or [Button, Button]) in a cell renders as elements; "copy,revoke" in an Actions column as icon buttons
+      var refs = cellRefs(raw, els), act = refs ? null : actionCell(c, raw);
+      if (refs || act) { td.appendChild(refs ? cellElements(els, refs, d) : act); tr.appendChild(td); return; }
       // Flatten object cell values (e.g. Badge specs) to string
-      var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw || '');
+      var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw == null ? '' : String(raw));
       // Auto-detect status badges
       if (/^(active|completed|shipped|approved|paid|live|verified|published|resolved)$/i.test(val)) {
         td.appendChild(mkEl('span', 'db-badge db-badge--new', val));
@@ -5739,26 +6513,33 @@ RENDERERS.DataTable = function(p) {
     tbody.appendChild(tr);
   });
   el.appendChild(tbody);
-  return el;
+  return tableScroll(el);
 };
 
 // -- List --
-RENDERERS.List = function(p) {
+RENDERERS.List = function(p, ch, els, d) {
   var el = mkEl('div', 'db-list');
-  (p.items || []).forEach(function(item) {
+  entries(p.items, ch, els).forEach(function(e) {
+    // Spec element (Text children, or List([Text(..)])): it is the item content
+    if (e.ref) {
+      var refLi = mkEl('div', 'db-list__item');
+      refLi.appendChild(mkEl('div', 'db-list__content')).appendChild(renderChildren(els, [e.ref], d));
+      el.appendChild(refLi);
+      return;
+    }
+    var item = e.data;
+    if (typeof item === 'string') item = { title: item }; // List(["a", "b"]) renders titles, as in daub-render.js
     var li = mkEl('div', 'db-list__item');
-    if (item.icon) {
+    var ico = mkIcon(item.icon, 16);
+    if (ico) {
       var iconWrap = mkEl('div', 'db-list__icon');
-      var ico = document.createElement('i');
-      ico.setAttribute('data-lucide', item.icon);
-      ico.style.width = '16px';
-      ico.style.height = '16px';
       iconWrap.appendChild(ico);
       li.appendChild(iconWrap);
     }
     var content = mkEl('div', 'db-list__content');
     content.appendChild(mkEl('div', 'db-list__title', item.title || ''));
     if (item.secondary) content.appendChild(mkEl('div', 'db-list__secondary', item.secondary));
+    if (isText(item.meta)) content.appendChild(mkEl('div', 'db-caption', String(item.meta)));
     li.appendChild(content);
     el.appendChild(li);
   });
@@ -5767,29 +6548,44 @@ RENDERERS.List = function(p) {
 
 // -- Badge --
 RENDERERS.Badge = function(p) {
-  return mkEl('span', 'db-badge' + (p.variant ? ' db-badge--' + p.variant : ''), p.text || '');
+  var bv = knownMod(p.variant, ['new', 'updated', 'success', 'warning', 'error', 'danger', 'info', 'gray', 'red', 'green', 'blue', 'amber', 'purple'], { secondary: 'gray', 'default': 'gray', neutral: 'gray', muted: 'gray', outline: 'gray', primary: 'new', accent: 'new', destructive: 'red' });
+  return mkEl('span', 'db-badge' + (bv ? ' db-badge--' + bv : ''), p.text || '');
 };
 
 // -- Avatar --
-RENDERERS.Avatar = function(p) {
-  var el = mkEl('div', 'db-avatar' + (p.size ? ' db-avatar--' + p.size : ' db-avatar--md'));
+RENDERERS.Avatar = function(p, ch, els, d) {
+  var px = /^\d+(px)?$/.test(String(p.size)) ? parseInt(p.size, 10) : 0;
+  var asz = px ? (px < 36 ? 'sm' : px < 48 ? 'md' : 'lg') : knownMod(p.size, ['sm', 'md', 'lg'], { xs: 'sm', xl: 'lg', '2xl': 'lg' });
+  var el = mkEl('div', 'db-avatar db-avatar--' + (asz || 'md'));
   if (p.src && isSafeUrl(p.src)) {
     var img = document.createElement('img');
     img.src = p.src;
     img.alt = '';
     el.appendChild(img);
   } else if (!p.src) {
-    el.textContent = p.initials || '?';
+    // No initials: child elements (a Text "DP") fill the circle instead of "?"
+    if (!p.initials && toArr(ch).length) el.appendChild(renderChildren(els, toArr(ch), d));
+    else el.textContent = p.initials || '?';
   }
   return el;
 };
 
 // -- AvatarGroup --
-RENDERERS.AvatarGroup = function(p) {
+RENDERERS.AvatarGroup = function(p, ch, els, d) {
   var el = mkEl('div', 'db-avatar-group');
-  var avatars = p.avatars || [];
+  var avatars = entries(p.avatars, ch, els);
   var max = p.max || avatars.length;
-  avatars.slice(0, max).forEach(function(a) {
+  avatars.forEach(function(e, i) {
+    // Spec element (Avatar children, or AvatarGroup([Avatar(..)])): rendered as is. Past max it stays hidden
+    // (counted in +N) rather than left for the page's orphan pass to append below
+    if (e.ref) {
+      var node = renderElement(els, e.ref, d + 1);
+      if (node && i >= max) node.style.display = 'none';
+      if (node) el.appendChild(node);
+      return;
+    }
+    if (i >= max) return;
+    var a = e.data;
     var av = mkEl('div', 'db-avatar db-avatar--md');
     if (a.src) {
       var img = document.createElement('img');
@@ -5881,13 +6677,13 @@ RENDERERS.Calendar = function(p) {
 // -- Chart --
 RENDERERS.Chart = function(p) {
   var wrap = document.createElement('div');
-  var bars = p.bars || [];
-  var maxVal = Math.max.apply(null, bars.map(function(b) { return b.max || b.value || 100; }));
+  var bars = chartBars(p.bars != null ? p.bars : p); // Chart({type, data, labels}) may land flat in props
+  var maxVal = Math.max.apply(null, bars.map(function(b) { return chartNum(b.max) || chartNum(b.value) || 100; }));
   if (maxVal <= 0) maxVal = 100;
   var chart = mkEl('div', 'db-chart');
   bars.forEach(function(b) {
     var bar = mkEl('div', 'db-chart__bar');
-    bar.style.height = Math.round(((b.value || 0) / maxVal) * 100) + '%';
+    bar.style.height = Math.round((chartNum(b.value) / maxVal) * 100) + '%';
     bar.title = (b.label || '') + ': ' + (b.value || 0);
     chart.appendChild(bar);
   });
@@ -5901,12 +6697,16 @@ RENDERERS.Chart = function(p) {
 };
 
 // -- Carousel --
-RENDERERS.Carousel = function(p) {
+RENDERERS.Carousel = function(p, ch, els, d) {
   var el = mkEl('div', 'db-carousel');
   var track = mkEl('div', 'db-carousel__track');
-  var slides = p.slides || [];
+  var slides = toArr(p.slides);
   slides.forEach(function(s) {
-    track.appendChild(mkEl('div', 'db-carousel__slide', s.content || ''));
+    // {content: "w1"} names a spec element: render it in the slide instead of printing the id
+    var ref = specRef(s.content, els), node = ref && renderElement(els, ref, (d || 0) + 1);
+    var slide = mkEl('div', 'db-carousel__slide', node ? null : (s.content || ''));
+    if (node) slide.appendChild(node);
+    track.appendChild(slide);
   });
   el.appendChild(track);
   var prevBtn = document.createElement('button');
@@ -5936,7 +6736,8 @@ RENDERERS.AspectRatio = function(p, ch, els, d) {
 
 // -- Chip --
 RENDERERS.Chip = function(p) {
-  var el = mkEl('span', 'db-chip' + (p.color ? ' db-chip--' + p.color : '') + (p.active ? ' db-chip--active' : ''), p.label || '');
+  var cc = knownMod(p.color, ['red', 'green', 'blue', 'purple', 'amber', 'pink']);
+  var el = mkEl('span', 'db-chip' + (cc ? ' db-chip--' + cc : '') + (p.active ? ' db-chip--active' : ''), p.label || '');
   if (p.closable) {
     var close = document.createElement('button');
     close.className = 'db-chip__close';
@@ -5956,7 +6757,8 @@ RENDERERS.ScrollArea = function(p, ch, els, d) {
 
 // -- Alert --
 RENDERERS.Alert = function(p) {
-  var el = mkEl('div', 'db-alert' + (p.type ? ' db-alert--' + p.type : ''));
+  var at = knownMod(p.type, ['info', 'warning', 'error', 'success'], { danger: 'error', destructive: 'error', warn: 'warning' });
+  var el = mkEl('div', 'db-alert' + (at ? ' db-alert--' + at : ''));
   var content = mkEl('div', 'db-alert__content');
   if (p.title) content.appendChild(mkEl('div', 'db-alert__title', p.title));
   if (p.message) content.appendChild(mkEl('p', null, p.message));
@@ -5970,7 +6772,7 @@ RENDERERS.Progress = function(p) {
   var bar = mkEl('div', 'db-progress__bar');
   bar.style.setProperty('--db-progress', (p.value || 0) + '%');
   el.appendChild(bar);
-  return el;
+  return withLabel(el, p.label, true);
 };
 
 // -- Skeleton --
@@ -5990,19 +6792,18 @@ RENDERERS.Skeleton = function(p) {
 };
 
 // -- EmptyState --
-RENDERERS.EmptyState = function(p) {
+RENDERERS.EmptyState = function(p, ch, els, d) {
   var el = mkEl('div', 'db-empty');
-  if (p.icon) {
+  var ico = mkIcon(p.icon, 48);
+  if (ico) {
     var iconWrap = mkEl('div', 'db-empty__icon');
-    var ico = document.createElement('i');
-    ico.setAttribute('data-lucide', p.icon);
-    ico.style.width = '48px';
-    ico.style.height = '48px';
     iconWrap.appendChild(ico);
     el.appendChild(iconWrap);
   }
   el.appendChild(mkEl('h3', 'db-empty__title', p.title || 'No items'));
-  el.appendChild(mkEl('p', 'db-empty__desc', p.message || ''));
+  el.appendChild(mkEl('p', 'db-empty__message', p.message || ''));
+  // Action children (a Button) sit centered under the message
+  if (toArr(ch).length) el.appendChild(renderChildren(els, toArr(ch), d));
   return el;
 };
 
@@ -6013,6 +6814,16 @@ RENDERERS.Tooltip = function(p, ch, els, d) {
   el.appendChild(mkEl('span', 'db-tooltip__content db-tooltip__content--' + (p.position || 'top'), p.text || ''));
   return el;
 };
+
+// Buttons in a dialog footer close the dialog (daub.js handles data-db-dismiss). A button that opens
+// another overlay (trigger), a dropdown or a popover keeps that job, and so does one with an "on" state action
+// (a wizard's Back and Next); put any other button that must not close in the body
+function markDismiss(box) {
+  Array.prototype.forEach.call(box.querySelectorAll('.db-btn:not([data-db-trigger]):not([data-ds-on]):not(.db-dropdown__trigger):not(.db-popover__trigger)'), function(b) {
+    b.setAttribute('data-db-dismiss', '');
+  });
+  return box;
+}
 
 // -- Modal --
 RENDERERS.Modal = function(p, ch, els, d) {
@@ -6028,9 +6839,14 @@ RENDERERS.Modal = function(p, ch, els, d) {
   closeBtn.textContent = '\u00D7';
   hdr.appendChild(closeBtn);
   modal.appendChild(hdr);
-  var footerIds = p.footer || [];
+  var footerIds = [].concat.apply([], toArr(p.footer)).filter(function(id) { return typeof id === 'string' && !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer; [["id"]] (a data-statement footer) flattens
   var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
   var body = mkEl('div', 'db-modal__body');
+  if (isText(p.description)) {
+    var desc = mkEl('p', 'db-text-muted', String(p.description));
+    desc.style.marginBottom = 'var(--db-space-4)';
+    body.appendChild(desc);
+  }
   body.appendChild(renderChildren(els, bodyIds, d));
   modal.appendChild(body);
   var footer = mkEl('div', 'db-modal__footer');
@@ -6045,7 +6861,7 @@ RENDERERS.Modal = function(p, ch, els, d) {
     var confirmBtn = mkEl('button', 'db-btn db-btn--primary', 'Confirm');
     footer.appendChild(confirmBtn);
   }
-  modal.appendChild(footer);
+  modal.appendChild(markDismiss(footer));
   el.appendChild(modal);
   return el;
 };
@@ -6058,7 +6874,7 @@ RENDERERS.AlertDialog = function(p, ch, els, d) {
   var panel = mkEl('div', 'db-alert-dialog__panel');
   panel.appendChild(mkEl('h3', 'db-alert-dialog__title', p.title || 'Confirm'));
   panel.appendChild(mkEl('p', 'db-alert-dialog__desc', p.description || ''));
-  var footerIds = p.footer || [];
+  var footerIds = [].concat.apply([], toArr(p.footer)).filter(function(id) { return typeof id === 'string' && !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer; [["id"]] (a data-statement footer) flattens
   var actionIds = footerIds.length ? footerIds : ch;
   var actions = mkEl('div', 'db-alert-dialog__actions');
   if (actionIds.length) {
@@ -6071,7 +6887,7 @@ RENDERERS.AlertDialog = function(p, ch, els, d) {
     actions.appendChild(cancelBtn);
     actions.appendChild(mkEl('button', 'db-btn db-btn--primary', 'Continue'));
   }
-  panel.appendChild(actions);
+  panel.appendChild(markDismiss(actions));
   el.appendChild(panel);
   return el;
 };
@@ -6105,6 +6921,7 @@ RENDERERS.Drawer = function(p, ch, els, d) {
   var panel = mkEl('div', 'db-drawer__panel');
   panel.appendChild(mkEl('div', 'db-drawer__handle'));
   var body = mkEl('div', 'db-drawer__body');
+  if (isText(p.title)) body.appendChild(mkEl('h3', 'db-h3', String(p.title)));
   body.appendChild(renderChildren(els, ch, d));
   panel.appendChild(body);
   el.appendChild(panel);
@@ -6114,6 +6931,17 @@ RENDERERS.Drawer = function(p, ch, els, d) {
 // -- Popover --
 RENDERERS.Popover = function(p, ch, els, d) {
   var el = mkEl('div', 'db-popover');
+  var first = ch.length > 1 && els[ch[0]];
+  var trig = first && (first.type === 'Button' || first.type === 'Link') ? renderElement(els, ch[0], d + 1) : null;
+  if (trig && trig.classList) {
+    trig.classList.add('db-popover__trigger');
+    ch = ch.slice(1);
+  } else {
+    trig = document.createElement('button');
+    trig.className = 'db-btn db-popover__trigger';
+    trig.textContent = 'Open';
+  }
+  el.appendChild(trig);
   var content = mkEl('div', 'db-popover__content db-popover__content--' + (p.position || 'bottom'));
   content.appendChild(renderChildren(els, ch, d));
   el.appendChild(content);
@@ -6132,16 +6960,21 @@ RENDERERS.HoverCard = function(p, ch, els, d) {
 // -- DropdownMenu --
 RENDERERS.DropdownMenu = function(p, ch, els, d) {
   var el = mkEl('div', 'db-dropdown');
-  if (ch.length) {
-    el.appendChild(renderElement(els, ch[0], d + 1));
+  var trigDef = ch.length ? els[ch[0]] : null;
+  var childTrig = trigDef ? renderElement(els, ch[0], d + 1) : null;
+  if (childTrig && childTrig.classList && (trigDef.type === 'Button' || trigDef.type === 'Link')) {
+    childTrig.classList.add('db-dropdown__trigger');
+    el.appendChild(childTrig);
   } else {
     var trigger = document.createElement('button');
     trigger.className = 'db-btn db-dropdown__trigger';
-    trigger.textContent = 'Options';
+    // A non-button first child (Text, Avatar, Icon) becomes the trigger's label instead of being dropped
+    if (childTrig) trigger.appendChild(childTrig);
+    else trigger.textContent = 'Options';
     el.appendChild(trigger);
   }
   var content = mkEl('div', 'db-dropdown__content');
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
     if (item.separator) {
       content.appendChild(mkEl('hr', 'db-dropdown__separator'));
     } else if (item.groupLabel) {
@@ -6149,11 +6982,8 @@ RENDERERS.DropdownMenu = function(p, ch, els, d) {
     } else {
       var btn = document.createElement('button');
       btn.className = 'db-dropdown__item' + (item.active ? ' db-dropdown__item--active' : '');
-      if (item.icon) {
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', item.icon);
-        ico.style.width = '16px';
-        ico.style.height = '16px';
+      var ico = mkIcon(item.icon, 16);
+      if (ico) {
         btn.appendChild(ico);
         btn.appendChild(document.createTextNode(' '));
       }
@@ -6186,17 +7016,14 @@ RENDERERS.ContextMenu = function(p, ch, els, d) {
   wrapper.appendChild(target);
   var menu = mkEl('div', 'db-context-menu');
   menu.id = id;
-  (p.items || []).forEach(function(item) {
+  toArr(p.items).forEach(function(item) {
     if (item.separator) {
       menu.appendChild(mkEl('hr', 'db-context-menu__separator'));
     } else {
       var btn = document.createElement('button');
       btn.className = 'db-context-menu__item';
-      if (item.icon) {
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', item.icon);
-        ico.style.width = '16px';
-        ico.style.height = '16px';
+      var ico = mkIcon(item.icon, 16);
+      if (ico) {
         btn.appendChild(ico);
         btn.appendChild(document.createTextNode(' '));
       }
@@ -6226,15 +7053,12 @@ RENDERERS.CommandPalette = function(p) {
   inputWrap.appendChild(inp);
   panel.appendChild(inputWrap);
   var list = mkEl('div', 'db-command__list');
-  (p.groups || []).forEach(function(g) {
+  toArr(p.groups).forEach(function(g) {
     list.appendChild(mkEl('div', 'db-command__group-label', g.label || ''));
-    (g.items || []).forEach(function(item) {
+    toArr(g.items).forEach(function(item) {
       var cmdItem = mkEl('div', 'db-command__item');
-      if (item.icon) {
-        var ico = document.createElement('i');
-        ico.setAttribute('data-lucide', item.icon);
-        ico.style.width = '16px';
-        ico.style.height = '16px';
+      var ico = mkIcon(item.icon, 16);
+      if (ico) {
         cmdItem.appendChild(ico);
         cmdItem.appendChild(document.createTextNode(' '));
       }
@@ -6259,7 +7083,7 @@ RENDERERS.CommandPalette = function(p) {
 RENDERERS.Accordion = function(p, ch, els, d) {
   var el = mkEl('div', 'db-accordion');
   if (p.multi) el.setAttribute('data-multi', '');
-  (p.items || []).forEach(function(item, i) {
+  toArr(p.items).forEach(function(item, i) {
     var open = i === 0;
     var accItem = mkEl('div', 'db-accordion__item' + (open ? ' db-accordion__item--open' : ''));
     var trigger = document.createElement('button');
@@ -6275,8 +7099,8 @@ RENDERERS.Accordion = function(p, ch, els, d) {
     trigger.appendChild(svg);
     accItem.appendChild(trigger);
     var content = mkEl('div', 'db-accordion__content');
-    if (item.children && item.children.length) {
-      content.appendChild(renderChildren(els, item.children, d));
+    if (toArr(item.children).length) {
+      content.appendChild(renderChildren(els, toArr(item.children), d));
     } else {
       content.textContent = item.content || '';
     }
@@ -6338,22 +7162,22 @@ RENDERERS.DatePicker = function(p) {
 // -- StatCard --
 RENDERERS.StatCard = function(p) {
   var el = mkEl('div', 'db-stat' + (p.horizontal ? ' db-stat--horizontal' : ''));
-  if (p.icon) {
+  var icoI = mkIcon(p.icon, 20);
+  if (icoI) {
     var ico = mkEl('div', 'db-stat__icon');
-    var icoI = document.createElement('i');
-    icoI.setAttribute('data-lucide', p.icon);
-    icoI.style.width = '20px';
-    icoI.style.height = '20px';
     ico.appendChild(icoI);
     el.appendChild(ico);
   }
   el.appendChild(mkEl('span', 'db-stat__label', p.label || ''));
   el.appendChild(mkEl('span', 'db-stat__value', p.value || ''));
   if (p.trend) {
-    var change = mkEl('span', 'db-stat__change db-stat__change--' + p.trend);
-    change.textContent = (p.trend === 'up' ? '\u2191' : '\u2193') + ' ' + (p.trendValue || '');
+    // trend is "up"/"down"; free text ("+2.8% vs last month") shows as written, coloured by its leading sign or arrow
+    var tr = String(p.trend), dir = tr === 'up' || tr === 'down' ? tr : /^[+\u2191]/.test(tr) ? 'up' : /^[-\u2212\u2193]/.test(tr) ? 'down' : '';
+    var change = mkEl('span', 'db-stat__change' + (dir ? ' db-stat__change--' + dir : ''));
+    change.textContent = dir === tr ? (tr === 'up' ? '\u2191' : '\u2193') + ' ' + (p.trendValue || '') : tr + (p.trendValue ? ' ' + p.trendValue : '');
     el.appendChild(change);
   }
+  if (isText(p.description)) el.appendChild(mkEl('span', 'db-caption', String(p.description)));
   return el;
 };
 
@@ -6361,10 +7185,19 @@ RENDERERS.StatCard = function(p) {
 RENDERERS.ChartCard = function(p, ch, els, d) {
   var el = mkEl('div', 'db-chart-card');
   var hdr = mkEl('div', 'db-chart-card__header');
-  hdr.appendChild(mkEl('span', 'db-chart-card__title', p.title || ''));
+  var title = mkEl('span', 'db-chart-card__title', p.title || '');
+  if (isText(p.description)) {
+    var head = mkEl('div');
+    head.appendChild(title);
+    head.appendChild(mkEl('div', 'db-caption', String(p.description)));
+    hdr.appendChild(head);
+  } else {
+    hdr.appendChild(title);
+  }
   el.appendChild(hdr);
   var body = mkEl('div', 'db-chart-card__body');
-  body.appendChild(renderChildren(els, ch, d));
+  if ((!ch || !ch.length) && chartBars(p.bars).length) body.appendChild(RENDERERS.Chart({ bars: p.bars }));
+  else body.appendChild(renderChildren(els, ch, d));
   el.appendChild(body);
   return el;
 };
@@ -6379,26 +7212,25 @@ RENDERERS.CustomHTML = function(p, ch, els, d) {
     el.appendChild(style);
   }
   if (p.html) {
-    var frag = document.createRange().createContextualFragment(
-      p.html.replace(new RegExp('<script[\\s\\S]*?<\\/script>', 'gi'), '') // strip script tags from user HTML
-    );
-    el.appendChild(frag);
+    // setAttribute never parses; the preview frame swaps this slot for the markup
+    var slot = document.createElement('template');
+    slot.setAttribute('data-pg-html', String(p.html));
+    el.appendChild(slot);
   }
   if (ch && ch.length) {
     el.appendChild(renderChildren(els, ch, d));
   }
+  // Code-only node for another element (props.forId): keep its <style>, add no layout gap
+  if (p.forId && !p.html && !(ch && ch.length)) el.hidden = true;
   // JS is collected by collectCustomJS() and executed inside the iframe via postMessage
   return el;
 };
 
 // -- Icon (Lucide) --
 RENDERERS.Icon = function(p) {
-  var el = document.createElement('i');
-  el.setAttribute('data-lucide', p.name || 'circle');
   var sz = { xs: '12px', sm: '16px', md: '20px', lg: '24px', xl: '32px' };
   var s = sz[p.size] || sz.md;
-  el.style.width = s;
-  el.style.height = s;
+  var el = mkIcon(p.name, parseInt(s, 10)) || mkIcon('circle', parseInt(s, 10));
   el.style.flexShrink = '0';
   if (p.variant === 'branded') el.style.color = 'var(--db-terracotta)';
   else if (p.variant === 'success') el.style.color = 'var(--db-color-success, green)';
@@ -6421,19 +7253,31 @@ RENDERERS.Image = function(p) {
   el.style.maxWidth = '100%';
   el.style.height = 'auto';
   el.style.borderRadius = 'var(--db-radius-md)';
+  // width/height in px: a number, "800" or "800px" (other units are ignored)
+  var px = function(v) { return /^\s*\d+(\.\d+)?(px)?\s*$/.test(String(v)) ? parseFloat(v) : 0; };
+  var w = px(p.width), h = px(p.height);
+  // As attributes they size the box before the image loads, while max-width:100% caps the width and height:auto
+  // keeps the ratio. A px height beside max-width squashed a 1200x800 image in a 564px column to 564x800.
+  if (w) el.setAttribute('width', w);
+  if (h) el.setAttribute('height', h);
   if (p.src && isSafeUrl(p.src)) {
     el.src = p.src;
+    // A height alone is a fixed height: crop to it rather than squash when max-width narrows the image
+    if (h && !w) { el.style.height = h + 'px'; el.style.objectFit = 'cover'; }
+    // With a width, fit-content keeps the ratio in a flex row too: there height:auto lets a taller sibling stretch it
+    else if (w) el.style.height = 'fit-content';
   } else {
-    // Placeholder when no valid src
+    // Placeholder when no valid src: fills the column up to its width, and with both sizes keeps their ratio.
+    // Without a src it has no image to shrink, so a px width would widen a grid column past the page.
     el.style.display = 'block';
-    el.style.width = p.width ? p.width + 'px' : '100%';
-    el.style.height = p.height ? p.height + 'px' : '200px';
+    el.style.width = '100%';
+    if (w) el.style.maxWidth = w + 'px';
+    if (w && h) el.style.aspectRatio = w + ' / ' + h;
+    else el.style.height = h ? h + 'px' : '200px';
     el.style.background = 'var(--db-muted)';
     el.style.objectFit = 'cover';
     el.removeAttribute('src');
   }
-  if (p.width) el.style.width = p.width + 'px';
-  if (p.height) el.style.height = p.height + 'px';
   return el;
 };
 
@@ -6443,116 +7287,233 @@ renderChildren = window.renderChildren;
 
 // ---- Component props documentation (mirrors mcp/lib/prompt.js) ----
 var COMP_PROPS = {
-  // Layout & Structure
-  Stack: 'direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true',
-  Grid: 'columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true',
-  Surface: 'variant: "raised"|"inset"|"pressed"',
-  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them',
-  Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
-  Separator: 'vertical: bool, dashed: bool, label: string',
-  Layout: 'deprecated alias for Stack/Grid: children, direction, columns, gap, align (main-axis), valign (cross-axis)',
-  Divider: 'alias for Separator: vertical: bool, dashed: bool, label: string',
-  Icon: 'name: string (Lucide), size: "xs"|"sm"|"md"|"lg"|"xl"',
-  Link: 'label: string, href: string (safe URL)',
-  CheckboxGroup: 'children: [Checkbox IDs], label: string, helper: string, inline: bool',
-  Fieldset: 'children: [field IDs], legend: string, helper: string, disabled: bool',
-  Frame: 'children: [body IDs], header: string|[childIds], footer: string|[childIds], flush: bool',
-  Group: 'children: [control IDs], attached: bool, vertical: bool, label: string or aria-label: string',
-  Meter: 'value: number (default 0), min: number (default 0), max: number (default 100), status: "success"|"warning"|"error", label: string or aria-label: string',
-  NumberField: 'value: number, defaultValue: number, min: number, max: number, step: number (default 1), disabled: bool, readOnly: bool, name: string, label: string or aria-label: string',
-  PreviewCard: 'trigger: string|[childIds], title: string, description: string, media: string (safe image URL)|[childIds], mediaAlt: string, children: [childIds]',
-  Toolbar: 'children: [control IDs], vertical: bool, label: string or aria-label: string',
-  // Controls
-  Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id) | UX: one primary per view, loading:true during async, verb-first labels',
-  ButtonGroup: '(children are Buttons)',
-  Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string | UX: always include label, helper for complex inputs, error near field',
-  Input: 'placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time" | UX: wrap in Field for label+helper, or pair with Label',
-  InputGroup: 'addonBefore: string, addonAfter: string (child is Input)',
-  InputIcon: 'icon: string, right: bool (child is Input)',
-  Search: 'placeholder: string',
-  Textarea: 'placeholder: string, rows: number, error: bool',
-  Checkbox: 'label: string, checked: bool',
-  RadioGroup: 'options: [{label, value}], selected: string',
-  Switch: 'label: string, checked: bool',
-  Slider: 'min: number, max: number, value: number, step: number, label: string',
-  Toggle: 'label: string, pressed: bool, size: "sm"',
-  ToggleGroup: 'options: [{label, value}], selected: string',
-  Select: 'label: string, options: [{label, value}], selected: string',
-  CustomSelect: 'placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool',
-  Kbd: 'keys: [string]',
-  Label: 'text: string, required: bool, optional: bool',
-  Spinner: 'size: "sm"|"lg"|"xl"',
-  InputOTP: 'length: number, separator: bool',
-  // Navigation
-  Tabs: 'tabs: [{label, id}], active: string, children: [childIds] (one child per tab — each child becomes a tab panel; order matches tabs array)',
-  Breadcrumbs: 'items: [{label, href}]',
-  Pagination: 'current: number, total: number, perPage: number',
-  Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool | UX: one active step at a time, completed steps should be revisitable',
-  NavMenu: 'items: [{label, href, active: bool}]',
-  Navbar: 'brand: string, brandHref: string',
-  Menubar: 'items: [{label, dropdown: [{label, href}]}]',
-  Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}] (inline objects, NOT element ID references), collapsed: bool',
-  BottomNav: 'items: [{label, icon, active, badge}] | UX: max 5 items, icon+label always, highlight active',
-  // Data Display
-  Card: 'title: string, description: string, media: string (image URL only, NOT element IDs), footer: [childIds] (element IDs rendered in card footer area, NOT a boolean), interactive: bool, clip: bool | UX: footer is an array of element IDs not a boolean, media is a URL string not element IDs',
-  Table: 'columns: [{key, label, numeric}], rows: [{}], sortable: bool',
-  DataTable: 'columns: [{key, label}], rows: [{}], selectable: bool',
-  List: 'items: [{title, secondary, icon}]',
-  Badge: 'text: string, variant: "new"|"updated"|"success"|"warning"|"error"',
-  Avatar: 'initials: string, src: string, size: "sm"|"md"|"lg"',
-  AvatarGroup: 'avatars: [{initials, src}], max: number',
-  Calendar: 'selected: "YYYY-MM-DD" (date to highlight), today: "YYYY-MM-DD" (today override)',
-  Chart: 'bars: [{label, value, max}]',
-  Carousel: 'slides: [{content}]',
-  AspectRatio: 'ratio: "16-9"|"4-3"|"1-1"|"21-9"',
-  Chip: 'label: string, color: "red"|"green"|"blue"|"purple"|"amber"|"pink", active: bool, closable: bool',
-  ScrollArea: 'direction: "horizontal"|"vertical"',
-  Image: 'src: string (URL), alt: string, width: number, height: number',
-  // Feedback
-  Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
-  Progress: 'value: number, indeterminate: bool',
-  Skeleton: 'variant: "text"|"heading"|"avatar"|"btn", lines: number',
-  EmptyState: 'icon: string, title: string, message: string',
-  Tooltip: 'text: string, position: "top"|"bottom"|"left"|"right"',
-  // Overlays
-  Modal: 'id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm) | UX: clear close affordance, confirm before dismiss with unsaved data',
-  AlertDialog: 'id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)',
-  Sheet: 'id: string, position: "right"|"left"|"top"|"bottom"',
-  Drawer: 'id: string',
-  Popover: 'position: "top"|"bottom"|"left"|"right"',
-  HoverCard: '',
-  DropdownMenu: 'items: [{label, icon, separator, groupLabel, active: bool}]',
-  ContextMenu: 'items: [{label, icon, separator}]',
-  CommandPalette: 'id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] (inline objects, NOT element ID references)',
-  // Layout Utilities
-  Accordion: 'items: [{title, content, children: [childIds]}], multi: bool',
-  Collapsible: 'label: string',
-  Resizable: 'direction: "horizontal"|"vertical"',
-  DatePicker: 'label: string, placeholder: string, selected: string',
-  // Dashboard
-  StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool',
-  ChartCard: 'title: string',
-  // Chat
-  MessageScroller: 'children: [row IDs], height: number (default 360px), autoScroll: bool (default true), defaultScrollPosition: "start"|"end"|"last-anchor" (default "end"), peek: nonnegative number (default 0), label: string',
-  Message: 'children: [content IDs], align: "start"|"end", avatar: string (initials)|{initials, src: safe image URL}, name: string, timestamp: string, messageId: string (defaults to element ID), scrollAnchor: bool, footer: string',
-  Bubble: 'children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled)',
-  Attachment: 'children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical"',
-  Marker: 'children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool',
-  // Custom
-  CustomHTML: 'html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector(\'[data-spec-id="someId"]\') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after)'
+  "Stack": "direction: \"vertical\"|\"horizontal\", gap: 0-6 (default 2=8px), justify: \"center\"|\"end\"|\"between\"|\"evenly\" (main-axis), align: \"center\"|\"end\"|\"start\"|\"stretch\" (cross-axis), wrap: bool (default true for horizontal), container: \"wide\"|\"narrow\"|true",
+  "Grid": "columns: 2-6, gap: 0-6 (default 2=8px), align: \"center\"|\"end\", container: \"wide\"|\"narrow\"|true",
+  "Surface": "variant: \"raised\"|\"inset\"|\"pressed\"",
+  "Text": "tag: \"h1\"|\"h2\"|\"h3\"|\"h4\"|\"p\"|\"span\", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them",
+  "Prose": "content: string (HTML), size: \"sm\"|\"lg\"|\"xl\"|\"2xl\"",
+  "Separator": "vertical: bool, dashed: bool, label: string",
+  "Layout": "deprecated alias for Stack/Grid: children, direction, columns, gap, align (main-axis), valign (cross-axis)",
+  "Divider": "alias for Separator: vertical: bool, dashed: bool, label: string",
+  "Icon": "name: string (Lucide icon name), size: \"xs\"|\"sm\"|\"md\"|\"lg\"|\"xl\", variant: \"branded\"|\"success\"",
+  "Link": "label: string, href: string (safe URL), class: string",
+  "CheckboxGroup": "children: [Checkbox IDs], label: string, helper: string, inline: bool",
+  "Fieldset": "children: [field IDs], legend: string, helper: string, disabled: bool",
+  "Frame": "children: [body IDs], header: string|[childIds], footer: string|[childIds], flush: bool",
+  "Group": "children: [control IDs], attached: bool, vertical: bool, label: string or aria-label: string",
+  "Meter": "value: number (default 0), min: number (default 0), max: number (default 100), status: \"success\"|\"warning\"|\"error\", label: string or aria-label: string",
+  "NumberField": "value: number, defaultValue: number, min: number, max: number, step: number (default 1), disabled: bool, readOnly: bool, name: string, label: string or aria-label: string",
+  "PreviewCard": "trigger: string|[childIds], title: string, description: string, media: string (safe image URL)|[childIds], mediaAlt: string, children: [childIds]",
+  "Toolbar": "children: [control IDs], vertical: bool, label: string or aria-label: string",
+  "Button": "label: string, variant: \"primary\"|\"secondary\"|\"ghost\"|\"icon-danger\"|\"icon-success\"|\"icon-accent\", size: \"sm\"|\"lg\"|\"icon\", loading: bool, icon: string, trigger: \"overlayId\" (opens Modal/AlertDialog/Sheet/Drawer by id) | UX: one primary per view, loading:true during async, verb-first labels",
+  "ButtonGroup": "(children are Buttons)",
+  "Field": "label: string, placeholder: string, type: \"text\"|\"email\"|\"password\"|\"number\", error: bool, helper: string, value: string (prefilled text; placeholder is only a hint) | UX: always include label, helper for complex inputs, error near field",
+  "Input": "placeholder: string, size: \"sm\"|\"lg\", error: bool, type: \"text\"|\"email\"|\"password\"|\"number\"|\"tel\"|\"url\"|\"search\"|\"date\"|\"time\", value: string (prefilled text) | UX: wrap in Field for label+helper, or pair with Label",
+  "InputGroup": "addonBefore: string, addonAfter: string (child is Input)",
+  "InputIcon": "icon: string, right: bool (child is Input)",
+  "Search": "placeholder: string",
+  "Textarea": "placeholder: string, rows: number, error: bool, value: string (prefilled text)",
+  "Checkbox": "label: string (shown beside the box; leave it out when a Text in the same row names the item: Checkbox(checked: true)), checked: bool",
+  "RadioGroup": "options: [{label, value}], selected: string",
+  "Switch": "label: string (leave it out when a Text in the same row names the setting: Switch(checked: true)), checked: bool (on/off setting: notifications, preferences, feature flags)",
+  "Slider": "min: number, max: number, value: number, step: number, label: string",
+  "Toggle": "label: string, pressed: bool, size: \"sm\" (pressable toolbar button: bold/italic, view filter — NOT for settings)",
+  "ToggleGroup": "options: [{label, value}], selected: string",
+  "Select": "label: string, options: [{label, value}], selected: string",
+  "CustomSelect": "placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool, selected: string",
+  "Kbd": "keys: [string]",
+  "Label": "text: string, required: bool, optional: bool",
+  "Spinner": "size: \"sm\"|\"lg\"|\"xl\"",
+  "InputOTP": "length: number, separator: bool",
+  "Tabs": "tabs: [{label, id}], active: string, children: [childIds] (one child per tab — each child becomes a tab panel; order matches tabs array)",
+  "Breadcrumbs": "items: [{label, href}]",
+  "Pagination": "current: number, total: number, perPage: number",
+  "Stepper": "steps: [{label, status: \"completed\"|\"active\"|\"pending\"}], vertical: bool | UX: one active step at a time, completed steps should be revisitable",
+  "NavMenu": "items: [{label, href, active: bool}]",
+  "Navbar": "brand: string, brandHref: string",
+  "Menubar": "items: [{label, dropdown: [{label, href}]}]",
+  "Sidebar": "sections: [{title, items: [{label, icon, active, href}]}] (inline objects, NOT element ID references), collapsed: bool",
+  "BottomNav": "items: [{label, icon, active, badge}] | UX: max 5 items, icon+label always, highlight active",
+  "Card": "title: string, description: string, media: string (image URL only, NOT element IDs), footer: [childIds] (element IDs rendered in card footer area, NOT a boolean), interactive: bool, clip: bool | UX: footer is an array of element IDs not a boolean, media is a URL string not element IDs",
+  "Table": "columns: [{key, label, numeric}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), sortable: bool",
+  "DataTable": "columns: [{key, label}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), selectable: bool",
+  "List": "items: [{title, secondary, icon}]",
+  "Badge": "text: string, variant: \"new\"|\"updated\"|\"success\"|\"warning\"|\"error\"",
+  "Avatar": "initials: string, src: string (image URL only; skip it with size: \"sm\"), size: \"sm\"|\"md\"|\"lg\"",
+  "AvatarGroup": "avatars: [{initials, src}], max: number",
+  "Calendar": "selected: \"YYYY-MM-DD\" (date to highlight), today: \"YYYY-MM-DD\" (today override)",
+  "Chart": "bars: [{label, value, max}]",
+  "Carousel": "slides: [{content}]",
+  "AspectRatio": "ratio: \"16-9\"|\"4-3\"|\"1-1\"|\"21-9\"",
+  "Chip": "label: string, color: \"red\"|\"green\"|\"blue\"|\"purple\"|\"amber\"|\"pink\", active: bool, closable: bool",
+  "ScrollArea": "direction: \"horizontal\"|\"vertical\"",
+  "MessageScroller": "children: [row IDs], height: number (default 360px), autoScroll: bool (default true), defaultScrollPosition: \"start\"|\"end\"|\"last-anchor\" (default \"end\"), peek: nonnegative number (default 0), label: string",
+  "Message": "children: [content IDs], align: \"start\"|\"end\", avatar: string (initials)|{initials, src: safe image URL}, name: string, timestamp: string, messageId: string (defaults to element ID), scrollAnchor: bool, footer: string",
+  "Bubble": "children: [content IDs], content: string (plain text), variant: \"primary\"|\"default\"|\"secondary\"|\"muted\"|\"tinted\"|\"outline\"|\"ghost\"|\"destructive\", align: \"start\"|\"end\", reactions: [{label, count, pressed}] (app-controlled)",
+  "Attachment": "children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: \"sm\"|\"xs\", state: \"idle\"|\"uploading\"|\"processing\"|\"error\"|\"done\" (default \"idle\"), progress: 0-100, orientation: \"horizontal\"|\"vertical\"",
+  "Marker": "children: [content IDs], content: string (plain text), icon: string (Lucide), variant: \"border\"|\"separator\", status: bool (polite live region), busy: bool",
+  "Image": "src: string (URL), alt: string, width: number, height: number",
+  "Alert": "type: \"info\"|\"warning\"|\"error\"|\"success\", title: string, message: string",
+  "Progress": "value: number, indeterminate: bool",
+  "Skeleton": "variant: \"text\"|\"heading\"|\"avatar\"|\"btn\", lines: number",
+  "EmptyState": "icon: string, title: string, message: string, children: [childIds] (action Buttons shown under the message)",
+  "Tooltip": "text: string, position: \"top\"|\"bottom\"|\"left\"|\"right\"",
+  "Modal": "id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm) | UX: clear close affordance, confirm before dismiss with unsaved data",
+  "AlertDialog": "id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)",
+  "Sheet": "id: string, position: \"right\"|\"left\"|\"top\"|\"bottom\"",
+  "Drawer": "id: string",
+  "Popover": "position: \"top\"|\"bottom\"|\"left\"|\"right\", children: [childIds] (first child becomes the trigger when it is a Button and there are 2+ children; other children are the content)",
+  "HoverCard": "",
+  "DropdownMenu": "items: [{label, icon, separator, groupLabel, active: bool}]",
+  "ContextMenu": "items: [{label, icon, separator}]",
+  "CommandPalette": "id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] (inline objects, NOT element ID references)",
+  "Accordion": "items: [{title, content, children: [childIds]}], multi: bool",
+  "Collapsible": "label: string",
+  "Resizable": "direction: \"horizontal\"|\"vertical\"",
+  "DatePicker": "label: string, placeholder: string, selected: string",
+  "StatCard": "label: string, value: string, trend: \"up\"|\"down\" (direction only, never an icon), trendValue: string, icon: string (Lucide name, pass named: icon: \"users\"), horizontal: bool",
+  "ChartCard": "title: string, children: [Chart element] (empty ChartCard renders \"No data\"), bars: [{label, value, max}] (shortcut: renders a Chart when no children)",
+  "CustomHTML": "html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives \"container\" arg for this element and \"preview\" arg for the entire preview pane — use preview.querySelector('[data-spec-id=\"someId\"]') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after)"
 };
 
 var COMP_CATEGORIES = [
-  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator', 'Layout', 'Divider', 'Icon', 'Link', 'Frame']],
-  ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP', 'CheckboxGroup', 'Fieldset', 'Group', 'NumberField', 'Toolbar']],
-  ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
-  ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea', 'Image']],
-  ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip', 'Meter']],
-  ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette', 'PreviewCard']],
-  ['Layout Utilities', ['Accordion', 'Collapsible', 'Resizable', 'DatePicker']],
-  ['Dashboard', ['StatCard', 'ChartCard']],
-  ['Chat', ['MessageScroller', 'Message', 'Bubble', 'Attachment', 'Marker']],
-  ['Custom', ['CustomHTML']]
+  [
+    "Layout & Structure",
+    [
+      "Stack",
+      "Grid",
+      "Surface",
+      "Text",
+      "Prose",
+      "Separator",
+      "Layout",
+      "Divider",
+      "Icon",
+      "Link",
+      "Frame"
+    ]
+  ],
+  [
+    "Controls",
+    [
+      "Button",
+      "ButtonGroup",
+      "Field",
+      "Input",
+      "InputGroup",
+      "InputIcon",
+      "Search",
+      "Textarea",
+      "Checkbox",
+      "RadioGroup",
+      "Switch",
+      "Slider",
+      "Toggle",
+      "ToggleGroup",
+      "Select",
+      "CustomSelect",
+      "Kbd",
+      "Label",
+      "Spinner",
+      "InputOTP",
+      "CheckboxGroup",
+      "Fieldset",
+      "Group",
+      "NumberField",
+      "Toolbar"
+    ]
+  ],
+  [
+    "Navigation",
+    [
+      "Tabs",
+      "Breadcrumbs",
+      "Pagination",
+      "Stepper",
+      "NavMenu",
+      "Navbar",
+      "Menubar",
+      "Sidebar",
+      "BottomNav"
+    ]
+  ],
+  [
+    "Data Display",
+    [
+      "Card",
+      "Table",
+      "DataTable",
+      "List",
+      "Badge",
+      "Avatar",
+      "AvatarGroup",
+      "Calendar",
+      "Chart",
+      "Carousel",
+      "AspectRatio",
+      "Chip",
+      "ScrollArea",
+      "Image"
+    ]
+  ],
+  [
+    "Feedback",
+    [
+      "Alert",
+      "Progress",
+      "Skeleton",
+      "EmptyState",
+      "Tooltip",
+      "Meter"
+    ]
+  ],
+  [
+    "Overlays",
+    [
+      "Modal",
+      "AlertDialog",
+      "Sheet",
+      "Drawer",
+      "Popover",
+      "HoverCard",
+      "DropdownMenu",
+      "ContextMenu",
+      "CommandPalette",
+      "PreviewCard"
+    ]
+  ],
+  [
+    "Layout Utilities",
+    [
+      "Accordion",
+      "Collapsible",
+      "Resizable",
+      "DatePicker"
+    ]
+  ],
+  [
+    "Dashboard",
+    [
+      "StatCard",
+      "ChartCard"
+    ]
+  ],
+  [
+    "Chat",
+    [
+      "MessageScroller",
+      "Message",
+      "Bubble",
+      "Attachment",
+      "Marker"
+    ]
+  ],
+  [
+    "Custom",
+    [
+      "CustomHTML"
+    ]
+  ]
 ];
 
 var VALID_TYPES = Object.keys(RENDERERS);
@@ -6563,6 +7524,7 @@ var VALID_TYPES_HINT = (function() {
 })();
 
 // ---- Dynamic system prompt (built from RENDERERS + COMP_PROPS) ----
+var focusedSystemPrompt; // (pickedTypes) -> SYSTEM_PROMPT variant with props only for picked components
 var SYSTEM_PROMPT = (function() {
   var preamble = 'You are a UI generator that outputs json-render flat specs using DAUB components.\n\n'
     + 'CRITICAL: You MUST return ONLY a single valid JSON object. No markdown fences, no explanation, no text before or after the JSON.\n'
@@ -6603,8 +7565,10 @@ var SYSTEM_PROMPT = (function() {
     + '- Do NOT use Layout — it is deprecated. Use Stack (flexbox) or Grid (CSS grid) instead\n'
     + '- Wrap related content in Card components\n'
     + '- Use StatCard for KPI metrics\n'
+    + '- Charts go inside ChartCard as a Chart child ("children":["chart-id"]) with 4-8 bars of realistic data unless the user specifies the data; use Switch (not Toggle) for on/off settings like notifications\n'
+    + '- Sidebar and NavMenu take data arrays (sections / items of {label, icon, href, active}), not child element refs\n'
     + '- Keep element IDs descriptive and unique\n'
-    + '- For standalone images use the Image component with a src URL. For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)\n'
+    + '- For photos use Image (or Card media) with src https://picsum.photos/seed/<subject-slug>/<W>/<H> sized to the slot (e.g. https://picsum.photos/seed/leather-weekender-bag/400/300 for a 400x300 product card) and alt text that names the subject. Never use dummyimage.com or other grey placeholder hosts, and never invent Unsplash photo ids.\n'
     + '- Escape quotes properly in JSON strings: use \\" for double quotes inside string values\n'
     + '- Overlay components (Modal, AlertDialog, Sheet, Drawer) are hidden by default — do NOT add display:none style\n'
     + '- Use trigger: "overlay-id" on Button to open overlays — no CustomHTML JS needed\n'
@@ -6697,10 +7661,27 @@ var SYSTEM_PROMPT = (function() {
       + '- Default: "light" when no preference is detected\n';
   })();
 
+  focusedSystemPrompt = function(picked) {
+    var focus = 'PICKED FOR THIS REQUEST (prefer these):\n';
+    var others = [];
+    for (var i = 0; i < COMP_CATEGORIES.length; i++) {
+      var types = COMP_CATEGORIES[i][1];
+      for (var j = 0; j < types.length; j++) {
+        var t = types[j];
+        if (!RENDERERS[t]) continue;
+        if (picked.indexOf(t) !== -1) focus += '- ' + t + ': { ' + (COMP_PROPS[t] || '') + ' }\n';
+        else others.push(t);
+      }
+    }
+    if (others.length) focus += '\nALSO AVAILABLE (use only if clearly needed): ' + others.join(', ') + '\n';
+    return preamble + focus + '\n' + guidelines + themes;
+  };
+
   return preamble + sections + guidelines + themes;
 })();
 
 // ---- OpenUI Lang system prompt (token-efficient alternative to JSON) ----
+var focusedOpenuiSystemPrompt; // (pickedTypes) -> OPENUI_SYSTEM_PROMPT variant with signatures only for picked components
 var OPENUI_SYSTEM_PROMPT = (function() {
   var preamble = 'You are a UI generator. Output ONLY valid openui-lang code using DAUB components.\n\n'
     + 'SYNTAX:\n'
@@ -6723,7 +7704,32 @@ var OPENUI_SYSTEM_PROMPT = (function() {
     + 'CRITICAL RULES:\n'
     + '- Output ONLY openui-lang code. No markdown fences, no explanation, no text before/after\n'
     + '- Every referenced name must be defined as a statement\n'
+    + '- Each named element has exactly one parent: list it in one children array. A section shown in a Tabs panel is listed in that panel only\n'
+    + '- Never write alias statements (name = otherName); use otherName directly\n'
+    + '- Every defined element must be reachable from root, except overlays opened by a trigger\n'
     + '- Use descriptive names for readability\n\n';
+
+  // Args in the parser's positional order (DaubOpenUI.COMP_SCHEMA); raw COMP_PROPS line when no schema
+  var schemaMap = (typeof DaubOpenUI !== 'undefined' && DaubOpenUI.COMP_SCHEMA) || {};
+  function sigArgs(t) {
+    var src = COMP_PROPS[t] || '', schema = schemaMap[t];
+    if (!schema) return src;
+    var segs = [], depth = 0, start = 0;
+    for (var k = 0; k <= src.length; k++) {
+      var c = src.charAt(k);
+      if (c === '(' || c === '[' || c === '{') depth++;
+      else if (c === ')' || c === ']' || c === '}') depth--;
+      else if ((c === ',' && depth === 0) || k === src.length) { segs.push(src.slice(start, k).trim()); start = k + 1; }
+    }
+    var byKey = {}, extra = [], notes = [];
+    segs.forEach(function(s) {
+      var m = s.match(/^(\w+)\s*:/);
+      if (m) { byKey[m[1]] = s; if (schema.indexOf(m[1]) === -1) extra.push(s + ' (named only)'); }
+      else if (s) notes.push(s);
+    });
+    var out = schema.map(function(key) { return byKey[key] || (key === 'children' ? 'children: [refs]' : key); });
+    return out.concat(extra).join(', ') + (notes.length ? ' ' + notes.join(' ') : '');
+  }
 
   // Component signatures from schema
   var sigs = 'COMPONENT SIGNATURES (positional arg order):\n\n';
@@ -6734,7 +7740,7 @@ var OPENUI_SYSTEM_PROMPT = (function() {
     for (var j = 0; j < types.length; j++) {
       var t = types[j];
       if (RENDERERS[t]) {
-        sigs += '- ' + t + '(' + (COMP_PROPS[t] || '') + ')\n';
+        sigs += '- ' + t + '(' + sigArgs(t) + ')\n';
       }
     }
     sigs += '\n';
@@ -6747,9 +7753,12 @@ var OPENUI_SYSTEM_PROMPT = (function() {
     + '- Gap tokens: 0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px\n'
     + '- Wrap related content in Card\n'
     + '- StatCard for KPI metrics\n'
+    + '- Charts go inside ChartCard as a Chart child with 4-8 bars of realistic data unless the user specifies the data: ChartCard([revenueChart], "Revenue"); use Switch (not Toggle) for on/off settings like notifications\n'
+    + '- Sidebar and NavMenu take data arrays (sections / items of {label, icon, href, active}), not child element refs\n'
     + '- Use trigger:"overlay-id" on Button to open overlays\n'
     + '- Generate 12-25+ elements for non-trivial UIs\n'
     + '- Use realistic sample data — no placeholders\n'
+    + '- Photos: use Image or Card media only where the page shows real things (products, listings, rooms, galleries, articles, recipes). src = https://picsum.photos/seed/<subject-slug>/<W>/<H> sized to the slot (600/400 card, 1200/600 hero, 80/80 thumbnail), e.g. Image("https://picsum.photos/seed/lisbon-sea-view-room/600/400", "Sea-view double room at Hotel Lusa", 600, 400). alt names the subject. Never use grey placeholder hosts (dummyimage.com, placehold.co, via.placeholder.com) or invented Unsplash photo ids. People get Avatar initials, not photos\n'
     + '- Every page needs header/nav, main content, footer/actions\n\n';
 
   var themes = (function() {
@@ -6767,12 +7776,29 @@ var OPENUI_SYSTEM_PROMPT = (function() {
 
   var example = 'EXAMPLE:\n'
     + '__theme = "bone"\n'
-    + 'root = Stack([header, stats, content], "vertical", 4)\n'
-    + 'header = Stack([Text("Dashboard", "h1"), Button("Settings", "ghost")], "horizontal", 2, "between", "center")\n'
+    + 'root = Stack([header, stats, orders], "vertical", 4)\n'
+    + 'header = Stack([Text("Dashboard", "h1"), Button("Settings", "ghost", icon: "settings")], "horizontal", 2, "between", "center")\n'
     + 'stats = Grid([s1, s2], 2, 3)\n'
-    + 's1 = StatCard("Revenue", "$12,345", "up", "+12%")\n'
-    + 's2 = StatCard("Users", "1,234", "up", "+5%")\n'
-    + 'content = Card([], "Overview", "Dashboard content goes here")\n';
+    + 's1 = StatCard("Revenue", "$12,345", "up", "+12%", icon: "dollar-sign")\n'
+    + 's2 = StatCard("Users", "1,234", "up", "+5%", icon: "users")\n'
+    + 'orders = Card([orderList], "Recent orders", "Last 24 hours")\n'
+    + 'orderList = List([{title: "#1042 Maya Chen", secondary: "$248.00 - Paid", icon: "receipt"}, {title: "#1041 Jonas Weber", secondary: "$96.50 - Refunded", icon: "undo-2"}])\n';
+
+  focusedOpenuiSystemPrompt = function(picked) {
+    var focus = 'COMPONENT SIGNATURES — PICKED FOR THIS REQUEST (positional arg order; prefer these):\n';
+    var others = [];
+    for (var i = 0; i < COMP_CATEGORIES.length; i++) {
+      var types = COMP_CATEGORIES[i][1];
+      for (var j = 0; j < types.length; j++) {
+        var t = types[j];
+        if (!RENDERERS[t]) continue;
+        if (picked.indexOf(t) !== -1) focus += '- ' + t + '(' + sigArgs(t) + ')\n';
+        else others.push(t);
+      }
+    }
+    if (others.length) focus += '\nALSO AVAILABLE (use only if clearly needed, named args only): ' + others.join(', ') + '\n';
+    return preamble + focus + '\n' + guidelines + themes + example;
+  };
 
   return preamble + sigs + guidelines + themes + example;
 })();
@@ -6869,16 +7895,6 @@ loadSettings();
 // Lucide is deferred — wait for DOMContentLoaded so the library is loaded
 document.addEventListener('DOMContentLoaded', function(){ if (window.lucide) lucide.createIcons(); });
 
-// ---- Pill toggle sync ----
-function syncPillToggle(checkbox, pillEl) {
-  function update() {
-    pillEl.classList.toggle('pg-pill-toggle--active', checkbox.checked);
-  }
-  update();
-  checkbox.addEventListener('change', update);
-}
-syncPillToggle($fastMode, document.getElementById('pg-fast-pill'));
-
 // ---- Examples trigger ----
 (function() {
   var trigger = document.getElementById('pg-examples-trigger');
@@ -6895,7 +7911,12 @@ renderChatHistory();
 if (currentSpec) {
   try {
     $json.value = JSON.stringify(currentSpec, null, 2);
-    renderSpec(currentSpec);
+    // A post before the srcdoc loads hits the discarded about:blank window, so render on load
+    var _restoredSpec = currentSpec;
+    $previewFrame.addEventListener('load', function onRestoreLoad() {
+      $previewFrame.removeEventListener('load', onRestoreLoad);
+      try { if (currentSpec === _restoredSpec) renderSpec(_restoredSpec); } catch(e) {}
+    });
     refreshJsonTree();
     updatePreviewToolbar();
   } catch(e) {}
@@ -6915,8 +7936,47 @@ if (presetPrompt) {
   setTimeout(function(){ generate(); }, 500);
 }
 
-// Load shared spec from ?s= param (LZString is deferred — defer the lookup too)
-var sharedSpec = urlParams.get('s');
+// Load shared spec from #s= (legacy ?s= links still work). LZString is deferred, so defer the lookup too
+function _hashShare() {
+  var m = /^#(?:.*&)?s=([^&]*)/.exec(window.location.hash);
+  return m ? m[1] : '';
+}
+var sharedSpec = _hashShare() || urlParams.get('s');
+var _previewLoaded = false;
+$previewFrame.addEventListener('load', function() { _previewLoaded = true; });
+function _showSharedCodeNotice(spec) {
+  var stale = $chatMessages.querySelector('[data-share-notice]');
+  if (stale) stale.remove(); // an earlier link's notice would offer to run the wrong spec
+  var wrap = mkEl('div', 'pg-chat__msg');
+  wrap.setAttribute('data-share-notice', '');
+  wrap.style.cssText = 'padding:0;max-width:100%;';
+  var alert = mkEl('div', 'db-alert db-alert--warning');
+  alert.setAttribute('role', 'status');
+  var content = mkEl('div', 'db-alert__content');
+  content.appendChild(mkEl('div', 'db-alert__title', 'This shared UI contains custom code'));
+  content.appendChild(mkEl('p', null, 'Its JavaScript is paused. HTML and CSS render in the sandboxed preview. Review it in the Structure tab, then run it only if you trust this link.'));
+  var btn = mkEl('button', 'db-btn db-btn--secondary db-btn--sm', 'Run code');
+  btn.type = 'button';
+  btn.style.marginTop = '8px';
+  btn.addEventListener('click', function() {
+    wrap.remove();
+    $status.textContent = '';
+    if (currentSpec === spec) renderSpec(spec); // skip if the user has moved on to another spec
+  });
+  content.appendChild(btn);
+  alert.appendChild(content);
+  wrap.appendChild(alert);
+  $chatMessages.insertBefore(wrap, $chatMessages.firstChild);
+  $status.textContent = 'Custom code paused';
+}
+// Notice trigger only: the inert render strips these in the frame even when this misses
+function _hasInlineCode(spec) {
+  return Object.keys(spec.elements).some(function(id) {
+    var d = spec.elements[id];
+    return d && d.type === 'CustomHTML' && d.props && typeof d.props.html === 'string'
+      && /[\s\/"']on[a-z]+\s*=|javascript:|<(i?frame|object|embed|meta|base)\b/i.test(d.props.html);
+  });
+}
 function _loadSharedSpec() {
   try {
     var json = LZString.decompressFromEncodedURIComponent(sharedSpec);
@@ -6926,8 +7986,25 @@ function _loadSharedSpec() {
       $json.value = JSON.stringify(spec, null, 2);
       refreshJsonTree();
       updatePreviewToolbar();
-      renderSpec(spec);
-      saveChatState();
+      // Links can come from anyone: render without CustomHTML js until the user opts in
+      var safeSpec = spec;
+      if (collectCustomJS(spec).length || _hasInlineCode(spec)) {
+        safeSpec = JSON.parse(JSON.stringify(spec));
+        Object.keys(safeSpec.elements).forEach(function(id) {
+          var d = safeSpec.elements[id];
+          if (d && d.props) delete d.props.js;
+        });
+        _showSharedCodeNotice(spec);
+      } else {
+        var staleNotice = $chatMessages.querySelector('[data-share-notice]');
+        if (staleNotice) { staleNotice.remove(); $status.textContent = ''; } // a code-free link replaced the paused one
+      }
+      // Render now if the iframe is ready (hashchange, or it loaded before DOMContentLoaded), else on load
+      if (_previewLoaded) renderSpec(safeSpec, null, true);
+      else $previewFrame.addEventListener('load', function onShareLoad() {
+        $previewFrame.removeEventListener('load', onShareLoad);
+        if (currentSpec === spec) renderSpec(safeSpec, null, true);
+      });
     }
   } catch(e) { console.warn('[share] failed to load shared spec:', e); }
   window.history.replaceState({}, '', window.location.pathname);
@@ -6936,6 +8013,13 @@ if (sharedSpec) {
   if (typeof LZString !== 'undefined') _loadSharedSpec();
   else document.addEventListener('DOMContentLoaded', _loadSharedSpec, { once: true });
 }
+// A #s= link pasted into this tab changes only the hash: load it with the same gating
+window.addEventListener('hashchange', function() {
+  var s = _hashShare();
+  if (!s || typeof LZString === 'undefined') return;
+  sharedSpec = s;
+  _loadSharedSpec();
+});
 
 // ---- assistant-ui React Chat bridge (expose IIFE-scoped vars) ----
 if (new URLSearchParams(location.search).has('react-chat')) {
@@ -6949,8 +8033,7 @@ if (new URLSearchParams(location.search).has('react-chat')) {
       return {
         provider: $provider ? $provider.value : 'default',
         model: $model ? $model.value : null,
-        apiKey: $apikey ? $apikey.value : null,
-        fastMode: $fastMode ? $fastMode.checked : false
+        apiKey: $apikey ? $apikey.value : null
       };
     },
     renderSpec: function(s, p) { renderSpec(s, p); },
@@ -6967,7 +8050,7 @@ if (new URLSearchParams(location.search).has('react-chat')) {
     refreshJsonTree: function() { refreshJsonTree(); },
     setJsonValue: function(v) { $json.value = v; },
     openByokModal: function() { openByokModal(); },
-    streamDefault: function(msgs, c, d, e, model, sig) { streamDefault(msgs, c, d, e, model, sig); },
+    streamDefault: function(msgs, c, d, e, model, sig) { streamDefault(msgs, c, d, e, model || AUTO_MODEL, sig, model ? null : mainGenOpts()); },
     streamOpenAI: function(msgs, c, d, e, sig) { streamOpenAI(msgs, c, d, e, sig); },
     streamAnthropic: function(msgs, c, d, e, sig) { streamAnthropic(msgs, c, d, e, sig); },
     streamOpenRouter: function(msgs, c, d, e, sig) { streamOpenRouter(msgs, c, d, e, sig); },
