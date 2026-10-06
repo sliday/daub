@@ -16,6 +16,8 @@ export const Stepper = forwardRef<HTMLDivElement, StepperProps>(
   ({ steps, vertical, className, ...props }, ref) => (
     <div
       ref={ref}
+      data-db-react=""
+      role="list"
       {...props}
       className={cn(
         "db-stepper",
@@ -26,13 +28,16 @@ export const Stepper = forwardRef<HTMLDivElement, StepperProps>(
       {steps.map((step, i) => (
         <div
           key={i}
+          role="listitem"
+          aria-current={step.active ? "step" : undefined}
           className={cn(
             "db-stepper__step",
+            !step.completed && !step.active && "db-stepper__step--pending",
             step.completed && "db-stepper__step--completed",
             step.active && "db-stepper__step--active",
           )}
         >
-          <div className="db-stepper__circle">
+          <div className="db-stepper__indicator">
             {step.completed ? "\u2713" : i + 1}
           </div>
           <span className="db-stepper__label">{step.label}</span>

@@ -6,11 +6,12 @@
 > JS: https://daub.dev/daub.js
 > Repo: https://github.com/sliday/daub
 > License: MIT
-> Components: 84
+> Components: 89
+> Browser/OpenUI/MCP renderer types: 87
 > Theme Families: 21 (42 variants total)
 > Components JSON: https://daub.dev/components.json
 > TypeScript: https://daub.dev/daub.d.ts
-> React: npm install daub-react daub-ui (78 typed JSX components)
+> React: npm install daub-react daub-ui (typed JSX components and compound chat primitives)
 
 ## Quick Start
 
@@ -119,7 +120,7 @@ Required HTML nesting for overlay and complex components. Use these as a startin
 - `db-field__input` goes on wrapper elements — not just `<input>` tags
 - Icons: DAUB pairs well with [Lucide](https://unpkg.com/lucide@latest) — all demos use Lucide icons
 
-## Components (84)
+## Components (89)
 
 ### 1. Button — `.db-btn`
 Variants: `db-btn--primary`, `db-btn--secondary`, `db-btn--ghost`
@@ -1099,6 +1100,151 @@ Fires `db:chip:change` CustomEvent with `{ detail: { chip, value, active } }` �
 </div>
 ```
 
+## Chat Components
+
+Compose these five primitives for conversations. Your app owns messages, reactions,
+upload state, AI transport, and persistence. Compose input with existing Textarea,
+InputGroup, and Button controls. The local example lives at `chat-demo.html`.
+
+### Message Scroller - `.db-message-scroller`
+
+The root contains `__viewport` > `__content` > `__item` rows, plus sibling
+`__button` controls. Give each row a stable string `data-db-message-id`. Mark turn
+anchors with `data-db-scroll-anchor="true"`.
+
+Root options: `data-db-auto-scroll="true|false"` (default true),
+`data-db-scroll-position="start|end|last-anchor"` (default end),
+`data-db-scroll-peek="0"` (nonnegative pixels). Default root height: 360px.
+Controls use `data-db-scroll-to="start|end"`. Call `DAUB.init(parent)` after adding
+the markup. Apply `db-scroll-fade` to the viewport for edge fades.
+
+```html
+<div class="db-message-scroller" data-db-auto-scroll="true" data-db-scroll-position="end" data-db-scroll-peek="24">
+  <div class="db-message-scroller__viewport db-scroll-fade" tabindex="0" role="region" aria-label="Conversation">
+    <div class="db-message-scroller__content">
+      <div class="db-message-scroller__item" data-db-message-id="m1" data-db-scroll-anchor="true">
+        <div class="db-message db-message--end">
+          <div class="db-message__avatar db-avatar db-avatar--sm" aria-hidden="true">AL</div>
+          <div class="db-message__content">
+            <div class="db-message__header"><span>Ada</span><time>10:42</time></div>
+            <div class="db-bubble db-bubble--secondary db-bubble--end"><div class="db-bubble__content">Review ready.</div></div>
+            <div class="db-message__footer">Delivered</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="db-message-scroller__button" type="button" data-db-scroll-to="end" aria-label="Scroll to end"><i data-lucide="arrow-down" aria-hidden="true"></i></button>
+</div>
+```
+
+### Message - `.db-message`
+
+Parts: `__avatar`, `__content`, `__header`, `__footer`. Use `--end` for end alignment.
+Group rows with `db-message-group`. In renderer specs, `messageId` defaults to the
+element ID. The scroller moves row IDs and anchors onto its `__item` wrappers.
+`avatar` accepts an initials string or `{initials, src}` with a safe image URL.
+`name`, `timestamp`, and `footer` accept plain text.
+
+### Bubble - `.db-bubble`
+
+Parts: `__content`, `__reactions`. Variants: `--primary` (default), `--secondary`,
+`--muted`, `--tinted`, `--outline`, `--ghost`, `--destructive`; use `--end` for
+alignment. The renderer treats `variant:"default"` as `"primary"`.
+Group bubbles with `db-bubble-group`. The `content` prop accepts plain text;
+renderer children provide composed controls or Prose. Reactions accept
+`[{label, count, pressed}]`; your app handles clicks and updates `pressed`.
+
+### Attachment - `.db-attachment`
+
+Parts: `__media` (`--image` for images), `__content`, `__title`, `__description`,
+`__actions`, `__action`, `__trigger`. Modifiers: `--vertical`, `--sm`, `--xs`.
+States: `data-state="idle|uploading|processing|error|done"` (default idle).
+Your app sets the state and progress. The renderer clamps upload progress to
+0-100 and supplies a named progressbar. During uploading/processing, set
+`aria-busy="true"`. Group cards with `db-attachment-group`.
+
+The full-card link uses an empty, named `__trigger` sibling. Keep action buttons
+in `__actions` beside that link. Do not place buttons inside the anchor. Renderer
+children become actions; `src` is an image URL, `href` is a link URL, and `size`
+selects `sm` or `xs` presentation. Put file size text in `description`.
+
+```html
+<div class="db-attachment" data-state="done">
+  <div class="db-attachment__media" aria-hidden="true"><i data-lucide="file" aria-hidden="true"></i></div>
+  <div class="db-attachment__content"><div class="db-attachment__title">Review.pdf</div><div class="db-attachment__description">PDF, 42 KB</div></div>
+  <a class="db-attachment__trigger" href="review.pdf" aria-label="Open Review.pdf"></a>
+  <div class="db-attachment__actions"><button class="db-btn db-btn--ghost db-btn--icon db-attachment__action" type="button" aria-label="Remove attachment"><i data-lucide="x" aria-hidden="true"></i></button></div>
+</div>
+```
+
+### Marker - `.db-marker`
+
+Parts: `__icon`, `__content`. Variants: `--border`, `--separator`. Use `status:true`
+for a polite live region and `busy:true` for `aria-busy="true"` in renderer specs.
+Use `db-shimmer` on the content text for streaming status.
+
+```html
+<div class="db-marker db-marker--border" role="status" aria-live="polite" aria-busy="true">
+  <span class="db-marker__icon" aria-hidden="true"><i data-lucide="loader" aria-hidden="true"></i></span>
+  <div class="db-marker__content db-shimmer">Generating response</div>
+</div>
+```
+
+### JSON-Render and OpenUI
+
+The browser, local MCP, and cloud MCP expose the same five types. OpenUI signatures
+place `children` first; metadata accepts named arguments:
+
+```text
+MessageScroller(children, height, autoScroll, defaultScrollPosition, peek)
+Message(children, align, avatar, name, timestamp, messageId, scrollAnchor, footer)
+Bubble(children, content, variant, align, reactions)
+Attachment(children, name, description, src, alt, href, size, state, progress, orientation)
+Marker(children, content, icon, variant, status, busy)
+```
+
+```text
+root = MessageScroller([Message([Bubble([], content: "Review ready.", variant: "secondary")], align: "end", avatar: "AL", name: "Ada", messageId: "m1", scrollAnchor: true), Marker([], content: "Today", variant: "separator")], height: 360, autoScroll: true)
+```
+
+For Message/Bubble/Marker, children render inside the family content part. Attachment
+children render inside its action part. Plain text props escape HTML. Image/link
+URLs use the canonical renderer's URL guard.
+
+### Native Message Scroller API
+
+Mount the root in the document before creating its handle. `DAUB.init(parent)`
+also initializes scrollers. Calling `createMessageScroller` again for the same
+root returns its existing handle; set options on the first call or root attributes.
+The native method uses `scrollPosition`/`scrollPeek`; renderer props use
+`defaultScrollPosition`/`peek` and translate those into root attributes.
+
+```js
+const root = document.querySelector('.db-message-scroller');
+const scroller = DAUB.createMessageScroller(root, {
+  autoScroll: true,
+  scrollPosition: 'end', // start, end, last-anchor
+  scrollPeek: 24
+});
+scroller.scrollToStart({ behavior: 'instant' });
+scroller.scrollToEnd({ behavior: 'smooth' });
+scroller.scrollToMessage('m1', { block: 'center', behavior: 'smooth' });
+scroller.getState(); // {atStart, atEnd, currentAnchorId, visibleMessageIds}
+root.addEventListener('db:message-scroll', event => {
+  const { atStart, atEnd, currentAnchorId, visibleMessageIds } = event.detail;
+});
+scroller.destroy();
+```
+
+Scroll commands return a boolean; `scrollToMessage` returns false for an unmounted
+ID. `block` accepts `start`, `center`, `end`, or `nearest`. Reduced-motion users get
+instant movement for smooth commands. The handle exposes scroll-edge, anchor, and
+visible-row state; `db:message-scroll` bubbles when that state changes. The native
+runtime suspends auto-follow when you scroll up, preserves the visible row while
+your app prepends history, and follows live turn anchors. Call `destroy()` before
+discarding a handle. The runtime also cleans up roots after removal from the DOM.
+
 ## Responsive Breakpoints
 
 | Breakpoint | Width | Grid behavior |
@@ -1128,6 +1274,7 @@ DAUB.closeCommand(id)          // Close command palette
 DAUB.toggleSidebar(el)         // Toggle sidebar collapse
 DAUB.toggleNavbar(el)          // Toggle mobile navbar menu
 DAUB.refreshIcons()            // Re-init Lucide icons after dynamic content
+DAUB.createMessageScroller(root, { autoScroll, scrollPosition, scrollPeek }) // Mounted native root, handle or null
 DAUB.setTheme(name)            // Set theme (direct)
 DAUB.getTheme()                // Get current theme
 DAUB.cycleTheme()              // Cycle through 21 families
@@ -1153,10 +1300,10 @@ DAUB.getColor(token)           // Get computed CSS variable value (e.g. 'terraco
 ## Component Init Requirements
 
 **Needs `DAUB.init()` (JS-powered):**
-Switch, Tabs, Modal, Stepper, Tooltip, Slider, Checkbox (custom), Radio (custom), Accordion, Collapsible, Alert Dialog, Sheet, Drawer, Popover, Context Menu, Dropdown, Toggle Group, Custom Select, Command Palette, Menubar, Calendar, Carousel, OTP, Resizable, Chip Close, Chip Toggle, Navbar, Sidebar Toggle, Theme Switcher.
+Switch, Tabs, Modal, Stepper, Tooltip, Slider, Checkbox (custom), Radio (custom), Accordion, Collapsible, Alert Dialog, Sheet, Drawer, Popover, Context Menu, Dropdown, Toggle Group, Custom Select, Command Palette, Menubar, Calendar, Carousel, OTP, Resizable, Chip Close, Chip Toggle, Navbar, Sidebar Toggle, Theme Switcher, Message Scroller.
 
 **Pure CSS (no JS needed):**
-Button, Badge, Card, Input, Textarea, Label, Kbd, Spinner, Separator, Progress, Avatar, Alert, Surface, Skeleton, Breadcrumb, Pagination, Grid, Container, Typography (h1–h6 classes), Prose.
+Button, Badge, Card, Input, Textarea, Label, Kbd, Spinner, Separator, Progress, Avatar, Alert, Surface, Skeleton, Breadcrumb, Pagination, Grid, Container, Typography (h1–h6 classes), Prose, Message, Bubble, Attachment, Marker. Consumers wire reactions and attachment actions.
 
 After dynamically adding HTML, call `DAUB.init()` or `DAUB.init(parentElement)` to bind new elements.
 
@@ -1449,7 +1596,7 @@ Wrap the canvas inside `db-chart-card` for consistent card framing:
 
 ## React Integration (daub-react)
 
-78 typed JSX components wrapping DAUB's CSS classes. Full TypeScript, IDE autocomplete, forwardRef on all components.
+Typed JSX components wrapping DAUB's CSS classes, including compound chat primitives. Full TypeScript, IDE autocomplete, forwardRef on all components.
 
 ```bash
 npm install daub-react daub-ui
@@ -1474,7 +1621,16 @@ function App() {
 
 Components: Stack, Grid, Surface, Container, Separator, ScrollArea, AspectRatio, Frame, Group, Toolbar, Card, Badge, Avatar, AvatarGroup, Alert, Progress, Meter, Skeleton, EmptyState, Spinner, StatCard, ChartCard, PreviewCard, Chart, Image, Button, ButtonGroup, Input, Textarea, Field, Fieldset, InputGroup, InputIcon, Search, Select, Label, Kbd, Prose, List, Table, DataTable, Chip, Breadcrumbs, Pagination, NavMenu, BottomNav, Stepper, Navbar, HoverCard, ThemeProvider, Checkbox, CheckboxGroup, Radio, RadioGroup, Switch, Slider, NumberField, Toggle, ToggleGroup, InputOTP, Tabs, Accordion, Collapsible, CustomSelect, Calendar, DatePicker, Carousel, Modal, AlertDialog, Sheet, Drawer, Tooltip, Popover, DropdownMenu, ContextMenu, CommandPalette, Toast, ToastProvider.
 
-Hooks: useControllable, useToast, useEscapeKey, useOutsideClick, useFocusTrap.
+Chat exports: MessageScroller, MessageScrollerProvider, MessageScrollerViewport,
+MessageScrollerContent, MessageScrollerItem, MessageScrollerButton; Message,
+MessageAvatar, MessageContent, MessageHeader, MessageFooter, MessageGroup; Bubble,
+BubbleContent, BubbleReactions, BubbleGroup, BubbleCollapsible; Attachment,
+AttachmentMedia, AttachmentContent, AttachmentTitle, AttachmentDescription,
+AttachmentActions, AttachmentAction, AttachmentTrigger, AttachmentGroup,
+AttachmentProgress; Marker, MarkerIcon, MarkerContent.
+
+Hooks: useControllable, useToast, useEscapeKey, useOutsideClick, useFocusTrap,
+useMessageScroller, useMessageScrollerScrollable, useMessageScrollerVisibility.
 
 npm: https://www.npmjs.com/package/daub-react
 

@@ -6,12 +6,14 @@ export interface ChipProps extends ComponentProps<"span"> {
   active?: boolean;
   closable?: boolean;
   onClose?: () => void;
+  closeLabel?: string;
 }
 
 export const Chip = forwardRef<HTMLSpanElement, ChipProps>(
-  ({ color, active, closable, onClose, className, children, ...props }, ref) => (
+  ({ color, active, closable, onClose, closeLabel = "Remove chip", className, children, ...props }, ref) => (
     <span
       ref={ref}
+      data-db-react=""
       className={cn(
         "db-chip",
         color && `db-chip--${color}`,
@@ -22,7 +24,7 @@ export const Chip = forwardRef<HTMLSpanElement, ChipProps>(
     >
       {children}
       {closable && (
-        <button className="db-chip__close" onClick={onClose} type="button">
+        <button className="db-chip__close" onClick={onClose} type="button" aria-label={closeLabel}>
           &times;
         </button>
       )}

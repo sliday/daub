@@ -17,7 +17,7 @@ allowed-tools:
 
 # DAUB UI — Component Library
 
-DAUB is a drop-in CSS + JS library with 84 considered components and 21 theme families (42 variants). Thoughtfully composed, no ceremony required.
+DAUB is a drop-in CSS + JS library with 89 considered components and 21 theme families (42 variants). Thoughtfully composed, no ceremony required.
 
 npm: `daub-ui` | CDN: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css`
 Machine-readable component reference: `https://daub.dev/components.json`
@@ -128,6 +128,16 @@ Category API: `DAUB.THEME_CATEGORIES`, `DAUB.getCategory('dracula')`
 - **Carousel**: `db-carousel` > `__track` + `__slide` + `__dots`
 - **Aspect Ratio**: `db-aspect` / `--16-9` / `--4-3` / `--1-1` / `--21-9`
 - **Scroll Area**: `db-scroll-area` / `--horizontal` / `--vertical`
+
+### Chat
+- **Message Scroller**: `db-message-scroller` > `__viewport` > `__content` > `__item[data-db-message-id]`; sibling `__button[data-db-scroll-to="start|end"]`. Default height 360px. Root options: `data-db-auto-scroll="true|false"`, `data-db-scroll-position="start|end|last-anchor"`, `data-db-scroll-peek="0"`.
+- **Message**: `db-message` / `--end` > `__avatar` + `__content` with `__header` and `__footer`. Group with `db-message-group`.
+- **Bubble**: `db-bubble` / `--primary` (default), `--secondary`, `--muted`, `--tinted`, `--outline`, `--ghost`, `--destructive`, `--end` > `__content` + `__reactions`. Group with `db-bubble-group`.
+- **Attachment**: `db-attachment` / `--vertical`, `--sm`, `--xs` > `__media`, `__content`, sibling overlay `__trigger` and `__actions`. Use `data-state="idle|uploading|processing|error|done"`; app controls progress. Group with `db-attachment-group`.
+- **Marker**: `db-marker` / `--border`, `--separator` > `__icon` + `__content`. Use `role="status"` for live status, `aria-busy="true"` during work, `db-shimmer` for status text.
+- Use `db-scroll-fade` on scroll viewports. Compose a composer with Textarea, InputGroup, and Button. Your app owns AI transport, uploads, persistence, and reaction state. See `chat-demo.html` and the Chat Components section of `llms.txt`.
+- The browser/OpenUI/MCP renderer registry has 87 types. Chat signatures start with children; use named metadata props. Attachment children represent actions. Bubble content and Marker content accept plain text.
+- Native runtime: `DAUB.createMessageScroller(root, {autoScroll, scrollPosition, scrollPeek})` returns a handle for a mounted native root. Handle methods: `scrollToStart({behavior})`, `scrollToEnd({behavior})`, `scrollToMessage(id, {block, behavior})`, `getState()`, `destroy()`. State contains `atStart`, `atEnd`, `currentAnchorId`, `visibleMessageIds`; listen for `db:message-scroll`. Renderer options use `defaultScrollPosition` and `peek` instead of the native names. Scroll commands return booleans.
 
 ### Feedback
 - **Toast**: `DAUB.toast('Quick message')` or `DAUB.toast({ type: 'success', title: 'Done', message: '...' })`

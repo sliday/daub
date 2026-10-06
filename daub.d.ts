@@ -1,6 +1,6 @@
 /**
  * DAUB UI Kit — TypeScript Declarations
- * Version 3.19.13
+ * Version 3.20.1
  * https://daub.dev
  */
 
@@ -13,7 +13,10 @@ interface DAUBToastOptions {
 
 interface DAUBStatic {
   /** Re-initialize all components (or scoped to a root element) */
-  init(root?: Element): void;
+  init(root?: Element | Document): void;
+
+  /** Bind a connected native root once, retaining its initial options. Returns null for invalid or React-owned markup. */
+  createMessageScroller(root: Element, options?: DAUBMessageScrollerOptions): DAUBMessageScrollerHandle | null;
 
   /** Show a toast notification. Pass a string for quick info toast, or options object for full control. */
   toast(opts: string | DAUBToastOptions): void;
@@ -25,7 +28,7 @@ interface DAUBStatic {
   /** Set theme by variant name */
   setTheme(theme: string): void;
   /** Cycle to the next theme family */
-  cycleTheme(): void;
+  cycleTheme(): string;
   /** Get current theme family name (e.g. 'default', 'ink', 'dracula') */
   getFamily(): string;
   /** Set theme family by name */
@@ -94,6 +97,10 @@ interface DAUBStatic {
   setTexture(type: string): void;
   /** Get current background texture type */
   getTexture(): string;
+  /** Set lighting temperature from -1 to 1, or follow the time of day. */
+  setTemperature(value: number | 'auto'): void;
+  /** Get the lighting temperature or automatic mode. */
+  getTemperature(): number | 'auto';
   /** Array of available texture types */
   readonly TEXTURES: string[];
 
@@ -101,6 +108,40 @@ interface DAUBStatic {
 
   /** Re-initialize Lucide icons (call after adding dynamic content) */
   refreshIcons(): void;
+}
+
+interface DAUBMessageScrollerOptions {
+  /** Follow new content while the reader follows the live edge. Defaults to true. */
+  autoScroll?: boolean;
+  /** Opening position on the first non-empty layout. Defaults to end. */
+  scrollPosition?: 'start' | 'end' | 'last-anchor';
+  /** Pixels of the previous row visible above a new turn anchor. Defaults to 0. */
+  scrollPeek?: number;
+}
+
+interface DAUBMessageScrollerState {
+  atStart: boolean;
+  atEnd: boolean;
+  currentAnchorId: string | null;
+  visibleMessageIds: string[];
+}
+
+interface DAUBMessageScrollOptions {
+  /** Reduced-motion users receive an instant scroll even for smooth commands. */
+  behavior?: ScrollBehavior;
+}
+
+interface DAUBMessageScrollerHandle {
+  scrollToEnd(options?: DAUBMessageScrollOptions): boolean;
+  scrollToStart(options?: DAUBMessageScrollOptions): boolean;
+  /** Returns false for an unmounted ID or a destroyed handle. */
+  scrollToMessage(id: string, options?: DAUBMessageScrollOptions & { block?: ScrollLogicalPosition }): boolean;
+  getState(): DAUBMessageScrollerState;
+  destroy(): void;
+}
+
+interface HTMLElementEventMap {
+  'db:message-scroll': CustomEvent<DAUBMessageScrollerState>;
 }
 
 declare const DAUB: DAUBStatic;

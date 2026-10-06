@@ -10,7 +10,7 @@ export interface GridProps extends ComponentProps<"div"> {
 }
 
 export const Grid = forwardRef<HTMLDivElement, GridProps>(
-  ({ columns, gap, align, container, className, ...props }, ref) => (
+  ({ columns, gap, align, container, className, style, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
@@ -24,6 +24,7 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
         className,
       )}
       {...props}
+      style={{ justifyItems: align, ...style }}
     />
   ),
 );

@@ -2,6 +2,27 @@
 
 All notable changes to DAUB are documented here.
 
+## Unreleased
+
+- Add a searchable 89-component browser with source/anatomy views, isolated previews,
+  42 theme variants, mobile sizing, working variant states, and copy actions.
+- Correct native and React keyboard, overlay, form, disclosure, menu, calendar,
+  table, carousel, metric, image, and disabled-state behavior.
+- Recompute semantic/component tokens in scoped themes and portals. Improve
+  button-state, placeholder, and raised-surface text contrast.
+- Align the 87-type browser/OpenUI/local MCP/cloud MCP renderer contract and add
+  thirteen named renderers. Generate the MCP renderer snapshot from the canonical body.
+- Add MessageScroller, Message, Bubble, Attachment, and Marker conversation primitives,
+  with app-controlled reactions and attachment states. Add the chat demo and renderer
+  contracts for stable row IDs, scoped actions, text escaping, and safe image/link URLs.
+- Use the shadcn headless scroll engine for React chat components. The updated
+  `daub-react` package requires React and React DOM 19 or later.
+- Isolate playground-generated code while retaining state, export, inspection,
+  screenshot, and chunk-test workflows.
+- Repair catalog examples, docs filtering/copy, theme JSON import, mobile navigation,
+  class hooks, social image counts, and stale React documentation.
+- Add regression and visual-contract coverage. See [QUALITY-REVIEW.md](QUALITY-REVIEW.md).
+
 ## v3.20.1
 
 **Mobile theme-switcher placement + WCAG audit accuracy (2026-08-26).**

@@ -17,6 +17,7 @@ export const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
   ) => (
     <div
       ref={ref}
+      data-db-react=""
       className={cn(
         "db-stat",
         horizontal && "db-stat--horizontal",
@@ -28,7 +29,7 @@ export const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
       <div className="db-stat__label">{label}</div>
       <div className="db-stat__value">{value}</div>
       {trend && (
-        <div className={cn("db-stat__trend", `db-stat__trend--${trend}`)}>
+        <div className={cn("db-stat__change", `db-stat__change--${trend}`)}>
           {trendValue}
         </div>
       )}

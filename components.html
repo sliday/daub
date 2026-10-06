@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Components | DAUB</title>
+  <meta name="description" content="Explore all 89 DAUB components with interactive examples, mobile previews, theme variants, and copyable HTML.">
+  <link rel="canonical" href="https://daub.dev/components">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="component-browser.css">
+  <script src="assets/lucide.min.js" defer></script>
+  <script src="daub.js" defer></script>
+  <script src="component-browser.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#component-title">Skip to component</a>
+  <aside class="library-sidebar" id="library-sidebar" aria-label="Component library">
+    <div class="library-brand-row"><a class="library-brand" href="index.html">DAUB<span>Component library</span></a><button class="icon-button mobile-only" id="close-sidebar" aria-label="Close component navigation" title="Close navigation"><i data-lucide="x" aria-hidden="true"></i></button></div>
+    <label class="library-search"><i data-lucide="search" aria-hidden="true"></i><input id="component-search" type="search" placeholder="Find a component..." aria-label="Search components" autocomplete="off"></label>
+    <nav class="library-links" aria-label="Documentation"><a href="docs.html">Getting started <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="playground.html">Playground <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="themes.html">Themes <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="chat-demo.html">Chat demo <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></nav>
+    <div class="library-label">Components <span id="component-count">89</span></div>
+    <nav id="component-nav" class="component-nav" aria-label="Components"></nav>
+    <p id="search-empty" class="search-empty" hidden>No matching components.</p>
+    <footer class="library-footer"><a href="https://github.com/sliday/daub">Source on GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><span id="library-version"></span></footer>
+  </aside>
+  <button id="sidebar-backdrop" class="sidebar-backdrop" aria-label="Close component navigation" hidden tabindex="-1"></button>
+  <div class="library-main" id="library-main">
+    <header class="library-topbar"><button class="icon-button mobile-only" id="open-sidebar" aria-label="Open component navigation" aria-controls="library-sidebar" aria-expanded="false" title="Open navigation"><i data-lucide="panel-left" aria-hidden="true"></i></button><nav aria-label="Breadcrumb"><a href="index.html">DAUB</a><span aria-hidden="true">/</span><span>Components</span><span aria-hidden="true">/</span><span id="breadcrumb-name">Button</span></nav><a href="llms.txt" class="topbar-link">AI docs <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></header>
+    <main class="component-detail" id="component-detail">
+      <div class="component-heading"><div><p class="eyebrow" id="component-category">Controls</p><h1 id="component-title" tabindex="-1">Button</h1></div><button class="text-button" id="copy-agent"><i data-lucide="clipboard" aria-hidden="true"></i>Copy for AI</button></div>
+      <p id="component-description" class="component-description"></p>
+      <div class="install-command"><code>npm install daub-ui</code><button class="icon-button" id="copy-install" aria-label="Copy install command" title="Copy install command"><i data-lucide="copy" aria-hidden="true"></i></button></div>
+      <div class="example-toolbar"><div class="example-tabs" role="tablist" aria-label="Component example"><button role="tab" id="tab-preview" aria-selected="true" aria-controls="panel-preview" tabindex="0" data-panel="preview">Preview</button><button role="tab" id="tab-html" aria-selected="false" aria-controls="panel-html" tabindex="-1" data-panel="html">HTML</button><button role="tab" id="tab-anatomy" aria-selected="false" aria-controls="panel-anatomy" tabindex="-1" data-panel="anatomy">Anatomy</button></div><button class="icon-button" id="copy-html" aria-label="Copy component HTML" title="Copy component HTML"><i data-lucide="copy" aria-hidden="true"></i></button></div>
+      <section id="panel-preview" role="tabpanel" aria-labelledby="tab-preview">
+        <div class="preview-controls"><div class="preview-options"><label>Theme<select id="preview-theme" aria-label="Preview theme"></select></label><label>Variant<select id="preview-variant" aria-label="Component variant"><option value="">Default</option></select></label></div><div class="preview-actions"><div class="device-toggle" role="group" aria-label="Preview device"><button class="icon-button" id="device-desktop" aria-label="Desktop preview" title="Desktop preview" aria-pressed="true"><i data-lucide="monitor" aria-hidden="true"></i></button><button class="icon-button" id="device-mobile" aria-label="Mobile preview" title="Mobile preview" aria-pressed="false"><i data-lucide="smartphone" aria-hidden="true"></i></button></div><button class="icon-button" id="reset-preview" aria-label="Reset preview" title="Reset preview"><i data-lucide="rotate-ccw" aria-hidden="true"></i></button></div></div>
+        <div class="preview-stage" id="preview-stage"><iframe id="component-preview" title="Button interactive preview" src="component-preview.html" sandbox="allow-scripts allow-forms"></iframe></div>
+      </section>
+      <section id="panel-html" class="source-panel" role="tabpanel" aria-labelledby="tab-html" hidden><pre><code id="component-source"></code></pre></section>
+      <section id="panel-anatomy" class="anatomy-panel" role="tabpanel" aria-labelledby="tab-anatomy" hidden><table><caption class="sr-only">Component structure</caption><thead><tr><th scope="col">Class</th><th scope="col">Element</th><th scope="col">Usage</th></tr></thead><tbody id="component-anatomy"></tbody></table></section>
+      <div class="component-meta"><code id="component-class"></code><span id="component-behavior"></span><a id="component-reference" href="llms.txt">Full reference <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
+      <section class="component-setup"><h2>Include DAUB</h2><div class="setup-source"><pre><code>&lt;link rel="stylesheet" href="https://daub.dev/daub.css"&gt;
+&lt;script src="https://daub.dev/daub.js"&gt;&lt;/script&gt;</code></pre><button class="icon-button" id="copy-setup" aria-label="Copy CDN setup" title="Copy CDN setup"><i data-lucide="copy" aria-hidden="true"></i></button></div></section>
+      <nav class="component-pagination" aria-label="Adjacent components"><a id="previous-component" href="#"><i data-lucide="arrow-left" aria-hidden="true"></i><span></span></a><a id="next-component" href="#"><span></span><i data-lucide="arrow-right" aria-hidden="true"></i></a></nav>
+      <p id="library-error" role="alert" hidden></p>
+    </main>
+  </div>
+  <div id="copy-status" class="copy-status" role="status" aria-live="polite"></div>
+</body>
+</html>

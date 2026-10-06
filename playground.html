@@ -117,7 +117,9 @@
     .db-nav__github:hover { border-color: var(--db-charcoal); }
     @media (max-width: 600px) {
       .db-nav { padding: 0 12px; }
-      .db-nav__links { gap: 2px; }
+      .db-nav__brand { flex-shrink: 0; margin-right: 12px; }
+      .db-nav__links { gap: 2px; overflow-x: auto; min-width: 0; }
+      .db-nav__links li { flex-shrink: 0; }
       .db-nav__links a { font-size: 0.75rem; padding: 4px 8px; }
       .db-nav__github span { display: none; }
     }
@@ -127,6 +129,8 @@
       display: flex;
       flex-direction: column;
       height: calc(100vh - 48px);
+      height: calc(100dvh - 48px);
+      box-sizing: border-box;
     }
     .pg-grid {
       display: grid;
@@ -195,7 +199,9 @@
       user-select: none; transition: all 0.15s ease;
       background: transparent;
     }
-    .pg-pill-toggle input { display: none; }
+    .pg-pill-toggle input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .pg-pill-toggle:focus-within { outline: 2px solid var(--db-terracotta); outline-offset: 2px; }
+    .pg-react-composer:focus-within { outline: 2px solid var(--db-terracotta); outline-offset: -1px; }
     .pg-pill-toggle:hover { border-color: var(--db-warm-gray); }
     .pg-pill-toggle--active {
       border-color: color-mix(in srgb, var(--db-terracotta) 40%, transparent);
@@ -290,7 +296,7 @@
     .pg-panel__body--mobile {
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: stretch;
       padding: 16px 8px;
       overflow: hidden;
       background: repeating-conic-gradient(
@@ -298,10 +304,13 @@
         transparent 0% 50%) 50% / 16px 16px;
     }
     .pg-panel__body--mobile .pg-preview {
-      width: 375px; min-width: 375px; max-width: 375px;
-      max-height: calc(100% - 32px);
+      width: min(375px, 100%) !important; min-width: 0; max-width: 375px;
+      max-height: 100%;
       border-radius: 8px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    }
+    .pg-panel__body--mobile .pg-preview-pane[data-pane="design"] {
+      width: 100%; align-items: center; padding: 16px 8px; box-sizing: border-box;
     }
     .pg-viewport-btn--active {
       background: color-mix(in srgb, var(--db-terracotta) 15%, transparent) !important;
@@ -694,6 +703,7 @@
     }
     .pg-json-area textarea {
       flex: 1;
+      min-height: 120px;
       resize: none;
       font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
       font-size: 0.75rem;
@@ -730,6 +740,8 @@
     .pg-json-tree .renderjson .key { color: var(--db-ink); font-weight: 500; }
     .pg-json-tree .renderjson .keyword { color: var(--db-warm-gray); }
     .pg-json-tree .renderjson .syntax { color: var(--db-warm-gray); }
+    .pg-json-outline { max-height: 40%; overflow: auto; border-top: 1px solid var(--db-sand); }
+    .pg-json-outline summary { padding: 8px 12px; cursor: pointer; font-family: var(--db-font-ui); font-size: 0.75rem; }
     .pg-json-error {
       display: none;
       margin-bottom: 8px;
@@ -776,6 +788,9 @@
       .pg-panel--active { display: flex; flex: 1; }
       .pg-footer { display: none; }
       .pg-wrapper { padding-bottom: 56px; }
+      #panel-preview > .pg-panel__toolbar { flex-wrap: wrap; height: auto; min-height: 36px; gap: 4px; }
+      .pg-preview-tabs { flex: 1 0 100%; }
+      .db-theme-switcher { bottom: calc(72px + env(safe-area-inset-bottom)); right: 12px; }
     }
   </style>
 </head>
@@ -853,7 +868,7 @@
           </div>
           <div class="pg-chat__input-wrap">
             <div class="pg-chat__img-strip" id="pg-img-strip"></div>
-            <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..."></textarea>
+            <textarea class="db-textarea" id="pg-prompt" aria-label="Describe a UI" rows="1" placeholder="Describe the UI you want to build..."></textarea>
             <div class="pg-chat__input-actions">
               <div style="display:flex;align-items:center;gap:2px;">
                 <button class="pg-chat__attach-btn" id="pg-attach-img" title="Attach image">
@@ -889,25 +904,25 @@
     <!-- RIGHT: Preview Panel (with Design / Structure / Code tabs) -->
     <div class="pg-panel" id="panel-preview">
       <div class="pg-panel__toolbar">
-        <div class="db-tabs__list pg-preview-tabs" id="pg-preview-tabs">
-          <button class="db-tabs__tab pg-tab pg-tab--active" data-tab="design" aria-selected="true">Design</button>
-          <button class="db-tabs__tab pg-tab" data-tab="structure">Structure</button>
-          <button class="db-tabs__tab pg-tab" data-tab="code">Code</button>
+        <div class="db-tabs__list pg-preview-tabs" id="pg-preview-tabs" role="tablist" aria-label="Preview view">
+          <button class="db-tabs__tab pg-tab pg-tab--active" id="pg-tab-design" role="tab" data-tab="design" aria-controls="pg-pane-design" aria-selected="true">Design</button>
+          <button class="db-tabs__tab pg-tab" id="pg-tab-structure" role="tab" data-tab="structure" aria-controls="pg-pane-structure" aria-selected="false" tabindex="-1">Structure</button>
+          <button class="db-tabs__tab pg-tab" id="pg-tab-code" role="tab" data-tab="code" aria-controls="pg-pane-code" aria-selected="false" tabindex="-1">Code</button>
         </div>
         <span class="db-caption db-text-muted" id="pg-status" style="font-family:var(--db-font-ui);white-space:nowrap;"></span>
         <span style="flex:1"></span>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-render" title="Render" style="display:none;"><i data-lucide="play" style="width:12px;height:12px;"></i></button>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-render" title="Render" aria-label="Render JSON" style="display:none;"><i data-lucide="play" style="width:12px;height:12px;"></i></button>
         <div class="db-btn-group" id="pg-viewport-toggle" style="display:none;">
           <button class="db-btn db-btn--ghost db-btn--sm pg-viewport-btn pg-viewport-btn--active"
-                  data-viewport="desktop" title="Desktop"><i data-lucide="monitor" style="width:12px;height:12px;"></i></button>
+                  data-viewport="desktop" title="Desktop" aria-label="Desktop preview" aria-pressed="true"><i data-lucide="monitor" style="width:12px;height:12px;"></i></button>
           <button class="db-btn db-btn--ghost db-btn--sm pg-viewport-btn"
-                  data-viewport="mobile" title="Mobile"><i data-lucide="smartphone" style="width:12px;height:12px;"></i></button>
+                  data-viewport="mobile" title="Mobile" aria-label="Mobile preview" aria-pressed="false"><i data-lucide="smartphone" style="width:12px;height:12px;"></i></button>
         </div>
         <span id="pg-toolbar-sep" style="display:none;width:1px;height:16px;background:var(--db-sand);"></span>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-share" title="Share link" style="display:none;">
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-share" title="Share link" aria-label="Copy share link" style="display:none;">
           <i data-lucide="link" style="width:12px;height:12px;"></i>
         </button>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-download" title="Download HTML" style="display:none;">
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-download" title="Download HTML" aria-label="Download HTML" style="display:none;">
           <i data-lucide="download" style="width:12px;height:12px;"></i>
         </button>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON" style="display:none;"><i data-lucide="copy" style="width:12px;height:12px;"></i> Copy</button>
@@ -915,12 +930,12 @@
       </div>
       <div class="pg-panel__body" id="pg-preview-body" style="display:flex;flex-direction:column;padding:0;min-height:0;">
         <!-- Design mode (default) -->
-        <div class="pg-preview-pane pg-preview-pane--active" data-pane="design">
-          <iframe class="pg-preview" id="pg-preview-frame" sandbox="allow-scripts allow-same-origin" style="border:none;width:100%;height:100%;"></iframe>
+        <div class="pg-preview-pane pg-preview-pane--active" id="pg-pane-design" role="tabpanel" aria-labelledby="pg-tab-design" data-pane="design">
+          <iframe class="pg-preview" id="pg-preview-frame" title="UI preview" sandbox="allow-scripts" style="border:none;width:100%;height:100%;"></iframe>
         </div>
         <!-- Structure mode -->
-        <div class="pg-preview-pane" data-pane="structure">
-          <div class="pg-json-error">
+        <div class="pg-preview-pane pg-json-area" id="pg-pane-structure" role="tabpanel" aria-labelledby="pg-tab-structure" data-pane="structure">
+          <div class="pg-json-error" role="alert">
             <div class="db-alert db-alert--error">
               <div class="db-alert__content">
                 <div class="db-alert__title">Invalid JSON</div>
@@ -928,17 +943,15 @@
               </div>
             </div>
           </div>
-          <div class="pg-json-tree"></div>
+          <textarea id="pg-json" aria-label="UI specification JSON" spellcheck="false" placeholder="{ &quot;root&quot;: &quot;app&quot;, &quot;elements&quot;: {} }"></textarea>
+          <details class="pg-json-outline"><summary>Outline</summary><div class="pg-json-tree"></div></details>
         </div>
         <!-- Code mode -->
-        <div class="pg-preview-pane" data-pane="code">
+        <div class="pg-preview-pane" id="pg-pane-code" role="tabpanel" aria-labelledby="pg-tab-code" data-pane="code">
           <pre class="pg-code-view" id="pg-code-view"></pre>
         </div>
       </div>
     </div>
-
-    <!-- Hidden JSON textarea for internal state -->
-    <textarea id="pg-json" spellcheck="false" style="display:none;"></textarea>
 
   </div>
 
@@ -1000,6 +1013,7 @@
 </div>
 
 <script src="daub.js?v=3.20.1"></script>
+<script src="daub-render.js"></script>
 <script src="daub-openui-parser.js"></script>
 <script>
 // ============================================================
@@ -1075,14 +1089,16 @@ var $byokModalClose = document.getElementById('pg-byok-modal-close');
 var $byokSave     = document.getElementById('pg-byok-save');
 
 // ---- Iframe preview bootstrap ----
-function buildIframeSrcdoc(theme) {
-  var themeAttr = theme ? ' data-theme="' + theme + '"' : '';
-  return '<!DOCTYPE html><html lang="en"' + themeAttr + '>'
+function buildIframeSrcdoc(theme, scheme) {
+  var themeAttr = theme ? ' data-theme="' + esc(theme) + '"' : '';
+  var schemeAttr = scheme ? ' data-scheme="' + esc(scheme) + '"' : '';
+  return '<!DOCTYPE html><html lang="en"' + themeAttr + schemeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
     + '<base target="_blank">'
     + '<link rel="stylesheet" href="daub.css?v=3.20.1">'
     + '<script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" crossorigin="anonymous"><\/script>'
     + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
+    + '<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js" integrity="sha384-Tha/42qsYmpYmQ07pX+nJzkKumO0BzKJxK/uzVc7xyBQxVCUgQBhQIG8L7vXK+9C" crossorigin="anonymous"><\/script>'
     + '<style>html,body{margin:0;min-height:100%;}'
     + '.pg-iframe-empty{display:flex;align-items:center;justify-content:center;min-height:100vh;}'
     + '.pg-iframe-empty::after{content:attr(data-quote);'
@@ -1105,6 +1121,7 @@ function buildIframeSrcdoc(theme) {
     + '"\u201CTypography is the craft of endowing human language with a durable visual form.\u201D\\n\u2014 Robert Bringhurst"'
     + '];document.getElementById("pg-iframe-root").setAttribute("data-quote",qs[Math.floor(Math.random()*qs.length)])})()<\/script>'
     + '<script src="daub.js?v=3.20.1"><\/script>'
+    + '<script>' + DAUB_RENDER_BODY.replace(/<\/script/gi, '<\\/script') + '<\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
     // ---- Declarative State Engine (iframe runtime) ----
@@ -1212,10 +1229,31 @@ function buildIframeSrcdoc(theme) {
     + '};'
     // ---- End Declarative State Engine ----
     + 'window.addEventListener("message", function(e) {'
-    + '  if (!e.data || !e.data.type) return;'
+    + '  if (e.source !== window.parent || !e.data || !e.data.type) return;'
+    + '  if (e.data.type === "highlight" || e.data.type === "unhighlight") {'
+    + '    var ids = Array.isArray(e.data.elements) ? e.data.elements : [];'
+    + '    root.querySelectorAll("[data-spec-id]").forEach(function(el) {'
+    + '      if (ids.indexOf(el.getAttribute("data-spec-id")) !== -1) el.classList.toggle("db-skeleton", e.data.type === "highlight");'
+    + '    });'
+    + '  }'
     + '  if (e.data.type === "render") {'
     + '    root.className = "pg-preview-body";'
     + '    root.innerHTML = e.data.html;'
+    + '    if (e.data.spec && e.data.spec.elements) {'
+    + '      var spec = e.data.spec;'
+    + '      root.replaceChildren();'
+    + '      var first = renderElement(spec.elements, spec.root, 0);'
+    + '      if (first) root.appendChild(first);'
+    + '      var rendered = Object.create(null);'
+    + '      function markRendered() { root.querySelectorAll("[data-spec-id]").forEach(function(el) { rendered[el.getAttribute("data-spec-id")] = true; }); }'
+    + '      markRendered();'
+    + '      Object.keys(spec.elements).forEach(function(id) {'
+    + '        if (id !== spec.root && !rendered[id]) {'
+    + '          var orphan = renderElement(spec.elements, id, 0);'
+    + '          if (orphan) { root.appendChild(orphan); markRendered(); }'
+    + '        }'
+    + '      });'
+    + '    }'
     + '    if (window.DAUB) { DAUB.init(root); if (DAUB.fixNestedRadius) DAUB.fixNestedRadius(root); }'
     + '    if (window.lucide) lucide.createIcons({ nodes: root.querySelectorAll("[data-lucide]") });'
     + '    window.__daubState = null;'
@@ -1242,9 +1280,11 @@ function buildIframeSrcdoc(theme) {
     + '    document.documentElement.removeAttribute("data-theme");'
     + '  }'
     + '  if (e.data.type === "screenshot") {'
-    + '    if (!window.html2canvas) { parent.postMessage({ type: "screenshot", data: null }, "*"); return; }'
-    + '    html2canvas(root, { scale: 1, useCORS: true, logging: false })'
-    + '      .then(function(c) { parent.postMessage({ type: "screenshot", data: c.toDataURL("image/jpeg", 0.7) }, "*"); })'
+    + '    var fallback = function() {'
+    + '      return window.htmlToImage ? htmlToImage.toJpeg(root, { quality: 0.7, pixelRatio: 1, backgroundColor: getComputedStyle(document.body).backgroundColor }) : Promise.resolve(null);'
+    + '    };'
+    + '    var capture = window.html2canvas ? html2canvas(root, { scale: 1, useCORS: true, logging: false }).then(function(c) { return c.toDataURL("image/jpeg", 0.7); }).catch(fallback) : fallback();'
+    + '    capture.then(function(data) { parent.postMessage({ type: "screenshot", data: data }, "*"); })'
     + '      .catch(function() { parent.postMessage({ type: "screenshot", data: null }, "*"); });'
     + '  }'
     + '  if (e.data.type === "test") {'
@@ -1293,10 +1333,20 @@ function collectCustomJS(spec) {
 }
 
 // Initialize iframe with srcdoc
+var _previewReady = false;
+var _previewMessages = [];
+$previewFrame.addEventListener('load', function() {
+  _previewReady = true;
+  _previewMessages.splice(0).forEach(postToPreview);
+});
 $previewFrame.srcdoc = buildIframeSrcdoc();
 
 // Helper to post message to iframe
 function postToPreview(msg) {
+  if (msg.type === 'theme') _pgPreviewTheme = msg.value;
+  if (msg.type === 'scheme') _pgPreviewScheme = msg.value;
+  if (msg.type === 'clear') _pgPreviewTheme = null;
+  if (!_previewReady) { _previewMessages.push(msg); return; }
   if ($previewFrame.contentWindow) {
     $previewFrame.contentWindow.postMessage(msg, '*');
   }
@@ -1305,7 +1355,7 @@ function postToPreview(msg) {
 // Cache for iframe HTML (used by copy/download)
 var _iframeHtmlCache = '';
 window.addEventListener('message', function(e) {
-  if (e.data && e.data.type === 'html') {
+  if (e.source === $previewFrame.contentWindow && e.data && e.data.type === 'html') {
     _iframeHtmlCache = e.data.data || '';
   }
 });
@@ -1317,6 +1367,7 @@ var PG_CHROME_THEME = 'bone';
 var PG_CHROME_SCHEME = 'light';
 var _pgLocking = false;
 var _pgPreviewTheme = null;
+var _pgPreviewScheme = null;
 
 function pgLockChrome() {
   _pgLocking = true;
@@ -2294,10 +2345,11 @@ function repairJSON(s, asString) {
 // ---- Screenshot capture for self-check ----
 function capturePreview() {
   if (!currentSpec) return Promise.resolve(null);
+  var expectedFrameWindow = $previewFrame.contentWindow;
   return new Promise(function(resolve) {
-    var timeout = setTimeout(function() { resolve(null); }, 5000);
+    var timeout = setTimeout(function() { window.removeEventListener('message', onMessage); resolve(null); }, 5000);
     function onMessage(e) {
-      if (e.data && e.data.type === 'screenshot') {
+      if (e.source === expectedFrameWindow && e.data && e.data.type === 'screenshot') {
         clearTimeout(timeout);
         window.removeEventListener('message', onMessage);
         resolve(e.data.data);
@@ -3041,17 +3093,18 @@ function runChunkTests(chunkResults, timeout) {
   if (!tests.length) return Promise.resolve([]);
   var iframe = document.getElementById('pg-preview-frame');
   if (!iframe || !iframe.contentWindow) return Promise.resolve([]);
+  var expectedFrameWindow = iframe.contentWindow;
   return new Promise(function(resolve) {
     var resolved = false;
     function onMessage(e) {
-      if (e.data && e.data.type === 'testResults' && !resolved) {
+      if (e.source === expectedFrameWindow && e.data && e.data.type === 'testResults' && !resolved) {
         resolved = true;
         window.removeEventListener('message', onMessage);
         resolve(e.data.results || []);
       }
     }
     window.addEventListener('message', onMessage);
-    iframe.contentWindow.postMessage({ type: 'test', tests: tests, timeout: timeout || 2000 }, '*');
+    postToPreview({ type: 'test', tests: tests, timeout: timeout || 2000 });
     setTimeout(function() {
       if (!resolved) {
         resolved = true;
@@ -3745,21 +3798,11 @@ function generate() {
           }
           function _addSkeleton(elements) {
             if (!elements || !elements.length) return;
-            var iframe = document.getElementById('pg-preview-frame');
-            if (!iframe || !iframe.contentDocument) return;
-            elements.forEach(function(id) {
-              var el = iframe.contentDocument.querySelector('[data-spec-id="' + id + '"]');
-              if (el) el.classList.add('db-skeleton');
-            });
+            postToPreview({ type: 'highlight', elements: elements });
           }
           function _removeSkeleton(elements) {
             if (!elements || !elements.length) return;
-            var iframe = document.getElementById('pg-preview-frame');
-            if (!iframe || !iframe.contentDocument) return;
-            elements.forEach(function(id) {
-              var el = iframe.contentDocument.querySelector('[data-spec-id="' + id + '"]');
-              if (el) el.classList.remove('db-skeleton');
-            });
+            postToPreview({ type: 'unhighlight', elements: elements });
           }
           function _pipeFinish() {
             pipeSummary.textContent = 'Pipeline complete';
@@ -4076,7 +4119,10 @@ function generate() {
           runBlockingGenerate(messages, streamBubble);
           return;
         }
-        doRetryOrFallback(err.message || String(err));
+        $status.textContent = '';
+        streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
+        streamBubble.textContent = err.message || String(err);
+        setLoading(false);
       }
     );
   }
@@ -4122,25 +4168,46 @@ $json.addEventListener('input', updateRenderVisibility);
 // ---- Render from JSON editor ----
 function renderFromEditor() {
   hideJsonError();
+  $status.textContent = '';
   try {
     var spec = JSON.parse($json.value);
-    renderSpec(spec);
+    commitSpec(spec, 'JSON edit');
     $status.textContent = 'Rendered';
   } catch (err) {
     showJsonError(err.message);
   }
 }
 
+function commitSpec(spec, prompt) {
+  var issues = validateSpec(spec);
+  if (issues.length) throw new Error(issues.join('; '));
+  renderSpec(spec, currentSpec);
+  currentSpec = spec;
+  $json.value = JSON.stringify(spec, null, 2);
+  pushVersion(spec, prompt);
+  refreshJsonTree();
+  updatePreviewToolbar();
+  updateCodeView();
+  hideJsonError();
+  saveChatState();
+}
+
+function copyText(text, message) {
+  return Promise.resolve().then(function() {
+    return navigator.clipboard.writeText(text);
+  }).then(function() {
+    DAUB.toast({ type: 'success', message: message });
+  }).catch(function() {
+    DAUB.toast({ type: 'error', message: 'Could not copy. Check clipboard permissions.' });
+  });
+}
+
 // ---- Copy / Format ----
 $copyJson.addEventListener('click', function() {
-  navigator.clipboard.writeText($json.value).then(function() {
-    DAUB.toast({ type: 'success', message: 'JSON copied!' });
-  });
+  copyText($json.value, 'JSON copied!');
 });
 $copyHtml.addEventListener('click', function() {
-  navigator.clipboard.writeText(_iframeHtmlCache).then(function() {
-    DAUB.toast({ type: 'success', message: 'HTML copied!' });
-  });
+  copyText(buildExportHtml(), 'HTML copied!');
 });
 
 // ---- Preview mode tabs ----
@@ -4161,7 +4228,7 @@ function updateToolbarForMode(mode) {
 
 function updateCodeView() {
   var el = document.getElementById('pg-code-view');
-  if (el && _iframeHtmlCache) el.textContent = _iframeHtmlCache;
+  if (el) el.textContent = currentSpec ? buildExportHtml() : '';
 }
 
 function updatePreviewToolbar() {
@@ -4174,9 +4241,10 @@ document.getElementById('pg-preview-tabs').addEventListener('click', function(e)
   var tab = btn.dataset.tab;
   if (tab === _previewMode) return;
   _previewMode = tab;
-  this.querySelectorAll('.pg-tab').forEach(function(b) { b.classList.remove('pg-tab--active'); b.setAttribute('aria-selected', 'false'); });
+  this.querySelectorAll('.pg-tab').forEach(function(b) { b.classList.remove('pg-tab--active'); b.setAttribute('aria-selected', 'false'); b.tabIndex = -1; });
   btn.classList.add('pg-tab--active');
   btn.setAttribute('aria-selected', 'true');
+  btn.tabIndex = 0;
   document.querySelectorAll('.pg-preview-pane').forEach(function(p) {
     var active = p.dataset.pane === tab;
     p.style.display = active ? '' : 'none';
@@ -4184,6 +4252,15 @@ document.getElementById('pg-preview-tabs').addEventListener('click', function(e)
   });
   if (tab === 'code') updateCodeView();
   updateToolbarForMode(tab);
+});
+document.getElementById('pg-preview-tabs').addEventListener('keydown', function(e) {
+  var tabs = Array.from(this.querySelectorAll('.pg-tab'));
+  var index = tabs.indexOf(e.target);
+  if (index < 0 || ['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(e.key) < 0) return;
+  e.preventDefault();
+  var next = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : (index + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+  tabs[next].click();
+  tabs[next].focus();
 });
 
 // ---- Share click handler ----
@@ -4205,8 +4282,9 @@ $share.addEventListener('click', function() {
 // ---- Viewport toggle handler ----
 document.querySelectorAll('.pg-viewport-btn').forEach(function(btn) {
   btn.addEventListener('click', function() {
-    document.querySelectorAll('.pg-viewport-btn').forEach(function(b) { b.classList.remove('pg-viewport-btn--active'); });
+    document.querySelectorAll('.pg-viewport-btn').forEach(function(b) { b.classList.remove('pg-viewport-btn--active'); b.setAttribute('aria-pressed', 'false'); });
     this.classList.add('pg-viewport-btn--active');
+    this.setAttribute('aria-pressed', 'true');
     if (this.dataset.viewport === 'mobile') {
       $panelPreviewBody.classList.add('pg-panel__body--mobile');
     } else {
@@ -4216,23 +4294,24 @@ document.querySelectorAll('.pg-viewport-btn').forEach(function(btn) {
 });
 
 // ---- Download HTML handler ----
+function buildExportHtml() {
+  if (!currentSpec) return '';
+  var payload = JSON.stringify({ type: 'render', html: _iframeHtmlCache, spec: currentSpec, js: collectCustomJS(currentSpec), stateConfig: collectStateConfig(currentSpec) }).replace(/</g, '\\u003c');
+  return buildIframeSrcdoc(_pgPreviewTheme || currentSpec.theme, _pgPreviewScheme)
+    .replace('<base target="_blank">', '<base href="https://daub.dev/" target="_blank">')
+    .replace('</head>', '<title>DAUB UI Export</title></head>')
+    .replace('</body>', '<script>window.postMessage(' + payload + ', "*");<\/script></body>');
+}
+
 $download.addEventListener('click', function() {
   if (!currentSpec) return;
-  var themeAttr = currentSpec.theme ? ' data-theme="' + currentSpec.theme + '"' : '';
-  var html = '<!DOCTYPE html>\n<html lang="en"' + themeAttr + '>\n<head>\n<meta charset="UTF-8">\n'
-    + '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
-    + '<title>DAUB UI Export</title>\n'
-    + '<link rel="stylesheet" href="https://daub.dev/daub.css">\n'
-    + '</head>\n<body>\n<div class="db-container" style="padding:24px;">\n'
-    + _iframeHtmlCache
-    + '\n</div>\n<script src="https://daub.dev/daub.js"><\/script>\n'
-    + '</body>\n</html>';
+  var html = buildExportHtml();
   var blob = new Blob([html], { type: 'text/html' });
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'daub-ui-export.html';
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(function() { URL.revokeObjectURL(a.href); }, 1000);
 });
 
 // ---- Version management ----
@@ -4288,7 +4367,8 @@ var _treeRefreshTimer = null;
 function refreshJsonTree() {
   // renderjson script is deferred — retry once it has loaded
   if (typeof renderjson === 'undefined') {
-    document.addEventListener('DOMContentLoaded', refreshJsonTree, { once: true });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refreshJsonTree, { once: true });
+    $jsonTree.textContent = $json.value;
     return;
   }
   var raw = $json.value;
@@ -4343,6 +4423,8 @@ $prompt.addEventListener('input', function() {
 
 // ---- New Chat ----
 $newChat.addEventListener('click', function() {
+  stopGeneration();
+  if (_isLoading) _cleanupCurrentStream();
   chatHistory = [];
   currentSpec = null;
   specVersions = [];
@@ -4354,6 +4436,8 @@ $newChat.addEventListener('click', function() {
   updatePreviewToolbar();
   postToPreview({ type: 'clear' });
   _iframeHtmlCache = '';
+  updateCodeView();
+  hideJsonError();
   $prompt.value = '';
   $prompt.style.height = '';
   $status.textContent = '';
@@ -4459,16 +4543,18 @@ var MAX_DEPTH = 20;
 // ---- Spec Validation & Auto-Fix ----
 function validateSpec(spec) {
   var issues = [];
-  if (!spec || typeof spec !== 'object') return ['Spec is not an object'];
-  if (!spec.elements || typeof spec.elements !== 'object') issues.push('Missing "elements" object');
+  if (!spec || typeof spec !== 'object' || Array.isArray(spec)) return ['Spec is not an object'];
+  if (!spec.elements || typeof spec.elements !== 'object' || Array.isArray(spec.elements)) return ['Missing "elements" object'];
   if (!spec.root) issues.push('Missing "root"');
   if (spec.root && spec.elements && !spec.elements[spec.root]) issues.push('Root "' + spec.root + '" not found in elements');
   if (spec.elements) {
     Object.keys(spec.elements).forEach(function(id) {
       var def = spec.elements[id];
+      if (!def || typeof def !== 'object' || Array.isArray(def)) { issues.push('Element "' + id + '" must be an object'); return; }
       if (!def.type) issues.push('Element "' + id + '" missing "type"');
-      else if (!RENDERERS[def.type] && def.type !== 'CustomHTML') issues.push('Unknown type "' + def.type + '" on element "' + id + '"');
+      else if (VALID_TYPES.indexOf(def.type) < 0) issues.push('Unknown type "' + def.type + '" on element "' + id + '"');
       var children = def.children || [];
+      if (!Array.isArray(children)) { issues.push('Element "' + id + '" children must be an array'); return; }
       children.forEach(function(cid) {
         if (!spec.elements[cid]) issues.push('Element "' + id + '" references missing child "' + cid + '"');
       });
@@ -4568,7 +4654,7 @@ function renderSpec(spec, prevSpec) {
   var jsItems = collectCustomJS(spec);
   var stateConfig = collectStateConfig(spec);
   _iframeHtmlCache = tempDiv.innerHTML;
-  postToPreview({ type: 'render', html: tempDiv.innerHTML, js: jsItems, stateConfig: stateConfig });
+  postToPreview({ type: 'render', html: tempDiv.innerHTML, spec: spec, js: jsItems, stateConfig: stateConfig });
 }
 
 // Incremental diff: walk spec tree, find DOM nodes by data-spec-id, replace changed subtrees
@@ -6351,22 +6437,36 @@ RENDERERS.Image = function(p) {
   return el;
 };
 
-// ---- Component props documentation (single source of truth for AI prompt) ----
+RENDERERS = window.RENDERERS;
+renderElement = window.renderElement;
+renderChildren = window.renderChildren;
+
+// ---- Component props documentation (mirrors mcp/lib/prompt.js) ----
 var COMP_PROPS = {
   // Layout & Structure
   Stack: 'direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true',
   Grid: 'columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true',
   Surface: 'variant: "raised"|"inset"|"pressed"',
-  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
+  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
-  Icon: 'name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"',
-  Link: 'label: string, class: string',
+  Layout: 'deprecated alias for Stack/Grid: children, direction, columns, gap, align (main-axis), valign (cross-axis)',
+  Divider: 'alias for Separator: vertical: bool, dashed: bool, label: string',
+  Icon: 'name: string (Lucide), size: "xs"|"sm"|"md"|"lg"|"xl"',
+  Link: 'label: string, href: string (safe URL)',
+  CheckboxGroup: 'children: [Checkbox IDs], label: string, helper: string, inline: bool',
+  Fieldset: 'children: [field IDs], legend: string, helper: string, disabled: bool',
+  Frame: 'children: [body IDs], header: string|[childIds], footer: string|[childIds], flush: bool',
+  Group: 'children: [control IDs], attached: bool, vertical: bool, label: string or aria-label: string',
+  Meter: 'value: number (default 0), min: number (default 0), max: number (default 100), status: "success"|"warning"|"error", label: string or aria-label: string',
+  NumberField: 'value: number, defaultValue: number, min: number, max: number, step: number (default 1), disabled: bool, readOnly: bool, name: string, label: string or aria-label: string',
+  PreviewCard: 'trigger: string|[childIds], title: string, description: string, media: string (safe image URL)|[childIds], mediaAlt: string, children: [childIds]',
+  Toolbar: 'children: [control IDs], vertical: bool, label: string or aria-label: string',
   // Controls
-  Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id)',
+  Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id) | UX: one primary per view, loading:true during async, verb-first labels',
   ButtonGroup: '(children are Buttons)',
-  Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string',
-  Input: 'placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time"',
+  Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string | UX: always include label, helper for complex inputs, error near field',
+  Input: 'placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time" | UX: wrap in Field for label+helper, or pair with Label',
   InputGroup: 'addonBefore: string, addonAfter: string (child is Input)',
   InputIcon: 'icon: string, right: bool (child is Input)',
   Search: 'placeholder: string',
@@ -6387,18 +6487,18 @@ var COMP_PROPS = {
   Tabs: 'tabs: [{label, id}], active: string, children: [childIds] (one child per tab — each child becomes a tab panel; order matches tabs array)',
   Breadcrumbs: 'items: [{label, href}]',
   Pagination: 'current: number, total: number, perPage: number',
-  Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool',
+  Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool | UX: one active step at a time, completed steps should be revisitable',
   NavMenu: 'items: [{label, href, active: bool}]',
   Navbar: 'brand: string, brandHref: string',
   Menubar: 'items: [{label, dropdown: [{label, href}]}]',
-  Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool',
-  BottomNav: 'items: [{label, icon, active, badge}]',
+  Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}] (inline objects, NOT element ID references), collapsed: bool',
+  BottomNav: 'items: [{label, icon, active, badge}] | UX: max 5 items, icon+label always, highlight active',
   // Data Display
-  Card: 'title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool',
+  Card: 'title: string, description: string, media: string (image URL only, NOT element IDs), footer: [childIds] (element IDs rendered in card footer area, NOT a boolean), interactive: bool, clip: bool | UX: footer is an array of element IDs not a boolean, media is a URL string not element IDs',
   Table: 'columns: [{key, label, numeric}], rows: [{}], sortable: bool',
   DataTable: 'columns: [{key, label}], rows: [{}], selectable: bool',
   List: 'items: [{title, secondary, icon}]',
-  Badge: 'text: string, variant: "new"|"updated"|"warning"|"error"',
+  Badge: 'text: string, variant: "new"|"updated"|"success"|"warning"|"error"',
   Avatar: 'initials: string, src: string, size: "sm"|"md"|"lg"',
   AvatarGroup: 'avatars: [{initials, src}], max: number',
   Calendar: 'selected: "YYYY-MM-DD" (date to highlight), today: "YYYY-MM-DD" (today override)',
@@ -6415,7 +6515,7 @@ var COMP_PROPS = {
   EmptyState: 'icon: string, title: string, message: string',
   Tooltip: 'text: string, position: "top"|"bottom"|"left"|"right"',
   // Overlays
-  Modal: 'id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm)',
+  Modal: 'id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm) | UX: clear close affordance, confirm before dismiss with unsaved data',
   AlertDialog: 'id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)',
   Sheet: 'id: string, position: "right"|"left"|"top"|"bottom"',
   Drawer: 'id: string',
@@ -6423,7 +6523,7 @@ var COMP_PROPS = {
   HoverCard: '',
   DropdownMenu: 'items: [{label, icon, separator, groupLabel, active: bool}]',
   ContextMenu: 'items: [{label, icon, separator}]',
-  CommandPalette: 'id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}]',
+  CommandPalette: 'id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] (inline objects, NOT element ID references)',
   // Layout Utilities
   Accordion: 'items: [{title, content, children: [childIds]}], multi: bool',
   Collapsible: 'label: string',
@@ -6432,26 +6532,32 @@ var COMP_PROPS = {
   // Dashboard
   StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool',
   ChartCard: 'title: string',
+  // Chat
+  MessageScroller: 'children: [row IDs], height: number (default 360px), autoScroll: bool (default true), defaultScrollPosition: "start"|"end"|"last-anchor" (default "end"), peek: nonnegative number (default 0), label: string',
+  Message: 'children: [content IDs], align: "start"|"end", avatar: string (initials)|{initials, src: safe image URL}, name: string, timestamp: string, messageId: string (defaults to element ID), scrollAnchor: bool, footer: string',
+  Bubble: 'children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled)',
+  Attachment: 'children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical"',
+  Marker: 'children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool',
   // Custom
   CustomHTML: 'html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector(\'[data-spec-id="someId"]\') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after)'
 };
 
 var COMP_CATEGORIES = [
-  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator', 'Icon', 'Link']],
-  ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
+  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator', 'Layout', 'Divider', 'Icon', 'Link', 'Frame']],
+  ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP', 'CheckboxGroup', 'Fieldset', 'Group', 'NumberField', 'Toolbar']],
   ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
   ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea', 'Image']],
-  ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip']],
-  ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette']],
+  ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip', 'Meter']],
+  ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette', 'PreviewCard']],
   ['Layout Utilities', ['Accordion', 'Collapsible', 'Resizable', 'DatePicker']],
   ['Dashboard', ['StatCard', 'ChartCard']],
+  ['Chat', ['MessageScroller', 'Message', 'Bubble', 'Attachment', 'Marker']],
   ['Custom', ['CustomHTML']]
 ];
 
+var VALID_TYPES = Object.keys(RENDERERS);
 var VALID_TYPES_HINT = (function() {
-  var types = [];
-  COMP_CATEGORIES.forEach(function(cat) { types = types.concat(cat[1]); });
-  return 'VALID COMPONENT TYPES (use ONLY these): ' + types.join(', ') + ', CustomHTML\n'
+  return 'VALID COMPONENT TYPES (use ONLY these): ' + VALID_TYPES.join(', ') + '\n'
     + 'Do NOT invent new types. Do NOT use nested elements objects — use flat ID references in "children" arrays.\n'
     + 'FORMAT: {"theme":"...","root":"id","elements":{"id":{"type":"ValidType","props":{...},"children":["child-id"]}}}\n';
 })();
@@ -6471,6 +6577,7 @@ var SYSTEM_PROMPT = (function() {
     + '- Only leaf elements omit "children"\n'
     + '- The "root" must reference an existing element ID\n'
     + '- Output MUST be valid JSON. Double-check: no trailing commas, no single quotes, no unescaped special characters\n\n'
+    + VALID_TYPES_HINT + '\n'
     + 'AVAILABLE COMPONENT TYPES AND PROPS:\n\n';
 
   var sections = '';
@@ -6508,7 +6615,7 @@ var SYSTEM_PROMPT = (function() {
     + '- StatCard horizontal:true for compact inline stat display (icon + label + value in a row)\n'
     + '- Stepper vertical:true for vertical process flows and timelines\n'
     + '- Use CustomSelect (not Select) when you need searchable dropdowns or custom-styled options; set selected:true on the default option and disabled:true on unavailable options\n'
-    + '- Use "Separator" for dividers/horizontal rules — there is no "Divider" component\n\n'
+    + '- Prefer "Separator" for dividers/horizontal rules; "Divider" is a legacy alias\n\n'
     + 'DENSITY & COMPLETENESS:\n'
     + '- Generate 12-25 elements minimum for any non-trivial UI\n'
     + '- Fill every section with realistic sample data — no "Lorem ipsum", no "..." placeholders\n'
@@ -6559,8 +6666,8 @@ var SYSTEM_PROMPT = (function() {
     + '"tab-settings":{"type":"Button","props":{"label":"Settings","variant":"outlined"},"on":{"click":{"action":"setState","params":{"path":"/activeTab","value":"settings"}}}},'
     + '"panel-home":{"type":"Card","props":{},"visible":{"$state":"/activeTab","eq":"home"},"children":["home-text"]},'
     + '"panel-settings":{"type":"Card","props":{},"visible":{"$state":"/activeTab","eq":"settings"},"children":["settings-text"]},'
-    + '"home-text":{"type":"Text","props":{"text":"Welcome to the home panel"}},'
-    + '"settings-text":{"type":"Text","props":{"text":"Settings panel content"}}}}\n\n'
+    + '"home-text":{"type":"Text","props":{"content":"Welcome to the home panel"}},'
+    + '"settings-text":{"type":"Text","props":{"content":"Settings panel content"}}}}\n\n'
     + 'INTERACTIVITY — CustomHTML JS (FOR COMPLEX CASES):\n'
     + '- Use CustomHTML JS ONLY for games, canvas drawing, complex animations, and advanced DOM manipulation\n'
     + '- For tabs, toggles, counters, forms, show/hide — use declarative state instead\n'
@@ -6819,11 +6926,8 @@ function _loadSharedSpec() {
       $json.value = JSON.stringify(spec, null, 2);
       refreshJsonTree();
       updatePreviewToolbar();
-      // Wait for iframe to be ready before rendering
-      $previewFrame.addEventListener('load', function onShareLoad() {
-        $previewFrame.removeEventListener('load', onShareLoad);
-        renderSpec(spec);
-      });
+      renderSpec(spec);
+      saveChatState();
     }
   } catch(e) { console.warn('[share] failed to load shared spec:', e); }
   window.history.replaceState({}, '', window.location.pathname);
@@ -6850,6 +6954,7 @@ if (new URLSearchParams(location.search).has('react-chat')) {
       };
     },
     renderSpec: function(s, p) { renderSpec(s, p); },
+    commitSpec: function(s, p) { commitSpec(s, p); },
     postToPreview: function(m) { postToPreview(m); },
     cleanJSON: function(t) { return cleanJSON(t); },
     repairJSON: function(s) { return repairJSON(s); },
@@ -6901,8 +7006,17 @@ if (new URLSearchParams(location.search).has('react-chat')) {
     var el = document.getElementById('pg-chat-mount');
     if (el && window.DaubChat && window.DaubChat.mount) {
       window.DaubChat.mount(el);
+    } else {
+      restoreVanillaChat();
     }
   };
+  function restoreVanillaChat() {
+    var el = document.getElementById('pg-chat-mount');
+    if (el) el.remove();
+    if (vanillaChat) vanillaChat.style.display = '';
+    DAUB.toast({ type: 'error', message: 'Could not load React chat. Using the standard chat.' });
+  }
+  s.onerror = restoreVanillaChat;
   document.body.appendChild(s);
 })();
 </script>

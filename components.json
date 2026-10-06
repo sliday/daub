@@ -27,7 +27,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<button class=\"db-btn db-btn--primary\">Label</button>",
+      "html": "<button class=\"db-btn db-btn--primary\" type=\"button\">Save changes</button>",
       "notes": "Icon-only: add --icon. Loading: add --loading (disables pointer events). Ghost: transparent bg with hover fill."
     },
     {
@@ -38,7 +38,7 @@
       "modifiers": [],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-btn-group\">\n  <button class=\"db-btn db-btn--secondary\">Copy</button>\n  <button class=\"db-btn db-btn--secondary\">Paste</button>\n</div>",
+      "html": "<div class=\"db-btn-group\">\n  <button type=\"button\" class=\"db-btn db-btn--secondary\">Copy</button>\n  <button type=\"button\" class=\"db-btn db-btn--secondary\">Paste</button>\n</div>",
       "notes": "Groups buttons with connected borders. Children should be db-btn elements."
     },
     {
@@ -118,7 +118,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-input-icon\">\n  <span class=\"db-input-icon__icon\">🔍</span>\n  <input class=\"db-input\" placeholder=\"Search...\" aria-label=\"Search\">\n</div>",
+      "html": "<div class=\"db-input-icon\">\n  <i class=\"db-input-icon__icon\" data-lucide=\"search\" aria-hidden=\"true\"></i>\n  <input class=\"db-input\" type=\"search\" placeholder=\"Search projects...\" aria-label=\"Search projects\">\n</div>",
       "notes": "Icon highlights on :focus-within. Use --right for trailing icon."
     },
     {
@@ -140,7 +140,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-search\">\n  <svg class=\"db-search__icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg>\n  <input class=\"db-input\" type=\"search\" placeholder=\"Search...\" aria-label=\"Search\">\n  <button class=\"db-search__clear\" aria-label=\"Clear\">&times;</button>\n</div>",
+      "html": "<div class=\"db-search\">\n  <svg class=\"db-search__icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg>\n  <input class=\"db-input\" type=\"search\" placeholder=\"Search...\" aria-label=\"Search\">\n  <button type=\"button\" class=\"db-search__clear\" aria-label=\"Clear\">&times;</button>\n</div>",
       "notes": "Clear button auto-shows when input has text."
     },
     {
@@ -208,7 +208,7 @@
       "modifiers": [],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-radio-group\">\n  <label class=\"db-radio\">\n    <input class=\"db-radio__input\" type=\"radio\" name=\"plan\" value=\"free\">\n    <span class=\"db-radio__circle\"></span>\n    Free\n  </label>\n</div>",
+      "html": "<div class=\"db-radio-group\" role=\"group\" aria-label=\"Plan\">\n  <label class=\"db-radio\"><input class=\"db-radio__input\" type=\"radio\" name=\"catalog-plan\" value=\"free\" checked><span class=\"db-radio__circle\"></span>Free</label>\n  <label class=\"db-radio\"><input class=\"db-radio__input\" type=\"radio\" name=\"catalog-plan\" value=\"team\"><span class=\"db-radio__circle\"></span>Team</label>\n</div>",
       "notes": "Groups db-radio children with consistent spacing."
     },
     {
@@ -230,7 +230,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-switch\" role=\"switch\" tabindex=\"0\" aria-checked=\"false\">\n  <span class=\"db-switch__track\"><span class=\"db-switch__thumb\"></span></span>\n  Label\n</div>",
+      "html": "<div class=\"db-switch\" role=\"switch\" tabindex=\"0\" aria-checked=\"false\">\n  <span class=\"db-switch__track\"><span class=\"db-switch__thumb\"></span></span>\n  Email notifications\n</div>",
       "notes": "JS toggles aria-checked on click/keypress."
     },
     {
@@ -271,7 +271,7 @@
       ],
       "children": [],
       "js": true,
-      "html": "<button class=\"db-toggle\" aria-pressed=\"false\">Bold</button>",
+      "html": "<button type=\"button\" class=\"db-toggle\" aria-pressed=\"false\">Bold</button>",
       "notes": "Active state via aria-pressed=\"true\" or db-toggle--active."
     },
     {
@@ -282,7 +282,7 @@
       "modifiers": [],
       "children": [],
       "js": true,
-      "html": "<div class=\"db-toggle-group\">\n  <button class=\"db-toggle\" aria-pressed=\"true\">Left</button>\n  <button class=\"db-toggle\" aria-pressed=\"false\">Center</button>\n  <button class=\"db-toggle\" aria-pressed=\"false\">Right</button>\n</div>",
+      "html": "<div class=\"db-toggle-group\">\n  <button type=\"button\" class=\"db-toggle\" aria-pressed=\"true\">Left</button>\n  <button type=\"button\" class=\"db-toggle\" aria-pressed=\"false\">Center</button>\n  <button type=\"button\" class=\"db-toggle\" aria-pressed=\"false\">Right</button>\n</div>",
       "notes": "Segmented control: inset track with raised active segment. Single select by default. Add data-multi for multi-select."
     },
     {
@@ -299,7 +299,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-select\">\n  <label class=\"db-label\" for=\"select-framework\">Framework</label>\n  <select class=\"db-select__input\" id=\"select-framework\">\n    <option value=\"\">Choose...</option>\n    <option>React</option>\n  </select>\n</div>",
+      "html": "<div class=\"db-select\">\n  <label class=\"db-label\" for=\"select-framework\">Framework</label>\n  <select class=\"db-select__input\" id=\"select-framework\">\n    <option value=\"\">Choose...</option>\n    <option value=\"react\">React</option>\n    <option value=\"vue\">Vue</option>\n    <option value=\"svelte\">Svelte</option>\n  </select>\n</div>",
       "notes": "Styled native select element."
     },
     {
@@ -334,7 +334,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-custom-select\">\n  <button class=\"db-custom-select__trigger\" type=\"button\">\n    <span class=\"db-custom-select__placeholder\">Select...</span>\n    <svg class=\"db-custom-select__icon\" viewBox=\"0 0 24 24\"><path d=\"m6 9 6 6 6-6\"/></svg>\n  </button>\n  <div class=\"db-custom-select__dropdown\">\n    <div class=\"db-custom-select__option\">Option A</div>\n    <div class=\"db-custom-select__option\">Option B</div>\n  </div>\n</div>",
+      "html": "<div class=\"db-custom-select\">\n  <button class=\"db-custom-select__trigger\" type=\"button\" aria-label=\"Select a framework\">\n    <span class=\"db-custom-select__placeholder\">Choose a framework...</span>\n    <svg class=\"db-custom-select__icon\" viewBox=\"0 0 24 24\"><path d=\"m6 9 6 6 6-6\"/></svg>\n  </button>\n  <div class=\"db-custom-select__dropdown\">\n    <div class=\"db-custom-select__option\" data-value=\"react\">React</div>\n    <div class=\"db-custom-select__option\" data-value=\"vue\">Vue</div>\n  </div>\n</div>",
       "notes": "JS auto-initializes. Optional search filter via __search child turns it into a combobox / autocomplete."
     },
     {
@@ -348,7 +348,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<label class=\"db-label db-label--required\">Email</label>",
+      "html": "<div class=\"db-field\">\n  <label class=\"db-label db-label--required\" for=\"label-email\">Email</label>\n  <input class=\"db-input\" id=\"label-email\" type=\"email\" required placeholder=\"you@example.com\">\n</div>",
       "notes": "--required appends *, --optional appends (optional)."
     },
     {
@@ -376,7 +376,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<span class=\"db-spinner\"></span>",
+      "html": "<span class=\"db-spinner\" role=\"status\" aria-label=\"Loading\"></span>",
       "notes": "Animated loading spinner. Inherits current text color."
     },
     {
@@ -425,7 +425,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-tabs\">\n  <div class=\"db-tabs__list\" role=\"tablist\">\n    <button class=\"db-tabs__tab\" aria-selected=\"true\">Tab 1</button>\n    <button class=\"db-tabs__tab\">Tab 2</button>\n  </div>\n  <div class=\"db-tabs__panel\">Content 1</div>\n  <div class=\"db-tabs__panel\" hidden>Content 2</div>\n</div>",
+      "html": "<div class=\"db-tabs\">\n  <div class=\"db-tabs__list\" role=\"tablist\" aria-label=\"Project details\">\n    <button type=\"button\" class=\"db-tabs__tab\" role=\"tab\" aria-selected=\"true\">Overview</button>\n    <button type=\"button\" class=\"db-tabs__tab\" role=\"tab\" aria-selected=\"false\">Activity</button>\n  </div>\n  <div class=\"db-tabs__panel\">3 tasks are ready for review.</div>\n  <div class=\"db-tabs__panel\" hidden>Ada updated the project today.</div>\n</div>",
       "skeleton": "db-tabs > __list[role=tablist] > __tab + __panel",
       "notes": "JS handles tab switching and panel visibility."
     },
@@ -471,7 +471,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-card\">\n  <div class=\"db-card__header\">\n    <h3 class=\"db-card__title\">Title</h3>\n    <p class=\"db-card__desc\">Description</p>\n  </div>\n  <div class=\"db-card__footer\">\n    <button class=\"db-btn db-btn--primary db-btn--sm\">Action</button>\n  </div>\n</div>",
+      "html": "<div class=\"db-card\">\n  <div class=\"db-card__header\">\n    <h3 class=\"db-card__title\">Project Aurora</h3>\n    <p class=\"db-card__desc\">Website redesign for the fall release.</p>\n  </div>\n  <div class=\"db-card__footer\">\n    <button type=\"button\" class=\"db-btn db-btn--primary db-btn--sm\">Open project</button>\n  </div>\n</div>",
       "notes": "Default allows overflow (tooltips/dropdowns). Add --clip for overflow:hidden. --media for edge-to-edge images."
     },
     {
@@ -508,7 +508,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-modal-overlay\" id=\"my-modal\" aria-hidden=\"true\">\n  <div class=\"db-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"my-modal-title\">\n    <div class=\"db-modal__header\">\n      <h2 class=\"db-modal__title\" id=\"my-modal-title\">Title</h2>\n      <button class=\"db-modal__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-modal__body\">Content</div>\n    <div class=\"db-modal__footer\">\n      <button class=\"db-btn db-btn--primary\">Confirm</button>\n    </div>\n  </div>\n</div>",
+      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-modal-trigger=\"my-modal\">Open project details</button>\n<div class=\"db-modal-overlay\" id=\"my-modal\" aria-hidden=\"true\">\n  <div class=\"db-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"my-modal-title\">\n    <div class=\"db-modal__header\"><h2 class=\"db-modal__title\" id=\"my-modal-title\">Project details</h2><button type=\"button\" class=\"db-modal__close\" aria-label=\"Close dialog\">&times;</button></div>\n    <div class=\"db-modal__body\">Project Aurora has 3 tasks ready for review.</div>\n    <div class=\"db-modal__footer\"><button type=\"button\" class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Close</button></div>\n  </div>\n</div>",
       "skeleton": "db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer",
       "notes": "Wrap in db-modal-overlay with id. Open: DAUB.openModal('id'). Close: DAUB.closeModal('id')."
     },
@@ -520,7 +520,7 @@
       "modifiers": [],
       "children": [],
       "js": true,
-      "html": "<div class=\"db-modal-overlay\" id=\"my-modal\" aria-hidden=\"true\">\n  <div class=\"db-modal\">...</div>\n</div>",
+      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-modal-trigger=\"overlay-example\">Open release notes</button>\n<div class=\"db-modal-overlay\" id=\"overlay-example\" aria-hidden=\"true\">\n  <div class=\"db-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"overlay-example-title\">\n    <div class=\"db-modal__header\"><h2 class=\"db-modal__title\" id=\"overlay-example-title\">Release notes</h2><button type=\"button\" class=\"db-modal__close\" aria-label=\"Close dialog\">&times;</button></div>\n    <div class=\"db-modal__body\">Version 3.20 includes 84 components and 21 theme families.</div>\n    <div class=\"db-modal__footer\"><button type=\"button\" class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Close</button></div>\n  </div>\n</div>",
       "skeleton": "db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer",
       "notes": "Container for db-modal. Must have an id attribute for JS API."
     },
@@ -560,7 +560,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-alert-dialog\" id=\"confirm-delete\">\n  <div class=\"db-alert-dialog__overlay\"></div>\n  <div class=\"db-alert-dialog__panel\">\n    <h3 class=\"db-alert-dialog__title\">Are you sure?</h3>\n    <p class=\"db-alert-dialog__desc\">This action cannot be undone.</p>\n    <div class=\"db-alert-dialog__actions\">\n      <button class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Cancel</button>\n      <button class=\"db-btn db-btn--primary\">Continue</button>\n    </div>\n  </div>\n</div>",
+      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-trigger=\"confirm-delete\">Delete draft</button>\n<div class=\"db-alert-dialog\" id=\"confirm-delete\">\n  <div class=\"db-alert-dialog__overlay\"></div>\n  <div class=\"db-alert-dialog__panel\" role=\"alertdialog\" aria-modal=\"true\" aria-labelledby=\"confirm-delete-title\" aria-describedby=\"confirm-delete-desc\">\n    <h3 class=\"db-alert-dialog__title\" id=\"confirm-delete-title\">Delete this draft?</h3>\n    <p class=\"db-alert-dialog__desc\" id=\"confirm-delete-desc\">This action cannot be undone.</p>\n    <div class=\"db-alert-dialog__actions\">\n      <button type=\"button\" class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Cancel</button>\n      <button type=\"button\" class=\"db-btn db-btn--primary\" onclick=\"DAUB.closeAlertDialog('confirm-delete')\">Delete draft</button>\n    </div>\n  </div>\n</div>",
       "skeleton": "db-alert-dialog#id > __overlay + __panel > __title + __desc + __actions",
       "notes": "Open: DAUB.openAlertDialog('id'). data-action=\"cancel\" auto-closes."
     },
@@ -609,7 +609,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-sheet db-sheet--right\" id=\"my-sheet\">\n  <div class=\"db-sheet__overlay\"></div>\n  <div class=\"db-sheet__panel\">\n    <div class=\"db-sheet__header\">\n      <span class=\"db-sheet__title\">Title</span>\n      <button class=\"db-sheet__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-sheet__body\">Content</div>\n  </div>\n</div>",
+      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-trigger=\"my-sheet\">Project settings</button>\n<div class=\"db-sheet db-sheet--right\" id=\"my-sheet\">\n  <div class=\"db-sheet__overlay\"></div>\n  <div class=\"db-sheet__panel\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"my-sheet-title\">\n    <div class=\"db-sheet__header\">\n      <span class=\"db-sheet__title\" id=\"my-sheet-title\">Project settings</span>\n      <button type=\"button\" class=\"db-sheet__close\" aria-label=\"Close\">&times;</button>\n    </div>\n    <div class=\"db-sheet__body\">Notifications are enabled for this project.</div>\n  </div>\n</div>",
       "skeleton": "db-sheet.db-sheet--right#id > __overlay + __panel > __header + __body",
       "notes": "Sides: --right (default), --left, --top, --bottom. Open: DAUB.openSheet('id')."
     },
@@ -644,7 +644,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-drawer\" id=\"my-drawer\">\n  <div class=\"db-drawer__overlay\"></div>\n  <div class=\"db-drawer__panel\">\n    <div class=\"db-drawer__handle\"></div>\n    <div class=\"db-drawer__body\">Content</div>\n  </div>\n</div>",
+      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-trigger=\"my-drawer\">View order</button>\n<div class=\"db-drawer\" id=\"my-drawer\">\n  <div class=\"db-drawer__overlay\"></div>\n  <div class=\"db-drawer__panel\" role=\"dialog\" aria-modal=\"true\" aria-label=\"Order summary\">\n    <div class=\"db-drawer__handle\"></div>\n    <div class=\"db-drawer__body\"><h3 class=\"db-h3\">Order summary</h3><p>3 items. Total: $42.00.</p><button type=\"button\" class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Close</button></div>\n  </div>\n</div>",
       "skeleton": "db-drawer#id > __overlay + __panel > __handle + __body",
       "notes": "Mobile-friendly bottom panel. Open: DAUB.openDrawer('id')."
     },
@@ -687,8 +687,8 @@
         }
       ],
       "js": true,
-      "html": "DAUB.toast('Hello!')\nDAUB.toast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 4000 })",
-      "notes": "Created via JS API only. String shorthand: DAUB.toast('msg'). Types: info, success, warning, error."
+      "html": "<div class=\"db-toast db-toast--success\" role=\"status\">\n  <i class=\"db-toast__icon\" data-lucide=\"circle-check\" aria-hidden=\"true\"></i>\n  <div class=\"db-toast__content\"><strong class=\"db-toast__title\">Saved</strong><p class=\"db-toast__message\">Your profile changes are ready.</p></div>\n</div>",
+      "notes": "HTML shows toast anatomy. Create timed notifications with DAUB.toast('msg') or DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 4000 }). Types: info, success, warning, error."
     },
     {
       "name": "Toast Stack",
@@ -699,7 +699,7 @@
       "modifiers": [],
       "children": [],
       "js": true,
-      "html": "<div class=\"db-toast-stack\" role=\"region\" aria-live=\"polite\" aria-label=\"Notifications\">\n  <div class=\"db-toast db-toast--success\">\n    <div class=\"db-toast__content\">Toast message 1</div>\n  </div>\n  <div class=\"db-toast db-toast--warning\">\n    <div class=\"db-toast__content\">Toast message 2</div>\n  </div>\n</div>",
+      "html": "<div class=\"db-toast-stack\" role=\"region\" aria-live=\"polite\" aria-label=\"Notifications\">\n  <div class=\"db-toast db-toast--success\">\n    <div class=\"db-toast__content\">Profile saved.</div>\n  </div>\n  <div class=\"db-toast db-toast--warning\">\n    <div class=\"db-toast__content\">Your storage is almost full.</div>\n  </div>\n</div>",
       "notes": "Container auto-created by JS when first toast fires. Fixed bottom-right."
     },
     {
@@ -731,7 +731,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-alert db-alert--warning\">\n  <span class=\"db-alert__icon\"><!-- icon --></span>\n  <div class=\"db-alert__content\">\n    <div class=\"db-alert__title\">Warning</div>\n    <p>Something needs attention.</p>\n  </div>\n</div>",
+      "html": "<div class=\"db-alert db-alert--warning\">\n  <span class=\"db-alert__icon\"><i data-lucide=\"triangle-alert\" aria-hidden=\"true\"></i></span>\n  <div class=\"db-alert__content\">\n    <div class=\"db-alert__title\">Storage almost full</div>\n    <p>You have used 90% of your workspace storage.</p>\n  </div>\n</div>",
       "notes": "Static inline alert. Variants: --info, --warning, --error, --success."
     },
     {
@@ -765,7 +765,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-avatar db-avatar--md\"><img src=\"photo.jpg\" alt=\"User\"></div>",
+      "html": "<div class=\"db-avatar db-avatar--md\" role=\"img\" aria-label=\"Ada Lovelace\">AL</div>",
       "notes": "Sizes: --sm (32px), --md (40px), --lg (56px). Supports img or text initials."
     },
     {
@@ -782,7 +782,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-avatar-group\">\n  <div class=\"db-avatar db-avatar--md\"><img src=\"user1.jpg\" alt=\"\"></div>\n  <div class=\"db-avatar db-avatar--md\"><img src=\"user2.jpg\" alt=\"\"></div>\n  <span class=\"db-avatar-group__overflow\">+5</span>\n</div>",
+      "html": "<div class=\"db-avatar-group\" role=\"group\" aria-label=\"Project members\">\n  <div class=\"db-avatar db-avatar--md\" role=\"img\" aria-label=\"Ada Lovelace\">AL</div>\n  <div class=\"db-avatar db-avatar--md\" role=\"img\" aria-label=\"Grace Hopper\">GH</div>\n  <span class=\"db-avatar-group__overflow\" aria-label=\"5 more members\">+5</span>\n</div>",
       "notes": "Overlapping avatar stack with optional overflow counter."
     },
     {
@@ -810,7 +810,7 @@
         }
       ],
       "js": true,
-      "html": "<table class=\"db-data-table\">\n  <thead><tr>\n    <th><input class=\"db-data-table__check\" type=\"checkbox\" aria-label=\"Select all rows\"></th>\n    <th data-sortable>Name</th>\n  </tr></thead>\n  <tbody><tr>\n    <td><input class=\"db-data-table__check\" type=\"checkbox\" aria-label=\"Select row\"></td>\n    <td>Item</td>\n  </tr></tbody>\n</table>",
+      "html": "<table class=\"db-data-table\">\n  <thead><tr>\n    <th><input class=\"db-data-table__check\" type=\"checkbox\" aria-label=\"Select all rows\"></th>\n    <th data-sortable>Name</th>\n  </tr></thead>\n  <tbody><tr>\n    <td><input class=\"db-data-table__check\" type=\"checkbox\" aria-label=\"Select Project Aurora\"></td>\n    <td>Project Aurora</td>\n  </tr><tr><td><input class=\"db-data-table__check\" type=\"checkbox\" aria-label=\"Select Project Birch\"></td><td>Project Birch</td></tr></tbody>\n</table>",
       "notes": "JS wires the thead checkbox to row checkboxes (select-all with indeterminate state) and click-to-sort on th[data-sortable] / th[data-db-sort] (toggles aria-sort, reorders tbody rows)."
     },
     {
@@ -842,7 +842,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-list\">\n  <div class=\"db-list__item\">\n    <div class=\"db-list__content\">\n      <div class=\"db-list__title\">Item</div>\n      <div class=\"db-list__secondary\">Details</div>\n    </div>\n  </div>\n</div>",
+      "html": "<div class=\"db-list\">\n  <div class=\"db-list__item\">\n    <div class=\"db-list__content\">\n      <div class=\"db-list__title\">Quarterly report</div>\n      <div class=\"db-list__secondary\">Updated today by Ada Lovelace</div>\n    </div>\n  </div>\n</div>",
       "notes": "Vertical list of items with optional title and secondary text."
     },
     {
@@ -900,7 +900,7 @@
         }
       ],
       "js": false,
-      "html": "<nav class=\"db-pagination\" aria-label=\"Pagination\">\n  <button class=\"db-pagination__btn\" disabled>&laquo;</button>\n  <button class=\"db-pagination__btn\" aria-current=\"page\">1</button>\n  <button class=\"db-pagination__btn\">2</button>\n  <button class=\"db-pagination__btn\">&raquo;</button>\n</nav>",
+      "html": "<nav class=\"db-pagination\" aria-label=\"Pagination\">\n  <button type=\"button\" class=\"db-pagination__btn\" disabled aria-label=\"Previous page\">&laquo;</button>\n  <button type=\"button\" class=\"db-pagination__btn\" aria-current=\"page\">1</button>\n  <button type=\"button\" class=\"db-pagination__btn\">2</button>\n  <button type=\"button\" class=\"db-pagination__btn\" aria-label=\"Next page\">&raquo;</button>\n</nav>",
       "notes": "Mark current page with aria-current=\"page\"."
     },
     {
@@ -946,7 +946,7 @@
         }
       ],
       "js": false,
-      "html": "<nav class=\"db-nav-menu\">\n  <a class=\"db-nav-menu__item db-nav-menu__item--active\" href=\"#\">Home</a>\n  <a class=\"db-nav-menu__item\" href=\"#\">About</a>\n</nav>",
+      "html": "<nav class=\"db-nav-menu\">\n  <a class=\"db-nav-menu__item db-nav-menu__item--active\" href=\"/\" aria-current=\"page\">Home</a>\n  <a class=\"db-nav-menu__item\" href=\"/docs.html\">Documentation</a>\n</nav>",
       "notes": "Horizontal navigation links. Use --active for current item."
     },
     {
@@ -985,7 +985,7 @@
         }
       ],
       "js": true,
-      "html": "<nav class=\"db-navbar\">\n  <a class=\"db-navbar__brand\" href=\"/\">AppName</a>\n  <div class=\"db-navbar__nav\">\n    <div class=\"db-nav-menu\">\n      <a class=\"db-nav-menu__item db-nav-menu__item--active\" href=\"/\">Home</a>\n    </div>\n  </div>\n  <div class=\"db-navbar__spacer\"></div>\n  <div class=\"db-navbar__actions\">\n    <button class=\"db-btn db-btn--icon\" aria-label=\"Notifications\">Bell</button>\n  </div>\n  <button class=\"db-navbar__toggle\" aria-label=\"Menu\">Menu</button>\n</nav>",
+      "html": "<nav class=\"db-navbar\">\n  <a class=\"db-navbar__brand\" href=\"/\">AppName</a>\n  <div class=\"db-navbar__nav\">\n    <div class=\"db-nav-menu\">\n      <a class=\"db-nav-menu__item db-nav-menu__item--active\" href=\"/\">Home</a>\n    </div>\n  </div>\n  <div class=\"db-navbar__spacer\"></div>\n  <div class=\"db-navbar__actions\">\n    <button type=\"button\" class=\"db-btn db-btn--icon\" aria-label=\"Notifications\"><i data-lucide=\"bell\" aria-hidden=\"true\"></i></button>\n  </div>\n  <button type=\"button\" class=\"db-navbar__toggle\" aria-label=\"Menu\"><i data-lucide=\"menu\" aria-hidden=\"true\"></i></button>\n</nav>",
       "notes": "Sticky top bar. JS: DAUB.toggleNavbar(el). Mobile hamburger auto-close on outside click."
     },
     {
@@ -1007,7 +1007,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-menubar\">\n  <button class=\"db-menubar__item\">File\n    <div class=\"db-menubar__dropdown\">\n      <button class=\"db-dropdown__item\">New</button>\n      <button class=\"db-dropdown__item\">Open</button>\n    </div>\n  </button>\n  <button class=\"db-menubar__item\">Edit</button>\n</div>",
+      "html": "<div class=\"db-menubar\" role=\"menubar\" aria-label=\"Document\">\n  <div class=\"db-menubar__item\" role=\"menuitem\" tabindex=\"0\" aria-haspopup=\"menu\" aria-expanded=\"false\">File\n    <div class=\"db-menubar__dropdown\" role=\"menu\">\n      <button type=\"button\" class=\"db-dropdown__item\" role=\"menuitem\">New document</button>\n      <button type=\"button\" class=\"db-dropdown__item\" role=\"menuitem\">Open document</button>\n    </div>\n  </div>\n  <div class=\"db-menubar__item\" role=\"menuitem\" tabindex=\"0\" aria-haspopup=\"menu\" aria-expanded=\"false\">Edit\n    <div class=\"db-menubar__dropdown\" role=\"menu\"><button type=\"button\" class=\"db-dropdown__item\" role=\"menuitem\">Select all</button></div>\n  </div>\n</div>",
       "notes": "Desktop menu bar. Dropdown items use db-dropdown__item class."
     },
     {
@@ -1051,7 +1051,7 @@
         }
       ],
       "js": true,
-      "html": "<aside class=\"db-sidebar\">\n  <div class=\"db-sidebar__header\">\n    <h3>App Name</h3>\n    <button class=\"db-sidebar__toggle\" aria-label=\"Toggle sidebar\">Toggle</button>\n  </div>\n  <div class=\"db-sidebar__section\">\n    <div class=\"db-sidebar__label\">Main</div>\n    <a class=\"db-sidebar__item db-sidebar__item--active\" data-tooltip=\"Dashboard\" href=\"#\">Dashboard</a>\n  </div>\n</aside>",
+      "html": "<aside class=\"db-sidebar\">\n  <div class=\"db-sidebar__header\">\n    <h3>App Name</h3>\n    <button type=\"button\" class=\"db-sidebar__toggle\" aria-label=\"Toggle sidebar\"><i data-lucide=\"panel-left\" aria-hidden=\"true\"></i></button>\n  </div>\n  <div class=\"db-sidebar__section\">\n    <div class=\"db-sidebar__label\">Main</div>\n    <a class=\"db-sidebar__item db-sidebar__item--active\" data-tooltip=\"Dashboard\" href=\"/\" aria-current=\"page\" aria-label=\"Dashboard\"><i data-lucide=\"layout-dashboard\" aria-hidden=\"true\"></i><span>Dashboard</span></a>\n  </div>\n</aside>",
       "notes": "Collapsible via --collapsed. Items need data-tooltip for collapsed hover labels. JS: DAUB.toggleSidebar(el)."
     },
     {
@@ -1075,7 +1075,7 @@
         }
       ],
       "js": false,
-      "html": "<nav class=\"db-bottom-nav\">\n  <a class=\"db-bottom-nav__item db-bottom-nav__item--active\" href=\"#\">\n    <svg>...</svg>\n    <span>Home</span>\n  </a>\n  <a class=\"db-bottom-nav__item\" href=\"#\">\n    <svg>...</svg>\n    <span>Search</span>\n    <span class=\"db-bottom-nav__badge\">3</span>\n  </a>\n</nav>",
+      "html": "<nav class=\"db-bottom-nav db-bottom-nav--always\" aria-label=\"Mobile navigation\">\n  <a class=\"db-bottom-nav__item db-bottom-nav__item--active\" href=\"/\" aria-current=\"page\"><i data-lucide=\"house\" aria-hidden=\"true\"></i><span>Home</span></a>\n  <a class=\"db-bottom-nav__item\" href=\"/components.html\"><i data-lucide=\"blocks\" aria-hidden=\"true\"></i><span>Components</span><span class=\"db-bottom-nav__badge\">3</span></a>\n</nav>",
       "notes": "Fixed mobile bottom bar. Hidden on desktop unless --always. Safe-area aware."
     },
     {
@@ -1094,7 +1094,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-tooltip\">\n  <button class=\"db-btn\">Hover me</button>\n  <span class=\"db-tooltip__content db-tooltip__content--top\">Tooltip text</span>\n</div>",
+      "html": "<div class=\"db-tooltip\">\n  <button type=\"button\" class=\"db-btn\">Hover me</button>\n  <span class=\"db-tooltip__content db-tooltip__content--top\">Tooltip text</span>\n</div>",
       "notes": "Positions: __content--top, --bottom, --left, --right."
     },
     {
@@ -1118,7 +1118,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-popover\">\n  <button class=\"db-btn db-popover__trigger\">Click me</button>\n  <div class=\"db-popover__content db-popover__content--bottom\">\n    <p>Popover content here.</p>\n  </div>\n</div>",
+      "html": "<div class=\"db-popover\">\n  <button type=\"button\" class=\"db-btn db-popover__trigger\">Click me</button>\n  <div class=\"db-popover__content db-popover__content--bottom\">\n    <p>Popover content here.</p>\n  </div>\n</div>",
       "notes": "Positions: __content--top, --bottom, --left, --right."
     },
     {
@@ -1135,7 +1135,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-hover-card\">\n  <a href=\"#\">@username</a>\n  <div class=\"db-hover-card__content\">\n    <p>User profile info shown on hover.</p>\n  </div>\n</div>",
+      "html": "<div class=\"db-hover-card\">\n  <button class=\"db-btn db-btn--ghost\" type=\"button\">Ada Lovelace</button>\n  <div class=\"db-hover-card__content\"><strong>Workspace owner</strong><p>Ada manages the project and billing.</p></div>\n</div>",
       "notes": "Content appears on hover or keyboard focus (:focus-within)."
     },
     {
@@ -1174,7 +1174,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-dropdown\">\n  <button class=\"db-btn db-dropdown__trigger\">Options</button>\n  <div class=\"db-dropdown__content\">\n    <div class=\"db-dropdown__label\">Actions</div>\n    <button class=\"db-dropdown__item\">Edit</button>\n    <hr class=\"db-dropdown__separator\">\n    <button class=\"db-dropdown__item\">Delete</button>\n  </div>\n</div>",
+      "html": "<div class=\"db-dropdown\">\n  <button type=\"button\" class=\"db-btn db-dropdown__trigger\">Options</button>\n  <div class=\"db-dropdown__content\">\n    <div class=\"db-dropdown__label\">Actions</div>\n    <button type=\"button\" class=\"db-dropdown__item\">Edit</button>\n    <hr class=\"db-dropdown__separator\">\n    <button type=\"button\" class=\"db-dropdown__item\">Delete</button>\n  </div>\n</div>",
       "skeleton": "db-dropdown > __trigger + __content > __item + __separator + __label",
       "notes": "JS auto-initializes toggle. Right-aligned: add db-dropdown__content--right. __menu is an alias for __content."
     },
@@ -1204,7 +1204,7 @@
         }
       ],
       "js": true,
-      "html": "<div data-context-menu=\"my-ctx-menu\">Right-click here</div>\n<div class=\"db-context-menu\" id=\"my-ctx-menu\">\n  <div class=\"db-context-menu__label\">Actions</div>\n  <button class=\"db-context-menu__item\">Copy</button>\n  <hr class=\"db-context-menu__separator\">\n  <button class=\"db-context-menu__item\">Delete</button>\n</div>",
+      "html": "<div data-context-menu=\"my-ctx-menu\">Right-click here</div>\n<div class=\"db-context-menu\" id=\"my-ctx-menu\">\n  <div class=\"db-context-menu__label\">Actions</div>\n  <button type=\"button\" class=\"db-context-menu__item\">Copy</button>\n  <hr class=\"db-context-menu__separator\">\n  <button type=\"button\" class=\"db-context-menu__item\">Delete</button>\n</div>",
       "skeleton": "data-context-menu='id' target + db-context-menu#id > __item + __separator + __label",
       "notes": "Triggered by data-context-menu attribute on right-click target."
     },
@@ -1264,7 +1264,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-command\" id=\"cmd\">\n  <div class=\"db-command__overlay\"></div>\n  <div class=\"db-command__panel\">\n    <div class=\"db-command__input-wrap\">\n      <input class=\"db-command__input\" placeholder=\"Search...\" aria-label=\"Search commands\">\n    </div>\n    <div class=\"db-command__list\">\n      <div class=\"db-command__group-label\">Navigation</div>\n      <div class=\"db-command__item\">Home</div>\n    </div>\n  </div>\n</div>",
+      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-command-trigger=\"cmd\" onclick=\"DAUB.openCommand('cmd')\">Search commands</button>\n<div class=\"db-command\" id=\"cmd\">\n  <div class=\"db-command__overlay\"></div>\n  <div class=\"db-command__panel\" role=\"dialog\" aria-modal=\"true\" aria-label=\"Command palette\">\n    <div class=\"db-command__input-wrap\">\n      <input class=\"db-command__input\" placeholder=\"Search...\" aria-label=\"Search commands\">\n    </div>\n    <div class=\"db-command__list\">\n      <div class=\"db-command__group-label\">Navigation</div>\n      <div class=\"db-command__item\">Home</div>\n    </div>\n  </div>\n</div>",
       "skeleton": "db-command#id > __overlay + __panel > __input-wrap + __list",
       "notes": "Opens with Ctrl+K / Cmd+K. JS: DAUB.openCommand('id'), DAUB.closeCommand('id')."
     },
@@ -1297,7 +1297,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-accordion\">\n  <div class=\"db-accordion__item\">\n    <button class=\"db-accordion__trigger\" aria-expanded=\"false\">\n      Question\n      <svg class=\"db-accordion__icon\" viewBox=\"0 0 24 24\"><path d=\"m6 9 6 6 6-6\"/></svg>\n    </button>\n    <div class=\"db-accordion__content\">Answer</div>\n  </div>\n</div>",
+      "html": "<div class=\"db-accordion\">\n  <div class=\"db-accordion__item\">\n    <button type=\"button\" class=\"db-accordion__trigger\" aria-expanded=\"false\">\n      Can I invite teammates?\n      <svg class=\"db-accordion__icon\" viewBox=\"0 0 24 24\"><path d=\"m6 9 6 6 6-6\"/></svg>\n    </button>\n    <div class=\"db-accordion__content\">Invite teammates from Workspace settings. Team members can review and edit projects.</div>\n  </div>\n</div>",
       "notes": "Single-open by default. Add data-multi for multi-open."
     },
     {
@@ -1326,7 +1326,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-collapsible\">\n  <button class=\"db-collapsible__trigger\" aria-expanded=\"false\">\n    <svg class=\"db-collapsible__icon\" viewBox=\"0 0 24 24\"><path d=\"m9 18 6-6-6-6\"/></svg>\n    Show more\n  </button>\n  <div class=\"db-collapsible__content\">Hidden content</div>\n</div>",
+      "html": "<div class=\"db-collapsible\">\n  <button type=\"button\" class=\"db-collapsible__trigger\" aria-expanded=\"false\">\n    <svg class=\"db-collapsible__icon\" viewBox=\"0 0 24 24\"><path d=\"m9 18 6-6-6-6\"/></svg>\n    Project history\n  </button>\n  <div class=\"db-collapsible__content\">Ada created this project on October 1. Grace reviewed the proposal on October 3.</div>\n</div>",
       "notes": "JS toggles open state and aria-expanded."
     },
     {
@@ -1388,7 +1388,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-empty\">\n  <div class=\"db-empty__icon\"><!-- icon --></div>\n  <h3 class=\"db-empty__title\">No items</h3>\n  <p class=\"db-empty__desc\">Get started by creating your first item.</p>\n  <button class=\"db-btn db-btn--primary\">Create</button>\n</div>",
+      "html": "<div class=\"db-empty\">\n  <div class=\"db-empty__icon\"><i data-lucide=\"folder-open\" aria-hidden=\"true\"></i></div>\n  <h3 class=\"db-empty__title\">No projects</h3>\n  <p class=\"db-empty__desc db-empty__message\">Get started by creating your first project.</p>\n  <button type=\"button\" class=\"db-btn db-btn--primary\">Create project</button>\n</div>",
       "notes": "Centered empty state with icon, title, description, and optional CTA."
     },
     {
@@ -1430,7 +1430,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-calendar\">\n  <div class=\"db-calendar__header\">\n    <button class=\"db-calendar__nav\" aria-label=\"Previous month\">&lsaquo;</button>\n    <span class=\"db-calendar__title\">February 2026</span>\n    <button class=\"db-calendar__nav\" aria-label=\"Next month\">&rsaquo;</button>\n  </div>\n  <div class=\"db-calendar__grid\">\n    <span class=\"db-calendar__day-label\">Mo</span>\n    <button class=\"db-calendar__day\">1</button>\n    <button class=\"db-calendar__day db-calendar__day--today\">27</button>\n  </div>\n</div>",
+      "html": "<div class=\"db-calendar\">\n  <div class=\"db-calendar__header\"><button type=\"button\" class=\"db-calendar__nav\" aria-label=\"Previous month\">&lsaquo;</button><span class=\"db-calendar__title\">February 2026</span><button type=\"button\" class=\"db-calendar__nav\" aria-label=\"Next month\">&rsaquo;</button></div>\n  <div class=\"db-calendar__grid\"><span class=\"db-calendar__day-label\">Mo</span><span class=\"db-calendar__day-label\">Tu</span><span class=\"db-calendar__day-label\">We</span><span class=\"db-calendar__day-label\">Th</span><span class=\"db-calendar__day-label\">Fr</span><span class=\"db-calendar__day-label\">Sa</span><span class=\"db-calendar__day-label\">Su</span><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">26</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">27</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">28</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">29</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">30</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">31</button><button type=\"button\" class=\"db-calendar__day\">1</button><button type=\"button\" class=\"db-calendar__day\">2</button><button type=\"button\" class=\"db-calendar__day\">3</button><button type=\"button\" class=\"db-calendar__day\">4</button><button type=\"button\" class=\"db-calendar__day\">5</button><button type=\"button\" class=\"db-calendar__day\">6</button><button type=\"button\" class=\"db-calendar__day\">7</button><button type=\"button\" class=\"db-calendar__day\">8</button><button type=\"button\" class=\"db-calendar__day\">9</button><button type=\"button\" class=\"db-calendar__day\">10</button><button type=\"button\" class=\"db-calendar__day\">11</button><button type=\"button\" class=\"db-calendar__day\">12</button><button type=\"button\" class=\"db-calendar__day\">13</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--selected\">14</button><button type=\"button\" class=\"db-calendar__day\">15</button><button type=\"button\" class=\"db-calendar__day\">16</button><button type=\"button\" class=\"db-calendar__day\">17</button><button type=\"button\" class=\"db-calendar__day\">18</button><button type=\"button\" class=\"db-calendar__day\">19</button><button type=\"button\" class=\"db-calendar__day\">20</button><button type=\"button\" class=\"db-calendar__day\">21</button><button type=\"button\" class=\"db-calendar__day\">22</button><button type=\"button\" class=\"db-calendar__day\">23</button><button type=\"button\" class=\"db-calendar__day\">24</button><button type=\"button\" class=\"db-calendar__day\">25</button><button type=\"button\" class=\"db-calendar__day\">26</button><button type=\"button\" class=\"db-calendar__day\">27</button><button type=\"button\" class=\"db-calendar__day\">28</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">1</button></div>\n</div>",
       "notes": "Day states: --today, --selected, --outside. JS handles month navigation."
     },
     {
@@ -1452,7 +1452,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-date-picker\">\n  <button class=\"db-date-picker__trigger db-input\" type=\"button\">Select date...</button>\n  <div class=\"db-date-picker__dropdown\">\n    <div class=\"db-calendar\"><!-- calendar markup --></div>\n  </div>\n</div>",
+      "html": "<div class=\"db-date-picker\">\n  <label class=\"db-label\" for=\"catalog-date\">Due date</label>\n  <button class=\"db-date-picker__trigger db-input\" id=\"catalog-date\" type=\"button\">2026-02-14</button>\n  <div class=\"db-date-picker__dropdown\"><div class=\"db-calendar\">\n  <div class=\"db-calendar__header\"><button type=\"button\" class=\"db-calendar__nav\" aria-label=\"Previous month\">&lsaquo;</button><span class=\"db-calendar__title\">February 2026</span><button type=\"button\" class=\"db-calendar__nav\" aria-label=\"Next month\">&rsaquo;</button></div>\n  <div class=\"db-calendar__grid\"><span class=\"db-calendar__day-label\">Mo</span><span class=\"db-calendar__day-label\">Tu</span><span class=\"db-calendar__day-label\">We</span><span class=\"db-calendar__day-label\">Th</span><span class=\"db-calendar__day-label\">Fr</span><span class=\"db-calendar__day-label\">Sa</span><span class=\"db-calendar__day-label\">Su</span><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">26</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">27</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">28</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">29</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">30</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">31</button><button type=\"button\" class=\"db-calendar__day\">1</button><button type=\"button\" class=\"db-calendar__day\">2</button><button type=\"button\" class=\"db-calendar__day\">3</button><button type=\"button\" class=\"db-calendar__day\">4</button><button type=\"button\" class=\"db-calendar__day\">5</button><button type=\"button\" class=\"db-calendar__day\">6</button><button type=\"button\" class=\"db-calendar__day\">7</button><button type=\"button\" class=\"db-calendar__day\">8</button><button type=\"button\" class=\"db-calendar__day\">9</button><button type=\"button\" class=\"db-calendar__day\">10</button><button type=\"button\" class=\"db-calendar__day\">11</button><button type=\"button\" class=\"db-calendar__day\">12</button><button type=\"button\" class=\"db-calendar__day\">13</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--selected\">14</button><button type=\"button\" class=\"db-calendar__day\">15</button><button type=\"button\" class=\"db-calendar__day\">16</button><button type=\"button\" class=\"db-calendar__day\">17</button><button type=\"button\" class=\"db-calendar__day\">18</button><button type=\"button\" class=\"db-calendar__day\">19</button><button type=\"button\" class=\"db-calendar__day\">20</button><button type=\"button\" class=\"db-calendar__day\">21</button><button type=\"button\" class=\"db-calendar__day\">22</button><button type=\"button\" class=\"db-calendar__day\">23</button><button type=\"button\" class=\"db-calendar__day\">24</button><button type=\"button\" class=\"db-calendar__day\">25</button><button type=\"button\" class=\"db-calendar__day\">26</button><button type=\"button\" class=\"db-calendar__day\">27</button><button type=\"button\" class=\"db-calendar__day\">28</button><button type=\"button\" class=\"db-calendar__day db-calendar__day--outside\">1</button></div>\n</div></div>\n</div>",
       "notes": "Wraps Calendar in a trigger/dropdown. Click trigger to open calendar."
     },
     {
@@ -1489,7 +1489,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-carousel\">\n  <div class=\"db-carousel__track\">\n    <div class=\"db-carousel__slide\">Slide 1</div>\n    <div class=\"db-carousel__slide\">Slide 2</div>\n  </div>\n  <button class=\"db-carousel__btn db-carousel__btn--prev\" aria-label=\"Previous slide\">&lsaquo;</button>\n  <button class=\"db-carousel__btn db-carousel__btn--next\" aria-label=\"Next slide\">&rsaquo;</button>\n  <div class=\"db-carousel__dots\">\n    <button class=\"db-carousel__dot db-carousel__dot--active\" aria-label=\"Go to slide 1\" aria-current=\"true\"></button>\n    <button class=\"db-carousel__dot\" aria-label=\"Go to slide 2\"></button>\n  </div>\n</div>",
+      "html": "<div class=\"db-carousel\">\n  <div class=\"db-carousel__track\">\n    <div class=\"db-carousel__slide\"><h3 class=\"db-h3\">Project Aurora</h3><p class=\"db-body\">Design review is ready.</p></div>\n    <div class=\"db-carousel__slide\"><h3 class=\"db-h3\">Project Birch</h3><p class=\"db-body\">The release is scheduled for Friday.</p></div>\n  </div>\n  <button type=\"button\" class=\"db-carousel__btn db-carousel__btn--prev\" aria-label=\"Previous slide\">&lsaquo;</button>\n  <button type=\"button\" class=\"db-carousel__btn db-carousel__btn--next\" aria-label=\"Next slide\">&rsaquo;</button>\n  <div class=\"db-carousel__dots\">\n    <button type=\"button\" class=\"db-carousel__dot db-carousel__dot--active\" aria-label=\"Go to slide 1\" aria-current=\"true\"></button>\n    <button type=\"button\" class=\"db-carousel__dot\" aria-label=\"Go to slide 2\"></button>\n  </div>\n</div>",
       "notes": "JS handles slide navigation, dot sync, and swipe."
     },
     {
@@ -1511,7 +1511,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-chart\">\n  <div class=\"db-chart__bar\" style=\"height:40%;\"></div>\n  <div class=\"db-chart__bar\" style=\"height:80%;\"></div>\n</div>\n<div class=\"db-chart__labels\"><span>Mon</span><span>Tue</span></div>",
+      "html": "<div class=\"db-chart\" role=\"img\" aria-label=\"Monthly revenue: January $40k, February $60k, March $80k\"><div class=\"db-chart__bar\" style=\"height:40%;\" title=\"January: $40k\"></div><div class=\"db-chart__bar\" style=\"height:60%;\" title=\"February: $60k\"></div><div class=\"db-chart__bar\" style=\"height:80%;\" title=\"March: $80k\"></div></div>\n<div class=\"db-chart__labels\"><span>Jan</span><span>Feb</span><span>Mar</span></div>",
       "notes": "Pure CSS bar chart. Set bar height via inline style. --secondary modifier for alt color."
     },
     {
@@ -1577,8 +1577,8 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-chart-card\">\n  <div class=\"db-chart-card__header\">\n    <span class=\"db-chart-card__title\">Revenue</span>\n    <div class=\"db-chart-card__actions\"><button class=\"db-btn db-btn--sm db-btn--secondary\">Export</button></div>\n  </div>\n  <div class=\"db-chart-card__body\">\n    <canvas id=\"myChart\"></canvas>\n  </div>\n</div>",
-      "notes": "Card wrapper for any chart. Header with title/actions. Body auto-sizes canvas to 100% width."
+      "html": "<div class=\"db-chart-card\">\n  <div class=\"db-chart-card__header\">\n    <span class=\"db-chart-card__title\">Revenue</span>\n    <div class=\"db-chart-card__actions\"><button type=\"button\" class=\"db-btn db-btn--sm db-btn--secondary\">Export</button></div>\n  </div>\n  <div class=\"db-chart-card__body\">\n    <div class=\"db-chart\" role=\"img\" aria-label=\"Monthly revenue: January $40k, February $60k, March $80k\"><div class=\"db-chart__bar\" style=\"height:40%;\" title=\"January: $40k\"></div><div class=\"db-chart__bar\" style=\"height:60%;\" title=\"February: $60k\"></div><div class=\"db-chart__bar\" style=\"height:80%;\" title=\"March: $80k\"></div></div>\n<div class=\"db-chart__labels\"><span>Jan</span><span>Feb</span><span>Mar</span></div>\n  </div>\n</div>",
+      "notes": "Card wrapper for any chart. Example uses CSS bars without external chart dependencies. Header with title/actions. Body auto-sizes canvas to 100% width."
     },
     {
       "name": "Resizable",
@@ -1594,7 +1594,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-resizable\" style=\"width:300px;height:200px;\">\n  Content\n  <div class=\"db-resizable__handle db-resizable__handle--right\"></div>\n  <div class=\"db-resizable__handle db-resizable__handle--bottom\"></div>\n</div>",
+      "html": "<div class=\"db-resizable\" style=\"width:300px;height:200px;\">\n  <h3 class=\"db-h3\">Project notes</h3><p class=\"db-body\">Review the homepage draft before Friday.</p>\n  <div class=\"db-resizable__handle db-resizable__handle--right\"></div>\n  <div class=\"db-resizable__handle db-resizable__handle--bottom\"></div>\n</div>",
       "notes": "Handle positions: --right, --bottom. JS enables drag-to-resize."
     },
     {
@@ -1639,7 +1639,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-scroll-area\" style=\"max-height:200px;\">\n  <!-- long content -->\n</div>",
+      "html": "<div class=\"db-scroll-area db-scroll-area--vertical\" tabindex=\"0\" role=\"region\" aria-label=\"Recent activity\" style=\"max-height:120px;\">\n  <div class=\"db-list\">\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Ada updated the project</div><div class=\"db-list__secondary\">Today at 09:20</div></div></div>\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Grace uploaded the report</div><div class=\"db-list__secondary\">Today at 08:45</div></div></div>\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Lin reviewed the proposal</div><div class=\"db-list__secondary\">Yesterday at 16:10</div></div></div>\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Team completed onboarding</div><div class=\"db-list__secondary\">Yesterday at 14:30</div></div></div>\n  </div>\n</div>",
       "notes": "Styled scrollbar container. --horizontal for horizontal scroll only."
     },
     {
@@ -1655,7 +1655,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-aspect db-aspect--16-9\"><img src=\"photo.jpg\" alt=\"\"></div>",
+      "html": "<div class=\"db-aspect db-aspect--16-9\"><img src=\"/og-image.png\" alt=\"DAUB UI component library\" style=\"object-fit:contain;\"></div>",
       "notes": "Aspect ratio container. Children fill the box."
     },
     {
@@ -1701,7 +1701,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-prose\">\n  <h2>Heading</h2>\n  <p>Paragraph with 1.75 line-height and 65ch max-width.</p>\n  <blockquote>Blockquote with left border.</blockquote>\n</div>",
+      "html": "<div class=\"db-prose\">\n  <h2>Project release notes</h2>\n  <p>The team completed the navigation redesign and added keyboard access to the project menu.</p>\n  <blockquote>The next review covers billing and account settings.</blockquote>\n</div>",
       "notes": "Typographic defaults for long-form content. Scale: --sm, --lg, --xl, --2xl."
     },
     {
@@ -1730,7 +1730,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-flex db-gap-4\">\n  <div>Item 1</div>\n  <div>Item 2</div>\n</div>",
+      "html": "<div class=\"db-flex db-gap-4\">\n  <div>Design review</div>\n  <div>Release planning</div>\n</div>",
       "notes": "Flexbox layout utility. Combine with db-gap-* for spacing."
     },
     {
@@ -1747,7 +1747,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-grid db-grid--3 db-gap-4\">\n  <div>Col 1</div>\n  <div>Col 2</div>\n  <div>Col 3</div>\n</div>",
+      "html": "<div class=\"db-grid db-grid--3 db-gap-4\">\n  <div>Design</div>\n  <div>Engineering</div>\n  <div>Support</div>\n</div>",
       "notes": "CSS grid utility. 2-6 columns. Auto-responsive: collapses at smaller screens."
     },
     {
@@ -1827,7 +1827,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-frame\">\n  <div class=\"db-frame__header\">Preview</div>\n  <div class=\"db-frame__body\">Framed content</div>\n  <div class=\"db-frame__footer\">Updated now</div>\n</div>",
+      "html": "<div class=\"db-frame\">\n  <div class=\"db-frame__header\">Preview</div>\n  <div class=\"db-frame__body\">3 tasks are ready for review.</div>\n  <div class=\"db-frame__footer\">Updated today by Ada</div>\n</div>",
       "notes": "Use for embedded previews, canvases, screenshots, and inspector panels."
     },
     {
@@ -1841,7 +1841,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-group db-group--attached\" role=\"group\" aria-label=\"Alignment\">\n  <button class=\"db-btn db-btn--secondary\">Left</button>\n  <button class=\"db-btn db-btn--secondary\">Center</button>\n  <button class=\"db-btn db-btn--secondary\">Right</button>\n</div>",
+      "html": "<div class=\"db-group db-group--attached\" role=\"group\" aria-label=\"Alignment\">\n  <button type=\"button\" class=\"db-btn db-btn--secondary\">Left</button>\n  <button type=\"button\" class=\"db-btn db-btn--secondary\">Center</button>\n  <button type=\"button\" class=\"db-btn db-btn--secondary\">Right</button>\n</div>",
       "notes": "Generic control grouping. Use --attached for connected controls."
     },
     {
@@ -1861,7 +1861,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-meter\" role=\"meter\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"72\" style=\"--db-meter:72%\"><div class=\"db-meter__bar\"></div></div>",
+      "html": "<div class=\"db-meter\" role=\"meter\" aria-label=\"Storage used\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"72\" style=\"--db-meter:72%\"><div class=\"db-meter__bar\"></div></div>",
       "notes": "Use for bounded measurements such as quota, health, or strength."
     },
     {
@@ -1882,8 +1882,8 @@
           "required": true
         }
       ],
-      "js": false,
-      "html": "<div class=\"db-number-field\" role=\"group\" aria-label=\"Quantity\">\n  <button class=\"db-btn db-btn--secondary db-number-field__btn\" type=\"button\" aria-label=\"Decrease\">-</button>\n  <input class=\"db-input\" type=\"number\" value=\"3\" min=\"0\" aria-label=\"Quantity\">\n  <button class=\"db-btn db-btn--secondary db-number-field__btn\" type=\"button\" aria-label=\"Increase\">+</button>\n</div>",
+      "js": true,
+      "html": "<div class=\"db-number-field\" role=\"group\" aria-label=\"Quantity\">\n  <button class=\"db-btn db-btn--secondary db-number-field__btn\" type=\"button\" aria-label=\"Decrease quantity\" onclick=\"var input=this.parentElement.querySelector('input');input.stepDown();input.dispatchEvent(new Event('input',{bubbles:true}))\">-</button>\n  <input class=\"db-input\" type=\"number\" value=\"3\" min=\"0\" aria-label=\"Quantity\">\n  <button class=\"db-btn db-btn--secondary db-number-field__btn\" type=\"button\" aria-label=\"Increase quantity\" onclick=\"var input=this.parentElement.querySelector('input');input.stepUp();input.dispatchEvent(new Event('input',{bubbles:true}))\">+</button>\n</div>",
       "notes": "Combines a numeric input with increment and decrement controls."
     },
     {
@@ -1920,7 +1920,7 @@
         }
       ],
       "js": false,
-      "html": "<span class=\"db-preview-card\"><button class=\"db-btn db-btn--ghost db-preview-card__trigger\">Account</button><span class=\"db-preview-card__content\"><strong class=\"db-preview-card__title\">Ada Lovelace</strong><span class=\"db-preview-card__desc\">Workspace owner and billing contact.</span></span></span>",
+      "html": "<span class=\"db-preview-card\"><button type=\"button\" class=\"db-btn db-btn--ghost db-preview-card__trigger\">Account</button><span class=\"db-preview-card__content\"><strong class=\"db-preview-card__title\">Ada Lovelace</strong><span class=\"db-preview-card__desc\">Workspace owner and billing contact.</span></span></span>",
       "notes": "Hover and focus preview surface for rich inline references."
     },
     {
@@ -1943,9 +1943,87 @@
           "required": false
         }
       ],
-      "js": false,
-      "html": "<div class=\"db-toolbar\" role=\"toolbar\" aria-label=\"Editor tools\">\n  <div class=\"db-toolbar__group\"><button class=\"db-btn db-btn--icon\" aria-label=\"Bold\">B</button><button class=\"db-btn db-btn--icon\" aria-label=\"Italic\">I</button></div>\n  <span class=\"db-toolbar__separator\" aria-hidden=\"true\"></span>\n  <button class=\"db-btn db-btn--secondary\">Save</button>\n</div>",
+      "js": true,
+      "html": "<div class=\"db-toolbar\" role=\"toolbar\" aria-label=\"Editor tools\">\n  <div class=\"db-toolbar__group\"><button type=\"button\" class=\"db-toggle db-toggle--sm\" aria-pressed=\"false\" aria-label=\"Bold\"><i data-lucide=\"bold\" aria-hidden=\"true\"></i></button><button type=\"button\" class=\"db-toggle db-toggle--sm\" aria-pressed=\"false\" aria-label=\"Italic\"><i data-lucide=\"italic\" aria-hidden=\"true\"></i></button></div>\n  <span class=\"db-toolbar__separator\" aria-hidden=\"true\"></span>\n  <button type=\"button\" class=\"db-btn db-btn--secondary\">Save</button>\n</div>",
       "notes": "Groups action buttons and segmented controls in editor or dashboard surfaces."
+    },
+    {
+      "name": "Message Scroller",
+      "class": "db-message-scroller",
+      "category": "conversation",
+      "element": "div",
+      "modifiers": [],
+      "children": [
+        { "class": "db-message-scroller__viewport", "element": "div", "required": true },
+        { "class": "db-message-scroller__content", "element": "div", "required": true },
+        { "class": "db-message-scroller__item", "element": "div", "required": true },
+        { "class": "db-message-scroller__button", "element": "button", "required": false }
+      ],
+      "js": true,
+      "html": "<div class=\"db-message-scroller\" data-db-auto-scroll=\"true\" data-db-scroll-position=\"end\">\n  <div class=\"db-message-scroller__viewport db-scroll-fade\" tabindex=\"0\" aria-label=\"Conversation\">\n    <div class=\"db-message-scroller__content\" role=\"log\" aria-live=\"polite\" aria-relevant=\"additions\">\n      <div class=\"db-message-scroller__item\" data-db-message-id=\"question\" data-db-scroll-anchor><div class=\"db-message db-message--end\"><div class=\"db-message__content\"><div class=\"db-bubble\"><div class=\"db-bubble__content\">Can we ship the updated chat interface?</div></div></div></div></div>\n      <div class=\"db-message-scroller__item\" data-db-message-id=\"answer\"><div class=\"db-message\"><div class=\"db-message__content\"><div class=\"db-message__header\">DAUB Assistant</div><div class=\"db-bubble db-bubble--secondary\"><div class=\"db-bubble__content\">The message rows, attachments, and scroll controls are ready for review. Check the mobile layout before publishing.</div></div><div class=\"db-message__footer\">09:42</div></div></div></div>\n      <div class=\"db-message-scroller__item\" data-db-message-id=\"status\"><div class=\"db-marker db-marker--separator\"><span class=\"db-marker__content\">Review complete</span></div></div>\n    </div>\n  </div>\n  <button class=\"db-message-scroller__button\" data-db-scroll-to=\"end\" type=\"button\" aria-label=\"Scroll to latest message\" title=\"Scroll to latest message\"><i data-lucide=\"arrow-down\" aria-hidden=\"true\"></i></button>\n</div>",
+      "notes": "Streaming-aware conversation viewport. Stable data-db-message-id rows preserve position when history is prepended. Follow pauses when you scroll away; the latest-message control resumes it. See chat-demo.html for a working conversation."
+    },
+    {
+      "name": "Message",
+      "class": "db-message",
+      "category": "conversation",
+      "element": "div",
+      "modifiers": ["--end"],
+      "children": [
+        { "class": "db-message__avatar", "element": "div", "required": false },
+        { "class": "db-message__content", "element": "div", "required": true },
+        { "class": "db-message__header", "element": "div", "required": false },
+        { "class": "db-message__footer", "element": "div", "required": false }
+      ],
+      "js": false,
+      "html": "<div class=\"db-message\">\n  <div class=\"db-message__avatar\"><span class=\"db-avatar\" aria-label=\"Alex\">A</span></div>\n  <div class=\"db-message__content\">\n    <div class=\"db-message__header\"><strong>Alex Morgan</strong><time datetime=\"2026-06-01T09:42\">09:42</time></div>\n    <div class=\"db-bubble db-bubble--secondary\"><div class=\"db-bubble__content\">The updated mockups are ready. I added the compact composer and attachment states.</div></div>\n    <div class=\"db-message__footer\">Delivered</div>\n  </div>\n</div>",
+      "notes": "Conversation row with avatar, sender metadata, content, and footer slots. Add --end for the sender side. Use db-message-group for consecutive messages from one participant."
+    },
+    {
+      "name": "Bubble",
+      "class": "db-bubble",
+      "category": "conversation",
+      "element": "div",
+      "modifiers": ["--primary", "--secondary", "--muted", "--tinted", "--outline", "--ghost", "--destructive", "--end"],
+      "children": [
+        { "class": "db-bubble__content", "element": "div", "required": true },
+        { "class": "db-bubble__reactions", "element": "div", "required": false }
+      ],
+      "js": false,
+      "html": "<div class=\"db-bubble\">\n  <div class=\"db-bubble__content\">The release candidate is ready for your review.</div>\n  <div class=\"db-bubble__reactions\"><button type=\"button\" aria-pressed=\"false\" aria-label=\"Acknowledge message\">Received <span>2</span></button></div>\n</div>",
+      "notes": "Content-sized conversational surface with seven color variants and an optional reaction row. Ghost removes the frame for rich assistant content. Reaction state and events belong to your application."
+    },
+    {
+      "name": "Attachment",
+      "class": "db-attachment",
+      "category": "conversation",
+      "element": "div",
+      "modifiers": ["--vertical", "--sm", "--xs"],
+      "children": [
+        { "class": "db-attachment__media", "element": "div", "required": false },
+        { "class": "db-attachment__content", "element": "div", "required": true },
+        { "class": "db-attachment__title", "element": "span", "required": true },
+        { "class": "db-attachment__description", "element": "span", "required": false },
+        { "class": "db-attachment__actions", "element": "div", "required": false },
+        { "class": "db-attachment__trigger", "element": "a", "required": false }
+      ],
+      "js": false,
+      "html": "<div class=\"db-attachment\" data-state=\"done\">\n  <div class=\"db-attachment__media\"><i data-lucide=\"file-text\" aria-hidden=\"true\"></i></div>\n  <div class=\"db-attachment__content\"><span class=\"db-attachment__title\">CHANGELOG.md</span><span class=\"db-attachment__description\">Markdown &middot; Release notes</span></div>\n  <a class=\"db-attachment__trigger\" href=\"CHANGELOG.md\" aria-label=\"Open CHANGELOG.md\"></a>\n</div>",
+      "notes": "File or image attachment with metadata and sibling trigger/actions. Set data-state to idle, uploading, processing, error, or done. Use a native progress element for upload progress. Uploading, persistence, and actions belong to your app."
+    },
+    {
+      "name": "Marker",
+      "class": "db-marker",
+      "category": "conversation",
+      "element": "div",
+      "modifiers": ["--border", "--separator"],
+      "children": [
+        { "class": "db-marker__icon", "element": "span", "required": false },
+        { "class": "db-marker__content", "element": "span", "required": true }
+      ],
+      "js": false,
+      "html": "<div class=\"db-marker\" role=\"status\">\n  <span class=\"db-marker__icon\" aria-hidden=\"true\"><i data-lucide=\"circle-check\"></i></span>\n  <span class=\"db-marker__content\">Reviewed 4 files</span>\n</div>",
+      "notes": "Inline activity, bordered status row, or centered date separator. Use role=status for progress updates and db-shimmer for busy text; reduced motion disables the animation."
     },
     {
       "name": "Theme Switcher",
@@ -1983,7 +2061,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-accent-picker\">\n  <button class=\"db-accent-picker__dot\" data-accent=\"#C67B5C\" style=\"background:#C67B5C\" aria-label=\"Terracotta\"></button>\n  <button class=\"db-accent-picker__dot\" data-accent=\"#6B7C3E\" style=\"background:#6B7C3E\" aria-label=\"Olive\"></button>\n  <button class=\"db-accent-picker__dot\" data-accent=\"#5A6D8E\" style=\"background:#5A6D8E\" aria-label=\"Slate\"></button>\n  <button class=\"db-accent-picker__dot\" data-accent=\"#7B506F\" style=\"background:#7B506F\" aria-label=\"Plum\"></button>\n  <button class=\"db-accent-picker__dot db-accent-picker__dot--reset\" data-accent=\"reset\" aria-label=\"Reset accent\">\n    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"/><path d=\"M3 3v5h5\"/></svg>\n  </button>\n</div>",
+      "html": "<div class=\"db-accent-picker\">\n  <button type=\"button\" class=\"db-accent-picker__dot\" data-accent=\"#C67B5C\" style=\"background:#C67B5C\" aria-label=\"Terracotta\"></button>\n  <button type=\"button\" class=\"db-accent-picker__dot\" data-accent=\"#6B7C3E\" style=\"background:#6B7C3E\" aria-label=\"Olive\"></button>\n  <button type=\"button\" class=\"db-accent-picker__dot\" data-accent=\"#5A6D8E\" style=\"background:#5A6D8E\" aria-label=\"Slate\"></button>\n  <button type=\"button\" class=\"db-accent-picker__dot\" data-accent=\"#7B506F\" style=\"background:#7B506F\" aria-label=\"Plum\"></button>\n  <button type=\"button\" class=\"db-accent-picker__dot db-accent-picker__dot--reset\" data-accent=\"reset\" aria-label=\"Reset accent\">\n    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"/><path d=\"M3 3v5h5\"/></svg>\n  </button>\n</div>",
       "notes": "Color dots for accent override. data-accent=\"reset\" restores theme default."
     }
   ]

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-scheme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAUB Component Preview</title>
+  <link rel="stylesheet" href="daub.css">
+  <script src="assets/lucide.min.js" defer></script>
+  <style>
+    html { color-scheme: light; }
+    body { margin: 0; padding: 24px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; background: var(--db-color-bg); font-family: var(--db-font-ui); }
+    #preview-root { width: 100%; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    #preview-root > * { max-width: 100%; }
+    #preview-root > .db-table, #preview-root > .db-data-table, #preview-root > .db-prose, #preview-root > .db-grid, #preview-root > .db-list, #preview-root > .db-toolbar, #preview-root > .db-nav-menu, #preview-root > .db-tabs, #preview-root > .db-input-group, #preview-root > .db-field, #preview-root > .db-search, #preview-root > .db-chart, #preview-root > .db-accordion, #preview-root > .db-collapsible { width: 100%; }
+    #preview-root > .db-bottom-nav { position: static; display: flex; width: 100%; }
+    #preview-root > .db-sidebar { position: static; }
+    #preview-root > .db-theme-switcher { position: static; }
+    #preview-root > .db-toast-stack { position: static; width: 100%; }
+    #preview-root > .db-navbar { position: relative; width: 100%; }
+    #preview-root > .db-card { width: min(100%, 400px); }
+    #preview-root > .db-slider { width: min(100%, 320px); }
+    .preview-trigger { align-self: center; }
+    @media (max-width: 420px) { body { padding: 16px; } }
+  </style>
+  <script src="daub.js" defer></script>
+  <script src="component-preview.js" defer></script>
+</head>
+<body><main id="preview-root" aria-label="Interactive component example"></main></body>
+</html>

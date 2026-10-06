@@ -1,4 +1,4 @@
-import { forwardRef, type ComponentProps, type ReactNode } from "react";
+import { forwardRef, useId, type ComponentProps, type ReactNode } from "react";
 import { cn } from "../utils/cn";
 import { useControllable } from "../hooks/useControllable";
 
@@ -12,18 +12,21 @@ export interface CollapsibleProps extends Omit<ComponentProps<"div">, "onChange"
 export const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(
   ({ open, defaultOpen = false, onChange, trigger, className, children, ...props }, ref) => {
     const [isOpen, setIsOpen] = useControllable(open, defaultOpen, onChange);
+    const id = useId();
 
     return (
-      <div ref={ref} className={cn("db-collapsible", isOpen && "db-collapsible--open", className)} {...props}>
+      <div ref={ref} data-db-react="" className={cn("db-collapsible", isOpen && "db-collapsible--open", className)} {...props}>
         <button
+          id={`${id}-trigger`}
           className="db-collapsible__trigger"
           aria-expanded={isOpen}
+          aria-controls={`${id}-content`}
           onClick={() => setIsOpen(!isOpen)}
           type="button"
         >
           {trigger}
         </button>
-        {isOpen && <div className="db-collapsible__content">{children}</div>}
+        <div id={`${id}-content`} className="db-collapsible__content" role="region" aria-labelledby={`${id}-trigger`} hidden={!isOpen}>{children}</div>
       </div>
     );
   },

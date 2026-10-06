@@ -4,6 +4,28 @@ export { Surface } from "./components/Surface";
 export { Container } from "./components/Container";
 export { Separator } from "./components/Separator";
 export { ScrollArea } from "./components/ScrollArea";
+export {
+  MessageScroller, MessageScrollerProvider, MessageScrollerViewport, MessageScrollerContent,
+  MessageScrollerItem, MessageScrollerButton, useMessageScroller,
+  useMessageScrollerScrollable, useMessageScrollerVisibility,
+} from "./components/MessageScroller";
+export type {
+  MessageScrollerProps, MessageScrollerProviderProps, MessageScrollerViewportProps,
+  MessageScrollerContentProps, MessageScrollerItemProps, MessageScrollerButtonProps,
+  MessageScrollerDefaultScrollPosition, MessageScrollerScrollAlign, MessageScrollerScrollOptions,
+  MessageScrollerScrollable, MessageScrollerVisibilityState,
+} from "./components/MessageScroller";
+export { Message, MessageAvatar, MessageContent, MessageHeader, MessageFooter, MessageGroup } from "./components/Message";
+export type { MessageProps } from "./components/Message";
+export { Bubble, BubbleContent, BubbleReactions, BubbleGroup, BubbleCollapsible } from "./components/Bubble";
+export type { BubbleProps, BubbleVariant, BubbleCollapsibleProps } from "./components/Bubble";
+export {
+  Attachment, AttachmentMedia, AttachmentContent, AttachmentTitle, AttachmentDescription,
+  AttachmentActions, AttachmentAction, AttachmentTrigger, AttachmentGroup, AttachmentProgress,
+} from "./components/Attachment";
+export type { AttachmentProps, AttachmentMediaProps, AttachmentProgressProps, AttachmentState } from "./components/Attachment";
+export { Marker, MarkerIcon, MarkerContent } from "./components/Marker";
+export type { MarkerProps } from "./components/Marker";
 export { AspectRatio } from "./components/AspectRatio";
 export { Frame } from "./components/Frame";
 export { Group } from "./components/Group";

@@ -1,6 +1,9 @@
 // Cloudflare Pages Function — Remote DAUB MCP Server (Streamable HTTP)
 // POST /api/mcp  — handles MCP JSON-RPC protocol
 
+import { DAUB_RENDER_BODY, RENDERER_TYPES, THEMES, normalizeTheme, serializeSpec } from '../../mcp/lib/renderers.js';
+import { validateSpec } from '../../mcp/lib/validate.js';
+
 // ---- Component Catalog (inlined from mcp/lib/prompt.js) ----
 
 const COMP_PROPS = {
@@ -10,6 +13,18 @@ const COMP_PROPS = {
   Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
+  Layout: 'deprecated alias for Stack/Grid: children, direction, columns, gap, align (main-axis), valign (cross-axis)',
+  Divider: 'alias for Separator: vertical: bool, dashed: bool, label: string',
+  Icon: 'name: string (Lucide), size: "xs"|"sm"|"md"|"lg"|"xl"',
+  Link: 'label: string, href: string (safe URL)',
+  CheckboxGroup: 'children: [Checkbox IDs], label: string, helper: string, inline: bool',
+  Fieldset: 'children: [field IDs], legend: string, helper: string, disabled: bool',
+  Frame: 'children: [body IDs], header: string|[childIds], footer: string|[childIds], flush: bool',
+  Group: 'children: [control IDs], attached: bool, vertical: bool, label: string or aria-label: string',
+  Meter: 'value: number (default 0), min: number (default 0), max: number (default 100), status: "success"|"warning"|"error", label: string or aria-label: string',
+  NumberField: 'value: number, defaultValue: number, min: number, max: number, step: number (default 1), disabled: bool, readOnly: bool, name: string, label: string or aria-label: string',
+  PreviewCard: 'trigger: string|[childIds], title: string, description: string, media: string (safe image URL)|[childIds], mediaAlt: string, children: [childIds]',
+  Toolbar: 'children: [control IDs], vertical: bool, label: string or aria-label: string',
   Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId"',
   ButtonGroup: '(children are Buttons)',
   Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string',
@@ -52,6 +67,11 @@ const COMP_PROPS = {
   AspectRatio: 'ratio: "16-9"|"4-3"|"1-1"|"21-9"',
   Chip: 'label: string, color: "red"|"green"|"blue"|"purple"|"amber"|"pink", active: bool, closable: bool',
   ScrollArea: 'direction: "horizontal"|"vertical"',
+  MessageScroller: 'children: [row IDs], height: number (default 360px), autoScroll: bool (default true), defaultScrollPosition: "start"|"end"|"last-anchor" (default "end"), peek: nonnegative number (default 0), label: string',
+  Message: 'children: [content IDs], align: "start"|"end", avatar: string (initials)|{initials, src: safe image URL}, name: string, timestamp: string, messageId: string (defaults to element ID), scrollAnchor: bool, footer: string',
+  Bubble: 'children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled)',
+  Attachment: 'children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical"',
+  Marker: 'children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool',
   Image: 'src: string, alt: string, width: number, height: number',
   Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
   Progress: 'value: number, indeterminate: bool',
@@ -77,55 +97,19 @@ const COMP_PROPS = {
 };
 
 const COMP_CATEGORIES = [
-  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator']],
-  ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
+  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator', 'Layout', 'Divider', 'Icon', 'Link', 'Frame']],
+  ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP', 'CheckboxGroup', 'Fieldset', 'Group', 'NumberField', 'Toolbar']],
   ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
   ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea', 'Image']],
-  ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip']],
-  ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette']],
+  ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip', 'Meter']],
+  ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette', 'PreviewCard']],
   ['Layout Utilities', ['Accordion', 'Collapsible', 'Resizable', 'DatePicker']],
   ['Dashboard', ['StatCard', 'ChartCard']],
+  ['Chat', ['MessageScroller', 'Message', 'Bubble', 'Attachment', 'Marker']],
   ['Custom', ['CustomHTML']],
 ];
 
-const VALID_TYPES = COMP_CATEGORIES.flatMap(([, types]) => types);
-const validTypeSet = new Set(VALID_TYPES);
-
-// ---- Validation (inlined from mcp/lib/validate.js) ----
-
-function validateSpec(spec) {
-  const issues = [];
-  if (!spec || typeof spec !== 'object') return { valid: false, issues: ['Spec is not an object'], element_count: 0, components_used: [] };
-  if (!spec.elements || typeof spec.elements !== 'object') issues.push('Missing "elements" object');
-  if (!spec.root) issues.push('Missing "root"');
-  if (spec.root && spec.elements && !spec.elements[spec.root]) issues.push(`Root "${spec.root}" not found in elements`);
-  const componentsUsed = new Set();
-  if (spec.elements) {
-    for (const [id, def] of Object.entries(spec.elements)) {
-      if (!def.type) {
-        issues.push(`Element "${id}" missing "type"`);
-      } else {
-        componentsUsed.add(def.type);
-        if (!validTypeSet.has(def.type)) issues.push(`Unknown type "${def.type}" on element "${id}"`);
-      }
-      for (const cid of (def.children || [])) {
-        if (!spec.elements[cid]) issues.push(`Element "${id}" references missing child "${cid}"`);
-      }
-    }
-  }
-  const warnings = [];
-  if (spec.elements) {
-    for (const [id, def] of Object.entries(spec.elements)) {
-      if (def.type === 'Card' && def.props?.footer === true) {
-        warnings.push(`Card "${id}" has footer:true (boolean) — footer should be an array of child element IDs`);
-      }
-      if (def.type === 'Card' && Array.isArray(def.props?.media)) {
-        warnings.push(`Card "${id}" has media as array — media should be a URL string, use footer for child element IDs`);
-      }
-    }
-  }
-  return { valid: issues.length === 0, issues, warnings, element_count: spec.elements ? Object.keys(spec.elements).length : 0, components_used: [...componentsUsed] };
-}
+const VALID_TYPES = RENDERER_TYPES;
 
 function autoFixSpec(spec) {
   if (!spec || !spec.elements) return spec;
@@ -374,14 +358,14 @@ const INDUSTRY_INTENTS = [
   { pattern: /health|medical|clinic|patient|pharma|wellness/i, theme: 'nord-light', rules: 'Calming, accessible. Clear hierarchy. Large text, high contrast. Whitespace-generous. Anti: dark mode default, playful animations, small text.' },
   { pattern: /education|learn|course|student|school|lms|tutor/i, theme: 'catppuccin', rules: 'Warm, inviting. Progress indicators (Stepper, Progress). Card-based content. Clear navigation. Anti: dense data tables, corporate tone.' },
   { pattern: /creative|portfolio|design\s*agency|studio|artist/i, theme: 'grunge-dark', rules: 'Expressive, bold. Large imagery. Minimal text. Full-bleed sections. Anti: corporate blue, dense forms, cookie-cutter layouts.' },
-  { pattern: /blog|news|magazine|editorial|article|content\s*site/i, theme: 'paper', rules: 'Typography-first. Prose component for body. Max 65ch line length. Clear reading hierarchy. Anti: sidebar clutter, small body text, low contrast.' },
+  { pattern: /blog|news|magazine|editorial|article|content\s*site/i, theme: 'bone', rules: 'Typography-first. Prose component for body. Max 65ch line length. Clear reading hierarchy. Anti: sidebar clutter, small body text, low contrast.' },
   { pattern: /social|community|forum|chat|messaging|feed/i, theme: 'light', rules: 'Card-based feeds. Avatar+name patterns. List for threads. BottomNav for mobile. Anti: dense tables, formal tone, no user presence indicators.' },
   { pattern: /dashboard|analytics|admin\s*panel|back.?office|monitoring/i, theme: 'github', rules: 'Data-dense. StatCards row + Charts + Tables. Sidebar navigation. Compact spacing. Anti: large hero sections, marketing copy, excessive whitespace.' },
   { pattern: /dev\s*tool|developer|api|code|terminal|ide|cli/i, theme: 'dracula', rules: 'Dark theme preferred. Monospace for code. Compact UI. Kbd for shortcuts. Anti: rounded playful shapes, pastel colors, large images.' },
   { pattern: /real\s*estate|property|listing|rental|housing/i, theme: 'bone', rules: 'Image-heavy cards. Grid layouts for listings. Filter chips. Anti: dark themes, dense tables without imagery.' },
   { pattern: /food|restaurant|recipe|delivery|menu|cafe/i, theme: 'gruvbox-light', rules: 'Warm tones. Image-heavy cards. Grid for menu items. Large CTAs for ordering. Anti: corporate blue, data-dense layouts.' },
   { pattern: /travel|booking|hotel|flight|tourism|vacation/i, theme: 'nord-light', rules: 'Image-forward. Search-first layout. Card grids for destinations. DatePicker for dates. Anti: text-heavy, dark themes, no imagery.' },
-  { pattern: /fitness|gym|workout|sport|exercise|training/i, theme: 'material-dark', rules: 'Bold, energetic. Progress bars, stat cards. Dark with accent pops. Charts for progress. Anti: pastel, formal corporate tone.' },
+  { pattern: /fitness|gym|workout|sport|exercise|training/i, theme: 'material', rules: 'Bold, energetic. Progress bars, stat cards. Dark with accent pops. Charts for progress. Anti: pastel, formal corporate tone.' },
   { pattern: /music|audio|podcast|streaming|playlist/i, theme: 'synthwave', rules: 'Dark with vibrant accents. List-based for tracks/episodes. Progress for playback. BottomNav for mobile. Anti: white themes, corporate layouts.' },
   { pattern: /gaming|game|esport|player|leaderboard/i, theme: 'tokyo-night', rules: 'Dark, immersive. StatCards for scores. Tables for leaderboards. Bold accent colors. Anti: light themes, formal business tone.' },
   { pattern: /hr|recruit|hiring|job\s*board|career|applicant/i, theme: 'material-light', rules: 'Clean, professional. Card-based job listings. Stepper for application flow. Filter sidebar. Anti: dark themes, playful tone.' },
@@ -411,6 +395,18 @@ Pricing: Toggle (monthly/annual) + Plan cards (3 tiers) + Feature comparison tab
 // ---- OpenUI Lang Parser (inlined for Cloudflare Pages Functions) ----
 
 const COMP_SCHEMA = {
+  CheckboxGroup: ['children', 'label', 'helper', 'inline'],
+  Fieldset: ['children', 'legend', 'helper', 'disabled'],
+  Frame: ['children', 'header', 'footer', 'flush'],
+  Group: ['children', 'attached', 'vertical', 'label'],
+  Meter: ['value', 'min', 'max', 'status', 'label'],
+  NumberField: ['value', 'defaultValue', 'step', 'min', 'max', 'disabled', 'readOnly', 'label'],
+  PreviewCard: ['trigger', 'title', 'description', 'media', 'children'],
+  Toolbar: ['children', 'vertical', 'label'],
+  Icon: ['name', 'size'],
+  Link: ['label', 'href'],
+  Layout: ['children', 'direction', 'columns', 'gap', 'align', 'valign'],
+  Divider: ['vertical', 'dashed', 'label'],
   Stack: ['children', 'direction', 'gap', 'justify', 'align', 'wrap', 'container'],
   Grid: ['children', 'columns', 'gap', 'align', 'container'],
   Surface: ['children', 'variant'],
@@ -459,6 +455,11 @@ const COMP_SCHEMA = {
   AspectRatio: ['children', 'ratio'],
   Chip: ['label', 'color', 'active', 'closable'],
   ScrollArea: ['children', 'direction'],
+  MessageScroller: ['children', 'height', 'autoScroll', 'defaultScrollPosition', 'peek'],
+  Message: ['children', 'align', 'avatar', 'name', 'timestamp', 'messageId', 'scrollAnchor', 'footer'],
+  Bubble: ['children', 'content', 'variant', 'align', 'reactions'],
+  Attachment: ['children', 'name', 'description', 'src', 'alt', 'href', 'size', 'state', 'progress', 'orientation'],
+  Marker: ['children', 'content', 'icon', 'variant', 'status', 'busy'],
   Image: ['src', 'alt', 'width', 'height'],
   Alert: ['type', 'title', 'message'],
   Progress: ['value', 'indeterminate'],
@@ -700,8 +701,8 @@ function buildOpenUISystemPrompt(ragBlocks, userPrompt) {
   }
 
   prompt += 'THEMES:\n'
-    + '- Light: light, bone, material-light, github, nord-light, solarized-light, catppuccin, gruvbox-light, paper, grunge-light\n'
-    + '- Dark: dark, material-dark, github-dark, nord, solarized-dark, catppuccin-dark, gruvbox-dark, dracula, grunge-dark, synthwave, tokyo-night\n\n';
+    + '- Light: ' + THEMES.light.join(', ') + '\n'
+    + '- Dark: ' + THEMES.dark.join(', ') + '\n\n';
 
   if (industryIntentOUI) {
     prompt += 'DETECTED INDUSTRY CONTEXT — recommended theme: "' + industryIntentOUI.theme + '"\n'
@@ -800,8 +801,8 @@ function buildSystemPrompt(ragBlocks, userPrompt) {
   }
 
   prompt += 'THEMES:\n'
-    + '- Light: light, bone, material-light, github, nord-light, solarized-light, catppuccin, gruvbox-light, paper, grunge-light\n'
-    + '- Dark: dark, material-dark, github-dark, nord, solarized-dark, catppuccin-dark, gruvbox-dark, dracula, grunge-dark, synthwave, tokyo-night\n\n';
+    + '- Light: ' + THEMES.light.join(', ') + '\n'
+    + '- Dark: ' + THEMES.dark.join(', ') + '\n\n';
 
   if (industryIntent) {
     prompt += 'DETECTED INDUSTRY CONTEXT — recommended theme: "' + industryIntent.theme + '"\n'
@@ -1094,8 +1095,8 @@ function specSummary(spec) {
 // ---- Render spec to self-contained HTML ----
 
 function renderToHTML(spec) {
-  const theme = spec.theme || 'light';
-  const specJSON = JSON.stringify(spec);
+  const theme = normalizeTheme(spec.theme);
+  const specJSON = serializeSpec(spec);
   return `<!DOCTYPE html>
 <html data-theme="${theme}">
 <head>
@@ -1104,9 +1105,9 @@ function renderToHTML(spec) {
   <title>DAUB UI</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@3/daub.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"><\/script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js"><\/script>
   <style>
-    body { margin: 0; padding: 16px; font-family: Inter, system-ui, sans-serif; background: var(--db-bg); color: var(--db-fg); }
+    body { margin: 0; padding: 16px; font-family: Inter, system-ui, sans-serif; background: var(--db-color-bg); color: var(--db-color-text); }
     #app { max-width: 1200px; margin: 0 auto; }
   </style>
 </head>
@@ -1116,26 +1117,22 @@ function renderToHTML(spec) {
   <script>
   (function() {
     var spec = ${specJSON};
-    // Load renderer from playground and render spec
-    var s = document.createElement('script');
-    s.src = 'https://daub.dev/daub-render.js';
-    s.onload = function() {
-      if (typeof renderElement === 'function') {
+    ${DAUB_RENDER_BODY}
         var root = renderElement(spec.elements, spec.root, 0);
         if (root) document.getElementById('app').appendChild(root);
-        var rendered = {};
+        var rendered = Object.create(null);
         document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
         Object.keys(spec.elements).forEach(function(id) {
           if (id !== spec.root && !rendered[id]) {
             var orphan = renderElement(spec.elements, id, 0);
-            if (orphan) document.getElementById('app').appendChild(orphan);
+            if (orphan) {
+              document.getElementById('app').appendChild(orphan);
+              document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+            }
           }
         });
-        if (typeof DAUB !== 'undefined') DAUB.init();
+        if (typeof DAUB !== 'undefined') DAUB.init(document.getElementById('app'));
         if (typeof lucide !== 'undefined') lucide.createIcons();
-      }
-    };
-    document.body.appendChild(s);
   })();
   <\/script>
 </body>
@@ -1492,10 +1489,7 @@ async function handleToolCall(name, args, env) {
       return JSON.stringify({
         categories: catalog,
         all_types: VALID_TYPES,
-        themes: {
-          light: ['light', 'bone', 'material-light', 'github', 'nord-light', 'solarized-light', 'catppuccin', 'gruvbox-light', 'paper', 'grunge-light'],
-          dark: ['dark', 'material-dark', 'github-dark', 'nord', 'solarized-dark', 'catppuccin-dark', 'gruvbox-dark', 'dracula', 'grunge-dark', 'synthwave', 'tokyo-night'],
-        },
+        themes: THEMES,
         spec_format: '{"theme":"<name>","root":"<id>","elements":{"<id>":{"type":"<Type>","props":{...},"children":["<child-id>"]}}}',
         example: {
           theme: 'bone',

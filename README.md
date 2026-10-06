@@ -4,17 +4,17 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-3.20.1-3D3832.svg)](https://daub.dev)
-[![Components](https://img.shields.io/badge/components-84-D4C4A8.svg)](https://daub.dev)
+[![Components](https://img.shields.io/badge/components-89-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
 
-[Live Demo](https://daub.dev) | [Docs](https://daub.dev/docs.html) | [Block Gallery](https://daub.dev/demo.html) | [Playground](https://daub.dev/playground.html) | [Roadmap](https://daub.dev/roadmap.html) | [Case Studies](https://daub.dev/case-studies.html) | [AI Docs](https://daub.dev/llms.txt)
+[Live Demo](https://daub.dev) | [Components](https://daub.dev/components) | [Docs](https://daub.dev/docs.html) | [Block Gallery](https://daub.dev/demo.html) | [Playground](https://daub.dev/playground.html) | [Roadmap](https://daub.dev/roadmap.html) | [Case Studies](https://daub.dev/case-studies.html) | [AI Docs](https://daub.dev/llms.txt)
 
 ---
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 84 components, 21 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 89 components, 21 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
 Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 266-block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
 
@@ -26,10 +26,10 @@ shadcn/ui is excellent — if you run React, Tailwind, and a build pipeline. DAU
 |---|------|-----------|
 | Framework | None required (plain HTML) | React only |
 | Install | One `<link>` + one `<script>` | CLI, Tailwind, build step |
-| Components | 84 in one CSS file | Copy-in per component |
+| Components | 89 in one CSS file | Copy-in per component |
 | Themes | 21 families, 42 variants built in | Bring your own tokens |
 | Classless mode | Yes | No |
-| AI docs | `llms.txt`, `components.json`, MCP server | No |
+| AI docs | `llms.txt`, `components.json`, MCP server | [llms.txt and MCP](https://ui.shadcn.com/llms.txt) |
 
 Use shadcn/ui when you're deep in a React + Tailwind stack. Use DAUB when you want considered components on any stack — including static pages and AI-generated interfaces — with zero build step.
 
@@ -38,7 +38,7 @@ Use shadcn/ui when you're deep in a React + Tailwind stack. Use DAUB when you wa
 ### CDN (recommended)
 
 ```html
-<!-- Full library: 84 components + themes -->
+<!-- Full library: 89 components + themes -->
 <link rel="stylesheet" href="https://daub.dev/daub.css">
 <script src="https://daub.dev/daub.js"></script>
 
@@ -76,7 +76,7 @@ DAUB uses system font stacks by default. For richer typography:
 <script src="https://unpkg.com/lucide@latest"></script>
 ```
 
-## Components (84)
+## Components (89)
 
 ### Foundations
 | Component | Class | Notes |
@@ -148,6 +148,22 @@ DAUB uses system font stacks by default. For richer typography:
 | Aspect Ratio | `db-aspect` | `--16-9`, `--4-3`, `--1-1`, `--21-9` |
 | Chip | `db-chip` | `--red`, `--green`, `--blue`, `--purple`, `--amber`, `--pink`, `--active`, `__close`, `data-db-chip-toggle` |
 | Scroll Area | `db-scroll-area` | `--horizontal`, `--vertical` |
+
+### Chat
+| Component | Class | Notes |
+|-----------|-------|-------|
+| Message Scroller | `db-message-scroller` | `__viewport`, `__content`, `__item`, `__button`; stable `data-db-message-id` rows |
+| Message | `db-message` | `--end`, `__avatar`, `__content`, `__header`, `__footer`; `db-message-group` |
+| Bubble | `db-bubble` | `--primary`, `--secondary`, `--muted`, `--tinted`, `--outline`, `--ghost`, `--destructive`, `--end`; `__content`, `__reactions`, `db-bubble-group` |
+| Attachment | `db-attachment` | `--vertical`, `--sm`, `--xs`; `data-state="idle|uploading|processing|error|done"`, sibling `__trigger` and `__actions`; `db-attachment-group` |
+| Marker | `db-marker` | `--border`, `--separator`, `__icon`, `__content` |
+
+Compose these primitives with existing Textarea, InputGroup, and Button controls.
+Your app owns the message data, reaction selection, upload progress, and transport.
+Use `db-shimmer` for text status and `db-scroll-fade` for scroll edges.
+See the [chat demo](chat-demo.html) and [chat reference](llms.txt#chat-components).
+The browser/OpenUI/MCP registry exposes 87 renderer types; the HTML catalog contains
+89 component entries. Renderer aliases and helpers account for the different totals.
 
 ### Feedback
 | Component | Class | Notes |
@@ -312,7 +328,7 @@ DAUB speaks both human and machine:
 
 - **`/llms.txt`** — Plain-text component reference for LLMs ([spec](https://llmstxt.org))
 - **`/llms-compact.txt`** — Condensed version for token-constrained contexts
-- **`/components.json`** — Machine-readable structured component reference (84 components with HTML examples)
+- **`/components.json`** — Machine-readable structured component reference (89 components with HTML examples)
 - **`/daub.d.ts`** — TypeScript declarations for `window.DAUB` API
 - **`/.well-known/ai-plugin.json`** — AI plugin manifest
 - **`/.well-known/api-catalog`** — API catalog for MCP, generation, and web lookups
@@ -332,7 +348,7 @@ Install the DAUB skill into any AI coding agent ([40+ supported](https://skills.
 npx skills add sliday/daub
 ```
 
-This gives your agent full knowledge of all 84 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
+This gives your agent full knowledge of all 89 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
 
 ## Block Library
 

@@ -2,6 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { LAYOUT_RULES_COMPACT, LANDING_PAGE_RULES, detectLandingIntent, detectIndustryIntent, detectMobileIntent, MOBILE_DESIGN_RULES, PAGE_FORMULAS } from './design-knowledge.js';
+import { RENDERER_TYPES, THEMES, normalizeTheme } from './renderers.js';
+
+export { THEMES };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -21,6 +24,18 @@ export const COMP_PROPS = {
   Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
   Separator: 'vertical: bool, dashed: bool, label: string',
+  Layout: 'deprecated alias for Stack/Grid: children, direction, columns, gap, align (main-axis), valign (cross-axis)',
+  Divider: 'alias for Separator: vertical: bool, dashed: bool, label: string',
+  Icon: 'name: string (Lucide), size: "xs"|"sm"|"md"|"lg"|"xl"',
+  Link: 'label: string, href: string (safe URL)',
+  CheckboxGroup: 'children: [Checkbox IDs], label: string, helper: string, inline: bool',
+  Fieldset: 'children: [field IDs], legend: string, helper: string, disabled: bool',
+  Frame: 'children: [body IDs], header: string|[childIds], footer: string|[childIds], flush: bool',
+  Group: 'children: [control IDs], attached: bool, vertical: bool, label: string or aria-label: string',
+  Meter: 'value: number (default 0), min: number (default 0), max: number (default 100), status: "success"|"warning"|"error", label: string or aria-label: string',
+  NumberField: 'value: number, defaultValue: number, min: number, max: number, step: number (default 1), disabled: bool, readOnly: bool, name: string, label: string or aria-label: string',
+  PreviewCard: 'trigger: string|[childIds], title: string, description: string, media: string (safe image URL)|[childIds], mediaAlt: string, children: [childIds]',
+  Toolbar: 'children: [control IDs], vertical: bool, label: string or aria-label: string',
   Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id) | UX: one primary per view, loading:true during async, verb-first labels',
   ButtonGroup: '(children are Buttons)',
   Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string | UX: always include label, helper for complex inputs, error near field',
@@ -63,6 +78,11 @@ export const COMP_PROPS = {
   AspectRatio: 'ratio: "16-9"|"4-3"|"1-1"|"21-9"',
   Chip: 'label: string, color: "red"|"green"|"blue"|"purple"|"amber"|"pink", active: bool, closable: bool',
   ScrollArea: 'direction: "horizontal"|"vertical"',
+  MessageScroller: 'children: [row IDs], height: number (default 360px), autoScroll: bool (default true), defaultScrollPosition: "start"|"end"|"last-anchor" (default "end"), peek: nonnegative number (default 0), label: string',
+  Message: 'children: [content IDs], align: "start"|"end", avatar: string (initials)|{initials, src: safe image URL}, name: string, timestamp: string, messageId: string (defaults to element ID), scrollAnchor: bool, footer: string',
+  Bubble: 'children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled)',
+  Attachment: 'children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical"',
+  Marker: 'children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool',
   Image: 'src: string (URL), alt: string, width: number, height: number',
   Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
   Progress: 'value: number, indeterminate: bool',
@@ -88,18 +108,19 @@ export const COMP_PROPS = {
 };
 
 export const COMP_CATEGORIES = [
-  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator']],
-  ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
+  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator', 'Layout', 'Divider', 'Icon', 'Link', 'Frame']],
+  ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP', 'CheckboxGroup', 'Fieldset', 'Group', 'NumberField', 'Toolbar']],
   ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
   ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea', 'Image']],
-  ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip']],
-  ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette']],
+  ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip', 'Meter']],
+  ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette', 'PreviewCard']],
   ['Layout Utilities', ['Accordion', 'Collapsible', 'Resizable', 'DatePicker']],
   ['Dashboard', ['StatCard', 'ChartCard']],
+  ['Chat', ['MessageScroller', 'Message', 'Bubble', 'Attachment', 'Marker']],
   ['Custom', ['CustomHTML']],
 ];
 
-export const VALID_TYPES = COMP_CATEGORIES.flatMap(([, types]) => types);
+export const VALID_TYPES = RENDERER_TYPES;
 
 export { BLOCK_INDEX };
 
@@ -210,11 +231,11 @@ export function buildSystemPrompt(ragBlocks, userPrompt) {
 
   let themes = 'THEMES:\n'
     + 'Set "theme" in the root JSON to apply a DAUB theme. Available themes:\n'
-    + '- Light: "light", "bone", "material-light", "github", "nord-light", "solarized-light", "catppuccin", "gruvbox-light", "paper", "grunge-light"\n'
-    + '- Dark: "dark", "material-dark", "github-dark", "nord", "solarized-dark", "catppuccin-dark", "gruvbox-dark", "dracula", "grunge-dark", "synthwave", "tokyo-night"\n\n';
+    + '- Light: ' + THEMES.light.map(theme => JSON.stringify(theme)).join(', ') + '\n'
+    + '- Dark: ' + THEMES.dark.map(theme => JSON.stringify(theme)).join(', ') + '\n\n';
 
   if (industryIntent) {
-    themes += 'DETECTED INDUSTRY CONTEXT — recommended theme: "' + industryIntent.theme + '"\n'
+    themes += 'DETECTED INDUSTRY CONTEXT — recommended theme: "' + normalizeTheme(industryIntent.theme) + '"\n'
       + 'Industry-specific guidance: ' + industryIntent.rules + '\n\n';
   }
 
@@ -225,12 +246,12 @@ export function buildSystemPrompt(ragBlocks, userPrompt) {
     + '- Healthcare/wellness → "nord-light" or "bone"\n'
     + '- Education/learning → "catppuccin" or "light"\n'
     + '- Creative/portfolio → "grunge-dark" or "synthwave"\n'
-    + '- Blog/editorial → "paper" or "bone"\n'
+    + '- Blog/editorial → "light" or "bone"\n'
     + '- Dashboards/analytics → "github" or "material-light"\n'
     + '- Dev tools/code → "dracula" or "tokyo-night"\n'
     + '- Gaming/esports → "tokyo-night" or "synthwave"\n'
     + '- Music/audio → "synthwave" or "grunge-dark"\n'
-    + '- Fitness/sports → "material-dark" or "github-dark"\n'
+    + '- Fitness/sports → "material" or "github-dark"\n'
     + '- Minimal/clean → "bone" or "nord-light"\n'
     + '- Warm/cozy → "gruvbox-light" or "catppuccin"\n'
     + '- Default: "light" when no preference is detected\n';

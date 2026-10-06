@@ -6,6 +6,7 @@ export interface PaginationProps extends Omit<ComponentProps<"nav">, "children" 
   total: number;
   perPage?: number;
   onChange?: (page: number) => void;
+  disabled?: boolean;
 }
 
 function getPages(current: number, totalPages: number): (number | "ellipsis")[] {
@@ -23,21 +24,25 @@ function getPages(current: number, totalPages: number): (number | "ellipsis")[] 
 }
 
 export const Pagination = forwardRef<HTMLElement, PaginationProps>(
-  ({ current, total, perPage = 10, onChange, className, ...props }, ref) => {
-    const totalPages = Math.max(1, Math.ceil(total / perPage));
-    const pages = getPages(current, totalPages);
+  ({ current, total, perPage = 10, onChange, disabled, className, ...props }, ref) => {
+    const pageSize = Number.isFinite(perPage) && perPage > 0 ? perPage : 10;
+    const totalPages = Math.max(1, Math.ceil((Number.isFinite(total) ? Math.max(0, total) : 0) / pageSize));
+    const selected = Math.min(totalPages, Math.max(1, Number.isFinite(current) ? Math.trunc(current) : 1));
+    const pages = getPages(selected, totalPages);
 
     return (
       <nav
         ref={ref}
         aria-label="Pagination"
         {...props}
+        data-db-react=""
         className={cn("db-pagination", className)}
       >
         <button
-          className="db-pagination__prev"
-          disabled={current <= 1}
-          onClick={() => onChange?.(current - 1)}
+          type="button"
+          className="db-pagination__btn db-pagination__prev"
+          disabled={disabled || selected <= 1}
+          onClick={() => onChange?.(selected - 1)}
           aria-label="Previous page"
         >
           Prev
@@ -49,12 +54,16 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
             </span>
           ) : (
             <button
+              type="button"
+              disabled={disabled}
               key={page}
               className={cn(
+                "db-pagination__btn",
                 "db-pagination__page",
-                page === current && "db-pagination__page--active",
+                page === selected && "db-pagination__page--active",
               )}
-              aria-current={page === current ? "page" : undefined}
+              aria-current={page === selected ? "page" : undefined}
+              aria-label={`Page ${page}`}
               onClick={() => onChange?.(page)}
             >
               {page}
@@ -62,9 +71,10 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
           ),
         )}
         <button
-          className="db-pagination__next"
-          disabled={current >= totalPages}
-          onClick={() => onChange?.(current + 1)}
+          type="button"
+          className="db-pagination__btn db-pagination__next"
+          disabled={disabled || selected >= totalPages}
+          onClick={() => onChange?.(selected + 1)}
           aria-label="Next page"
         >
           Next

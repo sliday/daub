@@ -4,20 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB — Component Documentation</title>
-  <meta name="description" content="Full documentation for all 84 DAUB UI components with live examples, copyable code, and modifier badges.">
+  <meta name="description" content="Full documentation for all 89 DAUB UI components with live examples, copyable code, and modifier badges.">
   <meta name="theme-color" content="#C67B5C">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://daub.dev/docs.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="DAUB — Component Documentation">
-  <meta property="og:description" content="Full documentation for all 84 DAUB UI components with live examples, copyable code, and modifier badges.">
+  <meta property="og:description" content="Full documentation for all 89 DAUB UI components with live examples, copyable code, and modifier badges.">
   <meta property="og:url" content="https://daub.dev/docs.html">
   <meta property="og:image" content="https://daub.dev/og-image.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="DAUB — Component Documentation">
-  <meta name="twitter:description" content="Full documentation for all 84 DAUB UI components with live examples, copyable code, and modifier badges.">
+  <meta name="twitter:description" content="Full documentation for all 89 DAUB UI components with live examples, copyable code, and modifier badges.">
   <meta name="twitter:image" content="https://daub.dev/og-image.png">
   <meta name="twitter:site" content="@staskulesh">
   <meta name="twitter:creator" content="@staskulesh">
@@ -35,6 +35,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
   <link rel="stylesheet" href="daub.css?v=3.20.1">
   <script src="daub.js?v=3.20.1" defer></script>
+  <script src="assets/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" defer onload="lucide.createIcons()"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -47,7 +48,7 @@
 
     .docs-layout {
       display: grid;
-      grid-template-columns: 240px 1fr;
+      grid-template-columns: 240px minmax(0, 1fr);
       min-height: 100vh;
     }
 
@@ -129,6 +130,7 @@
     }
 
     .docs-main {
+      min-width: 0;
       padding: 32px 48px;
       max-width: 860px;
     }
@@ -226,7 +228,7 @@
 
     .docs-component__code {
       display: block;
-      padding: 16px;
+      padding: 48px 16px 16px;
       font-family: var(--db-font-mono, monospace);
       font-size: 0.8125rem;
       line-height: 1.6;
@@ -255,6 +257,7 @@
 
     .docs-component__meta {
       display: flex;
+      flex-wrap: wrap;
       gap: 12px;
       align-items: center;
       margin-bottom: 12px;
@@ -329,19 +332,23 @@
   <aside class="docs-sidebar" id="sidebar">
     <a href="/" class="docs-sidebar__brand">DAUB</a>
     <a href="/" class="docs-sidebar__back">&larr; Back to homepage</a>
+    <a href="components.html" class="docs-sidebar__back">Components</a>
     <a href="/themes.html" class="docs-sidebar__back">Themes</a>
     <a href="/demo.html" class="docs-sidebar__back">Layouts</a>
     <a href="/playground.html" class="docs-sidebar__back">Playground</a>
+    <a href="chat-demo.html" class="docs-sidebar__back">Chat Demo</a>
     <a href="/llms.txt" class="docs-sidebar__back">AI Docs</a>
-    <input type="search" class="docs-sidebar__search" id="search" placeholder="Search components..." autocomplete="off">
-    <button class="docs-toggle" id="sidebarToggle">Browse categories</button>
-    <nav class="docs-sidebar__nav" id="sidebarNav"></nav>
+    <input type="search" class="docs-sidebar__search" id="search" aria-label="Search components" aria-controls="components sidebarNav" placeholder="Search components..." autocomplete="off">
+    <button class="docs-toggle" id="sidebarToggle" aria-expanded="false" aria-controls="sidebarNav">Browse categories</button>
+    <nav class="docs-sidebar__nav" id="sidebarNav" aria-label="Components"></nav>
   </aside>
   <main class="docs-main" id="main">
     <div class="docs-header">
       <h1 class="docs-header__title">Component Documentation</h1>
       <p class="docs-header__desc">Every DAUB component with live preview, code snippet, and modifiers.</p>
+      <p class="docs-header__desc">Compose MessageScroller, Message, Bubble, Attachment, and Marker for conversation layouts. Your app owns messages, reaction selection, upload states, and transport. <a href="chat-demo.html">Chat demo</a> &middot; <a href="llms.txt#chat-components">Chat reference</a></p>
       <div class="docs-stats" id="stats"></div>
+      <p id="docs-status" role="status">Loading components...</p>
     </div>
     <div id="components"></div>
   </main>
@@ -365,18 +372,30 @@
     'navigation': 'Navigation',
     'data-display': 'Data Display',
     'overlays': 'Overlays',
-    'layout-utility': 'Layout & Utility'
+    'layout-utility': 'Layout & Utility',
+    'chat': 'Chat'
   };
 
-  var CATEGORY_ORDER = ['controls', 'foundations', 'feedback', 'navigation', 'data-display', 'overlays', 'layout-utility'];
+  var CATEGORY_ORDER = ['controls', 'foundations', 'feedback', 'navigation', 'data-display', 'overlays', 'layout-utility', 'chat'];
+  var catalogExamples = {};
 
   fetch('components.json')
-    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (!r.ok) throw new Error('Component catalog request failed');
+      return r.json();
+    })
     .then(function(d) {
+      d.components.forEach(function(c) { catalogExamples[c.name] = c.html; });
       render(d.components);
       buildSidebar(d.components);
       buildStats(d.components);
       initSearch(d.components);
+      document.getElementById('docs-status').textContent = '';
+      var target = document.getElementById(location.hash.slice(1));
+      if (target) target.scrollIntoView();
+    })
+    .catch(function() {
+      document.getElementById('docs-status').textContent = 'Could not load components. Reload this page to try again.';
     });
 
   function groupByCategory(components) {
@@ -400,6 +419,7 @@
 
   function render(components) {
     var container = document.getElementById('components');
+    observer.disconnect();
     container.textContent = '';
 
     if (!components.length) {
@@ -479,36 +499,72 @@
         var placeholderImg = 'data:image/svg+xml;utf8,' + encodeURIComponent(
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="%23EDE5D8"/><circle cx="48" cy="38" r="14" fill="%23C67B5C"/><path d="M20 84c4-18 16-26 28-26s24 8 28 26z" fill="%23C67B5C"/></svg>'.replace(/%23/g, '#')
         );
-        preview.innerHTML = c.html.replace(/src="(?:photo|user1|user2)\.jpg"/g, 'src="' + placeholderImg + '"');
+        var example = c.name === 'Modal Overlay' ? catalogExamples.Modal : c.html;
+        if (c.name === 'Chart Card') example = example.replace(/<canvas[^>]*><\/canvas>/, catalogExamples['CSS Bar Chart']);
+        example = example.replace(/src="(?:photo|user1|user2)\.jpg"/g, 'src="' + placeholderImg + '"');
+        var ids = {};
+        example.replace(/\bid="([^"]+)"/g, function(match, value) { ids[value] = 'example-' + id + '-' + value; });
+        example = example.replace(/\b(id|for|aria-labelledby|aria-describedby|aria-controls|data-context-menu|data-db-(?:[a-z-]+-)?trigger)="([^"]+)"/g, function(match, attr, value) {
+          return attr + '="' + value.split(' ').map(function(token) { return ids[token] || token; }).join(' ') + '"';
+        });
+        example = example.replace(/\b(on[a-z]+)="([^"]*)"/g, function(match, attr, handler) {
+          return attr + '="' + handler.replace(/\bDAUB\.((?:open|close)(?:Modal|AlertDialog|Sheet|Drawer|Command))\(\s*(['"])([^'"]+)\2/g, function(call, method, quote, target) {
+            return ids[target] ? 'DAUB.' + method + '(' + quote + ids[target] + quote : call;
+          }) + '"';
+        });
+        var triggers = { 'Modal': 'modal', 'Modal Overlay': 'modal', 'Alert Dialog': 'alert-dialog', 'Sheet': 'sheet', 'Drawer': 'drawer', 'Command Palette': 'command' };
+        if (triggers[c.name] && !/data-db-(?:[a-z-]+-)?trigger=/.test(example)) {
+          var overlayId = Object.keys(ids)[0];
+          var trigger = c.name === 'Command Palette' ? 'onclick="DAUB.openCommand(\'' + ids[overlayId] + '\')"' : 'data-db-trigger="' + ids[overlayId] + '"';
+          example = '<button class="db-btn db-btn--secondary" ' + trigger + '>Open ' + escapeHtml(c.name) + '</button>\n' + example;
+        }
+        preview.innerHTML = example;
         card.appendChild(preview);
 
         var codeWrap = document.createElement('div');
         codeWrap.className = 'docs-component__code-wrap';
         var pre = document.createElement('pre');
         pre.className = 'docs-component__code';
-        pre.textContent = c.html;
+        pre.textContent = example;
         codeWrap.appendChild(pre);
 
         var copyBtn = document.createElement('button');
         copyBtn.className = 'docs-component__copy';
         copyBtn.textContent = 'Copy';
+        copyBtn.type = 'button';
+        copyBtn.setAttribute('aria-label', 'Copy ' + c.name + ' example');
         copyBtn.addEventListener('click', (function(code, btn) {
           return function() {
+            if (!navigator.clipboard) {
+              selectCode();
+              return;
+            }
             navigator.clipboard.writeText(code).then(function() {
               btn.textContent = 'Copied!';
+              document.getElementById('docs-status').textContent = 'Example copied.';
               setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
-            });
+            }).catch(selectCode);
+            function selectCode() {
+              var range = document.createRange();
+              range.selectNodeContents(btn.parentNode.querySelector('pre'));
+              var selection = window.getSelection();
+              selection.removeAllRanges();
+              selection.addRange(range);
+              document.getElementById('docs-status').textContent = 'Clipboard unavailable. Copy the selected example with your browser.';
+            }
           };
-        })(c.html, copyBtn));
+        })(example, copyBtn));
         codeWrap.appendChild(copyBtn);
         card.appendChild(codeWrap);
         container.appendChild(card);
+        observer.observe(card);
       });
     });
 
     if (window.DAUB && window.DAUB.init) {
       window.DAUB.init(container);
     }
+    if (window.lucide) window.lucide.createIcons();
   }
 
   function buildSidebar(components) {
@@ -565,8 +621,9 @@
     searchEl.addEventListener('input', function() {
       var q = searchEl.value.toLowerCase().trim();
       if (!q) {
-        render(allComponents);
+        filterExamples(allComponents);
         buildSidebar(allComponents);
+        document.getElementById('docs-status').textContent = allComponents.length + ' components';
         return;
       }
       var filtered = allComponents.filter(function(c) {
@@ -575,13 +632,45 @@
                c.category.toLowerCase().indexOf(q) !== -1 ||
                (c.notes && c.notes.toLowerCase().indexOf(q) !== -1);
       });
-      render(filtered);
+      filterExamples(filtered);
       buildSidebar(filtered);
+      document.getElementById('docs-status').textContent = filtered.length + ' components match your search.';
     });
   }
 
+  function filterExamples(components) {
+    var visible = {};
+    var categories = {};
+    components.forEach(function(c) { visible[slugify(c.name)] = true; categories[c.category] = true; });
+    var container = document.getElementById('components');
+    observer.disconnect();
+    container.querySelectorAll('.docs-component').forEach(function(card) {
+      card.hidden = !visible[card.id];
+      if (!card.hidden) observer.observe(card);
+    });
+    CATEGORY_ORDER.forEach(function(cat) {
+      var heading = document.getElementById('cat-' + cat);
+      if (heading) heading.hidden = !categories[cat];
+    });
+    var empty = document.getElementById('docs-search-empty');
+    if (!empty) {
+      empty = document.createElement('div');
+      empty.id = 'docs-search-empty';
+      empty.className = 'docs-empty';
+      empty.textContent = 'No components match your search.';
+      container.appendChild(empty);
+    }
+    empty.hidden = components.length > 0;
+  }
+
   document.getElementById('sidebarToggle').addEventListener('click', function() {
-    document.getElementById('sidebar').classList.toggle('docs-sidebar--open');
+    var open = document.getElementById('sidebar').classList.toggle('docs-sidebar--open');
+    this.setAttribute('aria-expanded', String(open));
+  });
+  document.getElementById('sidebarNav').addEventListener('click', function(e) {
+    if (!e.target.closest('a')) return;
+    document.getElementById('sidebar').classList.remove('docs-sidebar--open');
+    document.getElementById('sidebarToggle').setAttribute('aria-expanded', 'false');
   });
 
   var observer = new IntersectionObserver(function(entries) {
@@ -589,19 +678,16 @@
       if (entry.isIntersecting) {
         document.querySelectorAll('.docs-sidebar__link').forEach(function(link) {
           link.classList.remove('docs-sidebar__link--active');
+          link.removeAttribute('aria-current');
           if (link.getAttribute('href') === '#' + entry.target.id) {
             link.classList.add('docs-sidebar__link--active');
+            link.setAttribute('aria-current', 'location');
           }
         });
       }
     });
   }, { rootMargin: '-20% 0px -70% 0px' });
 
-  setTimeout(function() {
-    document.querySelectorAll('.docs-component').forEach(function(el) {
-      observer.observe(el);
-    });
-  }, 500);
 })();
 </script>
 

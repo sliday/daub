@@ -1,7 +1,7 @@
 {
   "name": "daub-ui",
   "version": "3.20.1",
-  "description": "Considered CSS component library — 84 components, 21 theme families, zero build step",
+  "description": "Considered CSS component library — 89 components, 21 theme families, zero build step",
   "main": "daub.js",
   "style": "daub.css",
   "types": "daub.d.ts",
@@ -39,7 +39,12 @@
     "url": "git+https://github.com/sliday/daub.git"
   },
   "scripts": {
-    "test": "node --test tests/**/*.test.{js,mjs}"
+    "test": "node --test tests/**/*.test.{js,mjs}",
+    "test:components": "node tests/component-audit/audit.mjs",
+    "test:contrast": "node scripts/wcag-audit.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.58.2"
   },
   "license": "MIT",
   "author": "Sliday"

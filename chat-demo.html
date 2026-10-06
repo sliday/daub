@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chat Components | DAUB</title>
+  <meta name="description" content="A working DAUB conversation with streaming messages, attachments, and scroll controls.">
+  <link rel="stylesheet" href="daub.css">
+  <link rel="stylesheet" href="chat-demo.css">
+  <script src="assets/lucide.min.js" defer></script>
+  <script src="daub.js" defer></script>
+  <script src="chat-demo.js" defer></script>
+</head>
+<body>
+  <header class="chat-demo-header">
+    <a href="index.html" class="chat-demo-brand">DAUB</a>
+    <span class="chat-demo-breadcrumb">/ Chat</span>
+    <a href="components.html#message-scroller" class="chat-demo-docs">Components <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+    <div class="db-theme-switcher" aria-label="Theme switcher"></div>
+  </header>
+  <main class="chat-demo">
+    <div class="chat-demo-titlebar">
+      <div><h1>Release review</h1><span class="chat-demo-caption">Demo conversation</span></div>
+      <div class="chat-demo-tools">
+        <button id="load-history" class="db-btn db-btn--ghost db-btn--sm" type="button" aria-label="Load earlier messages" title="Load earlier messages"><i data-lucide="history" aria-hidden="true"></i><span>Earlier messages</span></button>
+        <button id="reset-chat" class="db-btn db-btn--ghost db-btn--sm db-btn--icon chat-demo-icon-button" type="button" aria-label="Reset conversation" title="Reset conversation"><i data-lucide="rotate-ccw" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    <div class="db-message-scroller" id="chat-scroller" data-db-auto-scroll="true" data-db-scroll-position="end" data-db-scroll-peek="32">
+      <div class="db-message-scroller__viewport db-scroll-fade" tabindex="0" aria-label="Release review conversation">
+        <div class="db-message-scroller__content" id="chat-messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="Messages">
+          <div class="db-message-scroller__item" data-db-message-id="today"><div class="db-marker db-marker--separator"><span class="db-marker__content">Today</span></div></div>
+          <div class="db-message-scroller__item" data-db-message-id="initial-question" data-db-scroll-anchor>
+            <div class="db-message db-message--end"><div class="db-message__content"><div class="db-message__header">You <time datetime="2026-06-01T09:41">09:41</time></div><div class="db-bubble"><div class="db-bubble__content">I updated the analytics dashboard. Can you help me plan the release review?</div></div></div></div>
+          </div>
+          <div class="db-message-scroller__item" data-db-message-id="initial-answer">
+            <div class="db-message"><div class="db-message__avatar"><span class="db-avatar" aria-label="DAUB Assistant">D</span></div><div class="db-message__content"><div class="db-message__header">DAUB Assistant <time datetime="2026-06-01T09:42">09:42</time></div><div class="db-bubble db-bubble--ghost"><div class="db-bubble__content"><p>Start with the flows your team uses most: compare daily usage, inspect a team, and export a report.</p><p>For each flow, check keyboard access, empty and error states, and the mobile layout. Keep the release notes next to the preview so reviewers can compare the change with its intent.</p></div></div><div class="db-attachment"><div class="db-attachment__media db-attachment__media--image"><img src="case-studies/dashrock-overview.jpg" alt="Analytics dashboard with usage totals and charts"></div><div class="db-attachment__content"><span class="db-attachment__title">Dashboard preview</span><span class="db-attachment__description">Analytics overview &middot; JPG</span></div><a class="db-attachment__trigger" href="case-studies/dashrock-overview.jpg" target="_blank" rel="noopener" aria-label="Open dashboard preview"></a></div><div class="db-message__footer"><button class="db-btn db-btn--ghost db-btn--sm db-btn--icon chat-demo-icon-button" id="copy-reply" type="button" aria-label="Copy review checklist" title="Copy review checklist"><i data-lucide="copy" aria-hidden="true"></i></button><span>Simulated reply</span></div></div></div>
+          </div>
+        </div>
+      </div>
+      <button class="db-message-scroller__button" data-db-scroll-to="end" type="button" aria-label="Scroll to latest message" title="Scroll to latest message"><i data-lucide="arrow-down" aria-hidden="true"></i></button>
+    </div>
+    <form class="chat-demo-composer" id="chat-form">
+      <div id="pending-attachments" class="db-attachment-group" hidden></div>
+      <label class="db-sr-only" for="chat-prompt">Message</label>
+      <textarea id="chat-prompt" rows="1" placeholder="Ask about the release..." maxlength="4000"></textarea>
+      <div class="chat-demo-composer-bar">
+        <input id="chat-file" type="file" multiple hidden>
+        <button id="attach-file" class="db-btn db-btn--ghost db-btn--sm db-btn--icon chat-demo-icon-button" type="button" aria-label="Attach files" title="Attach files"><i data-lucide="paperclip" aria-hidden="true"></i></button>
+        <span id="chat-status" class="chat-demo-status" role="status">Ready</span>
+        <button id="chat-send" class="db-btn db-btn--primary db-btn--sm db-btn--icon chat-demo-icon-button" type="submit" aria-label="Send message" title="Send message" disabled><i data-lucide="arrow-up" aria-hidden="true"></i></button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

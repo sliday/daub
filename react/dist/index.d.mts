@@ -1,6 +1,8 @@
 import * as react from 'react';
 import { ComponentProps, ReactNode } from 'react';
 import * as react_jsx_runtime from 'react/jsx-runtime';
+import { MessageScroller as MessageScroller$1 } from '@shadcn/react/message-scroller';
+export { MessageScrollerDefaultScrollPosition, MessageScrollerScrollAlign, MessageScrollerScrollOptions, MessageScrollerScrollable, MessageScrollerVisibilityState, useMessageScroller, useMessageScrollerScrollable, useMessageScrollerVisibility } from '@shadcn/react/message-scroller';
 
 type Size = "sm" | "lg";
 type ButtonVariant = "primary" | "secondary" | "ghost";
@@ -60,6 +62,98 @@ interface ScrollAreaProps extends ComponentProps<"div"> {
 }
 declare const ScrollArea: react.ForwardRefExoticComponent<Omit<ScrollAreaProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
+type MessageScrollerProviderProps = ComponentProps<typeof MessageScroller$1.Provider>;
+type MessageScrollerProps = ComponentProps<"div">;
+type MessageScrollerViewportProps = ComponentProps<typeof MessageScroller$1.Viewport>;
+type MessageScrollerContentProps = ComponentProps<typeof MessageScroller$1.Content>;
+interface MessageScrollerItemProps extends ComponentProps<typeof MessageScroller$1.Item> {
+    messageId: string;
+}
+type MessageScrollerButtonProps = ComponentProps<typeof MessageScroller$1.Button>;
+declare function MessageScrollerProvider({ autoScroll, defaultScrollPosition, scrollPreviousItemPeek, children, ...props }: MessageScrollerProviderProps): react_jsx_runtime.JSX.Element;
+declare const MessageScroller: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const MessageScrollerViewport: react.ForwardRefExoticComponent<Omit<react.ClassAttributes<HTMLDivElement> & react.HTMLAttributes<HTMLDivElement> & {
+    preserveScrollOnPrepend?: boolean;
+}, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const MessageScrollerContent: react.ForwardRefExoticComponent<Omit<react.ClassAttributes<HTMLDivElement> & react.HTMLAttributes<HTMLDivElement> & {
+    spacerClassName?: string;
+}, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const MessageScrollerItem: react.ForwardRefExoticComponent<Omit<MessageScrollerItemProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const MessageScrollerButton: react.ForwardRefExoticComponent<Omit<react.ClassAttributes<HTMLButtonElement> & react.ButtonHTMLAttributes<HTMLButtonElement> & {
+    render?: (react.ReactElement<unknown, string | react.JSXElementConstructor<any>> | ((props: Record<string, unknown>, state: {
+        active: boolean;
+        direction: "start" | "end";
+    }) => React.ReactElement | null)) | undefined;
+} & {
+    behavior?: ScrollBehavior;
+    direction?: "start" | "end";
+}, "ref"> & react.RefAttributes<HTMLButtonElement>>;
+
+interface MessageProps extends ComponentProps<"div"> {
+    align?: "start" | "end";
+}
+declare const Message: react.ForwardRefExoticComponent<Omit<MessageProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const MessageAvatar: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const MessageContent: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const MessageHeader: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const MessageFooter: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const MessageGroup: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
+interface CollapsibleProps extends Omit<ComponentProps<"div">, "onChange"> {
+    open?: boolean;
+    defaultOpen?: boolean;
+    onChange?: (open: boolean) => void;
+    trigger: ReactNode;
+}
+declare const Collapsible: react.ForwardRefExoticComponent<Omit<CollapsibleProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
+type BubbleVariant = "default" | "primary" | "secondary" | "muted" | "tinted" | "outline" | "ghost" | "destructive";
+interface BubbleProps extends ComponentProps<"div"> {
+    variant?: BubbleVariant;
+    align?: "start" | "end";
+}
+declare const Bubble: react.ForwardRefExoticComponent<Omit<BubbleProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const BubbleContent: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const BubbleReactions: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const BubbleGroup: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+type BubbleCollapsibleProps = CollapsibleProps;
+declare const BubbleCollapsible: react.ForwardRefExoticComponent<Omit<CollapsibleProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
+interface ProgressProps extends ComponentProps<"div"> {
+    value?: number;
+    indeterminate?: boolean;
+}
+declare const Progress: react.ForwardRefExoticComponent<Omit<ProgressProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
+type AttachmentState = "idle" | "uploading" | "processing" | "error" | "done";
+interface AttachmentProps extends ComponentProps<"div"> {
+    state?: AttachmentState;
+    orientation?: "horizontal" | "vertical";
+    size?: "default" | "sm" | "xs";
+}
+declare const Attachment: react.ForwardRefExoticComponent<Omit<AttachmentProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+interface AttachmentMediaProps extends ComponentProps<"div"> {
+    variant?: "default" | "image";
+}
+declare const AttachmentMedia: react.ForwardRefExoticComponent<Omit<AttachmentMediaProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const AttachmentContent: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const AttachmentTitle: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const AttachmentDescription: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const AttachmentActions: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const AttachmentAction: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref"> & react.RefAttributes<HTMLButtonElement>>;
+declare const AttachmentTrigger: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, "ref"> & react.RefAttributes<HTMLButtonElement>>;
+declare const AttachmentGroup: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+type AttachmentProgressProps = ProgressProps;
+declare const AttachmentProgress: react.ForwardRefExoticComponent<Omit<ProgressProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
+interface MarkerProps extends ComponentProps<"div"> {
+    variant?: "default" | "border" | "separator";
+    busy?: boolean;
+}
+declare const Marker: react.ForwardRefExoticComponent<Omit<MarkerProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
+declare const MarkerIcon: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>, "ref"> & react.RefAttributes<HTMLSpanElement>>;
+declare const MarkerContent: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
 interface AspectRatioProps extends ComponentProps<"div"> {
     ratio?: AspectRatio$1;
 }
@@ -103,6 +197,7 @@ interface AvatarProps extends ComponentProps<"div"> {
     alt?: string;
     initials?: string;
     size?: "sm" | "md" | "lg";
+    fallback?: ReactNode;
 }
 declare const Avatar: react.ForwardRefExoticComponent<Omit<AvatarProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -116,12 +211,6 @@ interface AlertProps extends ComponentProps<"div"> {
     title?: string;
 }
 declare const Alert: react.ForwardRefExoticComponent<Omit<AlertProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
-
-interface ProgressProps extends ComponentProps<"div"> {
-    value?: number;
-    indeterminate?: boolean;
-}
-declare const Progress: react.ForwardRefExoticComponent<Omit<ProgressProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
 interface MeterProps extends Omit<ComponentProps<"div">, "children"> {
     value?: number;
@@ -161,6 +250,7 @@ declare const StatCard: react.ForwardRefExoticComponent<Omit<StatCardProps, "ref
 
 interface ChartCardProps extends ComponentProps<"div"> {
     title?: string;
+    emptyState?: ReactNode;
 }
 declare const ChartCard: react.ForwardRefExoticComponent<Omit<ChartCardProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -188,7 +278,7 @@ interface ButtonProps extends ComponentProps<"button"> {
     variant?: "primary" | "secondary" | "ghost";
     size?: "sm" | "lg" | "icon";
     loading?: boolean;
-    icon?: string;
+    icon?: ReactNode;
 }
 declare const Button: react.ForwardRefExoticComponent<Omit<ButtonProps, "ref"> & react.RefAttributes<HTMLButtonElement>>;
 
@@ -209,6 +299,7 @@ interface FieldProps extends ComponentProps<"div"> {
     label?: string;
     helper?: string;
     error?: boolean | string;
+    htmlFor?: string;
 }
 declare const Field: react.ForwardRefExoticComponent<Omit<FieldProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -266,7 +357,7 @@ declare const Prose: react.ForwardRefExoticComponent<Omit<ProseProps, "ref"> & r
 interface ListItem {
     title: string;
     secondary?: string;
-    icon?: string;
+    icon?: ReactNode;
 }
 interface ListProps extends ComponentProps<"div"> {
     items?: ListItem[];
@@ -288,6 +379,23 @@ interface DataTableProps extends Omit<ComponentProps<"div">, "children"> {
     columns: DataTableColumn[];
     rows: (string | number)[][];
     selectable?: boolean;
+    sort?: {
+        column: number;
+        direction: "ascending" | "descending";
+    } | null;
+    defaultSort?: {
+        column: number;
+        direction: "ascending" | "descending";
+    } | null;
+    onSortChange?: (sort: {
+        column: number;
+        direction: "ascending" | "descending";
+    } | null) => void;
+    selectedRows?: number[];
+    defaultSelectedRows?: number[];
+    onSelectionChange?: (rows: number[]) => void;
+    selectAllLabel?: string;
+    getRowLabel?: (row: (string | number)[], index: number) => string;
 }
 declare const DataTable: react.ForwardRefExoticComponent<Omit<DataTableProps, "ref"> & react.RefAttributes<HTMLTableElement>>;
 
@@ -296,6 +404,7 @@ interface ChipProps extends ComponentProps<"span"> {
     active?: boolean;
     closable?: boolean;
     onClose?: () => void;
+    closeLabel?: string;
 }
 declare const Chip: react.ForwardRefExoticComponent<Omit<ChipProps, "ref"> & react.RefAttributes<HTMLSpanElement>>;
 
@@ -313,6 +422,7 @@ interface PaginationProps extends Omit<ComponentProps<"nav">, "children" | "onCh
     total: number;
     perPage?: number;
     onChange?: (page: number) => void;
+    disabled?: boolean;
 }
 declare const Pagination: react.ForwardRefExoticComponent<Omit<PaginationProps, "ref"> & react.RefAttributes<HTMLElement>>;
 
@@ -320,6 +430,7 @@ interface NavMenuItem {
     label: string;
     href?: string;
     active?: boolean;
+    onClick?: () => void;
 }
 interface NavMenuProps extends Omit<ComponentProps<"nav">, "children"> {
     items: NavMenuItem[];
@@ -327,11 +438,12 @@ interface NavMenuProps extends Omit<ComponentProps<"nav">, "children"> {
 declare const NavMenu: react.ForwardRefExoticComponent<Omit<NavMenuProps, "ref"> & react.RefAttributes<HTMLElement>>;
 
 interface BottomNavItem {
-    icon?: string;
+    icon?: ReactNode;
     label: string;
     href?: string;
     active?: boolean;
     badge?: string;
+    onClick?: () => void;
 }
 interface BottomNavProps extends Omit<ComponentProps<"nav">, "children"> {
     items: BottomNavItem[];
@@ -352,6 +464,10 @@ declare const Stepper: react.ForwardRefExoticComponent<Omit<StepperProps, "ref">
 interface NavbarProps extends ComponentProps<"nav"> {
     brand?: ReactNode;
     brandHref?: string;
+    open?: boolean;
+    defaultOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    disabled?: boolean;
 }
 declare const Navbar: react.ForwardRefExoticComponent<Omit<NavbarProps, "ref"> & react.RefAttributes<HTMLElement>>;
 
@@ -373,18 +489,22 @@ declare namespace ThemeProvider {
 interface TabItem {
     label: string;
     content: ReactNode;
+    disabled?: boolean;
 }
 interface TabsProps extends Omit<ComponentProps<"div">, "onChange"> {
     tabs: TabItem[];
     activeTab?: number;
     defaultActiveTab?: number;
     onChange?: (index: number) => void;
+    orientation?: "horizontal" | "vertical";
+    tabListProps?: Omit<ComponentProps<"div">, "children">;
 }
 declare const Tabs: react.ForwardRefExoticComponent<Omit<TabsProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
 interface AccordionItem {
     trigger: string;
     content: ReactNode;
+    disabled?: boolean;
 }
 interface AccordionProps extends Omit<ComponentProps<"div">, "onChange"> {
     items: AccordionItem[];
@@ -395,17 +515,10 @@ interface AccordionProps extends Omit<ComponentProps<"div">, "onChange"> {
 }
 declare const Accordion: react.ForwardRefExoticComponent<Omit<AccordionProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
-interface CollapsibleProps extends Omit<ComponentProps<"div">, "onChange"> {
-    open?: boolean;
-    defaultOpen?: boolean;
-    onChange?: (open: boolean) => void;
-    trigger: ReactNode;
-}
-declare const Collapsible: react.ForwardRefExoticComponent<Omit<CollapsibleProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
-
 interface SelectOption {
     label: string;
     value: string;
+    disabled?: boolean;
 }
 interface CustomSelectProps extends Omit<ComponentProps<"div">, "onChange"> {
     value?: string;
@@ -414,6 +527,7 @@ interface CustomSelectProps extends Omit<ComponentProps<"div">, "onChange"> {
     options: SelectOption[];
     placeholder?: string;
     searchable?: boolean;
+    disabled?: boolean;
 }
 declare const CustomSelect: react.ForwardRefExoticComponent<Omit<CustomSelectProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -422,6 +536,10 @@ interface CalendarProps extends Omit<ComponentProps<"div">, "onChange"> {
     defaultSelected?: string;
     onChange?: (date: string) => void;
     month?: Date;
+    onMonthChange?: (month: Date) => void;
+    disabled?: boolean;
+    min?: string;
+    max?: string;
 }
 declare const Calendar: react.ForwardRefExoticComponent<Omit<CalendarProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -431,6 +549,11 @@ interface DatePickerProps extends Omit<ComponentProps<"div">, "onChange"> {
     onChange?: (date: string) => void;
     label?: string;
     placeholder?: string;
+    disabled?: boolean;
+    name?: string;
+    min?: string;
+    max?: string;
+    inputProps?: Omit<ComponentProps<"input">, "value" | "defaultValue" | "onChange">;
 }
 declare const DatePicker: react.ForwardRefExoticComponent<Omit<DatePickerProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -440,6 +563,9 @@ interface CarouselProps extends Omit<ComponentProps<"div">, "onChange"> {
     onChange?: (index: number) => void;
     autoplay?: boolean;
     duration?: number;
+    previousLabel?: string;
+    nextLabel?: string;
+    disabled?: boolean;
 }
 declare const Carousel: react.ForwardRefExoticComponent<Omit<CarouselProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -448,13 +574,18 @@ interface CheckboxProps extends Omit<ComponentProps<"input">, "type" | "checked"
     defaultChecked?: boolean;
     onChange?: (checked: boolean) => void;
     label?: string;
+    indeterminate?: boolean;
 }
 declare const Checkbox: react.ForwardRefExoticComponent<Omit<CheckboxProps, "ref"> & react.RefAttributes<HTMLInputElement>>;
 
-interface CheckboxGroupProps extends ComponentProps<"div"> {
+interface CheckboxGroupProps extends Omit<ComponentProps<"div">, "defaultValue"> {
     label?: ReactNode;
     helper?: ReactNode;
     inline?: boolean;
+    value?: string[];
+    defaultValue?: string[];
+    onValueChange?: (values: string[]) => void;
+    disabled?: boolean;
 }
 declare const CheckboxGroup: react.ForwardRefExoticComponent<Omit<CheckboxGroupProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -474,7 +605,10 @@ interface RadioGroupProps extends Omit<ComponentProps<"div">, "onChange" | "defa
     options?: {
         label: string;
         value: string;
+        disabled?: boolean;
     }[];
+    disabled?: boolean;
+    required?: boolean;
 }
 declare const RadioGroup: react.ForwardRefExoticComponent<Omit<RadioGroupProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -483,6 +617,7 @@ interface SwitchProps extends Omit<ComponentProps<"div">, "onChange" | "role"> {
     defaultChecked?: boolean;
     onChange?: (checked: boolean) => void;
     label?: string;
+    disabled?: boolean;
 }
 declare const Switch: react.ForwardRefExoticComponent<Omit<SwitchProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -494,6 +629,10 @@ interface SliderProps extends Omit<ComponentProps<"div">, "onChange" | "defaultV
     max?: number;
     step?: number;
     label?: string;
+    disabled?: boolean;
+    name?: string;
+    form?: string;
+    inputProps?: Omit<ComponentProps<"input">, "type" | "value" | "defaultValue" | "onChange" | "min" | "max" | "step">;
 }
 declare const Slider: react.ForwardRefExoticComponent<Omit<SliderProps, "ref"> & react.RefAttributes<HTMLInputElement>>;
 
@@ -520,6 +659,10 @@ interface ToggleGroupProps extends Omit<ComponentProps<"div">, "onChange" | "def
     defaultValue?: string;
     onChange?: (value: string) => void;
     multiple?: boolean;
+    values?: string[];
+    defaultValues?: string[];
+    onValuesChange?: (values: string[]) => void;
+    disabled?: boolean;
 }
 declare const ToggleGroup: react.ForwardRefExoticComponent<Omit<ToggleGroupProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
@@ -529,10 +672,14 @@ interface InputOTPProps extends Omit<ComponentProps<"div">, "onChange" | "defaul
     defaultValue?: string;
     onChange?: (value: string) => void;
     separator?: number;
+    disabled?: boolean;
+    readOnly?: boolean;
+    required?: boolean;
+    name?: string;
 }
 declare const InputOTP: react.ForwardRefExoticComponent<Omit<InputOTPProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
-interface ModalProps {
+interface ModalProps extends Omit<ComponentProps<"div">, "onClose"> {
     open: boolean;
     onClose: () => void;
     title?: string;
@@ -540,9 +687,9 @@ interface ModalProps {
     className?: string;
     children?: ReactNode;
 }
-declare function Modal({ open, onClose, title, footer, className, children }: ModalProps): react.ReactPortal | null;
+declare const Modal: react.ForwardRefExoticComponent<Omit<ModalProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
-interface AlertDialogProps {
+interface AlertDialogProps extends Omit<ComponentProps<"div">, "onClose"> {
     open: boolean;
     onClose: () => void;
     title: string;
@@ -552,23 +699,23 @@ interface AlertDialogProps {
     onConfirm?: () => void;
     variant?: "danger" | "warning" | "info";
 }
-declare function AlertDialog({ open, onClose, title, description, confirmLabel, cancelLabel, onConfirm, variant, }: AlertDialogProps): react.ReactPortal | null;
+declare const AlertDialog: react.ForwardRefExoticComponent<Omit<AlertDialogProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
-interface SheetProps {
+interface SheetProps extends Omit<ComponentProps<"div">, "onClose"> {
     open: boolean;
     onClose: () => void;
     side?: "right" | "left" | "top" | "bottom";
     title?: string;
     children?: ReactNode;
 }
-declare function Sheet({ open, onClose, side, title, children }: SheetProps): react.ReactPortal | null;
+declare const Sheet: react.ForwardRefExoticComponent<Omit<SheetProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
-interface DrawerProps {
+interface DrawerProps extends Omit<ComponentProps<"div">, "onClose"> {
     open: boolean;
     onClose: () => void;
     children?: ReactNode;
 }
-declare function Drawer({ open, onClose, children }: DrawerProps): react.ReactPortal | null;
+declare const Drawer: react.ForwardRefExoticComponent<Omit<DrawerProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
 interface ToastProps {
     id: string;
@@ -576,8 +723,10 @@ interface ToastProps {
     title?: string;
     message: string;
     onDismiss: (id: string) => void;
+    dismissLabel?: string;
+    role?: "status" | "alert";
 }
-declare function Toast({ id, type, title, message, onDismiss }: ToastProps): react_jsx_runtime.JSX.Element;
+declare function Toast({ id, type, title, message, onDismiss, dismissLabel, role }: ToastProps): react_jsx_runtime.JSX.Element;
 
 interface ToastOpts {
     type?: "info" | "success" | "warning" | "error";
@@ -600,10 +749,7 @@ interface TooltipProps {
     children: ReactNode;
     className?: string;
 }
-declare function Tooltip({ content, position, children, className, }: TooltipProps): react_jsx_runtime.JSX.Element;
-declare namespace Tooltip {
-    var displayName: string;
-}
+declare const Tooltip: react.ForwardRefExoticComponent<TooltipProps & react.RefAttributes<HTMLDivElement>>;
 
 type PopoverPosition = "top" | "bottom" | "left" | "right";
 interface PopoverProps {
@@ -620,7 +766,7 @@ declare const Popover: react.ForwardRefExoticComponent<PopoverProps & react.RefA
 interface DropdownMenuItem {
     label: string;
     onClick?: () => void;
-    icon?: string;
+    icon?: ReactNode;
     divider?: boolean;
     disabled?: boolean;
 }
@@ -630,10 +776,7 @@ interface DropdownMenuProps {
     align?: "left" | "right";
     className?: string;
 }
-declare function DropdownMenu({ trigger, items, align, className, }: DropdownMenuProps): react_jsx_runtime.JSX.Element;
-declare namespace DropdownMenu {
-    var displayName: string;
-}
+declare const DropdownMenu: react.ForwardRefExoticComponent<DropdownMenuProps & react.RefAttributes<HTMLDivElement>>;
 
 interface ContextMenuItem {
     label: string;
@@ -646,36 +789,31 @@ interface ContextMenuProps {
     children: ReactNode;
     className?: string;
 }
-declare function ContextMenu({ items, children, className }: ContextMenuProps): react_jsx_runtime.JSX.Element;
-declare namespace ContextMenu {
-    var displayName: string;
-}
+declare const ContextMenu: react.ForwardRefExoticComponent<ContextMenuProps & react.RefAttributes<HTMLDivElement>>;
 
 interface CommandItem {
     label: string;
     shortcut?: string;
     onClick?: () => void;
+    disabled?: boolean;
 }
 interface CommandGroup {
     label: string;
     items: CommandItem[];
 }
-interface CommandPaletteProps {
+interface CommandPaletteProps extends Omit<ComponentProps<"div">, "onClose"> {
     open: boolean;
     onClose: () => void;
     groups: CommandGroup[];
     placeholder?: string;
     className?: string;
 }
-declare function CommandPalette({ open, onClose, groups, placeholder, className, }: CommandPaletteProps): react.ReactPortal | null;
-declare namespace CommandPalette {
-    var displayName: string;
-}
+declare const CommandPalette: react.ForwardRefExoticComponent<Omit<CommandPaletteProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
 declare function useControllable<T>(controlled: T | undefined, defaultValue: T, onChange?: (value: T) => void): [T, (next: T) => void];
 
-declare function useEscapeKey(onClose: (() => void) | undefined, active: boolean): void;
+declare function useEscapeKey(onClose: (() => void) | undefined, active: boolean, ref?: React.RefObject<HTMLElement | null>): void;
 declare function useOutsideClick(ref: React.RefObject<HTMLElement | null>, onClose: (() => void) | undefined, active: boolean): void;
 declare function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean): void;
 
-export { Accordion, Alert, AlertDialog, type AlertVariant, AspectRatio, type AspectRatio$1 as AspectRatioType, Avatar, AvatarGroup, Badge, type BadgeVariant, BottomNav, Breadcrumbs, Button, ButtonGroup, type ButtonVariant, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, CheckboxGroup, Chip, type ChipColor, Collapsible, CommandPalette, Container, type ContainerSize, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, type GapToken, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, type Size, Skeleton, type SkeletonVariant, Slider, Spinner, Stack, StatCard, Stepper, Surface, type SurfaceVariant, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };
+export { Accordion, Alert, AlertDialog, type AlertVariant, AspectRatio, type AspectRatio$1 as AspectRatioType, Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, type AttachmentMediaProps, AttachmentProgress, type AttachmentProgressProps, type AttachmentProps, type AttachmentState, AttachmentTitle, AttachmentTrigger, Avatar, AvatarGroup, Badge, type BadgeVariant, BottomNav, Breadcrumbs, Bubble, BubbleCollapsible, type BubbleCollapsibleProps, BubbleContent, BubbleGroup, type BubbleProps, BubbleReactions, type BubbleVariant, Button, ButtonGroup, type ButtonVariant, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, CheckboxGroup, Chip, type ChipColor, Collapsible, CommandPalette, Container, type ContainerSize, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, type GapToken, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Marker, MarkerContent, MarkerIcon, type MarkerProps, Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader, type MessageProps, MessageScroller, MessageScrollerButton, type MessageScrollerButtonProps, MessageScrollerContent, type MessageScrollerContentProps, MessageScrollerItem, type MessageScrollerItemProps, type MessageScrollerProps, MessageScrollerProvider, type MessageScrollerProviderProps, MessageScrollerViewport, type MessageScrollerViewportProps, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, type Size, Skeleton, type SkeletonVariant, Slider, Spinner, Stack, StatCard, Stepper, Surface, type SurfaceVariant, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };
