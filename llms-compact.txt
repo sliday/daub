@@ -1,7 +1,7 @@
 # DAUB UI — Compact Reference
 
-> Version: 3.20.5
-> HTML catalog: 90 components | Browser/OpenUI/MCP: 88 renderer types
+> Version: 3.20.6
+> HTML catalog: 91 components | Browser/OpenUI/MCP: 89 renderer types
 > Full docs: https://daub.dev/llms.txt
 > CSS: https://daub.dev/daub.css | JS: https://daub.dev/daub.js
 > Classless: https://daub.dev/daub-classless.css
@@ -16,7 +16,7 @@
 
 ## Chat Components
 
-Chat primitives: MessageScroller, Message, Bubble, Attachment, Marker, ChatComposer.
+Chat primitives: MessageScroller, Message, Bubble, Attachment, Marker, ChangeSummary, ChatComposer.
 Your app owns messages, AI transport, uploads, persistence, and reaction selection.
 Use ChatComposer for native rich input. Example: `chat-demo.html`.
 
@@ -25,9 +25,10 @@ Use ChatComposer for native rich input. Example: `chat-demo.html`.
 - `db-bubble` / `--primary` (default), `--secondary`, `--muted`, `--tinted`, `--outline`, `--ghost`, `--destructive`, `--end`; parts `__content`, `__reactions`; group `db-bubble-group`.
 - `db-attachment` / `--vertical`, `--sm`, `--xs`; parts `__media` (`--image`), `__content`, `__title`, `__description`, sibling overlay link `__trigger` and `__actions` > `__action`. Group `db-attachment-group`. `data-state="idle|uploading|processing|error|done"`. Keep buttons outside the overlay anchor; app controls state/progress.
 - `db-marker` / `--border`, `--separator`; parts `__icon`, `__content`. `role="status"` for live status; `aria-busy="true"` during work. `db-shimmer` on text, `db-scroll-fade` on scroll viewports.
+- `db-change-summary`: static framed file list with labelled `__additions` / `__deletions`, `__totals`, and optional `__actions` inside `__header`. Other parts: `__icon` (Lucide files, 14/16px), `__heading`, `__title`, `__description`, `__files` (ul), `__file` (li), `__path`, `__counts`. No `daub.js` requirement. Props: files `[{path:string,additions?:number,deletions?:number,status?:"added"|"modified"|"deleted"}]`, title?, description?, undoLabel?, undoDisabled?. Default `Edited N file(s)`; empty `No files changed`. Escape paths as plain text; floor finite counts and clamp rows/totals to `0..Number.MAX_SAFE_INTEGER`; other counts become 0. No file operations or implicit buttons. Spec children are host-wired action IDs; undoLabel/undoDisabled configure only React onUndo buttons. Examples: title `Prepared 2 demo files`, description `Demo changes`, no actions.
 - `db-chat-composer` on an empty `<form data-db-chat-options="escaped JSON">`. Requires `daub.js` and `daub.css`; `DAUB.init(parent)` enhances native roots. Options: models `[{id,label,efforts?:string[]}]`, model, effort, approval `ask|auto`, mode `chat|plan`, actions `[{id,label,icon?,disabled?}]`, capabilities `{queue?,steer?,attachments?,folders?,dictation?,approval?}` (boolean flags), busy, placeholder. Default models are demo-only (simulated). Queue, steer, attachments, approval, and supported dictation default on; folders need browser support. The queue sits outside the composer panel. Dictation requires a user command.
 
-OpenUI: children first, named metadata. Attachment children are actions; other
+OpenUI: children first, named metadata. Attachment/ChangeSummary children are actions; other
 chat children render inside content. Plain text props escape HTML; image/link
 URLs use the renderer URL guard. Bubble reactions accept `[{label,count,pressed}]`.
 
@@ -37,6 +38,7 @@ Message(children, align, avatar, name, timestamp, messageId, scrollAnchor, foote
 Bubble(children, content, variant, align, reactions)
 Attachment(children, name, description, src, alt, href, size, state, progress, orientation)
 Marker(children, content, icon, variant, status, busy)
+ChangeSummary(children, files, title, description, undoLabel, undoDisabled)
 ChatComposer(models, model, effort, approval, mode, actions, capabilities, busy, placeholder, id)
 ```
 
@@ -61,6 +63,12 @@ local File[], model, effort, approval, mode, optional goal. Host sets busy durin
 responses, drains the queue, and owns transport and approval enforcement.
 Configuration grants no access rights. No reading/uploading File content without
 host action. Destroy cancels dictation and disposes listeners/preview URLs.
+
+React `ChangeSummary`: typed `files`, title?, description?, undoLabel? (default
+Undo), undoDisabled? (default false), div props/ref, action children, and
+`onUndo` / `onViewChanges` (React button mouse event handlers). Each callback
+renders its button only when supplied. The host owns undo and diff views.
+No `daub.js` requirement; React escapes text and supports SSR.
 
 React `ChatComposer`: models, model, effort, approval, mode, actions, capabilities,
 busy, placeholder, plus id, form props, form ref, and `onReady(controller)`.

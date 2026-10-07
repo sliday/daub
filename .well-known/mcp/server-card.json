@@ -4,7 +4,7 @@
     "name": "daub-mcp",
     "version": "1.0.0",
     "title": "DAUB UI MCP Server",
-    "description": "Generate, validate, and render DAUB CSS UIs from natural language. 88 spec renderer types, 21 theme families, including chat primitives and the native ChatComposer.",
+    "description": "Generate, validate, and render DAUB CSS UIs from natural language. 89 spec renderer types, 21 theme families, including static ChangeSummary, chat primitives, and the native ChatComposer.",
     "vendor": "Sliday",
     "homepage": "https://daub.dev",
     "documentation": "https://daub.dev/llms.txt",

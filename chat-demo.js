@@ -19,37 +19,14 @@
   slot('status', 'chat-status');
   slot('file-input', 'chat-file');
   slot('attachments', 'pending-attachments');
-  const settings = document.createElement('div');
-  settings.className = 'db-popover';
-  const settingsButton = document.createElement('button');
-  settingsButton.type = 'button';
-  settingsButton.className = 'db-popover__trigger chat-demo-config-trigger';
-  settingsButton.setAttribute('aria-label', 'Chat settings');
-  settingsButton.title = 'Chat settings';
-  settingsButton.append(icon('sliders-horizontal'));
-  const settingsPanel = document.createElement('div');
-  settingsPanel.className = 'db-popover__content chat-demo-composer-settings';
-  settingsPanel.setAttribute('role', 'dialog');
-  settingsPanel.setAttribute('aria-label', 'Chat settings');
-  settingsPanel.append(node('h3', '', 'Chat settings'));
-  for (const [field, label] of [['effort', 'Effort'], ['approval', 'Approval'], ['mode', 'Mode'], ['goal', 'Goal']]) {
-    const control = form.querySelector('.db-chat-composer__' + field);
-    const wrapper = node('label', 'chat-demo-config-field', label);
-    wrapper.append(control);
-    settingsPanel.append(wrapper);
-  }
-  settings.append(settingsButton, settingsPanel);
-  form.querySelector('.db-chat-composer__toolbar > .db-dropdown').after(settings);
-  settingsPanel.addEventListener('keydown', event => {
-    if (event.key === 'Enter' && event.target.matches('input')) {
-      event.preventDefault();
-      composer.setGoal(event.target.value.trim() || null);
-    }
-  });
   DAUB.init(form);
   const history = document.getElementById('load-history');
   let stream = null, sequence = 0, historyCount = 0, statusRevision = 0, queueTimer = null, workspace = null;
   const attachedFiles = new Set();
+  const demoFiles = [
+    { path: 'review-checklist.md', additions: 3, deletions: 1, before: '# Release review\n- Desktop smoke test\n- Export a report', patch: '@@ -1,3 +1,5 @@\n # Release review\n-- Desktop smoke test\n+- Desktop and mobile smoke tests\n+- Keyboard and focus checks\n+- Record release decision\n - Export a report' },
+    { path: 'release-notes.md', additions: 2, deletions: 0, before: '# Release notes\n- Selected date range included in exports', patch: '@@ -1,2 +1,4 @@\n # Release notes\n - Selected date range included in exports\n+- Queued follow-up messages\n+- Keyboard-accessible chat actions' },
+  ];
 
   function node(tag, className, text) {
     const element = document.createElement(tag);
@@ -64,6 +41,65 @@
     return element;
   }
   function icons() { if (window.lucide) lucide.createIcons(); }
+  function initialChangeSummary() {
+    const content = messages.querySelector('[data-db-message-id="initial-answer"] .db-message__content');
+    if (!content) return;
+    const card = node('section', 'db-change-summary');
+    card.setAttribute('aria-label', 'Demo file changes');
+    const header = node('div', 'db-change-summary__header');
+    const glyph = node('span', 'db-change-summary__icon');
+    glyph.append(icon('files'));
+    const heading = node('div', 'db-change-summary__heading');
+    const title = node('span', 'db-change-summary__title', 'Prepared 2 demo files');
+    const description = node('span', 'db-change-summary__description', 'Demo changes');
+    const totals = node('span', 'db-change-summary__totals');
+    const added = node('span', 'db-change-summary__additions', '+5');
+    const removed = node('span', 'db-change-summary__deletions', '-1');
+    added.setAttribute('aria-label', '5 added lines');
+    removed.setAttribute('aria-label', '1 deleted line');
+    totals.append(added, removed);
+    heading.append(title, description, totals);
+    const actions = node('div', 'db-change-summary__actions');
+    const undo = node('button', 'db-btn db-btn--ghost db-btn--sm');
+    undo.type = 'button'; undo.setAttribute('aria-label', 'Undo demo changes'); undo.title = 'Undo demo changes';
+    undo.append(icon('undo-2'), node('span', '', 'Undo'));
+    const view = node('button', 'db-btn db-btn--secondary db-btn--sm', 'View changes');
+    view.type = 'button'; view.setAttribute('aria-label', 'View demo changes'); view.title = 'View demo changes';
+    actions.append(undo, view);
+    header.append(glyph, heading, actions);
+    const list = node('ul', 'db-change-summary__files');
+    for (const file of demoFiles) {
+      const row = node('li', 'db-change-summary__file');
+      const path = node('span', 'db-change-summary__path', file.path); path.title = file.path;
+      const counts = node('span', 'db-change-summary__counts');
+      const additions = node('span', 'db-change-summary__additions', '+' + file.additions);
+      const deletions = node('span', 'db-change-summary__deletions', '-' + file.deletions);
+      additions.setAttribute('aria-label', file.additions + ' added lines');
+      deletions.setAttribute('aria-label', file.deletions + ' deleted lines');
+      counts.append(additions, deletions); row.append(path, counts); list.append(row);
+    }
+    card.append(header, list);
+    const batch = { applied: true };
+    undo.addEventListener('click', () => {
+      if (!batch.applied) return;
+      batch.applied = false; title.textContent = 'Reverted 2 demo files'; description.textContent = 'Demo changes reverted';
+      totals.replaceChildren(node('span', '', 'No pending changes'));
+      for (const counts of list.querySelectorAll('.db-change-summary__counts')) counts.textContent = 'Reverted';
+      undo.disabled = true;
+      setStatus('Demo changes reverted');
+    });
+    view.addEventListener('click', () => {
+      const body = document.getElementById('chat-changes-body');
+      body.replaceChildren();
+      for (const file of demoFiles) {
+        const section = node('section', 'chat-demo-changes-file');
+        section.append(node('h3', '', file.path), node('pre', '', batch.applied ? file.patch : file.before));
+        body.append(section);
+      }
+      DAUB.openModal('chat-changes-modal');
+    });
+    content.insertBefore(card, content.querySelector('.db-message__footer--hover'));
+  }
   function thinking(content, completed = false, context = {}) {
     const element = node('details', 'chat-demo-thinking');
     const summary = node('summary');
@@ -258,9 +294,10 @@
     return 'Review the main flow first, then its failure states. Try a long message, a narrow viewport, and a reply that grows while you read earlier messages. Confirm that loading history preserves your place and that the latest-message button resumes following. Keep model calls and storage in your application; these conversation components handle presentation and scrolling.';
   }
   function responseFooter(current, state) {
-    const footer = node('div', 'db-message__footer chat-demo-run-footer');
-    footer.append(node('span', '', state === 'stopped' ? 'Stopped' : state === 'steered' ? 'Steered' : 'Complete'));
     current.answer.content.querySelector('.chat-demo-copy').disabled = !current.answer.body.textContent;
+    if (state === 'complete') { icons(); return; }
+    const footer = node('div', 'db-message__footer chat-demo-run-footer');
+    footer.append(node('span', '', state === 'steered' ? 'Steered' : 'Stopped'));
     if (state === 'stopped') {
       const retry = node('button', 'db-btn db-btn--ghost db-btn--sm chat-demo-retry');
       retry.type = 'button';
@@ -280,8 +317,7 @@
   function startResponse(request, turn, attempt = 1) {
     messages.setAttribute('aria-busy', 'true');
     const answer = row('', 'assistant', 'assistant-' + turn + (attempt > 1 ? '-retry-' + attempt : ''));
-    answer.content.querySelector('.db-message__header').append(node('span', 'chat-demo-run-label', 'Attempt ' + attempt + ' (demo)'));
-    if (request.model) answer.content.querySelector('.db-message__header').append(node('span', 'chat-demo-run-label', request.model.replace('demo-', '') + ' / ' + (request.effort || 'high')));
+    if (attempt > 1) answer.content.querySelector('.db-message__header').append(node('span', 'chat-demo-run-label', 'Attempt ' + attempt + ' (demo)'));
     answer.body.parentElement.hidden = true;
     const activity = thinking(answer.content, false, request);
     const chunks = reply(request.prompt, request).split(/(?<=\s)/);
@@ -300,13 +336,6 @@
         stream = null;
         messages.setAttribute('aria-busy', 'false');
         setStatus('Ready');
-        const reactions = node('div', 'db-bubble__reactions');
-        const received = node('button', '', 'Received');
-        received.type = 'button';
-        received.setAttribute('aria-pressed', 'false');
-        received.addEventListener('click', () => received.setAttribute('aria-pressed', String(received.getAttribute('aria-pressed') !== 'true')));
-        reactions.append(received);
-        answer.content.append(reactions);
         updateSend();
         workspace?.refresh();
         queueTimer = setTimeout(() => {
@@ -378,7 +407,8 @@
     composer.clearDraft();
     for (const request of composer.getQueue()) composer.removeQueued(request.id);
     messages.innerHTML = empty ? '' : initial;
-    if (!empty) { initialThinking(); initialMessageMeta(); }
+    DAUB.closeModal('chat-changes-modal');
+    if (!empty) { initialThinking(); initialMessageMeta(); initialChangeSummary(); }
     historyCount = 0;
     history.disabled = false;
     input.value = '';
@@ -412,6 +442,7 @@
   });
   initialThinking();
   initialMessageMeta();
+  initialChangeSummary();
   workspace = createChatDemoShell({ composer, messages, scroller: controller, getFiles: () => [...new Set([...attachedFiles, ...composer.getState().files, ...composer.getQueue().flatMap(request => request.files || [])])], reset, setStatus, copyText });
   icons();
 })();

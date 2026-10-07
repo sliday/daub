@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { chromium, firefox, webkit } from 'playwright';
 
 const assets = new Map();
-for (const name of ['index.html', 'daub.css', 'daub.js', 'site-nav.js', 'assets/lucide.min.js']) {
+for (const name of ['index.html', 'daub.css', 'daub.js', 'site-nav.js', 'site-nav.css', 'assets/lucide.min.js']) {
   assets.set('/' + name, await readFile(new URL('../../' + name, import.meta.url)));
 }
 let browser;

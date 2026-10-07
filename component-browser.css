@@ -11,12 +11,11 @@ button, a, input, select { outline-offset: 4px; }
 [hidden] { display: none !important; }
 i[data-lucide], svg.lucide { width: 16px; height: 16px; flex-shrink: 0; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.skip-link { position: fixed; left: 16px; top: -60px; z-index: 60; background: var(--library-surface); padding: 8px 16px; }
+.skip-link { position: fixed; left: 16px; top: -60px; z-index: 110; background: var(--library-surface); padding: 8px 16px; }
 .skip-link:focus { top: 12px; }
-.library-sidebar { position: fixed; inset: 0 auto 0 0; width: 244px; display: flex; flex-direction: column; background: var(--library-sidebar); border-right: 1px solid var(--library-border); padding: 24px 16px 16px; z-index: 30; }
+.library-sidebar { position: fixed; inset: 48px auto 0 0; width: 244px; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; background: var(--library-sidebar); border-right: 1px solid var(--library-border); padding: 24px 16px 16px; z-index: 30; }
 .library-brand-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-.library-brand { font-family: Georgia, serif; font-size: 26px; font-weight: 700; }
-.library-brand span { display: block; font: 12px/1.5 system-ui, sans-serif; color: var(--library-muted); margin-top: 2px; }
+.library-section-title { font-size: 13px; font-weight: 600; }
 .library-search { display: flex; align-items: center; gap: 8px; padding: 0 10px; border: 1px solid var(--library-border); border-radius: 6px; background: var(--library-surface); min-height: 40px; }
 .library-search:focus-within { outline: 2px solid var(--library-accent); outline-offset: 2px; }
 .library-search input { min-width: 0; width: 100%; border: 0; background: transparent; outline: none; font-size: 13px; padding: 10px 0; }
@@ -26,7 +25,7 @@ i[data-lucide], svg.lucide { width: 16px; height: 16px; flex-shrink: 0; }
 .library-links a:hover, .library-footer a:hover { color: var(--library-text); background: var(--library-active); border-radius: 4px; }
 .library-label { display: flex; justify-content: space-between; font-weight: 600; font-size: 12px; padding: 18px 8px 10px; }
 .library-label span { color: var(--library-muted); font-variant-numeric: tabular-nums; }
-.component-nav { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.component-nav { flex: none; }
 .component-nav section + section { margin-top: 14px; }
 .component-nav h2 { margin: 0 0 4px; padding: 4px 8px; color: var(--library-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; }
 .component-nav a { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; margin: 1px 0; border-radius: 4px; font-size: 13px; }
@@ -52,6 +51,17 @@ h1 { margin: 0; font-size: 32px; line-height: 1.2; font-weight: 650; overflow-wr
 .text-button:hover { background: var(--library-active); }
 .install-command { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 8px 16px; border: 1px solid var(--library-border); border-radius: 6px; background: var(--library-code); margin-bottom: 32px; }
 code, pre { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 12px; }
+.component-description code, .getting-started :not(pre) > code { font-size: .9em; line-height: inherit; padding: .1em .3em; border: 1px solid var(--library-border); border-radius: 3px; background: var(--library-code); color: var(--library-text); overflow-wrap: anywhere; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.component-description { overflow-wrap: anywhere; }
+.getting-started { max-width: 1000px; }
+.guide-intro { margin: 16px 0 24px; color: var(--library-muted); font-size: 16px; }
+.guide-toc { display: flex; flex-wrap: wrap; gap: 16px; padding-bottom: 24px; }
+.getting-started a { color: var(--library-accent); text-decoration: underline; text-underline-offset: 3px; }
+.guide-section { border-top: 1px solid var(--library-border); padding-block: 28px; scroll-margin-top: 72px; }
+.guide-section h2 { margin: 0 0 16px; font-size: 20px; font-weight: 600; }
+.guide-section p { max-width: 75ch; line-height: 1.75; }
+.guide-section pre { margin: 16px 0; padding: 16px; border: 1px solid var(--library-border); border-radius: 6px; background: var(--library-code); white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7; }
+.library-links a[aria-current="page"] { color: var(--library-text); background: var(--library-active); border-radius: 4px; }
 .example-toolbar { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--library-border); }
 .example-tabs { display: flex; gap: 20px; }
 .example-tabs button { padding: 12px 0; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--library-muted); font-size: 13px; }

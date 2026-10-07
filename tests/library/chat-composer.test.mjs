@@ -42,6 +42,79 @@ async function fixture(options = {}, setup) {
   return { page, errors };
 }
 
+test('pasted clipboard and base64 images become local attachments with previews and queue ownership', async () => {
+  const { page, errors } = await fixture();
+  try {
+    await page.evaluate(() => {
+      window.pasteImageData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aXioAAAAASUVORK5CYII=';
+      window.pasteIntoComposer = (text = '', html = '', file = false) => {
+        const data = new DataTransfer();
+        if (text) data.setData('text/plain', text);
+        if (html) data.setData('text/html', html);
+        if (file) data.items.add(new File([Uint8Array.from(atob(pasteImageData.split(',')[1]), c => c.charCodeAt(0))], 'clipboard.png', { type: 'image/png' }));
+        const event = new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true });
+        document.querySelector('.db-chat-composer__input').dispatchEvent(event);
+        return event.defaultPrevented;
+      };
+      composer.setDraft('Review this');
+    });
+    assert.equal(await page.evaluate(() => pasteIntoComposer('', '', true)), true);
+    assert.equal(await page.evaluate(() => composer.getState().files.length), 1, 'clipboard files and items do not duplicate the image');
+    assert.equal(await page.evaluate(() => pasteIntoComposer(pasteImageData)), true);
+    assert.equal(await page.evaluate(() => composer.getState().text), 'Review this', 'base64 stays out of message text');
+    assert.equal(await page.evaluate(() => {
+      const input = document.querySelector('.db-chat-composer__input');
+      input.setSelectionRange(7, 11);
+      return pasteIntoComposer('these images', '<img src="' + pasteImageData + '"><img src="' + pasteImageData + '"><img src="https://example.invalid/image.png">');
+    }), true);
+    assert.equal(await page.evaluate(() => composer.getState().text), 'Review these images');
+    assert.equal(await page.evaluate(() => composer.getState().files.length), 3, 'repeated inline sources create one file');
+    await page.waitForFunction(() => [...document.querySelectorAll('.db-attachment__preview')].every(image => image.complete && image.naturalWidth > 0));
+    assert.equal(await page.evaluate(() => composer.getState().files.every(file => file instanceof File && file.type === 'image/png')), true);
+    const source = await page.locator('.db-attachment__preview').first().getAttribute('src');
+    assert.match(source, /^blob:/);
+    await page.evaluate(() => composer.setBusy(true));
+    await page.getByRole('button', { name: 'Queue message', exact: true }).click();
+    assert.equal(await page.evaluate(() => composer.getQueue()[0].files.length), 3);
+    assert.equal(await page.locator('.db-chat-composer__queued-files img').first().getAttribute('src'), source);
+    assert.equal(await page.evaluate(() => composer.getState().files.length), 0);
+    const next = await page.evaluate(async () => {
+      const request = composer.takeNext();
+      return { text: request.text, size: (await request.files[0].arrayBuffer()).byteLength };
+    });
+    assert.equal(next.text, 'Review these images');
+    assert.ok(next.size > 0);
+    assert.deepEqual(errors, []);
+  } finally { await page.close(); }
+});
+
+test('image paste respects disabled attachments, ordinary text, invalid data, and disposal', async () => {
+  const { page, errors } = await fixture({ capabilities: { attachments: false } });
+  try {
+    const result = await page.evaluate(() => {
+      const input = document.querySelector('.db-chat-composer__input');
+      function paste(text, image = false) {
+        const data = new DataTransfer();
+        data.setData('text/plain', text);
+        if (image) data.items.add(new File(['image'], 'clipboard.png', { type: 'image/png' }));
+        const event = new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true });
+        input.dispatchEvent(event);
+        return event.defaultPrevented;
+      }
+      const disabled = paste('', true);
+      composer.updateOptions({ capabilities: { attachments: true } });
+      const plain = paste('Regular text');
+      const invalid = paste('data:image/png;base64,abcde');
+      const unsupported = paste('data:text/html;base64,PHNjcmlwdD4=');
+      const count = composer.getState().files.length;
+      composer.destroy();
+      return { disabled, plain, invalid, unsupported, count, destroyed: paste('', true) };
+    });
+    assert.deepEqual(result, { disabled: false, plain: false, invalid: false, unsupported: false, count: 0, destroyed: false });
+    assert.deepEqual(errors, []);
+  } finally { await page.close(); }
+});
+
 test('empty roots self-populate once; native init skips React roots and respects explicit ownership', async () => {
   const { page, errors } = await fixture();
   try {
@@ -102,7 +175,7 @@ test('busy requests queue immutable configuration; edit, canceled steer, remove,
   try {
     await page.evaluate(() => { composer.setBusy(true); composer.setDraft('First'); composer.attachFiles([new File(['x'], 'queue.txt')]); });
     assert.equal(await page.getByRole('combobox', { name: 'Model', exact: true }).isDisabled(), true);
-    assert.equal(await page.getByRole('combobox', { name: 'Effort', exact: true }).isDisabled(), true);
+    assert.equal(await page.locator('.db-chat-composer__choice[data-field="effort"] button[role="combobox"]').isDisabled(), true);
     await page.getByRole('button', { name: 'Queue message', exact: true }).click();
     assert.equal(await page.locator('.db-chat-composer__queued-item').count(), 1);
     await page.getByRole('button', { name: 'Edit queued message', exact: true }).click();
@@ -159,6 +232,7 @@ test('declarative options merge with explicit options; model efforts validate an
       const selected = controller.getState();
       const ui = { placeholder: root.querySelector('textarea').placeholder, status: root.querySelector('.db-chat-composer__status').textContent, effort: root.querySelector('select[name=effort]').value };
       controller.setGoal(null);
+      root.remove();
       return { same, initial, rejected, locked, selected, ui, goal: controller.getState().goal };
     });
     assert.equal(result.same, true);
@@ -172,13 +246,20 @@ test('declarative options merge with explicit options; model efforts validate an
     assert.equal(result.selected.goal, 'Finish audit');
     assert.equal(result.goal, null);
     assert.deepEqual(result.ui, { placeholder: 'Release notes', status: 'Waiting for host', effort: 'low' });
-    await page.getByRole('combobox', { name: 'Model', exact: true }).first().selectOption('demo-code');
-    await page.getByRole('combobox', { name: 'Effort', exact: true }).first().selectOption('low');
-    await page.getByRole('combobox', { name: 'Approval', exact: true }).first().selectOption('auto');
+    await page.getByRole('combobox', { name: 'Model', exact: true }).first().click();
+    await page.getByRole('option', { name: 'Code reviewer (demo)', exact: true }).click();
+    await page.getByRole('button', { name: 'Chat settings', exact: true }).first().click();
+    await page.getByRole('combobox', { name: 'Effort', exact: true }).first().click();
+    await page.getByRole('option', { name: 'Low', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Approval', exact: true }).first().click();
+    await page.getByRole('option', { name: 'Auto-approve safe actions', exact: true }).click();
     assert.equal(await page.locator('#composer .db-chat-composer__approval option:checked').textContent(), 'Auto-approve safe actions');
-    await page.getByRole('combobox', { name: 'Mode', exact: true }).first().selectOption('plan');
+    await page.getByRole('button', { name: 'Chat settings', exact: true }).first().click();
+    await page.getByRole('combobox', { name: 'Mode', exact: true }).first().click();
+    await page.getByRole('option', { name: 'Plan', exact: true }).click();
     await page.getByRole('textbox', { name: 'Goal', exact: true }).first().fill('Ship review');
     await page.getByRole('textbox', { name: 'Goal', exact: true }).first().press('Tab');
+    await page.getByRole('textbox', { name: 'Message', exact: true }).first().focus();
     await page.evaluate(() => composer.setBusy(true));
     await page.getByRole('textbox', { name: 'Message', exact: true }).first().fill('Queued intent');
     await page.getByRole('button', { name: 'Queue message', exact: true }).click();
@@ -199,6 +280,8 @@ test('Add menu follows keyboard and disabled-item behavior; configured side-chat
     const add = page.getByRole('button', { name: 'Add', exact: true });
     await add.press('ArrowDown');
     assert.equal(await add.getAttribute('aria-expanded'), 'true');
+    assert.equal(await page.getByRole('menuitem', { name: 'Add files', exact: true }).locator('svg.lucide-paperclip').count(), 1);
+    assert.equal(await page.getByRole('menuitem', { name: 'Add folder', exact: true }).locator('svg.lucide-folder-plus').count(), 1);
     await page.getByRole('menuitem', { name: 'Add context', exact: true }).focus();
     await page.keyboard.press('ArrowDown');
     assert.equal(await page.getByRole('menuitem', { name: 'Open in side chat', exact: true }).evaluate(el => el === document.activeElement), true);
@@ -321,6 +404,9 @@ test('dictation requires a trusted click and reconciles changing interim results
     assert.equal(await page.evaluate(() => speechStarts), 0);
     await page.getByRole('button', { name: 'Start dictation', exact: true }).click();
     assert.equal(await page.evaluate(() => composer.getState().dictation), 'listening');
+    assert.equal(await page.locator('.db-chat-composer__dictation-state').textContent(), 'Starting dictation...');
+    await page.evaluate(() => fakeSpeech.onstart());
+    assert.equal(await page.locator('.db-chat-composer__dictation-state').textContent(), 'Listening');
     assert.equal(await page.getByRole('button', { name: 'Send message', exact: true }).isDisabled(), true);
     await page.evaluate(() => fakeSpeech.onresult({ resultIndex: 0, results: [{ 0: { transcript: 'draft' }, length: 1, isFinal: false }] }));
     assert.equal(await page.getByRole('textbox', { name: 'Message', exact: true }).inputValue(), 'Base draft');
@@ -348,6 +434,7 @@ test('dictation cancel restores draft; errors do not retry, and disposal aborts 
     await page.getByRole('button', { name: 'Start dictation', exact: true }).click();
     await page.evaluate(() => fakeSpeech.onerror({ error: 'not-allowed' }));
     assert.equal(await page.evaluate(() => composer.getState().dictation), 'error');
+    assert.equal(await page.locator('.db-chat-composer__dictation-state').textContent(), 'Microphone access denied. Check browser or app permissions.');
     const error = await page.evaluate(() => chatEvents.filter(event => event.name === 'dictation').at(-1));
     assert.deepEqual(error.detail, { state: 'error', error: 'not-allowed' });
     assert.equal(error.cancelable, false);
@@ -367,6 +454,54 @@ test('dictation cancel restores draft; errors do not retry, and disposal aborts 
     await page.evaluate(() => { window.composer = DAUB.createChatComposer(composerRoot); composer.setDraft('Reinitialized'); });
     await page.getByRole('textbox', { name: 'Message', exact: true }).press('Enter');
     assert.equal(await page.evaluate(() => chatEvents.filter(event => event.name === 'send').length), 1);
+  } finally { await page.close(); }
+});
+
+for (const policyName of ['permissionsPolicy', 'featurePolicy']) {
+  test(policyName + ' blocks dictation before constructing or starting recognition', async () => {
+    const { page } = await fixture({}, () => {
+      window.speechStarts = 0; window.speechConstructed = 0;
+      window.SpeechRecognition = class {
+        constructor() { speechConstructed++; }
+        start() { speechStarts++; }
+        abort() {}
+      };
+    });
+    try {
+      const result = await page.evaluate(policyName => {
+        composer.destroy();
+        Object.defineProperty(document, 'permissionsPolicy', { configurable: true, value: undefined });
+        Object.defineProperty(document, 'featurePolicy', { configurable: true, value: undefined });
+        window.policyChecks = [];
+        Object.defineProperty(document, policyName, { configurable: true, value: { allowsFeature(feature) { policyChecks.push(feature); return false; } } });
+        window.composer = DAUB.createChatComposer(composerRoot);
+        composer.updateOptions({ capabilities: { dictation: true } });
+        composerRoot.querySelector('.db-chat-composer__dictation').click();
+        return { disabled: composerRoot.querySelector('.db-chat-composer__dictation').disabled, title: composerRoot.querySelector('.db-chat-composer__dictation').title, state: composer.getState().dictation, starts: speechStarts, constructed: speechConstructed, accepted: composer.startDictation(), checks: policyChecks };
+      }, policyName);
+      assert.equal(result.disabled, true);
+      assert.equal(result.title, 'Microphone access is blocked on this page');
+      assert.equal(result.state, 'unsupported');
+      assert.equal(result.starts, 0);
+      assert.equal(result.constructed, 0);
+      assert.equal(result.accepted, false);
+      assert.ok(result.checks.length > 0 && result.checks.every(feature => feature === 'microphone'));
+    } finally { await page.close(); }
+  });
+}
+
+test('dictation errors use friendly messages, retain raw metadata, and never restart recognition', async () => {
+  const { page } = await fixture({}, fakeRecognition);
+  try {
+    for (const code of ['service-not-allowed', 'audio-capture', 'network', 'no-speech', 'aborted', 'language-not-supported', 'unknown-error']) {
+      await page.getByRole('button', { name: 'Start dictation', exact: true }).click();
+      const starts = await page.evaluate(() => speechStarts);
+      await page.evaluate(code => fakeSpeech.onerror({ error: code }), code);
+      const text = await page.locator('.db-chat-composer__dictation-state').textContent();
+      assert.ok(text.length > 20 && !text.includes(code) && !text.includes('Dictation error:'), text);
+      assert.equal(await page.evaluate(() => chatEvents.filter(event => event.name === 'dictation').at(-1).detail.error), code);
+      assert.equal(await page.evaluate(() => speechStarts), starts);
+    }
   } finally { await page.close(); }
 });
 

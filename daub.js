@@ -1,6 +1,6 @@
 /* ============================================================
    DAUB UI KIT — Interactive Behaviors
-   Version 3.20.5
+   Version 3.20.6
    IIFE module exposing window.DAUB = { init, toast, theme API }
    ============================================================ */
 ;(function() {
@@ -1458,8 +1458,11 @@
     if (isReactOwned(el)) return;
     var state = el._dbPopup;
     if (!state) return;
+    var composerRoot = el.closest('.db-chat-composer');
+    var composer = _chatComposers && _chatComposers.get(composerRoot);
+    if (composer) composer.closePanels(open ? el : null, open ? null : el);
     if (open) nativeElements(document, '.' + state.openClass).forEach(function(peer) {
-      if (peer !== el) popupState(peer, false);
+      if (peer !== el && (!composer || (peer.closest('.db-chat-composer') === composerRoot && !peer.contains(el)))) popupState(peer, false);
     });
     el.classList.toggle(state.openClass, open);
     state.trigger.setAttribute('aria-expanded', String(open));
@@ -1818,8 +1821,9 @@
       trigger.addEventListener('click', function(e) {
         e.stopPropagation();
         var wasOpen = drop.classList.contains('db-dropdown--open');
+        var composerRoot = drop.closest('.db-chat-composer');
         nativeElements(document, '.db-dropdown--open').forEach(function(d) {
-          popupState(d, false);
+          if (!composerRoot || d.closest('.db-chat-composer') === composerRoot) popupState(d, false);
         });
         if (!wasOpen) popupState(drop, true);
       });
@@ -3229,7 +3233,13 @@
     var allowQueue = capabilities.queue !== false, allowSteer = capabilities.steer !== false;
     var allowAttachments = capabilities.attachments !== false, allowApproval = capabilities.approval !== false;
     var Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    var allowDictation = capabilities.dictation !== false && typeof Recognition === 'function';
+    function microphoneBlocked() {
+      var policy = document.permissionsPolicy || document.featurePolicy;
+      if (!policy || typeof policy.allowsFeature !== 'function') return false;
+      try { return policy.allowsFeature('microphone') === false; } catch (e) { return false; }
+    }
+    var dictationBlocked = microphoneBlocked();
+    var allowDictation = capabilities.dictation !== false && typeof Recognition === 'function' && !dictationBlocked;
     var allowFolders = allowAttachments && capabilities.folders !== false && folderInput && 'webkitdirectory' in folderInput;
     var actions = normalizeActions(options.actions);
     var model = models.some(function(m) { return m.id === options.model; }) ? options.model : models[0].id;
@@ -3242,7 +3252,7 @@
     var approval = allowApproval && options.approval === 'auto' ? 'auto' : 'ask';
     var mode = options.mode === 'plan' ? 'plan' : 'chat', goal = options.goal == null ? null : String(options.goal);
     var files = [], queue = [], busy = !!options.busy, destroyed = false, draftRequest = null;
-    var previews = new Map(), listeners = [], menus = [], recognition = null, clickGesture = false, gestureTimer = 0;
+    var previews = new Map(), listeners = [], menus = [], choices = [], recognition = null, clickGesture = false, gestureTimer = 0;
     var dictation = allowDictation ? 'stopped' : 'unsupported', dictationError = null, dictationSession = null;
     var submitting = false, steering = new Set(), pendingOptions = null;
 
@@ -3290,11 +3300,74 @@
       });
       el.value = value;
     }
+    function createChoice(field, el, setter) {
+      if (!el) return;
+      var wrap = el.closest('.db-chat-composer__choice');
+      if (!wrap || !owns(wrap)) {
+        wrap = element('div', 'db-chat-composer__choice'); wrap.setAttribute('data-field', field);
+        el.before(wrap); wrap.appendChild(el);
+      }
+      var label = wrap.getAttribute('data-db-choice-label') || el.getAttribute('aria-label') || field.charAt(0).toUpperCase() + field.slice(1);
+      wrap.setAttribute('data-db-choice-label', label);
+      el.hidden = true; el.tabIndex = -1; el.setAttribute('aria-label', label + ' value');
+      var trigger = wrap.querySelector('.db-chat-composer__choice-trigger');
+      if (!trigger) {
+        trigger = button('db-chat-composer__choice-trigger', label);
+        trigger.textContent = '';
+        trigger.appendChild(element('span', 'db-chat-composer__choice-label'));
+        var chevron = element('i', ''); chevron.setAttribute('data-lucide', 'chevron-down'); chevron.setAttribute('aria-hidden', 'true');
+        trigger.appendChild(chevron); wrap.appendChild(trigger);
+      }
+      trigger.setAttribute('role', 'combobox');
+      trigger.tabIndex = 0;
+      var menu = wrap.querySelector('.db-chat-composer__choice-menu');
+      if (!menu) { menu = element('div', 'db-chat-composer__choice-menu'); wrap.appendChild(menu); }
+      var entry = registerMenu(trigger, menu, 'option');
+      entry.field = field; entry.select = el; entry.setter = setter; entry.label = trigger.querySelector('.db-chat-composer__choice-label');
+      menu.setAttribute('aria-label', label); choices.push(entry);
+    }
+    function syncChoices() {
+      var rebuilt = false;
+      choices.forEach(function(entry) {
+        var options = Array.from(entry.select.options);
+        var items = Array.from(entry.menu.children);
+        var rebuild = items.length !== options.length || options.some(function(option, index) {
+          var item = items[index];
+          return !item || item.getAttribute('data-value') !== option.value || item.textContent !== option.textContent || item.disabled !== option.disabled || item.hidden !== option.hidden;
+        });
+        if (rebuild) {
+          rebuilt = true;
+          menuState(entry, false, entry.menu.contains(document.activeElement));
+          entry.menu.replaceChildren();
+          options.forEach(function(option) {
+            var item = element('button', 'db-chat-composer__choice-option db-dropdown__item');
+            item.appendChild(element('span', '', option.textContent));
+            var check = element('i', ''); check.setAttribute('data-lucide', 'check'); check.setAttribute('aria-hidden', 'true'); item.appendChild(check);
+            item.type = 'button'; item.tabIndex = -1; item.disabled = option.disabled; item.hidden = option.hidden;
+            item.setAttribute('role', 'option'); item.setAttribute('data-value', option.value); entry.menu.appendChild(item);
+          });
+        }
+        var selected = entry.select.options[entry.select.selectedIndex];
+        entry.label.textContent = selected ? selected.textContent : '';
+        if (entry.field === 'model' && part('effort-summary')) part('effort-summary').textContent = effort.charAt(0).toUpperCase() + effort.slice(1);
+        entry.trigger.disabled = entry.select.disabled;
+        entry.wrap.hidden = entry.field === 'approval' && !allowApproval;
+        entry.select.hidden = true;
+        Array.from(entry.menu.children).forEach(function(item, index) { item.setAttribute('aria-selected', String(index === entry.select.selectedIndex)); });
+        if (entry.trigger.disabled || entry.wrap.hidden) {
+          var focused = entry.wrap.contains(document.activeElement);
+          menuState(entry, false);
+          if (focused) input.focus();
+        }
+      });
+      if (rebuilt) refreshIcons();
+    }
     function sync() {
       if (modelEl) { modelEl.value = model; modelEl.disabled = busy; }
       if (effortEl) { effortEl.value = effort; effortEl.disabled = busy; }
       if (approvalEl) { approvalEl.value = approval; approvalEl.hidden = !allowApproval; }
       if (modeEl) modeEl.value = mode;
+      syncChoices();
       if (goalEl) goalEl.value = goal || '';
       sendEl.disabled = (!input.value.trim() && !files.length) || (busy && !allowQueue) || !!recognition;
       sendEl.setAttribute('aria-label', busy && allowQueue ? 'Queue message' : 'Send message');
@@ -3309,12 +3382,12 @@
         dictationEl.disabled = !allowDictation;
         dictationEl.setAttribute('aria-pressed', String(dictation === 'listening'));
         dictationEl.setAttribute('aria-label', recognition ? 'Stop dictation' : 'Start dictation');
-        dictationEl.title = allowDictation ? dictationEl.getAttribute('aria-label') : capabilities.dictation === false ? 'Dictation is not enabled' : 'Dictation unavailable in this browser';
+        dictationEl.title = allowDictation ? dictationEl.getAttribute('aria-label') : capabilities.dictation === false ? 'Dictation is not enabled' : dictationBlocked ? 'Microphone access is blocked on this page' : 'Dictation unavailable in this browser';
       }
       if (dictationBar) {
         dictationBar.hidden = dictation !== 'listening' && dictation !== 'error';
         var stateEl = part('dictation-state');
-        if (stateEl) stateEl.textContent = dictation === 'error' ? 'Dictation error: ' + dictationError : 'Listening';
+        if (stateEl) stateEl.textContent = dictation === 'error' ? dictationMessage(dictationError) : dictationSession && !dictationSession.started ? 'Starting dictation...' : 'Listening';
         var dictationStop = part('dictation-stop');
         if (dictationStop) dictationStop.hidden = dictation !== 'listening';
       }
@@ -3383,20 +3456,66 @@
       Array.from(incoming || []).forEach(function(file) { if (file instanceof File && files.indexOf(file) === -1) files.push(file); });
       draftRequest = null; renderFiles(); return true;
     }
-    function registerMenu(trigger, menu) {
+    function pasteImages(event) {
+      if (event.defaultPrevented || !usable() || !allowAttachments || !event.clipboardData) return;
+      var clipboard = event.clipboardData, text = clipboard.getData('text/plain');
+      var incoming = Array.from(clipboard.files || []).filter(function(file) { return /^image\//.test(file.type); });
+      if (!incoming.length) incoming = Array.from(clipboard.items || []).filter(function(item) {
+        return item.kind === 'file' && /^image\//.test(item.type);
+      }).map(function(item) { return item.getAsFile(); }).filter(Boolean);
+      if (!incoming.length) {
+        var sources = new Set(), html = clipboard.getData('text/html');
+        if (html) {
+          var template = document.createElement('template'); template.innerHTML = html;
+          template.content.querySelectorAll('img[src]').forEach(function(image) { sources.add(image.getAttribute('src')); });
+        }
+        sources.add(text.trim());
+        sources.forEach(function(source) {
+          var match = /^data:image\/(png|jpeg|gif|webp|avif);base64,([a-z0-9+/=\s]+)$/i.exec(source);
+          if (!match) return;
+          try {
+            var decoded = atob(match[2].replace(/\s/g, ''));
+            if (!decoded.length) return;
+            var bytes = Uint8Array.from(decoded, function(character) { return character.charCodeAt(0); });
+            var format = match[1].toLowerCase();
+            incoming.push(new File([bytes], 'pasted-image-' + (files.length + incoming.length + 1) + '.' + (format === 'jpeg' ? 'jpg' : format), { type: 'image/' + format }));
+            if (source === text.trim()) text = '';
+          } catch (error) {}
+        });
+      }
+      if (!incoming.length) return;
+      event.preventDefault();
+      if (text) {
+        input.setRangeText(text, input.selectionStart, input.selectionEnd, 'end');
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      attachFiles(incoming);
+    }
+    function registerMenu(trigger, menu, role) {
       if (!trigger || !menu) return;
-      var wrap = trigger.closest('.db-dropdown') || trigger.parentElement;
+      var wrap = trigger.closest('.db-chat-composer__choice') || trigger.closest('.db-dropdown') || trigger.parentElement;
       wrap._dbInit = true;
       if (!menu.id) menu.id = uid();
-      trigger.setAttribute('aria-haspopup', 'menu'); trigger.setAttribute('aria-controls', menu.id); trigger.setAttribute('aria-expanded', 'false');
-      menu.setAttribute('role', 'menu'); menu.hidden = true; menu.setAttribute('aria-hidden', 'true');
-      Array.from(menu.querySelectorAll('button')).forEach(function(item) { item.setAttribute('role', 'menuitem'); item.tabIndex = -1; });
-      menus.push({ wrap: wrap, trigger: trigger, menu: menu });
+      var popupRole = role === 'option' ? 'listbox' : role === 'dialog' ? 'dialog' : 'menu';
+      trigger.setAttribute('aria-haspopup', popupRole); trigger.setAttribute('aria-controls', menu.id); trigger.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('role', popupRole); menu.hidden = true; menu.inert = true; menu.setAttribute('aria-hidden', 'true');
+      if (role !== 'dialog') Array.from(menu.querySelectorAll('button')).forEach(function(item) { item.setAttribute('role', role || 'menuitem'); item.tabIndex = -1; });
+      var entry = { wrap: wrap, trigger: trigger, menu: menu, role: popupRole, search: '', searchTime: 0 };
+      menus.push(entry); return entry;
+    }
+    function closePanels(except, within) {
+      menus.forEach(function(entry) {
+        if (entry.wrap !== except && (!except || !entry.wrap.contains(except)) && (!within || within.contains(entry.wrap))) menuState(entry, false);
+      });
+      Array.from(root.querySelectorAll('.db-popover--open, .db-dropdown--open')).filter(owns).forEach(function(pop) {
+        if (pop !== except && pop !== within && (!except || !pop.contains(except)) && (!within || within.contains(pop))) popupState(pop, false);
+      });
     }
     function menuState(entry, open, restore) {
-      if (open) menus.forEach(function(other) { if (other !== entry) menuState(other, false); });
+      if (open) closePanels(entry.wrap);
+      if (!open) { entry.search = ''; entry.searchTime = 0; }
       entry.wrap.classList.toggle('db-dropdown--open', open);
-      entry.trigger.setAttribute('aria-expanded', String(open)); entry.menu.hidden = !open; entry.menu.setAttribute('aria-hidden', String(!open));
+      entry.trigger.setAttribute('aria-expanded', String(open)); entry.menu.hidden = !open; entry.menu.inert = !open; entry.menu.setAttribute('aria-hidden', String(!open));
       if (open) {
         entry.menu.style.top = ''; entry.menu.style.bottom = ''; entry.menu.style.maxHeight = '';
         clampPanel(entry.menu);
@@ -3406,7 +3525,9 @@
           rect = entry.menu.getBoundingClientRect();
         }
         if (rect.bottom > window.innerHeight - 8) entry.menu.style.maxHeight = Math.max(44, window.innerHeight - rect.top - 8) + 'px';
-        var first = entry.menu.querySelector('button:not(:disabled)'); if (first) first.focus();
+        var items = Array.from(entry.menu.querySelectorAll('button, input')).filter(function(item) { return !isDisabled(item) && !item.hidden && item.getClientRects().length; });
+        var first = items.filter(function(item) { return item.getAttribute('aria-selected') === 'true'; })[0] || items[0];
+        if (first) first.focus();
       }
       else if (restore) entry.trigger.focus();
     }
@@ -3428,7 +3549,11 @@
           request.files.forEach(function(file, index) { rowFiles.appendChild(attachment(file, index, false)); }); row.appendChild(rowFiles);
         }
         var controls = element('div', 'db-chat-composer__queued-actions');
-        if (allowSteer) controls.appendChild(button('db-chat-composer__steer', busy ? 'Steer queued message' : 'Send queued message now', 'corner-up-left', 'steer'));
+        if (allowSteer) {
+          var steer = button('db-chat-composer__steer', busy ? 'Steer queued message' : 'Send queued message now', 'corner-up-left', 'steer');
+          steer.appendChild(element('span', '', busy ? 'Steer' : 'Send now'));
+          controls.appendChild(steer);
+        }
         var drop = element('div', 'db-dropdown');
         var edit = button('db-dropdown__trigger', 'Edit queued message', 'pencil');
         var menu = element('div', 'db-dropdown__menu'); menu.appendChild(button('db-dropdown__item', 'Edit message', null, 'edit'));
@@ -3496,6 +3621,16 @@
       emit('dictation', error ? { state: state, error: error } : { state: state });
       changed();
     }
+    function dictationMessage(error) {
+      if (error === 'not-allowed' || error === 'NotAllowedError' || error === 'SecurityError') return 'Microphone access denied. Check browser or app permissions.';
+      if (error === 'service-not-allowed') return 'Your browser has blocked the dictation service. Check your browser settings.';
+      if (error === 'audio-capture' || error === 'NotFoundError') return 'No microphone is available. Connect a microphone to use dictation.';
+      if (error === 'network') return 'Dictation could not connect. Check your connection before trying again.';
+      if (error === 'no-speech') return 'No speech detected. Start dictation again when you are ready.';
+      if (error === 'aborted' || error === 'AbortError') return 'Dictation stopped. Your draft is ready to edit.';
+      if (error === 'language-not-supported') return 'Your browser does not support dictation in this language.';
+      return 'Dictation could not start. You can type your message or try again.';
+    }
     function joined(base, transcript) { return base + (base && transcript && !/\s$/.test(base) ? ' ' : '') + transcript; }
     function detachRecognition(abort) {
       var current = recognition; recognition = null;
@@ -3510,13 +3645,20 @@
       dictationState(allowDictation ? 'stopped' : 'unsupported'); return true;
     }
     function startDictation() {
-      if (!usable() || !allowDictation || !clickGesture || recognition || isDisabled(root)) return false;
-      var session = { base: input.value, finalText: '' };
+      if (!usable()) return false;
+      dictationBlocked = microphoneBlocked();
+      if (dictationBlocked) { allowDictation = false; dictation = 'unsupported'; sync(); return false; }
+      if (!allowDictation || !clickGesture || recognition || isDisabled(root)) return false;
+      var session = { base: input.value, finalText: '', started: false };
       dictationSession = session;
       try {
         var current = new Recognition(); recognition = current;
         current.continuous = true; current.interimResults = true;
         current.lang = root.getAttribute('lang') || document.documentElement.lang || navigator.language || 'en-US';
+        current.onstart = function() {
+          if (!usable() || recognition !== current) return;
+          session.started = true; sync();
+        };
         current.onresult = function(event) {
           if (!usable() || recognition !== current) return;
           var finalText = '', interim = '';
@@ -3564,8 +3706,14 @@
       menus.forEach(function(entry) { if (entry.menu === addMenu) menuState(entry, false, entry.menu.contains(document.activeElement)); });
       menus = menus.filter(function(entry) { return entry.menu !== addMenu; });
       addMenu.replaceChildren();
-      if (allowAttachments) addMenu.appendChild(button('db-dropdown__item', 'Add files', null, 'files'));
-      if (allowFolders) addMenu.appendChild(button('db-dropdown__item', 'Add folder', null, 'folder'));
+      if (allowAttachments) {
+        var filesItem = button('db-dropdown__item', 'Add files', 'paperclip', 'files');
+        filesItem.appendChild(element('span', '', 'Add files')); addMenu.appendChild(filesItem);
+      }
+      if (allowFolders) {
+        var folderItem = button('db-dropdown__item', 'Add folder', 'folder-plus', 'folder');
+        folderItem.appendChild(element('span', '', 'Add folder')); addMenu.appendChild(folderItem);
+      }
       actions.forEach(function(action, index) {
         var item = button('db-dropdown__item', action.label, action.icon, 'action');
         if (action.icon) item.appendChild(element('span', '', action.label));
@@ -3581,7 +3729,8 @@
         capabilities = Object.assign({}, capabilities, patch.capabilities);
         allowQueue = capabilities.queue !== false; allowSteer = capabilities.steer !== false;
         allowAttachments = capabilities.attachments !== false; allowApproval = capabilities.approval !== false;
-        allowDictation = capabilities.dictation !== false && typeof Recognition === 'function';
+        dictationBlocked = microphoneBlocked();
+        allowDictation = capabilities.dictation !== false && typeof Recognition === 'function' && !dictationBlocked;
         allowFolders = allowAttachments && capabilities.folders !== false && folderInput && 'webkitdirectory' in folderInput;
         if (folderInput) { if (allowFolders) folderInput.setAttribute('webkitdirectory', ''); else folderInput.removeAttribute('webkitdirectory'); }
         if (!allowAttachments) { root.classList.remove('db-chat-composer--dragover'); if (part('dropzone')) part('dropzone').hidden = true; }
@@ -3654,7 +3803,42 @@
       setStatus: function(text) { if (usable() && statusEl) statusEl.textContent = String(text); },
       startDictation: startDictation, stopDictation: stopDictation, destroy: destroy
     };
-    _chatComposers.set(root, { handle: handle, reactOwned: reactOwned }); watchChatComposerCleanup();
+    _chatComposers.set(root, { handle: handle, reactOwned: reactOwned, closePanels: closePanels }); watchChatComposerCleanup();
+    [[modelEl, 'model', setModel], [effortEl, 'effort', setEffort], [approvalEl, 'approval', setApproval], [modeEl, 'mode', setMode]].forEach(function(entry) { createChoice(entry[1], entry[0], entry[2]); });
+    var toolbar = part('toolbar');
+    if (toolbar && !part('settings')) {
+      var settings = element('div', 'db-chat-composer__settings');
+      var settingsTrigger = button('db-chat-composer__settings-trigger', 'Chat settings', 'sliders-horizontal');
+      var settingsPanel = element('div', 'db-chat-composer__settings-panel');
+      settingsPanel.setAttribute('aria-label', 'Chat settings');
+      settingsPanel.appendChild(element('h3', '', 'Chat settings'));
+      [[effortEl, 'Effort'], [modeEl, 'Mode'], [goalEl, 'Goal']].forEach(function(pair) {
+        if (!pair[0]) return;
+        var field = element('div', 'db-chat-composer__settings-field');
+        field.appendChild(element('span', '', pair[1]));
+        field.appendChild(pair[0].closest('.db-chat-composer__choice') || pair[0]);
+        settingsPanel.appendChild(field);
+      });
+      settings.appendChild(settingsTrigger); settings.appendChild(settingsPanel);
+      var modelChoice = modelEl && modelEl.closest('.db-chat-composer__choice');
+      var approvalChoice = approvalEl && approvalEl.closest('.db-chat-composer__choice');
+      if (modelChoice) {
+        if (approvalChoice) modelChoice.before(approvalChoice);
+        modelChoice.before(settings);
+        var modelTrigger = modelChoice.querySelector('.db-chat-composer__choice-trigger');
+        modelTrigger.querySelector('.db-chat-composer__choice-label').after(element('span', 'db-chat-composer__effort-summary'));
+      } else toolbar.appendChild(settings);
+      if (approvalChoice) {
+        var shield = element('i', ''); shield.setAttribute('data-lucide', 'shield-check'); shield.setAttribute('aria-hidden', 'true');
+        approvalChoice.querySelector('.db-chat-composer__choice-trigger').prepend(shield);
+      }
+    }
+    if (part('settings')) {
+      registerMenu(part('settings-trigger'), part('settings-panel'), 'dialog');
+      listen(part('settings-panel'), 'keydown', function(event) {
+        if (event.key === 'Enter' && event.target === goalEl) { event.preventDefault(); setGoal(goalEl.value.trim() || null); }
+      });
+    }
     selectOptions(modelEl, models, model);
     selectOptions(effortEl, efforts().map(function(v) { return { id: v, label: v.charAt(0).toUpperCase() + v.slice(1) }; }), effort);
     if (folderInput && allowFolders) folderInput.setAttribute('webkitdirectory', '');
@@ -3664,12 +3848,14 @@
       clickGesture = event.isTrusted;
       clearTimeout(gestureTimer);
       gestureTimer = setTimeout(function() { clickGesture = false; }, 0);
+      menus.forEach(function(entry) { if (!entry.wrap.contains(event.target)) menuState(entry, false); });
     }, true);
-    listen(document, 'click', function(event) {
+    listen(document, 'focusin', function(event) {
       menus.forEach(function(entry) { if (!entry.wrap.contains(event.target)) menuState(entry, false); });
     });
     listen(root, 'submit', function(event) { if (event.target === root) { event.preventDefault(); submit(); } });
     listen(input, 'input', function() { if (!usable()) return; if (recognition) cancelDictation(false); draftRequest = null; sync(); changed(); });
+    listen(input, 'paste', pasteImages);
     listen(input, 'keydown', function(event) {
       if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && event.keyCode !== 229 && !event.defaultPrevented) { event.preventDefault(); submit(); }
     });
@@ -3699,7 +3885,12 @@
       var target = event.target.closest('button');
       if (!target || isDisabled(target)) return;
       var entry = menus.filter(function(menu) { return menu.trigger === target; })[0];
-      if (entry) { event.preventDefault(); menuState(entry, entry.menu.hidden); return; }
+      if (entry) { event.preventDefault(); event.stopPropagation(); menuState(entry, entry.menu.hidden); return; }
+      var choice = choices.filter(function(menu) { return menu.menu.contains(target); })[0];
+      if (choice) {
+        event.preventDefault(); event.stopPropagation();
+        choice.setter(target.getAttribute('data-value')); menuState(choice, false, true); return;
+      }
       if (target === sendEl && root.tagName !== 'FORM') { event.preventDefault(); submit(); return; }
       if (target === stopEl) { emit('stop', undefined, true); return; }
       if (target === dictationEl) { if (recognition) stopDictation(); else startDictation(); return; }
@@ -3707,7 +3898,7 @@
       if (target === part('dictation-cancel')) { cancelDictation(true); return; }
       var command = target.getAttribute('data-db-composer-command');
       if (!command) return;
-      menus.forEach(function(menu) { if (menu.menu.contains(target)) menuState(menu, false, true); });
+      menus.forEach(function(menu) { if (menu.menu.contains(target)) { event.stopPropagation(); menuState(menu, false, true); } });
       var row = target.closest('.db-chat-composer__queued-item');
       var id = row && row.getAttribute('data-db-request-id');
       if (command === 'files' && fileInput) fileInput.click();
@@ -3726,20 +3917,42 @@
     });
     listen(root, 'keydown', function(event) {
       if (!usable() || !owns(event.target)) return;
-      var entry = menus.filter(function(menu) { return menu.wrap.contains(event.target); })[0];
+      var entry = menus.filter(function(menu) { return menu.wrap.contains(event.target) && (!menu.menu.hidden || (event.target === menu.trigger && event.key !== 'Escape')); })[0];
       if (!entry) return;
-      if (event.target === entry.trigger && ['ArrowDown', 'ArrowUp'].indexOf(event.key) !== -1) { event.preventDefault(); menuState(entry, true); return; }
+      if (isDisabled(entry.trigger) || isDisabled(root)) return;
+      if (event.target === entry.trigger && ['ArrowDown', 'ArrowUp', 'Home', 'End'].indexOf(event.key) !== -1) {
+        event.preventDefault(); event.stopPropagation(); menuState(entry, true);
+        var edge = event.key === 'Home' ? 'first' : event.key === 'End' ? 'last' : null;
+        if (edge) {
+          var enabled = Array.from(entry.menu.querySelectorAll('button')).filter(function(item) { return !isDisabled(item) && !item.hidden; });
+          if (enabled.length) enabled[edge === 'first' ? 0 : enabled.length - 1].focus();
+        }
+        return;
+      }
+      var typing = entry.field && event.key.length === 1 && event.key !== ' ' && !event.ctrlKey && !event.metaKey && !event.altKey && !event.isComposing;
+      if (typing && entry.menu.hidden) menuState(entry, true);
       if (entry.menu.hidden) return;
-      if (event.key === 'Escape' || event.key === 'Tab') { if (event.key === 'Escape') event.preventDefault(); menuState(entry, false, event.key === 'Escape'); return; }
-      var items = Array.from(entry.menu.querySelectorAll('button')).filter(function(item) { return !isDisabled(item); });
+      if (entry.role === 'dialog' && event.key !== 'Escape') return;
+      if (event.key === 'Escape' || event.key === 'Tab') { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); } menuState(entry, false, event.key === 'Escape'); return; }
+      var items = Array.from(entry.menu.querySelectorAll('button')).filter(function(item) { return !isDisabled(item) && !item.hidden; });
       var index = items.indexOf(document.activeElement);
+      if (typing) {
+        event.preventDefault(); event.stopPropagation();
+        var now = Date.now(); entry.search = now - entry.searchTime < 700 ? entry.search + event.key.toLowerCase() : event.key.toLowerCase(); entry.searchTime = now;
+        var search = entry.search.split('').every(function(char) { return char === entry.search[0]; }) ? entry.search[0] : entry.search;
+        for (var i = 1; i <= items.length; i++) {
+          var item = items[(Math.max(index, 0) + i) % items.length];
+          if (item.textContent.trim().toLowerCase().indexOf(search) === 0) { item.focus(); break; }
+        }
+        return;
+      }
       if (!items.length || ['ArrowDown', 'ArrowUp', 'Home', 'End'].indexOf(event.key) === -1) return;
-      event.preventDefault();
+      event.preventDefault(); event.stopPropagation();
       if (event.key === 'Home') index = 0;
       else if (event.key === 'End') index = items.length - 1;
       else index = (index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
       items[index].focus();
-    });
+    }, true);
     renderFiles(); renderQueue(); sync();
     return handle;
   }

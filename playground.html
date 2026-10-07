@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB — Playground</title>
+  <script src="site-nav.js" defer></script>
   <meta name="description" content="Interactive Playground for DAUB UI Kit: prompt an AI, get a json-render spec, and see live DAUB component previews with all 84 components.">
   <meta name="keywords" content="DAUB playground, json-render, generative UI, AI components, CSS components, live preview, BYOK">
   <meta name="theme-color" content="#C67B5C">
@@ -49,7 +50,7 @@
           crossorigin="anonymous" defer></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.20.5">
+  <link rel="stylesheet" href="daub.css?v=3.20.6">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -1016,7 +1017,7 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.20.5"></script>
+<script src="daub.js?v=3.20.6"></script>
 <script src="daub-render.js"></script>
 <script src="daub-openui-parser.js"></script>
 <script>
@@ -1102,7 +1103,7 @@ function buildIframeSrcdoc(theme, scheme) {
   return '<!DOCTYPE html><html lang="en"' + themeAttr + schemeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
     + '<base target="_blank">'
-    + '<link rel="stylesheet" href="daub.css?v=3.20.5">'
+    + '<link rel="stylesheet" href="daub.css?v=3.20.6">'
     + '<script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"><\/script>'
     + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
     + '<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js" integrity="sha384-Tha/42qsYmpYmQ07pX+nJzkKumO0BzKJxK/uzVc7xyBQxVCUgQBhQIG8L7vXK+9C" crossorigin="anonymous"><\/script>'
@@ -1127,7 +1128,7 @@ function buildIframeSrcdoc(theme, scheme) {
     + '"\u201CThe best design is the simplest one that works.\u201D\\n\u2014 Albert Einstein",'
     + '"\u201CTypography is the craft of endowing human language with a durable visual form.\u201D\\n\u2014 Robert Bringhurst"'
     + '];document.getElementById("pg-iframe-root").setAttribute("data-quote",qs[Math.floor(Math.random()*qs.length)])})()<\/script>'
-    + '<script src="daub.js?v=3.20.5"><\/script>'
+    + '<script src="daub.js?v=3.20.6"><\/script>'
     + '<script>' + DAUB_RENDER_BODY.replace(/<\/script/gi, '<\\/script') + '<\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
@@ -2611,6 +2612,7 @@ var COMP_PURPOSE = {
   Bubble: 'a conversational text surface with user and assistant variants and reactions',
   Attachment: 'a file or image attachment with metadata, upload status, and separate actions',
   Marker: 'a chat activity status, system note, or date separator',
+  ChangeSummary: 'a static in-chat file change summary with addition/deletion totals and explicit host-provided actions',
   ChatComposer: 'a native rich message composer with local attachments, queue controls, model and effort selection, approval intent, plan mode, and user-started dictation',
   Image: 'an image or photo',
   Alert: 'an inline callout banner for info, warning, error or success messages',
@@ -7353,6 +7355,7 @@ var COMP_PROPS = {
   "Bubble": "children: [content IDs], content: string (plain text), variant: \"primary\"|\"default\"|\"secondary\"|\"muted\"|\"tinted\"|\"outline\"|\"ghost\"|\"destructive\", align: \"start\"|\"end\", reactions: [{label, count, pressed}] (app-controlled)",
   "Attachment": "children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: \"sm\"|\"xs\", state: \"idle\"|\"uploading\"|\"processing\"|\"error\"|\"done\" (default \"idle\"), progress: 0-100, orientation: \"horizontal\"|\"vertical\"",
   "Marker": "children: [content IDs], content: string (plain text), icon: string (Lucide), variant: \"border\"|\"separator\", status: bool (polite live region), busy: bool",
+  "ChangeSummary": "children: [action IDs] (explicit host-provided actions), files: [{path: string, additions?: number, deletions?: number, status?: \"added\"|\"modified\"|\"deleted\"}], title: string (default \"Edited N file(s)\"; empty: \"No files changed\"), description: string, undoLabel: string, undoDisabled: bool. Static markup, no daub.js requirement or file operations. Escape paths as plain text; floor finite counts and clamp rows/totals to 0..Number.MAX_SAFE_INTEGER; other counts become 0. No implicit buttons; host wires child actions. undoLabel/undoDisabled configure React onUndo buttons only. Label demo data with title \"Prepared 2 demo files\" and description \"Demo changes\"",
   "ChatComposer": "models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: \"ask\"|\"auto\", mode: \"chat\"|\"plan\", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights",
   "Image": "src: string (URL), alt: string, width: number, height: number",
   "Alert": "type: \"info\"|\"warning\"|\"error\"|\"success\", title: string, message: string",
@@ -7508,6 +7511,7 @@ var COMP_CATEGORIES = [
       "Bubble",
       "Attachment",
       "Marker",
+      "ChangeSummary",
       "ChatComposer"
     ]
   ],

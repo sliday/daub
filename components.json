@@ -1,5 +1,5 @@
 {
-  "version": "3.20.5",
+  "version": "3.20.6",
   "prefix": "db-",
   "cdn": {
     "css": "https://daub.dev/daub.css",
@@ -1992,7 +1992,7 @@
         { "class": "db-bubble__reactions", "element": "div", "required": false }
       ],
       "js": false,
-      "html": "<div class=\"db-bubble\">\n  <div class=\"db-bubble__content\">The release candidate is ready for your review.</div>\n  <div class=\"db-bubble__reactions\"><button type=\"button\" aria-pressed=\"false\" aria-label=\"Acknowledge message\">Received <span>2</span></button></div>\n</div>",
+      "html": "<div class=\"db-bubble\">\n  <div class=\"db-bubble__content\">The release candidate is ready for your review.</div>\n  <div class=\"db-bubble__reactions\"><button type=\"button\" aria-pressed=\"false\" aria-label=\"Mark response as helpful\">Helpful <span>2</span></button></div>\n</div>",
       "notes": "Content-sized conversational surface with seven color variants and an optional reaction row. Ghost removes the frame for rich assistant content. Reaction state and events belong to your application."
     },
     {
@@ -2026,6 +2026,31 @@
       "js": false,
       "html": "<div class=\"db-marker\" role=\"status\">\n  <span class=\"db-marker__icon\" aria-hidden=\"true\"><i data-lucide=\"circle-check\"></i></span>\n  <span class=\"db-marker__content\">Reviewed 4 files</span>\n</div>",
       "notes": "Inline activity, bordered status row, or centered date separator. Use role=status for progress updates and db-shimmer for busy text; reduced motion disables the animation."
+    },
+    {
+      "name": "Change Summary",
+      "class": "db-change-summary",
+      "category": "conversation",
+      "element": "div",
+      "modifiers": [],
+      "children": [
+        { "class": "db-change-summary__header", "element": "div", "required": true },
+        { "class": "db-change-summary__icon", "element": "span", "required": false },
+        { "class": "db-change-summary__heading", "element": "div", "required": true },
+        { "class": "db-change-summary__title", "element": "div", "required": true },
+        { "class": "db-change-summary__description", "element": "p", "required": false },
+        { "class": "db-change-summary__totals", "element": "span", "required": true },
+        { "class": "db-change-summary__additions", "element": "span", "required": true },
+        { "class": "db-change-summary__deletions", "element": "span", "required": true },
+        { "class": "db-change-summary__actions", "element": "div", "required": false },
+        { "class": "db-change-summary__files", "element": "ul", "required": true },
+        { "class": "db-change-summary__file", "element": "li", "required": false },
+        { "class": "db-change-summary__path", "element": "span", "required": false },
+        { "class": "db-change-summary__counts", "element": "span", "required": false }
+      ],
+      "js": false,
+      "html": "<div class=\"db-change-summary\" role=\"group\" aria-label=\"Prepared 2 demo files\">\n  <div class=\"db-change-summary__header\">\n    <span class=\"db-change-summary__icon\" aria-hidden=\"true\"><i data-lucide=\"files\" style=\"width:16px;height:16px\"></i></span>\n    <div class=\"db-change-summary__heading\"><div class=\"db-change-summary__title\">Prepared 2 demo files</div><p class=\"db-change-summary__description\">Demo changes</p>\n      <span class=\"db-change-summary__totals\"><span class=\"db-change-summary__additions\" role=\"img\" aria-label=\"48 additions\">+48</span><span class=\"db-change-summary__deletions\" role=\"img\" aria-label=\"4 deletions\">-4</span></span>\n    </div>\n  </div>\n  <ul class=\"db-change-summary__files\">\n    <li class=\"db-change-summary__file\" data-status=\"modified\"><span class=\"db-change-summary__path\" title=\"src/app.ts\" aria-label=\"src/app.ts, modified\">src/app.ts</span><span class=\"db-change-summary__counts\"><span class=\"db-change-summary__additions\" role=\"img\" aria-label=\"6 additions\">+6</span><span class=\"db-change-summary__deletions\" role=\"img\" aria-label=\"4 deletions\">-4</span></span></li>\n    <li class=\"db-change-summary__file\" data-status=\"added\"><span class=\"db-change-summary__path\" title=\"src/summary.ts\" aria-label=\"src/summary.ts, added\">src/summary.ts</span><span class=\"db-change-summary__counts\"><span class=\"db-change-summary__additions\" role=\"img\" aria-label=\"42 additions\">+42</span><span class=\"db-change-summary__deletions\" role=\"img\" aria-label=\"0 deletions\">-0</span></span></li>\n  </ul>\n</div>",
+      "notes": "Static framed change summary; requires daub.css, not daub.js. Files and counts come from the host; this example uses demo data, not filesystem changes. Use a 14px or 16px Lucide files icon. Render paths as plain text, additions/deletions with accessible labels, and rows as a simple list. Spec/React counts floor finite numbers, clamp to 0..Number.MAX_SAFE_INTEGER, and clamp aggregate totals; other values become 0. Default title: Edited N file(s), or No files changed for an empty list. Add __actions only with host-wired controls. Spec children are explicit action IDs; renderers create no implicit Undo or View changes buttons. React onUndo/onViewChanges render buttons only when supplied; undoLabel and undoDisabled configure the callback-backed Undo button. The host owns file operations, undo, and diff views."
     },
     {
       "name": "Chat Composer",

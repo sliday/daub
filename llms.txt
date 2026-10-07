@@ -1,13 +1,13 @@
 # DAUB UI — Considered Component Library for AI Agents
 
-> Version: 3.20.5
+> Version: 3.20.6
 > URL: https://daub.dev
 > CSS: https://daub.dev/daub.css
 > JS: https://daub.dev/daub.js
 > Repo: https://github.com/sliday/daub
 > License: MIT
-> Components: 90
-> Browser/OpenUI/MCP renderer types: 88
+> Components: 91
+> Browser/OpenUI/MCP renderer types: 89
 > Theme Families: 21 (42 variants total)
 > Components JSON: https://daub.dev/components.json
 > TypeScript: https://daub.dev/daub.d.ts
@@ -1291,9 +1291,81 @@ Use `db-shimmer` on the content text for streaming status.
 </div>
 ```
 
+### Change Summary - `.db-change-summary`
+
+Use a compact framed summary inside a message for host-provided file changes.
+This component needs `daub.css` without `daub.js`. DAUB performs no file operations.
+The host owns undo, diff views, and persistence.
+
+Parts: `__header`, `__icon`, `__heading`, `__title`, `__description`, `__totals`,
+`__additions`, `__deletions`, `__actions`, `__files`, `__file`, `__path`, `__counts`.
+Use a 14px or 16px Lucide `files` icon. Files are simple `<ul>` / `<li>` rows.
+Use `role="img"` with accessible labels on count spans to name the numeric glyphs;
+color alone cannot name them.
+
+```html
+<div class="db-change-summary" role="group" aria-label="Prepared 2 demo files">
+  <div class="db-change-summary__header">
+    <span class="db-change-summary__icon" aria-hidden="true"><i data-lucide="files" style="width:16px;height:16px"></i></span>
+    <div class="db-change-summary__heading">
+      <div class="db-change-summary__title">Prepared 2 demo files</div>
+      <p class="db-change-summary__description">Demo changes</p>
+      <span class="db-change-summary__totals"><span class="db-change-summary__additions" role="img" aria-label="48 additions">+48</span><span class="db-change-summary__deletions" role="img" aria-label="4 deletions">-4</span></span>
+    </div>
+  </div>
+  <ul class="db-change-summary__files">
+    <li class="db-change-summary__file" data-status="modified">
+      <span class="db-change-summary__path" title="src/app.ts" aria-label="src/app.ts, modified">src/app.ts</span>
+      <span class="db-change-summary__counts"><span class="db-change-summary__additions" role="img" aria-label="6 additions">+6</span><span class="db-change-summary__deletions" role="img" aria-label="4 deletions">-4</span></span>
+    </li>
+    <li class="db-change-summary__file" data-status="added">
+      <span class="db-change-summary__path" title="src/summary.ts" aria-label="src/summary.ts, added">src/summary.ts</span>
+      <span class="db-change-summary__counts"><span class="db-change-summary__additions" role="img" aria-label="42 additions">+42</span><span class="db-change-summary__deletions" role="img" aria-label="0 deletions">-0</span></span>
+    </li>
+  </ul>
+</div>
+```
+
+Props: `files: [{path: string, additions?: number, deletions?: number,
+status?: "added"|"modified"|"deleted"}]`, `title?: string`, `description?: string`,
+`undoLabel?: string`, `undoDisabled?: boolean`. Spec `children` holds explicit
+host-provided action IDs. The default title for host data is `Edited N file(s)`;
+an empty list uses `No files changed`. Custom titles override that text.
+Render paths as plain text. Both renderers and React floor finite counts and
+clamp rows/totals to `0..Number.MAX_SAFE_INTEGER`; missing, nonnumeric, or
+nonfinite counts become zero. Ignore malformed file entries without string paths.
+Allow `data-status` only for `added`, `modified`, and `deleted`.
+
+Renderers create no implicit Undo or View changes controls. Add `__actions` as
+a child of `__header` only when the host supplies controls with handlers.
+`undoLabel` and `undoDisabled` do not create or configure spec child buttons;
+configure child actions through their own props and host handlers.
+
+React exports `ChangeSummary`, `ChangeSummaryProps`, and `ChangeSummaryFile`.
+The wrapper accepts div props, forwards an `HTMLDivElement` ref, and escapes
+text through React. `onUndo?: MouseEventHandler<HTMLButtonElement>` renders
+an Undo button; `onViewChanges?: MouseEventHandler<HTMLButtonElement>` renders
+a View changes button. Both callbacks receive the button mouse event.
+`undoLabel` defaults to `Undo`; `undoDisabled` defaults to false and disables
+only the callback-backed Undo button. Arbitrary React children fill `__actions`.
+No callbacks means no generated buttons. SSR requires no browser globals.
+
+```tsx
+import { ChangeSummary } from "daub-react";
+
+<ChangeSummary
+  title="Prepared 2 demo files"
+  description="Demo changes"
+  files={[
+    { path: "src/app.ts", additions: 6, deletions: 4, status: "modified" },
+    { path: "src/summary.ts", additions: 42, deletions: 0, status: "added" },
+  ]}
+/>
+```
+
 ### JSON-Render and OpenUI
 
-The browser, local MCP, and cloud MCP expose the same six chat types. OpenUI
+The browser, local MCP, and cloud MCP expose the same seven chat types. OpenUI
 places `children` first on the content families. ChatComposer takes native
 options with no declarative children; metadata accepts named arguments:
 
@@ -1303,6 +1375,7 @@ Message(children, align, avatar, name, timestamp, messageId, scrollAnchor, foote
 Bubble(children, content, variant, align, reactions)
 Attachment(children, name, description, src, alt, href, size, state, progress, orientation)
 Marker(children, content, icon, variant, status, busy)
+ChangeSummary(children, files, title, description, undoLabel, undoDisabled)
 ChatComposer(models, model, effort, approval, mode, actions, capabilities, busy, placeholder, id)
 ```
 
@@ -1311,7 +1384,7 @@ root = MessageScroller([Message([Bubble([], content: "Review ready.", variant: "
 ```
 
 For Message/Bubble/Marker, children render inside the family content part. Attachment
-children render inside its action part. Plain text props escape HTML. Image/link
+and ChangeSummary children render inside their action parts. Plain text props escape HTML. Image/link
 URLs use the canonical renderer's URL guard.
 
 ### Native Message Scroller API
@@ -1731,7 +1804,7 @@ MessageAvatar, MessageContent, MessageHeader, MessageFooter, MessageGroup; Bubbl
 BubbleContent, BubbleReactions, BubbleGroup, BubbleCollapsible; Attachment,
 AttachmentMedia, AttachmentContent, AttachmentTitle, AttachmentDescription,
 AttachmentActions, AttachmentAction, AttachmentTrigger, AttachmentGroup,
-AttachmentProgress; Marker, MarkerIcon, MarkerContent; ChatComposer.
+AttachmentProgress; Marker, MarkerIcon, MarkerContent; ChangeSummary; ChatComposer.
 
 Hooks: useControllable, useToast, useEscapeKey, useOutsideClick, useFocusTrap,
 useMessageScroller, useMessageScrollerScrollable, useMessageScrollerVisibility.

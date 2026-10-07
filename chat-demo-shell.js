@@ -107,15 +107,13 @@
       const files = getFiles();
       const retained = new Set(files);
       for (const [file, url] of sources) if (!retained.has(file)) { URL.revokeObjectURL(url); sources.delete(file); }
-      const queued = composer.getQueue();
       document.getElementById('chat-activity-count').textContent = String(activities.reduce((sum, activity) => sum + activity.querySelectorAll('li').length, 0));
       document.getElementById('chat-files-count').textContent = String(files.length);
-      document.getElementById('chat-queue-count').textContent = String(queued.length);
       if (view === 'conversation') return;
-      const key = view + ':' + activities.map(activity => activity.dataset.state + activity.querySelectorAll('li').length).join('|') + ':' + files.map(file => file.name).join('|') + ':' + queued.map(item => item.id + item.text).join('|');
+      const key = view + ':' + activities.map(activity => activity.dataset.state + activity.querySelectorAll('li').length).join('|') + ':' + files.map(file => file.name).join('|');
       if (lastViewKey === key) return;
       lastViewKey = key;
-      panel.replaceChildren(node('h2', '', view === 'activity' ? 'Activity' : view === 'files' ? 'Files' : 'Queued messages'));
+      panel.replaceChildren(node('h2', '', view === 'activity' ? 'Activity' : 'Files'));
       const list = node('div', 'chat-demo-view-list');
       if (view === 'activity') {
         for (const activity of activities) {
@@ -141,16 +139,8 @@
           link.append(icon('file-text'), label, icon('download'));
           list.append(link);
         }
-      } else {
-        for (const request of queued) {
-          const item = node('div', 'chat-demo-view-row');
-          const label = node('span', '', request.text || 'Attached files');
-          label.append(node('small', '', request.model + ' - ' + (request.files || []).length + ' files'));
-          item.append(icon('list-start'), label);
-          list.append(item);
-        }
       }
-      if (!list.children.length) list.append(node('p', 'chat-demo-status', view === 'files' ? 'No files attached.' : view === 'queue' ? 'No queued messages.' : 'No activity yet.'));
+      if (!list.children.length) list.append(node('p', 'chat-demo-status', view === 'files' ? 'No files attached.' : 'No activity yet.'));
       panel.append(list);
       icons();
     }

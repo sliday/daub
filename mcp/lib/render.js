@@ -11,7 +11,7 @@ try { fs.mkdirSync(TMP_DIR, { recursive: true }); } catch {}
 
 // First-party daub.dev assets always match the deployed site (npm can lag a release); ?v= busts caches per release.
 // Version comes from the repo's package.json; outside the repo (no root package.json) fall back to the last known release
-let DAUB_VERSION = '3.20.5';
+let DAUB_VERSION = '3.20.6';
 try {
   const pkg = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf-8'));
   if (pkg.name === 'daub-ui' && pkg.version) DAUB_VERSION = pkg.version;

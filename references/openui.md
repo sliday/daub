@@ -225,6 +225,7 @@ Message(children: [content IDs], align: "start"|"end", avatar: string (initials)
 Bubble(children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled))
 Attachment(children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical")
 Marker(children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool)
+ChangeSummary(children: [action IDs] (explicit host-provided actions), files: [{path: string, additions?: number, deletions?: number, status?: "added"|"modified"|"deleted"}], title: string (default "Edited N file(s)"; empty: "No files changed"), description: string, undoLabel: string, undoDisabled: bool. Static markup)
 ChatComposer(models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: "ask"|"auto", mode: "chat"|"plan", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights)
 ```
 
@@ -234,9 +235,9 @@ ChatComposer(models: [{id, label, efforts?: string[]}], model: string, effort: s
 CustomHTML(html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector('[data-spec-id="someId"]') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after))
 ```
 
-Children-first types (33): Stack, Grid, Surface, Layout, ButtonGroup, Field, InputGroup, InputIcon, CheckboxGroup, Fieldset, Group, Tabs, Navbar, Toolbar, Card, Frame, AspectRatio, ScrollArea, MessageScroller, Message, Bubble, Attachment, Marker, Tooltip, Modal, Sheet, Drawer, Popover, HoverCard, PreviewCard, Collapsible, Resizable, ChartCard.
+Children-first types (34): Stack, Grid, Surface, Layout, ButtonGroup, Field, InputGroup, InputIcon, CheckboxGroup, Fieldset, Group, Tabs, Navbar, Toolbar, Card, Frame, AspectRatio, ScrollArea, MessageScroller, Message, Bubble, Attachment, Marker, ChangeSummary, Tooltip, Modal, Sheet, Drawer, Popover, HoverCard, PreviewCard, Collapsible, Resizable, ChartCard.
 
 Children elsewhere: EmptyState (position 4), CustomHTML (position 4).
 
-Parser types: 88. Any other PascalCase name tokenizes as a plain identifier and becomes a dangling child reference.
+Parser types: 89. Any other PascalCase name tokenizes as a plain identifier and becomes a dangling child reference.
 <!-- END GENERATED:signatures -->

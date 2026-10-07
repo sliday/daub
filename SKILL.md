@@ -2,7 +2,7 @@
 name: daub-ui
 description: >-
   Build, preview and verify UI with DAUB (daub.dev), a drop-in CSS + JS component library
-  with 90 components and 21 theme families. Covers three paths: plain HTML with db-* classes,
+  with 91 components and 21 theme families. Covers three paths: plain HTML with db-* classes,
   json-render or OpenUI Lang specs rendered by daub-render.js, and the hosted DAUB MCP server
   (generate_ui, validate_spec, render_spec, parse_openui, get_block_library). Includes the rules
   that prevent broken renders, 266 ready-made blocks, playground share links, a verify loop, and
@@ -12,13 +12,13 @@ description: >-
 license: MIT
 compatibility: Any agent that reads files and runs shell or HTTP. The MCP path needs network access to daub.dev. Jev recipes need an OpenRouter API key.
 metadata:
-  daub-version: "3.20.5"
+  daub-version: "3.20.6"
   homepage: https://daub.dev
 ---
 
 # DAUB UI
 
-DAUB is a drop-in CSS + JS component library. `daub.css` styles 90 components through `db-*` classes, `daub.js` wires the interactive ones (tabs, overlays, switches, dropdowns), and 21 theme families give 42 light and dark themes. No build step and no framework.
+DAUB is a drop-in CSS + JS component library. `daub.css` styles 91 components through `db-*` classes, `daub.js` wires the interactive ones (tabs, overlays, switches, dropdowns), and 21 theme families give 42 light and dark themes. No build step and no framework.
 
 | Path | You write | Good for |
 |---|---|---|
@@ -76,11 +76,13 @@ DAUB is a drop-in CSS + JS component library. `daub.css` styles 90 components th
 - `daub.js` runs `DAUB.init()` on load. After you insert markup later, call `DAUB.init(container)`.
 - Overlays (`db-modal-overlay`, `db-alert-dialog`, `db-sheet`, `db-drawer`, `db-command`) need an `id`. Open them with `DAUB.openModal('id')` and friends, or a `data-db-modal-trigger="id"` button.
 - Toasts are JS only: `DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes are live.' })`.
-- CDN copies: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css` and `/daub.js`. npm can lag the site; `https://daub.dev/daub.css?v=3.20.5` is the current build.
+- CDN copies: `cdn.jsdelivr.net/npm/daub-ui@latest/daub.css` and `/daub.js`. npm can lag the site; `https://daub.dev/daub.css?v=3.20.6` is the current build.
 
 ## Conversation components
 
-The HTML catalog has 90 components; the browser/OpenUI/MCP registry has 88 renderer types. Compose MessageScroller, Message, Bubble, Attachment, and Marker with ChatComposer. ChatComposer adds local attachments, dictation, model controls, queue and steer events; your app owns message data, AI transport, approval enforcement, uploads, persistence, and reaction state. See `https://daub.dev/chat-demo.html` and the Chat Components section of `https://daub.dev/llms.txt`.
+The HTML catalog has 91 components; the browser/OpenUI/MCP registry has 89 renderer types. Compose MessageScroller, Message, Bubble, Attachment, Marker, and ChangeSummary with ChatComposer. ChatComposer adds local attachments, dictation, model controls, queue and steer events; your app owns message data, AI transport, approval enforcement, uploads, persistence, and reaction state. See `https://daub.dev/chat-demo.html` and the Chat Components section of `https://daub.dev/llms.txt`.
+
+ChangeSummary is static markup with host-provided `files: [{path, additions?, deletions?, status?}]`, optional title/description, and explicit action children. It needs `daub.css` without `daub.js`. Render paths as plain text and counts with accessible addition/deletion labels. Counts floor finite numbers and clamp rows/totals to `0..Number.MAX_SAFE_INTEGER`; other counts become zero. Empty files default to `No files changed`. Label demo data `Prepared 2 demo files` / `Demo changes`; omit actions unless the host wires them. React `onUndo` / `onViewChanges` render buttons only when supplied; `undoLabel` / `undoDisabled` configure the callback-backed Undo button. DAUB performs no file operations.
 
 - Use stable `data-db-message-id` rows in `db-message-scroller__item`. The native root accepts `data-db-auto-scroll`, `data-db-scroll-position="start|end|last-anchor"`, and `data-db-scroll-peek`.
 - `DAUB.createMessageScroller(root, {autoScroll, scrollPosition, scrollPeek})` returns a handle with `scrollToStart`, `scrollToEnd`, `scrollToMessage`, `getState`, and `destroy`. Renderer options use `defaultScrollPosition` and `peek`.
@@ -132,12 +134,12 @@ confirmBtn = Button("Delete account", "primary")
 Render either one in any page. The parser and renderer ship only on daub.dev (the npm package has neither):
 
 ```html
-<link rel="stylesheet" href="https://daub.dev/daub.css?v=3.20.5">
+<link rel="stylesheet" href="https://daub.dev/daub.css?v=3.20.6">
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 <div id="app" style="padding-block: 24px"></div>
-<script src="https://daub.dev/daub.js?v=3.20.5"></script>
-<script src="https://daub.dev/daub-render.js?v=3.20.5"></script>
-<script src="https://daub.dev/daub-openui-parser.js?v=3.20.5"></script>
+<script src="https://daub.dev/daub.js?v=3.20.6"></script>
+<script src="https://daub.dev/daub-render.js?v=3.20.6"></script>
+<script src="https://daub.dev/daub-openui-parser.js?v=3.20.6"></script>
 <script>
   const spec = DaubOpenUI.openUItoSpec(openuiText); // or JSON.parse(jsonText)
   document.documentElement.dataset.theme = spec.theme || 'light';
@@ -221,7 +223,7 @@ Call `https://openrouter.ai/api/alpha/decisions` with your own OpenRouter key. D
 | `references/verify.md` | You check output before handing it over |
 | `references/design.md` | You plan layout, density and hierarchy |
 
-Full component docs with HTML for all 90 components: `https://daub.dev/llms.txt`. Machine-readable catalog: `https://daub.dev/components.json`.
+Full component docs with HTML for all 91 components: `https://daub.dev/llms.txt`. Machine-readable catalog: `https://daub.dev/components.json`.
 
 ## Install this skill
 

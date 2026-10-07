@@ -1,5 +1,5 @@
 import * as f2 from 'react';
-import { forwardRef, createContext, useRef, useContext, useImperativeHandle, useId, useEffect, useState, Children, useCallback, useMemo, cloneElement, isValidElement, Fragment as Fragment$1, createElement } from 'react';
+import { forwardRef, createContext, useRef, useContext, useImperativeHandle, useId, Children, useEffect, useState, useCallback, useMemo, cloneElement, isValidElement, Fragment as Fragment$1, createElement } from 'react';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import { createPortal } from 'react-dom';
 
@@ -931,6 +931,58 @@ var MarkerContent = forwardRef(
   ({ className, ...props }, ref) => /* @__PURE__ */ jsx("div", { ...props, ref, "data-db-react": "", className: cn("db-marker__content", className) })
 );
 MarkerContent.displayName = "MarkerContent";
+function normalizeChangeCount(value) {
+  return typeof value === "number" && Number.isFinite(value) ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.floor(value))) : 0;
+}
+function Counts({ className, additions, deletions }) {
+  return /* @__PURE__ */ jsxs("span", { className, children: [
+    /* @__PURE__ */ jsx("span", { className: "db-change-summary__additions", role: "img", "aria-label": `${additions} additions`, children: `+${additions}` }),
+    /* @__PURE__ */ jsx("span", { className: "db-change-summary__deletions", role: "img", "aria-label": `${deletions} deletions`, children: `-${deletions}` })
+  ] });
+}
+var ChangeSummary = forwardRef(function ChangeSummary2({
+  files,
+  title,
+  description,
+  undoLabel = "Undo",
+  undoDisabled = false,
+  onUndo,
+  onViewChanges,
+  children,
+  className,
+  ...props
+}, ref) {
+  const rows = (Array.isArray(files) ? files : []).filter((file) => file && !Array.isArray(file) && typeof file.path === "string");
+  const totals = rows.reduce((total, file) => ({
+    additions: Math.min(Number.MAX_SAFE_INTEGER, total.additions + normalizeChangeCount(file.additions)),
+    deletions: Math.min(Number.MAX_SAFE_INTEGER, total.deletions + normalizeChangeCount(file.deletions))
+  }), { additions: 0, deletions: 0 });
+  const heading = typeof title === "string" && title.trim() ? title : rows.length ? `Edited ${rows.length} file${rows.length === 1 ? "" : "s"}` : "No files changed";
+  const hasActions = Boolean(onUndo || onViewChanges) || Children.toArray(children).length > 0;
+  return /* @__PURE__ */ jsxs("div", { role: "group", "aria-label": heading, ...props, ref, "data-db-react": "", className: cn("db-change-summary", className), children: [
+    /* @__PURE__ */ jsxs("div", { className: "db-change-summary__header", children: [
+      /* @__PURE__ */ jsx("span", { className: "db-change-summary__icon", "aria-hidden": "true", children: /* @__PURE__ */ jsx("i", { "data-lucide": "files", style: { width: 16, height: 16 } }) }),
+      /* @__PURE__ */ jsxs("div", { className: "db-change-summary__heading", children: [
+        /* @__PURE__ */ jsx("div", { className: "db-change-summary__title", children: heading }),
+        description && /* @__PURE__ */ jsx("p", { className: "db-change-summary__description", children: description }),
+        /* @__PURE__ */ jsx(Counts, { className: "db-change-summary__totals", ...totals })
+      ] }),
+      hasActions && /* @__PURE__ */ jsxs("div", { className: "db-change-summary__actions", children: [
+        onUndo && /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", icon: "undo-2", disabled: undoDisabled, onClick: onUndo, children: undoLabel }),
+        onViewChanges && /* @__PURE__ */ jsx(Button, { variant: "ghost", size: "sm", icon: "diff", onClick: onViewChanges, children: "View changes" }),
+        children
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx("ul", { className: "db-change-summary__files", children: rows.map((file, index) => {
+      const status = file.status && ["added", "modified", "deleted"].includes(file.status) ? file.status : void 0;
+      return /* @__PURE__ */ jsxs("li", { className: "db-change-summary__file", "data-status": status, children: [
+        /* @__PURE__ */ jsx("span", { className: "db-change-summary__path", title: file.path, "aria-label": status ? `${file.path}, ${status}` : void 0, children: file.path }),
+        /* @__PURE__ */ jsx(Counts, { className: "db-change-summary__counts", additions: normalizeChangeCount(file.additions), deletions: normalizeChangeCount(file.deletions) })
+      ] }, index);
+    }) })
+  ] });
+});
+ChangeSummary.displayName = "ChangeSummary";
 var hostEvents = {
   "db:chat-send": "onSend",
   "db:chat-steer": "onSteer",
@@ -3995,6 +4047,6 @@ var CommandPalette = forwardRef(function CommandPalette2({
 });
 CommandPalette.displayName = "CommandPalette";
 
-export { Accordion, Alert, AlertDialog, AspectRatio, Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, AttachmentProgress, AttachmentTitle, AttachmentTrigger, Avatar, AvatarGroup, Badge, BottomNav, Breadcrumbs, Bubble, BubbleCollapsible, BubbleContent, BubbleGroup, BubbleReactions, Button, ButtonGroup, Calendar, Card, Carousel, Chart, ChartCard, ChatComposer, Checkbox, CheckboxGroup, Chip, Collapsible, CommandPalette, Container, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Marker, MarkerContent, MarkerIcon, Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader, MessageScroller, MessageScrollerButton, MessageScrollerContent, MessageScrollerItem, MessageScrollerProvider, MessageScrollerViewport, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, Skeleton, Slider, Spinner, Stack, StatCard, Stepper, Surface, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, Pt as useMessageScroller, wt as useMessageScrollerScrollable, Ot as useMessageScrollerVisibility, useOutsideClick, useToast };
+export { Accordion, Alert, AlertDialog, AspectRatio, Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, AttachmentProgress, AttachmentTitle, AttachmentTrigger, Avatar, AvatarGroup, Badge, BottomNav, Breadcrumbs, Bubble, BubbleCollapsible, BubbleContent, BubbleGroup, BubbleReactions, Button, ButtonGroup, Calendar, Card, Carousel, ChangeSummary, Chart, ChartCard, ChatComposer, Checkbox, CheckboxGroup, Chip, Collapsible, CommandPalette, Container, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Marker, MarkerContent, MarkerIcon, Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader, MessageScroller, MessageScrollerButton, MessageScrollerContent, MessageScrollerItem, MessageScrollerProvider, MessageScrollerViewport, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, Skeleton, Slider, Spinner, Stack, StatCard, Stepper, Surface, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, Pt as useMessageScroller, wt as useMessageScrollerScrollable, Ot as useMessageScrollerVisibility, useOutsideClick, useToast };
 //# sourceMappingURL=index.mjs.map
 //# sourceMappingURL=index.mjs.map

@@ -83,9 +83,12 @@ test('composer slots fit 320, 375 and desktop with distinct queue, panel and act
       assert.equal(result.rootBorder, '0px');
       assert.equal(result.panelBorder, '1px');
       const size = width < 500 ? 44 : 32;
-      for (const selector of ['.db-chat-composer__add', '.db-chat-composer__send', '.db-chat-composer__stop', '.db-chat-composer__steer']) {
+      for (const selector of ['.db-chat-composer__add', '.db-chat-composer__send', '.db-chat-composer__stop']) {
         assert.deepEqual(await page.locator(selector).evaluate(el => ({ width: el.offsetWidth, height: el.offsetHeight })), { width: size, height: size });
       }
+      const steer = page.locator('.db-chat-composer__steer');
+      assert.equal(await steer.textContent(), 'Steer');
+      assert.ok(await steer.evaluate((el, size) => el.offsetWidth >= size && el.offsetHeight === size, size));
       assert.equal(await page.locator('.db-chat-composer__panel').evaluate(el => getComputedStyle(el).position), 'relative');
       assert.equal(await page.locator('.db-chat-composer__panel').evaluate(el => getComputedStyle(el).pointerEvents), 'auto');
       if (process.env.DAUB_COMPOSER_EVIDENCE) await page.screenshot({ path: `${process.env.DAUB_COMPOSER_EVIDENCE}-${width}.png`, fullPage: true });

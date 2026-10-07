@@ -3,29 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Components | DAUB</title>
-  <meta name="description" content="Explore all 89 DAUB components with interactive examples, mobile previews, theme variants, and copyable HTML.">
+  <title>Documentation | DAUB</title>
+  <meta name="description" content="DAUB installation, React setup, and component reference with interactive examples, theme variants, and copyable HTML.">
   <link rel="canonical" href="https://daub.dev/components">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="component-browser.css">
+  <link rel="stylesheet" href="site-nav.css" data-site-nav-style>
   <script src="assets/lucide.min.js" defer></script>
   <script src="daub.js" defer></script>
+  <script src="site-nav.js" defer></script>
   <script src="component-browser.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#component-title">Skip to component</a>
+  <a class="skip-link" href="#component-title">Skip to content</a>
+  <nav class="db-nav" aria-label="Main"><a href="index.html">DAUB</a><a href="#getting-started">Docs</a></nav>
   <aside class="library-sidebar" id="library-sidebar" aria-label="Component library">
-    <div class="library-brand-row"><a class="library-brand" href="index.html">DAUB<span>Component library</span></a><button class="icon-button mobile-only" id="close-sidebar" aria-label="Close component navigation" title="Close navigation"><i data-lucide="x" aria-hidden="true"></i></button></div>
+    <div class="library-brand-row"><span class="library-section-title">Documentation</span><button class="icon-button mobile-only" id="close-sidebar" aria-label="Close component navigation" title="Close navigation"><i data-lucide="x" aria-hidden="true"></i></button></div>
     <label class="library-search"><i data-lucide="search" aria-hidden="true"></i><input id="component-search" type="search" placeholder="Find a component..." aria-label="Search components" autocomplete="off"></label>
-    <nav class="library-links" aria-label="Documentation"><a href="docs.html">Getting started <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="playground.html">Playground <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="themes.html">Themes <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><a href="chat-demo.html">Chat demo <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></nav>
-    <div class="library-label">Components <span id="component-count">89</span></div>
+    <nav class="library-links" aria-label="Documentation"><a href="#getting-started" id="getting-started-link">Getting started</a><a href="#installation">Installation</a><a href="#react">React</a><a href="#chat">Chat</a><a href="#themes">Theming</a></nav>
+    <div class="library-label">Components <span id="component-count">91</span></div>
     <nav id="component-nav" class="component-nav" aria-label="Components"></nav>
     <p id="search-empty" class="search-empty" hidden>No matching components.</p>
     <footer class="library-footer"><a href="https://github.com/sliday/daub">Source on GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a><span id="library-version"></span></footer>
   </aside>
   <button id="sidebar-backdrop" class="sidebar-backdrop" aria-label="Close component navigation" hidden tabindex="-1"></button>
   <div class="library-main" id="library-main">
-    <header class="library-topbar"><button class="icon-button mobile-only" id="open-sidebar" aria-label="Open component navigation" aria-controls="library-sidebar" aria-expanded="false" title="Open navigation"><i data-lucide="panel-left" aria-hidden="true"></i></button><nav aria-label="Breadcrumb"><a href="index.html">DAUB</a><span aria-hidden="true">/</span><span>Components</span><span aria-hidden="true">/</span><span id="breadcrumb-name">Button</span></nav><a href="llms.txt" class="topbar-link">AI docs <i data-lucide="arrow-up-right" aria-hidden="true"></i></a></header>
+    <header class="library-topbar"><button class="icon-button mobile-only" id="open-sidebar" aria-label="Open component navigation" aria-controls="library-sidebar" aria-expanded="false" title="Open navigation"><i data-lucide="panel-left" aria-hidden="true"></i></button><nav aria-label="Breadcrumb"><a href="#getting-started">Docs</a><span aria-hidden="true">/</span><a id="breadcrumb-section" href="#btn">Components</a><span aria-hidden="true" id="breadcrumb-separator">/</span><span id="breadcrumb-name">Button</span></nav></header>
+    <main class="component-detail getting-started" id="getting-started" hidden>
+      <p class="eyebrow">Documentation</p>
+      <h1 id="guide-title" tabindex="-1">Getting started</h1>
+      <p class="guide-intro">Use DAUB with HTML and JavaScript, or add its React components to your app.</p>
+      <nav class="guide-toc" aria-label="On this page"><a href="#installation">Installation</a><a href="#react">React</a><a href="#chat">Chat</a><a href="#themes">Themes</a></nav>
+      <section id="installation" class="guide-section">
+        <h2>HTML and JavaScript</h2>
+        <p>Load the stylesheet and runtime, then use the markup from a <a href="#btn">component example</a>. DAUB initializes interactive components when the document loads.</p>
+        <pre><code>&lt;link rel="stylesheet" href="https://daub.dev/daub.css"&gt;
+&lt;script src="https://daub.dev/daub.js" defer&gt;&lt;/script&gt;
+
+&lt;button class="db-btn db-btn--primary"&gt;Save changes&lt;/button&gt;</code></pre>
+        <p>For a bundled app, install the package:</p>
+        <pre><code>npm install daub-ui</code></pre>
+        <pre><code>import 'daub-ui/daub.css';
+import 'daub-ui';</code></pre>
+        <p>After inserting new markup, call <code>DAUB.init(container)</code> on its parent. Use the HTML tab to copy an example and Anatomy to inspect its classes.</p>
+      </section>
+      <section id="react" class="guide-section">
+        <h2>React</h2>
+        <p>Use React and React DOM 19 or later with your app's bundler.</p>
+        <pre><code>npm install daub-react daub-ui</code></pre>
+        <pre><code>import 'daub-ui/daub.css';
+import { Button } from 'daub-react';
+
+export function SaveButton() {
+  return &lt;Button variant="primary"&gt;Save changes&lt;/Button&gt;;
+}</code></pre>
+        <p>The React package includes <code>@shadcn/react</code> as a dependency for chat scrolling. For local package development, install dependencies in <code>react/</code>, then run:</p>
+        <pre><code>npm --prefix react run typecheck
+npm --prefix react run build</code></pre>
+      </section>
+      <section id="chat" class="guide-section">
+        <h2>Chat</h2>
+        <p>Combine <a href="#message-scroller">MessageScroller</a>, <a href="#message">Message</a>, and <a href="#chat-composer">ChatComposer</a>. Your app handles model requests, uploads, and persistence.</p>
+        <p>Load <code>daub.js</code> before creating a composer. Use <code>DAUB.createChatComposer(root, options)</code> to configure it and handle <code>db:chat-send</code> on its root. React composers use the same runtime.</p>
+        <p><a href="chat-demo.html">Open the chat demo</a> or read the <a href="docs/chat-composer-contract.md">integration contract</a>.</p>
+      </section>
+      <section id="themes" class="guide-section">
+        <h2>Themes</h2>
+        <p>DAUB follows your system color scheme until you choose an override. Set a theme with <code>DAUB.setTheme('nord-light')</code> or return to the system scheme with <code>DAUB.setScheme('auto')</code>.</p>
+        <p><a href="themes.html">Browse theme families</a>. Each component reference also includes a theme selector for its preview.</p>
+      </section>
+    </main>
     <main class="component-detail" id="component-detail">
       <div class="component-heading"><div><p class="eyebrow" id="component-category">Controls</p><h1 id="component-title" tabindex="-1">Button</h1></div><button class="text-button" id="copy-agent"><i data-lucide="clipboard" aria-hidden="true"></i>Copy for AI</button></div>
       <p id="component-description" class="component-description"></p>

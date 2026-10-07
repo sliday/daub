@@ -1,75 +1,93 @@
 import { before, after, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
 
-const script = readFileSync(new URL('../../site-nav.js', import.meta.url), 'utf8');
-const css = readFileSync(new URL('../../daub.css', import.meta.url), 'utf8');
+const read = name => readFileSync(new URL('../../' + name, import.meta.url), 'utf8');
+const script = read('site-nav.js');
+const css = read('daub.css');
+const navCss = read('site-nav.css');
+const icons = read('assets/lucide.min.js');
+const routes = ['index', 'demo', 'themes', 'theme-preview', 'roadmap', 'case-studies', 'playground', 'components'];
+const labels = ['Docs', 'Components', 'Layouts', 'Themes', 'Playground'];
 let browser;
-before(async () => { browser = await chromium.launch({ headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH }); });
+before(async () => { browser = await ({ chromium, webkit })[process.env.DAUB_TEST_BROWSER || 'chromium'].launch({ headless: true }); });
 after(async () => { await browser?.close(); });
 
-for (const name of ['index.html', 'roadmap.html', 'case-studies.html']) {
-  const source = readFileSync(new URL('../../' + name, import.meta.url), 'utf8');
+async function fixture(name, width = 1280, suffix = '.html') {
+  const source = read(name + '.html');
   const nav = source.match(/<nav class="db-nav"[\s\S]*?<\/nav>/)?.[0];
-  test(`${name} mobile navigation supports keyboard, outside dismissal, and links`, async () => {
-    assert.ok(nav, 'navigation fixture comes from the page');
-    assert.match(source, /<script src="site-nav\.js" defer><\/script>/);
-    const page = await browser.newPage({ viewport: { width: 375, height: 812 } });
-    try {
-      await page.setContent('<style>.db-nav__links{display:none}.db-nav--open .db-nav__links{display:block}</style>' + nav + '<button id="outside">Outside</button>');
-      await page.addScriptTag({ content: script });
-      const toggle = page.locator('.db-nav__toggle');
-      await toggle.press('Enter');
-      assert.equal(await toggle.getAttribute('aria-expanded'), 'true');
-      assert.equal(await page.locator('.db-nav__links').getAttribute('id'), await toggle.getAttribute('aria-controls'));
-      await page.keyboard.press('Escape');
-      assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
-      assert.equal(await toggle.evaluate(element => element === document.activeElement), true);
-      await toggle.click();
-      await page.locator('#outside').click();
-      assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
-      await toggle.click();
-      const componentLink = page.locator('.db-nav__links').getByRole('link', { name: 'Components', exact: true });
-      assert.equal(await componentLink.getAttribute('href'), 'components.html');
-      await componentLink.evaluate(element => element.addEventListener('click', event => event.preventDefault()));
-      await componentLink.click();
-      assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
-    } finally { await page.close(); }
+  assert.ok(nav);
+  assert.match(source, /<script src="site-nav\.js" defer><\/script>/);
+  const styles = [...source.matchAll(/<style>([\s\S]*?)<\/style>/g)].map(match => match[1]).join('\n');
+  const page = await browser.newPage({ viewport: { width, height: 812 } });
+  await page.route('**/*', route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path.endsWith('/site-nav.css')) return route.fulfill({ contentType: 'text/css', body: navCss });
+    if (path === '/' + name + suffix.split('#')[0]) return route.fulfill({ contentType: 'text/html', body: '<style>' + css + '\n' + styles + '</style>' + nav + '<button id="outside" style="margin-top:600px">Outside</button>' });
+    return route.abort();
   });
+  await page.goto('http://daub.test/' + name + suffix);
+  await page.addScriptTag({ content: icons });
+  await page.addScriptTag({ content: script });
+  await page.waitForFunction(() => [...document.styleSheets].some(sheet => sheet.href?.endsWith('/site-nav.css')));
+  return page;
 }
 
-for (const name of ['index.html', 'demo.html']) {
-  const source = readFileSync(new URL('../../' + name, import.meta.url), 'utf8');
-  const nav = source.match(/<nav class="db-nav"[\s\S]*?<\/nav>/)?.[0];
-  const styles = [...source.matchAll(/<style>([\s\S]*?)<\/style>/g)].map(match => match[1]).join('\n');
-  test(`${name} GitHub icon and count remain aligned in mobile and desktop navigation`, async () => {
-    const page = await browser.newPage();
+for (const name of routes) {
+  test(`${name} uses shared navigation, one active destination, and responsive geometry`, async () => {
+    const page = await fixture(name);
     try {
-      await page.setContent('<style>' + css + '\n' + styles + '</style><header>' + nav + '</header>');
-      await page.addScriptTag({ content: script });
-      await page.locator('.db-nav__github').evaluate(link => {
-        let stars = link.querySelector('#gh-stars');
-        if (!stars) { stars = document.createElement('span'); stars.id = 'gh-stars'; link.append(stars); }
-        stars.textContent = '41';
-        stars.style.display = 'inline';
-      });
-      for (const width of [320, 375, 768, 1440]) {
+      assert.deepEqual(await page.locator('.site-nav__links > a[data-page]').allTextContents(), labels);
+      const expected = name === 'theme-preview' ? 'themes' : name;
+      assert.deepEqual(await page.locator('[data-site-nav] [aria-current="page"]').evaluateAll(links => links.map(link => link.dataset.page)), name === 'index' ? [] : [expected]);
+      for (const width of [320, 375, 768, 960, 1280]) {
         await page.setViewportSize({ width, height: 812 });
-        const toggle = page.locator('.db-nav__toggle');
+        const toggle = page.locator('.site-nav__toggle');
         if (await toggle.isVisible()) await toggle.click();
-        const layout = await page.locator('.db-nav__github').evaluate(link => {
-          const icon = link.querySelector('svg').getBoundingClientRect();
-          const stars = link.querySelector('#gh-stars').getBoundingClientRect();
-          return { display: getComputedStyle(link).display, iconWidth: icon.width, iconRight: icon.right, countLeft: stars.left, centerDifference: Math.abs(icon.top + icon.height / 2 - stars.top - stars.height / 2) };
-        });
-        assert.ok(['flex', 'inline-flex'].includes(layout.display), name + '/' + width + ' uses one flex row');
-        assert.equal(layout.iconWidth, 16);
-        assert.ok(layout.countLeft > layout.iconRight, name + '/' + width + ' keeps count beside icon');
-        assert.ok(layout.centerDifference < 1, name + '/' + width + ' centers icon and count');
-        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no horizontal overflow');
+        const geometry = await page.locator('[data-site-nav]').evaluate(nav => ({
+          height: nav.getBoundingClientRect().height,
+          overflow: document.documentElement.scrollWidth > innerWidth,
+          links: [...nav.querySelectorAll('.site-nav__links > a, .site-nav__resources-toggle')].map(link => link.getBoundingClientRect().toJSON()),
+          icons: [...nav.querySelectorAll('.site-nav__github svg')].map(icon => icon.getBoundingClientRect().width)
+        }));
+        assert.equal(geometry.height, 48);
+        assert.equal(geometry.overflow, false);
+        assert.deepEqual(geometry.icons, [16], name + '/' + width + ': ' + JSON.stringify(geometry));
+        for (const link of geometry.links) {
+          assert.ok(link.left >= 0 && link.right <= width);
+          assert.ok(link.height >= (width <= 960 ? 44 : 36));
+        }
         if (await toggle.isVisible()) await page.keyboard.press('Escape');
       }
     } finally { await page.close(); }
   });
 }
+
+test('navigation disclosures support keyboard, outside dismissal and hash-based docs selection', async () => {
+  const page = await fixture('components', 375, '#getting-started');
+  try {
+    const toggle = page.locator('.site-nav__toggle');
+    const resources = page.getByRole('button', { name: 'Resources', exact: true });
+    assert.equal(await page.locator('[data-site-nav] [aria-current]').textContent(), 'Docs');
+    await toggle.press('Enter');
+    await resources.press('Enter');
+    assert.equal(await resources.getAttribute('aria-expanded'), 'true');
+    await page.keyboard.press('Tab');
+    assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Chat demo');
+    await page.keyboard.press('Escape');
+    assert.equal(await resources.evaluate(el => el === document.activeElement), true);
+    assert.equal(await resources.getAttribute('aria-expanded'), 'false');
+    await page.keyboard.press('Escape');
+    assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
+    assert.equal(await toggle.evaluate(el => el === document.activeElement), true);
+    await toggle.click();
+    await page.locator('#outside').click();
+    assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
+    await toggle.click();
+    await page.locator('[data-site-nav] [data-page="components"]').evaluate(link => link.href = '#btn');
+    await page.locator('[data-site-nav] [data-page="components"]').click();
+    assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
+    await page.waitForFunction(() => document.querySelector('[data-site-nav] [aria-current]')?.textContent === 'Components');
+  } finally { await page.close(); }
+});

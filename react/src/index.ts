@@ -26,6 +26,8 @@ export {
 export type { AttachmentProps, AttachmentMediaProps, AttachmentProgressProps, AttachmentState } from "./components/Attachment";
 export { Marker, MarkerIcon, MarkerContent } from "./components/Marker";
 export type { MarkerProps } from "./components/Marker";
+export { ChangeSummary } from "./components/ChangeSummary";
+export type { ChangeSummaryProps, ChangeSummaryFile } from "./components/ChangeSummary";
 export { ChatComposer } from "./components/ChatComposer";
 export type {
   ChatComposerProps, ChatComposerOptions, ChatComposerModel, ChatComposerAction,

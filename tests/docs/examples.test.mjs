@@ -5,10 +5,11 @@ import { chromium } from 'playwright';
 
 const root = new URL('../../', import.meta.url);
 const assets = new Map();
-for (const file of ['docs.html', 'themes.html', 'theme-preview.html', 'site-nav.js', 'components.json', 'daub.js', 'daub.css', 'assets/lucide.min.js']) {
+for (const file of ['themes.html', 'theme-preview.html', 'site-nav.js', 'site-nav.css', 'components.json', 'daub.js', 'daub.css', 'assets/lucide.min.js']) {
   assets.set('/' + file, await readFile(new URL(file, root), 'utf8'));
 }
 let browser;
+assets.set('/component-fixture.html', '<!doctype html><html><head><link rel="stylesheet" href="daub.css"><script src="assets/lucide.min.js" defer></script><script src="daub.js" defer></script></head><body></body></html>');
 
 before(async () => {
   browser = await chromium.launch({ headless: true, executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH });
@@ -32,7 +33,7 @@ async function withPage(path, run, setup) {
     if (setup) await setup(page);
     await page.goto('http://daub.test/' + path);
     await page.addStyleTag({ content: '*,*::before,*::after{transition:none!important;animation:none!important}' });
-    await page.locator(path === 'docs.html' ? '#alert-dialog .docs-component__copy' : path === 'themes.html' ? '#tg-grid .tg-card' : '#css-input').first().waitFor();
+    await page.locator(path === 'component-fixture.html' ? 'body' : path === 'themes.html' ? '#tg-grid .tg-card' : '#css-input').first().waitFor({ state: path === 'component-fixture.html' ? 'attached' : 'visible' });
     await run(page);
     assert.deepEqual(errors, []);
   } finally {
@@ -40,7 +41,7 @@ async function withPage(path, run, setup) {
   }
 }
 
-async function withDocs(run, setup) { return withPage('docs.html', run, setup); }
+async function withComponentFixture(run, setup) { return withPage('component-fixture.html', run, setup); }
 
 async function assertAlertDialogExample(page, sample) {
   const trigger = sample.getByRole('button', { name: 'Delete draft', exact: true }).and(sample.locator('[data-db-trigger]'));
@@ -82,14 +83,6 @@ async function assertAlertDialogExample(page, sample) {
 
 for (const width of [320, 1280]) {
   for (const theme of ['light', 'dark']) {
-    test('docs Alert Dialog shows content, traps focus, and dismisses at ' + width + 'px in ' + theme, async () => {
-      await withDocs(async page => {
-        await page.setViewportSize({ width, height: 900 });
-        assert.equal(await page.locator('html').getAttribute('data-theme'), theme);
-        await assertAlertDialogExample(page, page.locator('#alert-dialog .docs-component__preview'));
-        assert.match(await page.locator('#alert-dialog pre').textContent(), /data-db-trigger="example-alert-dialog-confirm-delete"/);
-      }, page => page.addInitScript(value => localStorage.setItem('db-theme', value), theme));
-    });
 
     test('AI Docs Alert Dialog includes a working launcher at ' + width + 'px in ' + theme, async () => {
       const reference = await readFile(new URL('llms.txt', root), 'utf8');
@@ -143,18 +136,6 @@ async function assertModalExample(page, sample, { triggerName = 'Open project de
 
 for (const width of [320, 1280]) {
   for (const theme of ['light', 'dark']) {
-    test('docs Modal Overlay shows its own launcher and dismissible dialog at ' + width + 'px in ' + theme, async () => {
-      const component = JSON.parse(assets.get('/components.json')).components.find(component => component.name === 'Modal Overlay');
-      await withDocs(async page => {
-        await page.setViewportSize({ width, height: 900 });
-        assert.equal(await page.locator('html').getAttribute('data-theme'), theme);
-        const body = component.html.match(/<div class="db-modal__body">([^]*?)<\/div>/)[1];
-        await assertModalExample(page, page.locator('#modal-overlay .docs-component__preview'), { triggerName: 'Open release notes', title: 'Release notes', body });
-        const code = await page.locator('#modal-overlay pre').textContent();
-        assert.match(code, /data-db-modal-trigger="example-modal-overlay-overlay-example"/);
-        assert.match(code, /aria-labelledby="example-modal-overlay-overlay-example-title"/);
-      }, page => page.addInitScript(value => localStorage.setItem('db-theme', value), theme));
-    });
 
     test('catalog Modal Overlay opens and dismisses its populated example at ' + width + 'px in ' + theme, async () => {
       const component = JSON.parse(assets.get('/components.json')).components.find(component => component.name === 'Modal Overlay');
@@ -170,15 +151,6 @@ for (const width of [320, 1280]) {
       } finally {
         await page.close();
       }
-    });
-
-    test('docs Modal shows a launcher and dismissible content at ' + width + 'px in ' + theme, async () => {
-      await withDocs(async page => {
-        await page.setViewportSize({ width, height: 900 });
-        assert.equal(await page.locator('html').getAttribute('data-theme'), theme);
-        await assertModalExample(page, page.locator('#modal .docs-component__preview'));
-        assert.match(await page.locator('#modal pre').textContent(), /data-db-modal-trigger="example-modal-my-modal"/);
-      }, page => page.addInitScript(value => localStorage.setItem('db-theme', value), theme));
     });
 
     test('AI Docs Modal includes a working launcher at ' + width + 'px in ' + theme, async () => {
@@ -224,18 +196,6 @@ async function assertRevenueChart(card) {
 
 for (const width of [320, 1280]) {
   for (const theme of ['light', 'dark']) {
-    test('docs Chart Card renders revenue bars and copyable data at ' + width + 'px in ' + theme, async () => {
-      await withDocs(async page => {
-        await page.setViewportSize({ width, height: 900 });
-        assert.equal(await page.locator('html').getAttribute('data-theme'), theme);
-        const card = page.locator('#chart-card .db-chart-card');
-        await assertRevenueChart(card);
-        const example = await page.locator('#chart-card .docs-component__code').textContent();
-        assert.ok(example.includes('class="db-chart"'));
-        assert.ok(example.includes('March: $80k'));
-        assert.ok(!example.includes('<canvas'));
-      }, page => page.addInitScript(value => localStorage.setItem('db-theme', value), theme));
-    });
 
     test('AI Docs Chart Card renders without chart scripts at ' + width + 'px in ' + theme, async () => {
       const reference = await readFile(new URL('llms.txt', root), 'utf8');
@@ -253,75 +213,8 @@ for (const width of [320, 1280]) {
   }
 }
 
-test('docs Carousel keeps phone content clear of arrows and switches visible slides', async () => {
-  await withDocs(async page => {
-    await page.setViewportSize({ width: 320, height: 800 });
-    const carousel = page.locator('#carousel .db-carousel');
-    const checkContent = async () => {
-      const geometry = await carousel.evaluate(element => {
-        const slide = element.querySelector('.db-carousel__slide[aria-hidden="false"]');
-        const heading = slide.querySelector('h3').getBoundingClientRect();
-        const previous = element.querySelector('.db-carousel__btn--prev').getBoundingClientRect();
-        const next = element.querySelector('.db-carousel__btn--next').getBoundingClientRect();
-        const rect = element.getBoundingClientRect();
-        const preview = element.closest('.docs-component__preview').getBoundingClientRect();
-        return { clear: heading.left >= previous.right + 8 && heading.right <= next.left - 8, fits: rect.left >= preview.left && rect.right <= preview.right };
-      });
-      assert.equal(geometry.clear, true);
-      assert.equal(geometry.fits, true);
-    };
-    await checkContent();
-    await carousel.getByRole('button', { name: 'Next slide', exact: true }).click();
-    await checkContent();
-    assert.equal(await carousel.getByRole('heading', { name: 'Project Birch', exact: true }).isVisible(), true);
-    assert.equal(await carousel.getByRole('button', { name: 'Go to slide 2' }).getAttribute('aria-current'), 'true');
-    await carousel.getByRole('button', { name: 'Previous slide', exact: true }).click();
-    assert.equal(await carousel.getByRole('heading', { name: 'Project Aurora', exact: true }).isVisible(), true);
-  });
-});
-
-for (const width of [320, 1280]) {
-  test('docs Theme Switcher remains in its preview and opens a complete picker at ' + width + 'px', async () => {
-    await withDocs(async page => {
-      await page.setViewportSize({ width, height: 900 });
-      const sample = page.locator('#theme-switcher .docs-component__preview');
-      const toggle = sample.getByRole('button', { name: 'Open theme picker', exact: true });
-      const geometry = await toggle.evaluate(element => {
-        const button = element.getBoundingClientRect();
-        const preview = element.closest('.docs-component__preview').getBoundingClientRect();
-        return { button: button.toJSON(), preview: preview.toJSON() };
-      });
-      assert.ok(geometry.button.left >= geometry.preview.left && geometry.button.right <= geometry.preview.right, JSON.stringify(geometry));
-      assert.ok(geometry.button.top >= geometry.preview.top && geometry.button.bottom <= geometry.preview.bottom, JSON.stringify(geometry));
-      await toggle.click();
-      const picker = sample.locator('.db-theme-switcher__popover');
-      assert.equal(await picker.isVisible(), true);
-      assert.equal(await picker.locator('[data-family]').count(), 21);
-      assert.equal(await picker.locator('.db-theme-switcher__tab').count(), 4);
-      assert.equal(await picker.locator('[data-scheme]').count(), 3);
-      const bounds = await picker.evaluate(element => {
-        const rect = element.getBoundingClientRect();
-        const preview = element.closest('.docs-component__preview').getBoundingClientRect();
-        return { rect: rect.toJSON(), preview: preview.toJSON(), overflow: element.scrollWidth > element.clientWidth };
-      });
-      assert.ok(bounds.rect.left >= bounds.preview.left && bounds.rect.right <= bounds.preview.right, JSON.stringify(bounds));
-      assert.ok(bounds.rect.bottom <= bounds.preview.bottom, JSON.stringify(bounds));
-      assert.equal(bounds.overflow, false);
-      const category = await picker.locator('[data-family="github"]').evaluate(element => element.parentElement.getAttribute('data-cat'));
-      await picker.locator('.db-theme-switcher__tab[data-cat="' + category + '"]').click();
-      await picker.getByRole('button', { name: 'github', exact: true }).click();
-      await picker.getByRole('button', { name: 'dark mode', exact: true }).click();
-      assert.equal(await page.locator('html').getAttribute('data-theme'), 'github-dark');
-      assert.equal(await picker.getByRole('button', { name: 'dark mode', exact: true }).getAttribute('aria-pressed'), 'true');
-      await picker.getByRole('button', { name: 'dark mode', exact: true }).press('Escape');
-      assert.equal(await picker.isVisible(), false);
-      assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
-    });
-  });
-}
-
 test('Theme Switcher retains its floating placement outside documentation previews', async () => {
-  await withDocs(async page => {
+  await withComponentFixture(async page => {
     await page.evaluate(() => {
       const switcher = document.createElement('div');
       switcher.className = 'db-theme-switcher';
@@ -338,237 +231,9 @@ test('Theme Switcher retains its floating placement outside documentation previe
   });
 });
 
-test('docs Sidebar navigation targets the component without duplicate IDs', async () => {
-  await withDocs(async page => {
-    assert.equal(await page.locator('[id="sidebar"]').count(), 1);
-    await page.locator('#sidebarNav').getByRole('link', { name: 'Sidebar', exact: true }).click();
-    const position = await page.locator('#sidebar .docs-component__name').boundingBox();
-    assert.ok(position.y >= 0 && position.y < 100, JSON.stringify(position));
-    await page.setViewportSize({ width: 375, height: 800 });
-    await page.getByRole('button', { name: 'Browse categories', exact: true }).click();
-    assert.equal(await page.locator('.docs-sidebar').evaluate(element => element.classList.contains('docs-sidebar--open')), true);
-    await page.locator('#sidebarNav').getByRole('link', { name: 'Sidebar', exact: true }).click();
-    assert.equal(await page.locator('.docs-sidebar').evaluate(element => element.classList.contains('docs-sidebar--open')), false);
-    assert.equal(await page.getByRole('button', { name: 'Browse categories', exact: true }).getAttribute('aria-expanded'), 'false');
-    const toggle = page.locator('#sidebar .db-sidebar__toggle');
-    assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
-    await toggle.click();
-    assert.equal(await toggle.getAttribute('aria-expanded'), 'true');
-    assert.ok(await page.locator('#sidebar .db-sidebar').evaluate(element => {
-      const rect = element.getBoundingClientRect();
-      const preview = element.closest('.docs-component__preview').getBoundingClientRect();
-      return element.scrollWidth <= element.clientWidth && rect.right <= preview.right;
-    }));
-  });
-});
-
-test('docs Toast shows anatomy and creates dismissible timed notifications outside its static preview', async () => {
-  await withDocs(async page => {
-    const example = page.locator('#toast .docs-component__preview');
-    const sample = example.getByRole('status');
-    assert.equal(await sample.locator('.db-toast__title').textContent(), 'Saved');
-    assert.equal(await sample.locator('svg.lucide-circle-check').count(), 1);
-    assert.doesNotMatch(await example.innerText(), /DAUB\.toast\(/);
-    assert.equal(await page.locator('#toast-stack .db-toast').count(), 2);
-    await example.getByRole('button', { name: 'Show toast', exact: true }).click();
-    const notification = page.locator('body > .db-toast-stack .db-toast');
-    await notification.waitFor();
-    assert.equal(await notification.locator('.db-toast__title').textContent(), 'Saved');
-    assert.equal(await notification.locator('.db-toast__message').textContent(), 'Changes saved.');
-    assert.equal(await page.locator('#toast-stack .db-toast').count(), 2);
-    await notification.getByRole('button', { name: 'Dismiss', exact: true }).click();
-    await page.clock.fastForward(201);
-    await notification.waitFor({ state: 'detached' });
-    await example.getByRole('button', { name: 'Show toast', exact: true }).click();
-    await notification.waitFor();
-    assert.equal(await page.locator('body > .db-toast-stack').count(), 1);
-    await page.clock.fastForward(4000);
-    await page.clock.fastForward(201);
-    await notification.waitFor({ state: 'detached' });
-    assert.equal(await sample.count(), 1);
-  }, page => page.clock.install());
-});
-
-test('docs Toast preview and live notification fit a phone viewport', async () => {
-  await withDocs(async page => {
-    await page.setViewportSize({ width: 320, height: 700 });
-    const preview = page.locator('#toast .docs-component__preview');
-    await preview.getByRole('button', { name: 'Show toast', exact: true }).click();
-    const geometry = await page.locator('body > .db-toast-stack .db-toast').evaluate(element => {
-      const rect = element.getBoundingClientRect();
-      return { rect: rect.toJSON(), width: innerWidth, height: innerHeight };
-    });
-    assert.ok(geometry.rect.left >= 0 && geometry.rect.right <= geometry.width);
-    assert.ok(geometry.rect.top >= 0 && geometry.rect.bottom <= geometry.height);
-    assert.ok(await preview.evaluate(element => element.scrollWidth <= element.clientWidth));
-  });
-});
-
-for (const width of [320, 1280]) {
-  test('docs component metadata shares a vertical center at ' + width + 'px', async () => {
-    await withDocs(async page => {
-      await page.setViewportSize({ width, height: 800 });
-      for (const theme of ['light', 'dark']) {
-        await page.evaluate(theme => DAUB.setTheme(theme), theme);
-        const rows = await page.locator('.docs-component__meta').evaluateAll(elements => elements.map(element => ({
-          id: element.closest('.docs-component').id,
-          items: Array.from(element.children, child => {
-            const rect = child.getBoundingClientRect();
-            return { text: child.textContent, center: rect.top + rect.height / 2 };
-          })
-        })));
-        for (const row of rows) {
-          for (const item of row.items.slice(1)) {
-            assert.ok(Math.abs(item.center - row.items[0].center) <= 0.5, JSON.stringify({ width, theme, ...row }));
-          }
-        }
-      }
-    });
-  });
-}
-
-for (const theme of ['light', 'dark']) {
-  test('docs Checkbox Group shows selected checkmarks in ' + theme, async () => {
-    await withDocs(async page => {
-      await page.evaluate(theme => DAUB.setTheme(theme), theme);
-      const group = page.getByRole('group', { name: 'Topics', exact: true });
-      const design = group.getByRole('checkbox', { name: 'Design', exact: true });
-      const engineering = group.getByRole('checkbox', { name: 'Engineering', exact: true });
-      const marks = group.locator('.db-checkbox__box svg');
-      assert.equal(await marks.count(), 2);
-      assert.equal(await design.isChecked(), false);
-      assert.equal(await engineering.isChecked(), false);
-      assert.deepEqual(await marks.evaluateAll(elements => elements.map(element => getComputedStyle(element).opacity)), ['0', '0']);
-      await group.locator('label').filter({ hasText: 'Design' }).click();
-      assert.equal(await design.isChecked(), true);
-      assert.equal(await engineering.isChecked(), false);
-      assert.equal(await marks.nth(0).evaluate(element => getComputedStyle(element).opacity), '1');
-      assert.equal(await marks.nth(0).getAttribute('fill'), 'none');
-      assert.equal(await marks.nth(0).getAttribute('aria-hidden'), 'true');
-      assert.ok(await marks.nth(0).evaluate(element => {
-        const rect = element.getBoundingClientRect();
-        return rect.width > 0 && rect.height > 0 && getComputedStyle(element).stroke !== 'none';
-      }));
-      await engineering.press('Space');
-      assert.equal(await engineering.isChecked(), true);
-      assert.equal(await marks.nth(1).evaluate(element => getComputedStyle(element).opacity), '1');
-      await engineering.press('Space');
-      assert.equal(await engineering.isChecked(), false);
-      assert.equal(await marks.nth(1).evaluate(element => getComputedStyle(element).opacity), '0');
-      assert.equal((await page.locator('#checkbox-group pre').textContent()).match(/<polyline/g).length, 2);
-    });
-  });
-}
-
-test('docs alert dialog confirmation closes its namespaced overlay', async () => {
-  await withDocs(async page => {
-    await page.locator('#alert-dialog [data-db-trigger]').click();
-    const dialog = page.getByRole('alertdialog', { name: 'Delete this draft?' });
-    await dialog.waitFor();
-    await dialog.getByRole('button', { name: 'Delete draft', exact: true }).click();
-    await dialog.waitFor({ state: 'hidden' });
-    assert.match(await page.locator('#alert-dialog pre').textContent(), /DAUB\.closeAlertDialog\('example-alert-dialog-confirm-delete'\)/);
-  });
-});
-
-test('docs command trigger opens its namespaced command palette', async () => {
-  await withDocs(async page => {
-    const trigger = page.locator('#command-palette [data-db-command-trigger]');
-    await trigger.click();
-    const dialog = page.getByRole('dialog', { name: 'Command palette', exact: true });
-    await dialog.waitFor();
-    const input = dialog.getByRole('combobox', { name: 'Search commands' });
-    assert.equal(await input.evaluate(element => element === document.activeElement), true);
-    await input.fill('Home');
-    await input.press('ArrowDown');
-    assert.equal(await dialog.getByRole('option', { name: 'Home', exact: true }).getAttribute('aria-selected'), 'true');
-    await page.keyboard.press('Escape');
-    await dialog.waitFor({ state: 'hidden' });
-    assert.equal(await trigger.evaluate(element => element === document.activeElement), true);
-    assert.match(await page.locator('#command-palette pre').textContent(), /DAUB\.openCommand\('example-command-palette-cmd'\)/);
-  });
-});
-
-test('docs renders each catalog component in its category and sidebar', async () => {
-  const catalog = JSON.parse(assets.get('/components.json'));
-  await withDocs(async page => {
-    assert.equal(await page.locator('.docs-component').count(), catalog.components.length);
-    for (const component of catalog.components) {
-      const id = component.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      assert.equal(await page.locator('#' + id + ' .docs-component__name').textContent(), component.name);
-      assert.equal(await page.locator('#sidebarNav a[href="#' + id + '"]').count(), 1);
-    }
-  });
-});
-
-for (const [width, theme] of [320, 375, 1280].flatMap(width => ['light', 'dark'].map(theme => [width, theme]))) {
-  test('docs preview card stays inside its preview at ' + width + 'px in ' + theme, async () => {
-    await withDocs(async page => {
-      await page.setViewportSize({ width, height: 900 });
-      await page.evaluate(theme => DAUB.setTheme(theme), theme);
-      const trigger = page.locator('#preview-card .db-preview-card__trigger');
-      await trigger.focus();
-      const geometry = await page.locator('#preview-card').evaluate(card => {
-        const preview = card.querySelector('.docs-component__preview');
-        const content = card.querySelector('.db-preview-card__content');
-        const p = preview.getBoundingClientRect();
-        const c = content.getBoundingClientRect();
-        return { preview: p.toJSON(), content: c.toJSON(), opacity: getComputedStyle(content).opacity,
-          overflow: getComputedStyle(preview).overflowY,
-          bottomHit: content.contains(document.elementFromPoint(c.left + 8, c.bottom - 8)) };
-      });
-      assert.equal(geometry.opacity, '1');
-      assert.equal(geometry.overflow, 'visible');
-      assert.ok(geometry.content.left >= geometry.preview.left);
-      assert.ok(geometry.content.right <= geometry.preview.right, JSON.stringify(geometry));
-      assert.ok(geometry.content.bottom <= geometry.preview.bottom, JSON.stringify(geometry));
-      assert.equal(geometry.bottomHit, true, JSON.stringify(geometry));
-      assert.equal(await page.locator('#preview-card .db-preview-card__title').evaluate(element => getComputedStyle(element).display), 'block');
-      assert.equal(await page.locator('#preview-card .db-preview-card__desc').evaluate(element => getComputedStyle(element).display), 'block');
-      assert.equal(await page.locator('#preview-card pre').textContent(), JSON.parse(assets.get('/components.json')).components.find(component => component.name === 'Preview Card').html);
-    });
-  });
-}
-
-for (const width of [320, 1280]) {
-  test('docs keeps visible bottom navigation inside its preview at ' + width + 'px', async () => {
-    await withDocs(async page => {
-      await page.setViewportSize({ width, height: 800 });
-      const nav = page.locator('#bottom-navigation .db-bottom-nav');
-      assert.equal(await nav.isVisible(), true);
-      assert.equal(await nav.locator('.db-bottom-nav__item').count(), 2);
-      assert.equal(await nav.locator('svg.lucide').count(), 2);
-      assert.equal(await nav.locator('.db-bottom-nav__badge').isVisible(), true);
-      const geometry = await page.locator('#bottom-navigation .db-bottom-nav').evaluate(nav => {
-        const preview = nav.closest('.docs-component__preview').getBoundingClientRect();
-        const rect = nav.getBoundingClientRect();
-        return { preview: preview.toJSON(), nav: rect.toJSON(), position: getComputedStyle(nav).position };
-      });
-      assert.equal(geometry.position, 'static');
-      assert.ok(geometry.nav.height >= 56);
-      assert.ok(geometry.nav.top >= geometry.preview.top);
-      assert.ok(geometry.nav.bottom <= geometry.preview.bottom);
-    });
-  });
-}
-
-test('docs previews plain mobile-only Bottom Navigation on desktop', async () => {
-  await withDocs(async page => {
-    const nav = page.locator('#bottom-navigation .db-bottom-nav');
-    assert.equal(await nav.isVisible(), true);
-    assert.equal(await nav.evaluate(element => getComputedStyle(element).display), 'flex');
-    assert.ok((await nav.boundingBox()).height >= 56);
-  }, page => page.route('**/components.json', route => {
-    const catalog = JSON.parse(assets.get('/components.json'));
-    const component = catalog.components.find(component => component.name === 'Bottom Navigation');
-    component.html = component.html.replace(' db-bottom-nav--always', '').replace(' db-bottom-nav--static', '');
-    return route.fulfill({ contentType: 'application/json', body: JSON.stringify(catalog) });
-  }));
-});
-
 test('Bottom Navigation retains mobile-only visibility outside documentation previews', async () => {
   const html = JSON.parse(assets.get('/components.json')).components.find(component => component.name === 'Bottom Navigation').html;
-  await withDocs(async page => {
+  await withComponentFixture(async page => {
     await page.evaluate(html => {
       const wrapper = document.createElement('div');
       wrapper.innerHTML = html;
@@ -587,69 +252,6 @@ test('Bottom Navigation retains mobile-only visibility outside documentation pre
     await nav.evaluate(element => element.classList.add('db-bottom-nav--always'));
     assert.equal(await nav.isVisible(), true);
   });
-});
-
-test('docs renders pinned local Lucide icons without third-party requests', async () => {
-  await withDocs(async page => {
-    await page.locator('#input-with-icon svg.lucide-search').waitFor();
-    assert.equal(await page.locator('script[src="assets/lucide.min.js"]').count(), 1);
-    assert.ok(await page.locator('svg.lucide').count() >= 7);
-  });
-});
-
-test('docs search preserves entered values, selected controls, and sample DOM nodes', async () => {
-  await withDocs(async page => {
-    await page.locator('#text-field .docs-component__preview input').fill('owner@example.com');
-    await page.locator('#checkbox .docs-component__preview label').click();
-    await page.locator('#radio-group .docs-component__preview label').filter({ hasText: 'Team' }).click();
-    await page.evaluate(() => { window.sampleInput = document.querySelector('#text-field .docs-component__preview input'); });
-    await page.getByLabel('Search components', { exact: true }).fill('nonexistent-sample');
-    await page.getByText('No components match your search.', { exact: true }).waitFor();
-    await page.getByLabel('Search components', { exact: true }).fill('');
-    assert.equal(await page.locator('#text-field .docs-component__preview input').inputValue(), 'owner@example.com');
-    assert.equal(await page.locator('#checkbox .docs-component__preview input').isChecked(), true);
-    assert.equal(await page.locator('#radio-group .docs-component__preview input[value="team"]').isChecked(), true);
-    assert.equal(await page.evaluate(() => window.sampleInput === document.querySelector('#text-field .docs-component__preview input')), true);
-    await page.locator('#switch [role="switch"]').click();
-    assert.equal(await page.locator('#switch [role="switch"]').getAttribute('aria-checked'), 'true');
-  });
-});
-
-for (const mode of ['missing', 'denied']) {
-  test('docs clipboard ' + mode + ' selects the displayed sample without losing form state', async () => {
-    await withDocs(async page => {
-      const sample = page.locator('#text-field');
-      await sample.locator('.docs-component__preview input').fill('owner@example.com');
-      const source = await sample.locator('pre').textContent();
-      await sample.getByRole('button', { name: 'Copy Text Field example' }).click();
-      await page.getByRole('status').filter({ hasText: 'Clipboard unavailable.' }).waitFor();
-      assert.equal(await page.evaluate(() => getSelection().toString()), source);
-      assert.equal(await sample.locator('.docs-component__preview input').inputValue(), 'owner@example.com');
-      assert.equal(await sample.locator('pre').textContent(), source);
-    }, page => page.addInitScript(mode => {
-      Object.defineProperty(navigator, 'clipboard', {
-        configurable: true,
-        value: mode === 'missing' ? undefined : { writeText: () => Promise.reject(new DOMException('Denied', 'NotAllowedError')) }
-      });
-    }, mode));
-  });
-}
-
-test('docs copy keeps source stable after editing and filtering a sample', async () => {
-  await withDocs(async page => {
-    const source = await page.locator('#text-field pre').textContent();
-    await page.locator('#text-field .docs-component__preview input').fill('owner@example.com');
-    await page.getByLabel('Search components', { exact: true }).fill('Text Field');
-    await page.getByRole('button', { name: 'Copy Text Field example' }).click();
-    await page.waitForFunction(() => window.copyCalls === 1);
-    assert.equal(await page.evaluate(() => window.copiedExample), source);
-    assert.equal(await page.locator('#text-field .docs-component__preview input').inputValue(), 'owner@example.com');
-  }, page => page.addInitScript(() => {
-    window.copyCalls = 0;
-    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: {
-      writeText: value => { window.copiedExample = value; window.copyCalls++; return Promise.resolve(); }
-    } });
-  }));
 });
 
 const importedTheme = {

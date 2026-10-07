@@ -76,7 +76,7 @@ test('generated MCP snapshot equals the canonical browser body', async () => {
 });
 
 test('local and cloud catalogs and valid types cover the renderer registry', async () => {
-  assert.equal(RENDERER_TYPES.length, 88);
+  assert.equal(RENDERER_TYPES.length, 89);
   assert.deepEqual([...VALID_TYPES].sort(), [...RENDERER_TYPES].sort());
   assert.deepEqual(COMP_CATEGORIES.flatMap(([, types]) => types).sort(), [...RENDERER_TYPES].sort());
   assert.deepEqual(Object.keys(COMP_PROPS).sort(), [...RENDERER_TYPES].sort());

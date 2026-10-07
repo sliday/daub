@@ -2000,6 +2000,65 @@ function DAUB_RENDER_FACTORY() {
       return el;
     };
 
+    RENDERERS.ChangeSummary = function(p, ch, els, d) {
+      function count(value) {
+        return typeof value === 'number' && Number.isFinite(value) ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.floor(value))) : 0;
+      }
+      function counts(cls, additions, deletions) {
+        var node = mkEl('span', cls);
+        var added = mkEl('span', 'db-change-summary__additions', '+' + additions);
+        added.setAttribute('role', 'img');
+        added.setAttribute('aria-label', additions + ' additions');
+        var deleted = mkEl('span', 'db-change-summary__deletions', '-' + deletions);
+        deleted.setAttribute('role', 'img');
+        deleted.setAttribute('aria-label', deletions + ' deletions');
+        node.appendChild(added);
+        node.appendChild(deleted);
+        return node;
+      }
+      var files = (Array.isArray(p.files) ? p.files : []).filter(function(file) { return file && !Array.isArray(file) && typeof file.path === 'string'; });
+      var additions = 0, deletions = 0;
+      var list = mkEl('ul', 'db-change-summary__files');
+      files.forEach(function(file) {
+        var added = count(file.additions), deleted = count(file.deletions);
+        additions = Math.min(Number.MAX_SAFE_INTEGER, additions + added);
+        deletions = Math.min(Number.MAX_SAFE_INTEGER, deletions + deleted);
+        var row = mkEl('li', 'db-change-summary__file');
+        var path = mkEl('span', 'db-change-summary__path', file.path);
+        path.setAttribute('title', file.path);
+        if (['added', 'modified', 'deleted'].indexOf(file.status) >= 0) {
+          row.setAttribute('data-status', file.status);
+          path.setAttribute('aria-label', file.path + ', ' + file.status);
+        }
+        row.appendChild(path);
+        row.appendChild(counts('db-change-summary__counts', added, deleted));
+        list.appendChild(row);
+      });
+      var title = typeof p.title === 'string' && p.title.trim() ? p.title : (files.length ? 'Edited ' + files.length + ' file' + (files.length === 1 ? '' : 's') : 'No files changed');
+      var el = mkEl('div', 'db-change-summary');
+      el.setAttribute('role', 'group');
+      el.setAttribute('aria-label', title);
+      var header = mkEl('div', 'db-change-summary__header');
+      var icon = mkEl('span', 'db-change-summary__icon');
+      icon.setAttribute('aria-hidden', 'true');
+      icon.innerHTML = iconHtml('files', 16);
+      header.appendChild(icon);
+      var heading = mkEl('div', 'db-change-summary__heading');
+      heading.appendChild(mkEl('div', 'db-change-summary__title', title));
+      if (typeof p.description === 'string' && p.description) heading.appendChild(mkEl('p', 'db-change-summary__description', p.description));
+      header.appendChild(heading);
+      var totals = counts('db-change-summary__totals', additions, deletions);
+      heading.appendChild(totals);
+      if (ch.length) {
+        var actions = mkEl('div', 'db-change-summary__actions');
+        actions.appendChild(renderChildren(els, ch, d));
+        header.appendChild(actions);
+      }
+      el.appendChild(header);
+      el.appendChild(list);
+      return el;
+    };
+
     RENDERERS.ChatComposer = function(p) {
       var el = mkEl('form', 'db-chat-composer');
       var config = {};

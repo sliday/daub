@@ -65,16 +65,40 @@ test('queue edits survive arrivals, steer interrupts now, and remaining requests
     await page.getByRole('button', { name: 'Queue message', exact: true }).click();
     assert.equal(await first.getByRole('textbox', { name: 'Edit queued message', exact: true }).inputValue(), 'Mobile follow-up');
     await first.getByRole('button', { name: 'Save edit', exact: true }).click();
-    assert.equal(await page.locator('#chat-queue-count').textContent(), '2');
+    assert.equal(await page.getByRole('list', { name: 'Queued messages' }).getByRole('listitem').count(), 2);
     await first.getByRole('button', { name: 'Steer queued message', exact: true }).click();
     assert.equal(await page.locator('[data-db-message-id="assistant-1"] .chat-demo-thinking').getAttribute('data-state'), 'steered');
     assert.match(await page.locator('[data-db-message-id="user-2"] .db-message__header').textContent(), /Steered mid-run/);
-    assert.equal(await page.locator('#chat-queue-count').textContent(), '1');
+    assert.equal(await page.getByRole('list', { name: 'Queued messages' }).getByRole('listitem').count(), 1);
     await page.clock.runFor(10000);
     assert.deepEqual(await page.locator('[data-db-message-id^="user-"] .db-bubble__content').allTextContents(), ['Review the release', 'Mobile follow-up', 'Second follow-up']);
     assert.equal(await page.locator('.db-chat-composer__queued-item').count(), 0);
     assert.equal(await page.getByRole('combobox', { name: 'Model', exact: true }).isDisabled(), false);
   }, { clock: true });
+});
+
+test('pending messages stay above the composer on desktop and mobile without a separate queue view', async () => {
+  for (const width of [320, 1440]) await workspace(async page => {
+    const queue = page.getByRole('list', { name: 'Queued messages' });
+    assert.equal(await queue.isVisible(), false);
+    assert.equal(await page.locator('[data-chat-view="queue"]').count(), 0);
+    await send(page, 'Review the release');
+    await page.locator('#chat-prompt').fill('Check the mobile layout next');
+    await page.getByRole('button', { name: 'Queue message', exact: true }).click();
+    assert.equal(await queue.isVisible(), true);
+    assert.equal(await queue.getByRole('button', { name: 'Steer queued message' }).innerText(), 'Steer');
+    const bounds = await page.evaluate(() => {
+      const queue = document.querySelector('.db-chat-composer__queue').getBoundingClientRect();
+      const panel = document.querySelector('.db-chat-composer__panel').getBoundingClientRect();
+      return { queueBottom: queue.bottom, panelTop: panel.top, panelBottom: panel.bottom, height: innerHeight, overflow: document.documentElement.scrollWidth > innerWidth };
+    });
+    assert.ok(bounds.queueBottom <= bounds.panelTop, 'queued messages sit above the input panel');
+    assert.ok(bounds.panelBottom <= bounds.height, 'composer stays reachable');
+    assert.equal(bounds.overflow, false);
+    assert.equal(await page.locator('[data-db-message-id^="user-"]').count(), 1, 'pending message has not entered the transcript');
+    await queue.getByRole('button', { name: 'Remove queued message' }).click();
+    assert.equal(await queue.isVisible(), false);
+  }, { width, height: 812, clock: true });
 });
 
 test('file drop, context, goal, plan and model selections affect the next request', async () => {
@@ -98,16 +122,20 @@ test('file drop, context, goal, plan and model selections affect the next reques
     await goal.getByRole('textbox', { name: 'Goal', exact: true }).fill('Complete the release review');
     await goal.getByRole('button', { name: 'Set goal', exact: true }).click();
     await add(page, 'Plan mode');
-    await page.getByRole('combobox', { name: 'Model', exact: true }).selectOption('demo-brief');
+    await page.evaluate(() => document.querySelector('#chat-form').addEventListener('db:chat-send', event => { window.sentChatConfig = event.detail.request; }));
+    await page.getByRole('combobox', { name: 'Model', exact: true }).click();
+    await page.getByRole('option', { name: 'Concise assistant (demo)', exact: true }).click();
     await page.getByRole('button', { name: 'Chat settings', exact: true }).click();
     const settings = page.getByRole('dialog', { name: 'Chat settings', exact: true });
-    await settings.getByRole('combobox', { name: 'Effort', exact: true }).selectOption('low');
-    await settings.getByRole('combobox', { name: 'Approval', exact: true }).selectOption('auto');
+    await settings.getByRole('combobox', { name: 'Effort', exact: true }).click();
+    await settings.getByRole('option', { name: 'Low', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Approval', exact: true }).click();
+    await page.getByRole('option', { name: 'Auto-approve safe actions', exact: true }).click();
     await page.keyboard.press('Escape');
     await send(page, 'Plan the release');
     await page.clock.runFor(6000);
     const answer = page.locator('[data-db-message-id="assistant-1"]');
-    assert.match(await answer.locator('.db-message__header').textContent(), /brief \/ low/);
+    assert.deepEqual(await page.evaluate(() => ({ model: sentChatConfig.model, effort: sentChatConfig.effort, approval: sentChatConfig.approval })), { model: 'demo-brief', effort: 'low', approval: 'auto' });
     assert.match(await answer.locator('.db-bubble__content').textContent(), /1\. Review the main workflow/);
     assert.equal(await page.locator('[data-db-message-id="user-1"] .db-attachment').count(), 2);
     assert.match(await page.locator('[data-db-message-id="user-1"] .db-message__header').textContent(), /Goal/);
@@ -204,7 +232,7 @@ test('settings and Add popups fit desktop, mobile, and short mobile viewports', 
       await page.getByRole('button', { name: 'Chat settings', exact: true }).click();
       const settings = page.getByRole('dialog', { name: 'Chat settings', exact: true });
       await assertFits(settings);
-      assert.equal(await settings.getByRole('combobox').count(), 3);
+      assert.equal(await settings.getByRole('combobox').count(), 2);
       await page.keyboard.press('Escape');
       await page.getByRole('button', { name: 'Add', exact: true }).click();
       await assertFits(page.locator('.db-chat-composer__add-menu'));

@@ -25,7 +25,23 @@ A spec is one JSON object with a flat element map. The playground, `daub-render.
 - `children` holds ids, never nested objects. Nesting lives only in the id graph.
 - `root` must name an element. Every other element should be reachable from `root` through `children` or `footer`. Renderers append unreachable elements after the root, so a stray element shows up at the bottom of the page.
 - `type` must be a spec type. Unknown types render an `Unknown: <Type>` warning notice in their place.
-- Data props (`items`, `sections`, `columns`, `rows`, `bars`, `options`, `tabs`, `steps`) hold plain values. Only `children` and `footer` hold ids.
+- Data props (`items`, `sections`, `columns`, `rows`, `bars`, `options`, `tabs`, `steps`, `files`) hold plain values. Only `children` and `footer` hold ids.
+
+### ChangeSummary
+
+`files` holds `{path: string, additions?: number, deletions?: number,
+status?: "added"|"modified"|"deleted"}` objects. Paths render as plain text.
+Counts floor finite numbers and clamp rows/totals to `0..Number.MAX_SAFE_INTEGER`;
+other values become zero. Ignore malformed entries without string paths.
+Optional props: title, description, undoLabel, undoDisabled. The default title
+for host data is `Edited N file(s)`; empty files use `No files changed`.
+Label fixtures `Prepared 2 demo files` / `Demo changes`.
+
+Children are explicit host-wired action IDs, not file IDs. Renderers create no
+implicit controls. `undoLabel` / `undoDisabled` configure React's callback-backed
+Undo button only; set spec child button props and handlers through the host.
+The component needs no `daub.js` controller and performs no file operations.
+See `components.md` for the action-free JSON/OpenUI demo example.
 
 ## Example
 

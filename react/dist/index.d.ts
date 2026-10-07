@@ -1,5 +1,5 @@
 import * as react from 'react';
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps, ReactNode, MouseEventHandler } from 'react';
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { MessageScroller as MessageScroller$1 } from '@shadcn/react/message-scroller';
 export { MessageScrollerDefaultScrollPosition, MessageScrollerScrollAlign, MessageScrollerScrollOptions, MessageScrollerScrollable, MessageScrollerVisibilityState, useMessageScroller, useMessageScrollerScrollable, useMessageScrollerVisibility } from '@shadcn/react/message-scroller';
@@ -153,6 +153,23 @@ interface MarkerProps extends ComponentProps<"div"> {
 declare const Marker: react.ForwardRefExoticComponent<Omit<MarkerProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 declare const MarkerIcon: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>, "ref"> & react.RefAttributes<HTMLSpanElement>>;
 declare const MarkerContent: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
+
+interface ChangeSummaryFile {
+    path: string;
+    additions?: number;
+    deletions?: number;
+    status?: "added" | "modified" | "deleted";
+}
+interface ChangeSummaryProps extends Omit<ComponentProps<"div">, "dangerouslySetInnerHTML"> {
+    files: ChangeSummaryFile[];
+    title?: string;
+    description?: string;
+    undoLabel?: string;
+    undoDisabled?: boolean;
+    onUndo?: MouseEventHandler<HTMLButtonElement>;
+    onViewChanges?: MouseEventHandler<HTMLButtonElement>;
+}
+declare const ChangeSummary: react.ForwardRefExoticComponent<Omit<ChangeSummaryProps, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
 interface ChatComposerModel {
     id: string;
@@ -920,4 +937,4 @@ declare function useEscapeKey(onClose: (() => void) | undefined, active: boolean
 declare function useOutsideClick(ref: React.RefObject<HTMLElement | null>, onClose: (() => void) | undefined, active: boolean): void;
 declare function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean): void;
 
-export { Accordion, Alert, AlertDialog, type AlertVariant, AspectRatio, type AspectRatio$1 as AspectRatioType, Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, type AttachmentMediaProps, AttachmentProgress, type AttachmentProgressProps, type AttachmentProps, type AttachmentState, AttachmentTitle, AttachmentTrigger, Avatar, AvatarGroup, Badge, type BadgeVariant, BottomNav, Breadcrumbs, Bubble, BubbleCollapsible, type BubbleCollapsibleProps, BubbleContent, BubbleGroup, type BubbleProps, BubbleReactions, type BubbleVariant, Button, ButtonGroup, type ButtonVariant, Calendar, Card, Carousel, Chart, ChartCard, ChatComposer, type ChatComposerAction, type ChatComposerActionDetail, type ChatComposerCapabilities, type ChatComposerChangeDetail, type ChatComposerConfig, type ChatComposerController, type ChatComposerDictationDetail, type ChatComposerDictationState, type ChatComposerModel, type ChatComposerOptions, type ChatComposerProps, type ChatComposerQueueDetail, type ChatComposerRequest, type ChatComposerState, Checkbox, CheckboxGroup, Chip, type ChipColor, Collapsible, CommandPalette, Container, type ContainerSize, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, type GapToken, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Marker, MarkerContent, MarkerIcon, type MarkerProps, Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader, type MessageProps, MessageScroller, MessageScrollerButton, type MessageScrollerButtonProps, MessageScrollerContent, type MessageScrollerContentProps, MessageScrollerItem, type MessageScrollerItemProps, type MessageScrollerProps, MessageScrollerProvider, type MessageScrollerProviderProps, MessageScrollerViewport, type MessageScrollerViewportProps, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, type Size, Skeleton, type SkeletonVariant, Slider, Spinner, Stack, StatCard, Stepper, Surface, type SurfaceVariant, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };
+export { Accordion, Alert, AlertDialog, type AlertVariant, AspectRatio, type AspectRatio$1 as AspectRatioType, Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, type AttachmentMediaProps, AttachmentProgress, type AttachmentProgressProps, type AttachmentProps, type AttachmentState, AttachmentTitle, AttachmentTrigger, Avatar, AvatarGroup, Badge, type BadgeVariant, BottomNav, Breadcrumbs, Bubble, BubbleCollapsible, type BubbleCollapsibleProps, BubbleContent, BubbleGroup, type BubbleProps, BubbleReactions, type BubbleVariant, Button, ButtonGroup, type ButtonVariant, Calendar, Card, Carousel, ChangeSummary, type ChangeSummaryFile, type ChangeSummaryProps, Chart, ChartCard, ChatComposer, type ChatComposerAction, type ChatComposerActionDetail, type ChatComposerCapabilities, type ChatComposerChangeDetail, type ChatComposerConfig, type ChatComposerController, type ChatComposerDictationDetail, type ChatComposerDictationState, type ChatComposerModel, type ChatComposerOptions, type ChatComposerProps, type ChatComposerQueueDetail, type ChatComposerRequest, type ChatComposerState, Checkbox, CheckboxGroup, Chip, type ChipColor, Collapsible, CommandPalette, Container, type ContainerSize, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, type GapToken, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Marker, MarkerContent, MarkerIcon, type MarkerProps, Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader, type MessageProps, MessageScroller, MessageScrollerButton, type MessageScrollerButtonProps, MessageScrollerContent, type MessageScrollerContentProps, MessageScrollerItem, type MessageScrollerItemProps, type MessageScrollerProps, MessageScrollerProvider, type MessageScrollerProviderProps, MessageScrollerViewport, type MessageScrollerViewportProps, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, type Size, Skeleton, type SkeletonVariant, Slider, Spinner, Stack, StatCard, Stepper, Surface, type SurfaceVariant, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };

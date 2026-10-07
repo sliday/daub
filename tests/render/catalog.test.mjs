@@ -27,9 +27,9 @@ async function installExample(component) {
   await page.evaluate(() => DAUB.init(document.getElementById('example')));
 }
 
-test('catalog contains 90 distinct components', () => {
-  assert.equal(catalog.components.length, 90);
-  assert.equal(new Set(catalog.components.map(c => c.name)).size, 90);
+test('catalog contains 91 distinct components', () => {
+  assert.equal(catalog.components.length, 91);
+  assert.equal(new Set(catalog.components.map(c => c.name)).size, 91);
 });
 
 for (const component of catalog.components) {

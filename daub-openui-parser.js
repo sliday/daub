@@ -74,6 +74,7 @@ var COMP_SCHEMA = {
   Bubble: ['children', 'content', 'variant', 'align', 'reactions'],
   Attachment: ['children', 'name', 'description', 'src', 'alt', 'href', 'size', 'state', 'progress', 'orientation'],
   Marker: ['children', 'content', 'icon', 'variant', 'status', 'busy'],
+  ChangeSummary: ['children', 'files', 'title', 'description', 'undoLabel', 'undoDisabled'],
   ChatComposer: ['models', 'model', 'effort', 'approval', 'mode', 'actions', 'capabilities', 'busy', 'placeholder', 'id'],
   Image: ['src', 'alt', 'width', 'height'],
   // Feedback

@@ -2,15 +2,25 @@
 
 All notable changes to DAUB are documented here.
 
-## Unreleased
+## v3.20.6
 
-- Add a searchable 89-component browser with source/anatomy views, isolated previews,
+**Chat composer, documentation, and navigation release (2026-10-07).**
+
+- Add the compact ChatComposer with queued messages, steering, clipboard images,
+  base64 image paste, and accessible model and settings menus.
+- Add ChangeSummary across native, React, browser, and MCP renderers.
+- Consolidate documentation and component references. Share the main navigation
+  across eight pages, and align the roadmap feature cards.
+- Refine message actions, focus styling, activity spacing, and dictation errors.
+- Release `daub-react@0.3.2` with the ChangeSummary component.
+
+- Add a searchable 91-component browser with source/anatomy views, isolated previews,
   42 theme variants, mobile sizing, working variant states, and copy actions.
 - Correct native and React keyboard, overlay, form, disclosure, menu, calendar,
   table, carousel, metric, image, and disabled-state behavior.
 - Recompute semantic/component tokens in scoped themes and portals. Improve
   button-state, placeholder, and raised-surface text contrast.
-- Align the 87-type browser/OpenUI/local MCP/cloud MCP renderer contract and add
+- Align the 89-type browser/OpenUI/local MCP/cloud MCP renderer contract and add
   thirteen named renderers. Generate the MCP renderer snapshot from the canonical body.
 - Add MessageScroller, Message, Bubble, Attachment, and Marker conversation primitives,
   with app-controlled reactions and attachment states. Add the chat demo and renderer

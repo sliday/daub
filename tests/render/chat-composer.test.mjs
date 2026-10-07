@@ -76,7 +76,7 @@ test('renderer emits an empty native form with escaped, round-trippable configur
 
 test('HTML catalog and generated skill references expose ChatComposer with native dependency and demo labels', async () => {
   const sources = loadSources();
-  assert.equal(sources.components.components.length, 90);
+  assert.equal(sources.components.components.length, 91);
   const entry = sources.components.components.find(entry => entry.name === 'Chat Composer');
   assert.equal(entry.class, 'db-chat-composer');
   assert.equal(entry.element, 'form');

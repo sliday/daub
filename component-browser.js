@@ -24,6 +24,21 @@
 
   function slug(component) { return component.class.slice(3); }
 
+  function renderNotes(text) {
+    const target = $('component-description');
+    target.replaceChildren();
+    const tokens = /`[^`]+`|\bDAUB\.[A-Za-z]\w*(?:\([^)]*\))?|\bdb:chat-[\w-]+|\b(?:db|data-db|aria)-[\w-]+|\bdaub(?:-[\w-]+)?\.(?:js|css)|--[a-z][\w-]*/g;
+    let offset = 0;
+    for (const match of text.matchAll(tokens)) {
+      target.append(document.createTextNode(text.slice(offset, match.index)));
+      const code = document.createElement('code');
+      code.textContent = match[0].startsWith('`') ? match[0].slice(1, -1) : match[0];
+      target.append(code);
+      offset = match.index + match[0].length;
+    }
+    target.append(document.createTextNode(text.slice(offset)));
+  }
+
   function markup() {
     if (!selected) return '';
     const modifier = $('preview-variant').value;
@@ -76,6 +91,7 @@
     $('open-sidebar').setAttribute('aria-expanded', String(open));
     $('sidebar-backdrop').hidden = !open;
     $('library-main').inert = open;
+    document.querySelector('[data-site-nav]').inert = open;
     if (open) $('component-search').focus();
     else if (restoreFocus) $('open-sidebar').focus();
   }
@@ -106,15 +122,40 @@
 
   function selectComponent() {
     const key = location.hash.slice(1);
-    if (key === 'component-title') return;
-    selected = components.find((item) => slug(item) === key) || components[0];
+    if (key === 'component-title' && selected) return;
+    const guide = ['getting-started', 'guide-title', 'installation', 'react', 'chat', 'themes'].includes(key);
+    $('getting-started').hidden = !guide;
+    $('component-detail').hidden = guide;
+    document.querySelector('.skip-link').href = guide ? '#guide-title' : '#component-title';
+    document.querySelectorAll('.library-links a').forEach(link => {
+      if (guide && link.hash === '#' + (key === 'guide-title' ? 'getting-started' : key)) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+    $('breadcrumb-section').hidden = guide;
+    $('breadcrumb-separator').hidden = guide;
+    if (guide) {
+      selected = null;
+      $('breadcrumb-name').textContent = ({ installation: 'Installation', react: 'React', chat: 'Chat', themes: 'Theming' })[key] || 'Getting started';
+      document.title = 'Getting started | DAUB Documentation';
+      renderNav();
+      if (document.body.dataset.sidebar === 'open') { setSidebar(false, false); $('guide-title').focus(); }
+      if (key !== 'getting-started') $(key).scrollIntoView();
+      else window.scrollTo(0, 0);
+      return;
+    }
+    selected = components.find((item) => slug(item) === key)
+      || components.find((item) => item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === key)
+      || components.find((item) => 'cat-' + item.category === key)
+      || components[0];
     if (!selected) return;
+    if (key && key !== slug(selected)) history.replaceState(null, '', location.pathname + location.search + '#' + slug(selected));
     const index = components.indexOf(selected);
+    window.scrollTo(0, 0);
     document.title = selected.name + ' | DAUB Components';
     $('component-title').textContent = selected.name;
     $('breadcrumb-name').textContent = selected.name;
     $('component-category').textContent = categories[selected.category] || selected.category;
-    $('component-description').textContent = selected.notes || '';
+    renderNotes(selected.notes || '');
     $('component-class').textContent = '.' + selected.class;
     $('component-behavior').textContent = selected.js ? 'JavaScript interaction' : 'CSS component';
     iframe.title = selected.name + ' interactive preview';
@@ -129,7 +170,9 @@
       const row = document.createElement('tr');
       for (const value of ['.' + child.class, child.element, child.required ? 'Required' : 'Optional']) {
         const cell = document.createElement('td');
-        cell.textContent = value;
+        if (value === '.' + child.class || value === child.element) {
+          const code = document.createElement('code'); code.textContent = value; cell.append(code);
+        } else cell.textContent = value;
         row.appendChild(cell);
       }
       $('component-anatomy').appendChild(row);

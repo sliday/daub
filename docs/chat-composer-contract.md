@@ -46,6 +46,19 @@ Controller methods: `getState()`, `updateOptions(options)`, `setBusy(boolean)`, 
 `approval`, `mode`, `goal`, and dictation state. Controller disposal cancels
 recognition, removes listeners, and revokes owned preview URLs.
 
+Pasting into the message input attaches clipboard images, standalone base64 image
+data URLs, and base64 images embedded in clipboard HTML. Data URLs support PNG,
+JPEG, GIF, WebP, and AVIF. The composer converts them to local `File` objects and
+uses the same removable previews and send/queue payloads as selected files. It
+does not fetch remote image URLs or insert clipboard HTML. Mixed text stays in the
+draft at the cursor. Ordinary text and unsupported data keep normal paste behavior.
+The attachments capability also controls image pasting.
+
+The default toolbar keeps Add and approval on the left, with model/effort summary,
+dictation, and send on the right. Chat settings contains effort, mode, and goal.
+At narrow widths approval uses its shield icon and the model summary omits effort.
+Status remains available to assistive technology without taking toolbar space.
+
 ## DOM Slots
 
 The root is an unframed queue plus a framed composer, not nested cards.
@@ -53,6 +66,7 @@ The root is an unframed queue plus a framed composer, not nested cards.
 - `.db-chat-composer__panel`, `__attachments`, `__input`, `__toolbar`, `__status`.
 - `.db-chat-composer__add`, `__add-menu`, `__file-input`, `__folder-input`.
 - `.db-chat-composer__model`, `__effort`, `__approval`, `__mode`, `__goal`.
+- `.db-chat-composer__choice`, `__choice-trigger`, `__choice-label`, `__choice-menu`, `__choice-option`.
 - `.db-chat-composer__dictation`, `__dictation-bar`, `__dictation-cancel`.
 - `.db-chat-composer__send`, `__stop`, `__dropzone`.
 
@@ -63,6 +77,12 @@ While busy, Send becomes Queue message; Stop remains a separate control.
 Model and effort selection lock during an active response. Dropping files cannot
 navigate the document. Dictation starts only on a user command, supports interim
 and final text, and exposes unsupported, listening, stopped, and error states.
+The model, effort, approval, and mode fields use themed combobox/listbox pickers.
+Their hidden selects retain form values; use controller setters to change them.
+Sibling composer popups close when another opens. A nested picker keeps its
+containing settings panel open. Arrow keys, typeahead, Enter, and Escape work.
+You get a disabled mic when page policy blocks microphone access. Permission
+refusals preserve your draft and display a readable error, without an automatic retry.
 
 ## Declarative Component
 
@@ -80,3 +100,9 @@ Extended Add actions provide local context text and sketch attachments. They
 remain host-provided actions, not ambient browser or filesystem access.
 The existing Thinking disclosure, horizontal shimmer, Copy/Retry controls,
 and scroller behavior remain intact.
+
+Completed replies show one completion state in Thinking. The demo has no
+delivery-acknowledgement reaction or raw model/effort metadata in message headers.
+The ChangeSummary fixture names its data as demo changes. View changes previews
+the supplied patch text; Undo restores only the fixture's browser state.
+The host supplies real changes, undo confirmation, diff viewers, and persistence.

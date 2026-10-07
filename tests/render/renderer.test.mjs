@@ -64,6 +64,7 @@ const fixtures = {
   Attachment: { name: 'Review.pdf', description: 'PDF document', href: '/review.pdf', state: 'uploading', progress: 25 },
   Marker: { content: 'Generating response', icon: 'loader', variant: 'border', busy: true },
   ChatComposer: { models: [{ id: 'demo', label: 'Demo model (simulated)' }], placeholder: 'Write a message' },
+  ChangeSummary: { files: [{ path: 'src/app.ts', additions: 48, deletions: 4 }], title: 'Prepared 1 demo file', description: 'Demo changes' },
 };
 const childFixtures = {
   Stack: ['body', 'body2'], Grid: ['body', 'body2'], Layout: ['body', 'body2'], Surface: ['body'],
@@ -74,6 +75,7 @@ const childFixtures = {
   CheckboxGroup: ['checkbox'], Fieldset: ['child'], Frame: ['body'], Group: ['action'],
   PreviewCard: ['body'], Toolbar: ['toggle', 'action'],
   MessageScroller: ['body', 'body2'], Message: ['body'], Bubble: ['body'], Attachment: ['action'], Marker: ['body'],
+  ChangeSummary: ['action'],
 };
 let browser;
 let page;

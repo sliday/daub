@@ -383,17 +383,17 @@ test('assistant activity and actions share the message gutter without a composer
             icon: step.querySelector('.db-marker__icon').getBoundingClientRect().left,
             copy: step.querySelector('.db-marker__content').getBoundingClientRect().left
           })),
-          footer: left('.db-message__footer'), reaction: left('.db-bubble__reactions button'),
+          footer: left('.db-message__footer'),
           resize: getComputedStyle(document.querySelector('#chat-prompt')).resize
         };
       });
       console.log('Assistant gutter audit: ' + JSON.stringify({ width, ...geometry }));
-      for (const edge of [geometry.body, geometry.chevron, geometry.footer, geometry.reaction, ...geometry.steps.map(step => step.icon)]) {
+      for (const edge of [geometry.body, geometry.chevron, geometry.footer, ...geometry.steps.map(step => step.icon)]) {
         assert.ok(Math.abs(edge - geometry.header) <= 0.5, JSON.stringify(geometry));
       }
       for (const step of geometry.steps) assert.ok(Math.abs(step.copy - geometry.copy) <= 0.5, JSON.stringify(geometry));
       assert.equal(geometry.resize, 'none');
-      assert.equal(await answer.getByRole('button', { name: 'Received', exact: true }).isVisible(), true);
+      assert.equal(await answer.getByRole('button', { name: 'Received', exact: true }).count(), 0);
       await answer.locator('.chat-demo-step summary').first().press('Enter');
       const detail = answer.locator('.chat-demo-step__detail').first();
       assert.equal(await detail.isVisible(), true);
@@ -510,9 +510,7 @@ test('send, stream, stop, reset, and composition keyboard input remain independe
   await input.fill('Release review');
   await input.press('Enter');
   await page.waitForFunction(() => document.querySelector('#chat-status').textContent === 'Ready');
-  const reaction = page.getByRole('button', { name: 'Received', exact: true });
-  await reaction.click();
-  assert.equal(await reaction.getAttribute('aria-pressed'), 'true');
+  assert.equal(await page.getByRole('button', { name: 'Received', exact: true }).count(), 0);
   await page.getByRole('button', { name: 'Reset conversation', exact: true }).click();
   await page.locator('[data-db-message-id="initial-answer"] .db-message').hover();
   await page.getByRole('button', { name: 'Copy review checklist', exact: true }).click();

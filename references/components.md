@@ -3,7 +3,7 @@
 Two catalogs describe the same library:
 
 - **Spec types** are the element `type` values a json-render spec or OpenUI Lang can use. `daub-render.js`, the playground and the hosted MCP renderer turn them into DAUB markup. Props below come from `COMP_PROPS` in playground.html, the text the playground prompt shows a model.
-- **HTML classes** are the 84 CSS components in `components.json`. Use them when you write markup by hand. Full HTML for each one: `https://daub.dev/llms.txt`.
+- **HTML classes** are the 91 CSS components in `components.json`. Use them when you write markup by hand. Full HTML for each one: `https://daub.dev/llms.txt`.
 
 Legend for spec types: _core_ means the Jev picker always keeps it, and _children first_ means the OpenUI signature starts with `children`.
 
@@ -32,6 +32,49 @@ Each of these renders without an error and still looks broken. They were measure
 - **Rows that never wrap.** In a horizontal Stack with `wrap: false`, a Button shrinks before the text beside it and its icon collapses to a few pixels ("Request export" lost its download icon at 1280 px). Drop the icon on buttons in such rows, or leave `wrap` on so the button drops below the text when space runs out.
 - **Destructive buttons.** Use variant `icon-danger` for a destructive text button such as "Delete account": it keeps its label and icon, draws them in the error color and has no fill. `danger` and `destructive` map to it.
 - **Dialog buttons.** Every button in a Modal `footer` or an AlertDialog's actions closes its dialog, the defaults (Cancel and Confirm, Cancel and Continue) and a custom "Delete account" included; the renderers mark them `data-db-dismiss` and daub.js closes the dialog after the click. A footer Button with `trigger` opens its overlay and leaves the dialog open under it. A footer Button with an `on` state action (a wizard's Back and Next) runs it and leaves the dialog open too. Any other button that must keep the dialog open belongs in the body. Escape closes the Modal, AlertDialog, Sheet or Drawer on top; the backdrop closes any of them.
+
+## Change Summary
+
+ChangeSummary is a static framed file summary. Use it inside Message/Bubble
+content without an extra Card. Load `daub.css`; it needs no `daub.js` controller.
+Files and counts come from the host. DAUB performs no file operations.
+Label fixtures as demo data and omit action controls unless the host wires them.
+
+```json
+{
+  "root": "summary",
+  "elements": {
+    "summary": {
+      "type": "ChangeSummary",
+      "props": {
+        "title": "Prepared 2 demo files",
+        "description": "Demo changes",
+        "files": [
+          { "path": "src/app.ts", "additions": 6, "deletions": 4, "status": "modified" },
+          { "path": "src/summary.ts", "additions": 42, "deletions": 0, "status": "added" }
+        ]
+      }
+    }
+  }
+}
+```
+
+OpenUI equivalent:
+
+```text
+root = ChangeSummary([], [{path: "src/app.ts", additions: 6, deletions: 4, status: "modified"}, {path: "src/summary.ts", additions: 42, deletions: 0, status: "added"}], "Prepared 2 demo files", "Demo changes")
+```
+
+Paths render as plain text. Finite numeric counts floor and clamp to
+`0..Number.MAX_SAFE_INTEGER`; other values become zero. Totals clamp at the
+same maximum. Ignore entries without string paths. The default host-data title
+is `Edited N file(s)` or `No files changed` for an empty list.
+Spec children are explicit host action IDs inside `__actions` in `__header`.
+Configure child buttons through their own props and handlers; `undoLabel` /
+`undoDisabled` configure only React callback-backed Undo buttons.
+React `onUndo` / `onViewChanges` receive button mouse events and render buttons
+only when supplied. Arbitrary children fill the action slot. The host owns
+undo and diff views. See `llms.txt` for the static HTML and React examples.
 
 ## Chat Composition Recipe
 
@@ -218,6 +261,7 @@ and tooltips; keep the action slot inside `db-message__content`.
 - **Bubble** _(children first)_: a conversational text surface with user and assistant variants and reactions. Props: `children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled)`
 - **Attachment** _(children first)_: a file or image attachment with metadata, upload status, and separate actions. Props: `children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical"`
 - **Marker** _(children first)_: a chat activity status, system note, or date separator. Props: `children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool`
+- **ChangeSummary** _(children first)_: a static in-chat file change summary with addition/deletion totals and explicit host-provided actions. Props: `children: [action IDs] (explicit host-provided actions), files: [{path: string, additions?: number, deletions?: number, status?: "added"|"modified"|"deleted"}], title: string (default "Edited N file(s)"; empty: "No files changed"), description: string, undoLabel: string, undoDisabled: bool. Static markup, no daub.js requirement or file operations. Escape paths as plain text; floor finite counts and clamp rows/totals to 0..Number.MAX_SAFE_INTEGER; other counts become 0. No implicit buttons; host wires child actions. undoLabel/undoDisabled configure React onUndo buttons only. Label demo data with title "Prepared 2 demo files" and description "Demo changes"`
 - **ChatComposer**: a native rich message composer with local attachments, queue controls, model and effort selection, approval intent, plan mode, and user-started dictation. Props: `models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: "ask"|"auto", mode: "chat"|"plan", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights`
 
 ### Custom
@@ -335,13 +379,14 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 - **Frame**: `.db-frame` on `<div>`; modifiers `--flush`; parts `db-frame__header` `db-frame__body`* `db-frame__footer`. Use for embedded previews, canvases, screenshots, and inspector panels.
 - **Group**: `.db-group` on `<div>`; modifiers `--attached` `--vertical`. Generic control grouping. Use --attached for connected controls.
 
-### conversation (6)
+### conversation (7)
 
 - **Message Scroller**: `.db-message-scroller` on `<div>`; parts `db-message-scroller__viewport`* `db-message-scroller__content`* `db-message-scroller__item`* `db-message-scroller__button`; needs daub.js. Streaming-aware conversation viewport. Stable data-db-message-id rows preserve position when history is prepended. Follow pauses when you scroll away; the latest-message control resumes it. See chat-demo.html for a working conversation.
 - **Message**: `.db-message` on `<div>`; modifiers `--end`; parts `db-message__avatar` `db-message__content`* `db-message__header` `db-message__footer`. Conversation row with avatar, sender metadata, content, and footer slots. Add --end for the sender side. Use db-message-group for consecutive messages from one participant.
 - **Bubble**: `.db-bubble` on `<div>`; modifiers `--primary` `--secondary` `--muted` `--tinted` `--outline` `--ghost` `--destructive` `--end`; parts `db-bubble__content`* `db-bubble__reactions`. Content-sized conversational surface with seven color variants and an optional reaction row. Ghost removes the frame for rich assistant content. Reaction state and events belong to your application.
 - **Attachment**: `.db-attachment` on `<div>`; modifiers `--vertical` `--sm` `--xs`; parts `db-attachment__media` `db-attachment__content`* `db-attachment__title`* `db-attachment__description` `db-attachment__actions` `db-attachment__trigger`. File or image attachment with metadata and sibling trigger/actions. Set data-state to idle, uploading, processing, error, or done. Use a native progress element for upload progress. Uploading, persistence, and actions belong to your app.
 - **Marker**: `.db-marker` on `<div>`; modifiers `--border` `--separator`; parts `db-marker__icon` `db-marker__content`*. Inline activity, bordered status row, or centered date separator. Use role=status for progress updates and db-shimmer for busy text; reduced motion disables the animation.
+- **Change Summary**: `.db-change-summary` on `<div>`; parts `db-change-summary__header`* `db-change-summary__icon` `db-change-summary__heading`* `db-change-summary__title`* `db-change-summary__description` `db-change-summary__totals`* `db-change-summary__additions`* `db-change-summary__deletions`* `db-change-summary__actions` `db-change-summary__files`* `db-change-summary__file` `db-change-summary__path` `db-change-summary__counts`. Static framed change summary; requires daub.css, not daub.js. Files and counts come from the host; this example uses demo data, not filesystem changes. Use a 14px or 16px Lucide files icon. Render paths as plain text, additions/deletions with accessible labels, and rows as a simple list. Spec/React counts floor finite numbers, clamp to 0..Number.MAX_SAFE_INTEGER, and clamp aggregate totals; other values become 0. Default title: Edited N file(s), or No files changed for an empty list. Add __actions only with host-wired controls. Spec children are explicit action IDs; renderers create no implicit Undo or View changes buttons. React onUndo/onViewChanges render buttons only when supplied; undoLabel and undoDisabled configure the callback-backed Undo button. The host owns file operations, undo, and diff views.
 - **Chat Composer**: `.db-chat-composer` on `<form>`; parts `db-chat-composer__queue` `db-chat-composer__queued-item` `db-chat-composer__queued-text` `db-chat-composer__queued-actions` `db-chat-composer__panel` `db-chat-composer__attachments` `db-chat-composer__input` `db-chat-composer__toolbar` `db-chat-composer__status` `db-chat-composer__add` `db-chat-composer__add-menu` `db-chat-composer__file-input` `db-chat-composer__folder-input` `db-chat-composer__model` `db-chat-composer__effort` `db-chat-composer__approval` `db-chat-composer__mode` `db-chat-composer__goal` `db-chat-composer__dictation` `db-chat-composer__dictation-bar` `db-chat-composer__dictation-cancel` `db-chat-composer__send` `db-chat-composer__stop` `db-chat-composer__dropzone`; needs daub.js. Requires daub.js and daub.css. DAUB.init() populates an empty native form from escaped data-db-chat-options JSON. Native API: DAUB.createChatComposer(root, options). Default models are demo-only (simulated). The host handles cancelable db:chat-send, db:chat-steer, db:chat-stop, and db:chat-action events and owns transport, uploads, approval enforcement, and persistence. Keep File objects local. Configuration describes intent, not access rights. React roots carry data-db-react and require an explicit controller call.
 
 `*` marks a required part.

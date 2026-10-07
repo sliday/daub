@@ -74,6 +74,7 @@ const COMP_PROPS = {
   Bubble: 'children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled)',
   Attachment: 'children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical"',
   Marker: 'children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool',
+  ChangeSummary: 'children: [action IDs] (explicit host-provided actions), files: [{path: string, additions?: number, deletions?: number, status?: "added"|"modified"|"deleted"}], title: string (default "Edited N file(s)"; empty: "No files changed"), description: string, undoLabel: string, undoDisabled: bool. Static markup, no daub.js requirement or file operations. Escape paths as plain text; floor finite counts and clamp rows/totals to 0..Number.MAX_SAFE_INTEGER; other counts become 0. No implicit buttons; host wires child actions. undoLabel/undoDisabled configure React onUndo buttons only. Label demo data with title "Prepared 2 demo files" and description "Demo changes"',
   ChatComposer: 'models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: "ask"|"auto", mode: "chat"|"plan", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights',
   Image: 'src: string, alt: string, width: number, height: number',
   Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
@@ -108,7 +109,7 @@ const COMP_CATEGORIES = [
   ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette', 'PreviewCard']],
   ['Layout Utilities', ['Accordion', 'Collapsible', 'Resizable', 'DatePicker']],
   ['Dashboard', ['StatCard', 'ChartCard']],
-  ['Chat', ['MessageScroller', 'Message', 'Bubble', 'Attachment', 'Marker', 'ChatComposer']],
+  ['Chat', ['MessageScroller', 'Message', 'Bubble', 'Attachment', 'Marker', 'ChangeSummary', 'ChatComposer']],
   ['Custom', ['CustomHTML']],
 ];
 
@@ -489,6 +490,7 @@ const COMP_SCHEMA = {
   Bubble: ["children","content","variant","align","reactions"],
   Attachment: ["children","name","description","src","alt","href","size","state","progress","orientation"],
   Marker: ["children","content","icon","variant","status","busy"],
+  ChangeSummary: ["children","files","title","description","undoLabel","undoDisabled"],
   ChatComposer: ["models","model","effort","approval","mode","actions","capabilities","busy","placeholder","id"],
   Image: ["src","alt","width","height"],
   Alert: ["type","title","message"],
@@ -1101,6 +1103,7 @@ async function callOpenRouter(model, messages, apiKey, format) {
 // ---- Component picker: Jev decision model via choose.js (same rules as the playground) ----
 
 const COMP_PURPOSE = {
+  ChangeSummary: 'Static in-chat file change summary with addition/deletion totals and explicit host-provided actions.',
   ChatComposer: 'Native rich message composer with local attachments, queue controls, model and effort selection, approval intent, plan mode, and user-started dictation.',
   MessageScroller: 'Scrollable conversation thread with message anchors and scroll-to-start/end controls.',
   Message: 'Conversation message row with author, avatar, timestamp, alignment, and delivery metadata.',

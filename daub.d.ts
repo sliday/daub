@@ -1,6 +1,6 @@
 /**
  * DAUB UI Kit — TypeScript Declarations
- * Version 3.20.5
+ * Version 3.20.6
  * https://daub.dev
  */
 
@@ -150,6 +150,23 @@ interface DAUBMessageScrollerHandle {
   scrollToMessage(id: string, options?: DAUBMessageScrollOptions & { block?: ScrollLogicalPosition }): boolean;
   getState(): DAUBMessageScrollerState;
   destroy(): void;
+}
+
+interface DAUBChangeSummaryFile {
+  path: string;
+  additions?: number;
+  deletions?: number;
+  status?: 'added' | 'modified' | 'deleted';
+}
+
+/** Static spec/markup contract. The host owns action handlers and file operations. */
+interface DAUBChangeSummaryProps {
+  files: DAUBChangeSummaryFile[];
+  title?: string;
+  description?: string;
+  undoLabel?: string;
+  undoDisabled?: boolean;
+  children?: string[];
 }
 
 interface DAUBChatComposerModel {
