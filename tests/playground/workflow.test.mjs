@@ -389,9 +389,9 @@ test('accepts screenshot replies only from the expected opaque preview', async (
     window.html2canvas = () => new Promise((resolve) => setTimeout(() => resolve({ toDataURL: () => 'data:image/jpeg;base64,preview' }), 30));
   });
   const html = await readFile(new URL('../../playground.html', import.meta.url), 'utf8');
-  const source = html.slice(html.indexOf('function capturePreview()'), html.indexOf('// ---- SSE response parser'));
+  const source = html.slice(html.indexOf('function capturePreview(options)'), html.indexOf('// ---- SSE response parser'));
   const result = await page.evaluate(async (source) => {
-    const capture = new Function('$previewFrame', 'currentSpec', 'postToPreview', source + ';return capturePreview();');
+    const capture = new Function('$previewFrame', 'currentSpec', 'postToPreview', 'var _renderSeq = 0;' + source + ';return capturePreview();');
     const pending = capture(document.querySelector('#pg-preview-frame'), window.__playgroundBridge.getCurrentSpec(), window.__playgroundBridge.postToPreview);
     window.postMessage({ type: 'screenshot', data: 'forged' }, '*');
     return pending;
@@ -418,6 +418,143 @@ test('uses the screenshot fallback when html2canvas cannot clone an opaque ifram
     window.__playgroundBridge.postToPreview({ type: 'screenshot' });
   }));
   assert.equal(result, 'data:image/jpeg;base64,fallback');
+});
+
+async function captureGeometry(page, requestId = 'geometry-test') {
+  return page.evaluate((requestId) => new Promise((resolve, reject) => {
+    const frame = document.querySelector('#pg-preview-frame').contentWindow;
+    const timer = setTimeout(() => { window.removeEventListener('message', receive); reject(new Error('Capture timeout')); }, 5000);
+    function receive(event) {
+      if (event.source !== frame || event.data?.type !== 'screenshot') return;
+      clearTimeout(timer);
+      window.removeEventListener('message', receive);
+      resolve(event.data);
+    }
+    window.addEventListener('message', receive);
+    window.__playgroundBridge.postToPreview({ type: 'screenshot', geometry: true, requestId });
+  }), requestId);
+}
+
+test('captures bounded layout geometry with hierarchy, box model and scroll coordinates', async (t) => {
+  const page = await open(t, { savedSpec: spec, react: true });
+  const preview = page.frames().find((frame) => frame.parentFrame());
+  await preview.locator('[data-spec-id="title"]').waitFor();
+  await preview.evaluate(() => {
+    document.getElementById('pg-iframe-root').innerHTML = '<div data-spec-id="grid" style="display:grid;grid-template-columns:100px 120px;gap:12px;padding:8px;border:2px solid;width:248px;box-sizing:border-box"><div data-spec-id="a" style="height:40px;overflow:hidden"><div style="width:150px">A</div></div><div data-spec-id="b" style="height:40px">B</div></div><div style="height:2000px"></div>';
+    window.scrollTo(0, 10);
+    window.html2canvas = () => Promise.resolve({ width: 600, height: 2100, toDataURL: () => 'data:image/jpeg;base64,geometry' });
+  });
+  const capture = await captureGeometry(page);
+  assert.equal(capture.requestId, 'geometry-test');
+  assert.equal(capture.geometry.units, 'css-px');
+  assert.equal(capture.geometry.stable, true);
+  assert.equal(capture.geometry.viewport.scrollY, 10);
+  const [grid, a, b] = capture.geometry.elements;
+  assert.equal(grid.id, 'grid');
+  assert.equal(grid.bounds.width, 248);
+  assert.deepEqual(grid.padding, [8, 8, 8, 8]);
+  assert.deepEqual(grid.border, [2, 2, 2, 2]);
+  assert.equal(grid.layout.columnGap, '12px');
+  assert.equal(a.parentId, 'grid');
+  assert.equal(b.bounds.x - a.bounds.x - a.bounds.width, 12);
+  assert.equal(a.overflow.x, true);
+  assert.equal(grid.bounds.y, 16);
+  assert.equal(capture.geometry.capture.bounds.y, 0);
+});
+
+test('geometry reports transformed and hidden elements and caps large previews on mobile', async (t) => {
+  const page = await open(t, { savedSpec: spec, react: true, width: 390 });
+  await page.locator('[data-panel="preview"]').click();
+  await page.locator('[data-viewport="mobile"]').click();
+  const preview = page.frames().find((frame) => frame.parentFrame());
+  await preview.locator('[data-spec-id="title"]').waitFor();
+  await preview.evaluate(() => {
+    const root = document.getElementById('pg-iframe-root');
+    root.innerHTML = '<div data-spec-id="scaled" style="width:100px;height:20px;transform:scale(1.5)"></div><div data-spec-id="hidden" style="display:none"></div>' + Array.from({ length: 100 }, (_, i) => '<div data-spec-id="item-' + i + '"></div>').join('');
+    window.htmlToImage = { toJpeg: () => Promise.resolve('data:image/jpeg;base64,fallback') };
+    window.html2canvas = () => Promise.reject(new Error('Fallback'));
+  });
+  const capture = await captureGeometry(page);
+  assert.equal(capture.data, 'data:image/jpeg;base64,fallback');
+  assert.equal(capture.geometry.capture.backend, 'html-to-image');
+  assert.equal(capture.geometry.totalElements, 102);
+  assert.equal(capture.geometry.elements.length, 80);
+  assert.equal(capture.geometry.truncated, true);
+  assert.equal(capture.geometry.elements[0].bounds.width, 150);
+  assert.equal(capture.geometry.elements[1].rendered, false);
+  assert.ok(capture.geometry.viewport.width <= 390);
+});
+
+test('marks geometry unstable when layout changes during screenshot capture', async (t) => {
+  const page = await open(t, { savedSpec: spec, react: true });
+  const preview = page.frames().find((frame) => frame.parentFrame());
+  await preview.locator('[data-spec-id="title"]').waitFor();
+  await preview.evaluate(() => {
+    window.html2canvas = () => {
+      document.querySelector('[data-spec-id="title"]').style.padding = '100px';
+      return Promise.resolve({ toDataURL: () => 'data:image/jpeg;base64,changed' });
+    };
+  });
+  const capture = await captureGeometry(page);
+  assert.equal(capture.geometry.stable, false);
+});
+
+test('measured capture correlates replies and rejects obsolete render revisions', async (t) => {
+  const page = await open(t, { savedSpec: spec, react: true });
+  const preview = page.frames().find((frame) => frame.parentFrame());
+  await preview.locator('[data-spec-id="title"]').waitFor();
+  await preview.evaluate(() => {
+    window.html2canvas = () => Promise.resolve({ toDataURL: () => 'data:image/jpeg;base64,current' });
+    window.addEventListener('message', (event) => {
+      if (event.data?.type === 'screenshot') parent.postMessage({ type: 'screenshot', requestId: 'wrong', data: 'wrong', geometry: { stable: true } }, '*');
+    });
+  });
+  const html = await readFile(new URL('../../playground.html', import.meta.url), 'utf8');
+  const source = html.slice(html.indexOf('function capturePreview(options)'), html.indexOf('// ---- SSE response parser'));
+  const result = await page.evaluate(async (source) => {
+    const build = new Function('$previewFrame', 'currentSpec', 'postToPreview', 'var _renderSeq = 1;' + source + '; return { capturePreview, change: function() { _renderSeq++; } };');
+    const controller = build(document.querySelector('#pg-preview-frame'), window.__playgroundBridge.getCurrentSpec(), window.__playgroundBridge.postToPreview);
+    const fresh = await controller.capturePreview({ geometry: true });
+    const stale = controller.capturePreview({ geometry: true });
+    controller.change();
+    return { fresh, stale: await stale };
+  }, source);
+  assert.equal(result.fresh.screenshot, 'data:image/jpeg;base64,current');
+  assert.equal(result.fresh.geometry.stable, true);
+  assert.equal(result.stale, null);
+  await preview.evaluate(() => {
+    window.html2canvas = () => {
+      document.querySelector('[data-spec-id="title"]').style.padding = '50px';
+      return Promise.resolve({ toDataURL: () => 'data:image/jpeg;base64,unstable' });
+    };
+  });
+  const unstable = await page.evaluate((source) => {
+    const capture = new Function('$previewFrame', 'currentSpec', 'postToPreview', 'var _renderSeq = 1;' + source + ';return capturePreview({ geometry: true });');
+    return capture(document.querySelector('#pg-preview-frame'), window.__playgroundBridge.getCurrentSpec(), window.__playgroundBridge.postToPreview);
+  }, source);
+  assert.equal(unstable.screenshot, 'data:image/jpeg;base64,unstable');
+  assert.equal(unstable.geometry, null);
+});
+
+test('both visual reviewers send measured geometry alongside images and the spec', async () => {
+  const html = await readFile(new URL('../../playground.html', import.meta.url), 'utf8');
+  const selfSource = html.slice(html.indexOf('function selfCheck('), html.indexOf('// ---- Component picker:'));
+  const diffSource = html.slice(html.indexOf('function geometryReviewContext('), html.indexOf('// ---- Interactivity pipeline:'));
+  const requests = [];
+  const build = new Function('fetch', 'AUTO_MODEL', 'LAYOUT_RULES', 'VALID_TYPES_HINT', 'parseSseResponse', 'cleanJSON', selfSource + diffSource + ';return { selfCheck, visualDiff };');
+  const reviewers = build(async (_url, options) => { requests.push(JSON.parse(options.body)); return {}; }, 'test-model', '', '', async () => ({ content: '{}' }), (value) => value);
+  const geometry = { units: 'css-px', elements: [{ id: 'title', bounds: { width: 100 } }] };
+  await reviewers.selfCheck(spec, 'data:image/jpeg;base64,current', undefined, geometry);
+  await reviewers.visualDiff(spec, 'data:image/jpeg;base64,current', 'data:image/jpeg;base64,target', undefined, geometry);
+  assert.equal(requests.length, 2);
+  for (const request of requests) {
+    const content = request.messages[1].content;
+    assert.ok(content.some(part => part.text === JSON.stringify(spec)));
+    assert.ok(content.some(part => part.text?.includes(JSON.stringify(geometry))));
+    assert.ok(content.some(part => part.text?.includes('never the reference image')));
+  }
+  assert.equal(requests[0].messages[1].content.filter(part => part.type === 'image_url').length, 1);
+  assert.equal(requests[1].messages[1].content.filter(part => part.type === 'image_url').length, 2);
 });
 
 test('runs chunk tests in the opaque preview and rejects forged test-result replies', async (t) => {

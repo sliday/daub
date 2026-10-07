@@ -144,12 +144,16 @@ Triggered after the spec renders successfully in the preview iframe.
 - Output: `{ needed, complexity, description, elements, scaffold }`
 - Complexity levels: `none` | `trivial` | `simple` | `complex`
 
-### Step 2: Visual Check (line 3351)
+### Step 2: Visual Check
 
-`selfCheck(spec, screenshotDataUrl, signal)` (line 2073)
+`selfCheck(spec, screenshotDataUrl, signal, geometry)`
 
-- Captures screenshot via `capturePreview()`
-- Sends screenshot + spec + LAYOUT_RULES to AI (`openrouter/auto`, effort `medium`; `visualDiff()` when the prompt had a target image)
+- Calls `capturePreview({ geometry: true })` to collect a screenshot and layout measurements inside the sandboxed preview iframe. Screenshot-only callers can still use `capturePreview()`.
+- Sends screenshot + spec + LAYOUT_RULES + stable geometry to AI (`openrouter/auto`, effort `medium`; `visualDiff()` receives the same geometry when the prompt had a target image).
+- Reports up to 80 `data-spec-id` elements in DOM order: IDs, nearest spec parent, root-relative border-box bounds, computed padding/margin/border, grid/flex settings, transforms, and scroll extents. The report includes viewport size, scroll offsets, device pixel ratio, total element count, and truncation status. Internal markup without a spec ID has no separate entry.
+- Uses CSS pixels for geometry and top/right/bottom/left order for edge arrays. Computed margins do not describe collapsed margins or actual sibling distances; compare bounds for distances. Overflow flags alone do not prove a defect.
+- Waits up to one second for fonts/images before measurement. Drops geometry when assets remain pending, animations run, or measured layout changes during capture. Correlates replies by request ID and rejects captures after a render revision or spec change.
+- Keeps screenshot-only review when geometry is unstable. The capture uses `html2canvas` with `html-to-image` fallback; both reconstruct the DOM, so the report does not claim screenshot-pixel equivalence. Measurements describe the current preview, not an uploaded reference image. This path does not draw an annotation overlay.
 - Returns fixed spec or unchanged
 
 ### Step 3: Complexity Routing (line 3373)
