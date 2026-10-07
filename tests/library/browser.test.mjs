@@ -87,6 +87,33 @@ test('sandboxed preview supports all theme variants and working overlays', async
   assert.deepEqual(errors, []);
 });
 
+test('Theme Switcher opens inside the component preview and applies theme choices', async () => {
+  for (const width of [375, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await navigate(catalog.components.find(component => component.name === 'Theme Switcher'));
+    const frame = page.frameLocator('#component-preview');
+    await page.getByLabel('Preview theme', { exact: true }).selectOption('light');
+    await frame.locator('html[data-theme="light"]').waitFor();
+    const toggle = frame.getByRole('button', { name: 'Open theme picker', exact: true });
+    await toggle.click();
+    const picker = frame.locator('.db-theme-switcher__popover');
+    assert.equal(await picker.isVisible(), true);
+    assert.equal(await picker.locator('[data-family]').count(), 21);
+    const bounds = await picker.evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      return { rect: rect.toJSON(), width: innerWidth, overflow: element.scrollWidth > element.clientWidth };
+    });
+    assert.ok(bounds.rect.left >= 0 && bounds.rect.right <= bounds.width, JSON.stringify(bounds));
+    assert.ok(bounds.rect.top >= 0, JSON.stringify(bounds));
+    assert.equal(bounds.overflow, false);
+    await picker.getByRole('button', { name: 'dark mode', exact: true }).click();
+    assert.equal(await frame.locator('html').getAttribute('data-theme'), 'dark');
+    await picker.getByRole('button', { name: 'dark mode', exact: true }).press('Escape');
+    assert.equal(await picker.isVisible(), false);
+    assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
+  }
+});
+
 test('demo links keep the preview usable and reset discards prior form state', async () => {
   await navigate(catalog.components.find(component => component.name === 'Nav Menu'));
   const frame = page.frameLocator('#component-preview');

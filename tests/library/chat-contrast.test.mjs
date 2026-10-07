@@ -5,7 +5,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 
 const root = new URL('../../', import.meta.url);
 const assets = new Map();
-for (const file of ['chat-demo.html', 'chat-demo.css', 'chat-demo.js', 'daub.css', 'daub.js', 'assets/lucide.min.js']) {
+for (const file of ['chat-demo.html', 'chat-demo.css', 'chat-demo.js', 'chat-demo-shell.js', 'daub.css', 'daub.js', 'assets/lucide.min.js']) {
   assets.set('/' + file, await readFile(new URL(file, root)));
 }
 
@@ -55,14 +55,18 @@ test('compact chat controls and settled text/focus contrast meet the theme contr
       markerText.textContent = 'Generating response';
       marker.append(markerText);
       document.querySelector('#chat-messages').append(marker);
+      const attempt = document.createElement('span');
+      attempt.className = 'chat-demo-run-label';
+      attempt.textContent = 'Attempt 1 (demo)';
+      document.querySelector('.db-message__header').append(attempt);
       function check(theme, selector, foreground, bg, minimum) {
         const value = ratio(blend(foreground, bg), bg);
         const item = { theme, selector, ratio: value, minimum };
         checks.push(item);
         if (value < minimum) failures.push(item);
       }
-      const textSelectors = ['.chat-demo-titlebar h1', '.chat-demo-caption', '.chat-demo-breadcrumb', '.chat-demo-docs', '.db-message__header', '.db-message__footer', '.db-marker', '.db-attachment__title', '.db-attachment__description', '.chat-demo-status', '#chat-prompt', '#chat-prompt::placeholder'];
-      const iconSelectors = ['#copy-reply', '#attach-file', '#load-history', '#reset-chat'];
+      const textSelectors = ['.chat-demo-titlebar h1', '.chat-demo-caption', '.chat-demo-breadcrumb', '.chat-demo-docs', '.chat-demo-sidebar-heading', '.chat-demo-nav-item', '.chat-demo-nav-count', '.chat-demo-sidebar-section', '.chat-demo-sidebar-footer', '.db-message__header', '.db-message__footer', '.db-marker', '.db-attachment__title', '.db-attachment__description', '#chat-status', '.chat-demo-thinking summary', '.chat-demo-thinking__state', '.chat-demo-thinking__stages .db-marker__content', '.chat-demo-thinking__demo', '.chat-demo-thinking__count', '.chat-demo-step__detail', '.chat-demo-run-label', '#chat-prompt', '#chat-prompt::placeholder'];
+      const iconSelectors = ['#copy-reply', '.db-chat-composer__add', '#load-history', '#reset-chat'];
       for (const theme of DAUB.THEMES) {
         DAUB.setTheme(theme);
         for (const query of textSelectors.concat(iconSelectors)) {
@@ -75,7 +79,7 @@ test('compact chat controls and settled text/focus contrast meet the theme contr
           const colors = style.backgroundImage.match(/color\(srgb [^)]+\)|rgba?\([^)]+\)/g);
           for (const color of colors || [style.backgroundColor]) check(theme, selector, rgba(style.color), blend(rgba(color), background(element.parentElement)), 4.5);
         }
-        for (const selector of iconSelectors.concat('.db-message-scroller__viewport')) {
+        for (const selector of iconSelectors.concat('.db-message-scroller__viewport', '.chat-demo-thinking summary')) {
           const element = document.querySelector(selector);
           element.focus({ preventScroll: true });
           const style = getComputedStyle(element);
@@ -89,6 +93,12 @@ test('compact chat controls and settled text/focus contrast meet the theme contr
           if (!colors.length) failures.push({ theme, error: 'Missing shimmer text colors' });
           for (const color of colors) check(theme, 'shimmer text', rgba(color), background(element.parentElement), 4.5);
         }
+        const thinkingCopy = document.querySelector('.chat-demo-thinking__copy');
+        thinkingCopy.classList.add('db-shimmer');
+        const thinkingColors = getComputedStyle(thinkingCopy).backgroundImage.match(/color\(srgb [^)]+\)|rgba?\([^)]+\)/g) || [];
+        if (!thinkingColors.length) failures.push({ theme, error: 'Missing Thinking highlight colors' });
+        for (const color of thinkingColors) check(theme, 'Thinking highlight', rgba(color), background(thinkingCopy.parentElement), 4.5);
+        thinkingCopy.classList.remove('db-shimmer');
         attachment.removeAttribute('data-state');
       }
       return { themes: DAUB.THEMES.length, checks: checks.length, minimumText: Math.min(...checks.filter(check => check.minimum === 4.5).map(check => check.ratio)), minimumFocus: Math.min(...checks.filter(check => check.minimum === 3).map(check => check.ratio)), failures };
@@ -107,10 +117,11 @@ test('compact chat controls and settled text/focus contrast meet the theme contr
     }
     const touch = await browser.newContext({ viewport: { width: 375, height: 812 }, hasTouch: true, isMobile: true });
     const touchPage = await touch.newPage();
-    await touchPage.setContent('<div class="chat-demo"><button class="db-btn chat-demo-icon-button">Send</button></div>');
+    await touchPage.setContent('<div class="chat-demo"><button class="db-btn chat-demo-icon-button">Send</button><details class="chat-demo-thinking"><summary>Thinking</summary></details></div>');
     await touchPage.addStyleTag({ content: assets.get('/daub.css').toString() });
     await touchPage.addStyleTag({ content: assets.get('/chat-demo.css').toString() });
     assert.deepEqual(await touchPage.locator('button').evaluate(button => ({ width: button.offsetWidth, height: button.offsetHeight })), { width: 44, height: 44 });
+    assert.ok(await touchPage.locator('summary').evaluate(element => element.offsetHeight >= 44));
     await touch.close();
   } finally {
     await browser.close();

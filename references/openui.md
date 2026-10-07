@@ -225,6 +225,7 @@ Message(children: [content IDs], align: "start"|"end", avatar: string (initials)
 Bubble(children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled))
 Attachment(children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical")
 Marker(children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool)
+ChatComposer(models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: "ask"|"auto", mode: "chat"|"plan", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights)
 ```
 
 ### Custom
@@ -237,5 +238,5 @@ Children-first types (33): Stack, Grid, Surface, Layout, ButtonGroup, Field, Inp
 
 Children elsewhere: EmptyState (position 4), CustomHTML (position 4).
 
-Parser types: 87. Any other PascalCase name tokenizes as a plain identifier and becomes a dangling child reference.
+Parser types: 88. Any other PascalCase name tokenizes as a plain identifier and becomes a dangling child reference.
 <!-- END GENERATED:signatures -->

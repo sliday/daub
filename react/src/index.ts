@@ -26,6 +26,13 @@ export {
 export type { AttachmentProps, AttachmentMediaProps, AttachmentProgressProps, AttachmentState } from "./components/Attachment";
 export { Marker, MarkerIcon, MarkerContent } from "./components/Marker";
 export type { MarkerProps } from "./components/Marker";
+export { ChatComposer } from "./components/ChatComposer";
+export type {
+  ChatComposerProps, ChatComposerOptions, ChatComposerModel, ChatComposerAction,
+  ChatComposerCapabilities, ChatComposerRequest, ChatComposerState, ChatComposerController,
+  ChatComposerConfig, ChatComposerQueueDetail, ChatComposerDictationDetail, ChatComposerDictationState,
+  ChatComposerChangeDetail, ChatComposerActionDetail,
+} from "./components/ChatComposer";
 export { AspectRatio } from "./components/AspectRatio";
 export { Frame } from "./components/Frame";
 export { Group } from "./components/Group";

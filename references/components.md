@@ -33,6 +33,76 @@ Each of these renders without an error and still looks broken. They were measure
 - **Destructive buttons.** Use variant `icon-danger` for a destructive text button such as "Delete account": it keeps its label and icon, draws them in the error color and has no fill. `danger` and `destructive` map to it.
 - **Dialog buttons.** Every button in a Modal `footer` or an AlertDialog's actions closes its dialog, the defaults (Cancel and Confirm, Cancel and Continue) and a custom "Delete account" included; the renderers mark them `data-db-dismiss` and daub.js closes the dialog after the click. A footer Button with `trigger` opens its overlay and leaves the dialog open under it. A footer Button with an `on` state action (a wizard's Back and Next) runs it and leaves the dialog open too. Any other button that must keep the dialog open belongs in the body. Escape closes the Modal, AlertDialog, Sheet or Drawer on top; the backdrop closes any of them.
 
+## Chat Composition Recipe
+
+Build a local chat workspace with existing Sidebar and Navbar components, an
+unframed MessageScroller thread, and an empty ChatComposer root. Load `daub.js`
+and `daub.css`; run `DAUB.init(parent)` after mounting the rendered spec. Use
+host model choices for production. This example uses a demo-only simulated
+model and an activity marker that identifies the simulation.
+
+```json
+{
+  "theme": "github",
+  "root": "workspace",
+  "elements": {
+    "workspace": { "type": "Stack", "props": { "container": "wide", "gap": 4 }, "children": ["navbar", "body"] },
+    "navbar": { "type": "Navbar", "props": { "brand": "Local chat demo", "brandHref": "/chat-demo.html" }, "children": ["conversation-menu"] },
+    "conversation-menu": { "type": "Menubar", "props": { "items": [{ "label": "Conversation", "dropdown": [{ "label": "Rename" }, { "label": "Pin" }, { "label": "New conversation" }, { "label": "Copy transcript" }, { "label": "Export transcript" }, { "label": "Clear local state" }] }] } },
+    "body": { "type": "Grid", "props": { "columns": "sidebar-main", "gap": 4 }, "children": ["sidebar", "conversation"] },
+    "sidebar": { "type": "Sidebar", "props": { "sections": [{ "title": "Conversation", "items": [{ "label": "Messages", "icon": "messages-square", "href": "/chat-demo.html#conversation", "active": true }, { "label": "Activity", "icon": "activity", "href": "/chat-demo.html#activity" }, { "label": "Files", "icon": "files", "href": "/chat-demo.html#files" }, { "label": "Queue", "icon": "list-ordered", "href": "/chat-demo.html#queue" }] }] } },
+    "conversation": { "type": "Stack", "props": { "gap": 3 }, "children": ["thread", "composer"] },
+    "thread": { "type": "MessageScroller", "props": { "height": 360, "autoScroll": true, "defaultScrollPosition": "end" }, "children": ["activity", "reply"] },
+    "activity": { "type": "Marker", "props": { "content": "Demo-only simulated backend", "variant": "separator" } },
+    "reply": { "type": "Message", "props": { "name": "Demo assistant (simulated)", "messageId": "demo-1" }, "children": ["reply-body"] },
+    "reply-body": { "type": "Bubble", "props": { "content": "Your local draft is ready to review.", "variant": "ghost" } },
+    "composer": { "type": "ChatComposer", "props": { "id": "chat-composer", "models": [{ "id": "demo", "label": "Demo model (simulated)", "efforts": ["low", "high"] }], "model": "demo", "approval": "ask", "mode": "chat", "actions": [{ "id": "context", "label": "Local context", "icon": "file-text" }, { "id": "sketch", "label": "Local sketch", "icon": "pencil" }], "capabilities": { "queue": true, "steer": true, "attachments": true, "dictation": false }, "placeholder": "Write a draft" } }
+  }
+}
+```
+
+The host wires the conversation menu to rename, pin, create, copy, export, and
+clear local state. It renders Messages, Activity, Files, and Queue sidebar views;
+navigation markup supplies no backend or filesystem access. Keep the queue
+outside the composer panel and avoid wrapping the thread/composer in cards.
+For a phone-first workspace, replace the Sidebar icon rail with BottomNav.
+
+After mounting, call `DAUB.createChatComposer(document.getElementById('chat-composer'))`
+to get its idempotent handle. Handle cancelable `db:chat-send/steer/stop/action`
+events at the root. Preserve rejected drafts/queued items through
+`event.preventDefault()`, set busy during a host response, and drain queued
+requests through `takeNext()`. Extended Add actions use `detail.action` for local
+context or sketch UI; the host decides when to read or upload File objects.
+Configuration describes intent and grants no permissions. The host must enforce
+approval policy even when the user selects `auto`.
+
+Use `db:chat-change` (`detail.state` is composer state) to refresh pending-file and
+queue counts, or read `getState()` after host commands. `clearDraft()` clears
+pending text/files while preserving queued requests. Clear conversation history
+or the queue through separate host actions. React exposes the same controller
+through `onReady`, the form through `ref`, and native state events through
+`onChange`. Call `destroy()` when the host discards a native root; React handles
+that cleanup on unmount.
+
+### Message Hover Actions
+
+For native markup or `MessageFooter` in React, use `db-message__footer--hover`
+for the timestamp and action row. Hover and keyboard focus reveal it; touch
+devices keep it visible. The host supplies timestamps and button handlers.
+Keep status or Retry controls in a separate footer if they should stay visible.
+
+```html
+<div class="db-message__footer db-message__footer--hover">
+  <time datetime="2026-10-07T12:15:00Z">12:15 PM</time>
+  <div class="db-message__actions" role="group" aria-label="Message actions">
+    <button class="db-message__action" type="button" tabindex="0" aria-label="Copy message" title="Copy message"><i data-lucide="copy" aria-hidden="true"></i></button>
+  </div>
+</div>
+```
+
+Add icon buttons to `db-message__actions` to extend the row. Use accessible names
+and tooltips; keep the action slot inside `db-message__content`.
+
 ## Spec types
 
 <!-- BEGIN GENERATED:spec-types (tools/build-skill.mjs) -->
@@ -148,6 +218,7 @@ Each of these renders without an error and still looks broken. They were measure
 - **Bubble** _(children first)_: a conversational text surface with user and assistant variants and reactions. Props: `children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled)`
 - **Attachment** _(children first)_: a file or image attachment with metadata, upload status, and separate actions. Props: `children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical"`
 - **Marker** _(children first)_: a chat activity status, system note, or date separator. Props: `children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool`
+- **ChatComposer**: a native rich message composer with local attachments, queue controls, model and effort selection, approval intent, plan mode, and user-started dictation. Props: `models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: "ask"|"auto", mode: "chat"|"plan", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights`
 
 ### Custom
 
@@ -189,8 +260,8 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 
 - **Label**: `.db-label` on `<label>`; modifiers `--required` `--optional`. --required appends *, --optional appends (optional).
 - **Kbd**: `.db-kbd` on `<kbd>`; modifiers `--sm`. Keyboard key display. Use --sm for smaller inline size.
-- **Surface**: `.db-surface` on `<div>`; modifiers `--raised` `--inset` `--pressed`. Base surface with variants for depth/shadow effects.
-- **Elevation**: `.db-elevation` on `<div>`; modifiers `-1` `-2` `-3`. Shadow utility classes. Three levels of elevation.
+- **Surface**: `.db-surface` on `<div>`; modifiers `--raised` `--inset` `--pressed`. Background, radius, and depth styles. Add padding and spacing when composing a panel.
+- **Elevation**: `.db-elevation` on `<div>`; modifiers `-1` `-2` `-3`. Shadow-only utility classes with three levels of elevation. This example composes padded surfaces.
 - **Prose**: `.db-prose` on `<article>`; modifiers `--sm` `--lg` `--xl` `--2xl`. Typographic defaults for long-form content. Scale: --sm, --lg, --xl, --2xl.
 
 ### feedback (8)
@@ -213,8 +284,8 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 - **Nav Menu**: `.db-nav-menu` on `<nav>`; parts `db-nav-menu__item`*. Horizontal navigation links. Use --active for current item.
 - **Navbar**: `.db-navbar` on `<nav>`; modifiers `--open`; parts `db-navbar__brand` `db-navbar__nav` `db-navbar__spacer` `db-navbar__actions` `db-navbar__toggle`; needs daub.js. Sticky top bar. At 640px and below db-navbar__nav collapses and db-navbar__toggle opens it; daub.js keeps the toggle's aria-expanded in step. JS: DAUB.toggleNavbar(el) or DAUB.toggleNavbar(el, open). The menu closes on outside click and Escape.
 - **Menubar**: `.db-menubar` on `<div>`; parts `db-menubar__item`* `db-menubar__dropdown`; needs daub.js. Desktop menu bar. Dropdown items use db-dropdown__item class.
-- **Sidebar**: `.db-sidebar` on `<aside>`; modifiers `--collapsed`; parts `db-sidebar__header` `db-sidebar__section` `db-sidebar__label` `db-sidebar__item`* `db-sidebar__footer` `db-sidebar__toggle`; needs daub.js. Collapsible via --collapsed. Items need data-tooltip for collapsed hover labels. JS: DAUB.toggleSidebar(el).
-- **Bottom Navigation**: `.db-bottom-nav` on `<nav>`; modifiers `--always`; parts `db-bottom-nav__item`* `db-bottom-nav__badge`. Fixed mobile bottom bar. Hidden on desktop unless --always. Safe-area aware.
+- **Sidebar**: `.db-sidebar` on `<aside>`; modifiers `--collapsed` `--expanded`; parts `db-sidebar__header` `db-sidebar__section` `db-sidebar__label` `db-sidebar__item`* `db-sidebar__footer` `db-sidebar__toggle`; needs daub.js. Starts as an icon rail on phones. Toggle with DAUB.toggleSidebar(el), or use --collapsed / --expanded. data-tooltip supplies labels on hover and keyboard focus.
+- **Bottom Navigation**: `.db-bottom-nav` on `<nav>`; modifiers `--always` `--static`; parts `db-bottom-nav__item`* `db-bottom-nav__badge`. Fixed mobile bottom bar. Hidden on desktop unless --always. Use --static for inline placement, as in this preview. Safe-area aware.
 - **Toolbar**: `.db-toolbar` on `<div>`; modifiers `--vertical`; parts `db-toolbar__group` `db-toolbar__separator`; needs daub.js. Groups action buttons and segmented controls in editor or dashboard surfaces.
 - **Theme Switcher**: `.db-theme-switcher` on `<div>`; parts `db-theme-switcher__toggle` `db-theme-switcher__popover`; needs daub.js. Auto-populates toggle + popover if empty. Popover shows 21 families in 4 categories + scheme buttons.
 
@@ -231,7 +302,7 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 - **Accordion**: `.db-accordion` on `<div>`; parts `db-accordion__item`* `db-accordion__trigger`* `db-accordion__icon` `db-accordion__content`*; needs daub.js. Single-open by default. Add data-multi for multi-open.
 - **Collapsible**: `.db-collapsible` on `<div>`; modifiers `--open`; parts `db-collapsible__trigger`* `db-collapsible__icon` `db-collapsible__content`*; needs daub.js. JS toggles open state and aria-expanded.
 - **Calendar**: `.db-calendar` on `<div>`; parts `db-calendar__header`* `db-calendar__title`* `db-calendar__nav`* `db-calendar__grid`* `db-calendar__day-label`* `db-calendar__day`*; needs daub.js. Day states: --today, --selected, --outside. JS handles month navigation.
-- **Carousel**: `.db-carousel` on `<div>`; parts `db-carousel__track`* `db-carousel__slide`* `db-carousel__btn` `db-carousel__dots` `db-carousel__dot`; needs daub.js. JS handles slide navigation, dot sync, and swipe.
+- **Carousel**: `.db-carousel` on `<div>`; parts `db-carousel__track`* `db-carousel__slide`* `db-carousel__btn` `db-carousel__dots` `db-carousel__dot`; needs daub.js. JS handles slide navigation, dot sync, and swipe. Text slides in this example reserve space for the overlay arrows.
 - **CSS Bar Chart**: `.db-chart` on `<div>`; parts `db-chart__bar`* `db-chart__labels`. Pure CSS bar chart. Set bar height via inline style. --secondary modifier for alt color.
 - **Stat Card**: `.db-stat` on `<div>`; modifiers `--horizontal`; parts `db-stat__label`* `db-stat__value`* `db-stat__change` `db-stat__icon`. KPI/metric card. --horizontal for row layout. __change--up (green) / --down (red). Optional __icon slot.
 - **Chart Card**: `.db-chart-card` on `<div>`; parts `db-chart-card__header` `db-chart-card__title` `db-chart-card__actions` `db-chart-card__body`*. Card wrapper for any chart. Example uses CSS bars without external chart dependencies. Header with title/actions. Body auto-sizes canvas to 100% width.
@@ -239,7 +310,7 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 ### overlays (12)
 
 - **Modal**: `.db-modal` on `<div>`; parts `db-modal__header` `db-modal__title` `db-modal__close` `db-modal__body` `db-modal__footer`; needs daub.js. Wrap in db-modal-overlay with id. Open: DAUB.openModal('id'). Close: DAUB.closeModal('id'). The close button, the backdrop, Escape and any button with data-db-dismiss close it too.
-- **Modal Overlay**: `.db-modal-overlay` on `<div>`; needs daub.js. Container for db-modal. Must have an id attribute for JS API.
+- **Modal Overlay**: `.db-modal-overlay` on `<div>`; needs daub.js. Backdrop container for db-modal. Keep the launcher outside the hidden overlay and match data-db-modal-trigger to its id. The close button, footer, backdrop, and Escape dismiss this example.
 - **Alert Dialog**: `.db-alert-dialog` on `<div>`; modifiers `--open`; parts `db-alert-dialog__overlay`* `db-alert-dialog__panel`* `db-alert-dialog__title` `db-alert-dialog__desc` `db-alert-dialog__actions`; needs daub.js. Open: DAUB.openAlertDialog('id'). data-action="cancel" auto-closes and takes focus on open. data-db-dismiss closes it from any button, a confirm action included; so do the backdrop and Escape.
 - **Sheet**: `.db-sheet` on `<div>`; modifiers `--open` `--right` `--left` `--top` `--bottom`; parts `db-sheet__overlay`* `db-sheet__panel`* `db-sheet__header` `db-sheet__title` `db-sheet__close` `db-sheet__body`; needs daub.js. Sides: --right (default), --left, --top, --bottom. Open: DAUB.openSheet('id'). The close button, the backdrop, Escape and any button with data-db-dismiss close it.
 - **Drawer**: `.db-drawer` on `<div>`; modifiers `--open`; parts `db-drawer__overlay`* `db-drawer__panel`* `db-drawer__handle` `db-drawer__body`; needs daub.js. Mobile-friendly bottom panel. Open: DAUB.openDrawer('id'). The backdrop, Escape and any button with data-db-dismiss close it.
@@ -253,7 +324,7 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 
 ### layout-utility (10)
 
-- **Resizable**: `.db-resizable` on `<div>`; parts `db-resizable__handle`*; needs daub.js. Handle positions: --right, --bottom. JS enables drag-to-resize.
+- **Resizable**: `.db-resizable` on `<div>`; parts `db-resizable__handle`*; needs daub.js. Handle positions: --right, --bottom. JS enables pointer and arrow-key resizing. This example adds inline size bounds and visible grips; its notes scroll within the panel.
 - **Separator**: `.db-separator` on `<hr>`; modifiers `--vertical` `--dashed`; parts `db-separator__label`. Horizontal divider. --vertical for flex row separators. --dashed for dashed style.
 - **Divider**: `.db-divider` on `<hr>`. Simple horizontal divider line.
 - **Scroll Area**: `.db-scroll-area` on `<div>`; modifiers `--horizontal` `--vertical`. Styled scrollbar container. --horizontal for horizontal scroll only.
@@ -264,13 +335,14 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 - **Frame**: `.db-frame` on `<div>`; modifiers `--flush`; parts `db-frame__header` `db-frame__body`* `db-frame__footer`. Use for embedded previews, canvases, screenshots, and inspector panels.
 - **Group**: `.db-group` on `<div>`; modifiers `--attached` `--vertical`. Generic control grouping. Use --attached for connected controls.
 
-### conversation (5)
+### conversation (6)
 
 - **Message Scroller**: `.db-message-scroller` on `<div>`; parts `db-message-scroller__viewport`* `db-message-scroller__content`* `db-message-scroller__item`* `db-message-scroller__button`; needs daub.js. Streaming-aware conversation viewport. Stable data-db-message-id rows preserve position when history is prepended. Follow pauses when you scroll away; the latest-message control resumes it. See chat-demo.html for a working conversation.
 - **Message**: `.db-message` on `<div>`; modifiers `--end`; parts `db-message__avatar` `db-message__content`* `db-message__header` `db-message__footer`. Conversation row with avatar, sender metadata, content, and footer slots. Add --end for the sender side. Use db-message-group for consecutive messages from one participant.
 - **Bubble**: `.db-bubble` on `<div>`; modifiers `--primary` `--secondary` `--muted` `--tinted` `--outline` `--ghost` `--destructive` `--end`; parts `db-bubble__content`* `db-bubble__reactions`. Content-sized conversational surface with seven color variants and an optional reaction row. Ghost removes the frame for rich assistant content. Reaction state and events belong to your application.
 - **Attachment**: `.db-attachment` on `<div>`; modifiers `--vertical` `--sm` `--xs`; parts `db-attachment__media` `db-attachment__content`* `db-attachment__title`* `db-attachment__description` `db-attachment__actions` `db-attachment__trigger`. File or image attachment with metadata and sibling trigger/actions. Set data-state to idle, uploading, processing, error, or done. Use a native progress element for upload progress. Uploading, persistence, and actions belong to your app.
 - **Marker**: `.db-marker` on `<div>`; modifiers `--border` `--separator`; parts `db-marker__icon` `db-marker__content`*. Inline activity, bordered status row, or centered date separator. Use role=status for progress updates and db-shimmer for busy text; reduced motion disables the animation.
+- **Chat Composer**: `.db-chat-composer` on `<form>`; parts `db-chat-composer__queue` `db-chat-composer__queued-item` `db-chat-composer__queued-text` `db-chat-composer__queued-actions` `db-chat-composer__panel` `db-chat-composer__attachments` `db-chat-composer__input` `db-chat-composer__toolbar` `db-chat-composer__status` `db-chat-composer__add` `db-chat-composer__add-menu` `db-chat-composer__file-input` `db-chat-composer__folder-input` `db-chat-composer__model` `db-chat-composer__effort` `db-chat-composer__approval` `db-chat-composer__mode` `db-chat-composer__goal` `db-chat-composer__dictation` `db-chat-composer__dictation-bar` `db-chat-composer__dictation-cancel` `db-chat-composer__send` `db-chat-composer__stop` `db-chat-composer__dropzone`; needs daub.js. Requires daub.js and daub.css. DAUB.init() populates an empty native form from escaped data-db-chat-options JSON. Native API: DAUB.createChatComposer(root, options). Default models are demo-only (simulated). The host handles cancelable db:chat-send, db:chat-steer, db:chat-stop, and db:chat-action events and owns transport, uploads, approval enforcement, and persistence. Keep File objects local. Configuration describes intent, not access rights. React roots carry data-db-react and require an explicit controller call.
 
 `*` marks a required part.
 <!-- END GENERATED:html-classes -->

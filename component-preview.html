@@ -14,7 +14,9 @@
     #preview-root > .db-table, #preview-root > .db-data-table, #preview-root > .db-prose, #preview-root > .db-grid, #preview-root > .db-list, #preview-root > .db-toolbar, #preview-root > .db-nav-menu, #preview-root > .db-tabs, #preview-root > .db-input-group, #preview-root > .db-field, #preview-root > .db-search, #preview-root > .db-chart, #preview-root > .db-accordion, #preview-root > .db-collapsible { width: 100%; }
     #preview-root > .db-bottom-nav { position: static; display: flex; width: 100%; }
     #preview-root > .db-sidebar { position: static; }
-    #preview-root > .db-theme-switcher { position: static; }
+    #preview-root > .db-theme-switcher { position: relative; inset: auto; width: min(280px, 100%); z-index: auto; }
+    #preview-root .db-theme-switcher__popover { position: relative; inset: auto; width: 100%; max-width: 100%; margin-top: var(--db-space-2); }
+    #preview-root .db-theme-switcher__tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     #preview-root > .db-toast-stack { position: static; width: 100%; }
     #preview-root > .db-navbar { position: relative; width: 100%; }
     #preview-root > .db-card { width: min(100%, 400px); }

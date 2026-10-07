@@ -2002,6 +2002,17 @@ export const DAUB_RENDER_BODY = [
   "      return el;",
   "    };",
   "",
+  "    RENDERERS.ChatComposer = function(p) {",
+  "      var el = mkEl('form', 'db-chat-composer');",
+  "      var config = {};",
+  "      ['models', 'model', 'effort', 'approval', 'mode', 'actions', 'capabilities', 'busy', 'placeholder'].forEach(function(key) {",
+  "        if (p[key] != null) config[key] = p[key];",
+  "      });",
+  "      el.setAttribute('data-db-chat-options', serializeSpec(config));",
+  "      if (p.id != null) el.id = String(p.id);",
+  "      return el;",
+  "    };",
+  "",
   "    RENDERERS.MessageScroller = function(p, ch, els, d) {",
   "      var el = mkEl('div', 'db-message-scroller');",
   "      el.style.height = (Number.isFinite(p.height) && p.height > 0 ? p.height : 360) + 'px';",
@@ -2717,7 +2728,7 @@ export const DAUB_RENDER_BODY = [
   "    return { MAX_DEPTH: MAX_DEPTH, esc: esc, sanitizeHtml: sanitizeHtml, iconHtml: iconHtml, mkEl: mkEl, isSafeUrl: isSafeUrl, setControlProps: setControlProps, createStateStore: createStateStore, resolveExpr: resolveExpr, resolveProps: resolveProps, dispatchAction: dispatchAction, collectStateConfig: collectStateConfig, renderElement: renderElement, renderChildren: renderChildren, renderOrphans: renderOrphans, orphanParents: orphanParents, normalizeProps: normalizeProps, mkIcon: mkIcon, lucideKey: lucideKey, knownMod: knownMod, isPlain: isPlain, toArr: toArr, toOpts: toOpts, toNum: toNum, footerRefs: footerRefs, specRef: specRef, entries: entries, kbdKeys: kbdKeys, isText: isText, withProp: withProp, fillAlias: fillAlias, isImgUrl: isImgUrl, withLabel: withLabel, chartBars: chartBars, tableShape: tableShape, tableScroll: tableScroll, actionCell: actionCell, cellRefs: cellRefs, cellElements: cellElements, dedupeControlLabels: dedupeControlLabels, RENDERERS: RENDERERS, THEMES: THEMES, normalizeTheme: normalizeTheme, serializeSpec: serializeSpec };",
   "})());"
 ].join('\n');
-export const RENDERER_TYPES = ["Stack","Grid","Layout","Surface","Text","Prose","Separator","Divider","Button","ButtonGroup","CheckboxGroup","Fieldset","Frame","Group","Meter","NumberField","PreviewCard","Toolbar","Field","Input","InputGroup","InputIcon","Search","Textarea","Checkbox","RadioGroup","Switch","Slider","Toggle","ToggleGroup","Select","CustomSelect","Kbd","Label","Spinner","InputOTP","Tabs","Breadcrumbs","Pagination","Stepper","NavMenu","Navbar","Menubar","Sidebar","BottomNav","Card","Table","DataTable","List","Badge","Avatar","AvatarGroup","Calendar","Chart","Carousel","AspectRatio","Chip","ScrollArea","MessageScroller","Message","Bubble","Attachment","Marker","Alert","Progress","Skeleton","EmptyState","Tooltip","Modal","AlertDialog","Sheet","Drawer","Popover","HoverCard","DropdownMenu","ContextMenu","CommandPalette","Accordion","Collapsible","Resizable","DatePicker","StatCard","ChartCard","CustomHTML","Link","Icon","Image"];
+export const RENDERER_TYPES = ["Stack","Grid","Layout","Surface","Text","Prose","Separator","Divider","Button","ButtonGroup","CheckboxGroup","Fieldset","Frame","Group","Meter","NumberField","PreviewCard","Toolbar","Field","Input","InputGroup","InputIcon","Search","Textarea","Checkbox","RadioGroup","Switch","Slider","Toggle","ToggleGroup","Select","CustomSelect","Kbd","Label","Spinner","InputOTP","Tabs","Breadcrumbs","Pagination","Stepper","NavMenu","Navbar","Menubar","Sidebar","BottomNav","Card","Table","DataTable","List","Badge","Avatar","AvatarGroup","Calendar","Chart","Carousel","AspectRatio","Chip","ScrollArea","ChatComposer","MessageScroller","Message","Bubble","Attachment","Marker","Alert","Progress","Skeleton","EmptyState","Tooltip","Modal","AlertDialog","Sheet","Drawer","Popover","HoverCard","DropdownMenu","ContextMenu","CommandPalette","Accordion","Collapsible","Resizable","DatePicker","StatCard","ChartCard","CustomHTML","Link","Icon","Image"];
 export const THEMES = {"light":["light","grunge-light","solarized","ink-light","ember-light","bone","dracula-light","nord-light","one-dark-light","monokai-light","gruvbox-light","night-owl-light","github","catppuccin","tokyo-night-light","material-light","monospace-light","synthwave-light","shades-of-purple-light","ayu","horizon-light"],"dark":["dark","grunge-dark","solarized-dark","ink","ember","bone-dark","dracula","nord","one-dark","monokai","gruvbox","night-owl","github-dark","catppuccin-dark","tokyo-night","material","monospace","synthwave","shades-of-purple","ayu-dark","horizon"]};
 export function normalizeTheme(theme) {
       return THEMES.light.concat(THEMES.dark).indexOf(theme) >= 0 ? theme : 'light';

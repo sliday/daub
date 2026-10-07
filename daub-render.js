@@ -2000,6 +2000,17 @@ function DAUB_RENDER_FACTORY() {
       return el;
     };
 
+    RENDERERS.ChatComposer = function(p) {
+      var el = mkEl('form', 'db-chat-composer');
+      var config = {};
+      ['models', 'model', 'effort', 'approval', 'mode', 'actions', 'capabilities', 'busy', 'placeholder'].forEach(function(key) {
+        if (p[key] != null) config[key] = p[key];
+      });
+      el.setAttribute('data-db-chat-options', serializeSpec(config));
+      if (p.id != null) el.id = String(p.id);
+      return el;
+    };
+
     RENDERERS.MessageScroller = function(p, ch, els, d) {
       var el = mkEl('div', 'db-message-scroller');
       el.style.height = (Number.isFinite(p.height) && p.height > 0 ? p.height : 360) + 'px';

@@ -190,7 +190,7 @@ On 8 labeled theme prompts, this wording matched the hand-written heuristic in 6
 Core set (always kept, never asked): `Stack`, `Grid`, `Text`, `Card`, `Button`, `Icon`, `Separator`.
 Threshold: `p(yes) >= 0.45` in the playground (tuned value). The hosted MCP `generate_ui` uses `0.5`.
 
-Purpose map (70 questions, one per non-core type), copied from `COMP_PURPOSE` in playground.html:
+Purpose map (71 questions, one per non-core type), copied from `COMP_PURPOSE` in playground.html:
 
 ```json
 {
@@ -263,6 +263,7 @@ Purpose map (70 questions, one per non-core type), copied from `COMP_PURPOSE` in
   "Bubble": "a conversational text surface with user and assistant variants and reactions",
   "Attachment": "a file or image attachment with metadata, upload status, and separate actions",
   "Marker": "a chat activity status, system note, or date separator",
+  "ChatComposer": "a native rich message composer with local attachments, queue controls, model and effort selection, approval intent, plan mode, and user-started dictation",
   "CustomHTML": "custom HTML and JS for anything no built-in component covers"
 }
 ```

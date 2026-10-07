@@ -2611,6 +2611,7 @@ var COMP_PURPOSE = {
   Bubble: 'a conversational text surface with user and assistant variants and reactions',
   Attachment: 'a file or image attachment with metadata, upload status, and separate actions',
   Marker: 'a chat activity status, system note, or date separator',
+  ChatComposer: 'a native rich message composer with local attachments, queue controls, model and effort selection, approval intent, plan mode, and user-started dictation',
   Image: 'an image or photo',
   Alert: 'an inline callout banner for info, warning, error or success messages',
   Progress: 'a progress bar',
@@ -7352,6 +7353,7 @@ var COMP_PROPS = {
   "Bubble": "children: [content IDs], content: string (plain text), variant: \"primary\"|\"default\"|\"secondary\"|\"muted\"|\"tinted\"|\"outline\"|\"ghost\"|\"destructive\", align: \"start\"|\"end\", reactions: [{label, count, pressed}] (app-controlled)",
   "Attachment": "children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: \"sm\"|\"xs\", state: \"idle\"|\"uploading\"|\"processing\"|\"error\"|\"done\" (default \"idle\"), progress: 0-100, orientation: \"horizontal\"|\"vertical\"",
   "Marker": "children: [content IDs], content: string (plain text), icon: string (Lucide), variant: \"border\"|\"separator\", status: bool (polite live region), busy: bool",
+  "ChatComposer": "models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: \"ask\"|\"auto\", mode: \"chat\"|\"plan\", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights",
   "Image": "src: string (URL), alt: string, width: number, height: number",
   "Alert": "type: \"info\"|\"warning\"|\"error\"|\"success\", title: string, message: string",
   "Progress": "value: number, indeterminate: bool",
@@ -7505,7 +7507,8 @@ var COMP_CATEGORIES = [
       "Message",
       "Bubble",
       "Attachment",
-      "Marker"
+      "Marker",
+      "ChatComposer"
     ]
   ],
   [

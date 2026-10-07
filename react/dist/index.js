@@ -952,6 +952,97 @@ var MarkerContent = f2.forwardRef(
   ({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx("div", { ...props, ref, "data-db-react": "", className: cn("db-marker__content", className) })
 );
 MarkerContent.displayName = "MarkerContent";
+var hostEvents = {
+  "db:chat-send": "onSend",
+  "db:chat-steer": "onSteer",
+  "db:chat-stop": "onStop",
+  "db:chat-action": "onAction",
+  "db:chat-queue": "onQueue",
+  "db:chat-config": "onConfig",
+  "db:chat-dictation": "onDictation",
+  "db:chat-change": "onChange"
+};
+var ChatComposer = f2.forwardRef(function ChatComposer2({
+  models,
+  model,
+  effort,
+  approval,
+  mode,
+  actions,
+  capabilities,
+  busy,
+  placeholder,
+  onSend,
+  onSteer,
+  onStop,
+  onAction,
+  onQueue,
+  onConfig,
+  onDictation,
+  onChange,
+  onReady,
+  className,
+  ...props
+}, ref) {
+  const root = f2.useRef(null);
+  const controller = f2.useRef(null);
+  const callbacks = f2.useRef({ onSend, onSteer, onStop, onAction, onQueue, onConfig, onDictation, onChange, onReady });
+  callbacks.current = { onSend, onSteer, onStop, onAction, onQueue, onConfig, onDictation, onChange, onReady };
+  const options = { models, model, effort, approval, mode, actions, capabilities, busy, placeholder };
+  const currentOptions = f2.useRef(options);
+  currentOptions.current = options;
+  const setup = JSON.stringify({ models, actions, capabilities, placeholder });
+  const serialized = JSON.stringify(options).replace(/[<>&\u2028\u2029]/g, (char) => "\\u" + char.charCodeAt(0).toString(16).padStart(4, "0"));
+  f2.useImperativeHandle(ref, () => root.current, []);
+  f2.useEffect(() => {
+    const element = root.current;
+    const runtime = window.DAUB;
+    if (!element || !runtime?.createChatComposer) throw new Error("ChatComposer requires daub.js with DAUB.createChatComposer. Load it before mounting.");
+    const listeners = Object.entries(hostEvents).map(([name, callback]) => {
+      const listener = (event) => {
+        const handler = callbacks.current[callback];
+        handler?.(event);
+      };
+      element.addEventListener(name, listener);
+      return { name, listener };
+    });
+    try {
+      controller.current = runtime.createChatComposer(element, currentOptions.current);
+      if (!controller.current) throw new Error("DAUB.createChatComposer could not initialize the ChatComposer form.");
+      callbacks.current.onReady?.(controller.current);
+    } catch (error) {
+      controller.current?.destroy();
+      controller.current = null;
+      for (const { name, listener } of listeners) element.removeEventListener(name, listener);
+      throw error;
+    }
+    return () => {
+      for (const { name, listener } of listeners) element.removeEventListener(name, listener);
+      controller.current?.destroy();
+      controller.current = null;
+    };
+  }, []);
+  f2.useEffect(() => {
+    controller.current?.setBusy(busy ?? false);
+  }, [busy]);
+  f2.useEffect(() => {
+    controller.current?.updateOptions(JSON.parse(setup));
+  }, [setup]);
+  f2.useEffect(() => {
+    if (model !== void 0) controller.current?.setModel(model);
+  }, [model, busy, setup]);
+  f2.useEffect(() => {
+    if (effort !== void 0) controller.current?.setEffort(effort);
+  }, [effort, model, busy, setup]);
+  f2.useEffect(() => {
+    if (approval !== void 0) controller.current?.setApproval(approval);
+  }, [approval]);
+  f2.useEffect(() => {
+    if (mode !== void 0) controller.current?.setMode(mode);
+  }, [mode]);
+  return /* @__PURE__ */ jsxRuntime.jsx("form", { ...props, ref: root, className: cn("db-chat-composer", className), "data-db-react": "", "data-db-chat-options": serialized });
+});
+ChatComposer.displayName = "ChatComposer";
 var AspectRatio = f2.forwardRef(
   ({ ratio = "16-9", className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
     "div",
@@ -3956,6 +4047,7 @@ exports.Card = Card;
 exports.Carousel = Carousel;
 exports.Chart = Chart;
 exports.ChartCard = ChartCard;
+exports.ChatComposer = ChatComposer;
 exports.Checkbox = Checkbox;
 exports.CheckboxGroup = CheckboxGroup;
 exports.Chip = Chip;

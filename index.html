@@ -841,45 +841,33 @@
       font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0;
       color: var(--db-warm-gray);
+    }
+    .db-mcp-example__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       margin-bottom: 12px;
     }
-    .db-mcp-example__flow {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    .db-mcp-example .db-message-scroller {
+      --db-message-scroller-height: 520px;
+      border-block: 1px solid var(--db-color-border);
     }
-    .db-mcp-example__step {
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 0.875rem;
-      line-height: 1.6;
+    .db-mcp-example .db-chat-composer {
+      margin-top: 16px;
     }
-    .db-mcp-example__step--user {
-      background: var(--db-color-surface, var(--db-sand));
-      color: var(--db-ink);
-      margin-right: 48px;
-    }
-    .db-mcp-example__step--ai {
-      background: var(--db-charcoal, #2D2A26);
-      color: var(--db-cream, #FAF8F0);
-      margin-left: 48px;
-    }
-    .db-mcp-example__role {
-      display: block;
-      font-family: var(--db-font-ui);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 4px;
-      opacity: 0.6;
+    .db-mcp-example .db-chat-composer__model,
+    .db-mcp-example .db-chat-composer__effort,
+    .db-mcp-example .db-chat-composer__mode,
+    .db-mcp-example .db-chat-composer__goal {
+      display: none;
     }
     @media (max-width: 720px) {
       .db-mcp-tools { grid-template-columns: 1fr; }
-      .db-mcp-example__step--user { margin-right: 16px; }
-      .db-mcp-example__step--ai { margin-left: 16px; }
+      .db-mcp-example .db-message-scroller { --db-message-scroller-height: 420px; }
+      .db-mcp-example .db-message-scroller__content { padding-inline: 0; }
     }
 
     /* Use with AI section */
@@ -1083,7 +1071,7 @@
       }
       .db-nav__links li { width: 100%; }
       .db-nav__links a { display: block; width: 100%; padding: 10px 12px; font-size: 0.875rem; }
-      .db-nav__github { width: 100%; justify-content: flex-start; border: none; padding: 10px 12px !important; }
+      .db-nav__links .db-nav__github { display: flex; width: 100%; justify-content: flex-start; border: none; padding: 10px 12px !important; }
       .db-nav--open .db-nav__links { display: flex; }
     }
 
@@ -1525,26 +1513,44 @@
     </div>
 
     <div class="db-mcp-example">
-      <div class="db-mcp-example__label">Example conversation</div>
-      <div class="db-mcp-example__flow">
-        <div class="db-mcp-example__step db-mcp-example__step--user">
-          <span class="db-mcp-example__role">You</span>
-          Build me a settings page with a sidebar, profile card with avatar and form fields, and notification toggles. Use the nord theme.
-        </div>
-        <div class="db-mcp-example__step db-mcp-example__step--ai">
-          <span class="db-mcp-example__role">AI <span class="db-badge db-badge--new" style="font-size:0.6rem;padding:1px 6px;margin-left:4px;">generate_ui</span></span>
-          Generated a 12-element spec with Sidebar, Card, Avatar, Field, and Switch components. Theme: nord-light.
-          <a href="https://daub.dev/playground.html" style="color:var(--db-terracotta);font-size:0.8125rem;display:inline-block;margin-top:4px;">Open in Playground &rarr;</a>
-        </div>
-        <div class="db-mcp-example__step db-mcp-example__step--user">
-          <span class="db-mcp-example__role">You</span>
-          Add a danger zone with a delete account button that opens an alert dialog.
-        </div>
-        <div class="db-mcp-example__step db-mcp-example__step--ai">
-          <span class="db-mcp-example__role">AI <span class="db-badge db-badge--new" style="font-size:0.6rem;padding:1px 6px;margin-left:4px;">generate_ui</span></span>
-          Updated spec: added danger-card with AlertDialog overlay. Now 16 elements. Validation: all clear.
-        </div>
+      <div class="db-mcp-example__header">
+        <div class="db-mcp-example__label">Example conversation</div>
+        <a class="db-btn db-btn--ghost db-btn--sm" href="chat-demo.html">Try chat <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
       </div>
+      <div class="db-message-scroller" data-db-scroll-position="start" data-db-auto-scroll="false">
+        <div class="db-message-scroller__viewport db-scroll-fade" tabindex="0" aria-label="MCP example conversation">
+          <div class="db-message-scroller__content" role="log" aria-label="Example messages">
+            <div class="db-message-scroller__item" data-db-message-id="mcp-settings-request">
+              <div class="db-message db-message--end"><div class="db-message__content">
+                <div class="db-message__header">You</div>
+                <div class="db-bubble"><div class="db-bubble__content">Build me a settings page with a sidebar, profile card with avatar and form fields, and notification toggles. Use the nord theme.</div></div>
+              </div></div>
+            </div>
+            <div class="db-message-scroller__item" data-db-message-id="mcp-settings-reply">
+              <div class="db-message"><div class="db-message__avatar"><span class="db-avatar" aria-label="DAUB Assistant">D</span></div><div class="db-message__content">
+                <div class="db-message__header">DAUB Assistant</div>
+                <div class="db-marker"><span class="db-marker__icon"><i data-lucide="wand-2" aria-hidden="true"></i></span><span class="db-marker__content"><code>generate_ui</code></span></div>
+                <div class="db-bubble db-bubble--ghost"><div class="db-bubble__content"><p>Generated a 12-element spec with Sidebar, Card, Avatar, Field, and Switch components. Theme: nord-light.</p><a href="playground.html">Open in Playground</a></div></div>
+              </div></div>
+            </div>
+            <div class="db-message-scroller__item" data-db-message-id="mcp-danger-request">
+              <div class="db-message db-message--end"><div class="db-message__content">
+                <div class="db-message__header">You</div>
+                <div class="db-bubble"><div class="db-bubble__content">Add a danger zone with a delete account button that opens an alert dialog.</div></div>
+              </div></div>
+            </div>
+            <div class="db-message-scroller__item" data-db-message-id="mcp-danger-reply">
+              <div class="db-message"><div class="db-message__avatar"><span class="db-avatar" aria-label="DAUB Assistant">D</span></div><div class="db-message__content">
+                <div class="db-message__header">DAUB Assistant</div>
+                <div class="db-marker"><span class="db-marker__icon"><i data-lucide="wand-2" aria-hidden="true"></i></span><span class="db-marker__content"><code>generate_ui</code></span></div>
+                <div class="db-bubble db-bubble--ghost"><div class="db-bubble__content">Updated spec: added danger-card with AlertDialog overlay. Now 16 elements. Validation: all clear.</div></div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+        <button class="db-message-scroller__button" data-db-scroll-to="end" type="button" aria-label="Scroll to latest message" title="Scroll to latest message"><i data-lucide="arrow-down" aria-hidden="true"></i></button>
+      </div>
+      <form class="db-chat-composer" id="mcp-composer" data-db-chat-options='{"placeholder":"Describe your next interface...","models":[{"id":"playground","label":"DAUB Playground"}],"capabilities":{"queue":false,"steer":false,"attachments":false,"folders":false,"approval":false},"actions":[{"id":"full-chat","label":"Open full chat","icon":"messages-square"}]}'></form>
     </div>
   </section>
 
@@ -3242,6 +3248,18 @@
   <script>
     // Initialize Lucide icons (Lucide script is deferred — wait for DOMContentLoaded)
     document.addEventListener('DOMContentLoaded', function(){ lucide.createIcons(); });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var form = document.getElementById('mcp-composer');
+      var composer = DAUB.createChatComposer(form);
+      composer.setStatus('Opens in Playground');
+      form.addEventListener('db:chat-send', function(event) {
+        window.location.href = 'playground.html?prompt=' + encodeURIComponent(event.detail.request.text);
+      });
+      form.addEventListener('db:chat-action', function(event) {
+        if (event.detail.action.id === 'full-chat') window.location.href = 'chat-demo.html';
+      });
+    });
 
     // Example tab switcher (Preview / Code)
     function dbExampleTab(tab, btn) {

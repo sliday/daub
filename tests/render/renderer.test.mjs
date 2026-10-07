@@ -63,6 +63,7 @@ const fixtures = {
   Bubble: { content: 'Review ready.', variant: 'secondary', reactions: [{ label: 'Helpful', count: 2 }] },
   Attachment: { name: 'Review.pdf', description: 'PDF document', href: '/review.pdf', state: 'uploading', progress: 25 },
   Marker: { content: 'Generating response', icon: 'loader', variant: 'border', busy: true },
+  ChatComposer: { models: [{ id: 'demo', label: 'Demo model (simulated)' }], placeholder: 'Write a message' },
 };
 const childFixtures = {
   Stack: ['body', 'body2'], Grid: ['body', 'body2'], Layout: ['body', 'body2'], Surface: ['body'],

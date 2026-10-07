@@ -154,6 +154,110 @@ declare const Marker: react.ForwardRefExoticComponent<Omit<MarkerProps, "ref"> &
 declare const MarkerIcon: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>, "ref"> & react.RefAttributes<HTMLSpanElement>>;
 declare const MarkerContent: react.ForwardRefExoticComponent<Omit<react.DetailedHTMLProps<react.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref"> & react.RefAttributes<HTMLDivElement>>;
 
+interface ChatComposerModel {
+    id: string;
+    label: string;
+    efforts?: string[];
+}
+interface ChatComposerAction {
+    id: string;
+    label: string;
+    icon?: string;
+    disabled?: boolean;
+}
+interface ChatComposerCapabilities {
+    queue?: boolean;
+    steer?: boolean;
+    attachments?: boolean;
+    folders?: boolean;
+    dictation?: boolean;
+    approval?: boolean;
+}
+interface ChatComposerOptions {
+    models?: ChatComposerModel[];
+    model?: string;
+    effort?: string;
+    approval?: "ask" | "auto";
+    mode?: "chat" | "plan";
+    actions?: ChatComposerAction[];
+    capabilities?: ChatComposerCapabilities;
+    busy?: boolean;
+    placeholder?: string;
+}
+interface ChatComposerRequest {
+    id: string;
+    text: string;
+    files: File[];
+    model: string;
+    effort: string;
+    approval: "ask" | "auto";
+    mode: "chat" | "plan";
+    goal?: string | null;
+}
+type ChatComposerDictationState = "unsupported" | "listening" | "stopped" | "error";
+interface ChatComposerState extends Omit<ChatComposerRequest, "id" | "goal"> {
+    queue: ChatComposerRequest[];
+    busy: boolean;
+    goal: string | null;
+    dictation: ChatComposerDictationState;
+}
+interface ChatComposerController {
+    getState(): ChatComposerState;
+    setBusy(busy: boolean): void;
+    setStatus(status: string): void;
+    setDraft(text: string): boolean;
+    clearDraft(): boolean;
+    updateOptions(options: ChatComposerOptions): boolean;
+    attachFiles(files: File[]): boolean;
+    getQueue(): ChatComposerRequest[];
+    takeNext(): ChatComposerRequest | null;
+    removeQueued(id: string): boolean;
+    editQueued(id: string, text: string): boolean;
+    steerQueued(id: string): boolean;
+    setModel(id: string): boolean;
+    setEffort(value: string): boolean;
+    setMode(value: "chat" | "plan"): boolean;
+    setApproval(value: "ask" | "auto"): boolean;
+    setGoal(goal: string | null): boolean;
+    startDictation(): boolean;
+    stopDictation(): boolean;
+    destroy(): void;
+}
+interface ChatComposerConfig extends Pick<ChatComposerState, "model" | "effort" | "approval" | "mode" | "goal"> {
+}
+interface ChatComposerQueueDetail {
+    request: ChatComposerRequest | null;
+    queue: ChatComposerRequest[];
+}
+interface ChatComposerDictationDetail {
+    state: ChatComposerDictationState;
+    error?: string;
+}
+interface ChatComposerChangeDetail {
+    state: ChatComposerState;
+}
+interface ChatComposerActionDetail {
+    action: string | ChatComposerAction;
+    request?: ChatComposerRequest;
+}
+interface ChatComposerProps extends Omit<ComponentProps<"form">, "children" | "dangerouslySetInnerHTML" | "onChange">, ChatComposerOptions {
+    onSend?: (event: CustomEvent<{
+        request: ChatComposerRequest;
+    }>) => void;
+    onSteer?: (event: CustomEvent<{
+        request: ChatComposerRequest;
+    }>) => void;
+    onStop?: (event: CustomEvent) => void;
+    onAction?: (event: CustomEvent<ChatComposerActionDetail>) => void;
+    onQueue?: (event: CustomEvent<ChatComposerQueueDetail>) => void;
+    onConfig?: (event: CustomEvent<ChatComposerConfig>) => void;
+    onDictation?: (event: CustomEvent<ChatComposerDictationDetail>) => void;
+    onChange?: (event: CustomEvent<ChatComposerChangeDetail>) => void;
+    onReady?: (controller: ChatComposerController) => void;
+}
+/** Requires daub.js alongside daub.css; the native controller owns the form contents. */
+declare const ChatComposer: react.ForwardRefExoticComponent<Omit<ChatComposerProps, "ref"> & react.RefAttributes<HTMLFormElement>>;
+
 interface AspectRatioProps extends ComponentProps<"div"> {
     ratio?: AspectRatio$1;
 }
@@ -816,4 +920,4 @@ declare function useEscapeKey(onClose: (() => void) | undefined, active: boolean
 declare function useOutsideClick(ref: React.RefObject<HTMLElement | null>, onClose: (() => void) | undefined, active: boolean): void;
 declare function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean): void;
 
-export { Accordion, Alert, AlertDialog, type AlertVariant, AspectRatio, type AspectRatio$1 as AspectRatioType, Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, type AttachmentMediaProps, AttachmentProgress, type AttachmentProgressProps, type AttachmentProps, type AttachmentState, AttachmentTitle, AttachmentTrigger, Avatar, AvatarGroup, Badge, type BadgeVariant, BottomNav, Breadcrumbs, Bubble, BubbleCollapsible, type BubbleCollapsibleProps, BubbleContent, BubbleGroup, type BubbleProps, BubbleReactions, type BubbleVariant, Button, ButtonGroup, type ButtonVariant, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, CheckboxGroup, Chip, type ChipColor, Collapsible, CommandPalette, Container, type ContainerSize, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, type GapToken, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Marker, MarkerContent, MarkerIcon, type MarkerProps, Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader, type MessageProps, MessageScroller, MessageScrollerButton, type MessageScrollerButtonProps, MessageScrollerContent, type MessageScrollerContentProps, MessageScrollerItem, type MessageScrollerItemProps, type MessageScrollerProps, MessageScrollerProvider, type MessageScrollerProviderProps, MessageScrollerViewport, type MessageScrollerViewportProps, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, type Size, Skeleton, type SkeletonVariant, Slider, Spinner, Stack, StatCard, Stepper, Surface, type SurfaceVariant, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };
+export { Accordion, Alert, AlertDialog, type AlertVariant, AspectRatio, type AspectRatio$1 as AspectRatioType, Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, type AttachmentMediaProps, AttachmentProgress, type AttachmentProgressProps, type AttachmentProps, type AttachmentState, AttachmentTitle, AttachmentTrigger, Avatar, AvatarGroup, Badge, type BadgeVariant, BottomNav, Breadcrumbs, Bubble, BubbleCollapsible, type BubbleCollapsibleProps, BubbleContent, BubbleGroup, type BubbleProps, BubbleReactions, type BubbleVariant, Button, ButtonGroup, type ButtonVariant, Calendar, Card, Carousel, Chart, ChartCard, ChatComposer, type ChatComposerAction, type ChatComposerActionDetail, type ChatComposerCapabilities, type ChatComposerChangeDetail, type ChatComposerConfig, type ChatComposerController, type ChatComposerDictationDetail, type ChatComposerDictationState, type ChatComposerModel, type ChatComposerOptions, type ChatComposerProps, type ChatComposerQueueDetail, type ChatComposerRequest, type ChatComposerState, Checkbox, CheckboxGroup, Chip, type ChipColor, Collapsible, CommandPalette, Container, type ContainerSize, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, type GapToken, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Marker, MarkerContent, MarkerIcon, type MarkerProps, Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader, type MessageProps, MessageScroller, MessageScrollerButton, type MessageScrollerButtonProps, MessageScrollerContent, type MessageScrollerContentProps, MessageScrollerItem, type MessageScrollerItemProps, type MessageScrollerProps, MessageScrollerProvider, type MessageScrollerProviderProps, MessageScrollerViewport, type MessageScrollerViewportProps, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, type Size, Skeleton, type SkeletonVariant, Slider, Spinner, Stack, StatCard, Stepper, Surface, type SurfaceVariant, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, useOutsideClick, useToast };

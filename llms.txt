@@ -6,8 +6,8 @@
 > JS: https://daub.dev/daub.js
 > Repo: https://github.com/sliday/daub
 > License: MIT
-> Components: 89
-> Browser/OpenUI/MCP renderer types: 87
+> Components: 90
+> Browser/OpenUI/MCP renderer types: 88
 > Theme Families: 21 (42 variants total)
 > Components JSON: https://daub.dev/components.json
 > TypeScript: https://daub.dev/daub.d.ts
@@ -343,17 +343,18 @@ Media variant: `db-card--media` removes padding for edge-to-edge images.
 Interactive: `db-card--interactive` adds cursor pointer + hover lift.
 
 ### 21. Modal — `.db-modal`
+The launcher opens the hidden overlay. Keep it outside the overlay so users can reach it before opening the modal.
 ```html
+<button type="button" class="db-btn db-btn--secondary" data-db-modal-trigger="my-modal">Open project details</button>
 <div class="db-modal-overlay" id="my-modal" aria-hidden="true">
-  <div class="db-modal">
+  <div class="db-modal" role="dialog" aria-modal="true" aria-labelledby="my-modal-title">
     <div class="db-modal__header">
-      <h2 class="db-modal__title">Title</h2>
-      <button class="db-modal__close" aria-label="Close">&times;</button>
+      <h2 class="db-modal__title" id="my-modal-title">Project details</h2>
+      <button type="button" class="db-modal__close" aria-label="Close dialog">&times;</button>
     </div>
-    <div class="db-modal__body">Content</div>
+    <div class="db-modal__body">Project Aurora has 3 tasks ready for review.</div>
     <div class="db-modal__footer">
-      <button class="db-btn db-btn--secondary" data-db-dismiss>Cancel</button>
-      <button class="db-btn db-btn--primary" data-db-dismiss>Confirm</button>
+      <button type="button" class="db-btn db-btn--secondary" data-db-dismiss>Close</button>
     </div>
   </div>
 </div>
@@ -361,15 +362,17 @@ Interactive: `db-card--interactive` adds cursor pointer + hover lift.
 Open: `DAUB.openModal('my-modal')`. Close: `DAUB.closeModal('my-modal')` or `DAUB.closeModal(overlayEl)`. The close button, the backdrop, Escape and any button with `data-db-dismiss` close it too. A button's own click handler runs before `data-db-dismiss` closes the modal; a primary action that validates first can leave the attribute off and call `DAUB.closeModal('my-modal')` when it succeeds.
 
 ### 22. Alert Dialog — `.db-alert-dialog`
+Keep the launcher outside the hidden dialog and match its data-db-trigger to the dialog id.
 ```html
+<button type="button" class="db-btn db-btn--secondary" data-db-trigger="confirm-delete">Delete draft</button>
 <div class="db-alert-dialog" id="confirm-delete">
   <div class="db-alert-dialog__overlay"></div>
-  <div class="db-alert-dialog__panel">
-    <h3 class="db-alert-dialog__title">Are you sure?</h3>
-    <p class="db-alert-dialog__desc">This action cannot be undone.</p>
+  <div class="db-alert-dialog__panel" role="alertdialog" aria-modal="true" aria-labelledby="confirm-delete-title" aria-describedby="confirm-delete-desc">
+    <h3 class="db-alert-dialog__title" id="confirm-delete-title">Delete this draft?</h3>
+    <p class="db-alert-dialog__desc" id="confirm-delete-desc">This action cannot be undone.</p>
     <div class="db-alert-dialog__actions">
-      <button class="db-btn db-btn--secondary" data-action="cancel">Cancel</button>
-      <button class="db-btn db-btn--primary" data-db-dismiss>Continue</button>
+      <button type="button" class="db-btn db-btn--secondary" data-action="cancel">Cancel</button>
+      <button type="button" class="db-btn db-btn--primary" data-db-dismiss>Delete draft</button>
     </div>
   </div>
 </div>
@@ -412,6 +415,10 @@ DAUB.toast('Quick message');
 DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 4000 });
 ```
 Types: `success`, `error`, `warning`, `info`.
+Live trigger:
+```html
+<button type="button" class="db-btn db-btn--secondary db-btn--sm" onclick="DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 4000 })">Show toast</button>
+```
 Rendered markup (for styling reference):
 ```html
 <div class="db-toast-stack" role="region" aria-live="polite" aria-label="Notifications">
@@ -430,7 +437,7 @@ Toast modifiers: `--success` / `--error` / `--warning` / `--removing`.
 ### 26. Alert — `.db-alert`
 ```html
 <div class="db-alert db-alert--warning">
-  <span class="db-alert__icon"><!-- icon --></span>
+  <span class="db-alert__icon"><i data-lucide="triangle-alert" aria-hidden="true"></i></span>
   <div class="db-alert__content">
     <div class="db-alert__title">Warning</div>
     <p>Something needs attention.</p>
@@ -585,20 +592,21 @@ React/Next.js: include `<script src="daub.js">` — no useState required for mob
 
 ### 38. Sidebar — `.db-sidebar`
 Collapsible: add `db-sidebar--collapsed` class. Toggle: `db-sidebar__toggle` button.
-Items need `data-tooltip="Label"` for collapsed hover tooltips.
+Phones start with an icon rail. `db-sidebar--expanded` overrides this after expansion.
+Items need `data-tooltip="Label"` for collapsed hover and keyboard-focus labels.
 JS: `DAUB.toggleSidebar(el)` or click `db-sidebar__toggle`.
 ```html
 <aside class="db-sidebar">
   <div class="db-sidebar__header">
     <h3>App Name</h3>
-    <button class="db-sidebar__toggle" aria-label="Toggle sidebar">☰</button>
+    <button type="button" class="db-sidebar__toggle" aria-label="Toggle sidebar"><i data-lucide="panel-left" aria-hidden="true"></i></button>
   </div>
   <div class="db-sidebar__section">
     <div class="db-sidebar__label">Main</div>
-    <a class="db-sidebar__item db-sidebar__item--active" data-tooltip="Dashboard" href="#">Dashboard</a>
-    <a class="db-sidebar__item" data-tooltip="Settings" href="#">Settings</a>
+    <a class="db-sidebar__item db-sidebar__item--active" data-tooltip="Dashboard" aria-label="Dashboard" aria-current="page" href="#"><i data-lucide="layout-dashboard" aria-hidden="true"></i><span>Dashboard</span></a>
+    <a class="db-sidebar__item" data-tooltip="Settings" aria-label="Settings" href="#"><i data-lucide="settings" aria-hidden="true"></i><span>Settings</span></a>
   </div>
-  <div class="db-sidebar__footer">Footer content</div>
+  <div class="db-sidebar__footer"><a class="db-sidebar__item" data-tooltip="Account" aria-label="Account" href="#"><i data-lucide="user" aria-hidden="true"></i><span>Account</span></a></div>
 </aside>
 ```
 
@@ -766,17 +774,18 @@ Wraps Calendar in a trigger/dropdown.
 ```
 
 ### 52. Carousel — `.db-carousel`
+Text slides need padding to keep overlay arrows clear of the content. This example supplies a minimum height and arrow gutters.
 ```html
-<div class="db-carousel">
+<div class="db-carousel" role="region" aria-roledescription="carousel" aria-label="Project updates" style="width:100%;">
   <div class="db-carousel__track">
-    <div class="db-carousel__slide">Slide 1</div>
-    <div class="db-carousel__slide">Slide 2</div>
+    <div class="db-carousel__slide" role="group" aria-roledescription="slide" aria-label="1 of 2" style="min-height:180px;padding:24px 60px;display:flex;flex-direction:column;justify-content:center;"><h3 class="db-h3">Project Aurora</h3><p class="db-body">Design review is ready.</p></div>
+    <div class="db-carousel__slide" role="group" aria-roledescription="slide" aria-label="2 of 2" style="min-height:180px;padding:24px 60px;display:flex;flex-direction:column;justify-content:center;"><h3 class="db-h3">Project Birch</h3><p class="db-body">The release is scheduled for Friday.</p></div>
   </div>
-  <button class="db-carousel__btn db-carousel__btn--prev">&lsaquo;</button>
-  <button class="db-carousel__btn db-carousel__btn--next">&rsaquo;</button>
+  <button type="button" class="db-carousel__btn db-carousel__btn--prev" aria-label="Previous slide" style="top:calc(50% - var(--db-space-3) - 4px);"><i data-lucide="chevron-left" aria-hidden="true"></i></button>
+  <button type="button" class="db-carousel__btn db-carousel__btn--next" aria-label="Next slide" style="top:calc(50% - var(--db-space-3) - 4px);"><i data-lucide="chevron-right" aria-hidden="true"></i></button>
   <div class="db-carousel__dots">
-    <button class="db-carousel__dot db-carousel__dot--active"></button>
-    <button class="db-carousel__dot"></button>
+    <button type="button" class="db-carousel__dot db-carousel__dot--active" aria-label="Go to slide 1" aria-current="true"></button>
+    <button type="button" class="db-carousel__dot" aria-label="Go to slide 2"></button>
   </div>
 </div>
 ```
@@ -807,7 +816,7 @@ Layout: `--horizontal` for row layout with icon.
 ```
 
 ### 55. Chart Card — `.db-chart-card`
-Card wrapper for any chart (Chart.js canvas, db-chart, etc.) with title/actions header.
+Card wrapper for any chart with a title/actions header. This example uses CSS bars and requires no chart script. For a canvas chart, initialize your chart library with data (see the Chart.js Integration Recipe).
 ```html
 <div class="db-chart-card">
   <div class="db-chart-card__header">
@@ -817,7 +826,12 @@ Card wrapper for any chart (Chart.js canvas, db-chart, etc.) with title/actions 
     </div>
   </div>
   <div class="db-chart-card__body">
-    <canvas id="myChart"></canvas>
+    <div class="db-chart" role="img" aria-label="Monthly revenue: January $40k, February $60k, March $80k">
+      <div class="db-chart__bar" style="height:40%;" title="January: $40k"></div>
+      <div class="db-chart__bar" style="height:60%;" title="February: $60k"></div>
+      <div class="db-chart__bar" style="height:80%;" title="March: $80k"></div>
+    </div>
+    <div class="db-chart__labels"><span>Jan</span><span>Feb</span><span>Mar</span></div>
   </div>
 </div>
 ```
@@ -866,10 +880,12 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 
 ### 61. Surface — `.db-surface`
 ```html
-<div class="db-surface">Base</div>
-<div class="db-surface--raised">Raised</div>
-<div class="db-surface--inset">Inset</div>
-<div class="db-surface--pressed">Pressed</div>
+<div class="db-grid db-grid--2 db-gap-4">
+  <div class="db-surface" style="padding:var(--db-space-4);">Base</div>
+  <div class="db-surface db-surface--raised" style="padding:var(--db-space-4);">Raised</div>
+  <div class="db-surface db-surface--inset" style="padding:var(--db-space-4);">Inset</div>
+  <div class="db-surface db-surface--pressed" style="padding:var(--db-space-4);">Pressed</div>
+</div>
 ```
 
 ### 62. Typography — Heading/Body classes
@@ -883,9 +899,11 @@ Typographic defaults for long-form content. Scale: `--sm`, `--lg`, `--xl`, `--2x
 
 ### 63. Elevation — `.db-elevation-*`
 ```html
-<div class="db-elevation-1">Level 1</div>
-<div class="db-elevation-2">Level 2</div>
-<div class="db-elevation-3">Level 3</div>
+<div class="db-grid db-grid--3 db-gap-4">
+  <div class="db-surface db-elevation-1" style="padding:var(--db-space-4);">Level 1</div>
+  <div class="db-surface db-elevation-2" style="padding:var(--db-space-4);">Level 2</div>
+  <div class="db-surface db-elevation-3" style="padding:var(--db-space-4);">Level 3</div>
+</div>
 ```
 
 ### 64. Stack — flexbox layout
@@ -918,15 +936,9 @@ Visibility: `db-hide-mobile`, `db-show-mobile`, `db-hide-tablet`, `db-show-table
 
 ### 67. Theme Switcher — `.db-theme-switcher`
 Toggle button + categorized popover with 21 families + scheme row.
+An empty container lets `daub.js` create the palette icon, toggle and picker. The default placement is fixed near the viewport's bottom corner; documentation previews keep it inline.
 ```html
-<div class="db-theme-switcher" role="group" aria-label="Theme switcher">
-  <button class="db-theme-switcher__toggle" aria-label="Open theme picker" aria-expanded="false">
-    <!-- palette icon -->
-  </button>
-  <div class="db-theme-switcher__popover" id="db-theme-popover">
-    <!-- Auto-populated by daub.js with categorized family dots + scheme buttons -->
-  </div>
-</div>
+<div class="db-theme-switcher" role="group" aria-label="Theme switcher"></div>
 ```
 
 ### 68. Accent Picker — `.db-accent-picker`
@@ -982,20 +994,21 @@ Search box with icon, clear button (auto-shows when input has text).
 
 ### 73. Bottom Navigation — `.db-bottom-nav`
 Fixed mobile bottom bar. Hidden on desktop unless `db-bottom-nav--always`.
+Use `db-bottom-nav--static` for inline placement. The example uses both modifiers so it remains visible in a preview.
 Badge: `db-bottom-nav__badge`. Safe-area aware via `env(safe-area-inset-bottom)`.
 ```html
-<nav class="db-bottom-nav db-bottom-nav--always">
-  <a class="db-bottom-nav__item db-bottom-nav__item--active" href="#">
-    <svg>...</svg>
+<nav class="db-bottom-nav db-bottom-nav--always db-bottom-nav--static" aria-label="Mobile navigation">
+  <a class="db-bottom-nav__item db-bottom-nav__item--active" href="#" aria-current="page">
+    <i data-lucide="house" aria-hidden="true"></i>
     <span>Home</span>
   </a>
   <a class="db-bottom-nav__item" href="#">
-    <svg>...</svg>
+    <i data-lucide="search" aria-hidden="true"></i>
     <span>Search</span>
     <span class="db-bottom-nav__badge">3</span>
   </a>
   <a class="db-bottom-nav__item" href="#">
-    <svg>...</svg>
+    <i data-lucide="user" aria-hidden="true"></i>
     <span>Profile</span>
   </a>
 </nav>
@@ -1030,7 +1043,7 @@ Fires `db:chip:change` CustomEvent with `{ detail: { chip, value, active } }` �
 ```html
 <div class="db-checkbox-group" role="group" aria-labelledby="topics-label">
   <span class="db-checkbox-group__label" id="topics-label">Topics</span>
-  <label class="db-checkbox"><input class="db-checkbox__input" type="checkbox"><span class="db-checkbox__box"></span><span>Design</span></label>
+  <label class="db-checkbox"><input class="db-checkbox__input" type="checkbox"><span class="db-checkbox__box" aria-hidden="true"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Design</span></label>
   <span class="db-checkbox-group__helper">Choose all that apply.</span>
 </div>
 ```
@@ -1102,9 +1115,20 @@ Fires `db:chip:change` CustomEvent with `{ detail: { chip, value, active } }` �
 
 ## Chat Components
 
-Compose these five primitives for conversations. Your app owns messages, reactions,
-upload state, AI transport, and persistence. Compose input with existing Textarea,
-InputGroup, and Button controls. The local example lives at `chat-demo.html`.
+Compose the conversation primitives with ChatComposer for rich native input.
+Your app owns messages, reactions, upload state, AI transport, and persistence.
+The local example lives at `chat-demo.html`.
+
+The chat demo includes an expandable Thinking activity summary above assistant
+replies. It shows simulated request review, reply preparation, and response
+writing stages, then retains completed or stopped activity. For a model-backed
+chat, your app must supply public progress events or reasoning summaries from
+its provider. Display those summaries as text; do not expose hidden chain-of-thought
+or invent tool activity. Keep the stage history separate from the answer body.
+
+Each activity step has a type icon and expandable plain-text details. The demo
+also labels response attempts and offers Copy and stopped-response Retry controls.
+Retry keeps the original user turn and preserves unsent composer text and files.
 
 ### Message Scroller - `.db-message-scroller`
 
@@ -1146,6 +1170,14 @@ element ID. The scroller moves row IDs and anchors onto its `__item` wrappers.
 `avatar` accepts an initials string or `{initials, src}` with a safe image URL.
 `name`, `timestamp`, and `footer` accept plain text.
 
+For native HTML or React, add `db-message__footer--hover` to the footer to reveal
+timestamp and actions on message hover or keyboard focus. Touch devices keep it
+visible. Use a semantic `<time datetime="...">` followed by `.db-message__actions`;
+add icon buttons with `.db-message__action`, `tabindex="0"`, an accessible name,
+and a tooltip.
+The host supplies timestamps and click handlers. Adding more buttons extends the
+action row without changing the message layout.
+
 ### Bubble - `.db-bubble`
 
 Parts: `__content`, `__reactions`. Variants: `--primary` (default), `--secondary`,
@@ -1178,6 +1210,74 @@ selects `sm` or `xs` presentation. Put file size text in `description`.
 </div>
 ```
 
+### Chat Composer - `.db-chat-composer`
+
+Use an empty native form. Load `daub.js` alongside `daub.css` before mounting.
+`DAUB.init(parent)` enhances native roots from escaped `data-db-chat-options`
+JSON; `DAUB.createChatComposer(root, options)` merges explicit options over that
+attribute and returns the native controller. The controller owns its DOM slots.
+
+```html
+<form class="db-chat-composer" data-db-chat-options="{&quot;models&quot;:[{&quot;id&quot;:&quot;demo&quot;,&quot;label&quot;:&quot;Demo model (simulated)&quot;,&quot;efforts&quot;:[&quot;low&quot;,&quot;high&quot;]}],&quot;model&quot;:&quot;demo&quot;,&quot;approval&quot;:&quot;ask&quot;,&quot;mode&quot;:&quot;chat&quot;}"></form>
+```
+
+Declarative `ChatComposer` props: `models: [{id, label, efforts?: string[]}]`,
+`model`, `effort`, `approval: "ask"|"auto"`, `mode: "chat"|"plan"`,
+`actions: [{id, label, icon?, disabled?}]`,
+`capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?}`
+(boolean flags), `busy`, `placeholder`, and `id`. Default model labels are
+demo-only (simulated). Supply host model choices for a real engine. Queue, steer,
+attachments, approval, and browser-supported dictation default on; folders need
+browser support. Dictation starts through a user command.
+
+Slots: `__queue`, `__queued-item`, `__queued-text`, `__queued-actions`, `__panel`,
+`__attachments`, `__input`, `__toolbar`, `__status`, `__add`, `__add-menu`,
+`__file-input`, `__folder-input`, `__model`, `__effort`, `__approval`, `__mode`,
+`__goal`, `__dictation`, `__dictation-bar`, `__dictation-cancel`, `__send`,
+`__stop`, `__dropzone`. The queue sits outside the framed composer panel.
+
+Cancelable bubbling events: `db:chat-send` and `db:chat-steer` carry
+`detail.request`; `db:chat-stop` has no request; `db:chat-action` carries
+`detail.action`. Requests contain `id`, `text`, local `files: File[]`, `model`,
+`effort`, `approval`, `mode`, and optional `goal`. Call `event.preventDefault()`
+to retain a rejected send or steer draft/queued item. Informational events:
+`db:chat-queue` (request and queue updates), `db:chat-config` (model, effort,
+approval, mode, goal), `db:chat-dictation` (state and optional error).
+`db:chat-change` carries `detail.state` for host sidebar counts.
+
+Controller methods: `getState()`, `setBusy(boolean)`, `setStatus(string)`,
+`setDraft(string)`, `clearDraft()`, `attachFiles(File[])`, `getQueue()`, `takeNext()`,
+`removeQueued(id)`, `editQueued(id, text)`, `steerQueued(id)`, `setModel(id)`,
+`setEffort(value)`, `setMode(value)`, `setApproval(value)`, `setGoal(string|null)`,
+`startDictation()`, `stopDictation()`, `destroy()`. `getState()` returns text,
+files, queue, busy, model, effort, approval, mode, goal, and dictation state.
+The host toggles `setBusy` during responses and drains its queue through
+`takeNext`. The host owns transport, history, storage, and approval enforcement.
+Configuration describes intent, not access rights. Keep File objects local;
+only host action may read or upload them. `destroy()` cancels dictation,
+removes listeners, and revokes owned preview URLs.
+`clearDraft()` clears pending text and files, preserves the queue, and updates
+host counts through `db:chat-change`.
+
+React: `ChatComposer` renders an empty `data-db-react` form, escapes the same
+JSON options, and calls `window.DAUB.createChatComposer` in an effect. Load the
+native script before mounting. `ref` exposes the form; `onReady(controller)`
+exposes its handle. `onSend`, `onSteer`, `onStop`, `onAction`, `onQueue`,
+`onConfig`, `onDictation`, and `onChange` receive the native CustomEvent, including its
+`detail` and `preventDefault()`. Scalar props update through native setters;
+`updateOptions()` updates models, actions, capabilities, and placeholder without
+discarding drafts, Files, queue items, or preview ownership. Placeholder changes
+apply at once; structural changes wait until the active response unlocks.
+Disabling dictation aborts recognition at once, including during a response.
+Callback changes preserve the controller. Unmount destroys it. SSR needs no browser
+globals; the React wrapper supplies no separate draft or queue engine.
+`onChange` receives `CustomEvent<{state: ChatComposerState}>`, not a React form change
+event. Use `onReady(controller)` for `clearDraft()` and other native commands.
+
+```text
+ChatComposer(models, model, effort, approval, mode, actions, capabilities, busy, placeholder, id)
+```
+
 ### Marker - `.db-marker`
 
 Parts: `__icon`, `__content`. Variants: `--border`, `--separator`. Use `status:true`
@@ -1193,8 +1293,9 @@ Use `db-shimmer` on the content text for streaming status.
 
 ### JSON-Render and OpenUI
 
-The browser, local MCP, and cloud MCP expose the same five types. OpenUI signatures
-place `children` first; metadata accepts named arguments:
+The browser, local MCP, and cloud MCP expose the same six chat types. OpenUI
+places `children` first on the content families. ChatComposer takes native
+options with no declarative children; metadata accepts named arguments:
 
 ```text
 MessageScroller(children, height, autoScroll, defaultScrollPosition, peek)
@@ -1202,6 +1303,7 @@ Message(children, align, avatar, name, timestamp, messageId, scrollAnchor, foote
 Bubble(children, content, variant, align, reactions)
 Attachment(children, name, description, src, alt, href, size, state, progress, orientation)
 Marker(children, content, icon, variant, status, busy)
+ChatComposer(models, model, effort, approval, mode, actions, capabilities, busy, placeholder, id)
 ```
 
 ```text
@@ -1629,7 +1731,7 @@ MessageAvatar, MessageContent, MessageHeader, MessageFooter, MessageGroup; Bubbl
 BubbleContent, BubbleReactions, BubbleGroup, BubbleCollapsible; Attachment,
 AttachmentMedia, AttachmentContent, AttachmentTitle, AttachmentDescription,
 AttachmentActions, AttachmentAction, AttachmentTrigger, AttachmentGroup,
-AttachmentProgress; Marker, MarkerIcon, MarkerContent.
+AttachmentProgress; Marker, MarkerIcon, MarkerContent; ChatComposer.
 
 Hooks: useControllable, useToast, useEscapeKey, useOutsideClick, useFocusTrap,
 useMessageScroller, useMessageScrollerScrollable, useMessageScrollerVisibility.

@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chat Components | DAUB</title>
-  <meta name="description" content="A working DAUB conversation with streaming messages, attachments, and scroll controls.">
+  <meta name="description" content="A DAUB chat workspace with queued messages, steering, local attachments, dictation, and model controls.">
   <link rel="stylesheet" href="daub.css">
   <link rel="stylesheet" href="chat-demo.css">
   <script src="assets/lucide.min.js" defer></script>
   <script src="daub.js" defer></script>
+  <script src="chat-demo-shell.js" defer></script>
   <script src="chat-demo.js" defer></script>
 </head>
 <body>
@@ -18,14 +19,44 @@
     <a href="components.html#message-scroller" class="chat-demo-docs">Components <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
     <div class="db-theme-switcher" aria-label="Theme switcher"></div>
   </header>
+  <div class="chat-demo-shell">
+  <button class="chat-demo-nav-backdrop" id="chat-nav-backdrop" type="button" aria-label="Close workspace navigation" hidden></button>
+  <aside class="chat-demo-sidebar" id="chat-sidebar" aria-label="Chat workspace">
+    <div class="chat-demo-sidebar-heading"><span>Workspace</span><button class="db-btn db-btn--ghost db-btn--sm db-btn--icon" data-demo-action="new" type="button" aria-label="New conversation" title="New conversation"><i data-lucide="square-pen" aria-hidden="true"></i></button></div>
+    <nav aria-label="Chat views">
+      <button class="chat-demo-nav-item" data-chat-view="conversation" type="button" aria-current="page"><i data-lucide="messages-square" aria-hidden="true"></i><span id="chat-nav-title">Release review</span><i id="chat-pin-indicator" data-lucide="pin" aria-hidden="true" hidden></i></button>
+      <button class="chat-demo-nav-item" data-chat-view="activity" type="button"><i data-lucide="list-checks" aria-hidden="true"></i><span>Activity</span><span id="chat-activity-count" class="chat-demo-nav-count">3</span></button>
+      <button class="chat-demo-nav-item" data-chat-view="files" type="button"><i data-lucide="files" aria-hidden="true"></i><span>Files</span><span id="chat-files-count" class="chat-demo-nav-count">0</span></button>
+      <button class="chat-demo-nav-item" data-chat-view="queue" type="button"><i data-lucide="list-start" aria-hidden="true"></i><span>Queue</span><span id="chat-queue-count" class="chat-demo-nav-count">0</span></button>
+    </nav>
+    <div class="chat-demo-sidebar-section">Context</div>
+    <button class="chat-demo-nav-item" data-demo-action="context" type="button"><i data-lucide="globe" aria-hidden="true"></i><span>Add context</span></button>
+    <button class="chat-demo-nav-item" data-demo-action="sketch" type="button"><i data-lucide="pencil" aria-hidden="true"></i><span>Sketch</span></button>
+    <div class="chat-demo-sidebar-footer">Local demo workspace</div>
+  </aside>
   <main class="chat-demo">
     <div class="chat-demo-titlebar">
-      <div><h1>Release review</h1><span class="chat-demo-caption">Demo conversation</span></div>
+      <button class="db-btn db-btn--ghost db-btn--sm db-btn--icon chat-demo-nav-toggle" id="chat-nav-toggle" type="button" aria-label="Show workspace navigation" aria-controls="chat-sidebar" aria-expanded="false" title="Workspace navigation"><i data-lucide="panel-left" aria-hidden="true"></i></button>
+      <div class="chat-demo-title"><h1 id="chat-title">Release review</h1><span class="chat-demo-caption">Demo conversation</span></div>
       <div class="chat-demo-tools">
         <button id="load-history" class="db-btn db-btn--ghost db-btn--sm" type="button" aria-label="Load earlier messages" title="Load earlier messages"><i data-lucide="history" aria-hidden="true"></i><span>Earlier messages</span></button>
         <button id="reset-chat" class="db-btn db-btn--ghost db-btn--sm db-btn--icon chat-demo-icon-button" type="button" aria-label="Reset conversation" title="Reset conversation"><i data-lucide="rotate-ccw" aria-hidden="true"></i></button>
+        <div class="db-dropdown">
+          <button class="db-btn db-btn--ghost db-btn--sm db-btn--icon db-dropdown__trigger chat-demo-icon-button" type="button" aria-label="Conversation menu" title="Conversation menu"><i data-lucide="ellipsis" aria-hidden="true"></i></button>
+          <div class="db-dropdown__content db-dropdown__content--right" role="menu">
+            <button class="db-dropdown__item" data-demo-action="rename" type="button"><i data-lucide="pencil" aria-hidden="true"></i>Rename</button>
+            <button class="db-dropdown__item" data-demo-action="pin" type="button"><i data-lucide="pin" aria-hidden="true"></i><span id="chat-pin-label">Pin conversation</span></button>
+            <button class="db-dropdown__item" data-demo-action="new" type="button"><i data-lucide="square-pen" aria-hidden="true"></i>New conversation</button>
+            <button class="db-dropdown__item" data-demo-action="fork" type="button"><i data-lucide="git-fork" aria-hidden="true"></i>Fork conversation</button>
+            <hr class="db-dropdown__separator">
+            <button class="db-dropdown__item" data-demo-action="copy" type="button"><i data-lucide="copy" aria-hidden="true"></i>Copy transcript</button>
+            <button class="db-dropdown__item" data-demo-action="export" type="button"><i data-lucide="download" aria-hidden="true"></i>Export transcript</button>
+            <button class="db-dropdown__item" data-demo-action="clear" type="button"><i data-lucide="trash-2" aria-hidden="true"></i>Clear conversation</button>
+          </div>
+        </div>
       </div>
     </div>
+    <section class="chat-demo-view" id="chat-view-panel" aria-live="polite" hidden></section>
     <div class="db-message-scroller" id="chat-scroller" data-db-auto-scroll="true" data-db-scroll-position="end" data-db-scroll-peek="32">
       <div class="db-message-scroller__viewport db-scroll-fade" tabindex="0" aria-label="Release review conversation">
         <div class="db-message-scroller__content" id="chat-messages" role="log" aria-live="polite" aria-relevant="additions" aria-label="Messages">
@@ -40,17 +71,13 @@
       </div>
       <button class="db-message-scroller__button" data-db-scroll-to="end" type="button" aria-label="Scroll to latest message" title="Scroll to latest message"><i data-lucide="arrow-down" aria-hidden="true"></i></button>
     </div>
-    <form class="chat-demo-composer" id="chat-form">
-      <div id="pending-attachments" class="db-attachment-group" hidden></div>
-      <label class="db-sr-only" for="chat-prompt">Message</label>
-      <textarea id="chat-prompt" rows="1" placeholder="Ask about the release..." maxlength="4000"></textarea>
-      <div class="chat-demo-composer-bar">
-        <input id="chat-file" type="file" multiple hidden>
-        <button id="attach-file" class="db-btn db-btn--ghost db-btn--sm db-btn--icon chat-demo-icon-button" type="button" aria-label="Attach files" title="Attach files"><i data-lucide="paperclip" aria-hidden="true"></i></button>
-        <span id="chat-status" class="chat-demo-status" role="status">Ready</span>
-        <button id="chat-send" class="db-btn db-btn--primary db-btn--sm db-btn--icon chat-demo-icon-button" type="submit" aria-label="Send message" title="Send message" disabled><i data-lucide="arrow-up" aria-hidden="true"></i></button>
-      </div>
-    </form>
+    <form class="db-chat-composer chat-demo-composer" id="chat-form" data-db-chat-options='{"placeholder":"Ask about the release...","capabilities":{"folders":true},"actions":[{"id":"context","label":"Browser or text context","icon":"globe"},{"id":"goal","label":"Set goal","icon":"target"},{"id":"plan","label":"Plan mode","icon":"lightbulb"},{"id":"sketch","label":"Draw sketch","icon":"pencil"},{"id":"document","label":"Attach document","icon":"file-text"},{"id":"pdf","label":"Attach PDF","icon":"file-text"},{"id":"spreadsheet","label":"Attach spreadsheet","icon":"table"},{"id":"side-chat","label":"Open in side chat","icon":"messages-square"}]}'></form>
   </main>
+  </div>
+  <input id="chat-extra-file" type="file" multiple hidden>
+  <div class="db-modal-overlay" id="chat-goal-modal" aria-hidden="true"><div class="db-modal" role="dialog" aria-modal="true" aria-labelledby="chat-goal-title"><div class="db-modal__header"><h2 class="db-modal__title" id="chat-goal-title">Set goal</h2><button class="db-modal__close" type="button" aria-label="Close goal dialog">&times;</button></div><form id="chat-goal-form"><div class="db-modal__body"><label class="db-label" for="chat-goal-text">Goal</label><textarea class="db-textarea" id="chat-goal-text" rows="3" maxlength="2000" required></textarea></div><div class="db-modal__footer"><button class="db-btn db-btn--secondary db-btn--sm" type="button" data-db-dismiss>Cancel</button><button class="db-btn db-btn--primary db-btn--sm" type="submit">Set goal</button></div></form></div></div>
+  <div class="db-modal-overlay" id="chat-rename-modal" aria-hidden="true"><div class="db-modal" role="dialog" aria-modal="true" aria-labelledby="chat-rename-title"><div class="db-modal__header"><h2 class="db-modal__title" id="chat-rename-title">Rename conversation</h2><button class="db-modal__close" type="button" aria-label="Close rename dialog">&times;</button></div><form id="chat-rename-form"><div class="db-modal__body"><label class="db-label" for="chat-rename-input">Name</label><input class="db-input" id="chat-rename-input" maxlength="80" required></div><div class="db-modal__footer"><button class="db-btn db-btn--secondary db-btn--sm" type="button" data-db-dismiss>Cancel</button><button class="db-btn db-btn--primary db-btn--sm" type="submit">Rename</button></div></form></div></div>
+  <div class="db-modal-overlay" id="chat-context-modal" aria-hidden="true"><div class="db-modal" role="dialog" aria-modal="true" aria-labelledby="chat-context-title"><div class="db-modal__header"><h2 class="db-modal__title" id="chat-context-title">Add context</h2><button class="db-modal__close" type="button" aria-label="Close context dialog">&times;</button></div><form id="chat-context-form"><div class="db-modal__body"><label class="db-label" for="chat-context-text">Context</label><textarea class="db-textarea" id="chat-context-text" rows="5" maxlength="12000" required></textarea><label class="db-label" for="chat-context-url">Source URL (optional)</label><input class="db-input" id="chat-context-url" type="url"></div><div class="db-modal__footer"><button class="db-btn db-btn--secondary db-btn--sm" type="button" data-db-dismiss>Cancel</button><button class="db-btn db-btn--primary db-btn--sm" type="submit">Attach context</button></div></form></div></div>
+  <div class="db-modal-overlay" id="chat-sketch-modal" aria-hidden="true"><div class="db-modal" role="dialog" aria-modal="true" aria-labelledby="chat-sketch-title"><div class="db-modal__header"><h2 class="db-modal__title" id="chat-sketch-title">Sketch</h2><button class="db-modal__close" type="button" aria-label="Close sketch dialog">&times;</button></div><div class="db-modal__body"><div class="chat-demo-sketch-tools"><button class="db-btn db-btn--ghost db-btn--sm db-btn--icon" id="chat-sketch-undo" type="button" aria-label="Undo stroke" title="Undo stroke"><i data-lucide="undo-2" aria-hidden="true"></i></button><button class="db-btn db-btn--ghost db-btn--sm db-btn--icon" id="chat-sketch-clear" type="button" aria-label="Clear sketch" title="Clear sketch"><i data-lucide="trash-2" aria-hidden="true"></i></button><label class="db-sr-only" for="chat-sketch-color">Brush color</label><input id="chat-sketch-color" type="color" value="#222222" aria-label="Brush color"><label class="db-sr-only" for="chat-sketch-width">Brush width</label><input id="chat-sketch-width" type="range" min="2" max="16" value="4" aria-label="Brush width"></div><canvas id="chat-sketch-canvas" width="960" height="540" aria-label="Sketch canvas"></canvas></div><div class="db-modal__footer"><button class="db-btn db-btn--secondary db-btn--sm" type="button" data-db-dismiss>Cancel</button><button class="db-btn db-btn--primary db-btn--sm" id="chat-sketch-attach" type="button">Attach sketch</button></div></div></div>
 </body>
 </html>

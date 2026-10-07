@@ -74,6 +74,7 @@ const COMP_PROPS = {
   Bubble: 'children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled)',
   Attachment: 'children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical"',
   Marker: 'children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool',
+  ChatComposer: 'models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: "ask"|"auto", mode: "chat"|"plan", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights',
   Image: 'src: string, alt: string, width: number, height: number',
   Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
   Progress: 'value: number, indeterminate: bool',
@@ -107,7 +108,7 @@ const COMP_CATEGORIES = [
   ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette', 'PreviewCard']],
   ['Layout Utilities', ['Accordion', 'Collapsible', 'Resizable', 'DatePicker']],
   ['Dashboard', ['StatCard', 'ChartCard']],
-  ['Chat', ['MessageScroller', 'Message', 'Bubble', 'Attachment', 'Marker']],
+  ['Chat', ['MessageScroller', 'Message', 'Bubble', 'Attachment', 'Marker', 'ChatComposer']],
   ['Custom', ['CustomHTML']],
 ];
 
@@ -488,6 +489,7 @@ const COMP_SCHEMA = {
   Bubble: ["children","content","variant","align","reactions"],
   Attachment: ["children","name","description","src","alt","href","size","state","progress","orientation"],
   Marker: ["children","content","icon","variant","status","busy"],
+  ChatComposer: ["models","model","effort","approval","mode","actions","capabilities","busy","placeholder","id"],
   Image: ["src","alt","width","height"],
   Alert: ["type","title","message"],
   Progress: ["value","indeterminate"],
@@ -1099,6 +1101,7 @@ async function callOpenRouter(model, messages, apiKey, format) {
 // ---- Component picker: Jev decision model via choose.js (same rules as the playground) ----
 
 const COMP_PURPOSE = {
+  ChatComposer: 'Native rich message composer with local attachments, queue controls, model and effort selection, approval intent, plan mode, and user-started dictation.',
   MessageScroller: 'Scrollable conversation thread with message anchors and scroll-to-start/end controls.',
   Message: 'Conversation message row with author, avatar, timestamp, alignment, and delivery metadata.',
   Bubble: 'Chat message content bubble with variants, alignment, and reaction controls.',

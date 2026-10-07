@@ -520,9 +520,9 @@
       "modifiers": [],
       "children": [],
       "js": true,
-      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-modal-trigger=\"overlay-example\">Open release notes</button>\n<div class=\"db-modal-overlay\" id=\"overlay-example\" aria-hidden=\"true\">\n  <div class=\"db-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"overlay-example-title\">\n    <div class=\"db-modal__header\"><h2 class=\"db-modal__title\" id=\"overlay-example-title\">Release notes</h2><button type=\"button\" class=\"db-modal__close\" aria-label=\"Close dialog\">&times;</button></div>\n    <div class=\"db-modal__body\">Version 3.20 includes 84 components and 21 theme families.</div>\n    <div class=\"db-modal__footer\"><button type=\"button\" class=\"db-btn db-btn--secondary\" data-action=\"cancel\">Close</button></div>\n  </div>\n</div>",
+      "html": "<button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-modal-trigger=\"overlay-example\">Open release notes</button>\n<div class=\"db-modal-overlay\" id=\"overlay-example\" aria-hidden=\"true\">\n  <div class=\"db-modal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"overlay-example-title\">\n    <div class=\"db-modal__header\"><h2 class=\"db-modal__title\" id=\"overlay-example-title\">Release notes</h2><button type=\"button\" class=\"db-modal__close\" aria-label=\"Close dialog\">&times;</button></div>\n    <div class=\"db-modal__body\">The team completed the navigation and chat updates for this release.</div>\n    <div class=\"db-modal__footer\"><button type=\"button\" class=\"db-btn db-btn--secondary\" data-db-dismiss>Close</button></div>\n  </div>\n</div>",
       "skeleton": "db-modal-overlay#id[aria-hidden] > db-modal > __header + __body + __footer",
-      "notes": "Container for db-modal. Must have an id attribute for JS API."
+      "notes": "Backdrop container for db-modal. Keep the launcher outside the hidden overlay and match data-db-modal-trigger to its id. The close button, footer, backdrop, and Escape dismiss this example."
     },
     {
       "name": "Alert Dialog",
@@ -687,7 +687,7 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-toast db-toast--success\" role=\"status\">\n  <i class=\"db-toast__icon\" data-lucide=\"circle-check\" aria-hidden=\"true\"></i>\n  <div class=\"db-toast__content\"><strong class=\"db-toast__title\">Saved</strong><p class=\"db-toast__message\">Your profile changes are ready.</p></div>\n</div>",
+      "html": "<div class=\"db-toast db-toast--success\" role=\"status\">\n  <i class=\"db-toast__icon\" data-lucide=\"circle-check\" aria-hidden=\"true\"></i>\n  <div class=\"db-toast__content\"><strong class=\"db-toast__title\">Saved</strong><p class=\"db-toast__message\">Your profile changes are ready.</p></div>\n</div>\n<button type=\"button\" class=\"db-btn db-btn--secondary db-btn--sm db-mt-4\" onclick=\"DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 4000 })\">Show toast</button>",
       "notes": "HTML shows toast anatomy. Create timed notifications with DAUB.toast('msg') or DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 4000 }). Types: info, success, warning, error."
     },
     {
@@ -1016,7 +1016,8 @@
       "category": "navigation",
       "element": "aside",
       "modifiers": [
-        "--collapsed"
+        "--collapsed",
+        "--expanded"
       ],
       "children": [
         {
@@ -1052,7 +1053,7 @@
       ],
       "js": true,
       "html": "<aside class=\"db-sidebar\">\n  <div class=\"db-sidebar__header\">\n    <h3>App Name</h3>\n    <button type=\"button\" class=\"db-sidebar__toggle\" aria-label=\"Toggle sidebar\"><i data-lucide=\"panel-left\" aria-hidden=\"true\"></i></button>\n  </div>\n  <div class=\"db-sidebar__section\">\n    <div class=\"db-sidebar__label\">Main</div>\n    <a class=\"db-sidebar__item db-sidebar__item--active\" data-tooltip=\"Dashboard\" href=\"/\" aria-current=\"page\" aria-label=\"Dashboard\"><i data-lucide=\"layout-dashboard\" aria-hidden=\"true\"></i><span>Dashboard</span></a>\n  </div>\n</aside>",
-      "notes": "Collapsible via --collapsed. Items need data-tooltip for collapsed hover labels. JS: DAUB.toggleSidebar(el)."
+      "notes": "Starts as an icon rail on phones. Toggle with DAUB.toggleSidebar(el), or use --collapsed / --expanded. data-tooltip supplies labels on hover and keyboard focus."
     },
     {
       "name": "Bottom Navigation",
@@ -1060,7 +1061,8 @@
       "category": "navigation",
       "element": "nav",
       "modifiers": [
-        "--always"
+        "--always",
+        "--static"
       ],
       "children": [
         {
@@ -1075,8 +1077,8 @@
         }
       ],
       "js": false,
-      "html": "<nav class=\"db-bottom-nav db-bottom-nav--always\" aria-label=\"Mobile navigation\">\n  <a class=\"db-bottom-nav__item db-bottom-nav__item--active\" href=\"/\" aria-current=\"page\"><i data-lucide=\"house\" aria-hidden=\"true\"></i><span>Home</span></a>\n  <a class=\"db-bottom-nav__item\" href=\"/components.html\"><i data-lucide=\"blocks\" aria-hidden=\"true\"></i><span>Components</span><span class=\"db-bottom-nav__badge\">3</span></a>\n</nav>",
-      "notes": "Fixed mobile bottom bar. Hidden on desktop unless --always. Safe-area aware."
+      "html": "<nav class=\"db-bottom-nav db-bottom-nav--always db-bottom-nav--static\" aria-label=\"Mobile navigation\">\n  <a class=\"db-bottom-nav__item db-bottom-nav__item--active\" href=\"/\" aria-current=\"page\"><i data-lucide=\"house\" aria-hidden=\"true\"></i><span>Home</span></a>\n  <a class=\"db-bottom-nav__item\" href=\"/components.html\"><i data-lucide=\"blocks\" aria-hidden=\"true\"></i><span>Components</span><span class=\"db-bottom-nav__badge\">3</span></a>\n</nav>",
+      "notes": "Fixed mobile bottom bar. Hidden on desktop unless --always. Use --static for inline placement, as in this preview. Safe-area aware."
     },
     {
       "name": "Tooltip",
@@ -1489,8 +1491,8 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-carousel\">\n  <div class=\"db-carousel__track\">\n    <div class=\"db-carousel__slide\"><h3 class=\"db-h3\">Project Aurora</h3><p class=\"db-body\">Design review is ready.</p></div>\n    <div class=\"db-carousel__slide\"><h3 class=\"db-h3\">Project Birch</h3><p class=\"db-body\">The release is scheduled for Friday.</p></div>\n  </div>\n  <button type=\"button\" class=\"db-carousel__btn db-carousel__btn--prev\" aria-label=\"Previous slide\">&lsaquo;</button>\n  <button type=\"button\" class=\"db-carousel__btn db-carousel__btn--next\" aria-label=\"Next slide\">&rsaquo;</button>\n  <div class=\"db-carousel__dots\">\n    <button type=\"button\" class=\"db-carousel__dot db-carousel__dot--active\" aria-label=\"Go to slide 1\" aria-current=\"true\"></button>\n    <button type=\"button\" class=\"db-carousel__dot\" aria-label=\"Go to slide 2\"></button>\n  </div>\n</div>",
-      "notes": "JS handles slide navigation, dot sync, and swipe."
+      "html": "<div class=\"db-carousel\" role=\"region\" aria-roledescription=\"carousel\" aria-label=\"Project updates\" style=\"width:100%;\">\n  <div class=\"db-carousel__track\">\n    <div class=\"db-carousel__slide\" role=\"group\" aria-roledescription=\"slide\" aria-label=\"1 of 2\" style=\"min-height:180px;padding:24px 60px;display:flex;flex-direction:column;justify-content:center;\"><h3 class=\"db-h3\">Project Aurora</h3><p class=\"db-body\">Design review is ready.</p></div>\n    <div class=\"db-carousel__slide\" role=\"group\" aria-roledescription=\"slide\" aria-label=\"2 of 2\" style=\"min-height:180px;padding:24px 60px;display:flex;flex-direction:column;justify-content:center;\"><h3 class=\"db-h3\">Project Birch</h3><p class=\"db-body\">The release is scheduled for Friday.</p></div>\n  </div>\n  <button type=\"button\" class=\"db-carousel__btn db-carousel__btn--prev\" aria-label=\"Previous slide\" style=\"top:calc(50% - var(--db-space-3) - 4px);\"><i data-lucide=\"chevron-left\" aria-hidden=\"true\"></i></button>\n  <button type=\"button\" class=\"db-carousel__btn db-carousel__btn--next\" aria-label=\"Next slide\" style=\"top:calc(50% - var(--db-space-3) - 4px);\"><i data-lucide=\"chevron-right\" aria-hidden=\"true\"></i></button>\n  <div class=\"db-carousel__dots\">\n    <button type=\"button\" class=\"db-carousel__dot db-carousel__dot--active\" aria-label=\"Go to slide 1\" aria-current=\"true\"></button>\n    <button type=\"button\" class=\"db-carousel__dot\" aria-label=\"Go to slide 2\"></button>\n  </div>\n</div>",
+      "notes": "JS handles slide navigation, dot sync, and swipe. Text slides in this example reserve space for the overlay arrows."
     },
     {
       "name": "CSS Bar Chart",
@@ -1594,8 +1596,8 @@
         }
       ],
       "js": true,
-      "html": "<div class=\"db-resizable\" style=\"width:300px;height:200px;\">\n  <h3 class=\"db-h3\">Project notes</h3><p class=\"db-body\">Review the homepage draft before Friday.</p>\n  <div class=\"db-resizable__handle db-resizable__handle--right\"></div>\n  <div class=\"db-resizable__handle db-resizable__handle--bottom\"></div>\n</div>",
-      "notes": "Handle positions: --right, --bottom. JS enables drag-to-resize."
+      "html": "<div class=\"db-resizable\" style=\"width:320px;height:220px;min-width:min(240px,100%);max-width:min(480px,100%);min-height:180px;max-height:320px;padding:16px 24px 24px 16px;border:1px solid var(--db-sand);border-radius:var(--db-radius-2);background:var(--db-white);\">\n  <div class=\"db-scroll-area db-scroll-area--vertical\" tabindex=\"0\" role=\"region\" aria-label=\"Project notes\" style=\"height:100%;\">\n    <h3 class=\"db-h3\">Project notes</h3>\n    <p class=\"db-body db-body--sm\" style=\"margin-bottom:12px;\">Review the homepage draft before Friday. Ada owns the copy and Grace owns the illustrations.</p>\n    <p class=\"db-body db-body--sm\" style=\"margin-bottom:12px;\">Confirm the navigation labels with Lin and attach the mobile screenshots to the review.</p>\n    <p class=\"db-body db-body--sm\">Publish the approved draft on Monday after the team checks the signup flow.</p>\n  </div>\n  <div class=\"db-resizable__handle db-resizable__handle--right\" style=\"background:var(--db-sand);\"><span aria-hidden=\"true\" style=\"position:absolute;top:50%;left:2px;width:2px;height:24px;transform:translateY(-50%);background:var(--db-warm-gray);\"></span></div>\n  <div class=\"db-resizable__handle db-resizable__handle--bottom\" style=\"background:var(--db-sand);\"><span aria-hidden=\"true\" style=\"position:absolute;left:50%;top:2px;width:24px;height:2px;transform:translateX(-50%);background:var(--db-warm-gray);\"></span></div>\n</div>",
+      "notes": "Handle positions: --right, --bottom. JS enables pointer and arrow-key resizing. This example adds inline size bounds and visible grips; its notes scroll within the panel."
     },
     {
       "name": "Separator",
@@ -1639,7 +1641,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-scroll-area db-scroll-area--vertical\" tabindex=\"0\" role=\"region\" aria-label=\"Recent activity\" style=\"max-height:120px;\">\n  <div class=\"db-list\">\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Ada updated the project</div><div class=\"db-list__secondary\">Today at 09:20</div></div></div>\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Grace uploaded the report</div><div class=\"db-list__secondary\">Today at 08:45</div></div></div>\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Lin reviewed the proposal</div><div class=\"db-list__secondary\">Yesterday at 16:10</div></div></div>\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Team completed onboarding</div><div class=\"db-list__secondary\">Yesterday at 14:30</div></div></div>\n  </div>\n</div>",
+      "html": "<div class=\"db-scroll-area db-scroll-area--vertical\" tabindex=\"0\" role=\"region\" aria-label=\"Recent activity\" style=\"width:100%;max-width:360px;max-height:120px;border:1px solid var(--db-sand);border-radius:var(--db-radius-2);\">\n  <div class=\"db-list\">\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Ada updated the project</div><div class=\"db-list__secondary\">Today at 09:20</div></div></div>\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Grace uploaded the report</div><div class=\"db-list__secondary\">Today at 08:45</div></div></div>\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Lin reviewed the proposal</div><div class=\"db-list__secondary\">Yesterday at 16:10</div></div></div>\n    <div class=\"db-list__item\"><div class=\"db-list__content\"><div class=\"db-list__title\">Team completed onboarding</div><div class=\"db-list__secondary\">Yesterday at 14:30</div></div></div>\n  </div>\n</div>",
       "notes": "Styled scrollbar container. --horizontal for horizontal scroll only."
     },
     {
@@ -1670,8 +1672,8 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-surface\">Base</div>\n<div class=\"db-surface--raised\">Raised</div>\n<div class=\"db-surface--inset\">Inset</div>",
-      "notes": "Base surface with variants for depth/shadow effects."
+      "html": "<div class=\"db-grid db-grid--2 db-gap-4\">\n  <div class=\"db-surface\" style=\"padding:var(--db-space-4);\">Base</div>\n  <div class=\"db-surface db-surface--raised\" style=\"padding:var(--db-space-4);\">Raised</div>\n  <div class=\"db-surface db-surface--inset\" style=\"padding:var(--db-space-4);\">Inset</div>\n  <div class=\"db-surface db-surface--pressed\" style=\"padding:var(--db-space-4);\">Pressed</div>\n</div>",
+      "notes": "Background, radius, and depth styles. Add padding and spacing when composing a panel."
     },
     {
       "name": "Elevation",
@@ -1685,8 +1687,8 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-elevation-1\">Level 1</div>\n<div class=\"db-elevation-2\">Level 2</div>\n<div class=\"db-elevation-3\">Level 3</div>",
-      "notes": "Shadow utility classes. Three levels of elevation."
+      "html": "<div class=\"db-grid db-grid--3 db-gap-4\">\n  <div class=\"db-surface db-elevation-1\" style=\"padding:var(--db-space-4);\">Level 1</div>\n  <div class=\"db-surface db-elevation-2\" style=\"padding:var(--db-space-4);\">Level 2</div>\n  <div class=\"db-surface db-elevation-3\" style=\"padding:var(--db-space-4);\">Level 3</div>\n</div>",
+      "notes": "Shadow-only utility classes with three levels of elevation. This example composes padded surfaces."
     },
     {
       "name": "Prose",
@@ -1715,7 +1717,7 @@
       ],
       "children": [],
       "js": false,
-      "html": "<div class=\"db-container\">960px centered</div>\n<div class=\"db-container db-container--wide\">1200px centered</div>",
+      "html": "<div style=\"width:100%;padding:16px 0;border:1px dashed var(--db-sand);background:var(--db-cream);\">\n  <div class=\"db-container db-container--narrow\" style=\"padding-top:16px;padding-bottom:16px;border:1px solid var(--db-sand);background:var(--db-white);\">\n    <h3 class=\"db-h3\">Project brief</h3>\n    <p class=\"db-body\">The team will review the homepage copy, navigation and signup flow before Monday's release.</p>\n  </div>\n</div>",
       "notes": "Centered max-width container. Default 960px, --wide 1200px, --narrow 640px."
     },
     {
@@ -1771,7 +1773,7 @@
         }
       ],
       "js": false,
-      "html": "<div class=\"db-checkbox-group\" role=\"group\" aria-labelledby=\"topics-label\">\n  <span class=\"db-checkbox-group__label\" id=\"topics-label\">Topics</span>\n  <label class=\"db-checkbox\"><input class=\"db-checkbox__input\" type=\"checkbox\"><span class=\"db-checkbox__box\"></span><span>Design</span></label>\n  <label class=\"db-checkbox\"><input class=\"db-checkbox__input\" type=\"checkbox\"><span class=\"db-checkbox__box\"></span><span>Engineering</span></label>\n  <span class=\"db-checkbox-group__helper\">Choose all that apply.</span>\n</div>",
+      "html": "<div class=\"db-checkbox-group\" role=\"group\" aria-labelledby=\"topics-label\">\n  <span class=\"db-checkbox-group__label\" id=\"topics-label\">Topics</span>\n  <label class=\"db-checkbox\"><input class=\"db-checkbox__input\" type=\"checkbox\"><span class=\"db-checkbox__box\" aria-hidden=\"true\"><svg aria-hidden=\"true\" focusable=\"false\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span><span>Design</span></label>\n  <label class=\"db-checkbox\"><input class=\"db-checkbox__input\" type=\"checkbox\"><span class=\"db-checkbox__box\" aria-hidden=\"true\"><svg aria-hidden=\"true\" focusable=\"false\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span><span>Engineering</span></label>\n  <span class=\"db-checkbox-group__helper\">Choose all that apply.</span>\n</div>",
       "notes": "Use --inline for horizontal checkbox sets."
     },
     {
@@ -2024,6 +2026,42 @@
       "js": false,
       "html": "<div class=\"db-marker\" role=\"status\">\n  <span class=\"db-marker__icon\" aria-hidden=\"true\"><i data-lucide=\"circle-check\"></i></span>\n  <span class=\"db-marker__content\">Reviewed 4 files</span>\n</div>",
       "notes": "Inline activity, bordered status row, or centered date separator. Use role=status for progress updates and db-shimmer for busy text; reduced motion disables the animation."
+    },
+    {
+      "name": "Chat Composer",
+      "class": "db-chat-composer",
+      "category": "conversation",
+      "element": "form",
+      "modifiers": [],
+      "children": [
+        { "class": "db-chat-composer__queue", "element": "div", "required": false },
+        { "class": "db-chat-composer__queued-item", "element": "div", "required": false },
+        { "class": "db-chat-composer__queued-text", "element": "div", "required": false },
+        { "class": "db-chat-composer__queued-actions", "element": "div", "required": false },
+        { "class": "db-chat-composer__panel", "element": "div", "required": false },
+        { "class": "db-chat-composer__attachments", "element": "div", "required": false },
+        { "class": "db-chat-composer__input", "element": "textarea", "required": false },
+        { "class": "db-chat-composer__toolbar", "element": "div", "required": false },
+        { "class": "db-chat-composer__status", "element": "div", "required": false },
+        { "class": "db-chat-composer__add", "element": "button", "required": false },
+        { "class": "db-chat-composer__add-menu", "element": "div", "required": false },
+        { "class": "db-chat-composer__file-input", "element": "input", "required": false },
+        { "class": "db-chat-composer__folder-input", "element": "input", "required": false },
+        { "class": "db-chat-composer__model", "element": "select", "required": false },
+        { "class": "db-chat-composer__effort", "element": "select", "required": false },
+        { "class": "db-chat-composer__approval", "element": "select", "required": false },
+        { "class": "db-chat-composer__mode", "element": "select", "required": false },
+        { "class": "db-chat-composer__goal", "element": "input", "required": false },
+        { "class": "db-chat-composer__dictation", "element": "button", "required": false },
+        { "class": "db-chat-composer__dictation-bar", "element": "div", "required": false },
+        { "class": "db-chat-composer__dictation-cancel", "element": "button", "required": false },
+        { "class": "db-chat-composer__send", "element": "button", "required": false },
+        { "class": "db-chat-composer__stop", "element": "button", "required": false },
+        { "class": "db-chat-composer__dropzone", "element": "div", "required": false }
+      ],
+      "js": true,
+      "html": "<form class=\"db-chat-composer\" data-db-chat-options=\"{&quot;models&quot;:[{&quot;id&quot;:&quot;demo&quot;,&quot;label&quot;:&quot;Demo model (simulated)&quot;,&quot;efforts&quot;:[&quot;low&quot;,&quot;high&quot;]}],&quot;model&quot;:&quot;demo&quot;,&quot;approval&quot;:&quot;ask&quot;,&quot;mode&quot;:&quot;chat&quot;}\"></form>",
+      "notes": "Requires daub.js and daub.css. DAUB.init() populates an empty native form from escaped data-db-chat-options JSON. Native API: DAUB.createChatComposer(root, options). Default models are demo-only (simulated). The host handles cancelable db:chat-send, db:chat-steer, db:chat-stop, and db:chat-action events and owns transport, uploads, approval enforcement, and persistence. Keep File objects local. Configuration describes intent, not access rights. React roots carry data-db-react and require an explicit controller call."
     },
     {
       "name": "Theme Switcher",

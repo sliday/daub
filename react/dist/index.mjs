@@ -1,5 +1,5 @@
 import * as f2 from 'react';
-import { forwardRef, createContext, useRef, useContext, useImperativeHandle, useId, useState, useEffect, Children, useCallback, useMemo, cloneElement, isValidElement, Fragment as Fragment$1, createElement } from 'react';
+import { forwardRef, createContext, useRef, useContext, useImperativeHandle, useId, useEffect, useState, Children, useCallback, useMemo, cloneElement, isValidElement, Fragment as Fragment$1, createElement } from 'react';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import { createPortal } from 'react-dom';
 
@@ -931,6 +931,97 @@ var MarkerContent = forwardRef(
   ({ className, ...props }, ref) => /* @__PURE__ */ jsx("div", { ...props, ref, "data-db-react": "", className: cn("db-marker__content", className) })
 );
 MarkerContent.displayName = "MarkerContent";
+var hostEvents = {
+  "db:chat-send": "onSend",
+  "db:chat-steer": "onSteer",
+  "db:chat-stop": "onStop",
+  "db:chat-action": "onAction",
+  "db:chat-queue": "onQueue",
+  "db:chat-config": "onConfig",
+  "db:chat-dictation": "onDictation",
+  "db:chat-change": "onChange"
+};
+var ChatComposer = forwardRef(function ChatComposer2({
+  models,
+  model,
+  effort,
+  approval,
+  mode,
+  actions,
+  capabilities,
+  busy,
+  placeholder,
+  onSend,
+  onSteer,
+  onStop,
+  onAction,
+  onQueue,
+  onConfig,
+  onDictation,
+  onChange,
+  onReady,
+  className,
+  ...props
+}, ref) {
+  const root = useRef(null);
+  const controller = useRef(null);
+  const callbacks = useRef({ onSend, onSteer, onStop, onAction, onQueue, onConfig, onDictation, onChange, onReady });
+  callbacks.current = { onSend, onSteer, onStop, onAction, onQueue, onConfig, onDictation, onChange, onReady };
+  const options = { models, model, effort, approval, mode, actions, capabilities, busy, placeholder };
+  const currentOptions = useRef(options);
+  currentOptions.current = options;
+  const setup = JSON.stringify({ models, actions, capabilities, placeholder });
+  const serialized = JSON.stringify(options).replace(/[<>&\u2028\u2029]/g, (char) => "\\u" + char.charCodeAt(0).toString(16).padStart(4, "0"));
+  useImperativeHandle(ref, () => root.current, []);
+  useEffect(() => {
+    const element = root.current;
+    const runtime = window.DAUB;
+    if (!element || !runtime?.createChatComposer) throw new Error("ChatComposer requires daub.js with DAUB.createChatComposer. Load it before mounting.");
+    const listeners = Object.entries(hostEvents).map(([name, callback]) => {
+      const listener = (event) => {
+        const handler = callbacks.current[callback];
+        handler?.(event);
+      };
+      element.addEventListener(name, listener);
+      return { name, listener };
+    });
+    try {
+      controller.current = runtime.createChatComposer(element, currentOptions.current);
+      if (!controller.current) throw new Error("DAUB.createChatComposer could not initialize the ChatComposer form.");
+      callbacks.current.onReady?.(controller.current);
+    } catch (error) {
+      controller.current?.destroy();
+      controller.current = null;
+      for (const { name, listener } of listeners) element.removeEventListener(name, listener);
+      throw error;
+    }
+    return () => {
+      for (const { name, listener } of listeners) element.removeEventListener(name, listener);
+      controller.current?.destroy();
+      controller.current = null;
+    };
+  }, []);
+  useEffect(() => {
+    controller.current?.setBusy(busy ?? false);
+  }, [busy]);
+  useEffect(() => {
+    controller.current?.updateOptions(JSON.parse(setup));
+  }, [setup]);
+  useEffect(() => {
+    if (model !== void 0) controller.current?.setModel(model);
+  }, [model, busy, setup]);
+  useEffect(() => {
+    if (effort !== void 0) controller.current?.setEffort(effort);
+  }, [effort, model, busy, setup]);
+  useEffect(() => {
+    if (approval !== void 0) controller.current?.setApproval(approval);
+  }, [approval]);
+  useEffect(() => {
+    if (mode !== void 0) controller.current?.setMode(mode);
+  }, [mode]);
+  return /* @__PURE__ */ jsx("form", { ...props, ref: root, className: cn("db-chat-composer", className), "data-db-react": "", "data-db-chat-options": serialized });
+});
+ChatComposer.displayName = "ChatComposer";
 var AspectRatio = forwardRef(
   ({ ratio = "16-9", className, ...props }, ref) => /* @__PURE__ */ jsx(
     "div",
@@ -3904,6 +3995,6 @@ var CommandPalette = forwardRef(function CommandPalette2({
 });
 CommandPalette.displayName = "CommandPalette";
 
-export { Accordion, Alert, AlertDialog, AspectRatio, Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, AttachmentProgress, AttachmentTitle, AttachmentTrigger, Avatar, AvatarGroup, Badge, BottomNav, Breadcrumbs, Bubble, BubbleCollapsible, BubbleContent, BubbleGroup, BubbleReactions, Button, ButtonGroup, Calendar, Card, Carousel, Chart, ChartCard, Checkbox, CheckboxGroup, Chip, Collapsible, CommandPalette, Container, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Marker, MarkerContent, MarkerIcon, Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader, MessageScroller, MessageScrollerButton, MessageScrollerContent, MessageScrollerItem, MessageScrollerProvider, MessageScrollerViewport, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, Skeleton, Slider, Spinner, Stack, StatCard, Stepper, Surface, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, Pt as useMessageScroller, wt as useMessageScrollerScrollable, Ot as useMessageScrollerVisibility, useOutsideClick, useToast };
+export { Accordion, Alert, AlertDialog, AspectRatio, Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, AttachmentProgress, AttachmentTitle, AttachmentTrigger, Avatar, AvatarGroup, Badge, BottomNav, Breadcrumbs, Bubble, BubbleCollapsible, BubbleContent, BubbleGroup, BubbleReactions, Button, ButtonGroup, Calendar, Card, Carousel, Chart, ChartCard, ChatComposer, Checkbox, CheckboxGroup, Chip, Collapsible, CommandPalette, Container, ContextMenu, CustomSelect, DataTable, DatePicker, Drawer, DropdownMenu, EmptyState, Field, Fieldset, Frame, Grid, Group, HoverCard, Image, Input, InputGroup, InputIcon, InputOTP, Kbd, Label, List, Marker, MarkerContent, MarkerIcon, Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader, MessageScroller, MessageScrollerButton, MessageScrollerContent, MessageScrollerItem, MessageScrollerProvider, MessageScrollerViewport, Meter, Modal, NavMenu, Navbar, NumberField, Pagination, Popover, PreviewCard, Progress, Prose, Radio, RadioGroup, ScrollArea, Search, Select, Separator, Sheet, Skeleton, Slider, Spinner, Stack, StatCard, Stepper, Surface, Switch, Table, Tabs, Textarea, ThemeProvider, Toast, ToastProvider, Toggle, ToggleGroup, Toolbar, Tooltip, useControllable, useEscapeKey, useFocusTrap, Pt as useMessageScroller, wt as useMessageScrollerScrollable, Ot as useMessageScrollerVisibility, useOutsideClick, useToast };
 //# sourceMappingURL=index.mjs.map
 //# sourceMappingURL=index.mjs.map

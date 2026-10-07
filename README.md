@@ -14,7 +14,7 @@
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 89 components, 21 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 90 components, 21 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
 Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 266-block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
 
@@ -38,7 +38,7 @@ Use shadcn/ui when you're deep in a React + Tailwind stack. Use DAUB when you wa
 ### CDN (recommended)
 
 ```html
-<!-- Full library: 89 components + themes -->
+<!-- Full library: 90 components + themes -->
 <link rel="stylesheet" href="https://daub.dev/daub.css">
 <script src="https://daub.dev/daub.js"></script>
 
@@ -169,13 +169,14 @@ DAUB uses system font stacks by default. For richer typography:
 | Bubble | `db-bubble` | `--primary`, `--secondary`, `--muted`, `--tinted`, `--outline`, `--ghost`, `--destructive`, `--end`; `__content`, `__reactions`, `db-bubble-group` |
 | Attachment | `db-attachment` | `--vertical`, `--sm`, `--xs`; `data-state="idle|uploading|processing|error|done"`, sibling `__trigger` and `__actions`; `db-attachment-group` |
 | Marker | `db-marker` | `--border`, `--separator`, `__icon`, `__content` |
+| Chat Composer | `db-chat-composer` | Queue/steer, local file drop, browser dictation, model/effort/approval intent; native host events |
 
-Compose these primitives with existing Textarea, InputGroup, and Button controls.
-Your app owns the message data, reaction selection, upload progress, and transport.
+Compose these primitives with ChatComposer or existing Textarea, InputGroup, and Button controls.
+Your app owns the message data, reaction selection, upload progress, approval enforcement, and transport.
 Use `db-shimmer` for text status and `db-scroll-fade` for scroll edges.
 See the [chat demo](chat-demo.html) and [chat reference](llms.txt#chat-components).
-The browser/OpenUI/MCP registry exposes 87 renderer types; the HTML catalog contains
-89 component entries. Renderer aliases and helpers account for the different totals.
+The browser/OpenUI/MCP registry exposes 88 renderer types; the HTML catalog contains
+90 component entries. Renderer aliases and helpers account for the different totals.
 
 ### Feedback
 | Component | Class | Notes |
@@ -341,7 +342,7 @@ DAUB speaks both human and machine:
 
 - **`/llms.txt`** — Plain-text component reference for LLMs ([spec](https://llmstxt.org))
 - **`/llms-compact.txt`** — Condensed version for token-constrained contexts
-- **`/components.json`** — Machine-readable structured component reference (89 components with HTML examples)
+- **`/components.json`** — Machine-readable structured component reference (90 components with HTML examples)
 - **`/daub.d.ts`** — TypeScript declarations for `window.DAUB` API
 - **`/.well-known/ai-plugin.json`** — AI plugin manifest
 - **`/.well-known/api-catalog`** — API catalog for MCP, generation, and web lookups
@@ -361,7 +362,7 @@ Install the DAUB skill into any AI coding agent ([40+ supported](https://skills.
 npx skills add sliday/daub
 ```
 
-This gives your agent full knowledge of all 89 components, class conventions, theme API, and usage patterns, plus the spec formats, MCP tools, a verify loop and Jev recipes in `references/`. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
+This gives your agent full knowledge of all 90 components, class conventions, theme API, and usage patterns, plus the spec formats, MCP tools, a verify loop and Jev recipes in `references/`. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
 
 ## Block Library
 

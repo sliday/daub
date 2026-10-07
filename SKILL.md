@@ -2,7 +2,7 @@
 name: daub-ui
 description: >-
   Build, preview and verify UI with DAUB (daub.dev), a drop-in CSS + JS component library
-  with 89 components and 21 theme families. Covers three paths: plain HTML with db-* classes,
+  with 90 components and 21 theme families. Covers three paths: plain HTML with db-* classes,
   json-render or OpenUI Lang specs rendered by daub-render.js, and the hosted DAUB MCP server
   (generate_ui, validate_spec, render_spec, parse_openui, get_block_library). Includes the rules
   that prevent broken renders, 266 ready-made blocks, playground share links, a verify loop, and
@@ -18,7 +18,7 @@ metadata:
 
 # DAUB UI
 
-DAUB is a drop-in CSS + JS component library. `daub.css` styles 89 components through `db-*` classes, `daub.js` wires the interactive ones (tabs, overlays, switches, dropdowns), and 21 theme families give 42 light and dark themes. No build step and no framework.
+DAUB is a drop-in CSS + JS component library. `daub.css` styles 90 components through `db-*` classes, `daub.js` wires the interactive ones (tabs, overlays, switches, dropdowns), and 21 theme families give 42 light and dark themes. No build step and no framework.
 
 | Path | You write | Good for |
 |---|---|---|
@@ -80,7 +80,7 @@ DAUB is a drop-in CSS + JS component library. `daub.css` styles 89 components th
 
 ## Conversation components
 
-The HTML catalog has 89 components; the browser/OpenUI/MCP registry has 87 renderer types. Compose MessageScroller, Message, Bubble, Attachment, and Marker with Textarea, InputGroup, and Button. Your app owns message data, AI transport, uploads, persistence, and reaction state. See `https://daub.dev/chat-demo.html` and the Chat Components section of `https://daub.dev/llms.txt`.
+The HTML catalog has 90 components; the browser/OpenUI/MCP registry has 88 renderer types. Compose MessageScroller, Message, Bubble, Attachment, and Marker with ChatComposer. ChatComposer adds local attachments, dictation, model controls, queue and steer events; your app owns message data, AI transport, approval enforcement, uploads, persistence, and reaction state. See `https://daub.dev/chat-demo.html` and the Chat Components section of `https://daub.dev/llms.txt`.
 
 - Use stable `data-db-message-id` rows in `db-message-scroller__item`. The native root accepts `data-db-auto-scroll`, `data-db-scroll-position="start|end|last-anchor"`, and `data-db-scroll-peek`.
 - `DAUB.createMessageScroller(root, {autoScroll, scrollPosition, scrollPeek})` returns a handle with `scrollToStart`, `scrollToEnd`, `scrollToMessage`, `getState`, and `destroy`. Renderer options use `defaultScrollPosition` and `peek`.
@@ -221,7 +221,7 @@ Call `https://openrouter.ai/api/alpha/decisions` with your own OpenRouter key. D
 | `references/verify.md` | You check output before handing it over |
 | `references/design.md` | You plan layout, density and hierarchy |
 
-Full component docs with HTML for all 89 components: `https://daub.dev/llms.txt`. Machine-readable catalog: `https://daub.dev/components.json`.
+Full component docs with HTML for all 90 components: `https://daub.dev/llms.txt`. Machine-readable catalog: `https://daub.dev/components.json`.
 
 ## Install this skill
 

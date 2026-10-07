@@ -833,7 +833,7 @@
      Toast — built with safe DOM methods (no innerHTML)
      ---------------------------------------------------------- */
   function getToastStack() {
-    var stack = nativeElements(document, '.db-toast-stack')[0];
+    var stack = nativeElements(document, '.db-toast-stack:not([data-db-toast-preview])')[0];
     if (!stack) {
       stack = document.createElement('div');
       stack.className = 'db-toast-stack';
@@ -2608,25 +2608,108 @@
   /* ----------------------------------------------------------
      Sidebar Toggle
      ---------------------------------------------------------- */
+  var _sidebarMedia = null;
+
+  function isSidebarCollapsed(sidebar) {
+    return sidebar.classList.contains('db-sidebar--collapsed') ||
+      (!sidebar.classList.contains('db-sidebar--expanded') && (_sidebarMedia || window.matchMedia('(max-width: 640px)')).matches);
+  }
+
+  function hideSidebarTooltip(sidebar) {
+    var tip = sidebar._dbSidebarTooltip;
+    if (!tip) return;
+    if (typeof tip.hidePopover === 'function') {
+      if (tip.matches(':popover-open')) tip.hidePopover();
+    } else tip.hidden = true;
+    if (tip._dbTrigger) {
+      var descriptions = (tip._dbTrigger.getAttribute('aria-describedby') || '').split(/\s+/).filter(function(id) { return id && id !== tip.id; });
+      if (descriptions.length) tip._dbTrigger.setAttribute('aria-describedby', descriptions.join(' '));
+      else tip._dbTrigger.removeAttribute('aria-describedby');
+      tip._dbTrigger = null;
+    }
+  }
+
+  function showSidebarTooltip(sidebar, item) {
+    if (!isSidebarCollapsed(sidebar) || isDisabled(item) || !item.getAttribute('data-tooltip')) return;
+    hideSidebarTooltip(sidebar);
+    var tip = sidebar._dbSidebarTooltip;
+    if (!tip) {
+      tip = document.createElement('span');
+      tip.id = uid();
+      tip.className = 'db-sidebar__tooltip';
+      tip.setAttribute('role', 'tooltip');
+      tip.setAttribute('popover', 'manual');
+      sidebar.appendChild(tip);
+      sidebar._dbSidebarTooltip = tip;
+    }
+    tip.textContent = item.getAttribute('data-tooltip');
+    tip._dbTrigger = item;
+    var descriptions = (item.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+    descriptions.push(tip.id);
+    item.setAttribute('aria-describedby', descriptions.join(' '));
+    tip.style.visibility = 'hidden';
+    if (typeof tip.showPopover === 'function') tip.showPopover();
+    else tip.hidden = false;
+    var anchor = item.getBoundingClientRect();
+    var rect = tip.getBoundingClientRect();
+    tip.style.left = Math.max(8, Math.min(sidebar.getBoundingClientRect().right + 8, document.documentElement.clientWidth - rect.width - 8)) + 'px';
+    tip.style.top = Math.max(8, Math.min(anchor.top + (anchor.height - rect.height) / 2, window.innerHeight - rect.height - 8)) + 'px';
+    tip.style.visibility = '';
+  }
+
+  function syncSidebar(sidebar) {
+    if (!sidebar.id) sidebar.id = uid();
+    nativeElements(sidebar, '.db-sidebar__toggle').forEach(function(btn) {
+      if (btn.closest('.db-sidebar') !== sidebar) return;
+      btn.setAttribute('aria-controls', sidebar.id);
+      btn.setAttribute('aria-expanded', String(!isSidebarCollapsed(sidebar)));
+    });
+    hideSidebarTooltip(sidebar);
+  }
+
   function initSidebarToggle(root) {
-    nativeElements(root, '.db-sidebar__toggle').forEach(function(btn) {
-      if (btn._dbSidebar) return;
-      btn._dbSidebar = true;
-      var sidebar = btn.closest('.db-sidebar');
-      if (sidebar) btn.setAttribute('aria-expanded', String(!sidebar.classList.contains('db-sidebar--collapsed')));
-      btn.addEventListener('click', function() {
-        var sidebar = btn.closest('.db-sidebar');
-        if (!sidebar) return;
-        toggleSidebar(sidebar);
+    if (!_sidebarMedia) {
+      _sidebarMedia = window.matchMedia('(max-width: 640px)');
+      _sidebarMedia.addEventListener('change', function() { nativeElements(document, '.db-sidebar').forEach(syncSidebar); });
+      window.addEventListener('resize', function() { nativeElements(document, '.db-sidebar').forEach(hideSidebarTooltip); });
+    }
+    nativeElements(root, '.db-sidebar').forEach(function(sidebar) {
+      syncSidebar(sidebar);
+      nativeElements(sidebar, '.db-sidebar__toggle').forEach(function(btn) {
+        if (btn.closest('.db-sidebar') !== sidebar) return;
+        if (btn._dbSidebar) return;
+        btn._dbSidebar = true;
+        btn.addEventListener('click', function() { toggleSidebar(sidebar); });
       });
+      nativeElements(sidebar, '.db-sidebar__item[data-tooltip]').forEach(function(item) {
+        if (item.closest('.db-sidebar') !== sidebar) return;
+        if (item._dbSidebarTooltip) return;
+        item._dbSidebarTooltip = true;
+        item.addEventListener('mouseenter', function() { showSidebarTooltip(sidebar, item); });
+        item.addEventListener('mouseleave', function() { if (document.activeElement !== item) hideSidebarTooltip(sidebar); });
+        item.addEventListener('focus', function() { showSidebarTooltip(sidebar, item); });
+        item.addEventListener('blur', function() { hideSidebarTooltip(sidebar); });
+        item.addEventListener('keydown', function(e) {
+          var tip = sidebar._dbSidebarTooltip;
+          if (e.key === 'Escape' && tip && tip._dbTrigger === item) {
+            e.preventDefault(); e.stopPropagation(); hideSidebarTooltip(sidebar);
+          }
+        });
+      });
+      if (!sidebar._dbSidebarScroll) {
+        sidebar._dbSidebarScroll = true;
+        sidebar.addEventListener('scroll', function() { hideSidebarTooltip(sidebar); });
+      }
     });
   }
 
   function toggleSidebar(el) {
     if (typeof el === 'string') el = nativeElement(document, el);
     if (el) {
-      el.classList.toggle('db-sidebar--collapsed');
-      nativeElements(el, '.db-sidebar__toggle').forEach(function(btn) { btn.setAttribute('aria-expanded', String(!el.classList.contains('db-sidebar--collapsed'))); });
+      var collapsed = isSidebarCollapsed(el);
+      el.classList.toggle('db-sidebar--collapsed', !collapsed);
+      el.classList.toggle('db-sidebar--expanded', collapsed);
+      syncSidebar(el);
     }
   }
 
@@ -3068,6 +3151,605 @@
   }
 
   /* ----------------------------------------------------------
+     Chat Composer
+     ---------------------------------------------------------- */
+  var _chatComposers = new Map();
+  var _chatComposerCleanup = null;
+
+  function watchChatComposerCleanup() {
+    if (_chatComposerCleanup || typeof MutationObserver === 'undefined') return;
+    _chatComposerCleanup = new MutationObserver(function() {
+      _chatComposers.forEach(function(instance, root) {
+        if (!root.isConnected || isReactOwned(root) !== instance.reactOwned) instance.handle.destroy();
+      });
+    });
+    _chatComposerCleanup.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-db-react'] });
+  }
+
+  function createChatComposer(root, options) {
+    if (!root || root.nodeType !== 1 || !root.matches('.db-chat-composer') || !root.isConnected) return null;
+    if (_chatComposers.has(root)) return _chatComposers.get(root).handle;
+    var reactOwned = isReactOwned(root);
+    var declared = {};
+    try { declared = JSON.parse(root.getAttribute('data-db-chat-options') || '{}') || {}; } catch (e) {}
+    options = Object.assign({}, declared, options || {});
+    if (!root.childElementCount) {
+      root.innerHTML = '<div class="db-chat-composer__queue" role="list" aria-label="Queued messages" hidden></div>' +
+        '<div class="db-chat-composer__panel"><div class="db-chat-composer__dropzone" hidden>Drop files</div>' +
+        '<div class="db-chat-composer__attachments" aria-label="Attachments" hidden></div>' +
+        '<textarea class="db-chat-composer__input" aria-label="Message" rows="2" placeholder="Message"></textarea>' +
+        '<div class="db-chat-composer__dictation-bar" role="status" hidden><span class="db-chat-composer__dictation-state"></span>' +
+        '<button type="button" class="db-chat-composer__dictation-stop" aria-label="Stop dictation" title="Stop dictation"><i data-lucide="square" aria-hidden="true"></i></button>' +
+        '<button type="button" class="db-chat-composer__dictation-cancel" aria-label="Cancel dictation" title="Cancel dictation"><i data-lucide="x" aria-hidden="true"></i></button></div>' +
+        '<div class="db-chat-composer__toolbar">' +
+        '<div class="db-dropdown"><button type="button" class="db-dropdown__trigger db-chat-composer__add" aria-label="Add" title="Add"><i data-lucide="plus" aria-hidden="true"></i></button>' +
+        '<div class="db-dropdown__menu db-chat-composer__add-menu" hidden></div></div>' +
+        '<select class="db-chat-composer__model" aria-label="Model" name="model"></select>' +
+        '<select class="db-chat-composer__effort" aria-label="Effort" name="effort"></select>' +
+        '<select class="db-chat-composer__approval" aria-label="Approval" name="approval"><option value="ask">Ask for approval</option><option value="auto">Auto-approve safe actions</option></select>' +
+        '<select class="db-chat-composer__mode" aria-label="Mode" name="mode"><option value="chat">Chat</option><option value="plan">Plan</option></select>' +
+        '<input class="db-chat-composer__goal" aria-label="Goal" name="goal" placeholder="Goal" type="text">' +
+        '<span class="db-chat-composer__status" role="status" aria-live="polite">Ready</span>' +
+        '<button type="button" class="db-chat-composer__dictation" aria-label="Start dictation" title="Start dictation"><i data-lucide="mic" aria-hidden="true"></i></button>' +
+        '<button type="button" class="db-chat-composer__stop" aria-label="Stop response" title="Stop response" hidden><i data-lucide="square" aria-hidden="true"></i></button>' +
+        '<button type="submit" class="db-chat-composer__send" aria-label="Send message" title="Send message"><i data-lucide="arrow-up" aria-hidden="true"></i></button>' +
+        '</div><input class="db-chat-composer__file-input" type="file" multiple aria-label="Attach files" hidden>' +
+        '<input class="db-chat-composer__folder-input" type="file" multiple aria-label="Choose folder" hidden></div>';
+    }
+    function owns(el) {
+      return el && el.closest('.db-chat-composer') === root && (reactOwned || !isReactOwned(el));
+    }
+    function part(name) {
+      return Array.from(root.querySelectorAll('.db-chat-composer__' + name)).filter(owns)[0];
+    }
+    var input = part('input'), panel = part('panel'), queueEl = part('queue'), attachments = part('attachments');
+    var modelEl = part('model'), effortEl = part('effort'), approvalEl = part('approval'), modeEl = part('mode'), goalEl = part('goal');
+    var sendEl = part('send'), stopEl = part('stop'), statusEl = part('status'), addEl = part('add'), addMenu = part('add-menu');
+    var fileInput = part('file-input'), folderInput = part('folder-input'), dictationEl = part('dictation'), dictationBar = part('dictation-bar');
+    if (!input || !panel || !queueEl || !attachments || !sendEl) return null;
+    if (options.placeholder !== undefined) input.placeholder = String(options.placeholder);
+    var defaults = [
+      { id: 'demo-review', label: 'Review assistant (demo)' },
+      { id: 'demo-brief', label: 'Concise assistant (demo)' },
+      { id: 'demo-code', label: 'Code reviewer (demo)' }
+    ];
+    function normalizeModels(value) {
+      var result = (Array.isArray(value) ? value : defaults).filter(function(m) {
+        return m && typeof m.id === 'string' && m.id && typeof m.label === 'string';
+      }).map(function(m) { return { id: m.id, label: m.label, efforts: Array.isArray(m.efforts) ? m.efforts.filter(function(v) { return typeof v === 'string' && v; }) : [] }; });
+      return result.length ? result : defaults;
+    }
+    function normalizeActions(value) {
+      return (Array.isArray(value) ? value : []).filter(function(action) {
+        return action && typeof action.id === 'string' && typeof action.label === 'string';
+      }).map(function(action) { return Object.assign({}, action); });
+    }
+    var models = normalizeModels(options.models);
+    var capabilities = options.capabilities || {};
+    var allowQueue = capabilities.queue !== false, allowSteer = capabilities.steer !== false;
+    var allowAttachments = capabilities.attachments !== false, allowApproval = capabilities.approval !== false;
+    var Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var allowDictation = capabilities.dictation !== false && typeof Recognition === 'function';
+    var allowFolders = allowAttachments && capabilities.folders !== false && folderInput && 'webkitdirectory' in folderInput;
+    var actions = normalizeActions(options.actions);
+    var model = models.some(function(m) { return m.id === options.model; }) ? options.model : models[0].id;
+    function efforts() {
+      var selected = models.filter(function(m) { return m.id === model; })[0];
+      return selected.efforts && selected.efforts.length ? selected.efforts : ['low', 'medium', 'high'];
+    }
+    function defaultEffort() { var values = efforts(); return values.indexOf('high') !== -1 ? 'high' : values[values.length - 1]; }
+    var effort = efforts().indexOf(options.effort) !== -1 ? options.effort : defaultEffort();
+    var approval = allowApproval && options.approval === 'auto' ? 'auto' : 'ask';
+    var mode = options.mode === 'plan' ? 'plan' : 'chat', goal = options.goal == null ? null : String(options.goal);
+    var files = [], queue = [], busy = !!options.busy, destroyed = false, draftRequest = null;
+    var previews = new Map(), listeners = [], menus = [], recognition = null, clickGesture = false, gestureTimer = 0;
+    var dictation = allowDictation ? 'stopped' : 'unsupported', dictationError = null, dictationSession = null;
+    var submitting = false, steering = new Set(), pendingOptions = null;
+
+    function usable() {
+      if (destroyed) return false;
+      if (!root.isConnected || isReactOwned(root) !== reactOwned) { destroy(); return false; }
+      return true;
+    }
+    function listen(el, name, handler, opts) {
+      if (!el) return;
+      el.addEventListener(name, handler, opts);
+      listeners.push(function() { el.removeEventListener(name, handler, opts); });
+    }
+    function element(tag, className, text) {
+      var el = document.createElement(tag);
+      el.className = className;
+      if (text !== undefined) el.textContent = text;
+      return el;
+    }
+    function button(className, label, icon, command) {
+      var el = element('button', className);
+      el.type = 'button'; el.setAttribute('aria-label', label); el.title = label;
+      if (icon) {
+        var glyph = document.createElement('i');
+        glyph.setAttribute('data-lucide', icon); glyph.setAttribute('aria-hidden', 'true'); el.appendChild(glyph);
+      } else el.textContent = label;
+      if (command) el.setAttribute('data-db-composer-command', command);
+      return el;
+    }
+    function copyRequest(request) { return Object.assign({}, request, { files: request.files.slice() }); }
+    function getQueue() { return queue.map(copyRequest); }
+    function config() { return { model: model, effort: effort, approval: approval, mode: mode, goal: goal }; }
+    function getState() {
+      return Object.assign(config(), { text: input.value, files: files.slice(), queue: getQueue(), busy: busy, dictation: dictation });
+    }
+    function emit(name, detail, cancelable) {
+      return root.dispatchEvent(new CustomEvent('db:chat-' + name, { bubbles: true, cancelable: !!cancelable, detail: detail }));
+    }
+    function changed() { if (!destroyed) emit('change', { state: getState() }); }
+    function selectOptions(el, entries, value) {
+      if (!el) return;
+      el.replaceChildren();
+      entries.forEach(function(entry) {
+        var option = document.createElement('option'); option.value = entry.id; option.textContent = entry.label; el.appendChild(option);
+      });
+      el.value = value;
+    }
+    function sync() {
+      if (modelEl) { modelEl.value = model; modelEl.disabled = busy; }
+      if (effortEl) { effortEl.value = effort; effortEl.disabled = busy; }
+      if (approvalEl) { approvalEl.value = approval; approvalEl.hidden = !allowApproval; }
+      if (modeEl) modeEl.value = mode;
+      if (goalEl) goalEl.value = goal || '';
+      sendEl.disabled = (!input.value.trim() && !files.length) || (busy && !allowQueue) || !!recognition;
+      sendEl.setAttribute('aria-label', busy && allowQueue ? 'Queue message' : 'Send message');
+      sendEl.title = sendEl.getAttribute('aria-label');
+      if (stopEl) stopEl.hidden = !busy;
+      Array.from(queueEl.querySelectorAll('.db-chat-composer__steer')).forEach(function(el) {
+        el.setAttribute('aria-label', busy ? 'Steer queued message' : 'Send queued message now'); el.title = el.getAttribute('aria-label');
+      });
+      root.setAttribute('data-busy', String(busy));
+      root.setAttribute('data-dictation', dictation);
+      if (dictationEl) {
+        dictationEl.disabled = !allowDictation;
+        dictationEl.setAttribute('aria-pressed', String(dictation === 'listening'));
+        dictationEl.setAttribute('aria-label', recognition ? 'Stop dictation' : 'Start dictation');
+        dictationEl.title = allowDictation ? dictationEl.getAttribute('aria-label') : capabilities.dictation === false ? 'Dictation is not enabled' : 'Dictation unavailable in this browser';
+      }
+      if (dictationBar) {
+        dictationBar.hidden = dictation !== 'listening' && dictation !== 'error';
+        var stateEl = part('dictation-state');
+        if (stateEl) stateEl.textContent = dictation === 'error' ? 'Dictation error: ' + dictationError : 'Listening';
+        var dictationStop = part('dictation-stop');
+        if (dictationStop) dictationStop.hidden = dictation !== 'listening';
+      }
+    }
+    function configChanged() {
+      draftRequest = null;
+      selectOptions(effortEl, efforts().map(function(v) { return { id: v, label: v.charAt(0).toUpperCase() + v.slice(1) }; }), effort);
+      sync(); emit('config', config()); changed();
+    }
+    function setModel(value) {
+      if (!usable() || busy || !models.some(function(m) { return m.id === value; })) return false;
+      model = value;
+      if (efforts().indexOf(effort) === -1) effort = defaultEffort();
+      configChanged(); return true;
+    }
+    function setEffort(value) {
+      if (!usable() || busy || efforts().indexOf(value) === -1) return false;
+      effort = value; configChanged(); return true;
+    }
+    function setMode(value) {
+      if (!usable() || ['chat', 'plan'].indexOf(value) === -1) return false;
+      mode = value; configChanged(); return true;
+    }
+    function setApproval(value) {
+      if (!usable() || !allowApproval || ['ask', 'auto'].indexOf(value) === -1) return false;
+      approval = value; configChanged(); return true;
+    }
+    function setGoal(value) {
+      if (!usable() || (value !== null && typeof value !== 'string')) return false;
+      goal = value; configChanged(); return true;
+    }
+    function releasePreviews() {
+      var retained = new Set(files);
+      queue.forEach(function(request) { request.files.forEach(function(file) { retained.add(file); }); });
+      previews.forEach(function(url, file) {
+        if (!retained.has(file)) { URL.revokeObjectURL(url); previews.delete(file); }
+      });
+    }
+    function attachment(file, index, removable) {
+      var tile = element('div', 'db-attachment db-chat-composer__attachment');
+      if (/^image\//.test(file.type) && typeof URL.createObjectURL === 'function') {
+        var url = previews.get(file);
+        if (!url) { url = URL.createObjectURL(file); previews.set(file, url); }
+        var media = element('div', 'db-attachment__media db-attachment__media--image');
+        var image = element('img', 'db-attachment__preview'); image.src = url; image.alt = file.name; media.appendChild(image); tile.appendChild(media);
+      }
+      var info = element('div', 'db-attachment__content');
+      var title = element('span', 'db-attachment__title', file.name); title.title = file.name; info.appendChild(title);
+      info.appendChild(element('span', 'db-attachment__description', String(file.size) + ' bytes'));
+      tile.appendChild(info);
+      if (removable) {
+        var remove = button('db-attachment__action', 'Remove ' + file.name, 'x', 'remove-file');
+        var controls = element('div', 'db-attachment__actions');
+        remove.setAttribute('data-db-file-index', String(index)); controls.appendChild(remove); tile.appendChild(controls);
+      }
+      return tile;
+    }
+    function renderFiles() {
+      attachments.replaceChildren();
+      files.forEach(function(file, index) { attachments.appendChild(attachment(file, index, true)); });
+      attachments.hidden = !files.length;
+      releasePreviews(); sync(); refreshIcons(); changed();
+    }
+    function attachFiles(incoming) {
+      if (!usable() || !allowAttachments) return false;
+      Array.from(incoming || []).forEach(function(file) { if (file instanceof File && files.indexOf(file) === -1) files.push(file); });
+      draftRequest = null; renderFiles(); return true;
+    }
+    function registerMenu(trigger, menu) {
+      if (!trigger || !menu) return;
+      var wrap = trigger.closest('.db-dropdown') || trigger.parentElement;
+      wrap._dbInit = true;
+      if (!menu.id) menu.id = uid();
+      trigger.setAttribute('aria-haspopup', 'menu'); trigger.setAttribute('aria-controls', menu.id); trigger.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('role', 'menu'); menu.hidden = true; menu.setAttribute('aria-hidden', 'true');
+      Array.from(menu.querySelectorAll('button')).forEach(function(item) { item.setAttribute('role', 'menuitem'); item.tabIndex = -1; });
+      menus.push({ wrap: wrap, trigger: trigger, menu: menu });
+    }
+    function menuState(entry, open, restore) {
+      if (open) menus.forEach(function(other) { if (other !== entry) menuState(other, false); });
+      entry.wrap.classList.toggle('db-dropdown--open', open);
+      entry.trigger.setAttribute('aria-expanded', String(open)); entry.menu.hidden = !open; entry.menu.setAttribute('aria-hidden', String(!open));
+      if (open) {
+        entry.menu.style.top = ''; entry.menu.style.bottom = ''; entry.menu.style.maxHeight = '';
+        clampPanel(entry.menu);
+        var rect = entry.menu.getBoundingClientRect();
+        if (rect.top < 8 && getComputedStyle(entry.menu).position === 'absolute') {
+          entry.menu.style.top = 'calc(100% + 4px)'; entry.menu.style.bottom = 'auto';
+          rect = entry.menu.getBoundingClientRect();
+        }
+        if (rect.bottom > window.innerHeight - 8) entry.menu.style.maxHeight = Math.max(44, window.innerHeight - rect.top - 8) + 'px';
+        var first = entry.menu.querySelector('button:not(:disabled)'); if (first) first.focus();
+      }
+      else if (restore) entry.trigger.focus();
+    }
+    function renderQueue(resetEditId) {
+      var edits = new Map(), activeEdit = null;
+      Array.from(queueEl.querySelectorAll('.db-chat-composer__queued-item')).forEach(function(row) {
+        var id = row.getAttribute('data-db-request-id'), editor = row.querySelector('.db-chat-composer__queued-editor'), text = row.querySelector('textarea');
+        if (!editor || !text || editor.hidden || id === resetEditId) return;
+        edits.set(id, { value: text.value, start: text.selectionStart, end: text.selectionEnd });
+        if (text === document.activeElement) activeEdit = id;
+      });
+      menus = menus.filter(function(entry) { return !queueEl.contains(entry.wrap); });
+      queueEl.replaceChildren(); queueEl.hidden = !queue.length;
+      queue.forEach(function(request) {
+        var row = element('div', 'db-chat-composer__queued-item'); row.setAttribute('role', 'listitem'); row.setAttribute('data-db-request-id', request.id);
+        row.appendChild(element('div', 'db-chat-composer__queued-text', request.text));
+        if (request.files.length) {
+          var rowFiles = element('div', 'db-chat-composer__queued-files');
+          request.files.forEach(function(file, index) { rowFiles.appendChild(attachment(file, index, false)); }); row.appendChild(rowFiles);
+        }
+        var controls = element('div', 'db-chat-composer__queued-actions');
+        if (allowSteer) controls.appendChild(button('db-chat-composer__steer', busy ? 'Steer queued message' : 'Send queued message now', 'corner-up-left', 'steer'));
+        var drop = element('div', 'db-dropdown');
+        var edit = button('db-dropdown__trigger', 'Edit queued message', 'pencil');
+        var menu = element('div', 'db-dropdown__menu'); menu.appendChild(button('db-dropdown__item', 'Edit message', null, 'edit'));
+        drop.appendChild(edit); drop.appendChild(menu); controls.appendChild(drop); registerMenu(edit, menu);
+        controls.appendChild(button('db-chat-composer__remove', 'Remove queued message', 'x', 'remove'));
+        var sideChat = actions.filter(function(action) { return action.id === 'side-chat'; })[0];
+        if (sideChat) {
+          var sideButton = button('db-chat-composer__side-chat', sideChat.label, sideChat.icon || 'messages-square', 'side-chat');
+          sideButton.disabled = !!sideChat.disabled; controls.appendChild(sideButton);
+        }
+        row.appendChild(controls);
+        var editor = element('div', 'db-chat-composer__queued-editor'); editor.hidden = true;
+        var text = element('textarea', 'db-chat-composer__queued-input'); text.rows = 3; text.value = request.text; text.setAttribute('aria-label', 'Edit queued message');
+        var savedEdit = edits.get(request.id);
+        if (savedEdit) { editor.hidden = false; text.value = savedEdit.value; text.setSelectionRange(savedEdit.start, savedEdit.end); }
+        editor.appendChild(text); editor.appendChild(button('db-chat-composer__edit-save', 'Save edit', 'check', 'save-edit'));
+        editor.appendChild(button('db-chat-composer__edit-cancel', 'Cancel edit', 'x', 'cancel-edit')); row.appendChild(editor); queueEl.appendChild(row);
+        if (request.id === activeEdit) text.focus();
+      });
+      releasePreviews(); refreshIcons();
+    }
+    function queueChanged(request, resetEditId) { renderQueue(resetEditId); emit('queue', { request: request ? copyRequest(request) : null, queue: getQueue() }); changed(); }
+    function removeQueued(id) {
+      if (!usable()) return false;
+      var index = queue.findIndex(function(request) { return request.id === id; });
+      if (index === -1) return false;
+      var request = queue.splice(index, 1)[0]; queueChanged(request); return true;
+    }
+    function editQueued(id, text) {
+      if (!usable() || typeof text !== 'string') return false;
+      var request = queue.filter(function(item) { return item.id === id; })[0];
+      if (!request || (!text.trim() && !request.files.length)) return false;
+      request.text = text; queueChanged(request, id); return true;
+    }
+    function steerQueued(id) {
+      if (!usable() || !allowSteer || steering.has(id)) return false;
+      var request = queue.filter(function(item) { return item.id === id; })[0];
+      if (!request) return false;
+      steering.add(id);
+      try {
+        if (!emit('steer', { request: copyRequest(request) }, true) || !usable()) return false;
+        removeQueued(id); return true;
+      } finally { steering.delete(id); }
+    }
+    function takeNext() {
+      if (!usable() || !queue.length) return null;
+      var request = queue.shift(); queueChanged(request); return copyRequest(request);
+    }
+    function submit() {
+      if (!usable() || submitting || isDisabled(root) || sendEl.disabled) return false;
+      submitting = true;
+      try {
+        var request = draftRequest || Object.assign({ id: uid(), text: input.value, files: files.slice() }, config());
+        draftRequest = request;
+        if (busy) { queue.push(request); }
+        else if (!emit('send', { request: copyRequest(request) }, true) || !usable()) return false;
+        // A host may replace the draft while handling a send event.
+        if (draftRequest === request) { input.value = ''; files = []; draftRequest = null; }
+        if (busy && queue.indexOf(request) !== -1) queueChanged(request);
+        renderFiles(); return true;
+      } finally { submitting = false; }
+    }
+    function dictationState(state, error) {
+      dictation = state; dictationError = error || null; sync();
+      emit('dictation', error ? { state: state, error: error } : { state: state });
+      changed();
+    }
+    function joined(base, transcript) { return base + (base && transcript && !/\s$/.test(base) ? ' ' : '') + transcript; }
+    function detachRecognition(abort) {
+      var current = recognition; recognition = null;
+      if (!current) return;
+      current.onstart = current.onresult = current.onerror = current.onend = null;
+      if (abort) { try { current.abort(); } catch (e) {} }
+    }
+    function cancelDictation(restore) {
+      if (!usable()) return false;
+      if (dictationSession && restore) input.value = dictationSession.base;
+      detachRecognition(true); dictationSession = null; draftRequest = null;
+      dictationState(allowDictation ? 'stopped' : 'unsupported'); return true;
+    }
+    function startDictation() {
+      if (!usable() || !allowDictation || !clickGesture || recognition || isDisabled(root)) return false;
+      var session = { base: input.value, finalText: '' };
+      dictationSession = session;
+      try {
+        var current = new Recognition(); recognition = current;
+        current.continuous = true; current.interimResults = true;
+        current.lang = root.getAttribute('lang') || document.documentElement.lang || navigator.language || 'en-US';
+        current.onresult = function(event) {
+          if (!usable() || recognition !== current) return;
+          var finalText = '', interim = '';
+          for (var i = 0; i < event.results.length; i++) {
+            var result = event.results[i];
+            if (result.isFinal) finalText += result[0].transcript;
+            else interim += result[0].transcript;
+          }
+          session.finalText = finalText; input.value = joined(session.base, finalText + interim); draftRequest = null; sync(); changed();
+        };
+        current.onerror = function(event) {
+          if (!usable() || recognition !== current) return;
+          input.value = joined(session.base, session.finalText); detachRecognition(true); dictationSession = null;
+          dictationState('error', event.error || 'recognition-failed');
+        };
+        current.onend = function() {
+          if (!usable() || recognition !== current) return;
+          input.value = joined(session.base, session.finalText); detachRecognition(false); dictationSession = null;
+          dictationState('stopped');
+        };
+        dictationState('listening');
+        if (recognition !== current || !usable()) return false;
+        current.start(); return true;
+      } catch (error) {
+        detachRecognition(true); dictationSession = null; dictationState('error', error.name || 'recognition-failed'); return false;
+      }
+    }
+    function stopDictation() {
+      if (!usable() || !recognition) return false;
+      try { recognition.stop(); dictationState('stopped'); return true; }
+      catch (error) { detachRecognition(true); dictationSession = null; dictationState('error', error.name || 'recognition-failed'); return false; }
+    }
+    function setDraft(text) {
+      if (!usable()) return false;
+      if (recognition) cancelDictation(false);
+      input.value = String(text); draftRequest = null; sync(); changed(); return true;
+    }
+    function clearDraft() {
+      if (!usable()) return false;
+      if (recognition) cancelDictation(false);
+      input.value = ''; files = []; draftRequest = null; renderFiles(); return true;
+    }
+    function renderAddMenu() {
+      if (!addMenu) return;
+      menus.forEach(function(entry) { if (entry.menu === addMenu) menuState(entry, false, entry.menu.contains(document.activeElement)); });
+      menus = menus.filter(function(entry) { return entry.menu !== addMenu; });
+      addMenu.replaceChildren();
+      if (allowAttachments) addMenu.appendChild(button('db-dropdown__item', 'Add files', null, 'files'));
+      if (allowFolders) addMenu.appendChild(button('db-dropdown__item', 'Add folder', null, 'folder'));
+      actions.forEach(function(action, index) {
+        var item = button('db-dropdown__item', action.label, action.icon, 'action');
+        if (action.icon) item.appendChild(element('span', '', action.label));
+        item.setAttribute('data-db-action-index', String(index)); item.disabled = !!action.disabled; addMenu.appendChild(item);
+      });
+      if (addEl) { addEl.hidden = !addMenu.childElementCount; if (addEl.hidden && document.activeElement === addEl) input.focus(); }
+      registerMenu(addEl, addMenu);
+    }
+    function applyOptions(patch) {
+      if (patch.models !== undefined) models = normalizeModels(patch.models);
+      if (patch.actions !== undefined) actions = normalizeActions(patch.actions);
+      if (patch.capabilities !== undefined) {
+        capabilities = Object.assign({}, capabilities, patch.capabilities);
+        allowQueue = capabilities.queue !== false; allowSteer = capabilities.steer !== false;
+        allowAttachments = capabilities.attachments !== false; allowApproval = capabilities.approval !== false;
+        allowDictation = capabilities.dictation !== false && typeof Recognition === 'function';
+        allowFolders = allowAttachments && capabilities.folders !== false && folderInput && 'webkitdirectory' in folderInput;
+        if (folderInput) { if (allowFolders) folderInput.setAttribute('webkitdirectory', ''); else folderInput.removeAttribute('webkitdirectory'); }
+        if (!allowAttachments) { root.classList.remove('db-chat-composer--dragover'); if (part('dropzone')) part('dropzone').hidden = true; }
+        if (!allowDictation && recognition) cancelDictation(false);
+        if (!allowDictation) dictation = 'unsupported';
+        else if (dictation === 'unsupported') dictation = 'stopped';
+      }
+      if (patch.model !== undefined) model = patch.model;
+      if (!models.some(function(m) { return m.id === model; })) model = models[0].id;
+      if (patch.effort !== undefined) effort = patch.effort;
+      if (efforts().indexOf(effort) === -1) effort = defaultEffort();
+      if (patch.approval !== undefined) approval = patch.approval;
+      if (!allowApproval) approval = 'ask';
+      if (patch.mode !== undefined) mode = patch.mode;
+      if (patch.goal !== undefined) goal = patch.goal;
+      if (patch.models !== undefined) selectOptions(modelEl, models, model);
+      if (patch.actions !== undefined || patch.capabilities !== undefined) { renderAddMenu(); renderQueue(); }
+      configChanged(); refreshIcons();
+    }
+    function updateOptions(patch) {
+      if (!usable() || !patch || typeof patch !== 'object' || Array.isArray(patch)) return false;
+      if ((patch.models !== undefined && !Array.isArray(patch.models)) || (patch.actions !== undefined && !Array.isArray(patch.actions)) ||
+          (patch.capabilities !== undefined && (!patch.capabilities || typeof patch.capabilities !== 'object' || Array.isArray(patch.capabilities))) ||
+          (patch.model !== undefined && typeof patch.model !== 'string') || (patch.effort !== undefined && typeof patch.effort !== 'string') ||
+          (patch.approval !== undefined && ['ask', 'auto'].indexOf(patch.approval) === -1) ||
+          (patch.mode !== undefined && ['chat', 'plan'].indexOf(patch.mode) === -1) ||
+          (patch.goal !== undefined && patch.goal !== null && typeof patch.goal !== 'string') ||
+          (patch.placeholder !== undefined && typeof patch.placeholder !== 'string')) return false;
+      if (patch.placeholder !== undefined) input.placeholder = patch.placeholder;
+      if (busy && patch.capabilities && patch.capabilities.dictation === false) {
+        capabilities = Object.assign({}, capabilities, { dictation: false });
+        allowDictation = false;
+        if (recognition) cancelDictation(false);
+        dictationState('unsupported');
+      }
+      var next = {};
+      ['models', 'actions', 'capabilities', 'model', 'effort', 'approval', 'mode', 'goal'].forEach(function(key) {
+        if (patch[key] !== undefined) next[key] = patch[key];
+      });
+      if (!Object.keys(next).length) return true;
+      if (next.models !== undefined) next.models = normalizeModels(next.models);
+      if (next.actions !== undefined) next.actions = normalizeActions(next.actions);
+      if (next.capabilities !== undefined) next.capabilities = Object.assign({}, pendingOptions && pendingOptions.capabilities, next.capabilities);
+      if (busy) pendingOptions = Object.assign({}, pendingOptions, next);
+      else applyOptions(next);
+      return true;
+    }
+    function setBusy(value) {
+      if (!usable()) return;
+      busy = !!value;
+      if (!busy && pendingOptions) {
+        var patch = pendingOptions; pendingOptions = null; applyOptions(patch);
+      } else { sync(); changed(); }
+    }
+    function destroy() {
+      if (destroyed) return;
+      destroyed = true; detachRecognition(true); dictationSession = null;
+      clearTimeout(gestureTimer); clickGesture = false;
+      listeners.forEach(function(remove) { remove(); }); listeners = [];
+      menus.forEach(function(entry) { menuState(entry, false); }); menus = [];
+      previews.forEach(function(url) { URL.revokeObjectURL(url); }); previews.clear();
+      files = []; queue = []; draftRequest = null; pendingOptions = null; steering.clear(); dictation = allowDictation ? 'stopped' : 'unsupported'; sync();
+      _chatComposers.delete(root);
+      if (!_chatComposers.size && _chatComposerCleanup) { _chatComposerCleanup.disconnect(); _chatComposerCleanup = null; }
+    }
+    var handle = {
+      getState: getState, getQueue: getQueue, takeNext: takeNext, removeQueued: removeQueued, editQueued: editQueued, steerQueued: steerQueued,
+      setDraft: setDraft, clearDraft: clearDraft, attachFiles: attachFiles, setModel: setModel, setEffort: setEffort, setMode: setMode, setApproval: setApproval, setGoal: setGoal,
+      setBusy: setBusy, updateOptions: updateOptions,
+      setStatus: function(text) { if (usable() && statusEl) statusEl.textContent = String(text); },
+      startDictation: startDictation, stopDictation: stopDictation, destroy: destroy
+    };
+    _chatComposers.set(root, { handle: handle, reactOwned: reactOwned }); watchChatComposerCleanup();
+    selectOptions(modelEl, models, model);
+    selectOptions(effortEl, efforts().map(function(v) { return { id: v, label: v.charAt(0).toUpperCase() + v.slice(1) }; }), effort);
+    if (folderInput && allowFolders) folderInput.setAttribute('webkitdirectory', '');
+    renderAddMenu();
+    listen(window, 'pagehide', function() { if (recognition) cancelDictation(false); });
+    listen(document, 'click', function(event) {
+      clickGesture = event.isTrusted;
+      clearTimeout(gestureTimer);
+      gestureTimer = setTimeout(function() { clickGesture = false; }, 0);
+    }, true);
+    listen(document, 'click', function(event) {
+      menus.forEach(function(entry) { if (!entry.wrap.contains(event.target)) menuState(entry, false); });
+    });
+    listen(root, 'submit', function(event) { if (event.target === root) { event.preventDefault(); submit(); } });
+    listen(input, 'input', function() { if (!usable()) return; if (recognition) cancelDictation(false); draftRequest = null; sync(); changed(); });
+    listen(input, 'keydown', function(event) {
+      if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && event.keyCode !== 229 && !event.defaultPrevented) { event.preventDefault(); submit(); }
+    });
+    [[modelEl, setModel], [effortEl, setEffort], [approvalEl, setApproval], [modeEl, setMode], [goalEl, setGoal]].forEach(function(pair) {
+      listen(pair[0], 'change', function() { pair[1](pair[0].value); sync(); });
+    });
+    [fileInput, folderInput].forEach(function(el) {
+      listen(el, 'change', function() { attachFiles(Array.from(el.files || [])); el.value = ''; });
+    });
+    listen(root, 'dragover', function(event) {
+      if (!owns(event.target) || !usable()) return;
+      event.preventDefault(); if (event.dataTransfer) event.dataTransfer.dropEffect = allowAttachments ? 'copy' : 'none';
+      if (allowAttachments) root.classList.add('db-chat-composer--dragover');
+      if (part('dropzone')) part('dropzone').hidden = !allowAttachments;
+    });
+    listen(root, 'dragleave', function(event) {
+      if (!root.contains(event.relatedTarget)) { root.classList.remove('db-chat-composer--dragover'); if (part('dropzone')) part('dropzone').hidden = true; }
+    });
+    listen(root, 'drop', function(event) {
+      if (!owns(event.target) || !usable()) return;
+      event.preventDefault(); event.stopPropagation(); root.classList.remove('db-chat-composer--dragover');
+      if (part('dropzone')) part('dropzone').hidden = true;
+      if (event.dataTransfer) attachFiles(Array.from(event.dataTransfer.files || []));
+    });
+    listen(root, 'click', function(event) {
+      if (!usable() || !owns(event.target) || event.defaultPrevented) return;
+      var target = event.target.closest('button');
+      if (!target || isDisabled(target)) return;
+      var entry = menus.filter(function(menu) { return menu.trigger === target; })[0];
+      if (entry) { event.preventDefault(); menuState(entry, entry.menu.hidden); return; }
+      if (target === sendEl && root.tagName !== 'FORM') { event.preventDefault(); submit(); return; }
+      if (target === stopEl) { emit('stop', undefined, true); return; }
+      if (target === dictationEl) { if (recognition) stopDictation(); else startDictation(); return; }
+      if (target === part('dictation-stop')) { stopDictation(); return; }
+      if (target === part('dictation-cancel')) { cancelDictation(true); return; }
+      var command = target.getAttribute('data-db-composer-command');
+      if (!command) return;
+      menus.forEach(function(menu) { if (menu.menu.contains(target)) menuState(menu, false, true); });
+      var row = target.closest('.db-chat-composer__queued-item');
+      var id = row && row.getAttribute('data-db-request-id');
+      if (command === 'files' && fileInput) fileInput.click();
+      else if (command === 'folder' && folderInput) folderInput.click();
+      else if (command === 'action') emit('action', { action: Object.assign({}, actions[Number(target.getAttribute('data-db-action-index'))]) }, true);
+      else if (command === 'remove-file') { files.splice(Number(target.getAttribute('data-db-file-index')), 1); draftRequest = null; renderFiles(); }
+      else if (command === 'remove') removeQueued(id);
+      else if (command === 'steer') steerQueued(id);
+      else if (command === 'side-chat') {
+        var request = queue.filter(function(item) { return item.id === id; })[0];
+        if (request) emit('action', { action: 'side-chat', request: copyRequest(request) }, true);
+      }
+      else if (command === 'edit' && row) { row.querySelector('.db-chat-composer__queued-editor').hidden = false; row.querySelector('textarea').focus(); }
+      else if (command === 'save-edit' && row) editQueued(id, row.querySelector('textarea').value);
+      else if (command === 'cancel-edit' && row) { row.querySelector('.db-chat-composer__queued-editor').hidden = true; row.querySelector('.db-dropdown__trigger').focus(); }
+    });
+    listen(root, 'keydown', function(event) {
+      if (!usable() || !owns(event.target)) return;
+      var entry = menus.filter(function(menu) { return menu.wrap.contains(event.target); })[0];
+      if (!entry) return;
+      if (event.target === entry.trigger && ['ArrowDown', 'ArrowUp'].indexOf(event.key) !== -1) { event.preventDefault(); menuState(entry, true); return; }
+      if (entry.menu.hidden) return;
+      if (event.key === 'Escape' || event.key === 'Tab') { if (event.key === 'Escape') event.preventDefault(); menuState(entry, false, event.key === 'Escape'); return; }
+      var items = Array.from(entry.menu.querySelectorAll('button')).filter(function(item) { return !isDisabled(item); });
+      var index = items.indexOf(document.activeElement);
+      if (!items.length || ['ArrowDown', 'ArrowUp', 'Home', 'End'].indexOf(event.key) === -1) return;
+      event.preventDefault();
+      if (event.key === 'Home') index = 0;
+      else if (event.key === 'End') index = items.length - 1;
+      else index = (index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+      items[index].focus();
+    });
+    renderFiles(); renderQueue(); sync();
+    return handle;
+  }
+
+  function initChatComposers(root) {
+    if (root.nodeType === 1 && root.matches('.db-chat-composer') && !isReactOwned(root)) createChatComposer(root);
+    nativeElements(root, '.db-chat-composer').forEach(function(el) { createChatComposer(el); });
+  }
+
+  /* ----------------------------------------------------------
      Icon Refresh
      ---------------------------------------------------------- */
   function refreshIcons() {
@@ -3157,6 +3839,7 @@
     initAlertDialogs(root);
     initSheets(root);
     initDrawers(root);
+    initChatComposers(root);
     initPopovers(root);
     initContextMenus(root);
     initDropdowns(root);
@@ -3199,6 +3882,7 @@
     getColor: getColor,
     init: init,
     createMessageScroller: createMessageScroller,
+    createChatComposer: createChatComposer,
     toast: toast,
     openModal: openModal,
     closeModal: closeModal,

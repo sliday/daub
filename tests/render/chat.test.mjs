@@ -54,7 +54,7 @@ async function callCloud(name, args) {
 }
 
 test('chat types share the browser, parser, validator and local/cloud catalogs', async () => {
-  assert.equal(RENDERER_TYPES.length, 87);
+  assert.equal(RENDERER_TYPES.length, 88);
   const cloud = await callCloud('get_component_catalog', {});
   for (const type of types) {
     assert.ok(RENDERER_TYPES.includes(type), type);

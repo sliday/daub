@@ -24,6 +24,9 @@ interface DAUBStatic {
   /** Bind a connected native root once, retaining its initial options. Returns null for invalid or React-owned markup. */
   createMessageScroller(root: Element, options?: DAUBMessageScrollerOptions): DAUBMessageScrollerHandle | null;
 
+  /** Bind once; explicit calls also support React-owned composer roots. */
+  createChatComposer(root: Element, options?: DAUBChatComposerOptions): DAUBChatComposerHandle | null;
+
   /** Show a toast notification. Pass a string for quick info toast, or options object for full control. */
   toast(opts: string | DAUBToastOptions): void;
 
@@ -149,8 +152,104 @@ interface DAUBMessageScrollerHandle {
   destroy(): void;
 }
 
+interface DAUBChatComposerModel {
+  id: string;
+  label: string;
+  efforts?: string[];
+}
+
+interface DAUBChatComposerAction {
+  id: string;
+  label: string;
+  icon?: string;
+  disabled?: boolean;
+}
+
+interface DAUBChatComposerOptions {
+  models?: DAUBChatComposerModel[];
+  model?: string;
+  effort?: string;
+  approval?: 'ask' | 'auto';
+  mode?: 'chat' | 'plan';
+  goal?: string | null;
+  busy?: boolean;
+  placeholder?: string;
+  actions?: DAUBChatComposerAction[];
+  capabilities?: {
+    queue?: boolean;
+    steer?: boolean;
+    attachments?: boolean;
+    folders?: boolean;
+    dictation?: boolean;
+    approval?: boolean;
+  };
+}
+
+interface DAUBChatComposerConfig {
+  model: string;
+  effort: string;
+  approval: 'ask' | 'auto';
+  mode: 'chat' | 'plan';
+  goal: string | null;
+}
+
+interface DAUBChatComposerRequest {
+  id: string;
+  text: string;
+  files: File[];
+  model: string;
+  effort: string;
+  approval: 'ask' | 'auto';
+  mode: 'chat' | 'plan';
+  goal?: string | null;
+}
+
+type DAUBChatComposerDictationState = 'unsupported' | 'listening' | 'stopped' | 'error';
+
+interface DAUBChatComposerState extends DAUBChatComposerConfig {
+  text: string;
+  files: File[];
+  queue: DAUBChatComposerRequest[];
+  busy: boolean;
+  dictation: DAUBChatComposerDictationState;
+}
+
+interface DAUBChatComposerHandle {
+  getState(): DAUBChatComposerState;
+  /** Patch options without clearing requests. Placeholder applies now; other options wait until idle. Busy remains host-controlled via setBusy. */
+  updateOptions(options: DAUBChatComposerOptions): boolean;
+  setBusy(busy: boolean): void;
+  setStatus(status: string): void;
+  setDraft(text: string): boolean;
+  /** Clear pending text and attachments without removing queued requests. */
+  clearDraft(): boolean;
+  attachFiles(files: File[]): boolean;
+  getQueue(): DAUBChatComposerRequest[];
+  takeNext(): DAUBChatComposerRequest | null;
+  removeQueued(id: string): boolean;
+  editQueued(id: string, text: string): boolean;
+  steerQueued(id: string): boolean;
+  setModel(id: string): boolean;
+  setEffort(value: string): boolean;
+  setMode(mode: 'chat' | 'plan'): boolean;
+  setApproval(approval: 'ask' | 'auto'): boolean;
+  setGoal(goal: string | null): boolean;
+  /** Requires a trusted user click; does not request permission on initialization. */
+  startDictation(): boolean;
+  stopDictation(): boolean;
+  destroy(): void;
+}
+
 interface HTMLElementEventMap {
   'db:message-scroll': CustomEvent<DAUBMessageScrollerState>;
+  'db:chat-send': CustomEvent<{ request: DAUBChatComposerRequest }>;
+  'db:chat-steer': CustomEvent<{ request: DAUBChatComposerRequest }>;
+  'db:chat-stop': CustomEvent<undefined>;
+  'db:chat-action': CustomEvent<{ action: DAUBChatComposerAction } | { action: 'side-chat'; request: DAUBChatComposerRequest }>;
+  'db:chat-queue': CustomEvent<{ request: DAUBChatComposerRequest | null; queue: DAUBChatComposerRequest[] }>;
+  'db:chat-config': CustomEvent<DAUBChatComposerConfig>;
+  'db:chat-change': CustomEvent<{ state: DAUBChatComposerState }>;
+  'db:chat-dictation': CustomEvent<{ state: DAUBChatComposerDictationState; error?: string }>;
 }
 
 declare const DAUB: DAUBStatic;
