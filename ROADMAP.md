@@ -16,9 +16,9 @@ DAUB is the rendering layer for this future.
 
 **Zero ceremony.** Two files, CDN link, done. No bundler, no framework, no config. Classless CSS means even raw HTML looks considered. In a world of build pipelines, DAUB is refreshingly immediate.
 
-**Opinionated about beauty.** Most component libraries are deliberately neutral — gray surfaces, utilitarian defaults. DAUB has a point of view: tactile surfaces, letterpress typography, real textures. 20 theme families, each with character. "Considered" isn't marketing — it's the design constraint.
+**Opinionated about beauty.** Most component libraries are deliberately neutral — gray surfaces, utilitarian defaults. DAUB has a point of view: tactile surfaces, letterpress typography, real textures. 21 theme families, each with character. "Considered" isn't marketing — it's the design constraint.
 
-**AI-native architecture.** Not a CSS framework with AI bolted on. The JSON-Render spec, MCP server, complexity-routed pipeline, 230+ block RAG library, and `llms.txt` documentation were designed together. AI doesn't just *use* DAUB — DAUB was built for AI to use.
+**AI-native architecture.** Not a CSS framework with AI bolted on. The JSON-Render spec, MCP server, complexity-routed pipeline, 266-block RAG library, and `llms.txt` documentation were designed together. AI doesn't just *use* DAUB — DAUB was built for AI to use.
 
 **Structured specs, not throwaway code.** v0 generates one-off Tailwind/React. Cursor produces code you maintain. DAUB generates structured JSON specs that AI can iterate on, validate, visually diff, and render — without a compile step. The spec *is* the UI.
 
@@ -33,7 +33,7 @@ The stack builds progressively. Each layer enables the next.
 | Layer | Status | What it does |
 |-------|--------|--------------|
 | `daub-classless.css` | **Shipped** (v3.0) | Plain HTML looks good. Zero classes needed. |
-| `daub.css` + `daub.js` | **Shipped** (v2.9) | 76 class-based components, 40 theme variants. |
+| `daub.css` + `daub.js` | **Shipped** (v2.9) | 91 class-based components, 42 theme variants. |
 | JSON-Render spec | **Shipped** (v3.5+) | AI outputs JSON, DAUB renders live UI. Full pipeline with complexity routing. |
 | AI Playground | **Shipped** (v3.9) | 7-stage pipeline: analyze, scaffold, generate, selfCheck, verify, repair, visual diff. Figma input, mobile detection, complexity-based model routing. |
 | MCP Server | **Shipped** (v3.8-3.9) | Remote edge server on Cloudflare. Prompt complexity scoring, tiered model routing with fallback chains. |
@@ -45,11 +45,11 @@ The bottom layers are infrastructure. The top layers are where it gets interesti
 
 ---
 
-## Where We Are (v3.13.0)
+## Current Library
 
-- **73 components** — buttons, cards, modals, tabs, drawers, data tables, and more
-- **20 theme families** with 40 variants — from clean corporate to tactile grunge
-- **230+ pre-made blocks** across 34 categories with multimodal RAG retrieval
+- **91 components** — buttons, cards, modals, tabs, drawers, data tables, and more
+- **21 theme families** with 42 variants — from clean corporate to tactile grunge
+- **266 pre-made blocks** across 34 categories with multimodal RAG retrieval
 - **Block library QA audit** — all blocks validated, screenshots regenerated
 - **AI Playground** with full 7-stage pipeline — analyze, scaffold, generate, selfCheck, verify, repair loop, visual diff
 - **Complexity-based model routing** — prompts scored across 6 dimensions, routed to tiered models with exponential backoff fallbacks

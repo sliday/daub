@@ -120,7 +120,7 @@ Required HTML nesting for overlay and complex components. Use these as a startin
 - `db-field__input` goes on wrapper elements — not just `<input>` tags
 - Icons: DAUB pairs well with [Lucide](https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js) — all demos use Lucide icons
 
-## Components (89)
+## Components (91)
 
 ### 1. Button — `.db-btn`
 Variants: `db-btn--primary`, `db-btn--secondary`, `db-btn--ghost`

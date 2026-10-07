@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-3.20.6-3D3832.svg)](https://daub.dev)
-[![Components](https://img.shields.io/badge/components-89-D4C4A8.svg)](https://daub.dev)
+[![Components](https://img.shields.io/badge/components-91-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
 
@@ -26,7 +26,7 @@ shadcn/ui is excellent — if you run React, Tailwind, and a build pipeline. DAU
 |---|------|-----------|
 | Framework | None required (plain HTML) | React only |
 | Install | One `<link>` + one `<script>` | CLI, Tailwind, build step |
-| Components | 89 in one CSS file | Copy-in per component |
+| Components | 91 in one CSS file | Copy-in per component |
 | Themes | 21 families, 42 variants built in | Bring your own tokens |
 | Classless mode | Yes | No |
 | AI docs | `llms.txt`, `components.json`, MCP server | [llms.txt and MCP](https://ui.shadcn.com/llms.txt) |
@@ -88,7 +88,7 @@ DAUB uses system font stacks by default. For richer typography:
 <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 ```
 
-## Components (89)
+## Components (91)
 
 ### Foundations
 | Component | Class | Notes |

@@ -14,8 +14,8 @@
       "type": "documentation",
       "description": "Full DAUB UI reference: all 91 components with classes, variants and HTML examples, 21 theme families, JS API.",
       "url": "https://daub.dev/llms.txt",
-      "digest": "sha256:10c4e68c56d67b59f1a01c09b25211f807a8d7e685972c4d998049beb951035f",
-      "sha256": "10c4e68c56d67b59f1a01c09b25211f807a8d7e685972c4d998049beb951035f"
+      "digest": "sha256:9313b1ba60eba7b5dd4fcf357eb9b7284f2aa4b2a532060548c41ecd31892619",
+      "sha256": "9313b1ba60eba7b5dd4fcf357eb9b7284f2aa4b2a532060548c41ecd31892619"
     },
     {
       "name": "daub-llms-compact",

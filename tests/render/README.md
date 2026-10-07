@@ -12,10 +12,10 @@ For an existing Chromium installation, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`
 
 ## Coverage
 
-- 89 catalog components: useful HTML, named controls, label targets, overlay trigger targets, complete calendar grids, navigation destinations, nested-button rejection, placeholder rejection, and repository image paths and loading.
+- 91 catalog components: useful HTML, named controls, label targets, overlay trigger targets, complete calendar grids, navigation destinations, nested-button rejection, placeholder rejection, and repository image paths and loading.
 - Catalog modifier selectors: each advertised modifier has a matching CSS selector.
 - Catalog interactions: six overlay examples open and close, Number Field steps and respects its minimum, Date Picker selects a date, Data Table selects and sorts rows, and Toolbar toggles formatting.
-- 87 renderer types: representative props and children, named controls, root creation, and nested-button rejection. Tests require a fixture for each registered type. The additions cover Checkbox Group, Fieldset, Frame, Group, Meter, Number Field, Preview Card, Toolbar, Message Scroller, Message, Bubble, Attachment, and Marker.
+- 89 renderer types: representative props and children, named controls, root creation, and nested-button rejection. Tests require a fixture for each registered type. The additions cover Checkbox Group, Fieldset, Frame, Group, Meter, Number Field, Preview Card, Toolbar, Message Scroller, Message, Bubble, Attachment, and Marker.
 - Renderer regressions: child field labels/helpers/errors, values and disabled states, zero spacing and numeric values, table cells, default tabs, pagination, date-only parsing in a negative UTC offset, chart scaling, named dialogs, usable popup triggers, navigation URLs, prose attribute escaping, avatar fallback, chart empty states, collapsed sidebar names, image loading, and icon positioning.
 
 - MCP contracts: browser/snapshot body equality, local/cloud type catalogs and shared validation, 42 theme names against native JavaScript and CSS, new Cloud OpenUI types, rendered controls and color tokens at desktop/mobile widths, theme/spec script-literal injection, orphan slot uniqueness, and standalone package rendering without the root checkout. Tests fulfill CDN and font requests with local fixtures.
@@ -48,7 +48,7 @@ Overlay triggers use `data-db-modal-trigger` for Modal and `data-db-trigger` for
 
 ## Boundaries
 
-- The HTML catalog and renderer registry have different scopes: 89 CSS/catalog entries and 87 spec renderer types, including layout aliases and helpers.
+- The HTML catalog and renderer registry have different scopes: 91 CSS/catalog entries and 89 spec renderer types, including layout aliases and helpers.
 - App-specific commands such as Save, Create, and Export expose controls for consumers to wire; the catalog does not create an application backend.
 - `mcp/server.js` still hardcodes a stale theme catalog outside this task's file ownership. Its owner needs to import `THEMES` from `lib/prompt.js` and return that object. The shared prompt and cloud catalog expose the 42 supported names.
 - The browser/OpenUI parser and playground catalogs need their owners to expose the new types. This task updates the owned cloud OpenUI schema.
@@ -59,6 +59,6 @@ Overlay triggers use `data-db-modal-trigger` for Modal and `data-db-trigger` for
 
 On the local `component-preview.html` bridge, the Aspect Ratio example loaded `/og-image.png` with a natural size of 1200 by 630 pixels. A 390px viewport displayed the image within a 358px-wide preview; a 1280px viewport also loaded it. Screenshots from this check reside at `/private/tmp/daub-aspect-ratio-mobile.png` and `/private/tmp/daub-aspect-ratio-desktop.png`.
 
-The existing image artwork still states 76 components and 20 themes. Its owner should refresh those counts; this task leaves the image file unchanged.
+The current social preview artwork lists 91 components and 21 theme families. Its source is `og-template.html`.
 
 Desktop/mobile screenshots of the new MCP-rendered types reside in `/private/tmp/daub-render-contracts/`. Set `DAUB_RENDER_SCREENSHOTS` when running the MCP contract suite to capture them again. The npm dry-run package inventory includes the renderer snapshot and all required local library modules.
