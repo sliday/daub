@@ -7,12 +7,12 @@
   <meta name="description" content="DAUB installation, React setup, and component reference with interactive examples, theme variants, and copyable HTML.">
   <link rel="canonical" href="https://daub.dev/components">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="component-browser.css">
-  <link rel="stylesheet" href="site-nav.css" data-site-nav-style>
+  <link rel="stylesheet" href="component-browser.css?v=3.20.6">
+  <link rel="stylesheet" href="site-nav.css?v=3.20.6" data-site-nav-style>
   <script src="assets/lucide.min.js" defer></script>
-  <script src="daub.js" defer></script>
+  <script src="daub.js?v=3.20.6" defer></script>
   <script src="site-nav.js" defer></script>
-  <script src="component-browser.js" defer></script>
+  <script src="component-browser.js?v=3.20.6" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#component-title">Skip to content</a>
@@ -80,7 +80,7 @@ npm --prefix react run build</code></pre>
       <div class="example-toolbar"><div class="example-tabs" role="tablist" aria-label="Component example"><button role="tab" id="tab-preview" aria-selected="true" aria-controls="panel-preview" tabindex="0" data-panel="preview">Preview</button><button role="tab" id="tab-html" aria-selected="false" aria-controls="panel-html" tabindex="-1" data-panel="html">HTML</button><button role="tab" id="tab-anatomy" aria-selected="false" aria-controls="panel-anatomy" tabindex="-1" data-panel="anatomy">Anatomy</button></div><button class="icon-button" id="copy-html" aria-label="Copy component HTML" title="Copy component HTML"><i data-lucide="copy" aria-hidden="true"></i></button></div>
       <section id="panel-preview" role="tabpanel" aria-labelledby="tab-preview">
         <div class="preview-controls"><div class="preview-options"><label>Theme<select id="preview-theme" aria-label="Preview theme"></select></label><label>Variant<select id="preview-variant" aria-label="Component variant"><option value="">Default</option></select></label></div><div class="preview-actions"><div class="device-toggle" role="group" aria-label="Preview device"><button class="icon-button" id="device-desktop" aria-label="Desktop preview" title="Desktop preview" aria-pressed="true"><i data-lucide="monitor" aria-hidden="true"></i></button><button class="icon-button" id="device-mobile" aria-label="Mobile preview" title="Mobile preview" aria-pressed="false"><i data-lucide="smartphone" aria-hidden="true"></i></button></div><button class="icon-button" id="reset-preview" aria-label="Reset preview" title="Reset preview"><i data-lucide="rotate-ccw" aria-hidden="true"></i></button></div></div>
-        <div class="preview-stage" id="preview-stage"><iframe id="component-preview" title="Button interactive preview" src="component-preview.html" sandbox="allow-scripts allow-forms"></iframe></div>
+        <div class="preview-stage" id="preview-stage"><iframe id="component-preview" title="Button interactive preview" src="component-preview.html?v=3.20.6" sandbox="allow-scripts allow-forms"></iframe></div>
       </section>
       <section id="panel-html" class="source-panel" role="tabpanel" aria-labelledby="tab-html" hidden><pre><code id="component-source"></code></pre></section>
       <section id="panel-anatomy" class="anatomy-panel" role="tabpanel" aria-labelledby="tab-anatomy" hidden><table><caption class="sr-only">Component structure</caption><thead><tr><th scope="col">Class</th><th scope="col">Element</th><th scope="col">Usage</th></tr></thead><tbody id="component-anatomy"></tbody></table></section>

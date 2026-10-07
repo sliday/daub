@@ -247,7 +247,7 @@
 
   async function load() {
     try {
-      const response = await fetch('components.json');
+      const response = await fetch('components.json?v=3.20.6');
       if (!response.ok) throw new Error('Catalog request failed');
       const catalog = await response.json();
       components = catalog.components;

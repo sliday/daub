@@ -34,6 +34,25 @@ async function navigate(component) {
   await page.frameLocator('#component-preview').locator('#preview-root [class*="' + component.class + '"]').first().waitFor({ state: 'attached' });
 }
 
+test('composer preview requests release-versioned assets and renders compact controls', async () => {
+  const requests = [];
+  const record = request => requests.push(new URL(request.url()));
+  page.on('request', record);
+  try {
+    await navigate(catalog.components.find(component => component.class === 'db-chat-composer'));
+    for (const path of ['component-browser.js', 'component-browser.css', 'component-preview.html', 'component-preview.js', 'daub.js', 'daub.css', 'components.json']) {
+      const matches = requests.filter(url => url.pathname === '/' + path);
+      assert.ok(matches.length, path + ' requested');
+      assert.ok(matches.every(url => url.searchParams.get('v') === catalog.version), path + ' matches the release');
+    }
+    const frame = page.frameLocator('#component-preview');
+    await frame.getByRole('button', { name: 'Chat settings', exact: true }).waitFor();
+    assert.equal(await frame.locator('select:visible').count(), 0);
+  } finally {
+    page.off('request', record);
+  }
+});
+
 for (const component of catalog.components) {
   test(`component browser: ${component.name} renders its catalog example`, async () => {
     await navigate(component);
