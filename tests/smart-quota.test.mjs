@@ -104,6 +104,10 @@ describe('/api/smart quota', () => {
 
     assert.equal(callerBucket('2001:0DB8:0001:0002:0000:0000:0000:0001'), '2001:db8:1:2::/64');
     assert.equal(callerBucket('::ffff:203.0.113.7'), IP_A);
+    assert.equal(callerBucket('::ffff:cb00:7107'), IP_A);
+    assert.equal(callerBucket('0:0:0:0:0:ffff:cb00:7107'), IP_A);
+    assert.equal(callerBucket('::ffff:c633:6417'), IP_B);
+    assert.doesNotThrow(() => callerBucket('2001:db8:1:2:3:4:5:6::7'));
     assert.equal(callerBucket(IP_A), IP_A);
     assert.equal(callerBucket(''), 'unknown');
   });
@@ -191,5 +195,39 @@ describe('/api/smart quota', () => {
       assert.equal(res.headers.get('Allow'), 'GET, POST, OPTIONS');
     }
     assert.equal(kv.puts.length, 0);
+  });
+
+  it('rejects cross-origin quota spending before touching KV', async () => {
+    let reads = 0;
+    let writes = 0;
+    const env = { SMART_QUOTA: { get: async () => { reads++; return null; }, put: async () => { writes++; } } };
+    for (const origin of ['https://evil.example', 'null', 'http://preview.daub.pages.dev', 'https://daub.dev.evil.example']) {
+      const res = await call('POST', { env, origin });
+      assert.equal(res.status, 403, origin);
+      assert.deepEqual(await body(res), { granted: false, reason: 'forbidden' });
+      assert.equal(res.headers.get('Cache-Control'), 'no-store');
+    }
+    const res = await onRequest({ request: new Request(URL_, { method: 'POST', headers: { 'Sec-Fetch-Site': 'cross-site' } }), env });
+    assert.equal(res.status, 403);
+    assert.equal(reads, 0);
+    assert.equal(writes, 0);
+  });
+
+  it('allows trusted origins, same-origin local development, and non-browser callers', async () => {
+    for (const origin of ['https://daub.dev', 'https://daub.pages.dev', 'https://preview.daub.pages.dev', undefined]) {
+      assert.equal((await call('POST', { env: { SMART_QUOTA: mockKV() }, origin })).status, 200);
+    }
+    const origin = 'http://127.0.0.1:8797';
+    const res = await onRequest({ request: new Request(origin + '/api/smart', { method: 'POST', headers: { Origin: origin } }), env: { SMART_QUOTA: mockKV() } });
+    assert.equal(res.status, 200);
+  });
+
+  it('shares a quota between IPv4 and equivalent mapped IPv6 representations', async () => {
+    const env = { SMART_QUOTA: mockKV() };
+    for (let i = 0; i < LIMIT; i++) await call('POST', { env, ip: IP_A });
+    for (const ip of ['::ffff:203.0.113.7', '::ffff:cb00:7107', '0:0:0:0:0:ffff:cb00:7107']) {
+      assert.equal((await call('POST', { env, ip })).status, 429, ip);
+    }
+    assert.equal((await call('POST', { env, ip: '::ffff:c633:6417' })).status, 200);
   });
 });

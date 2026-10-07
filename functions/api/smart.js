@@ -3,11 +3,11 @@
 // POST /api/smart -> 200 { granted: true, remaining, resetAt }     spends one Smart run
 //                    429 { granted: false, remaining: 0, resetAt } budget spent until resetAt
 // Both -> 503 { granted: false, reason: 'unavailable' } when the SMART_QUOTA KV binding is missing or KV throws.
-// The playground treats any non-200 as "stay in normal mode" (fail closed).
+// Future Smart callers must treat any non-200 as "stay in normal mode" (fail closed).
 //
 // This is a UI budget, not abuse protection. KV is eventually consistent and accepts about one write per
 // second per key, so parallel POSTs from one caller can read the same count and slightly exceed LIMIT.
-// The zone WAF rate-limiting rule on /api/* (60 requests / 10 s per IP) covers abuse.
+// Before enabling Smart, verify rate-limit coverage for /api/* on production and Pages hostnames.
 //
 // KV key: q:<yyyy-mm-dd UTC>:<sha256(salt|day|caller)>. The raw IP never reaches KV. IPv6 callers count
 // per /64, so rotating addresses inside one allocation does not refill the budget. The default salt is
@@ -18,12 +18,17 @@ export const LIMIT = 10;
 const TTL_SECONDS = 30 * 3600; // outlives the UTC day it counts, then KV drops the key
 const DEFAULT_SALT = 'daub-smart-quota-v1';
 
+function allowsOrigin(request) {
+  const origin = request.headers.get('Origin') || '';
+  if (!origin || origin === 'null') return false;
+  return origin === new URL(request.url).origin || origin === 'https://daub.dev'
+    || origin === 'https://daub.pages.dev' || /^https:\/\/[a-z0-9-]+\.daub\.pages\.dev$/.test(origin);
+}
+
 function corsFor(request) {
   const origin = request.headers.get('Origin') || '';
-  const allowedOrigins = ['https://daub.dev', 'https://daub.pages.dev'];
-  const isAllowed = allowedOrigins.some(o => origin === o || origin.endsWith('.daub.pages.dev'));
   return {
-    'Access-Control-Allow-Origin': isAllowed ? origin : allowedOrigins[0],
+    'Access-Control-Allow-Origin': allowsOrigin(request) ? origin : 'https://daub.dev',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
@@ -31,16 +36,20 @@ function corsFor(request) {
 
 // IPv4 as is; IPv6 reduced to its /64 prefix (an IPv4-mapped address counts as the IPv4 address).
 export function callerBucket(ip) {
-  const s = String(ip || '').trim().toLowerCase();
+  let s = String(ip || '').trim().toLowerCase();
   if (!s.includes(':')) return s || 'unknown';
-  const mapped = s.match(/^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/);
-  if (mapped) return mapped[1];
+  try {
+    s = new URL(`http://[${s}]/`).hostname.slice(1, -1);
+  } catch { return s; }
   const halves = s.split('::');
   if (halves.length > 2) return s;
   const head = halves[0] ? halves[0].split(':') : [];
   const tail = halves.length === 2 && halves[1] ? halves[1].split(':') : [];
   const groups = halves.length === 2 ? [...head, ...Array(8 - head.length - tail.length).fill('0'), ...tail] : head;
   if (groups.length !== 8 || !groups.every(g => /^[0-9a-f]{1,4}$/.test(g))) return s;
+  if (groups.slice(0, 5).every(g => parseInt(g, 16) === 0) && parseInt(groups[5], 16) === 0xffff) {
+    return groups.slice(6).flatMap(g => [parseInt(g, 16) >> 8, parseInt(g, 16) & 255]).join('.');
+  }
   return groups.slice(0, 4).map(g => parseInt(g, 16).toString(16)).join(':') + '::/64';
 }
 
@@ -70,6 +79,11 @@ export async function onRequest(context) {
   if (method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders });
   if (method !== 'GET' && method !== 'POST') {
     return json({ error: 'Method not allowed' }, 405, { Allow: 'GET, POST, OPTIONS' });
+  }
+  if (method === 'POST' && (request.headers.has('Origin')
+    ? !allowsOrigin(request)
+    : request.headers.get('Sec-Fetch-Site') === 'cross-site')) {
+    return json({ granted: false, reason: 'forbidden' }, 403);
   }
 
   const unavailable = () => json({ granted: false, reason: 'unavailable' }, 503);

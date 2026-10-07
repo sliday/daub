@@ -11,11 +11,12 @@ pages_build_output_dir = "."
 # SMART_QUOTA_SALT: optional secret salt for /api/smart quota keys. Set it once; changing it resets that day's counts.
 #
 # Rate limiting: Pages has no rate-limit binding type, so RL_WEBLOOK, RL_GENERATE, RL_MCP and RL_PHOTO
-# are always unbound and the handlers skip those checks (they fail open). A zone WAF rate-limiting rule
-# limits /api/* instead: 60 requests / 10 s per IP, then a 10 s block.
+# are unbound and the handlers skip those checks (they fail open). Before enabling Smart, verify WAF
+# protection for /api/* (60 requests / 10 s per IP, 10 s block) and restrict unprotected Pages hostnames.
 
 # Smart mode daily budget (/api/smart): 10 runs per IP per UTC day. Namespace title: DAUB_SMART_QUOTA.
-# /api/smart answers 503 without this binding, and the playground stays in normal mode.
+# /api/smart answers 503 without this binding; future callers must stay in normal mode.
+# This binding is shared by previews and production; isolate preview storage before Smart preview testing.
 [[kv_namespaces]]
 binding = "SMART_QUOTA"
 id = "1aeec0ea7a8b4a8d92f36574a432cc53"
