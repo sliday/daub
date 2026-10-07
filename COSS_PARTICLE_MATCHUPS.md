@@ -76,6 +76,25 @@ Daub adds these components to close named COSS particle categories without inven
 | Preview Card | `db-preview-card` | Hover and focus preview for inline references. |
 | Toolbar | `db-toolbar` | Editor or dashboard action rail with groups and separators. |
 
+## Chat Conversation Primitives
+
+DAUB also provides equivalents for the five conversation primitives in the
+[shadcn/ui June 2026 chat release](https://ui.shadcn.com/docs/changelog/2026-06-chat-components).
+These additions sit outside the May 2026 COSS particle inventory above. The HTML
+catalog has 89 entries; the browser/OpenUI/MCP renderer registry has 87 types.
+
+| Reference primitive | DAUB class | Composition |
+|---|---|---|
+| MessageScroller | `db-message-scroller` | Viewport, content, stable-ID rows, scroll controls |
+| Message | `db-message` | Avatar, header, content, footer, end alignment |
+| Bubble | `db-bubble` | Seven surfaces, end alignment, app-controlled reactions |
+| Attachment | `db-attachment` | Media, metadata, app-controlled states, overlay link and sibling actions |
+| Marker | `db-marker` | System notes, bordered status rows, labeled separators |
+
+Group primitives with `db-message-group`, `db-bubble-group`, and
+`db-attachment-group`. Compose input with Textarea, InputGroup, and Button.
+Consumers supply transport, uploads, and persistence. See [chat-demo.html](chat-demo.html).
+
 ## Composition Notes
 
 Autocomplete and combobox particles map to existing Daub building blocks because Daub already separates search input styling from popup behavior. Use `db-search` for filtered text entry, `db-custom-select` for selectable options, and `db-command` for command style filtering.

@@ -17,7 +17,7 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
 
     if (lines > 1) {
       return (
-        <div ref={ref} {...props}>
+        <div ref={ref} data-db-react="" aria-hidden="true" {...props}>
           {Array.from({ length: lines }, (_, i) => (
             <div key={i} className={classes} />
           ))}
@@ -25,7 +25,7 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
       );
     }
 
-    return <div ref={ref} className={classes} {...props} />;
+    return <div ref={ref} data-db-react="" aria-hidden="true" className={classes} {...props} />;
   },
 );
 

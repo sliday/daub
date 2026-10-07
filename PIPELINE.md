@@ -9,7 +9,7 @@ User prompt
     |
     v
 [Phase 0: Component Picking] (parallel with layout analysis)
-    |  chooseComponents() -> /api/choose -> Jev (~typesafe/jev-latest)
+    |  chooseComponents() -> /api/choose -> Jev (typesafe/jev-1.13-20260917)
     |  One yes/no decision per component; picked ones get full props in the prompt
     v
 [Phase 1: Streaming Generation]
@@ -45,12 +45,27 @@ Spec rendered in preview iframe
 - `session_id` (`^[A-Za-z0-9_-]{1,128}$`): passed through so Auto Router keeps one chat on the same model
 - Streams SSE responses back to the client. Each chunk carries `model`, the model Auto Router picked.
 
+## Photo Proxy
+
+`functions/api/photo.js`: `GET /api/photo?q=<1-6 words>&w=<16-2000>&h=<16-2000>[&i=0-9]` answers with a 302 to a CC0 or public-domain photo of `q`. The photos need no attribution, and no API key is required. The playground prompt does not emit these URLs yet; a later change wires that in.
+
+- Sources, in order: Openverse (`license=cc0,pdm`, `source=rawpixel,wordpress,stocksnap,nappy`), then Wikimedia Commons CC0/PD search, then an inline DAUB placeholder SVG. Openverse images go through `api.openverse.org/v1/images/{id}/thumb/` (600px; `?full_size=true` when `w > 600`), so generated pages never hotlink the stock sites.
+- Query ladder: Openverse matches every word, so a miss retries with the phrase before the first preposition and then drops leading words (`white leather sneaker` → `leather sneaker` → `sneaker`). At most 3 upstream calls per query.
+- Cache: a named Cache API cache (`daub-photo-v1`) keyed by the normalised `q` stores the top 20 hits for 7 days (10 min for no match, 5 min for a Commons answer given while Openverse was slow or down). `w`, `h` and `i` pick from that list, so the same `(q, w, h, i)` gives the same photo. The 302 carries `Cache-Control: public, max-age=86400`.
+- Pick rule: the `i`-th hit whose orientation matches the slot (landscape if `w >= 1.15h`, portrait if `h >= 1.15w`), otherwise the `i`-th hit.
+- Failure handling: Openverse races a 3 s timer; if Openverse loses, Commons answers and the late Openverse result replaces the cache entry via `waitUntil`. A network error, 429, 5xx or timeout opens a 60 s per-isolate breaker. Commons has a 2.5 s timeout.
+- Content filter: a `q` that names nudity or gore (`nude`, `naked`, `topless`, `porn`, `corpse`, ...) returns the placeholder with no upstream call. Openverse hits flagged `mature` or whose title or tags match those words are dropped, and so are Commons files whose title or categories match. Openverse's `mature=false` alone lets StockSnap's "Body Nude" through for `q=body`. The filter reads metadata only, so Commons can still return classical art or historical photos that carry no such words.
+- Safety: the request never supplies a URL. `Location` must be https on `api.openverse.org`, `thumb.wikimedia.org` or `upload.wikimedia.org`. Invalid input returns the placeholder with `X-Photo-Status: invalid`, so an `<img>` never breaks. Responses send `Access-Control-Allow-Origin: *`, `Cross-Origin-Resource-Policy: cross-origin`, `Referrer-Policy: no-referrer` and `nosniff`.
+- Rate limit: `RL_PHOTO` (60 req / 60 s per IP) runs on cache misses only and fails open. Over the limit, the proxy returns the placeholder with `no-store` and `Retry-After: 60`.
+- Debug headers: `X-Photo-Status` (`hit`, `miss`, `miss-fallback`, `no-match`, `cached-empty`, `upstream-down`, `rate-limited`, `invalid`), `X-Photo-Source`, `X-Photo-License`, `X-Photo-Landing`.
+- Tests: `tests/photo-proxy.test.mjs` (mocked fetch and Cache API).
+
 ## Phase 0: Component Picking
 
 `chooseComponents(prompt, signal)` runs in parallel with `analyzeLayout()` and resolves before `buildMessages()`.
 
 - Endpoint: `functions/api/choose.js` → OpenRouter `/api/alpha/decisions` (not chat/completions; Jev is a decisions model)
-- Model: `~typesafe/jev-latest` (pinned server-side; clients cannot override)
+- Model: `typesafe/jev-1.13-20260917` (versioned id pinned server-side; clients cannot override)
 - Request: `state = { request: prompt }`, one `noul` question per renderable component (core layout types excluded), each described by its one-line `COMP_PURPOSE` entry
 - Picks: core set (`Stack`, `Grid`, `Text`, `Card`, `Button`, `Icon`, `Separator`) + every component with p(yes) ≥ 0.45 (`PICK_THRESHOLD`) + every type already in `currentSpec`
 - Skipped when the message has attachments (images, web or Figma context): Jev only sees the typed text, so those requests use the full catalog
@@ -192,7 +207,7 @@ Benchmark (34 prompts, 116 outputs, two blind frontier judges plus a critic): th
 
 | Stage | Function | Model | Reasoning effort | `cost_tier` | `session_id` |
 |-------|----------|-------|------------------|-------------|--------------|
-| Pick components | `chooseComponents()` → `/api/choose` | `~typesafe/jev-latest` | — | — | — |
+| Pick components | `chooseComponents()` → `/api/choose` | `typesafe/jev-1.13-20260917` | — | — | — |
 | Layout analysis | `analyzeLayout()` | `openrouter/auto` | low | — | — |
 | Generate (main chat, continuations, retries) | `startStream()` → `streamDefault()` | `openrouter/auto` | server default (medium) | — | per chat |
 | Fallback after 3 failed parses | `startStream(messages, FALLBACK_MODEL)` | `moonshotai/kimi-k2.5` | server default (medium) | — | — |

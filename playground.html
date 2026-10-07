@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DAUB — Playground</title>
+  <script src="site-nav.js" defer></script>
   <meta name="description" content="Interactive Playground for DAUB UI Kit: prompt an AI, get a json-render spec, and see live DAUB component previews with all 84 components.">
   <meta name="keywords" content="DAUB playground, json-render, generative UI, AI components, CSS components, live preview, BYOK">
   <meta name="theme-color" content="#C67B5C">
@@ -18,7 +19,7 @@
   <meta property="og:description" content="Interactive Generative UI playground with 84 DAUB components. Prompt AI, get JSON specs, see live previews.">
   <meta property="og:url" content="https://daub.dev/playground.html">
   <meta property="og:site_name" content="DAUB UI">
-  <meta property="og:image" content="https://daub.dev/og-image.png">
+  <meta property="og:image" content="https://daub.dev/og-image.png?v=3.20.6">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="DAUB UI — Considered interface components">
@@ -28,7 +29,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="DAUB — Playground">
   <meta name="twitter:description" content="Interactive Generative UI playground with 84 DAUB components. Prompt AI, get JSON specs, see live previews.">
-  <meta name="twitter:image" content="https://daub.dev/og-image.png">
+  <meta name="twitter:image" content="https://daub.dev/og-image.png?v=3.20.6">
   <meta name="twitter:site" content="@staskulesh">
 
   <!-- FOUC prevention -->
@@ -49,7 +50,7 @@
           crossorigin="anonymous" defer></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.20.3">
+  <link rel="stylesheet" href="daub.css?v=3.20.6">
 
   <style>
     html, body { margin: 0; overflow-x: hidden; height: 100%; }
@@ -117,7 +118,9 @@
     .db-nav__github:hover { border-color: var(--db-charcoal); }
     @media (max-width: 600px) {
       .db-nav { padding: 0 12px; }
-      .db-nav__links { gap: 2px; }
+      .db-nav__brand { flex-shrink: 0; margin-right: 12px; }
+      .db-nav__links { gap: 2px; overflow-x: auto; min-width: 0; }
+      .db-nav__links li { flex-shrink: 0; }
       .db-nav__links a { font-size: 0.75rem; padding: 4px 8px; }
       .db-nav__github span { display: none; }
     }
@@ -127,6 +130,8 @@
       display: flex;
       flex-direction: column;
       height: calc(100vh - 48px);
+      height: calc(100dvh - 48px);
+      box-sizing: border-box;
     }
     .pg-grid {
       display: grid;
@@ -181,6 +186,39 @@
     .pg-options-examples-trigger[aria-expanded="true"] .db-collapsible__icon {
       transform: rotate(90deg);
     }
+    .pg-options-sep {
+      width: 2px; height: 2px; border-radius: 50%;
+      background: var(--db-warm-gray); opacity: 0.5;
+      flex-shrink: 0;
+    }
+    .pg-pill-toggle {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 999px;
+      border: 1px solid var(--db-sand);
+      font-size: 0.6875rem; color: var(--db-warm-gray);
+      font-family: var(--db-font-ui); cursor: pointer;
+      user-select: none; transition: all 0.15s ease;
+      background: transparent;
+    }
+    .pg-pill-toggle input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .pg-pill-toggle:focus-within { outline: 2px solid var(--db-terracotta); outline-offset: 2px; }
+    .pg-react-composer:focus-within { outline: 2px solid var(--db-terracotta); outline-offset: -1px; }
+    .pg-pill-toggle:hover { border-color: var(--db-warm-gray); }
+    .pg-pill-toggle--active {
+      border-color: color-mix(in srgb, var(--db-terracotta) 40%, transparent);
+      background: color-mix(in srgb, var(--db-terracotta) 8%, transparent);
+      color: var(--db-terracotta);
+    }
+    .pg-zap-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 14px; height: 14px; border-radius: 3px;
+      background: var(--db-sand); transition: all 0.15s ease;
+    }
+    .pg-zap-icon svg { stroke: var(--db-warm-gray); transition: all 0.15s ease; }
+    .pg-pill-toggle--active .pg-zap-icon {
+      background: var(--db-terracotta);
+    }
+    .pg-pill-toggle--active .pg-zap-icon svg { stroke: #fff; }
     .pg-byok-link {
       font-size: 0.6875rem; color: var(--db-warm-gray);
       text-decoration: none; font-family: var(--db-font-ui);
@@ -259,7 +297,7 @@
     .pg-panel__body--mobile {
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: stretch;
       padding: 16px 8px;
       overflow: hidden;
       background: repeating-conic-gradient(
@@ -267,10 +305,13 @@
         transparent 0% 50%) 50% / 16px 16px;
     }
     .pg-panel__body--mobile .pg-preview {
-      width: 375px; min-width: 375px; max-width: 375px;
-      max-height: calc(100% - 32px);
+      width: min(375px, 100%) !important; min-width: 0; max-width: 375px;
+      max-height: 100%;
       border-radius: 8px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    }
+    .pg-panel__body--mobile .pg-preview-pane[data-pane="design"] {
+      width: 100%; align-items: center; padding: 16px 8px; box-sizing: border-box;
     }
     .pg-viewport-btn--active {
       background: color-mix(in srgb, var(--db-terracotta) 15%, transparent) !important;
@@ -340,6 +381,15 @@
       vertical-align: middle;
     }
     @keyframes pg-blink { 0%,100%{opacity:.2} 50%{opacity:1} }
+    /* Live progress steps in the reply bubble: done steps get a check, the active one blinks */
+    .pg-chat__steps { list-style: none; margin: 0; padding: 0; font-size: 0.75rem; color: var(--db-warm-gray); }
+    .pg-chat__steps li { display: flex; gap: 6px; align-items: baseline; }
+    .pg-chat__steps li::before { content: '\2713'; flex: 0 0 0.75rem; text-align: center; color: var(--db-success, #2e7d32); }
+    .pg-chat__steps li.pg-chat__step--active { color: var(--db-ink); }
+    .pg-chat__steps li.pg-chat__step--active::before { content: '\25CF'; font-size: 0.625rem; color: var(--db-terracotta); animation: pg-blink 1s infinite; }
+    .pg-chat__msg--stopped .pg-chat__steps li.pg-chat__step--active::before { content: '\25A0'; animation: none; }
+    .pg-chat__msg--streaming:has(.pg-chat__steps)::after { content: none; }
+    .pg-result-summary { font-size: 0.75rem; color: var(--db-ink); margin-top: 4px; }
     .pg-chat__msg--error {
       align-self: flex-start;
       background: color-mix(in srgb, var(--db-error, #d32f2f) 10%, transparent);
@@ -662,6 +712,7 @@
     }
     .pg-json-area textarea {
       flex: 1;
+      min-height: 120px;
       resize: none;
       font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
       font-size: 0.75rem;
@@ -698,6 +749,8 @@
     .pg-json-tree .renderjson .key { color: var(--db-ink); font-weight: 500; }
     .pg-json-tree .renderjson .keyword { color: var(--db-warm-gray); }
     .pg-json-tree .renderjson .syntax { color: var(--db-warm-gray); }
+    .pg-json-outline { max-height: 40%; overflow: auto; border-top: 1px solid var(--db-sand); }
+    .pg-json-outline summary { padding: 8px 12px; cursor: pointer; font-family: var(--db-font-ui); font-size: 0.75rem; }
     .pg-json-error {
       display: none;
       margin-bottom: 8px;
@@ -714,6 +767,8 @@
       border-radius: 0; font-weight: 500;
     }
     .pg-preview-tabs .db-tabs__tab[aria-selected="true"] { font-weight: 500; }
+    /* Status text shares the tab box so "Streaming…" sits on the tab baseline */
+    #pg-status { height: 36px; line-height: 34px; border-bottom: 2px solid transparent; box-sizing: border-box; font-weight: 500; }
     .pg-preview-pane { display: none; flex: 1; overflow: auto; min-height: 0; }
     .pg-preview-pane--active { display: flex; flex-direction: column; }
     .pg-code-view {
@@ -744,6 +799,9 @@
       .pg-panel--active { display: flex; flex: 1; }
       .pg-footer { display: none; }
       .pg-wrapper { padding-bottom: 56px; }
+      #panel-preview > .pg-panel__toolbar { flex-wrap: wrap; height: auto; min-height: 36px; gap: 4px; }
+      .pg-preview-tabs { flex: 1 0 100%; }
+      .db-theme-switcher { bottom: calc(72px + env(safe-area-inset-bottom)); right: 12px; }
     }
   </style>
 </head>
@@ -808,14 +866,14 @@
               <button class="db-chip db-chip--sm" data-example="Stripe-style analytics dashboard: Breadcrumbs (Home > Analytics > Overview). Row of 4 horizontal StatCards: Gross Volume ($142.8K, up 14.2%, icon dollar-sign), Successful Payments (3,847, up 8.1%, icon credit-card), New Customers (284, down 3.2%, icon users), Net Revenue ($128.6K, up 11.4%, icon trending-up). Two-column layout below. Left (4 cols): ChartCard titled 'Revenue Over Time' with a 12-bar chart (Jan–Dec values 85,92,78,105,118,96,110,125,134,128,138,143 max 150). Right (2 cols): Card titled 'Top Products' with a sortable DataTable — columns Product, Revenue, Sales, Status — 5 rows: Pro Plan/$48.2K/1240/active-green, Team Plan/$32.1K/890/active-green, Starter/$24.8K/2100/active-green, Enterprise/$18.4K/42/active-green, Add-ons/$8.6K/680/updated-Badge. Below the columns: Card titled 'Recent Activity' with a List of 5 items: 'Payment received from Acme Corp' (icon check-circle, secondary '2 min ago'), 'Subscription upgraded — Pro to Team' (icon arrow-up-circle, '14 min ago'), 'Refund processed #RF-2847' (icon rotate-ccw, '1 hour ago'), 'New customer signup' (icon user-plus, '3 hours ago'), 'Invoice #INV-1923 sent' (icon send, '5 hours ago'). Pagination at the bottom: page 1 of 12, 10 per page.">Dashboard</button>
               <button class="db-chip db-chip--sm" data-example="Sign-in page inspired by Linear/Notion: centered narrow layout with a clipped Card on a raised Surface. Top: heading 'Welcome back' with caption 'Sign in to continue to your workspace'. Field label 'Email address' with email-type input placeholder 'you@company.com'. Field label 'Password' with password-type input. Row: Checkbox 'Remember this device' on the left, ghost Button 'Forgot password?' on the right. Full-width primary Button 'Sign in'. Separator with label 'or'. Row of 3 ghost Buttons with icons: 'Google' (icon chrome), 'GitHub' (icon github), 'SSO' (icon key-round). Below the card: small text 'New to the platform? Create an account'. At the very bottom: small muted text 'By continuing, you agree to our Terms of Service and Privacy Policy'.">Sign In</button>
               <button class="db-chip db-chip--sm" data-example="Account settings page like GitHub/GitLab: heading 'Settings' with caption 'Manage your account and preferences'. Tabs: Profile, Notifications, Appearance, Security (Profile active). Profile tab content: Card titled 'Public Profile'. Inside: two-column horizontal layout. Left (4 cols): Field label 'Display name' text input value 'Sarah Chen', Field label 'Username' with InputGroup addonBefore '@' and input value 'sarahchen', Field label 'Bio' with Textarea (3 rows) value 'Design engineer building tools for developers', searchable CustomSelect label 'Timezone' with options (UTC-8 Los Angeles selected, UTC-5 New York, UTC+0 London, UTC+1 Berlin, UTC+8 Singapore, UTC+9 Tokyo). Right (2 cols): Avatar (initials SC, size lg), ghost Button 'Change photo' with icon camera. Switch 'Make profile public' (checked). Separator. Card footer: secondary Button 'Cancel', primary Button 'Save changes'. Below: Card titled 'Danger Zone' on a pressed Surface. Inside: horizontal layout with Text 'Delete your account and all associated data permanently' on the left, a Button variant 'icon-danger' label 'Delete account' with icon trash-2 on the right. An AlertDialog (id 'delete-confirm') titled 'Delete account?' description 'This will permanently delete your account, all projects, and data. This action cannot be undone.' with footer containing a secondary Button 'Cancel' and a danger-variant Button 'Yes, delete my account'.">Settings</button>
-              <button class="db-chip db-chip--sm" data-example="User profile page like Dribbble/Behance: two-column horizontal layout. Left sidebar (2 cols): Card with large Avatar (initials SC, size lg), heading 'Sarah Chen', caption 'Staff Design Engineer at Vercel'. Row of 3 horizontal StatCards: Projects (47), Followers (12.4K), Following (328). Two Buttons side by side: primary 'Follow' with icon user-plus, secondary 'Message' with icon mail. Separator. Card titled 'Skills' with Chips: Systems Design (blue), React (green), TypeScript (purple), Figma (amber), Motion Design (pink), Accessibility (red). Card titled 'Links' with a List: 'sarahchen.design' (icon globe), '@sarahchen' (icon twitter), 'github.com/sarahchen' (icon github). Right content area (4 cols): Tabs: Projects, Activity, About (Projects active). Card with a 3-column layout of 3 interactive clipped Cards, each with media image (use dummyimage.com 400x240/e0e0e0/999.png with labels 'Design System', 'Dashboard Kit', 'Mobile App'), title, description text, and a footer row with a Badge ('Figma' new-variant) and small muted text '2 days ago'.">Profile</button>
+              <button class="db-chip db-chip--sm" data-example="User profile page like Dribbble/Behance: two-column horizontal layout. Left sidebar (2 cols): Card with large Avatar (initials SC, size lg), heading 'Sarah Chen', caption 'Staff Design Engineer at Vercel'. Row of 3 horizontal StatCards: Projects (47), Followers (12.4K), Following (328). Two Buttons side by side: primary 'Follow' with icon user-plus, secondary 'Message' with icon mail. Separator. Card titled 'Skills' with Chips: Systems Design (blue), React (green), TypeScript (purple), Figma (amber), Motion Design (pink), Accessibility (red). Card titled 'Links' with a List: 'sarahchen.design' (icon globe), '@sarahchen' (icon twitter), 'github.com/sarahchen' (icon github). Right content area (4 cols): Tabs: Projects, Activity, About (Projects active). Card with a 3-column layout of 3 interactive clipped Cards, each with media image (https://picsum.photos/seed/design-system/400/240, https://picsum.photos/seed/dashboard-kit/400/240 and https://picsum.photos/seed/mobile-app/400/240, with alt text naming each project: 'Design System', 'Dashboard Kit', 'Mobile App'), title, description text, and a footer row with a Badge ('Figma' new-variant) and small muted text '2 days ago'.">Profile</button>
               <button class="db-chip db-chip--sm" data-example="Team management page like Slack/Linear admin: heading 'Team Members' with caption '24 members across 5 departments'. Row: Search input placeholder 'Search by name, email, or role...', CustomSelect placeholder 'All Roles' with options (All Roles selected, Engineering, Design, Product, Marketing, Sales), CustomSelect placeholder 'Status' with options (All selected, Active, Away, Offline), DropdownMenu trigger Button (icon more-horizontal, size icon) with items: 'Export as CSV' (icon download), 'Import members' (icon upload), separator, 'Manage roles' (icon shield), 'Bulk actions' (icon layers). Card: selectable DataTable columns Name, Email, Role, Department, Joined, Status — 6 rows of realistic data where Role uses Chips (Engineering blue, Design purple, Product green, Marketing amber) and Status uses Badges (Active green, Away amber). Pagination: page 1 of 4, 25 per page. A Sheet (id 'invite-sheet', position right) containing heading 'Invite New Member', Field 'Email address' email-type, CustomSelect 'Role' with options (Engineering, Design, Product, Marketing, Sales), CustomSelect 'Department' with options (Platform, Growth, Enterprise), Switch 'Send welcome email' checked, footer with secondary Button 'Cancel' and primary Button 'Send Invite'. A primary Button 'Invite Member' with icon user-plus that has trigger 'invite-sheet'.">Team</button>
               <button class="db-chip db-chip--sm" data-example="SaaS pricing page like Vercel/Supabase: centered heading 'Simple, transparent pricing' with caption 'Start building for free. Scale with confidence.'. ToggleGroup: Monthly / Annual (Monthly selected). Three-column layout of interactive clipped Cards. Free ($0/mo): 5 features with check icons (Up to 3 projects, 1GB storage, Community support, Basic analytics, 100K API calls/mo), ghost Button 'Get Started'. Pro ($25/mo): Badge 'Popular' (new variant) at top, raised Surface, 6 features (Unlimited projects, 50GB storage, Priority email support, Advanced analytics, 2M API calls/mo, Custom domains), primary Button 'Start Free Trial'. Enterprise (Custom): 6 features (Everything in Pro, Unlimited storage, Dedicated support engineer, SSO and SAML, Unlimited API calls, 99.99% SLA), secondary Button 'Contact Sales'. Separator. Accordion titled 'Frequently Asked Questions' with 4 items: 'Can I switch plans at any time?' / 'Yes — upgrades are immediate, downgrades take effect at next billing cycle.', 'What happens when I hit my usage limit?' / 'We will notify you at 80% and 100%. Your service continues with overage billing at standard rates.', 'Do you offer discounts for startups?' / 'Yes — eligible startups get 50% off Pro for the first year through our Startup Program.', 'How does the 14-day free trial work?' / 'Full access to Pro features, no credit card required. Your projects persist if you upgrade.'.">Pricing</button>
             </div>
           </div>
           <div class="pg-chat__input-wrap">
             <div class="pg-chat__img-strip" id="pg-img-strip"></div>
-            <textarea class="db-textarea" id="pg-prompt" rows="1" placeholder="Describe the UI you want to build..."></textarea>
+            <textarea class="db-textarea" id="pg-prompt" aria-label="Describe a UI" rows="1" placeholder="Describe the UI you want to build..."></textarea>
             <div class="pg-chat__input-actions">
               <div style="display:flex;align-items:center;gap:2px;">
                 <button class="pg-chat__attach-btn" id="pg-attach-img" title="Attach image">
@@ -851,25 +909,25 @@
     <!-- RIGHT: Preview Panel (with Design / Structure / Code tabs) -->
     <div class="pg-panel" id="panel-preview">
       <div class="pg-panel__toolbar">
-        <div class="db-tabs__list pg-preview-tabs" id="pg-preview-tabs">
-          <button class="db-tabs__tab pg-tab pg-tab--active" data-tab="design" aria-selected="true">Design</button>
-          <button class="db-tabs__tab pg-tab" data-tab="structure">Structure</button>
-          <button class="db-tabs__tab pg-tab" data-tab="code">Code</button>
+        <div class="db-tabs__list pg-preview-tabs" id="pg-preview-tabs" role="tablist" aria-label="Preview view">
+          <button class="db-tabs__tab pg-tab pg-tab--active" id="pg-tab-design" role="tab" data-tab="design" aria-controls="pg-pane-design" aria-selected="true">Design</button>
+          <button class="db-tabs__tab pg-tab" id="pg-tab-structure" role="tab" data-tab="structure" aria-controls="pg-pane-structure" aria-selected="false" tabindex="-1">Structure</button>
+          <button class="db-tabs__tab pg-tab" id="pg-tab-code" role="tab" data-tab="code" aria-controls="pg-pane-code" aria-selected="false" tabindex="-1">Code</button>
         </div>
         <span class="db-caption db-text-muted" id="pg-status" style="font-family:var(--db-font-ui);white-space:nowrap;"></span>
         <span style="flex:1"></span>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-render" title="Render" style="display:none;"><i data-lucide="play" style="width:12px;height:12px;"></i></button>
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-render" title="Render" aria-label="Render JSON" style="display:none;"><i data-lucide="play" style="width:12px;height:12px;"></i></button>
         <div class="db-btn-group" id="pg-viewport-toggle" style="display:none;">
           <button class="db-btn db-btn--ghost db-btn--sm pg-viewport-btn pg-viewport-btn--active"
-                  data-viewport="desktop" title="Desktop"><i data-lucide="monitor" style="width:12px;height:12px;"></i></button>
+                  data-viewport="desktop" title="Desktop" aria-label="Desktop preview" aria-pressed="true"><i data-lucide="monitor" style="width:12px;height:12px;"></i></button>
           <button class="db-btn db-btn--ghost db-btn--sm pg-viewport-btn"
-                  data-viewport="mobile" title="Mobile"><i data-lucide="smartphone" style="width:12px;height:12px;"></i></button>
+                  data-viewport="mobile" title="Mobile" aria-label="Mobile preview" aria-pressed="false"><i data-lucide="smartphone" style="width:12px;height:12px;"></i></button>
         </div>
         <span id="pg-toolbar-sep" style="display:none;width:1px;height:16px;background:var(--db-sand);"></span>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-share" title="Share link" style="display:none;">
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-share" title="Share link" aria-label="Copy share link" style="display:none;">
           <i data-lucide="link" style="width:12px;height:12px;"></i>
         </button>
-        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-download" title="Download HTML" style="display:none;">
+        <button class="db-btn db-btn--ghost db-btn--sm" id="pg-download" title="Download HTML" aria-label="Download HTML" style="display:none;">
           <i data-lucide="download" style="width:12px;height:12px;"></i>
         </button>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-copy-json" title="Copy JSON" style="display:none;"><i data-lucide="copy" style="width:12px;height:12px;"></i> Copy</button>
@@ -877,12 +935,12 @@
       </div>
       <div class="pg-panel__body" id="pg-preview-body" style="display:flex;flex-direction:column;padding:0;min-height:0;">
         <!-- Design mode (default) -->
-        <div class="pg-preview-pane pg-preview-pane--active" data-pane="design">
-          <iframe class="pg-preview" id="pg-preview-frame" sandbox="allow-scripts" style="border:none;width:100%;height:100%;"></iframe>
+        <div class="pg-preview-pane pg-preview-pane--active" id="pg-pane-design" role="tabpanel" aria-labelledby="pg-tab-design" data-pane="design">
+          <iframe class="pg-preview" id="pg-preview-frame" title="UI preview" sandbox="allow-scripts" style="border:none;width:100%;height:100%;"></iframe>
         </div>
         <!-- Structure mode -->
-        <div class="pg-preview-pane" data-pane="structure">
-          <div class="pg-json-error">
+        <div class="pg-preview-pane pg-json-area" id="pg-pane-structure" role="tabpanel" aria-labelledby="pg-tab-structure" data-pane="structure">
+          <div class="pg-json-error" role="alert">
             <div class="db-alert db-alert--error">
               <div class="db-alert__content">
                 <div class="db-alert__title">Invalid JSON</div>
@@ -890,17 +948,15 @@
               </div>
             </div>
           </div>
-          <div class="pg-json-tree"></div>
+          <textarea id="pg-json" aria-label="UI specification JSON" spellcheck="false" placeholder="{ &quot;root&quot;: &quot;app&quot;, &quot;elements&quot;: {} }"></textarea>
+          <details class="pg-json-outline"><summary>Outline</summary><div class="pg-json-tree"></div></details>
         </div>
         <!-- Code mode -->
-        <div class="pg-preview-pane" data-pane="code">
+        <div class="pg-preview-pane" id="pg-pane-code" role="tabpanel" aria-labelledby="pg-tab-code" data-pane="code">
           <pre class="pg-code-view" id="pg-code-view"></pre>
         </div>
       </div>
     </div>
-
-    <!-- Hidden JSON textarea for internal state -->
-    <textarea id="pg-json" spellcheck="false" style="display:none;"></textarea>
 
   </div>
 
@@ -961,7 +1017,8 @@
   </div>
 </div>
 
-<script src="daub.js?v=3.20.3"></script>
+<script src="daub.js?v=3.20.6"></script>
+<script src="daub-render.js"></script>
 <script src="daub-openui-parser.js"></script>
 <script>
 // ============================================================
@@ -1040,15 +1097,16 @@ var $byokModalClose = document.getElementById('pg-byok-modal-close');
 var $byokSave     = document.getElementById('pg-byok-save');
 
 // ---- Iframe preview bootstrap ----
-function buildIframeSrcdoc(theme) {
-  var themeAttr = theme ? ' data-theme="' + String(theme).replace(/[&<>"']/g, function(c) { return '&#' + c.charCodeAt(0) + ';'; }) + '"' : '';
-  return '<!DOCTYPE html><html lang="en"' + themeAttr + '>'
+function buildIframeSrcdoc(theme, scheme) {
+  var themeAttr = theme ? ' data-theme="' + esc(theme) + '"' : '';
+  var schemeAttr = scheme ? ' data-scheme="' + esc(scheme) + '"' : '';
+  return '<!DOCTYPE html><html lang="en"' + themeAttr + schemeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
     + '<base target="_blank">'
-    + '<link rel="stylesheet" href="daub.css?v=3.20.3">'
+    + '<link rel="stylesheet" href="daub.css?v=3.20.6">'
     + '<script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"><\/script>'
-    // html2canvas needs a same-origin clone iframe, which an opaque sandbox forbids; html-to-image uses SVG foreignObject
-    + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js" integrity="sha384-YAj4cGTKsNinHUzylwDJDDZEpC6gnqNubmrp9eerckq7+gwWjABe5s2plXl3uUKb" crossorigin="anonymous"><\/script>'
+    + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
+    + '<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js" integrity="sha384-Tha/42qsYmpYmQ07pX+nJzkKumO0BzKJxK/uzVc7xyBQxVCUgQBhQIG8L7vXK+9C" crossorigin="anonymous"><\/script>'
     + '<style>html,body{margin:0;min-height:100%;}'
     + '.pg-iframe-empty{display:flex;align-items:center;justify-content:center;min-height:100vh;}'
     + '.pg-iframe-empty::after{content:attr(data-quote);'
@@ -1070,7 +1128,8 @@ function buildIframeSrcdoc(theme) {
     + '"\u201CThe best design is the simplest one that works.\u201D\\n\u2014 Albert Einstein",'
     + '"\u201CTypography is the craft of endowing human language with a durable visual form.\u201D\\n\u2014 Robert Bringhurst"'
     + '];document.getElementById("pg-iframe-root").setAttribute("data-quote",qs[Math.floor(Math.random()*qs.length)])})()<\/script>'
-    + '<script src="daub.js?v=3.20.3"><\/script>'
+    + '<script src="daub.js?v=3.20.6"><\/script>'
+    + '<script>' + DAUB_RENDER_BODY.replace(/<\/script/gi, '<\\/script') + '<\/script>'
     + '<script>'
     + 'var root = document.getElementById("pg-iframe-root");'
     // Opaque-origin frame: reply only to the embedding origin
@@ -1180,11 +1239,32 @@ function buildIframeSrcdoc(theme) {
     + '};'
     // ---- End Declarative State Engine ----
     + 'window.addEventListener("message", function(e) {'
-    + '  if (e.source !== window.parent) return;'
-    + '  if (!e.data || !e.data.type) return;'
+    + '  if (e.source !== window.parent || !e.data || !e.data.type) return;'
+    + '  if (e.data.type === "highlight" || e.data.type === "unhighlight") {'
+    + '    var ids = Array.isArray(e.data.elements) ? e.data.elements : [];'
+    + '    root.querySelectorAll("[data-spec-id]").forEach(function(el) {'
+    + '      if (ids.indexOf(el.getAttribute("data-spec-id")) !== -1) el.classList.toggle("db-skeleton", e.data.type === "highlight");'
+    + '    });'
+    + '  }'
     + '  if (e.data.type === "render") {'
     + '    root.className = "pg-preview-body";'
     + '    root.innerHTML = e.data.html;'
+    + '    if (e.data.spec && e.data.spec.elements) {'
+    + '      var spec = e.data.spec;'
+    + '      root.replaceChildren();'
+    + '      var first = renderElement(spec.elements, spec.root, 0);'
+    + '      if (first) root.appendChild(first);'
+    + '      if (typeof renderOrphans === "function") renderOrphans(spec, root);'
+    + '      var rendered = Object.create(null);'
+    + '      function markRendered() { root.querySelectorAll("[data-spec-id]").forEach(function(el) { rendered[el.getAttribute("data-spec-id")] = true; }); }'
+    + '      markRendered();'
+    + '      Object.keys(spec.elements).forEach(function(id) {'
+    + '        if (id !== spec.root && !rendered[id]) {'
+    + '          var orphan = renderElement(spec.elements, id, 0);'
+    + '          if (orphan) { root.appendChild(orphan); markRendered(); }'
+    + '        }'
+    + '      });'
+    + '    }'
     // CustomHTML markup arrives as an attribute and is parsed only here, never in the parent
     + '    root.querySelectorAll("template[data-pg-html]").forEach(function(slot) {'
     + '      var t = document.createElement("template");'
@@ -1223,11 +1303,13 @@ function buildIframeSrcdoc(theme) {
     + '    document.documentElement.removeAttribute("data-theme");'
     + '  }'
     + '  if (e.data.type === "screenshot") {'
-    + '    if (!window.htmlToImage) { parent.postMessage({ type: "screenshot", data: null }, _po); return; }'
     + '    var bg = getComputedStyle(document.body).backgroundColor;'
     + '    if (!bg || bg === "transparent" || bg === "rgba(0, 0, 0, 0)") bg = getComputedStyle(document.documentElement).backgroundColor;'
-    + '    htmlToImage.toJpeg(root, { quality: 0.7, pixelRatio: 1, skipFonts: true, backgroundColor: bg })'
-    + '      .then(function(u) { parent.postMessage({ type: "screenshot", data: u }, _po); })'
+    + '    var fallback = function() {'
+    + '      return window.htmlToImage ? htmlToImage.toJpeg(root, { quality: 0.7, pixelRatio: 1, skipFonts: true, backgroundColor: bg }) : Promise.resolve(null);'
+    + '    };'
+    + '    var capture = window.html2canvas ? html2canvas(root, { scale: 1, useCORS: true, logging: false }).then(function(c) { return c.toDataURL("image/jpeg", 0.7); }).catch(fallback) : fallback();'
+    + '    capture.then(function(data) { parent.postMessage({ type: "screenshot", data: data }, _po); })'
     + '      .catch(function() { parent.postMessage({ type: "screenshot", data: null }, _po); });'
     + '  }'
     + '  if (e.data.type === "test") {'
@@ -1282,10 +1364,20 @@ function collectCustomJS(spec) {
 }
 
 // Initialize iframe with srcdoc
+var _previewReady = false;
+var _previewMessages = [];
+$previewFrame.addEventListener('load', function() {
+  _previewReady = true;
+  _previewMessages.splice(0).forEach(postToPreview);
+});
 $previewFrame.srcdoc = buildIframeSrcdoc();
 
 // Helper to post message to iframe
 function postToPreview(msg) {
+  if (msg.type === 'theme') _pgPreviewTheme = msg.value;
+  if (msg.type === 'scheme') _pgPreviewScheme = msg.value;
+  if (msg.type === 'clear') _pgPreviewTheme = null;
+  if (!_previewReady) { _previewMessages.push(msg); return; }
   if ($previewFrame.contentWindow) {
     $previewFrame.contentWindow.postMessage(msg, '*');
   }
@@ -1309,6 +1401,7 @@ var PG_CHROME_THEME = 'bone';
 var PG_CHROME_SCHEME = 'light';
 var _pgLocking = false;
 var _pgPreviewTheme = null;
+var _pgPreviewScheme = null;
 
 function pgLockChrome() {
   _pgLocking = true;
@@ -2295,10 +2388,11 @@ function repairJSON(s, asString) {
 // ---- Screenshot capture for self-check ----
 function capturePreview() {
   if (!currentSpec) return Promise.resolve(null);
+  var expectedFrameWindow = $previewFrame.contentWindow;
   return new Promise(function(resolve) {
-    var timeout = setTimeout(function() { resolve(null); }, 5000);
+    var timeout = setTimeout(function() { window.removeEventListener('message', onMessage); resolve(null); }, 5000);
     function onMessage(e) {
-      if (e.source === $previewFrame.contentWindow && e.data && e.data.type === 'screenshot') {
+      if (e.source === expectedFrameWindow && e.data && e.data.type === 'screenshot') {
         clearTimeout(timeout);
         window.removeEventListener('message', onMessage);
         resolve(e.data.data);
@@ -2462,7 +2556,7 @@ function selfCheck(spec, screenshotDataUrl, signal) {
   .catch(function(e) { if (e.name === 'AbortError') return null; return null; });
 }
 
-// ---- Component picker: Jev decision model (~typesafe/jev-latest) via /api/choose ----
+// ---- Component picker: Jev decision model (typesafe/jev-1.13-20260917) via /api/choose ----
 // Asks one yes/no question per component and resolves to the picked type list,
 // or null (use the full catalog) on any failure, timeout, or empty pick.
 var PICK_CORE = ['Stack', 'Grid', 'Text', 'Card', 'Button', 'Icon', 'Separator'];
@@ -2513,6 +2607,13 @@ var COMP_PURPOSE = {
   AspectRatio: 'a fixed aspect-ratio frame for images or video',
   Chip: 'a tag or filter pill',
   ScrollArea: 'a scrollable region',
+  MessageScroller: 'a streaming-aware conversation viewport that preserves history and reader position',
+  Message: 'a chat message row with sender, avatar, content, and footer',
+  Bubble: 'a conversational text surface with user and assistant variants and reactions',
+  Attachment: 'a file or image attachment with metadata, upload status, and separate actions',
+  Marker: 'a chat activity status, system note, or date separator',
+  ChangeSummary: 'a static in-chat file change summary with addition/deletion totals and explicit host-provided actions',
+  ChatComposer: 'a native rich message composer with local attachments, queue controls, model and effort selection, approval intent, plan mode, and user-started dictation',
   Image: 'an image or photo',
   Alert: 'an inline callout banner for info, warning, error or success messages',
   Progress: 'a progress bar',
@@ -2646,7 +2747,8 @@ function analyzeLayout(userPrompt, images, webContexts, figmaContexts, signal) {
       model: AUTO_MODEL,
       messages: messages,
       reasoning: { effort: 'low' },
-      max_tokens: 800,
+      // Reasoning tokens count against this: at 800, reasoning routes (deepseek) could spend it all and return no brief
+      max_tokens: 3000,
       response_format: false
     }),
     signal: signal
@@ -3202,17 +3304,18 @@ function runChunkTests(chunkResults, timeout) {
   if (!tests.length) return Promise.resolve([]);
   var iframe = document.getElementById('pg-preview-frame');
   if (!iframe || !iframe.contentWindow) return Promise.resolve([]);
+  var expectedFrameWindow = iframe.contentWindow;
   return new Promise(function(resolve) {
     var resolved = false;
     function onMessage(e) {
-      if (e.source === iframe.contentWindow && e.data && e.data.type === 'testResults' && !resolved) {
+      if (e.source === expectedFrameWindow && e.data && e.data.type === 'testResults' && !resolved) {
         resolved = true;
         window.removeEventListener('message', onMessage);
         resolve(e.data.results || []);
       }
     }
     window.addEventListener('message', onMessage);
-    iframe.contentWindow.postMessage({ type: 'test', tests: tests, timeout: timeout || 2000 }, '*');
+    postToPreview({ type: 'test', tests: tests, timeout: timeout || 2000 });
     setTimeout(function() {
       if (!resolved) {
         resolved = true;
@@ -3500,10 +3603,36 @@ function addChatBubble(role, text, images) {
       setTimeout(function() { copyBtn.innerHTML = _svgCopy; }, 1500); // safe: static SVG constant
     });
   });
-  div.appendChild(copyBtn);
+  // Replies hold progress and results, not text worth copying
+  if (role !== 'ai') div.appendChild(copyBtn);
   $chatMessages.appendChild(div);
   $chatMessages.scrollTop = $chatMessages.scrollHeight;
   return div;
+}
+
+// Add a progress step to a reply bubble; the previous active step counts as done
+function bubbleStep(bubble, text) {
+  if (!bubble) return;
+  var list = bubble.querySelector('.pg-chat__steps');
+  if (!list) {
+    list = document.createElement('ul');
+    list.className = 'pg-chat__steps';
+    bubble.insertBefore(list, bubble.firstChild);
+  }
+  var active = list.querySelector('.pg-chat__step--active');
+  if (active) active.classList.remove('pg-chat__step--active');
+  if (text) {
+    var li = document.createElement('li');
+    li.className = 'pg-chat__step--active';
+    li.textContent = text;
+    list.appendChild(li);
+  }
+  $chatMessages.scrollTop = $chatMessages.scrollHeight;
+}
+// Rewrite the active step in place (live counters)
+function bubbleStepText(bubble, text) {
+  var active = bubble && bubble.querySelector('.pg-chat__step--active');
+  if (active) active.textContent = text;
 }
 
 function renderChatHistory() {
@@ -3563,8 +3692,22 @@ function buildResultBubble(bubble, spec, verIdx) {
   // Meta: timestamp
   var meta = document.createElement('div');
   meta.className = 'pg-result-meta';
-  meta.textContent = fmtTime(ver ? ver.timestamp : Date.now()) + (ver && ver.model ? ' \u00B7 via ' + ver.model : '');
+  meta.textContent = fmtTime(ver ? ver.timestamp : Date.now()) + (ver && ver.model ? ' \u00B7 via ' + ver.model : '') + (ver && ver.ms ? ' \u00B7 built in ' + Math.round(ver.ms / 1000) + 's' : '');
   bubble.appendChild(meta);
+
+  // Summary: the most-used content components, layout primitives left out
+  var _useCounts = {};
+  Object.keys((spec && spec.elements) || {}).forEach(function(id) {
+    var t = spec.elements[id].type;
+    if (t && ['Stack', 'Grid', 'Text', 'Separator'].indexOf(t) === -1) _useCounts[t] = (_useCounts[t] || 0) + 1;
+  });
+  var _top = Object.keys(_useCounts).sort(function(a, b) { return _useCounts[b] - _useCounts[a]; });
+  if (_top.length) {
+    var summary = document.createElement('div');
+    summary.className = 'pg-result-summary';
+    summary.textContent = _top.slice(0, 5).map(function(t) { return _useCounts[t] > 1 ? t + ' \u00D7' + _useCounts[t] : t; }).join(', ') + (_top.length > 5 ? ' +' + (_top.length - 5) + ' more' : '');
+    bubble.appendChild(summary);
+  }
 
   // Component type chips (collapsible)
   var detail = document.createElement('div');
@@ -3705,6 +3848,7 @@ function generate() {
   _currentStream.streamBubble = addChatBubble('ai', '');
   _currentStream.streamBubble.classList.add('pg-chat__msg--streaming');
   var streamBubble = _currentStream.streamBubble;
+  var _genStart = Date.now();
 
   // Auto-switch to mobile viewport for mobile app prompts
   var _promptLower = prompt.toLowerCase();
@@ -3728,18 +3872,21 @@ function generate() {
   }
 
   _abortCtrl = new AbortController();
+  // Jev only sees the typed text, so attachments skip the picker (full catalog)
+  var _hasAttachments = imagesForThisMsg.length || webContextsForThisMsg.length || figmaContextsForThisMsg.length;
   var analysisPromise;
-  if (!currentSpec) {
+  // The layout brief runs only for attachments: on text asks it cost ~7 s of first paint with no quality gain (brief eval, 2026-09-29)
+  if (!currentSpec && _hasAttachments) {
     $status.textContent = 'Analyzing layout\u2026';
     analysisPromise = analyzeLayout(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, _abortCtrl.signal);
   } else {
     analysisPromise = Promise.resolve(null);
   }
   var preSignal = _abortCtrl.signal;
-  // Jev only sees the typed text, so attachments skip the picker (full catalog)
-  var _hasAttachments = imagesForThisMsg.length || webContextsForThisMsg.length || figmaContextsForThisMsg.length;
-  if (currentSpec && !_hasAttachments) $status.textContent = 'Choosing components\u2026';
+  if (!_hasAttachments) $status.textContent = 'Choosing components\u2026';
   var pickPromise = _hasAttachments ? Promise.resolve(null) : chooseComponents(prompt, preSignal);
+  if (!_hasAttachments) bubbleStep(streamBubble, 'Choosing components\u2026');
+  else if (!currentSpec) bubbleStep(streamBubble, 'Reading the attachments and planning the layout\u2026');
   var messages; // set after analysis completes
   var accumulated = '';
   var continuations = 0;
@@ -3760,6 +3907,8 @@ function generate() {
         renderSpec(result.spec, progressivePrevSpec);
         progressivePrevSpec = result.spec;
         $status.textContent = 'Rendering\u2026';
+        var _n = countComponents(result.spec);
+        if (_n) bubbleStepText(streamBubble, 'Building the UI\u2026 ' + _n + (_n === 1 ? ' element' : ' elements') + ' so far');
       }
     } else {
       tryProgressiveRender(accumulated);
@@ -3786,11 +3935,13 @@ function generate() {
     $json.value = '';
     if (retries <= MAX_RETRIES) {
       $status.textContent = 'Retry ' + retries + '/' + MAX_RETRIES + ' \u2014 ' + reason;
+      bubbleStep(streamBubble, 'Retry ' + retries + ' of ' + MAX_RETRIES + ': ' + reason);
       setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages, usingFallback ? FALLBACK_MODEL : undefined); }, 500);
     } else if (useDefault && !usingFallback) {
       usingFallback = true;
       retries = 0;
       $status.textContent = 'Switching to fallback model\u2026';
+      bubbleStep(streamBubble, 'Switching to the fallback model\u2026');
       setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages, FALLBACK_MODEL); }, 500);
     } else {
       clearInterval(renderTimer);
@@ -3822,6 +3973,7 @@ function generate() {
         if (_lastFinishReason === 'length' && continuations < MAX_CONTINUATIONS) {
           continuations++;
           $status.textContent = 'Continuing (' + continuations + '/' + MAX_CONTINUATIONS + ')\u2026';
+          bubbleStep(streamBubble, 'Output hit the length limit, continuing (' + continuations + ' of ' + MAX_CONTINUATIONS + ')\u2026');
           var contMsg = (_detectedFormat || DaubOpenUI.detectFormat(accumulated)) === 'openui'
             ? 'Continue the openui-lang code from where you stopped. Output ONLY remaining statements, no repetition, no explanation.'
             : 'Continue the JSON exactly from where you stopped. Output ONLY the remaining JSON, no repetition, no explanation.';
@@ -3854,6 +4006,7 @@ function generate() {
           pushVersion(spec, prompt);
           var _routedModel = useDefault ? _lastRoutedModel : '';
           if (_routedModel) specVersions[specVersions.length - 1].model = _routedModel;
+          specVersions[specVersions.length - 1].ms = Date.now() - _genStart;
           renderSpec(spec, prevSpec2);
           refreshJsonTree();
           updatePreviewToolbar();
@@ -3928,11 +4081,11 @@ function generate() {
           }
           function _addSkeleton(elements) {
             if (!elements || !elements.length) return;
-            postToPreview({ type: 'skeleton', ids: elements, on: true });
+            postToPreview({ type: 'highlight', elements: elements });
           }
           function _removeSkeleton(elements) {
             if (!elements || !elements.length) return;
-            postToPreview({ type: 'skeleton', ids: elements, on: false });
+            postToPreview({ type: 'unhighlight', elements: elements });
           }
           function _pipeFinish() {
             pipeSummary.textContent = 'Pipeline complete';
@@ -4279,7 +4432,10 @@ function generate() {
           runBlockingGenerate(messages, streamBubble);
           return;
         }
-        doRetryOrFallback(err.message || String(err));
+        $status.textContent = '';
+        streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
+        streamBubble.textContent = err.message || String(err);
+        setLoading(false);
       }
     );
   }
@@ -4290,6 +4446,18 @@ function generate() {
     else if (!currentSpec) console.warn('[analyzeLayout] Skipped or failed');
     messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief, res[1]);
     $status.textContent = 'Streaming\u2026';
+    // Swap the planning step for what it produced, then show the build step
+    var _picked = (res[1] || []).filter(function(t) { return PICK_CORE.indexOf(t) === -1; });
+    var _planDone = [];
+    if (analysisBrief) _planDone.push('Planned the layout');
+    else if (!currentSpec && _hasAttachments) _planDone.push('Layout planning skipped');
+    if (_picked.length) _planDone.push('Picked ' + _picked.length + ' components: ' + _picked.slice(0, 5).join(', ') + (_picked.length > 5 ? ' +' + (_picked.length - 5) + ' more' : ''));
+    else if (!_hasAttachments) _planDone.push('Using the full component catalog');
+    if (_planDone.length) {
+      bubbleStepText(streamBubble, _planDone[0]);
+      for (var _pi = 1; _pi < _planDone.length; _pi++) bubbleStep(streamBubble, _planDone[_pi]);
+    }
+    bubbleStep(streamBubble, 'Building the UI\u2026');
     startStream(messages);
   });
 }
@@ -4327,25 +4495,46 @@ $json.addEventListener('input', updateRenderVisibility);
 // ---- Render from JSON editor ----
 function renderFromEditor() {
   hideJsonError();
+  $status.textContent = '';
   try {
     var spec = JSON.parse($json.value);
-    renderSpec(spec);
+    commitSpec(spec, 'JSON edit');
     $status.textContent = 'Rendered';
   } catch (err) {
     showJsonError(err.message);
   }
 }
 
+function commitSpec(spec, prompt) {
+  var issues = validateSpec(spec);
+  if (issues.length) throw new Error(issues.join('; '));
+  renderSpec(spec, currentSpec);
+  currentSpec = spec;
+  $json.value = JSON.stringify(spec, null, 2);
+  pushVersion(spec, prompt);
+  refreshJsonTree();
+  updatePreviewToolbar();
+  updateCodeView();
+  hideJsonError();
+  saveChatState();
+}
+
+function copyText(text, message) {
+  return Promise.resolve().then(function() {
+    return navigator.clipboard.writeText(text);
+  }).then(function() {
+    DAUB.toast({ type: 'success', message: message });
+  }).catch(function() {
+    DAUB.toast({ type: 'error', message: 'Could not copy. Check clipboard permissions.' });
+  });
+}
+
 // ---- Copy / Format ----
 $copyJson.addEventListener('click', function() {
-  navigator.clipboard.writeText($json.value).then(function() {
-    DAUB.toast({ type: 'success', message: 'JSON copied!' });
-  });
+  copyText($json.value, 'JSON copied!');
 });
 $copyHtml.addEventListener('click', function() {
-  navigator.clipboard.writeText(_iframeHtmlCache).then(function() {
-    DAUB.toast({ type: 'success', message: 'HTML copied!' });
-  });
+  copyText(buildExportHtml(), 'HTML copied!');
 });
 
 // ---- Preview mode tabs ----
@@ -4366,7 +4555,7 @@ function updateToolbarForMode(mode) {
 
 function updateCodeView() {
   var el = document.getElementById('pg-code-view');
-  if (el && _iframeHtmlCache) el.textContent = _iframeHtmlCache;
+  if (el) el.textContent = currentSpec ? buildExportHtml() : '';
 }
 
 function updatePreviewToolbar() {
@@ -4379,9 +4568,10 @@ document.getElementById('pg-preview-tabs').addEventListener('click', function(e)
   var tab = btn.dataset.tab;
   if (tab === _previewMode) return;
   _previewMode = tab;
-  this.querySelectorAll('.pg-tab').forEach(function(b) { b.classList.remove('pg-tab--active'); b.setAttribute('aria-selected', 'false'); });
+  this.querySelectorAll('.pg-tab').forEach(function(b) { b.classList.remove('pg-tab--active'); b.setAttribute('aria-selected', 'false'); b.tabIndex = -1; });
   btn.classList.add('pg-tab--active');
   btn.setAttribute('aria-selected', 'true');
+  btn.tabIndex = 0;
   document.querySelectorAll('.pg-preview-pane').forEach(function(p) {
     var active = p.dataset.pane === tab;
     p.style.display = active ? '' : 'none';
@@ -4389,6 +4579,15 @@ document.getElementById('pg-preview-tabs').addEventListener('click', function(e)
   });
   if (tab === 'code') updateCodeView();
   updateToolbarForMode(tab);
+});
+document.getElementById('pg-preview-tabs').addEventListener('keydown', function(e) {
+  var tabs = Array.from(this.querySelectorAll('.pg-tab'));
+  var index = tabs.indexOf(e.target);
+  if (index < 0 || ['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(e.key) < 0) return;
+  e.preventDefault();
+  var next = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : (index + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+  tabs[next].click();
+  tabs[next].focus();
 });
 
 // ---- Share click handler ----
@@ -4411,8 +4610,9 @@ $share.addEventListener('click', function() {
 // ---- Viewport toggle handler ----
 document.querySelectorAll('.pg-viewport-btn').forEach(function(btn) {
   btn.addEventListener('click', function() {
-    document.querySelectorAll('.pg-viewport-btn').forEach(function(b) { b.classList.remove('pg-viewport-btn--active'); });
+    document.querySelectorAll('.pg-viewport-btn').forEach(function(b) { b.classList.remove('pg-viewport-btn--active'); b.setAttribute('aria-pressed', 'false'); });
     this.classList.add('pg-viewport-btn--active');
+    this.setAttribute('aria-pressed', 'true');
     if (this.dataset.viewport === 'mobile') {
       $panelPreviewBody.classList.add('pg-panel__body--mobile');
     } else {
@@ -4422,23 +4622,24 @@ document.querySelectorAll('.pg-viewport-btn').forEach(function(btn) {
 });
 
 // ---- Download HTML handler ----
+function buildExportHtml() {
+  if (!currentSpec) return '';
+  var payload = JSON.stringify({ type: 'render', html: _iframeHtmlCache, spec: currentSpec, js: collectCustomJS(currentSpec), stateConfig: collectStateConfig(currentSpec) }).replace(/</g, '\\u003c');
+  return buildIframeSrcdoc(_pgPreviewTheme || currentSpec.theme, _pgPreviewScheme)
+    .replace('<base target="_blank">', '<base href="https://daub.dev/" target="_blank">')
+    .replace('</head>', '<title>DAUB UI Export</title></head>')
+    .replace('</body>', '<script>window.postMessage(' + payload + ', "*");<\/script></body>');
+}
+
 $download.addEventListener('click', function() {
   if (!currentSpec) return;
-  var themeAttr = currentSpec.theme ? ' data-theme="' + esc(String(currentSpec.theme)).replace(/"/g, '&quot;') + '"' : '';
-  var html = '<!DOCTYPE html>\n<html lang="en"' + themeAttr + '>\n<head>\n<meta charset="UTF-8">\n'
-    + '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
-    + '<title>DAUB UI Export</title>\n'
-    + '<link rel="stylesheet" href="https://daub.dev/daub.css">\n'
-    + '</head>\n<body>\n<div class="db-container" style="padding:24px;">\n'
-    + _iframeHtmlCache
-    + '\n</div>\n<script src="https://daub.dev/daub.js"><\/script>\n'
-    + '</body>\n</html>';
+  var html = buildExportHtml();
   var blob = new Blob([html], { type: 'text/html' });
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'daub-ui-export.html';
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(function() { URL.revokeObjectURL(a.href); }, 1000);
 });
 
 // ---- Version management ----
@@ -4494,7 +4695,8 @@ var _treeRefreshTimer = null;
 function refreshJsonTree() {
   // renderjson script is deferred — retry once it has loaded
   if (typeof renderjson === 'undefined') {
-    document.addEventListener('DOMContentLoaded', refreshJsonTree, { once: true });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refreshJsonTree, { once: true });
+    $jsonTree.textContent = $json.value;
     return;
   }
   var raw = $json.value;
@@ -4549,6 +4751,8 @@ $prompt.addEventListener('input', function() {
 
 // ---- New Chat ----
 $newChat.addEventListener('click', function() {
+  stopGeneration();
+  if (_isLoading) _cleanupCurrentStream();
   chatHistory = [];
   currentSpec = null;
   specVersions = [];
@@ -4560,6 +4764,7 @@ $newChat.addEventListener('click', function() {
   updatePreviewToolbar();
   postToPreview({ type: 'clear' });
   _iframeHtmlCache = '';
+  updateCodeView();
   _renderSeq++;
   _chatSessionId = newChatSessionId();
   $prompt.value = '';
@@ -4663,23 +4868,25 @@ function computeSpecDiff(oldSpec, newSpec) {
 //  RENDERER — json-render spec to DAUB HTML
 // ============================================================
 var MAX_DEPTH = 20;
+var RENDERING = Object.create(null); // element ids on the current render path (see specRef)
 var _renderFailures = []; // {id, type, message} per renderSpec pass; a throwing element renders a notice instead
 var _renderFailSig = '', _renderFailMsg = '';
 
 // ---- Spec Validation & Auto-Fix ----
 function validateSpec(spec) {
   var issues = [];
-  if (!spec || typeof spec !== 'object') return ['Spec is not an object'];
-  if (!spec.elements || typeof spec.elements !== 'object') issues.push('Missing "elements" object');
+  if (!spec || typeof spec !== 'object' || Array.isArray(spec)) return ['Spec is not an object'];
+  if (!spec.elements || typeof spec.elements !== 'object' || Array.isArray(spec.elements)) return ['Missing "elements" object'];
   if (!spec.root) issues.push('Missing "root"');
   if (spec.root && spec.elements && !spec.elements[spec.root]) issues.push('Root "' + spec.root + '" not found in elements');
   if (spec.elements) {
     Object.keys(spec.elements).forEach(function(id) {
       var def = spec.elements[id];
+      if (!def || typeof def !== 'object' || Array.isArray(def)) { issues.push('Element "' + id + '" must be an object'); return; }
       if (!def.type) issues.push('Element "' + id + '" missing "type"');
-      else if (!RENDERERS[def.type] && def.type !== 'CustomHTML') issues.push('Unknown type "' + def.type + '" on element "' + id + '"');
+      else if (VALID_TYPES.indexOf(def.type) < 0) issues.push('Unknown type "' + def.type + '" on element "' + id + '"');
       var children = def.children || [];
-      if (!Array.isArray(children)) { issues.push('Element "' + id + '" has non-array children'); children = []; }
+      if (!Array.isArray(children)) { issues.push('Element "' + id + '" children must be an array'); return; }
       children.forEach(function(cid) {
         if (!spec.elements[cid]) issues.push('Element "' + id + '" references missing child "' + cid + '"');
       });
@@ -4735,6 +4942,8 @@ function autoFixSpec(spec) {
     var ids = Object.keys(spec.elements);
     if (ids.length) spec.root = ids[0];
   }
+  // A named element listed under two parents renders once (the OpenUI parser already does this for its specs)
+  if (window.DaubOpenUI && DaubOpenUI.dedupeRefs && spec.elements[spec.root]) DaubOpenUI.dedupeRefs(spec.elements, spec.root);
   return spec;
 }
 
@@ -4755,22 +4964,7 @@ function renderSpec(spec, prevSpec, inert) {
   if (el) tempDiv.appendChild(el);
 
   // Render orphan elements (overlays not in any children array)
-  var rendered = {};
-  tempDiv.querySelectorAll('[data-spec-id]').forEach(function(n) {
-    rendered[n.getAttribute('data-spec-id')] = true;
-  });
-  Object.keys(spec.elements).forEach(function(id) {
-    if (id !== spec.root && !rendered[id]) {
-      var orphan = renderElement(spec.elements, id, 0);
-      if (orphan) {
-        tempDiv.appendChild(orphan);
-        orphan.querySelectorAll('[data-spec-id]').forEach(function(n) {
-          rendered[n.getAttribute('data-spec-id')] = true;
-        });
-        rendered[id] = true;
-      }
-    }
-  });
+  renderOrphans(spec, tempDiv);
 
   // Report guarded element failures once per distinct set (progressive renders repeat them)
   var failSig = _renderFailures.length ? JSON.stringify(_renderFailures) : '';
@@ -4789,7 +4983,7 @@ function renderSpec(spec, prevSpec, inert) {
   var jsItems = collectCustomJS(spec);
   var stateConfig = collectStateConfig(spec);
   _iframeHtmlCache = tempDiv.innerHTML;
-  postToPreview({ type: 'render', html: tempDiv.innerHTML, js: jsItems, stateConfig: stateConfig, seq: ++_renderSeq, inert: !!inert });
+  postToPreview({ type: 'render', html: tempDiv.innerHTML, spec: spec, js: jsItems, stateConfig: stateConfig, seq: ++_renderSeq, inert: !!inert });
 }
 
 // Incremental diff: walk spec tree, find DOM nodes by data-spec-id, replace changed subtrees
@@ -4861,6 +5055,7 @@ function renderElement(elements, id, depth) {
   if (depth > MAX_DEPTH) return document.createTextNode('[max depth]');
   var def = elements[id];
   if (!def) return null;
+  if (RENDERING[id]) return null; // cycle: an element listed inside itself (or a descendant)
 
   // Encode visible expression as data attribute for iframe-side evaluation
   if (def.visible != null) {
@@ -4877,6 +5072,7 @@ function renderElement(elements, id, depth) {
 
   var children = def.children || (def.props && def.props.children) || [];
   var el;
+  RENDERING[id] = (RENDERING[id] || 0) + 1;
   try {
     el = render(normalizeProps(def.type, def.props || {}), children, elements, depth);
   } catch (err) {
@@ -4885,6 +5081,8 @@ function renderElement(elements, id, depth) {
     el = renderNotice('Couldn\'t render ' + def.type);
     el.setAttribute('data-spec-id', id);
     return el;
+  } finally {
+    RENDERING[id]--;
   }
   if (el && el.setAttribute) {
     el.setAttribute('data-spec-id', id);
@@ -4929,6 +5127,43 @@ function renderChildren(elements, childIds, depth) {
     if (el) frag.appendChild(el);
   });
   return frag;
+}
+
+// Parent of each element some other element references (a children entry or a prop holding its id; trigger-like
+// props excluded), for the orphan pass
+function orphanParents(els) {
+  var parentOf = {};
+  Object.keys(els).forEach(function(pid) {
+    (function refs(v, depth) {
+      if (v == null || depth > 6) return;
+      if (typeof v === 'string') { if (v !== pid && Object.prototype.hasOwnProperty.call(els, v) && !parentOf[v]) parentOf[v] = pid; return; }
+      if (typeof v === 'object') for (var k in v) if (Object.prototype.hasOwnProperty.call(v, k) && !/^(trigger|target|for|controls|id|opens)$/.test(k)) refs(v[k], depth + 1);
+    })({ c: els[pid] && els[pid].children, p: els[pid] && els[pid].props }, 0);
+  });
+  return parentOf;
+}
+
+// Append what the root tree did not place (overlays opened by a trigger, unreferenced statements) to container.
+// Each one renders through its top-most unplaced ancestor, so a Modal's inline children render inside the Modal
+// instead of first standing alone and then again inside it. Returns [{id, node}] for each appended element
+function renderOrphans(spec, container) {
+  var els = spec.elements, rendered = {}, out = [];
+  container.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+  var parentOf = orphanParents(els);
+  Object.keys(els).forEach(function(id) {
+    var top = id, hops = 0;
+    while (parentOf[top] && !rendered[parentOf[top]] && hops++ < 50) top = parentOf[top];
+    [top, id].forEach(function(oid) {
+      if (oid === spec.root || rendered[oid]) return;
+      rendered[oid] = true;
+      var node = renderElement(els, oid, 0);
+      if (!node) return;
+      container.appendChild(node);
+      out.push({ id: oid, node: node });
+      if (node.querySelectorAll) node.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
+    });
+  });
+  return out;
 }
 
 // Safe HTML-entity escaping via textContent
@@ -5079,6 +5314,25 @@ function optArr(x) {
   return toArr(x).map(function(o) { return typeof o === 'string' || typeof o === 'number' ? { label: String(o), value: String(o) } : o; });
 }
 
+// A data entry that names a spec element: OpenUI hoists inline components (Breadcrumbs([Text(..)]), Table([[Text(..)]]))
+// to element ids. An id some element lists as a child stays text, so a cell that equals an id is not pulled out of its parent.
+// So does an id on the current render path: a cell naming the root ("home") must not nest the page inside itself
+function specRef(v, els) {
+  if (typeof v !== 'string' || !els || !Object.prototype.hasOwnProperty.call(els, v) || RENDERING[v]) return null;
+  for (var k in els) {
+    var e = els[k], c = e && (e.children || (e.props && e.props.children));
+    if (Array.isArray(c) && c.indexOf(v) >= 0) return null;
+  }
+  return v;
+}
+
+// Entries of a list-like renderer: its data items ({ref} for spec elements, else {data}), or its child elements when it has none
+function entries(items, ch, els) {
+  items = toArr(items);
+  if (!items.length) return toArr(ch).map(function(id) { return { ref: id }; });
+  return items.map(function(v) { var id = specRef(v, els); return id ? { ref: id } : { data: v }; });
+}
+
 // Renderable text: a non-empty string or a number ($state/$cond objects resolve later in the iframe)
 function isText(v) {
   return (typeof v === 'string' && v !== '') || typeof v === 'number';
@@ -5100,9 +5354,14 @@ function fillAlias(o, key, names) {
   return o;
 }
 
+// Image-URL shape: http(s), protocol-relative, a path, blob:, or a filename with an image extension ("sm" and "Jordan Diaz" are not)
+function isImgUrl(s) {
+  return typeof s === 'string' && /^((https?:)?\/\/|\.{0,2}\/|blob:)|^\S+\.(png|jpe?g|gif|webp|avif|svg)(\?|$)/i.test(s.trim());
+}
+
 // AI-written prop names -> the names the renderers read (Badge label -> text, List items[].primary -> title)
 function normalizeProps(type, p) {
-  var items, on;
+  var items, on, tv, q, slid, signed;
   switch (type) {
     case 'Badge':
     case 'Label':
@@ -5113,7 +5372,34 @@ function normalizeProps(type, p) {
     case 'EmptyState':
       return fillAlias(p, 'message', ['description', 'text']);
     case 'StatCard':
-      return fillAlias(p, 'label', ['title']);
+      p = fillAlias(p, 'label', ['title']);
+      tv = p.trendValue;
+      // trend "neutral"/"flat": no direction word, the value shows uncoloured
+      if (/^(neutral|flat)$/.test(p.trend)) return withProp(withProp(p, 'trend', isText(tv) ? String(tv) : null), 'trendValue', null);
+      // StatCard("Keys", "14", "key-round", "up", "+2") / StatCard("Support", "24/7", "headset", "Replies in 2 min"): a Lucide name in the trend slot
+      if (typeof p.trend !== 'string' || !/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(p.trend) || /^(up|down)$/.test(p.trend) || !mkIcon(p.trend)) return p;
+      slid = /^(up|down)$/.test(tv);
+      signed = typeof tv === 'string' && /^[+\u2191\-\u2212\u2193]/.test(tv);
+      q = withProp(withProp(withProp(p, 'icon', p.trend), 'trend', slid || signed ? tv : null), 'trendValue', slid && isText(p.icon) && p.icon !== p.trend ? p.icon : null);
+      return slid || signed || !isText(tv) || isText(q.description) ? q : withProp(q, 'description', tv);
+    case 'Switch':
+    case 'Checkbox':
+      // Switch(true): a boolean in the label slot is the checked state, not text
+      return typeof p.label === 'boolean' && p.checked == null ? withProp(withProp(p, 'checked', p.label), 'label', '') : p;
+    case 'CustomSelect':
+      // CustomSelect("Language", opts, "de"): a string in the searchable slot is the selection
+      if (typeof p.searchable === 'string' && !/^(true|false)$/.test(p.searchable)) p = withProp(fillAlias(p, 'selected', ['searchable']), 'searchable', false);
+      // A top-level selected (as Select and RadioGroup take it) marks the matching option; a label is the placeholder
+      p = fillAlias(fillAlias(p, 'selected', ['value', 'defaultValue']), 'placeholder', ['label']);
+      items = optArr(p.options);
+      if (!isText(p.selected) || items.some(function(o) { return o && o.selected; })) return p;
+      return withProp(p, 'options', items.map(function(o) { return isPlainObj(o) && (String(o.value) === String(p.selected) || o.label === p.selected) ? withProp(o, 'selected', true) : o; }));
+    case 'Avatar':
+      // src holds only an image URL: Avatar("MC", "sm") is a size, Avatar("JD", "Jordan Diaz") a name, Avatar(url, "Name") swapped args
+      if (isImgUrl(p.initials) && !isImgUrl(p.src)) p = withProp(withProp(p, 'src', p.initials), 'initials', '');
+      if (typeof p.src !== 'string' || !p.src || isImgUrl(p.src)) return p;
+      if (p.size == null && /^(xs|sm|md|lg|xl|2xl)$/i.test(p.src)) p = withProp(p, 'size', p.src);
+      return withProp(p, 'src', '');
     case 'List':
       if (p.items == null) return p;
       return withProp(p, 'items', toArr(p.items).map(function(it) {
@@ -5128,6 +5414,9 @@ function normalizeProps(type, p) {
       on = items.filter(function(o) { return o && o.active === true; })[0];
       return p.selected == null && on ? withProp(p, 'selected', on.value) : p;
     case 'Tabs':
+      // Tabs(tabs: ["All", "Done"]): a bare string tab is its own label and id
+      items = toArr(p.tabs != null ? p.tabs : p.items);
+      if (items.some(isText)) p = withProp(p, p.tabs != null ? 'tabs' : 'items', items.map(function(t) { return isText(t) ? { label: String(t), id: String(t) } : t; }));
       if (p.tabs != null || p.items == null) return p;
       items = toArr(p.items).map(function(t) { return isPlainObj(t) ? fillAlias(t, 'id', ['value']) : t; });
       p = withProp(p, 'tabs', items);
@@ -5210,6 +5499,40 @@ function tableScroll(table) {
   var wrap = mkEl('div', 'db-table-scroll');
   wrap.appendChild(table);
   return wrap;
+}
+
+// Row-action verbs a model packs into one "Actions" cell ("copy,revoke", "Copy \u00b7 Revoke", "\u22ef") -> the icon each renders as
+var ACTION_ICONS = { copy: 'copy', revoke: 'ban', 'delete': 'trash-2', remove: 'trash-2', edit: 'pencil', view: 'eye', open: 'external-link',
+  download: 'download', share: 'share-2', archive: 'archive', rotate: 'refresh-cw', menu: 'ellipsis', more: 'ellipsis', '\u22ef': 'ellipsis', '\u2026': 'ellipsis', '...': 'ellipsis' };
+
+// An "Actions" column cell made only of action verbs -> ghost icon buttons; anything else stays text (null)
+function actionCell(c, v) {
+  if (typeof v !== 'string' || !(/^actions?$/i.test(c.key || '') || /^actions?$/i.test(c.label || ''))) return null;
+  var names = v.split(/\s*[,\u00b7|\/]\s*/).filter(Boolean);
+  if (!names.length || !names.every(function(n) { return Object.prototype.hasOwnProperty.call(ACTION_ICONS, n.toLowerCase()); })) return null;
+  var box = mkEl('div');
+  box.style.cssText = 'display:inline-flex;align-items:center;gap:var(--db-space-1)';
+  names.forEach(function(n) {
+    var b = RENDERERS.Button({ variant: 'ghost', size: 'icon', icon: ACTION_ICONS[n.toLowerCase()] });
+    b.setAttribute('aria-label', n);
+    box.appendChild(b);
+  });
+  return box;
+}
+
+// A cell that names spec elements: one id, or a list of ids (row actions: [Button(..), Button(..)]); null when any entry is data
+function cellRefs(v, els) {
+  var ids = toArr(v).map(function(x) { return specRef(x, els); });
+  return ids.length && ids.every(Boolean) ? ids : null;
+}
+
+// Several elements in one cell sit in a row
+function cellElements(els, ids, d) {
+  if (ids.length === 1) return renderChildren(els, ids, d);
+  var box = mkEl('div');
+  box.style.cssText = 'display:inline-flex;align-items:center;gap:var(--db-space-1)';
+  box.appendChild(renderChildren(els, ids, d));
+  return box;
 }
 
 // ---- Declarative State Engine ----
@@ -5358,6 +5681,27 @@ function collectStateConfig(spec) {
 // ---- Component Renderers (67 types) ----
 var RENDERERS = {};
 
+// A Checkbox or Switch whose label repeats text beside it (Stack([Text("Email alerts"), Switch("Email alerts", true)])):
+// the row shows the name once, and the control keeps it as its accessible name
+function dedupeControlLabels(row) {
+  var kids = [].slice.call(row.children), seen = {};
+  var isCtl = function(k) { return k.classList && (k.classList.contains('db-checkbox') || k.classList.contains('db-switch')); };
+  kids.forEach(function(k) {
+    if (isCtl(k)) return;
+    [k].concat([].slice.call(k.querySelectorAll('h1,h2,h3,h4,p,span,label'))).forEach(function(n) {
+      var t = n.textContent.trim().toLowerCase();
+      if (t) seen[t] = true;
+    });
+  });
+  kids.forEach(function(k) {
+    if (!isCtl(k)) return;
+    var last = k.lastChild, t = last && last.nodeType === 3 ? last.nodeValue.trim() : '';
+    if (!t || !seen[t.toLowerCase()]) return;
+    k.removeChild(last);
+    (k.querySelector('input') || k).setAttribute('aria-label', t);
+  });
+}
+
 // -- Stack (flexbox) --
 RENDERERS.Stack = function(p, ch, els, d) {
   var el = document.createElement('div');
@@ -5378,6 +5722,7 @@ RENDERERS.Stack = function(p, ch, els, d) {
   else if (p.align === 'start') el.style.alignItems = 'flex-start';
   else if (p.align === 'stretch') el.style.alignItems = 'stretch';
   el.appendChild(renderChildren(els, ch, d));
+  dedupeControlLabels(el);
   // Sidebar rows: give the content a flex basis so it sits beside the sidebar instead of wrapping below it (still wraps on narrow screens)
   if (isH && Array.isArray(ch) && ch.some(function(id) { return els[id] && els[id].type === 'Sidebar'; })) {
     for (var si = 0; si < el.children.length; si++) {
@@ -5437,6 +5782,10 @@ RENDERERS.Text = function(p) {
   var el = document.createElement(tag);
   var classMap = { h1:'db-h1', h2:'db-h2', h3:'db-h3', h4:'db-h4', p:'db-body', span:'' };
   el.className = (classMap[tag] || '') + (p.class ? ' ' + p.class : '');
+  // Utility names models borrow from Tailwind: line-through strikes the text, text-muted maps to the DAUB muted class
+  var cl = String(p.class || '').split(/\s+/);
+  if (cl.indexOf('line-through') >= 0) el.style.textDecoration = 'line-through';
+  if (cl.indexOf('text-muted') >= 0 || cl.indexOf('text-muted-foreground') >= 0) el.classList.add('db-text-muted');
   el.textContent = c || '';
   return el;
 };
@@ -5521,6 +5870,8 @@ RENDERERS.Field = function(p, ch, els, d) {
     inp.className = 'db-field__input';
     inp.type = p.type || 'text';
     inp.placeholder = p.placeholder || '';
+    // value is the text the field holds (placeholder only hints); as an attribute it survives serialized HTML
+    if (isText(p.value)) inp.setAttribute('value', String(p.value));
     el.appendChild(inp);
   }
   if (p.helper) {
@@ -5537,6 +5888,7 @@ RENDERERS.Input = function(p) {
   el.className = 'db-input' + (isz ? ' db-input--' + isz : '') + (p.error ? ' db-input--error' : '');
   el.type = p.type || 'text';
   el.placeholder = p.placeholder || '';
+  if (isText(p.value)) el.setAttribute('value', String(p.value));
   return withLabel(el, p.label, true);
 };
 
@@ -5590,6 +5942,7 @@ RENDERERS.Textarea = function(p) {
   el.className = 'db-textarea' + (p.error ? ' db-textarea--error' : '');
   el.placeholder = p.placeholder || '';
   if (p.rows) el.rows = p.rows;
+  if (isText(p.value)) el.textContent = String(p.value);
   return el;
 };
 
@@ -5717,7 +6070,7 @@ RENDERERS.CustomSelect = function(p) {
   trigger.className = 'db-custom-select__trigger';
   trigger.type = 'button';
   var selectedOpt = optArr(p.options).filter(function(o) { return o.selected; })[0];
-  var triggerText = mkEl('span', 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
+  var triggerText = mkEl('span', selectedOpt ? 'db-custom-select__value' : 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
   trigger.appendChild(triggerText);
   var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('class', 'db-custom-select__icon');
@@ -5806,35 +6159,32 @@ RENDERERS.Tabs = function(p, ch, els, d) {
     list.appendChild(btn);
   });
   el.appendChild(list);
-  if (ch.length) {
-    ch.forEach(function(cid, i) {
-      var panel = mkEl('div', 'db-tabs__panel');
-      if (i !== activeIdx) panel.hidden = true;
-      var child = renderElement(els, cid, d + 1);
-      if (child) panel.appendChild(child);
-      el.appendChild(panel);
-    });
-  } else {
-    tabs.forEach(function(t, i) {
-      var panel = mkEl('div', 'db-tabs__panel');
-      if (i !== activeIdx) panel.hidden = true;
-      panel.appendChild(mkEl('p', 'db-body', (t.label || '') + ' content'));
-      el.appendChild(panel);
-    });
-  }
+  // No children: a filter strip (Tabs(["All", "Done"], "All")) with no panels, not "All content" filler
+  ch.forEach(function(cid, i) {
+    var panel = mkEl('div', 'db-tabs__panel');
+    if (i !== activeIdx) panel.hidden = true;
+    var child = renderElement(els, cid, d + 1);
+    if (child) panel.appendChild(child);
+    el.appendChild(panel);
+  });
   return el;
 };
 
 // -- Breadcrumbs --
-RENDERERS.Breadcrumbs = function(p) {
+RENDERERS.Breadcrumbs = function(p, ch, els, d) {
   var el = document.createElement('nav');
   el.className = 'db-breadcrumbs';
   el.setAttribute('aria-label', 'Breadcrumb');
   var ol = document.createElement('ol');
-  var items = toArr(p.items);
-  items.forEach(function(item, i) {
+  var items = entries(p.items, ch, els);
+  items.forEach(function(e, i) {
     var li = document.createElement('li');
-    if (i === items.length - 1) {
+    var item = e.data;
+    if (e.ref) {
+      // Spec element (Text children, or Breadcrumbs([Text(..)])): it is the crumb
+      if (i === items.length - 1) li.setAttribute('aria-current', 'page');
+      li.appendChild(renderChildren(els, [e.ref], d));
+    } else if (i === items.length - 1) {
       li.setAttribute('aria-current', 'page');
       li.textContent = item.label || '';
     } else {
@@ -5886,8 +6236,11 @@ RENDERERS.Pagination = function(p) {
 // -- Stepper --
 RENDERERS.Stepper = function(p) {
   var el = mkEl('div', 'db-stepper' + (p.vertical ? ' db-stepper--vertical' : ''));
+  // current: 0-based index of the active step; earlier steps are completed. An explicit step status wins
+  var cur = parseInt(p.current, 10);
   toArr(p.steps).forEach(function(s, i) {
-    var step = mkEl('div', 'db-stepper__step db-stepper__step--' + (s.status || 'pending'));
+    var st = s.status || (isNaN(cur) ? 'pending' : i < cur ? 'completed' : i === cur ? 'active' : 'pending');
+    var step = mkEl('div', 'db-stepper__step db-stepper__step--' + st);
     step.appendChild(mkEl('div', 'db-stepper__indicator', String(i + 1)));
     var label = mkEl('div', 'db-stepper__label', s.label || '');
     if (isText(s.description)) label.appendChild(mkEl('div', 'db-caption', String(s.description)));
@@ -5926,6 +6279,19 @@ RENDERERS.Navbar = function(p, ch, els, d) {
     var nav = mkEl('div', 'db-navbar__nav');
     nav.appendChild(ch.length ? renderChildren(els, ch, d) : RENDERERS.NavMenu({ items: links }));
     el.appendChild(nav);
+    // Phones (max-width 640px) hide the nav slot; this button opens it (daub.js toggles db-navbar--open and aria-expanded)
+    var tog = mkEl('button', 'db-navbar__toggle');
+    tog.setAttribute('type', 'button');
+    tog.setAttribute('aria-label', 'Menu');
+    tog.setAttribute('aria-expanded', 'false');
+    var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg'), bars = document.createElementNS(ns, 'path');
+    var at = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'aria-hidden': 'true' };
+    for (var k in at) svg.setAttribute(k, at[k]);
+    bars.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+    svg.appendChild(bars);
+    tog.appendChild(svg);
+    // Before the nav slot, so Tab goes from the button into the open menu (CSS still puts it at the right edge)
+    el.insertBefore(tog, nav);
   }
   return el;
 };
@@ -6022,7 +6388,7 @@ RENDERERS.Card = function(p, ch, els, d) {
     if (p.description) hdr.appendChild(mkEl('p', 'db-card__desc', p.description));
     el.appendChild(hdr);
   }
-  var footerIds = toArr(p.footer).filter(function(id) { return !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer
+  var footerIds = [].concat.apply([], toArr(p.footer)).filter(function(id) { return typeof id === 'string' && !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer; [["id"]] (a data-statement footer) flattens
   var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
   if (bodyIds.length) {
     var body = mkEl('div', 'db-card__body');
@@ -6041,10 +6407,12 @@ RENDERERS.Card = function(p, ch, els, d) {
 };
 
 // -- Table --
-RENDERERS.Table = function(p) {
+RENDERERS.Table = function(p, ch, els, d) {
   var el = document.createElement('table');
   el.className = 'db-table';
-  var shape = tableShape(p);
+  // Table([[head, ..], [cell, ..], ..]): a matrix in columns is the header row, then the body rows
+  var matrix = !toArr(p.rows).length && Array.isArray(p.columns) && p.columns.length > 0 && p.columns.every(Array.isArray);
+  var shape = tableShape(matrix ? { columns: p.columns[0], rows: p.columns.slice(1) } : p);
   var cols = shape.cols;
   var rows = shape.rows;
   var thead = document.createElement('thead');
@@ -6053,7 +6421,9 @@ RENDERERS.Table = function(p) {
     var th = document.createElement('th');
     if (p.sortable) th.setAttribute('data-db-sort', '');
     if (c.numeric) th.className = 'db-numeric';
-    th.textContent = c.label || '';
+    var hRef = specRef(c.label, els);
+    if (hRef) th.appendChild(renderChildren(els, [hRef], d));
+    else th.textContent = c.label || '';
     headRow.appendChild(th);
   });
   thead.appendChild(headRow);
@@ -6064,9 +6434,21 @@ RENDERERS.Table = function(p) {
     cols.forEach(function(c) {
       var td = document.createElement('td');
       if (c.numeric) td.className = 'db-numeric';
-      td.textContent = r[c.key] == null ? '' : String(r[c.key]); // 0 and false are real values
+      var cRefs = cellRefs(r[c.key], els), act = cRefs ? null : actionCell(c, r[c.key]);
+      if (cRefs) td.appendChild(cellElements(els, cRefs, d));
+      else if (act) td.appendChild(act);
+      else td.textContent = r[c.key] == null ? '' : String(r[c.key]); // 0 and false are real values
       tr.appendChild(td);
     });
+    tbody.appendChild(tr);
+  });
+  // No data rows: each child element is a full-width row
+  if (!rows.length) toArr(ch).forEach(function(id) {
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    td.colSpan = Math.max(1, cols.length);
+    td.appendChild(renderChildren(els, [id], d));
+    tr.appendChild(td);
     tbody.appendChild(tr);
   });
   el.appendChild(tbody);
@@ -6074,7 +6456,7 @@ RENDERERS.Table = function(p) {
 };
 
 // -- DataTable --
-RENDERERS.DataTable = function(p) {
+RENDERERS.DataTable = function(p, ch, els, d) {
   var el = document.createElement('table');
   el.className = 'db-data-table';
   var shape = tableShape(p);
@@ -6112,6 +6494,9 @@ RENDERERS.DataTable = function(p) {
     cols.forEach(function(c) {
       var td = document.createElement('td');
       var raw = r[c.key];
+      // A Button (or [Button, Button]) in a cell renders as elements; "copy,revoke" in an Actions column as icon buttons
+      var refs = cellRefs(raw, els), act = refs ? null : actionCell(c, raw);
+      if (refs || act) { td.appendChild(refs ? cellElements(els, refs, d) : act); tr.appendChild(td); return; }
       // Flatten object cell values (e.g. Badge specs) to string
       var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw == null ? '' : String(raw));
       // Auto-detect status badges
@@ -6135,9 +6520,17 @@ RENDERERS.DataTable = function(p) {
 };
 
 // -- List --
-RENDERERS.List = function(p) {
+RENDERERS.List = function(p, ch, els, d) {
   var el = mkEl('div', 'db-list');
-  toArr(p.items).forEach(function(item) {
+  entries(p.items, ch, els).forEach(function(e) {
+    // Spec element (Text children, or List([Text(..)])): it is the item content
+    if (e.ref) {
+      var refLi = mkEl('div', 'db-list__item');
+      refLi.appendChild(mkEl('div', 'db-list__content')).appendChild(renderChildren(els, [e.ref], d));
+      el.appendChild(refLi);
+      return;
+    }
+    var item = e.data;
     if (typeof item === 'string') item = { title: item }; // List(["a", "b"]) renders titles, as in daub-render.js
     var li = mkEl('div', 'db-list__item');
     var ico = mkIcon(item.icon, 16);
@@ -6163,7 +6556,7 @@ RENDERERS.Badge = function(p) {
 };
 
 // -- Avatar --
-RENDERERS.Avatar = function(p) {
+RENDERERS.Avatar = function(p, ch, els, d) {
   var px = /^\d+(px)?$/.test(String(p.size)) ? parseInt(p.size, 10) : 0;
   var asz = px ? (px < 36 ? 'sm' : px < 48 ? 'md' : 'lg') : knownMod(p.size, ['sm', 'md', 'lg'], { xs: 'sm', xl: 'lg', '2xl': 'lg' });
   var el = mkEl('div', 'db-avatar db-avatar--' + (asz || 'md'));
@@ -6173,17 +6566,29 @@ RENDERERS.Avatar = function(p) {
     img.alt = '';
     el.appendChild(img);
   } else if (!p.src) {
-    el.textContent = p.initials || '?';
+    // No initials: child elements (a Text "DP") fill the circle instead of "?"
+    if (!p.initials && toArr(ch).length) el.appendChild(renderChildren(els, toArr(ch), d));
+    else el.textContent = p.initials || '?';
   }
   return el;
 };
 
 // -- AvatarGroup --
-RENDERERS.AvatarGroup = function(p) {
+RENDERERS.AvatarGroup = function(p, ch, els, d) {
   var el = mkEl('div', 'db-avatar-group');
-  var avatars = toArr(p.avatars);
+  var avatars = entries(p.avatars, ch, els);
   var max = p.max || avatars.length;
-  avatars.slice(0, max).forEach(function(a) {
+  avatars.forEach(function(e, i) {
+    // Spec element (Avatar children, or AvatarGroup([Avatar(..)])): rendered as is. Past max it stays hidden
+    // (counted in +N) rather than left for the page's orphan pass to append below
+    if (e.ref) {
+      var node = renderElement(els, e.ref, d + 1);
+      if (node && i >= max) node.style.display = 'none';
+      if (node) el.appendChild(node);
+      return;
+    }
+    if (i >= max) return;
+    var a = e.data;
     var av = mkEl('div', 'db-avatar db-avatar--md');
     if (a.src) {
       var img = document.createElement('img');
@@ -6295,12 +6700,16 @@ RENDERERS.Chart = function(p) {
 };
 
 // -- Carousel --
-RENDERERS.Carousel = function(p) {
+RENDERERS.Carousel = function(p, ch, els, d) {
   var el = mkEl('div', 'db-carousel');
   var track = mkEl('div', 'db-carousel__track');
   var slides = toArr(p.slides);
   slides.forEach(function(s) {
-    track.appendChild(mkEl('div', 'db-carousel__slide', s.content || ''));
+    // {content: "w1"} names a spec element: render it in the slide instead of printing the id
+    var ref = specRef(s.content, els), node = ref && renderElement(els, ref, (d || 0) + 1);
+    var slide = mkEl('div', 'db-carousel__slide', node ? null : (s.content || ''));
+    if (node) slide.appendChild(node);
+    track.appendChild(slide);
   });
   el.appendChild(track);
   var prevBtn = document.createElement('button');
@@ -6386,7 +6795,7 @@ RENDERERS.Skeleton = function(p) {
 };
 
 // -- EmptyState --
-RENDERERS.EmptyState = function(p) {
+RENDERERS.EmptyState = function(p, ch, els, d) {
   var el = mkEl('div', 'db-empty');
   var ico = mkIcon(p.icon, 48);
   if (ico) {
@@ -6395,7 +6804,9 @@ RENDERERS.EmptyState = function(p) {
     el.appendChild(iconWrap);
   }
   el.appendChild(mkEl('h3', 'db-empty__title', p.title || 'No items'));
-  el.appendChild(mkEl('p', 'db-empty__desc', p.message || ''));
+  el.appendChild(mkEl('p', 'db-empty__message', p.message || ''));
+  // Action children (a Button) sit centered under the message
+  if (toArr(ch).length) el.appendChild(renderChildren(els, toArr(ch), d));
   return el;
 };
 
@@ -6406,6 +6817,16 @@ RENDERERS.Tooltip = function(p, ch, els, d) {
   el.appendChild(mkEl('span', 'db-tooltip__content db-tooltip__content--' + (p.position || 'top'), p.text || ''));
   return el;
 };
+
+// Buttons in a dialog footer close the dialog (daub.js handles data-db-dismiss). A button that opens
+// another overlay (trigger), a dropdown or a popover keeps that job, and so does one with an "on" state action
+// (a wizard's Back and Next); put any other button that must not close in the body
+function markDismiss(box) {
+  Array.prototype.forEach.call(box.querySelectorAll('.db-btn:not([data-db-trigger]):not([data-ds-on]):not(.db-dropdown__trigger):not(.db-popover__trigger)'), function(b) {
+    b.setAttribute('data-db-dismiss', '');
+  });
+  return box;
+}
 
 // -- Modal --
 RENDERERS.Modal = function(p, ch, els, d) {
@@ -6421,7 +6842,7 @@ RENDERERS.Modal = function(p, ch, els, d) {
   closeBtn.textContent = '\u00D7';
   hdr.appendChild(closeBtn);
   modal.appendChild(hdr);
-  var footerIds = toArr(p.footer).filter(function(id) { return !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer
+  var footerIds = [].concat.apply([], toArr(p.footer)).filter(function(id) { return typeof id === 'string' && !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer; [["id"]] (a data-statement footer) flattens
   var bodyIds = footerIds.length ? ch.filter(function(id) { return footerIds.indexOf(id) < 0; }) : ch;
   var body = mkEl('div', 'db-modal__body');
   if (isText(p.description)) {
@@ -6443,7 +6864,7 @@ RENDERERS.Modal = function(p, ch, els, d) {
     var confirmBtn = mkEl('button', 'db-btn db-btn--primary', 'Confirm');
     footer.appendChild(confirmBtn);
   }
-  modal.appendChild(footer);
+  modal.appendChild(markDismiss(footer));
   el.appendChild(modal);
   return el;
 };
@@ -6456,7 +6877,7 @@ RENDERERS.AlertDialog = function(p, ch, els, d) {
   var panel = mkEl('div', 'db-alert-dialog__panel');
   panel.appendChild(mkEl('h3', 'db-alert-dialog__title', p.title || 'Confirm'));
   panel.appendChild(mkEl('p', 'db-alert-dialog__desc', p.description || ''));
-  var footerIds = toArr(p.footer).filter(function(id) { return !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer
+  var footerIds = [].concat.apply([], toArr(p.footer)).filter(function(id) { return typeof id === 'string' && !!els && Object.prototype.hasOwnProperty.call(els, id); }); // ids that name no element count as no footer; [["id"]] (a data-statement footer) flattens
   var actionIds = footerIds.length ? footerIds : ch;
   var actions = mkEl('div', 'db-alert-dialog__actions');
   if (actionIds.length) {
@@ -6469,7 +6890,7 @@ RENDERERS.AlertDialog = function(p, ch, els, d) {
     actions.appendChild(cancelBtn);
     actions.appendChild(mkEl('button', 'db-btn db-btn--primary', 'Continue'));
   }
-  panel.appendChild(actions);
+  panel.appendChild(markDismiss(actions));
   el.appendChild(panel);
   return el;
 };
@@ -6835,123 +7256,276 @@ RENDERERS.Image = function(p) {
   el.style.maxWidth = '100%';
   el.style.height = 'auto';
   el.style.borderRadius = 'var(--db-radius-md)';
+  // width/height in px: a number, "800" or "800px" (other units are ignored)
+  var px = function(v) { return /^\s*\d+(\.\d+)?(px)?\s*$/.test(String(v)) ? parseFloat(v) : 0; };
+  var w = px(p.width), h = px(p.height);
+  // As attributes they size the box before the image loads, while max-width:100% caps the width and height:auto
+  // keeps the ratio. A px height beside max-width squashed a 1200x800 image in a 564px column to 564x800.
+  if (w) el.setAttribute('width', w);
+  if (h) el.setAttribute('height', h);
   if (p.src && isSafeUrl(p.src)) {
     el.src = p.src;
+    // A height alone is a fixed height: crop to it rather than squash when max-width narrows the image
+    if (h && !w) { el.style.height = h + 'px'; el.style.objectFit = 'cover'; }
+    // With a width, fit-content keeps the ratio in a flex row too: there height:auto lets a taller sibling stretch it
+    else if (w) el.style.height = 'fit-content';
   } else {
-    // Placeholder when no valid src
+    // Placeholder when no valid src: fills the column up to its width, and with both sizes keeps their ratio.
+    // Without a src it has no image to shrink, so a px width would widen a grid column past the page.
     el.style.display = 'block';
-    el.style.width = p.width ? p.width + 'px' : '100%';
-    el.style.height = p.height ? p.height + 'px' : '200px';
+    el.style.width = '100%';
+    if (w) el.style.maxWidth = w + 'px';
+    if (w && h) el.style.aspectRatio = w + ' / ' + h;
+    else el.style.height = h ? h + 'px' : '200px';
     el.style.background = 'var(--db-muted)';
     el.style.objectFit = 'cover';
     el.removeAttribute('src');
   }
-  if (p.width) el.style.width = p.width + 'px';
-  if (p.height) el.style.height = p.height + 'px';
   return el;
 };
 
-// ---- Component props documentation (single source of truth for AI prompt) ----
+RENDERERS = window.RENDERERS;
+renderElement = window.renderElement;
+renderChildren = window.renderChildren;
+
+// ---- Component props documentation (mirrors mcp/lib/prompt.js) ----
 var COMP_PROPS = {
-  // Layout & Structure
-  Stack: 'direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true',
-  Grid: 'columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true',
-  Surface: 'variant: "raised"|"inset"|"pressed"',
-  Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string',
-  Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
-  Separator: 'vertical: bool, dashed: bool, label: string',
-  Icon: 'name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"',
-  Link: 'label: string, class: string',
-  // Controls
-  Button: 'label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id)',
-  ButtonGroup: '(children are Buttons)',
-  Field: 'label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string',
-  Input: 'placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time"',
-  InputGroup: 'addonBefore: string, addonAfter: string (child is Input)',
-  InputIcon: 'icon: string, right: bool (child is Input)',
-  Search: 'placeholder: string',
-  Textarea: 'placeholder: string, rows: number, error: bool',
-  Checkbox: 'label: string, checked: bool',
-  RadioGroup: 'options: [{label, value}], selected: string',
-  Switch: 'label: string, checked: bool (on/off setting: notifications, preferences, feature flags)',
-  Slider: 'min: number, max: number, value: number, step: number, label: string',
-  Toggle: 'label: string, pressed: bool, size: "sm" (pressable toolbar button: bold/italic, view filter — NOT for settings)',
-  ToggleGroup: 'options: [{label, value}], selected: string',
-  Select: 'label: string, options: [{label, value}], selected: string',
-  CustomSelect: 'placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool',
-  Kbd: 'keys: [string]',
-  Label: 'text: string, required: bool, optional: bool',
-  Spinner: 'size: "sm"|"lg"|"xl"',
-  InputOTP: 'length: number, separator: bool',
-  // Navigation
-  Tabs: 'tabs: [{label, id}], active: string, children: [childIds] (one child per tab — each child becomes a tab panel; order matches tabs array)',
-  Breadcrumbs: 'items: [{label, href}]',
-  Pagination: 'current: number, total: number, perPage: number',
-  Stepper: 'steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool',
-  NavMenu: 'items: [{label, href, active: bool}]',
-  Navbar: 'brand: string, brandHref: string',
-  Menubar: 'items: [{label, dropdown: [{label, href}]}]',
-  Sidebar: 'sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool',
-  BottomNav: 'items: [{label, icon, active, badge}]',
-  // Data Display
-  Card: 'title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool',
-  Table: 'columns: [{key, label, numeric}], rows: [{}], sortable: bool',
-  DataTable: 'columns: [{key, label}], rows: [{}], selectable: bool',
-  List: 'items: [{title, secondary, icon}]',
-  Badge: 'text: string, variant: "new"|"updated"|"warning"|"error"',
-  Avatar: 'initials: string, src: string, size: "sm"|"md"|"lg"',
-  AvatarGroup: 'avatars: [{initials, src}], max: number',
-  Calendar: 'selected: "YYYY-MM-DD" (date to highlight), today: "YYYY-MM-DD" (today override)',
-  Chart: 'bars: [{label, value, max}]',
-  Carousel: 'slides: [{content}]',
-  AspectRatio: 'ratio: "16-9"|"4-3"|"1-1"|"21-9"',
-  Chip: 'label: string, color: "red"|"green"|"blue"|"purple"|"amber"|"pink", active: bool, closable: bool',
-  ScrollArea: 'direction: "horizontal"|"vertical"',
-  Image: 'src: string (URL), alt: string, width: number, height: number',
-  // Feedback
-  Alert: 'type: "info"|"warning"|"error"|"success", title: string, message: string',
-  Progress: 'value: number, indeterminate: bool',
-  Skeleton: 'variant: "text"|"heading"|"avatar"|"btn", lines: number',
-  EmptyState: 'icon: string, title: string, message: string',
-  Tooltip: 'text: string, position: "top"|"bottom"|"left"|"right"',
-  // Overlays
-  Modal: 'id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm)',
-  AlertDialog: 'id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)',
-  Sheet: 'id: string, position: "right"|"left"|"top"|"bottom"',
-  Drawer: 'id: string',
-  Popover: 'position: "top"|"bottom"|"left"|"right", children: [childIds] (first child becomes the trigger when it is a Button or Link and there are 2+ children; other children are the content)',
-  HoverCard: '',
-  DropdownMenu: 'items: [{label, icon, separator, groupLabel, active: bool}]',
-  ContextMenu: 'items: [{label, icon, separator}]',
-  CommandPalette: 'id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}]',
-  // Layout Utilities
-  Accordion: 'items: [{title, content, children: [childIds]}], multi: bool',
-  Collapsible: 'label: string',
-  Resizable: 'direction: "horizontal"|"vertical"',
-  DatePicker: 'label: string, placeholder: string, selected: string',
-  // Dashboard
-  StatCard: 'label: string, value: string, trend: "up"|"down", trendValue: string, icon: string, horizontal: bool',
-  ChartCard: 'title: string, children: [Chart element] (empty ChartCard renders "No data"), bars: [{label, value, max}] (shortcut: renders a Chart when no children)',
-  // Custom
-  CustomHTML: 'html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector(\'[data-spec-id="someId"]\') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after)'
+  "Stack": "direction: \"vertical\"|\"horizontal\", gap: 0-6 (default 2=8px), justify: \"center\"|\"end\"|\"between\"|\"evenly\" (main-axis), align: \"center\"|\"end\"|\"start\"|\"stretch\" (cross-axis), wrap: bool (default true for horizontal), container: \"wide\"|\"narrow\"|true",
+  "Grid": "columns: 2-6, gap: 0-6 (default 2=8px), align: \"center\"|\"end\", container: \"wide\"|\"narrow\"|true",
+  "Surface": "variant: \"raised\"|\"inset\"|\"pressed\"",
+  "Text": "tag: \"h1\"|\"h2\"|\"h3\"|\"h4\"|\"p\"|\"span\", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them",
+  "Prose": "content: string (HTML), size: \"sm\"|\"lg\"|\"xl\"|\"2xl\"",
+  "Separator": "vertical: bool, dashed: bool, label: string",
+  "Layout": "deprecated alias for Stack/Grid: children, direction, columns, gap, align (main-axis), valign (cross-axis)",
+  "Divider": "alias for Separator: vertical: bool, dashed: bool, label: string",
+  "Icon": "name: string (Lucide icon name), size: \"xs\"|\"sm\"|\"md\"|\"lg\"|\"xl\", variant: \"branded\"|\"success\"",
+  "Link": "label: string, href: string (safe URL), class: string",
+  "CheckboxGroup": "children: [Checkbox IDs], label: string, helper: string, inline: bool",
+  "Fieldset": "children: [field IDs], legend: string, helper: string, disabled: bool",
+  "Frame": "children: [body IDs], header: string|[childIds], footer: string|[childIds], flush: bool",
+  "Group": "children: [control IDs], attached: bool, vertical: bool, label: string or aria-label: string",
+  "Meter": "value: number (default 0), min: number (default 0), max: number (default 100), status: \"success\"|\"warning\"|\"error\", label: string or aria-label: string",
+  "NumberField": "value: number, defaultValue: number, min: number, max: number, step: number (default 1), disabled: bool, readOnly: bool, name: string, label: string or aria-label: string",
+  "PreviewCard": "trigger: string|[childIds], title: string, description: string, media: string (safe image URL)|[childIds], mediaAlt: string, children: [childIds]",
+  "Toolbar": "children: [control IDs], vertical: bool, label: string or aria-label: string",
+  "Button": "label: string, variant: \"primary\"|\"secondary\"|\"ghost\"|\"icon-danger\"|\"icon-success\"|\"icon-accent\", size: \"sm\"|\"lg\"|\"icon\", loading: bool, icon: string, trigger: \"overlayId\" (opens Modal/AlertDialog/Sheet/Drawer by id) | UX: one primary per view, loading:true during async, verb-first labels",
+  "ButtonGroup": "(children are Buttons)",
+  "Field": "label: string, placeholder: string, type: \"text\"|\"email\"|\"password\"|\"number\", error: bool, helper: string, value: string (prefilled text; placeholder is only a hint) | UX: always include label, helper for complex inputs, error near field",
+  "Input": "placeholder: string, size: \"sm\"|\"lg\", error: bool, type: \"text\"|\"email\"|\"password\"|\"number\"|\"tel\"|\"url\"|\"search\"|\"date\"|\"time\", value: string (prefilled text) | UX: wrap in Field for label+helper, or pair with Label",
+  "InputGroup": "addonBefore: string, addonAfter: string (child is Input)",
+  "InputIcon": "icon: string, right: bool (child is Input)",
+  "Search": "placeholder: string",
+  "Textarea": "placeholder: string, rows: number, error: bool, value: string (prefilled text)",
+  "Checkbox": "label: string (shown beside the box; leave it out when a Text in the same row names the item: Checkbox(checked: true)), checked: bool",
+  "RadioGroup": "options: [{label, value}], selected: string",
+  "Switch": "label: string (leave it out when a Text in the same row names the setting: Switch(checked: true)), checked: bool (on/off setting: notifications, preferences, feature flags)",
+  "Slider": "min: number, max: number, value: number, step: number, label: string",
+  "Toggle": "label: string, pressed: bool, size: \"sm\" (pressable toolbar button: bold/italic, view filter — NOT for settings)",
+  "ToggleGroup": "options: [{label, value}], selected: string",
+  "Select": "label: string, options: [{label, value}], selected: string",
+  "CustomSelect": "placeholder: string, options: [{label, value, selected: bool, disabled: bool}], searchable: bool, selected: string",
+  "Kbd": "keys: [string]",
+  "Label": "text: string, required: bool, optional: bool",
+  "Spinner": "size: \"sm\"|\"lg\"|\"xl\"",
+  "InputOTP": "length: number, separator: bool",
+  "Tabs": "tabs: [{label, id}], active: string, children: [childIds] (one child per tab — each child becomes a tab panel; order matches tabs array)",
+  "Breadcrumbs": "items: [{label, href}]",
+  "Pagination": "current: number, total: number, perPage: number",
+  "Stepper": "steps: [{label, status: \"completed\"|\"active\"|\"pending\"}], vertical: bool | UX: one active step at a time, completed steps should be revisitable",
+  "NavMenu": "items: [{label, href, active: bool}]",
+  "Navbar": "brand: string, brandHref: string",
+  "Menubar": "items: [{label, dropdown: [{label, href}]}]",
+  "Sidebar": "sections: [{title, items: [{label, icon, active, href}]}] (inline objects, NOT element ID references), collapsed: bool",
+  "BottomNav": "items: [{label, icon, active, badge}] | UX: max 5 items, icon+label always, highlight active",
+  "Card": "title: string, description: string, media: string (image URL only, NOT element IDs), footer: [childIds] (element IDs rendered in card footer area, NOT a boolean), interactive: bool, clip: bool | UX: footer is an array of element IDs not a boolean, media is a URL string not element IDs",
+  "Table": "columns: [{key, label, numeric}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), sortable: bool",
+  "DataTable": "columns: [{key, label}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), selectable: bool",
+  "List": "items: [{title, secondary, icon}]",
+  "Badge": "text: string, variant: \"new\"|\"updated\"|\"success\"|\"warning\"|\"error\"",
+  "Avatar": "initials: string, src: string (image URL only; skip it with size: \"sm\"), size: \"sm\"|\"md\"|\"lg\"",
+  "AvatarGroup": "avatars: [{initials, src}], max: number",
+  "Calendar": "selected: \"YYYY-MM-DD\" (date to highlight), today: \"YYYY-MM-DD\" (today override)",
+  "Chart": "bars: [{label, value, max}]",
+  "Carousel": "slides: [{content}]",
+  "AspectRatio": "ratio: \"16-9\"|\"4-3\"|\"1-1\"|\"21-9\"",
+  "Chip": "label: string, color: \"red\"|\"green\"|\"blue\"|\"purple\"|\"amber\"|\"pink\", active: bool, closable: bool",
+  "ScrollArea": "direction: \"horizontal\"|\"vertical\"",
+  "MessageScroller": "children: [row IDs], height: number (default 360px), autoScroll: bool (default true), defaultScrollPosition: \"start\"|\"end\"|\"last-anchor\" (default \"end\"), peek: nonnegative number (default 0), label: string",
+  "Message": "children: [content IDs], align: \"start\"|\"end\", avatar: string (initials)|{initials, src: safe image URL}, name: string, timestamp: string, messageId: string (defaults to element ID), scrollAnchor: bool, footer: string",
+  "Bubble": "children: [content IDs], content: string (plain text), variant: \"primary\"|\"default\"|\"secondary\"|\"muted\"|\"tinted\"|\"outline\"|\"ghost\"|\"destructive\", align: \"start\"|\"end\", reactions: [{label, count, pressed}] (app-controlled)",
+  "Attachment": "children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: \"sm\"|\"xs\", state: \"idle\"|\"uploading\"|\"processing\"|\"error\"|\"done\" (default \"idle\"), progress: 0-100, orientation: \"horizontal\"|\"vertical\"",
+  "Marker": "children: [content IDs], content: string (plain text), icon: string (Lucide), variant: \"border\"|\"separator\", status: bool (polite live region), busy: bool",
+  "ChangeSummary": "children: [action IDs] (explicit host-provided actions), files: [{path: string, additions?: number, deletions?: number, status?: \"added\"|\"modified\"|\"deleted\"}], title: string (default \"Edited N file(s)\"; empty: \"No files changed\"), description: string, undoLabel: string, undoDisabled: bool. Static markup, no daub.js requirement or file operations. Escape paths as plain text; floor finite counts and clamp rows/totals to 0..Number.MAX_SAFE_INTEGER; other counts become 0. No implicit buttons; host wires child actions. undoLabel/undoDisabled configure React onUndo buttons only. Label demo data with title \"Prepared 2 demo files\" and description \"Demo changes\"",
+  "ChatComposer": "models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: \"ask\"|\"auto\", mode: \"chat\"|\"plan\", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights",
+  "Image": "src: string (URL), alt: string, width: number, height: number",
+  "Alert": "type: \"info\"|\"warning\"|\"error\"|\"success\", title: string, message: string",
+  "Progress": "value: number, indeterminate: bool",
+  "Skeleton": "variant: \"text\"|\"heading\"|\"avatar\"|\"btn\", lines: number",
+  "EmptyState": "icon: string, title: string, message: string, children: [childIds] (action Buttons shown under the message)",
+  "Tooltip": "text: string, position: \"top\"|\"bottom\"|\"left\"|\"right\"",
+  "Modal": "id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm) | UX: clear close affordance, confirm before dismiss with unsaved data",
+  "AlertDialog": "id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)",
+  "Sheet": "id: string, position: \"right\"|\"left\"|\"top\"|\"bottom\"",
+  "Drawer": "id: string",
+  "Popover": "position: \"top\"|\"bottom\"|\"left\"|\"right\", children: [childIds] (first child becomes the trigger when it is a Button and there are 2+ children; other children are the content)",
+  "HoverCard": "",
+  "DropdownMenu": "items: [{label, icon, separator, groupLabel, active: bool}]",
+  "ContextMenu": "items: [{label, icon, separator}]",
+  "CommandPalette": "id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] (inline objects, NOT element ID references)",
+  "Accordion": "items: [{title, content, children: [childIds]}], multi: bool",
+  "Collapsible": "label: string",
+  "Resizable": "direction: \"horizontal\"|\"vertical\"",
+  "DatePicker": "label: string, placeholder: string, selected: string",
+  "StatCard": "label: string, value: string, trend: \"up\"|\"down\" (direction only, never an icon), trendValue: string, icon: string (Lucide name, pass named: icon: \"users\"), horizontal: bool",
+  "ChartCard": "title: string, children: [Chart element] (empty ChartCard renders \"No data\"), bars: [{label, value, max}] (shortcut: renders a Chart when no children)",
+  "CustomHTML": "html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives \"container\" arg for this element and \"preview\" arg for the entire preview pane — use preview.querySelector('[data-spec-id=\"someId\"]') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after)"
 };
 
 var COMP_CATEGORIES = [
-  ['Layout & Structure', ['Stack', 'Grid', 'Surface', 'Text', 'Prose', 'Separator', 'Icon', 'Link']],
-  ['Controls', ['Button', 'ButtonGroup', 'Field', 'Input', 'InputGroup', 'InputIcon', 'Search', 'Textarea', 'Checkbox', 'RadioGroup', 'Switch', 'Slider', 'Toggle', 'ToggleGroup', 'Select', 'CustomSelect', 'Kbd', 'Label', 'Spinner', 'InputOTP']],
-  ['Navigation', ['Tabs', 'Breadcrumbs', 'Pagination', 'Stepper', 'NavMenu', 'Navbar', 'Menubar', 'Sidebar', 'BottomNav']],
-  ['Data Display', ['Card', 'Table', 'DataTable', 'List', 'Badge', 'Avatar', 'AvatarGroup', 'Calendar', 'Chart', 'Carousel', 'AspectRatio', 'Chip', 'ScrollArea', 'Image']],
-  ['Feedback', ['Alert', 'Progress', 'Skeleton', 'EmptyState', 'Tooltip']],
-  ['Overlays', ['Modal', 'AlertDialog', 'Sheet', 'Drawer', 'Popover', 'HoverCard', 'DropdownMenu', 'ContextMenu', 'CommandPalette']],
-  ['Layout Utilities', ['Accordion', 'Collapsible', 'Resizable', 'DatePicker']],
-  ['Dashboard', ['StatCard', 'ChartCard']],
-  ['Custom', ['CustomHTML']]
+  [
+    "Layout & Structure",
+    [
+      "Stack",
+      "Grid",
+      "Surface",
+      "Text",
+      "Prose",
+      "Separator",
+      "Layout",
+      "Divider",
+      "Icon",
+      "Link",
+      "Frame"
+    ]
+  ],
+  [
+    "Controls",
+    [
+      "Button",
+      "ButtonGroup",
+      "Field",
+      "Input",
+      "InputGroup",
+      "InputIcon",
+      "Search",
+      "Textarea",
+      "Checkbox",
+      "RadioGroup",
+      "Switch",
+      "Slider",
+      "Toggle",
+      "ToggleGroup",
+      "Select",
+      "CustomSelect",
+      "Kbd",
+      "Label",
+      "Spinner",
+      "InputOTP",
+      "CheckboxGroup",
+      "Fieldset",
+      "Group",
+      "NumberField",
+      "Toolbar"
+    ]
+  ],
+  [
+    "Navigation",
+    [
+      "Tabs",
+      "Breadcrumbs",
+      "Pagination",
+      "Stepper",
+      "NavMenu",
+      "Navbar",
+      "Menubar",
+      "Sidebar",
+      "BottomNav"
+    ]
+  ],
+  [
+    "Data Display",
+    [
+      "Card",
+      "Table",
+      "DataTable",
+      "List",
+      "Badge",
+      "Avatar",
+      "AvatarGroup",
+      "Calendar",
+      "Chart",
+      "Carousel",
+      "AspectRatio",
+      "Chip",
+      "ScrollArea",
+      "Image"
+    ]
+  ],
+  [
+    "Feedback",
+    [
+      "Alert",
+      "Progress",
+      "Skeleton",
+      "EmptyState",
+      "Tooltip",
+      "Meter"
+    ]
+  ],
+  [
+    "Overlays",
+    [
+      "Modal",
+      "AlertDialog",
+      "Sheet",
+      "Drawer",
+      "Popover",
+      "HoverCard",
+      "DropdownMenu",
+      "ContextMenu",
+      "CommandPalette",
+      "PreviewCard"
+    ]
+  ],
+  [
+    "Layout Utilities",
+    [
+      "Accordion",
+      "Collapsible",
+      "Resizable",
+      "DatePicker"
+    ]
+  ],
+  [
+    "Dashboard",
+    [
+      "StatCard",
+      "ChartCard"
+    ]
+  ],
+  [
+    "Chat",
+    [
+      "MessageScroller",
+      "Message",
+      "Bubble",
+      "Attachment",
+      "Marker",
+      "ChangeSummary",
+      "ChatComposer"
+    ]
+  ],
+  [
+    "Custom",
+    [
+      "CustomHTML"
+    ]
+  ]
 ];
 
+var VALID_TYPES = Object.keys(RENDERERS);
 var VALID_TYPES_HINT = (function() {
-  var types = [];
-  COMP_CATEGORIES.forEach(function(cat) { types = types.concat(cat[1]); });
-  return 'VALID COMPONENT TYPES (use ONLY these): ' + types.join(', ') + ', CustomHTML\n'
+  return 'VALID COMPONENT TYPES (use ONLY these): ' + VALID_TYPES.join(', ') + '\n'
     + 'Do NOT invent new types. Do NOT use nested elements objects — use flat ID references in "children" arrays.\n'
     + 'FORMAT: {"theme":"...","root":"id","elements":{"id":{"type":"ValidType","props":{...},"children":["child-id"]}}}\n';
 })();
@@ -6972,6 +7546,7 @@ var SYSTEM_PROMPT = (function() {
     + '- Only leaf elements omit "children"\n'
     + '- The "root" must reference an existing element ID\n'
     + '- Output MUST be valid JSON. Double-check: no trailing commas, no single quotes, no unescaped special characters\n\n'
+    + VALID_TYPES_HINT + '\n'
     + 'AVAILABLE COMPONENT TYPES AND PROPS:\n\n';
 
   var sections = '';
@@ -7000,7 +7575,7 @@ var SYSTEM_PROMPT = (function() {
     + '- Charts go inside ChartCard as a Chart child ("children":["chart-id"]) with 4-8 bars of realistic data unless the user specifies the data; use Switch (not Toggle) for on/off settings like notifications\n'
     + '- Sidebar and NavMenu take data arrays (sections / items of {label, icon, href, active}), not child element refs\n'
     + '- Keep element IDs descriptive and unique\n'
-    + '- For standalone images use the Image component with a src URL. For placeholder images, use dummyimage.com: https://dummyimage.com/WxH/BGCOLOR/TEXTCOLOR.png&text=LABEL (e.g. https://dummyimage.com/300x200/e0e0e0/666.png&text=Product+Photo)\n'
+    + '- For photos use Image (or Card media) with src https://picsum.photos/seed/<subject-slug>/<W>/<H> sized to the slot (e.g. https://picsum.photos/seed/leather-weekender-bag/400/300 for a 400x300 product card) and alt text that names the subject. Never use dummyimage.com or other grey placeholder hosts, and never invent Unsplash photo ids.\n'
     + '- Escape quotes properly in JSON strings: use \\" for double quotes inside string values\n'
     + '- Overlay components (Modal, AlertDialog, Sheet, Drawer) are hidden by default — do NOT add display:none style\n'
     + '- Use trigger: "overlay-id" on Button to open overlays — no CustomHTML JS needed\n'
@@ -7011,7 +7586,7 @@ var SYSTEM_PROMPT = (function() {
     + '- StatCard horizontal:true for compact inline stat display (icon + label + value in a row)\n'
     + '- Stepper vertical:true for vertical process flows and timelines\n'
     + '- Use CustomSelect (not Select) when you need searchable dropdowns or custom-styled options; set selected:true on the default option and disabled:true on unavailable options\n'
-    + '- Use "Separator" for dividers/horizontal rules — there is no "Divider" component\n\n'
+    + '- Prefer "Separator" for dividers/horizontal rules; "Divider" is a legacy alias\n\n'
     + 'DENSITY & COMPLETENESS:\n'
     + '- Generate 12-25 elements minimum for any non-trivial UI\n'
     + '- Fill every section with realistic sample data — no "Lorem ipsum", no "..." placeholders\n'
@@ -7062,8 +7637,8 @@ var SYSTEM_PROMPT = (function() {
     + '"tab-settings":{"type":"Button","props":{"label":"Settings","variant":"outlined"},"on":{"click":{"action":"setState","params":{"path":"/activeTab","value":"settings"}}}},'
     + '"panel-home":{"type":"Card","props":{},"visible":{"$state":"/activeTab","eq":"home"},"children":["home-text"]},'
     + '"panel-settings":{"type":"Card","props":{},"visible":{"$state":"/activeTab","eq":"settings"},"children":["settings-text"]},'
-    + '"home-text":{"type":"Text","props":{"text":"Welcome to the home panel"}},'
-    + '"settings-text":{"type":"Text","props":{"text":"Settings panel content"}}}}\n\n'
+    + '"home-text":{"type":"Text","props":{"content":"Welcome to the home panel"}},'
+    + '"settings-text":{"type":"Text","props":{"content":"Settings panel content"}}}}\n\n'
     + 'INTERACTIVITY — CustomHTML JS (FOR COMPLEX CASES):\n'
     + '- Use CustomHTML JS ONLY for games, canvas drawing, complex animations, and advanced DOM manipulation\n'
     + '- For tabs, toggles, counters, forms, show/hide — use declarative state instead\n'
@@ -7136,6 +7711,9 @@ var OPENUI_SYSTEM_PROMPT = (function() {
     + 'CRITICAL RULES:\n'
     + '- Output ONLY openui-lang code. No markdown fences, no explanation, no text before/after\n'
     + '- Every referenced name must be defined as a statement\n'
+    + '- Each named element has exactly one parent: list it in one children array. A section shown in a Tabs panel is listed in that panel only\n'
+    + '- Never write alias statements (name = otherName); use otherName directly\n'
+    + '- Every defined element must be reachable from root, except overlays opened by a trigger\n'
     + '- Use descriptive names for readability\n\n';
 
   // Args in the parser's positional order (DaubOpenUI.COMP_SCHEMA); raw COMP_PROPS line when no schema
@@ -7187,6 +7765,7 @@ var OPENUI_SYSTEM_PROMPT = (function() {
     + '- Use trigger:"overlay-id" on Button to open overlays\n'
     + '- Generate 12-25+ elements for non-trivial UIs\n'
     + '- Use realistic sample data — no placeholders\n'
+    + '- Photos: use Image or Card media only where the page shows real things (products, listings, rooms, galleries, articles, recipes). src = https://picsum.photos/seed/<subject-slug>/<W>/<H> sized to the slot (600/400 card, 1200/600 hero, 80/80 thumbnail), e.g. Image("https://picsum.photos/seed/lisbon-sea-view-room/600/400", "Sea-view double room at Hotel Lusa", 600, 400). alt names the subject. Never use grey placeholder hosts (dummyimage.com, placehold.co, via.placeholder.com) or invented Unsplash photo ids. People get Avatar initials, not photos\n'
     + '- Every page needs header/nav, main content, footer/actions\n\n';
 
   var themes = (function() {
@@ -7204,12 +7783,13 @@ var OPENUI_SYSTEM_PROMPT = (function() {
 
   var example = 'EXAMPLE:\n'
     + '__theme = "bone"\n'
-    + 'root = Stack([header, stats, content], "vertical", 4)\n'
-    + 'header = Stack([Text("Dashboard", "h1"), Button("Settings", "ghost")], "horizontal", 2, "between", "center")\n'
+    + 'root = Stack([header, stats, orders], "vertical", 4)\n'
+    + 'header = Stack([Text("Dashboard", "h1"), Button("Settings", "ghost", icon: "settings")], "horizontal", 2, "between", "center")\n'
     + 'stats = Grid([s1, s2], 2, 3)\n'
-    + 's1 = StatCard("Revenue", "$12,345", "up", "+12%")\n'
-    + 's2 = StatCard("Users", "1,234", "up", "+5%")\n'
-    + 'content = Card([], "Overview", "Dashboard content goes here")\n';
+    + 's1 = StatCard("Revenue", "$12,345", "up", "+12%", icon: "dollar-sign")\n'
+    + 's2 = StatCard("Users", "1,234", "up", "+5%", icon: "users")\n'
+    + 'orders = Card([orderList], "Recent orders", "Last 24 hours")\n'
+    + 'orderList = List([{title: "#1042 Maya Chen", secondary: "$248.00 - Paid", icon: "receipt"}, {title: "#1041 Jonas Weber", secondary: "$96.50 - Refunded", icon: "undo-2"}])\n';
 
   focusedOpenuiSystemPrompt = function(picked) {
     var focus = 'COMPONENT SIGNATURES — PICKED FOR THIS REQUEST (positional arg order; prefer these):\n';
@@ -7464,6 +8044,7 @@ if (new URLSearchParams(location.search).has('react-chat')) {
       };
     },
     renderSpec: function(s, p) { renderSpec(s, p); },
+    commitSpec: function(s, p) { commitSpec(s, p); },
     postToPreview: function(m) { postToPreview(m); },
     cleanJSON: function(t) { return cleanJSON(t); },
     repairJSON: function(s) { return repairJSON(s); },
@@ -7515,8 +8096,17 @@ if (new URLSearchParams(location.search).has('react-chat')) {
     var el = document.getElementById('pg-chat-mount');
     if (el && window.DaubChat && window.DaubChat.mount) {
       window.DaubChat.mount(el);
+    } else {
+      restoreVanillaChat();
     }
   };
+  function restoreVanillaChat() {
+    var el = document.getElementById('pg-chat-mount');
+    if (el) el.remove();
+    if (vanillaChat) vanillaChat.style.display = '';
+    DAUB.toast({ type: 'error', message: 'Could not load React chat. Using the standard chat.' });
+  }
+  s.onerror = restoreVanillaChat;
   document.body.appendChild(s);
 })();
 </script>

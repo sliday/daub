@@ -18,7 +18,7 @@
   <meta property="og:description" content="Dashboard, login, settings, profile, inbox, and file browser — real-world layouts built with DAUB's 84 neo-skeuomorphic components.">
   <meta property="og:url" content="https://daub.dev/demo.html">
   <meta property="og:site_name" content="DAUB UI">
-  <meta property="og:image" content="https://daub.dev/og-image.png">
+  <meta property="og:image" content="https://daub.dev/og-image.png?v=3.20.6">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="DAUB UI — Considered interface components">
@@ -28,7 +28,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="DAUB — Layout Demos">
   <meta name="twitter:description" content="Dashboard, login, settings, profile, inbox, and file browser — real-world layouts built with 84 neo-skeuomorphic components.">
-  <meta name="twitter:image" content="https://daub.dev/og-image.png">
+  <meta name="twitter:image" content="https://daub.dev/og-image.png?v=3.20.6">
   <meta name="twitter:site" content="@staskulesh">
 
   <!-- FOUC prevention -->
@@ -41,10 +41,11 @@
           crossorigin="anonymous"></script>
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
+  <script src="assets/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.20.3">
+  <link rel="stylesheet" href="daub.css?v=3.20.6">
+  <script src="site-nav.js" defer></script>
 
   <style>
     /* ---- Demo page layout ---- */
@@ -127,12 +128,12 @@
       flex-shrink: 0;
     }
     .db-nav__toggle:hover { background: color-mix(in srgb, var(--db-ink) 5%, transparent); }
-    @media (max-width: 768px) {
+    @media (max-width: 1100px) {
       .db-nav__toggle { display: flex; }
       .db-nav__links {
         display: none;
         position: absolute;
-        top: 48px;
+        top: 100%;
         left: 0;
         right: 0;
         flex-direction: column;
@@ -142,10 +143,12 @@
         gap: 0;
         box-shadow: var(--db-shadow-2);
         z-index: 99;
+        max-height: calc(100dvh - 48px);
+        overflow-y: auto;
       }
       .db-nav__links li { width: 100%; }
       .db-nav__links a { display: block; width: 100%; padding: 10px 12px; font-size: 0.875rem; }
-      .db-nav__github { width: 100%; justify-content: flex-start; border: none; padding: 10px 12px !important; }
+      .db-nav__links .db-nav__github { display: flex; width: 100%; justify-content: flex-start; border: none; padding: 10px 12px !important; }
       .db-nav--open .db-nav__links { display: flex; }
     }
 
@@ -489,6 +492,10 @@
       padding: 24px;
     }
     .block-card {
+      padding: 0;
+      text-align: left;
+      font: inherit;
+      color: inherit;
       border: 1px solid var(--db-sand);
       border-radius: var(--db-radius-3);
       overflow: hidden;
@@ -500,6 +507,7 @@
       border-color: var(--db-terracotta);
       box-shadow: 0 4px 16px color-mix(in srgb, var(--db-terracotta) 15%, transparent);
     }
+    .block-card:focus-visible { outline: 2px solid var(--db-terracotta); outline-offset: 3px; }
     .block-card__img {
       width: 100%;
       aspect-ratio: 16 / 10;
@@ -558,6 +566,11 @@
       .profile-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .block-gallery__grid { grid-template-columns: 1fr; padding: 16px; }
       .block-tabs { padding: 10px 16px; }
+      .dash__main { padding: 20px 16px; min-width: 0; }
+      .dash__topbar, .files-toolbar, .inbox-toolbar { flex-wrap: wrap; gap: 12px; }
+      .files-toolbar .db-field { width: 100% !important; }
+      .profile-stat { padding: 12px 8px; }
+      .profile-stat__label { overflow-wrap: anywhere; }
     }
   </style>
 </head>
@@ -578,13 +591,13 @@
 <!-- ====== Top Nav ====== -->
 <nav class="db-nav" role="navigation" aria-label="Main">
   <a href="index.html" class="db-nav__brand">DAUB</a>
-    <button class="db-nav__toggle" aria-label="Menu" aria-expanded="false" onclick="this.closest('.db-nav').classList.toggle('db-nav--open');this.setAttribute('aria-expanded',this.closest('.db-nav').classList.contains('db-nav--open'))">
+    <button class="db-nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="main-nav-links" onclick="this.closest('.db-nav').classList.toggle('db-nav--open');this.setAttribute('aria-expanded',this.closest('.db-nav').classList.contains('db-nav--open'))">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-  <ul class="db-nav__links">
-    <li><a href="/">Components</a></li>
+  <ul class="db-nav__links" id="main-nav-links">
+    <li><a href="components.html">Components</a></li>
     <li><a href="docs.html">Docs</a></li>
-    <li><a href="demo.html" class="db-nav__link--active">Layouts</a></li>
+    <li><a href="demo.html" class="db-nav__link--active" aria-current="page">Layouts</a></li>
     <li><a href="playground.html">Playground</a></li>
     <li><a href="themes.html">Themes</a></li>
     <li><a href="roadmap.html">Roadmap</a></li>
@@ -600,10 +613,12 @@
 </nav>
 
 <!-- ====== Block Gallery Tabs ====== -->
+<h1 style="font-family:var(--db-font-heading);font-size:1.5rem;margin:24px 24px 8px">Layout Library</h1>
+<p id="gallery-status" role="status" style="margin:0 24px 16px;color:var(--db-warm-gray)">Loading layouts...</p>
 <div class="block-tabs" role="tablist" aria-label="Block categories" id="block-tabs"></div>
 
 <!-- ====== Block Gallery Grid ====== -->
-<div id="block-gallery" style="display:none;">
+<div id="block-gallery" role="tabpanel" style="display:none;">
   <div class="block-gallery__grid" id="block-gallery-grid"></div>
 </div>
 
@@ -1154,7 +1169,7 @@
       </button>
     </div>
     <div class="db-field" style="margin:0;width:240px;">
-      <input class="db-field__input" placeholder="Search files..." style="padding:8px 12px;font-size:0.8125rem;">
+      <input class="db-field__input" type="search" aria-label="Search files" placeholder="Search files..." style="padding:8px 12px;font-size:0.8125rem;">
     </div>
   </div>
 
@@ -1257,15 +1272,15 @@
 <!-- Footer -->
 <div class="db-divider"></div>
 <p style="text-align:center;padding:24px;font-family:var(--db-font-ui);font-size:0.75rem;color:var(--db-warm-gray);">
-  DAUB v3.20.3 — 84 Components, 21 Theme Families, Zero Build Step
+  DAUB v3.20.6 — 91 Components, 21 Theme Families, Zero Build Step
 </p>
 
 <!-- Theme Switcher (popover) -->
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher"></div>
 
-<script src="daub.js?v=3.20.3"></script>
+<script src="daub.js?v=3.20.6"></script>
 <script>
-  lucide.createIcons();
+  if (window.lucide) lucide.createIcons();
 
   (function () {
     var VERTICALS = {
@@ -1291,6 +1306,7 @@
     var demos = document.getElementById('demo-layouts');
     var allBlocks = [];
     var activeTab = 'all';
+    var status = document.getElementById('gallery-status');
 
     function clearChildren(el) {
       while (el.firstChild) el.removeChild(el.firstChild);
@@ -1308,6 +1324,9 @@
         btn.className = 'block-tabs__tab' + (id === activeTab ? ' block-tabs__tab--active' : '');
         btn.setAttribute('role', 'tab');
         btn.setAttribute('aria-selected', id === activeTab ? 'true' : 'false');
+        btn.id = 'block-tab-' + id;
+        btn.setAttribute('aria-controls', 'block-gallery');
+        btn.tabIndex = id === activeTab ? 0 : -1;
         btn.dataset.tab = id;
         var count = filterBlocks(id).length;
         if (id === 'misc') count += 6;
@@ -1330,13 +1349,15 @@
         return;
       }
       blocks.forEach(function (block) {
-        var card = document.createElement('div');
+        var card = document.createElement('button');
+        card.type = 'button';
         card.className = 'block-card';
-        card.title = block.name + ' \u2014 click to open in Playground';
+        card.title = 'Open ' + block.name + ' in Playground';
+        card.setAttribute('aria-label', card.title);
 
         var img = document.createElement('img');
         img.className = 'block-card__img';
-        img.alt = block.name;
+        img.alt = '';
         img.loading = 'lazy';
         img.src = 'blocks/' + block.screenshot;
 
@@ -1369,13 +1390,18 @@
     }
 
     function openInPlayground(block) {
+      status.textContent = 'Opening ' + block.name + '...';
       fetch('blocks/' + block.file)
-        .then(function (r) { return r.json(); })
+        .then(function (r) {
+          if (!r.ok) throw new Error('Layout request failed');
+          return r.json();
+        })
         .then(function (spec) {
           var json = JSON.stringify(spec);
           var compressed = LZString.compressToEncodedURIComponent(json);
-          window.open('playground.html#s=' + compressed, '_blank');
-        });
+          window.location.href = 'playground.html#s=' + compressed;
+        })
+        .catch(function () { status.textContent = 'Could not open ' + block.name + '. Try again.'; });
     }
 
     function switchTab(tabId) {
@@ -1384,11 +1410,14 @@
         var isActive = btn.dataset.tab === tabId;
         btn.classList.toggle('block-tabs__tab--active', isActive);
         btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        btn.tabIndex = isActive ? 0 : -1;
       });
       var blocks = filterBlocks(tabId);
       gallery.style.display = 'block';
+      gallery.setAttribute('aria-labelledby', 'block-tab-' + tabId);
       renderGallery(blocks);
       demos.style.display = (tabId === 'misc') ? 'block' : 'none';
+      status.textContent = blocks.length + ' layouts' + (tabId === 'misc' ? ' and 6 compositions' : '');
     }
 
     tabBar.addEventListener('click', function (e) {
@@ -1396,14 +1425,29 @@
       if (!btn) return;
       switchTab(btn.dataset.tab);
     });
+    tabBar.addEventListener('keydown', function(e) {
+      var btn = e.target.closest('.block-tabs__tab');
+      if (!btn || ['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(e.key) === -1) return;
+      e.preventDefault();
+      var index = TAB_ORDER.indexOf(btn.dataset.tab);
+      if (e.key === 'Home') index = 0;
+      else if (e.key === 'End') index = TAB_ORDER.length - 1;
+      else index = (index + (e.key === 'ArrowRight' ? 1 : -1) + TAB_ORDER.length) % TAB_ORDER.length;
+      switchTab(TAB_ORDER[index]);
+      document.getElementById('block-tab-' + TAB_ORDER[index]).focus();
+    });
 
     fetch('blocks/index.json')
-      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        if (!r.ok) throw new Error('Layout catalog request failed');
+        return r.json();
+      })
       .then(function (data) {
         allBlocks = data;
         renderTabs();
         switchTab('all');
-      });
+      })
+      .catch(function () { status.textContent = 'Could not load layouts. Reload this page to try again.'; });
   })();
 </script>
 </body>

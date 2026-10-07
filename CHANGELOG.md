@@ -2,6 +2,86 @@
 
 All notable changes to DAUB are documented here.
 
+## v3.20.6
+
+**Chat composer, documentation, and navigation release (2026-10-07).**
+
+- Add the compact ChatComposer with queued messages, steering, clipboard images,
+  base64 image paste, and accessible model and settings menus.
+- Add ChangeSummary across native, React, browser, and MCP renderers.
+- Consolidate documentation and component references. Share the main navigation
+  across eight pages, and align the roadmap feature cards.
+- Refine message actions, focus styling, activity spacing, and dictation errors.
+- Release `daub-react@0.3.2` with the ChangeSummary component.
+
+- Add a searchable 91-component browser with source/anatomy views, isolated previews,
+  42 theme variants, mobile sizing, working variant states, and copy actions.
+- Correct native and React keyboard, overlay, form, disclosure, menu, calendar,
+  table, carousel, metric, image, and disabled-state behavior.
+- Recompute semantic/component tokens in scoped themes and portals. Improve
+  button-state, placeholder, and raised-surface text contrast.
+- Align the 89-type browser/OpenUI/local MCP/cloud MCP renderer contract and add
+  thirteen named renderers. Generate the MCP renderer snapshot from the canonical body.
+- Add MessageScroller, Message, Bubble, Attachment, and Marker conversation primitives,
+  with app-controlled reactions and attachment states. Add the chat demo and renderer
+  contracts for stable row IDs, scoped actions, text escaping, and safe image/link URLs.
+- Use the shadcn headless scroll engine for React chat components. The updated
+  `daub-react` package requires React and React DOM 19 or later.
+- Isolate playground-generated code while retaining state, export, inspection,
+  screenshot, and chunk-test workflows.
+- Repair catalog examples, docs filtering/copy, theme JSON import, mobile navigation,
+  class hooks, social image counts, and stale React documentation.
+- Add regression and visual-contract coverage. See [QUALITY-REVIEW.md](QUALITY-REVIEW.md).
+
+## v3.20.5
+
+**Hover lifts and press flips, dialog dismiss, Navbar phone menu, hosted MCP gaps closed (2026-09-29).**
+
+### Library (daub.css, daub.js)
+- Button hover keeps the resting gradient, lifts 1px and deepens the shadow; only press flips the fill and insets it. Before, primary and secondary hover already showed the pressed lighting (#24).
+- Plain `.db-card` no longer raises its shadow on hover; `.db-card--interactive` keeps its lift. Hover-only rules apply under `@media (hover: hover) and (pointer: fine)`, so taps on touch screens leave no stuck hover (#24).
+- Icons inside `.db-btn` no longer shrink in tight rows, and ToggleGroup labels no longer wrap (#24).
+- A button with `data-db-dismiss` closes the Modal, Alert Dialog, Sheet or Drawer it sits in, and Escape closes the one on top (#25).
+- Navbar gets a phone menu toggle (`.db-navbar__toggle`) so its links stay reachable at narrow widths (#25).
+
+### Rendering (playground, daub-render.js, MCP renderer)
+- `Image` keeps its aspect ratio instead of writing a fixed pixel height beside `max-width: 100%` (#25).
+- `Field`/`Input` accept a `value` prop (#25).
+- Dialog default buttons and footer buttons carry `data-db-dismiss`; footer buttons that run a state action (for example a wizard's Next) keep the dialog open (#25).
+
+### Hosted MCP (functions/api/mcp.js)
+- `render_spec` and `validate_spec` accept the spec as a JSON string or an object (#26).
+- `parse_openui` and `validate_spec` support `Icon` and `Link`; before, `Icon(...)` became a stray Text with a dangling id (#26).
+- `get_component_catalog` lists only themes `daub.js` defines, with a test that fails on drift (#26).
+
+### Playground
+- The "Streaming…" status lines up with the Design / Structure / Code tabs (#23).
+
+## v3.20.4
+
+**Combo-audit fixes, render fixes from the design eval, weblook SSRF hardening, daub-ui skill v2 (2026-09-28).**
+
+### Rendering (combo visual audit, #8-#18)
+- Hosted MCP pages follow the theme background (#8). Dark themes define the text-colour tokens, and links use the text colour instead of the fill (#14).
+- Grid tracks grow with content, and spans survive the mobile collapse (#13). Tables sit in a scroll container (#9). Sidebar labels render in a span (#11).
+- Popovers, dropdowns, hover cards and tooltips stay inside the viewport (`clampPanel` in `daub.js`) (#16).
+- Variant props map onto classes `daub.css` defines (#10). Each text slot reads one prop name through shared aliases, which ends dropped content (#15). Unknown icon names resolve through an alias map or leave no empty slot (#12).
+- Renderers render their children (List, Avatar, Table and others) with a recursion guard (#17). The Stepper completed indicator meets contrast and the current index is honoured (#18).
+
+### Rendering (design eval defects, #21)
+- Avatar keeps non-image strings out of `<img src>`: a size token becomes `size`, a name falls back to initials, and a swapped URL moves to `src`.
+- StatCard moves a Lucide icon name out of the trend slot. `neutral`/`flat` trends show the value without the word.
+- CustomSelect honours a top-level `selected`. Switch and Checkbox show one visible label per row, and a boolean in the label slot sets `checked`.
+- Tabs accept string tab lists. EmptyState renders action children. Table and DataTable row actions render as buttons, and cells can hold element ids.
+- The OpenUI spec tree places each element once: duplicate references, aliases, id-first overlays and cycles no longer render content twice. Orphans, nested footer arrays and carousel slides render once.
+- Prompts: a real-photo rule replaces the dummyimage recommendation, the filler-Card example is gone, and the prompts add tree rules (one parent, reachable from root).
+
+### Security
+- `weblook.js` blocks private, reserved and IPv6-mapped hosts, checks DNS answers over DoH (fail closed) and re-checks the final URL after navigation (#7, supersedes #5).
+
+### Agent skill
+- daub-ui skill v2 (#20): `SKILL.md` plus nine generated `references/*.md` (components, OpenUI, json-render, blocks, themes, MCP, Jev, verify, design), rebuilt by `node tools/build-skill.mjs` and checked by `tests/skill.test.mjs`. `.well-known/agent-skills/index.json` follows the discovery schema with sha256 digests.
+
 ## v3.20.3
 
 **Consistent rendering across renderers, #s= share links, preview state, combo visual audit (2026-09-28).**

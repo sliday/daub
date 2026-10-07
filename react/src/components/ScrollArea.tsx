@@ -9,6 +9,9 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
   ({ horizontal, className, ...props }, ref) => (
     <div
       ref={ref}
+      data-db-react=""
+      tabIndex={0}
+      role={props["aria-label"] || props["aria-labelledby"] ? "region" : undefined}
       className={cn(
         "db-scroll-area",
         horizontal && "db-scroll-area--horizontal",

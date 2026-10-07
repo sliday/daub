@@ -6,7 +6,8 @@
 // generating text, so it only works on /api/alpha/decisions (not chat/completions).
 // We ask one yes/no ("noul") question per component, all in one request.
 
-const MODEL = '~typesafe/jev-latest';
+// Pinned version: an alias can shift probabilities (and the tuned 0.45 threshold) under us. Re-probe before bumping.
+const MODEL = 'typesafe/jev-1.13-20260917';
 const MAX_PROMPT = 4000;
 const MAX_COMPONENTS = 120;
 const MAX_DESC = 400;

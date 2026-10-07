@@ -2,6 +2,7 @@ import {
   ThreadPrimitive,
   ComposerPrimitive,
   MessagePrimitive,
+  useComposerRuntime,
 } from "@assistant-ui/react";
 import { getBridge } from "../runtime/bridge";
 
@@ -15,6 +16,7 @@ const EXAMPLES = [
 ];
 
 function EmptyState() {
+  const composer = useComposerRuntime();
   return (
     <ThreadPrimitive.Empty>
       <div style={{
@@ -61,15 +63,11 @@ function EmptyState() {
               className="db-chip db-chip--sm"
               style={{ cursor: "pointer", textAlign: "left", fontSize: "0.75rem" }}
               onClick={() => {
+                composer.setText(ex);
                 const input = document.querySelector(
                   "[data-aui-composer-input]"
                 ) as HTMLTextAreaElement | null;
                 if (input) {
-                  const setter = Object.getOwnPropertyDescriptor(
-                    window.HTMLTextAreaElement.prototype, "value"
-                  )?.set;
-                  setter?.call(input, ex);
-                  input.dispatchEvent(new Event("input", { bubbles: true }));
                   input.focus();
                 }
               }}
@@ -122,6 +120,9 @@ function AssistantMessage() {
         whiteSpace: "pre-wrap",
       }}>
         <MessagePrimitive.Content />
+        <MessagePrimitive.Error>
+          <p role="alert" style={{ margin: "8px 0 0", color: "var(--db-error, #b5503c)" }}>Generation failed. Check your connection and provider settings.</p>
+        </MessagePrimitive.Error>
       </div>
     </MessagePrimitive.Root>
   );
@@ -133,10 +134,12 @@ export function DaubThread() {
       display: "flex",
       flexDirection: "column",
       height: "100%",
+      minHeight: 0,
       fontFamily: "var(--db-font-body)",
     }}>
       <ThreadPrimitive.Viewport style={{
         flex: 1,
+        minHeight: 0,
         overflowY: "auto",
         padding: "16px",
       }}>
@@ -154,7 +157,7 @@ export function DaubThread() {
         padding: "10px 12px",
         background: "var(--db-cream-dark)",
       }}>
-        <ComposerPrimitive.Root style={{
+        <ComposerPrimitive.Root className="pg-react-composer" style={{
           display: "flex",
           flexDirection: "column",
           gap: "0",
@@ -165,6 +168,7 @@ export function DaubThread() {
           transition: "border-color 0.15s",
         }}>
           <ComposerPrimitive.Input
+            aria-label="Describe a UI"
             placeholder="Describe a UI to generate..."
             data-aui-composer-input=""
             autoFocus
@@ -179,7 +183,6 @@ export function DaubThread() {
               color: "var(--db-ink)",
               background: "transparent",
               outline: "none",
-              minHeight: "48px",
               lineHeight: 1.5,
             }}
           />
@@ -189,6 +192,7 @@ export function DaubThread() {
             padding: "4px 8px 8px",
             gap: "2px",
           }}>
+            <button type="button" className="db-btn db-btn--ghost db-btn--sm" onClick={() => getBridge()?.openByokModal()}>Own Key</button>
             <div style={{ flex: 1 }} />
             <span style={{
               fontSize: "0.625rem",
@@ -198,12 +202,17 @@ export function DaubThread() {
             }}>
               ↵ Enter
             </span>
-            <ComposerPrimitive.Send
-              className="db-btn db-btn--primary db-btn--sm"
-              style={{ fontSize: "0.75rem", padding: "5px 14px", borderRadius: "var(--db-radius-2)" }}
-            >
-              Send
-            </ComposerPrimitive.Send>
+            <ThreadPrimitive.If running={false}>
+              <ComposerPrimitive.Send
+                className="db-btn db-btn--primary db-btn--sm"
+                style={{ fontSize: "0.75rem", padding: "5px 14px", borderRadius: "var(--db-radius-2)" }}
+              >
+                Send
+              </ComposerPrimitive.Send>
+            </ThreadPrimitive.If>
+            <ThreadPrimitive.If running>
+              <ComposerPrimitive.Cancel className="db-btn db-btn--secondary db-btn--sm">Stop</ComposerPrimitive.Cancel>
+            </ThreadPrimitive.If>
           </div>
         </ComposerPrimitive.Root>
       </div>

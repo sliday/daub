@@ -34,7 +34,7 @@ function contrastRatio(c1, c2) {
 
 /* ---- Parse themes ---- */
 const themeRe = /((?:\[data-theme="[^"]+"\]\s*,?\s*)+)\{([^}]+)\}/g;
-const rootMatch = css.match(/:root\s*\{([^}]+)\}/);
+const rootMatch = css.match(/:root(?:\s*,\s*\[data-theme\])?\s*\{([^}]+)\}/);
 
 function extractVars(block) {
   const vars = {};
@@ -74,6 +74,7 @@ const pairs = [
   { fg: 'terracotta', bg: 'cream',      label: 'terracotta on cream (accent)',       aa: 3.0 },
   { fg: 'ink',        bg: 'cream-dark',  label: 'ink on cream-dark (surface)',        aa: 4.5 },
   { fg: 'warm-gray',  bg: 'cream-dark',  label: 'warm-gray on cream-dark (surface secondary)', aa: 4.5 },
+  { fg: 'warm-gray',  bg: 'white', label: 'warm-gray on white (raised surface secondary)', aa: 4.5 },
 ];
 
 let failures = 0;
@@ -103,6 +104,28 @@ for (const theme of themes) {
     }
   }
 
+  function resolveColor(value) {
+    if (value && value.startsWith('var(')) return resolveColor(theme.vars[value.slice(9, -1)]);
+    return value;
+  }
+  const buttonText = resolveColor(theme.vars['btn-color']);
+  const mixColor = resolveColor(theme.vars['btn-contrast-color']);
+  const mix = parseFloat(theme.vars['btn-contrast-mix'] || '0') / 100;
+  if (buttonText?.startsWith('#') && mixColor?.startsWith('#')) {
+    for (const key of ['terracotta', 'accent-dark', 'accent-hover', 'accent-pressed']) {
+      const value = resolveColor(theme.vars[key]);
+      if (!value?.startsWith('#')) continue;
+      const base = hexToRgb(value);
+      const tint = hexToRgb(mixColor);
+      const background = base.map((channel, index) => channel * (1 - mix) + tint[index] * mix);
+      const ratio = contrastRatio(hexToRgb(buttonText), background);
+      if (ratio < 4.5) {
+        results.push({ label: 'button text on ' + key, ratio, aa: 4.5, fgHex: buttonText, bgHex: value, pass: false });
+        failures++;
+      }
+    }
+  }
+
   if (results.length) {
     console.log(`\n[${theme.name}]`);
     for (const r of results) {
@@ -116,7 +139,7 @@ for (const theme of themes) {
 console.log('\n' + '='.repeat(50));
 console.log(`Themes: ${themes.length} | Failures: ${failures} | Warnings: ${warnings}`);
 if (failures === 0) {
-  console.log('All themes pass WCAG AA!');
+  console.log('Audited theme color pairs pass WCAG AA.');
 } else {
   console.log(`\n${failures} failure(s) need fixing.`);
   process.exit(1);

@@ -10,6 +10,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ error, inputSize, className, ...props }, ref) => (
     <input
       ref={ref}
+      aria-invalid={error || undefined}
       className={cn(
         "db-input",
         inputSize && `db-input--${inputSize}`,
@@ -17,6 +18,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         className,
       )}
       {...props}
+      data-db-react=""
     />
   ),
 );

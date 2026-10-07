@@ -9,8 +9,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ error, className, ...props }, ref) => (
     <textarea
       ref={ref}
+      aria-invalid={error || undefined}
       className={cn("db-textarea", error && "db-textarea--error", className)}
       {...props}
+      data-db-react=""
     />
   ),
 );

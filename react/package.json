@@ -1,6 +1,6 @@
 {
   "name": "daub-react",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "React components for DAUB UI — typed JSX wrappers around CSS classes",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,8 +19,8 @@
     "dev": "tsup --watch"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": ">=19",
+    "react-dom": ">=19"
   },
   "devDependencies": {
     "@types/react": "^19",
@@ -31,7 +31,8 @@
     "typescript": "^5"
   },
   "files": [
-    "dist"
+    "dist",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "license": "MIT",
   "repository": {
@@ -48,5 +49,8 @@
     "css",
     "design-system",
     "typescript"
-  ]
+  ],
+  "dependencies": {
+    "@shadcn/react": "0.3.1"
+  }
 }

@@ -18,7 +18,7 @@
   <meta property="og:description" content="From CSS components to intent-to-interface. Software that dissolves between thought and solution.">
   <meta property="og:url" content="https://daub.dev/roadmap.html">
   <meta property="og:site_name" content="DAUB UI">
-  <meta property="og:image" content="https://daub.dev/og-image.png">
+  <meta property="og:image" content="https://daub.dev/og-image.png?v=3.20.6">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="DAUB Roadmap — Intent to Interface">
@@ -28,7 +28,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="DAUB — Roadmap">
   <meta name="twitter:description" content="From CSS components to intent-to-interface. Software that dissolves between thought and solution.">
-  <meta name="twitter:image" content="https://daub.dev/og-image.png">
+  <meta name="twitter:image" content="https://daub.dev/og-image.png?v=3.20.6">
   <meta name="twitter:site" content="@staskulesh">
 
   <!-- FOUC prevention -->
@@ -40,7 +40,8 @@
   <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.20.3">
+  <link rel="stylesheet" href="daub.css?v=3.20.6">
+  <script src="site-nav.js" defer></script>
 
   <style>
     body { margin: 0; overflow-x: hidden; }
@@ -197,11 +198,15 @@
     .rm-place { max-width: 800px; margin: 0 auto; padding: 0 24px 80px; }
     .rm-place h2 { font-family: var(--db-font-heading); text-align: center; margin: 0 0 12px; font-size: 1.6rem; }
     .rm-place > p { text-align: center; color: var(--db-color-text-secondary); margin: 0 0 40px; font-size: 0.95rem; max-width: 560px; margin-left: auto; margin-right: auto; }
-    .rm-place__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-    .rm-place__item { text-align: center; padding: 28px 20px; border-radius: 12px; background: var(--db-color-surface); border: 1px solid var(--db-color-border); }
-    .rm-place__icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+    .rm-place__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .rm-place__item { min-width: 0; text-align: left; padding: 24px; border-radius: 8px; background: var(--db-color-surface); border: 1px solid var(--db-color-border); }
+    .rm-place__item:last-child:nth-child(odd) { grid-column: 1 / -1; }
+    .rm-place__icon { width: 32px; height: 32px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; }
     .rm-place__label { font-family: var(--db-font-heading); font-weight: 600; font-size: 0.95rem; margin: 0 0 6px; color: var(--db-color-text); }
     .rm-place__desc { font-size: 0.8rem; color: var(--db-color-text-muted); margin: 0; line-height: 1.5; }
+    @media (max-width: 600px) {
+      .rm-place__grid { grid-template-columns: minmax(0, 1fr); }
+    }
 
     /* Closing visual */
     .rm-closing { position: relative; padding: 80px 24px 96px; overflow: hidden; text-align: center; }
@@ -237,7 +242,7 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <ul class="db-nav__links">
-      <li><a href="/">Components</a></li>
+      <li><a href="components.html">Components</a></li>
       <li><a href="docs.html">Docs</a></li>
       <li><a href="demo.html">Layouts</a></li>
       <li><a href="playground.html">Playground</a></li>
@@ -259,7 +264,7 @@
     <h2>What Makes This Different</h2>
     <p>Not a comparison. Just the design decisions that led somewhere no one else went.</p>
 
-    <div class="rm-place__grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+    <div class="rm-place__grid">
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="zap" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
         <div class="rm-place__label">Zero Ceremony</div>
@@ -300,7 +305,7 @@
 
     <div class="rm-layer" data-num="2" data-status="done">
       <span class="rm-layer__name">daub.css + daub.js</span>
-      <span class="rm-layer__desc">84 components with tactile surfaces, letterpress type, and real textures. COSS particle coverage mapped. 21 theme families, 42 variants. Two files, zero build step.</span>
+      <span class="rm-layer__desc">91 components with tactile surfaces, letterpress type, and real textures. COSS particle coverage mapped. 21 theme families, 42 variants. Two files, zero build step.</span>
       <span class="rm-layer__status rm-layer__status--done">Shipped</span>
     </div>
 
@@ -324,7 +329,7 @@
 
     <div class="rm-layer" data-num="6" data-status="done">
       <span class="rm-layer__name">React / JSX Wrappers</span>
-      <span class="rm-layer__desc">80 typed JSX components wrapping DAUB's CSS classes. Full TypeScript, IDE autocomplete, forwardRef, controlled &amp; uncontrolled modes. <code>npm install daub-react</code></span>
+      <span class="rm-layer__desc">Typed JSX components wrapping DAUB's CSS classes, including conversation primitives. React and React DOM 19+, with the <code>@shadcn/react</code> 0.3.1 chat scroll engine. TypeScript, controlled &amp; uncontrolled modes. <code>npm install daub-react daub-ui</code> and build with your app's bundler.</span>
       <span class="rm-layer__status rm-layer__status--done">Shipped</span>
     </div>
 
@@ -517,7 +522,7 @@
   </footer>
 
   <div class="db-theme-switcher"></div>
-  <script src="daub.js?v=3.20.3"></script>
+  <script src="daub.js?v=3.20.6"></script>
   <script>
     // Generative closing visual — particles that drift and connect,
     // evoking intent coalescing into structure.

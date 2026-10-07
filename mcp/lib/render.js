@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import LZString from 'lz-string';
+import { createRequire } from 'node:module';
+import { DAUB_RENDER_BODY, normalizeTheme, serializeSpec } from './renderers.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
 const TMP_DIR = path.join(process.env.TMPDIR || '/tmp', 'daub-mcp');
 
 // Ensure tmp directory exists
@@ -11,9 +11,9 @@ try { fs.mkdirSync(TMP_DIR, { recursive: true }); } catch {}
 
 // First-party daub.dev assets always match the deployed site (npm can lag a release); ?v= busts caches per release.
 // Version comes from the repo's package.json; outside the repo (no root package.json) fall back to the last known release
-let DAUB_VERSION = '3.20.3';
+let DAUB_VERSION = '3.20.6';
 try {
-  const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'package.json'), 'utf-8'));
+  const pkg = JSON.parse(fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf-8'));
   if (pkg.name === 'daub-ui' && pkg.version) DAUB_VERSION = pkg.version;
 } catch {}
 // Same pinned build + SRI as the playground export
@@ -21,26 +21,15 @@ const LUCIDE_SRC = 'https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.
 const LUCIDE_SRI = 'sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ';
 
 export function buildPreviewURL(spec) {
+  const LZString = require('lz-string');
   const json = typeof spec === 'string' ? spec : JSON.stringify(spec);
   const compressed = LZString.compressToEncodedURIComponent(json);
   return `https://daub.dev/playground#s=${compressed}`;
 }
 
-// \u-escape chars that could close the inline <script> or break JS parsing
-function scriptSafeJSON(value) {
-  return JSON.stringify(value, null, 2).replace(/[<>&\u2028\u2029]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
-}
-
-function escAttr(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
 export function renderToHTML(spec, outputPath) {
-  const theme = escAttr(spec.theme || 'light');
-  const specJSON = scriptSafeJSON(spec);
-
-  // Read the renderer template — it's the bulk of the file
-  const rendererCode = fs.readFileSync(path.join(__dirname, 'renderers.js'), 'utf-8');
+  const theme = normalizeTheme(spec.theme);
+  const specJSON = serializeSpec(spec);
 
   const html = `<!DOCTYPE html>
 <html data-theme="${theme}">
@@ -62,23 +51,16 @@ export function renderToHTML(spec, outputPath) {
   <script>
   (function() {
     var spec = ${specJSON};
-${rendererCode}
+${DAUB_RENDER_BODY}
     // ---- Render the spec ----
     var root = renderElement(spec.elements, spec.root, 0);
     if (root) document.getElementById('app').appendChild(root);
 
     // Render orphan elements (overlays etc.)
-    var rendered = {};
-    document.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
-    Object.keys(spec.elements).forEach(function(id) {
-      if (id !== spec.root && !rendered[id]) {
-        var orphan = renderElement(spec.elements, id, 0);
-        if (orphan) document.getElementById('app').appendChild(orphan);
-      }
-    });
+    renderOrphans(spec, document.getElementById('app'));
 
     // Init DAUB + Lucide icons
-    if (typeof DAUB !== 'undefined') DAUB.init();
+    if (typeof DAUB !== 'undefined') DAUB.init(document.getElementById('app'));
     if (typeof lucide !== 'undefined') lucide.createIcons();
   })();
   <\/script>

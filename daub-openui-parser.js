@@ -14,18 +14,24 @@ var COMP_SCHEMA = {
   Text: ['content', 'tag', 'class'],
   Prose: ['content', 'size'],
   Separator: ['vertical', 'dashed', 'label'],
+  Layout: ['children', 'direction', 'columns', 'gap', 'align', 'valign'],
+  Divider: ['vertical', 'dashed', 'label'],
   Icon: ['name', 'size', 'variant'],
-  Link: ['label', 'class'],
+  Link: ['label', 'href', 'class'],
   // Controls
   Button: ['label', 'variant', 'size', 'loading', 'icon', 'trigger'],
   ButtonGroup: ['children'],
-  Field: ['children', 'label', 'placeholder', 'type', 'error', 'helper'],
-  Input: ['placeholder', 'size', 'error', 'type'],
+  Field: ['children', 'label', 'placeholder', 'type', 'error', 'helper', 'value'],
+  Input: ['placeholder', 'size', 'error', 'type', 'value'],
   InputGroup: ['children', 'addonBefore', 'addonAfter'],
   InputIcon: ['children', 'icon', 'right'],
   Search: ['placeholder'],
-  Textarea: ['placeholder', 'rows', 'error'],
+  Textarea: ['placeholder', 'rows', 'error', 'value'],
   Checkbox: ['label', 'checked'],
+  CheckboxGroup: ['children', 'label', 'helper', 'inline'],
+  Fieldset: ['children', 'legend', 'helper', 'disabled'],
+  Group: ['children', 'attached', 'vertical', 'label'],
+  NumberField: ['value', 'min', 'max', 'step', 'label'],
   RadioGroup: ['options', 'selected'],
   Switch: ['label', 'checked'],
   Slider: ['min', 'max', 'value', 'step', 'label'],
@@ -44,11 +50,13 @@ var COMP_SCHEMA = {
   Stepper: ['steps', 'vertical'],
   NavMenu: ['items'],
   Navbar: ['children', 'brand', 'brandHref'],
+  Toolbar: ['children', 'vertical', 'label'],
   Menubar: ['items'],
   Sidebar: ['sections', 'collapsed'],
   BottomNav: ['items'],
   // Data Display
   Card: ['children', 'title', 'description', 'media', 'footer', 'interactive', 'clip'],
+  Frame: ['children', 'header', 'footer', 'flush'],
   Table: ['columns', 'rows', 'sortable'],
   DataTable: ['columns', 'rows', 'selectable'],
   List: ['items'],
@@ -61,12 +69,20 @@ var COMP_SCHEMA = {
   AspectRatio: ['children', 'ratio'],
   Chip: ['label', 'color', 'active', 'closable'],
   ScrollArea: ['children', 'direction'],
+  MessageScroller: ['children', 'height', 'autoScroll', 'defaultScrollPosition', 'peek'],
+  Message: ['children', 'align', 'avatar', 'name', 'timestamp', 'messageId', 'scrollAnchor', 'footer'],
+  Bubble: ['children', 'content', 'variant', 'align', 'reactions'],
+  Attachment: ['children', 'name', 'description', 'src', 'alt', 'href', 'size', 'state', 'progress', 'orientation'],
+  Marker: ['children', 'content', 'icon', 'variant', 'status', 'busy'],
+  ChangeSummary: ['children', 'files', 'title', 'description', 'undoLabel', 'undoDisabled'],
+  ChatComposer: ['models', 'model', 'effort', 'approval', 'mode', 'actions', 'capabilities', 'busy', 'placeholder', 'id'],
   Image: ['src', 'alt', 'width', 'height'],
   // Feedback
   Alert: ['type', 'title', 'message'],
   Progress: ['value', 'indeterminate'],
+  Meter: ['value', 'min', 'max', 'status', 'label'],
   Skeleton: ['variant', 'lines'],
-  EmptyState: ['icon', 'title', 'message'],
+  EmptyState: ['icon', 'title', 'message', 'children'],
   Tooltip: ['children', 'text', 'position'],
   // Overlays
   Modal: ['children', 'id', 'title', 'footer'],
@@ -75,6 +91,7 @@ var COMP_SCHEMA = {
   Drawer: ['children', 'id'],
   Popover: ['children', 'position'],
   HoverCard: ['children'],
+  PreviewCard: ['children', 'trigger', 'title', 'description', 'media', 'mediaAlt'],
   DropdownMenu: ['items'],
   ContextMenu: ['items'],
   CommandPalette: ['id', 'placeholder', 'groups'],
@@ -377,6 +394,34 @@ Parser.prototype.parseStatements = function() {
 // ---- Resolve statements into DAUB spec ----
 var _counter = 0;
 
+// Overlays models call id-first, in AlertDialog order: Modal("upload-modal", "Upload files", ...)
+var ID_FIRST = { Modal: 1, Sheet: 1, Drawer: 1 };
+function isIdLike(v) {
+  return typeof v === 'string' && /^[A-Za-z][\w-]*$/.test(v);
+}
+
+// A named element listed under two parents renders once: the first placement in document order wins.
+// A repeat in a sibling panel of the same Tabs stays (one panel shows at a time). Mutates children arrays.
+function dedupeRefs(elements, rootId) {
+  var placed = Object.create(null), onPath = Object.create(null);
+  (function walk(id, panel) {
+    var el = elements[id];
+    if (!el || !Array.isArray(el.children) || onPath[id]) return;
+    onPath[id] = true;
+    el.children = el.children.filter(function(cid, i) {
+      var ctx = el.type === 'Tabs' ? id + '#' + i : panel;
+      var prev = placed[cid];
+      if (!prev) { placed[cid] = [ctx]; walk(cid, ctx); return true; }
+      var tabs = ctx && ctx.split('#')[0];
+      var sibling = tabs && prev.every(function(p) { return p && p !== ctx && p.split('#')[0] === tabs; });
+      if (sibling) prev.push(ctx);
+      return !!sibling;
+    });
+    delete onPath[id];
+  })(rootId, null);
+  return elements;
+}
+
 function genId(prefix) {
   _counter++;
   return (prefix || 'el') + '-' + _counter;
@@ -394,6 +439,13 @@ function resolveStatements(stmts) {
   // References to them resolve to their value wherever they are defined in the file.
   var dataStmts = Object.create(null);
   var resolvingData = Object.create(null);
+  // Alias statements (name = otherName) create no element: every use of the alias resolves to its target
+  var aliasOf = Object.create(null);
+  function canon(n) {
+    var seen = Object.create(null);
+    while (aliasOf[n] && !seen[n]) { seen[n] = true; n = aliasOf[n]; }
+    return n;
+  }
 
   function isDataValue(v) {
     if (v === null || v === undefined) return false;
@@ -402,6 +454,12 @@ function resolveStatements(stmts) {
   }
   function isData(name) {
     return Object.prototype.hasOwnProperty.call(dataStmts, name);
+  }
+  // Switch(webhook1) with __state = {webhook1: true}: a bare __state key sets the control's state instead of printing as its label
+  var STATE_PROP = { Switch: 'checked', Checkbox: 'checked', Toggle: 'pressed' };
+  function stateKey(v) {
+    var k = v && v.__ref;
+    return k && !nameToId[k] && state && typeof state === 'object' && !Array.isArray(state) && Object.prototype.hasOwnProperty.call(state, k) ? k : null;
   }
 
   // First pass: assign IDs
@@ -419,6 +477,7 @@ function resolveStatements(stmts) {
     stmtIds[i] = id;
     nameToId[id] = id;
     if (stmt.name && isDataValue(stmt.value)) dataStmts[stmt.name] = stmt.value;
+    else if (stmt.name && stmt.value && stmt.value.__ref && stmt.value.__ref !== stmt.name) aliasOf[stmt.name] = stmt.value.__ref;
     if (!rootName && !isData(id)) rootName = id;
     if (stmt.name === 'root') rootName = id;
   }
@@ -440,8 +499,9 @@ function resolveStatements(stmts) {
 
     // Reference to another statement
     if (val.__ref) {
-      if (isData(val.__ref)) return resolveData(val.__ref);
-      return val.__ref; // Return as string ID reference
+      var ref = canon(val.__ref);
+      if (isData(ref)) return resolveData(ref);
+      return ref; // Return as string ID reference
     }
 
     // Component node
@@ -462,15 +522,37 @@ function resolveStatements(stmts) {
   function resolveComponent(comp) {
     var typeName = comp.__component;
     var schema = COMP_SCHEMA[typeName];
+    var args = comp.__args;
     var props = {};
     var childIds = [];
+    // Modal("upload-modal", "Upload files", "Drop files here", [footer]) or Modal("upload-modal", [body], "Upload files"):
+    // an id-first call (AlertDialog order). Text args are the title then the description; an array before them is the body,
+    // after them the footer. Modal("Body", "id", "Title") keeps the schema order (its 2nd arg is id-shaped)
+    if (ID_FIRST[typeName] && isIdLike(args[0]) && args.length > 1 && !isIdLike(args[1])) {
+      props.id = args[0];
+      var sawText = false;
+      for (var m = 1; m < args.length; m++) {
+        if (typeof args[m] === 'string') {
+          if (props.title == null) props.title = args[m];
+          else if (props.description == null) props.description = args[m];
+          sawText = true;
+        } else if (!sawText) collectChildren(args[m], childIds, typeName);
+        else props.footer = resolveValue(args[m]);
+      }
+      args = [];
+    }
+    // Tabs(["All", "Active"], "All"): a first arg of only quoted labels is the tab list, not the panels
+    if (typeName === 'Tabs' && Array.isArray(args[0]) && args[0].length && args[0].every(function(x) { return typeof x === 'string' && !nameToId[x]; })) schema = ['tabs', 'active'];
+
+    var stateArg = STATE_PROP[typeName] && stateKey(args[0]);
+    if (stateArg) props[STATE_PROP[typeName]] = state[stateArg];
 
     // Map positional args to named props using schema
-    if (schema && comp.__args.length > 0) {
-      for (var a = 0; a < comp.__args.length; a++) {
+    if (schema && args.length > 0) {
+      for (var a = stateArg ? 1 : 0; a < args.length; a++) {
         if (a < schema.length) {
           var propName = schema[a];
-          var argVal = comp.__args[a];
+          var argVal = args[a];
           if (propName === 'children') {
             // Children are component calls or references
             collectChildren(argVal, childIds, typeName);
@@ -508,10 +590,11 @@ function resolveStatements(stmts) {
       for (var c = 0; c < val.length; c++) collectChildren(val[c], out, parentType);
       return;
     }
-    if (val && val.__ref && isData(val.__ref) && !resolvingData[val.__ref]) {
-      resolvingData[val.__ref] = true;
-      collectChildren(dataStmts[val.__ref], out, parentType);
-      delete resolvingData[val.__ref];
+    var dref = val && val.__ref && canon(val.__ref);
+    if (dref && isData(dref) && !resolvingData[dref]) {
+      resolvingData[dref] = true;
+      collectChildren(dataStmts[dref], out, parentType);
+      delete resolvingData[dref];
       return;
     }
     var childId = processChild(val, parentType);
@@ -522,7 +605,7 @@ function resolveStatements(stmts) {
     if (childVal === null || childVal === undefined) return null;
     if (typeof childVal === 'string') {
       // Could be a reference name or a literal string
-      if (nameToId[childVal]) return childVal;
+      if (nameToId[childVal]) return canon(childVal);
       // Treat as inline Text
       var tid = genId('text');
       elements[tid] = { type: 'Text', props: { content: childVal } };
@@ -534,7 +617,7 @@ function resolveStatements(stmts) {
       return tid2;
     }
     if (childVal.__ref) {
-      return childVal.__ref;
+      return canon(childVal.__ref);
     }
     if (childVal.__component) {
       return resolveComponent(childVal);
@@ -571,11 +654,13 @@ function resolveStatements(stmts) {
     }
   }
 
+  if (rootName) rootName = canon(rootName); // root = page
   if (!rootName || !elements[rootName]) {
     // Use first element as root
     var keys = Object.keys(elements);
     if (keys.length > 0) rootName = keys[0];
   }
+  if (rootName) dedupeRefs(elements, rootName);
 
   var spec = { theme: theme, root: rootName || 'root', elements: elements };
   if (state) spec.state = state;
@@ -646,6 +731,7 @@ var exports = {
   createStreamingOpenUIParser: createStreamingOpenUIParser,
   detectFormat: detectFormat,
   tokenize: tokenize,
+  dedupeRefs: dedupeRefs,
   COMP_SCHEMA: COMP_SCHEMA
 };
 

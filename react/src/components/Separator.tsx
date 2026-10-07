@@ -28,7 +28,9 @@ export const Separator = forwardRef<HTMLHRElement | HTMLDivElement, SeparatorPro
       return (
         <div
           ref={ref as React.Ref<HTMLDivElement>}
+          data-db-react=""
           role="separator"
+          aria-orientation={vertical ? "vertical" : "horizontal"}
           className={classes}
           {...(props as ComponentProps<"div">)}
         >
@@ -40,6 +42,8 @@ export const Separator = forwardRef<HTMLHRElement | HTMLDivElement, SeparatorPro
     return (
       <hr
         ref={ref as React.Ref<HTMLHRElement>}
+        data-db-react=""
+        aria-orientation={vertical ? "vertical" : "horizontal"}
         className={classes}
         {...(props as ComponentProps<"hr">)}
       />

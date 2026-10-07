@@ -3,18 +3,18 @@
 **Considered CSS components for discerning interfaces.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-C67B5C.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-3.20.1-3D3832.svg)](https://daub.dev)
-[![Components](https://img.shields.io/badge/components-84-D4C4A8.svg)](https://daub.dev)
+[![Version](https://img.shields.io/badge/version-3.20.6-3D3832.svg)](https://daub.dev)
+[![Components](https://img.shields.io/badge/components-89-D4C4A8.svg)](https://daub.dev)
 
 ![CleanShot 2026-03-02 at 16 07 28 - 02](https://github.com/user-attachments/assets/5ddefcde-6f79-4175-b9c4-fc20005c551d)
 
-[Live Demo](https://daub.dev) | [Docs](https://daub.dev/docs.html) | [Block Gallery](https://daub.dev/demo.html) | [Playground](https://daub.dev/playground.html) | [Roadmap](https://daub.dev/roadmap.html) | [Case Studies](https://daub.dev/case-studies.html) | [AI Docs](https://daub.dev/llms.txt)
+[Live Demo](https://daub.dev) | [Components](https://daub.dev/components) | [Docs](https://daub.dev/docs.html) | [Block Gallery](https://daub.dev/demo.html) | [Playground](https://daub.dev/playground.html) | [Roadmap](https://daub.dev/roadmap.html) | [Case Studies](https://daub.dev/case-studies.html) | [AI Docs](https://daub.dev/llms.txt)
 
 ---
 
 ## What is DAUB?
 
-A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 84 components, 21 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
+A drop-in CSS + JS component library with a tactile, handcrafted aesthetic. 91 components, 21 theme families (each with light & dark modes), zero build step. Thoughtfully composed, no ceremony required.
 
 Not a CSS framework with AI bolted on — DAUB was designed from the ground up as the rendering layer for AI-generated interfaces. JSON-Render spec, MCP server, 266-block RAG library, complexity-routed pipeline, and `llms.txt` documentation were built together. See [ROADMAP.md](ROADMAP.md) for where DAUB is headed and what makes it different.
 
@@ -26,10 +26,10 @@ shadcn/ui is excellent — if you run React, Tailwind, and a build pipeline. DAU
 |---|------|-----------|
 | Framework | None required (plain HTML) | React only |
 | Install | One `<link>` + one `<script>` | CLI, Tailwind, build step |
-| Components | 84 in one CSS file | Copy-in per component |
+| Components | 89 in one CSS file | Copy-in per component |
 | Themes | 21 families, 42 variants built in | Bring your own tokens |
 | Classless mode | Yes | No |
-| AI docs | `llms.txt`, `components.json`, MCP server | No |
+| AI docs | `llms.txt`, `components.json`, MCP server | [llms.txt and MCP](https://ui.shadcn.com/llms.txt) |
 
 Use shadcn/ui when you're deep in a React + Tailwind stack. Use DAUB when you want considered components on any stack — including static pages and AI-generated interfaces — with zero build step.
 
@@ -38,7 +38,7 @@ Use shadcn/ui when you're deep in a React + Tailwind stack. Use DAUB when you wa
 ### CDN (recommended)
 
 ```html
-<!-- Full library: 84 components + themes -->
+<!-- Full library: 91 components + themes -->
 <link rel="stylesheet" href="https://daub.dev/daub.css">
 <script src="https://daub.dev/daub.js"></script>
 
@@ -51,6 +51,18 @@ Alternative CDNs (npm package: `daub-ui`):
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.css">
 <script src="https://cdn.jsdelivr.net/npm/daub-ui@latest/daub.js"></script>
 ```
+
+### React
+
+Install `daub-react` and `daub-ui` in an app with React and React DOM 19 or later:
+
+```bash
+npm install daub-react daub-ui
+```
+
+Import `daub-ui/daub.css` in your app. The React package depends on `@shadcn/react` 0.3.1 for the chat scroll engine. Your bundler builds the React app; plain HTML needs no build step.
+
+To build the React package from this checkout, install its dependencies in `react/`, then run `npm --prefix react run typecheck` and `npm --prefix react run build`.
 
 ### Download
 
@@ -76,7 +88,7 @@ DAUB uses system font stacks by default. For richer typography:
 <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
 ```
 
-## Components (84)
+## Components (89)
 
 ### Foundations
 | Component | Class | Notes |
@@ -148,6 +160,39 @@ DAUB uses system font stacks by default. For richer typography:
 | Aspect Ratio | `db-aspect` | `--16-9`, `--4-3`, `--1-1`, `--21-9` |
 | Chip | `db-chip` | `--red`, `--green`, `--blue`, `--purple`, `--amber`, `--pink`, `--active`, `__close`, `data-db-chip-toggle` |
 | Scroll Area | `db-scroll-area` | `--horizontal`, `--vertical` |
+
+### Chat
+| Component | Class | Notes |
+|-----------|-------|-------|
+| Message Scroller | `db-message-scroller` | `__viewport`, `__content`, `__item`, `__button`; stable `data-db-message-id` rows |
+| Message | `db-message` | `--end`, `__avatar`, `__content`, `__header`, `__footer`; `db-message-group` |
+| Bubble | `db-bubble` | `--primary`, `--secondary`, `--muted`, `--tinted`, `--outline`, `--ghost`, `--destructive`, `--end`; `__content`, `__reactions`, `db-bubble-group` |
+| Attachment | `db-attachment` | `--vertical`, `--sm`, `--xs`; `data-state="idle|uploading|processing|error|done"`, sibling `__trigger` and `__actions`; `db-attachment-group` |
+| Marker | `db-marker` | `--border`, `--separator`, `__icon`, `__content` |
+| Change Summary | `db-change-summary` | Static file list and labelled addition/deletion totals; optional host action slot; no `daub.js` requirement |
+| Chat Composer | `db-chat-composer` | Queue/steer, local file drop, browser dictation, model/effort/approval intent; native host events |
+
+Compose these primitives with ChatComposer or existing Textarea, InputGroup, and Button controls.
+Your app owns the message data, reaction selection, upload progress, approval enforcement, and transport.
+Use `db-shimmer` for text status and `db-scroll-fade` for scroll edges.
+See the [chat demo](chat-demo.html) and [chat reference](llms.txt#chat-components).
+The browser/OpenUI/MCP registry exposes 89 renderer types; the HTML catalog contains
+91 component entries. Renderer aliases and helpers account for the different totals.
+
+`ChangeSummary` takes `files: [{path, additions?, deletions?, status?}]`, optional
+`title`, `description`, `undoLabel`, and `undoDisabled`. Status is `added`, `modified`,
+or `deleted`. Spec children are host action IDs. React exports `ChangeSummary`,
+`ChangeSummaryProps`, and `ChangeSummaryFile`, forwards a div ref, and accepts div
+props and arbitrary action children. React renders Undo and View changes buttons
+only with `onUndo` and `onViewChanges` callbacks; both receive a React button mouse
+event. `undoLabel` and `undoDisabled` configure the callback-backed Undo button.
+The host owns undo and diff views. DAUB reads no files and performs no file operations.
+
+Paths render as plain text. Counts floor finite numbers and clamp to
+`0..Number.MAX_SAFE_INTEGER`; other values become zero. Totals clamp at the same
+maximum. Without a title, host data renders `Edited N file(s)` or `No files changed`
+for an empty list. Examples use `Prepared 2 demo files` and `Demo changes` and
+omit actions. See the [static HTML and React examples](llms.txt#change-summary---db-change-summary).
 
 ### Feedback
 | Component | Class | Notes |
@@ -313,17 +358,17 @@ DAUB speaks both human and machine:
 
 - **`/llms.txt`** — Plain-text component reference for LLMs ([spec](https://llmstxt.org))
 - **`/llms-compact.txt`** — Condensed version for token-constrained contexts
-- **`/components.json`** — Machine-readable structured component reference (84 components with HTML examples)
+- **`/components.json`** — Machine-readable structured component reference (91 components with HTML examples)
 - **`/daub.d.ts`** — TypeScript declarations for `window.DAUB` API
 - **`/.well-known/ai-plugin.json`** — AI plugin manifest
 - **`/.well-known/api-catalog`** — API catalog for MCP, generation, and web lookups
 - **`/.well-known/oauth-authorization-server`** — OAuth authorization server metadata
 - **`/.well-known/oauth-protected-resource`** — OAuth protected resource metadata for DAUB APIs
-- **`SKILL.md`** — Claude Code skill for DAUB development
+- **`SKILL.md`** + **`/references/`** — Agent skill for building with DAUB (HTML, json-render/OpenUI specs, MCP, verification, Jev recipes)
 
 Point your AI at `https://daub.dev/llms.txt` for complete component docs with HTML snippets, or fetch `https://daub.dev/components.json` for structured data.
 
-For **json-render** (Vercel Generative UI): see the [integration recipe in llms.txt](https://daub.dev/llms.txt#json-render-integration-vercel-generative-ui).
+For **json-render** and OpenUI Lang specs: see [references/json-render.md](https://daub.dev/references/json-render.md) and [references/openui.md](https://daub.dev/references/openui.md).
 
 ### Agent Skill
 
@@ -333,7 +378,7 @@ Install the DAUB skill into any AI coding agent ([40+ supported](https://skills.
 npx skills add sliday/daub
 ```
 
-This gives your agent full knowledge of all 84 components, class conventions, theme API, and usage patterns. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
+This gives your agent full knowledge of all 91 components, class conventions, theme API, and usage patterns, plus the spec formats, MCP tools, a verify loop and Jev recipes in `references/`. Works with Claude Code, Cursor, Codex, Gemini CLI, OpenCode, and more.
 
 ## Block Library
 
@@ -466,6 +511,16 @@ This produces the same spec as the JSON example above. Both positional and named
 
 To use with the MCP server, pass `format: "openui"` to `generate_ui`. The `parse_openui` tool converts OpenUI Lang to JSON specs independently.
 
+## Photo Proxy
+
+`https://daub.dev/api/photo?q=pasta%20carbonara&w=640&h=480` redirects to a CC0 or public-domain photo of the subject, so you can use it as an `<img src>` in a generated page. Photos come from Openverse's curated stock sources (rawpixel, WordPress Photo Directory, StockSnap, Nappy), with Wikimedia Commons as the fallback. They need no attribution, and you need no API key.
+
+- `q`: 1-6 words; a 2-3 word noun phrase with the head noun last works best (`leather sneaker`, `hotel lobby`). A `q` that names nudity or gore gets the placeholder.
+- `w`, `h`: 16-2000, default 800x600; the proxy picks a photo whose orientation fits the slot
+- `i`: 0-9, picks a different photo of the same subject (for grids)
+
+The same URL returns the same photo while the search result is cached (7 days). If nothing matches or both sources are down, you get a neutral SVG placeholder, so the `<img>` never breaks. A page with a CSP must allow `daub.dev`, `api.openverse.org`, `thumb.wikimedia.org` and `upload.wikimedia.org` in `img-src`. Details: [PIPELINE.md](PIPELINE.md#photo-proxy).
+
 ## Use with AI
 
 Drop these prompts into Claude, ChatGPT, Cursor, or any AI assistant. Each produces a complete, working HTML page. Add "Fetch docs from daub.dev/llms.txt first" for best results.
@@ -558,7 +613,7 @@ No polyfills needed.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
 
-**Latest: v3.20.3** — Consistent rendering of malformed props across the playground, `daub-render.js` and the MCP renderer; share links move to `#s=`; preview keeps checkbox/radio/select/slider state; pinned lucide with integrity; hosted MCP pages load first-party assets; new combo visual audit (`tests/combo-audit/`).
+**Latest: v3.20.6** — Compact chat composer with queues and clipboard images; ChangeSummary across native, React, and renderers; unified documentation and site navigation. React package: `daub-react@0.3.2`.
 
 **v3.20.2** — Playground generates on OpenRouter's Auto Router (`openrouter/auto`) and picks components with Jev (`~typesafe/jev-latest`); the preview now runs in an isolated origin (share-link and postMessage exploits fixed); elements that fail to render no longer blank the page; plus fixes from a full-repo review.
 

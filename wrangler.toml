@@ -5,10 +5,13 @@ pages_build_output_dir = "."
 # Environment variables for MCP server (set via Cloudflare dashboard or wrangler secret)
 # OPENROUTER_API_KEY — required for generate_ui (LLM generation)
 # GEMINI_API_KEY — required for RAG (gemini-embedding-2-preview, Google-only)
+# OPENVERSE_CLIENT_ID / OPENVERSE_CLIENT_SECRET: optional; /api/photo works without them. A free registered
+#   Openverse app raises the limit from 20/min, 200/day per egress IP to 100/min, 10,000/day.
 #
 # Rate-limit bindings (Pages does not accept [[unsafe.bindings]] in wrangler.toml):
 # Add via CF dashboard → Pages → daub → Settings → Functions → Bindings → Rate Limiting:
 #   RL_WEBLOOK  → 30 req / 60 s  (protects Browserbase)
 #   RL_GENERATE → 60 req / 60 s  (protects OpenRouter)
 #   RL_MCP      → 60 req / 60 s  (protects MCP + OpenRouter)
+#   RL_PHOTO    → 60 req / 60 s  (protects Openverse + Wikimedia Commons; counts /api/photo cache misses only)
 # Handler code fails open when a binding is missing, so deploy stays green.

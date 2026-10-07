@@ -11,6 +11,8 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(
   ({ variant, title, className, children, ...props }, ref) => (
     <div
       ref={ref}
+      data-db-react=""
+      role={variant === "error" || variant === "warning" ? "alert" : "status"}
       className={cn("db-alert", variant && `db-alert--${variant}`, className)}
       {...props}
     >
