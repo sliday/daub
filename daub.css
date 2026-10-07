@@ -4270,14 +4270,15 @@ meter.db-meter::-moz-meter-bar {
   gap: var(--db-space-5);
 }
 
-.db-grid--2 { grid-template-columns: repeat(2, 1fr); }
-.db-grid--3 { grid-template-columns: repeat(3, 1fr); }
-.db-grid--4 { grid-template-columns: repeat(4, 1fr); }
-.db-grid--5 { grid-template-columns: repeat(5, 1fr); }
-.db-grid--6 { grid-template-columns: repeat(6, 1fr); }
+.db-grid > * { min-width: 0; max-width: 100%; }
+.db-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.db-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.db-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.db-grid--5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.db-grid--6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 
 @media (max-width: 1023px) {
-  .db-grid--4, .db-grid--5, .db-grid--6 { grid-template-columns: repeat(2, 1fr); }
+  .db-grid--4, .db-grid--5, .db-grid--6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
   /* One column: minmax(0, 1fr) keeps a wide child from widening the column past the screen */

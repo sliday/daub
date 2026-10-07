@@ -104,8 +104,9 @@ export async function decideComponents({ prompt, components, apiKey, timeoutMs =
 
 // One Decisions API round trip (also used by functions/api/assemble.js). Resolves to the
 // parsed response ({ model, answers, usage }); throws an Error with .status like decideComponents.
-export async function jevDecide({ state, questions, apiKey, timeoutMs = 10_000, title = 'DAUB Playground' }) {
+export async function jevDecide({ state, questions, apiKey, timeoutMs = 10_000, title = 'DAUB Playground', signal }) {
   if (!apiKey) throw fail('Server misconfigured: missing API key', 500);
+  if (signal?.aborted) throw fail('Request aborted', 499);
 
   let upstream;
   try {
@@ -118,9 +119,10 @@ export async function jevDecide({ state, questions, apiKey, timeoutMs = 10_000, 
         'X-Title': title,
       },
       body: JSON.stringify({ model: MODEL, state, questions }),
-      signal: AbortSignal.timeout(timeoutMs),
+      signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)]) : AbortSignal.timeout(timeoutMs),
     });
   } catch (e) {
+    if (signal?.aborted) throw fail('Request aborted', 499);
     if (e && (e.name === 'AbortError' || e.name === 'TimeoutError')) {
       throw fail('Gateway Timeout: decision model did not respond in time', 504);
     }
@@ -131,8 +133,12 @@ export async function jevDecide({ state, questions, apiKey, timeoutMs = 10_000, 
   try {
     data = await upstream.json();
   } catch {
+    if (signal?.aborted) throw fail('Request aborted', 499);
+    if (upstream.status === 429) throw fail('Upstream rate limit exceeded', 429);
+    if (upstream.status === 402) throw fail('Upstream credits required', 402);
     throw fail('Invalid upstream response', 502);
   }
+  if (signal?.aborted) throw fail('Request aborted', 499);
   if (!upstream.ok) {
     throw fail((data && data.error && data.error.message) || 'Upstream error', upstream.status);
   }

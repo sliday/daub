@@ -65,6 +65,53 @@ test('restores the preview after iframe readiness', async (t) => {
   await page.frameLocator('#pg-preview-frame').getByText('Restored preview', { exact: true }).waitFor({ timeout: 3000 });
 });
 
+test('composer hides narrow-panel icons instead of squeezing them and keeps actions usable', async t => {
+  const page = await open(t);
+  await page.addScriptTag({ content: await readFile(resolve(root, 'assets/lucide.min.js'), 'utf8') });
+  await page.evaluate(() => lucide.createIcons());
+  for (const panelWidth of [180, 220, 260, 280, 300, 340, 360, 460]) {
+    await page.evaluate(width => {
+      document.querySelector('.pg-grid').style.gridTemplateColumns = width + 'px 6px 1fr';
+    }, panelWidth);
+    for (const generating of [false, true]) {
+      await page.evaluate(active => {
+        document.querySelector('#pg-stop-btn').style.display = active ? 'inline-flex' : 'none';
+        document.querySelector('#pg-send-hint').style.display = active ? 'none' : '';
+      }, generating);
+      const state = await page.locator('.pg-chat__input-wrap').evaluate(wrap => {
+        const box = wrap.getBoundingClientRect();
+        const contentWidth = wrap.clientWidth;
+        const buttons = [...wrap.querySelectorAll('.pg-chat__attach-btn, #pg-stop-btn')].filter(el => getComputedStyle(el).display !== 'none');
+        return {
+          contentWidth,
+          labels: buttons.map(el => el.textContent.trim()),
+          icons: buttons.map(el => {
+            const icon = el.querySelector('svg');
+            return { visible: getComputedStyle(icon).display !== 'none', width: icon.getBoundingClientRect().width, expected: parseFloat(icon.style.width) };
+          }),
+          clipped: buttons.some(el => {
+            const rect = el.getBoundingClientRect();
+            return rect.left < box.left || rect.right > box.right || el.scrollWidth > el.clientWidth;
+          }),
+          overlap: buttons.some((el, i) => buttons.slice(i + 1).some(other => {
+            const a = el.getBoundingClientRect(), b = other.getBoundingClientRect();
+            return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+          })),
+          hintVisible: getComputedStyle(wrap.querySelector('#pg-send-hint')).display !== 'none'
+        };
+      });
+      assert.deepEqual(state.labels, generating ? ['Image', 'File', 'Link', 'Figma', 'Stop'] : ['Image', 'File', 'Link', 'Figma']);
+      assert.equal(state.clipped, false, JSON.stringify({ panelWidth, generating, state }));
+      assert.equal(state.overlap, false);
+      assert.equal(state.hintVisible, !generating && state.contentWidth > 260);
+      for (const icon of state.icons) {
+        assert.equal(icon.visible, state.contentWidth > 320);
+        if (icon.visible) assert.equal(icon.width, icon.expected);
+      }
+    }
+  }
+});
+
 test('the live JSON prompt exposes all canonical props and supported types', async (t) => {
   const page = await open(t, { react: true });
   const prompt = await page.evaluate(() => window.__playgroundBridge.getSystemPrompt());

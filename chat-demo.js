@@ -6,6 +6,13 @@
   const controller = DAUB.createMessageScroller(root);
   const form = document.getElementById('chat-form');
   const composer = DAUB.createChatComposer(form);
+  const demo = form.closest('.chat-demo');
+  function sizeComposer() {
+    demo.style.setProperty('--chat-composer-height', form.getBoundingClientRect().height + 'px');
+  }
+  const composerSize = new ResizeObserver(sizeComposer);
+  composerSize.observe(form);
+  sizeComposer();
   function slot(className, id) {
     const element = form.querySelector('.db-chat-composer__' + className);
     const oldId = element.id;
@@ -435,6 +442,7 @@
     composer.stopDictation();
     stop();
     if (event.persisted) return;
+    composerSize.disconnect();
     controller.destroy();
     composer.destroy();
     workspace?.destroy();

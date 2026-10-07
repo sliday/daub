@@ -29,7 +29,7 @@
       if (nav.hasAttribute('data-site-nav')) return;
       nav.dataset.siteNav = '';
       nav.setAttribute('aria-label', 'Main');
-      nav.innerHTML = '<a class="site-nav__brand" href="index.html" aria-label="DAUB home">DAUB</a>'
+      nav.innerHTML = '<a class="site-nav__brand site-brand" href="index.html" aria-label="DAUB home">DAUB</a>'
         + '<button type="button" class="site-nav__toggle" aria-label="Open site navigation" aria-expanded="false" aria-controls="site-navigation-' + index + '"><i data-lucide="menu" aria-hidden="true"></i></button>'
         + '<div class="site-nav__links" id="site-navigation-' + index + '">'
         + primary.map(navLink).join('')

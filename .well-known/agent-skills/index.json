@@ -46,8 +46,8 @@
       "type": "documentation",
       "description": "DAUB component catalog: spec types with purpose and props, plus every db-* HTML class with modifiers and parts.",
       "url": "https://daub.dev/references/components.md",
-      "digest": "sha256:9ddf6f16619009d850dd4454811de8d330ed7a8a264cd17fb30c4cea359187c5",
-      "sha256": "9ddf6f16619009d850dd4454811de8d330ed7a8a264cd17fb30c4cea359187c5"
+      "digest": "sha256:a652558fa4ace80ea755aa7cd812f42f89e6f12d62117589c8e5d71a30e20720",
+      "sha256": "a652558fa4ace80ea755aa7cd812f42f89e6f12d62117589c8e5d71a30e20720"
     },
     {
       "name": "daub-ui-ref-design",
@@ -86,8 +86,8 @@
       "type": "documentation",
       "description": "OpenUI Lang syntax for DAUB and every component signature in parser argument order.",
       "url": "https://daub.dev/references/openui.md",
-      "digest": "sha256:0089f6c1985c12a96c162cd6df623f3e6ddf1a8b3c3413bb1f07ecbb90263f6b",
-      "sha256": "0089f6c1985c12a96c162cd6df623f3e6ddf1a8b3c3413bb1f07ecbb90263f6b"
+      "digest": "sha256:4576ae6409af1fc9cc19985e0c6efc203ac4b241f9b5f4fabc940ef5dcf8a1db",
+      "sha256": "4576ae6409af1fc9cc19985e0c6efc203ac4b241f9b5f4fabc940ef5dcf8a1db"
     },
     {
       "name": "daub-ui-ref-themes",

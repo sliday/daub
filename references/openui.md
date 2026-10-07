@@ -100,7 +100,7 @@ Positional order per type, with the prop types from the playground catalog. Prop
 
 ```text
 Stack(children: [refs], direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true)
-Grid(children: [refs], columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true)
+Grid(children: [refs], columns: 1-12|"sidebar-main" (navigation + flexible content), gap: 0-6, align: "center"|"end", container: "wide"|"narrow"|true)
 Surface(children: [refs], variant: "raised"|"inset"|"pressed")
 Text(content: string (the visible text), tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", class: string | UX: tag is the HTML element)
 Prose(content: string (HTML), size: "sm"|"lg"|"xl"|"2xl")

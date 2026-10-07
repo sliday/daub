@@ -2,6 +2,11 @@ name = "daub"
 compatibility_date = "2026-02-27"
 pages_build_output_dir = "."
 
+[vars]
+# Verified WAF rule 11f49e0921004fadadd390d497f5d789 covers /api/* (60 requests / 10 s).
+# The judge rejects other hosts, including Pages previews, without RL_GENERATE.
+REFINEMENT_WAF_HOST = "daub.dev"
+
 # Environment variables for MCP server (set via Cloudflare dashboard or wrangler secret)
 # OPENROUTER_API_KEY — required for generate_ui (LLM generation)
 # GEMINI_API_KEY — required for RAG (gemini-embedding-2-preview, Google-only)

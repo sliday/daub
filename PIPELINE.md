@@ -34,6 +34,70 @@ Spec rendered in preview iframe
   Done
 ```
 
+## Recursive Design Experiment
+
+In the native playground chat, select **Recursive (experimental)** or open
+`/playground?design=snowflake`. Direct remains the default. This experiment accepts
+text prompts through DAUB AI; attachments, own-key providers, and the experimental
+React chat use the Direct path.
+
+The Playground uses `playground-snowflake.js` with `scheduling: 'queue'`:
+
+1. Generate the complete page shell with semantic layout regions, then render it.
+   Empty regions show preview-only placeholders so the header, navigation,
+   content, and footer retain visible space before their detail arrives.
+2. Measure the rendered regions and ask Jev which ones need detail.
+3. Refine up to three independent regions concurrently from their judged snapshots.
+   Merge each accepted subtree into the latest spec and publish it before waiting
+   for the remaining regions. Validate the graph, component types, IDs, existing
+   content, and sibling boundaries before rendering. New IDs use a region prefix.
+4. Recheck each finished region and enqueue its children without waiting for slow
+   siblings. A FIFO queue gives waiting regions a turn before new descendants.
+   Audit ancestors after the queue drains before reporting completion.
+
+Generator and Jev jobs share three async worker slots, configurable through
+`concurrency` from 1 to 4. These are concurrent network jobs, not browser threads.
+The toolbar reports active and queued jobs. Preview publication and geometry
+capture share a serial lock; provider calls run outside that lock. Each queued
+refinement retains its own spec and geometry snapshot. The `level` scheduler
+remains available for callers that require a barrier between levels.
+
+The generator uses the existing `/api/generate` proxy and Auto Router. The judge
+uses `/api/refine-judge`, which batches independent `noul` questions through the
+existing Jev Decisions helper. Each question receives the original request, the
+current spec, target ID, depth, and optional measured geometry. The generator also
+receives geometry from its judgment snapshot. Hidden mobile previews render offscreen during
+measurement; geometry-only captures skip screenshot reconstruction. Jev returns a
+probability that the target needs more detail; the provisional threshold is 0.65.
+This threshold needs evaluation across prompt families before default activation.
+
+The client allows 24 model requests, 160 elements, 12 targets per judge batch, a maximum
+depth of 5, and two minutes per run. Generator and judge calls share the request
+budget. An invalid subtree response marks that region incomplete while siblings
+continue. Quota responses, authentication failures, and rate limits stop the run
+without retries. Cancel pending requests before returning on a global stop.
+The UI retains the last valid preview and distinguishes completion from a limit
+or failure. Stop and New Chat cancel pending work. Recursive mode does not run the
+Direct path's interactivity pipeline; generated controls may still need behavior.
+Branch progress appears in the chat and preview. Placeholder styling stays out
+of saved specs and exports; measured geometry marks placeholder regions so the
+judge can distinguish their reserved space from finished content.
+Child groups with more than 12 targets use multiple queued judge batches.
+
+The judge requires `RL_GENERATE` or an exact HTTPS host configured through
+`REFINEMENT_WAF_HOST` with verified WAF protection. Pages production uses
+`daub.dev`, covered by rule `11f49e0921004fadadd390d497f5d789` (60 API requests
+per 10 seconds per IP/colo, verified 2026-10-07). Preview hosts fail closed.
+A configured but failing limiter never falls back to WAF. Local development may
+set `ALLOW_LOCAL_REFINEMENT=true` only on a loopback request host.
+Configure and verify production rate limiting before enabling the endpoint. The
+client budget alone does not constrain direct API callers or total monetary cost.
+The endpoint rejects cross-origin browser requests, invalid graphs, oversized
+bodies, and missing decision scores. It never accepts a client model or API key.
+
+Tests: `tests/playground/snowflake.test.mjs`,
+`tests/playground/snowflake-browser.test.mjs`, and `tests/refine-judge.test.mjs`.
+
 ## Backend Proxy
 
 `functions/api/generate.js` — Cloudflare Pages Function that proxies to OpenRouter.

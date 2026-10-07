@@ -19,7 +19,7 @@ try {
 // Current COMP_PROPS from playground.html (Stack/Grid, not legacy Layout)
 export const COMP_PROPS = {
   Stack: 'direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true',
-  Grid: 'columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true',
+  Grid: 'columns: 1-12|"sidebar-main" (navigation + flexible content), gap: 0-6, align: "center"|"end", container: "wide"|"narrow"|true',
   Surface: 'variant: "raised"|"inset"|"pressed"',
   Text: 'tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them',
   Prose: 'content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"',
@@ -167,6 +167,7 @@ export function buildSystemPrompt(ragBlocks, userPrompt) {
   const guidelines = 'GUIDELINES:\n'
     + '- Use Stack as the root with direction:"vertical" for page-level layouts\n'
     + '- Use Grid with columns for equal-width grid arrangements\n'
+    + '- For navigation beside content, use Grid columns:"sidebar-main" with two children: the navigation column and the main content. Use nested Grid for page columns; reserve horizontal Stack for content rows and toolbars. Do not rely on intrinsic image widths to size page columns.\n'
     + '- Use Stack with direction:"horizontal" and justify:"between" for header rows, toolbars, and spaced-out content\n'
     + '- To center children use Stack justify:"center" align:"center"\n'
     + '- Stack/Grid gap uses spacing tokens 0-6 (0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px). Default is 2 (8px). Use gap:2-3 for tight rhythm, gap:4-5 for sections\n'

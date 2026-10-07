@@ -5,7 +5,7 @@ import { chromium, firefox, webkit } from 'playwright';
 
 const root = new URL('../../', import.meta.url);
 const assets = new Map();
-for (const file of ['chat-demo.html', 'chat-demo.css', 'chat-demo.js', 'chat-demo-shell.js', 'daub.css', 'daub.js', 'assets/lucide.min.js', 'case-studies/dashrock-overview.jpg']) assets.set('/' + file, await readFile(new URL(file, root)));
+for (const file of ['chat-demo.html', 'chat-demo.css', 'site-nav.css', 'chat-demo.js', 'chat-demo-shell.js', 'daub.css', 'daub.js', 'assets/lucide.min.js', 'case-studies/dashrock-overview.jpg']) assets.set('/' + file, await readFile(new URL(file, root)));
 let browser;
 before(async () => { browser = await ({ chromium, firefox, webkit })[process.env.DAUB_TEST_BROWSER || 'chromium'].launch({ headless: true }); });
 after(async () => { await browser?.close(); });

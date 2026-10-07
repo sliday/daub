@@ -5,7 +5,7 @@ import { chromium, firefox, webkit } from 'playwright';
 
 const root = new URL('../../', import.meta.url);
 const assets = new Map();
-for (const file of ['chat-demo.html', 'chat-demo.css', 'chat-demo.js', 'chat-demo-shell.js', 'daub.css', 'daub.js', 'assets/lucide.min.js', 'case-studies/dashrock-overview.jpg']) assets.set('/' + file, await readFile(new URL(file, root)));
+for (const file of ['chat-demo.html', 'chat-demo.css', 'site-nav.css', 'chat-demo.js', 'chat-demo-shell.js', 'daub.css', 'daub.js', 'assets/lucide.min.js', 'case-studies/dashrock-overview.jpg']) assets.set('/' + file, await readFile(new URL(file, root)));
 let browser;
 before(async () => { browser = await ({ chromium, firefox, webkit })[process.env.DAUB_TEST_BROWSER || 'chromium'].launch({ headless: true }); });
 after(async () => { await browser?.close(); });
@@ -50,6 +50,56 @@ async function add(page, name) {
   await page.getByRole('button', { name: 'Add', exact: true }).click();
   await page.getByRole('menuitem', { name, exact: true }).click();
 }
+
+test('conversation scrolls edge to edge behind a floating composer with a clear last message', async () => {
+  for (const width of [320, 390, 1440, 1920]) await workspace(async page => {
+    await page.evaluate(() => {
+      const messages = document.getElementById('chat-messages');
+      for (let i = 0; i < 20; i++) {
+        const row = document.createElement('div');
+        row.className = 'db-message-scroller__item';
+        row.dataset.dbMessageId = 'layout-' + i;
+        row.textContent = 'Conversation message ' + i;
+        row.style.minHeight = '70px';
+        messages.appendChild(row);
+      }
+    });
+    await page.waitForFunction(() => {
+      const viewport = document.querySelector('.db-message-scroller__viewport');
+      return viewport.scrollTop > 500;
+    });
+    const bounds = await page.evaluate(() => {
+      const box = selector => { const r = document.querySelector(selector).getBoundingClientRect(); return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width }; };
+      return { main: box('.chat-demo'), viewport: box('.db-message-scroller__viewport'), composer: box('#chat-form'), last: box('[data-db-message-id="layout-19"]'), fade: getComputedStyle(document.getElementById('chat-scroller'), '::after').backgroundImage, overflow: document.documentElement.scrollWidth > innerWidth };
+    });
+    assert.equal(bounds.viewport.left, bounds.main.left);
+    assert.equal(bounds.viewport.right, bounds.main.right);
+    assert.ok(bounds.viewport.bottom > bounds.composer.bottom);
+    assert.ok(bounds.last.bottom <= bounds.composer.top - 24);
+    assert.match(bounds.fade, /linear-gradient/);
+    assert.equal(bounds.overflow, false);
+    const before = await page.locator('.db-message-scroller__viewport').evaluate(el => el.scrollTop);
+    await page.mouse.move(bounds.viewport.right - 8, bounds.viewport.top + 100);
+    await page.mouse.wheel(0, -500);
+    await page.waitForFunction(value => document.querySelector('.db-message-scroller__viewport').scrollTop < value - 100, before);
+    const latest = page.getByRole('button', { name: 'Scroll to latest message', exact: true });
+    await latest.waitFor({ state: 'visible' });
+    const button = await latest.boundingBox();
+    assert.ok(button.y + button.height < bounds.composer.top);
+    await latest.click();
+    await page.waitForFunction(() => {
+      const viewport = document.querySelector('.db-message-scroller__viewport');
+      return Math.abs(viewport.scrollHeight - viewport.clientHeight - viewport.scrollTop) < 2;
+    });
+    await page.locator('#chat-prompt').fill('A longer draft\nwith several lines\nthat grows the composer\nand preserves the last message.');
+    await page.waitForFunction(() => {
+      const form = document.getElementById('chat-form');
+      const reserved = parseFloat(getComputedStyle(document.querySelector('.chat-demo')).getPropertyValue('--chat-composer-height'));
+      const last = document.querySelector('[data-db-message-id="layout-19"]').getBoundingClientRect();
+      return Math.abs(reserved - form.getBoundingClientRect().height) < 1 && last.bottom <= form.getBoundingClientRect().top - 24;
+    });
+  }, { width, height: 900 });
+});
 
 test('queue edits survive arrivals, steer interrupts now, and remaining requests drain in order', async () => {
   await workspace(async page => {

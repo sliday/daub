@@ -248,7 +248,7 @@
       <li><a href="playground.html">Playground</a></li>
       <li><a href="themes.html">Themes</a></li>
       <li><a href="roadmap.html" class="db-nav__link--active">Roadmap</a></li>
-      <li><a href="case-studies.html">Case Studies</a></li>
+      <li><a href="case-studies.html">Case studies</a></li>
       <li><a href="llms.txt">AI Docs</a></li>
     </ul>
   </nav>
@@ -261,33 +261,33 @@
 
   <!-- What Makes This Different -->
   <section class="rm-place" style="padding-bottom: 48px;">
-    <h2>What Makes This Different</h2>
+    <h2>What makes this different</h2>
     <p>Not a comparison. Just the design decisions that led somewhere no one else went.</p>
 
     <div class="rm-place__grid">
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="zap" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
-        <div class="rm-place__label">Zero Ceremony</div>
+        <div class="rm-place__label">Zero ceremony</div>
         <p class="rm-place__desc">Two files, CDN link, done. No bundler, no framework, no config. Classless CSS means even raw HTML looks considered.</p>
       </div>
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="palette" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
-        <div class="rm-place__label">Opinionated About Beauty</div>
+        <div class="rm-place__label">Opinionated about beauty</div>
         <p class="rm-place__desc">Tactile surfaces, letterpress typography, real textures. 21 theme families, each with character. "Considered" is the design constraint.</p>
       </div>
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="cpu" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
-        <div class="rm-place__label">AI-Native Architecture</div>
+        <div class="rm-place__label">AI-native architecture</div>
         <p class="rm-place__desc">JSON-Render spec, MCP server, complexity-routed pipeline, 266-block RAG library, and llms.txt — designed together. Built for AI to use.</p>
       </div>
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="file-json" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
-        <div class="rm-place__label">Structured Specs, Not Throwaway Code</div>
+        <div class="rm-place__label">Structured specs, not throwaway code</div>
         <p class="rm-place__desc">JSON specs that AI can iterate on, validate, visually diff, and render — without a compile step. The spec is the UI.</p>
       </div>
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="layers" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
-        <div class="rm-place__label">Rendering Layer, Not the Whole Stack</div>
+        <div class="rm-place__label">Rendering layer, not the whole stack</div>
         <p class="rm-place__desc">Plug it into any stack — vanilla HTML, React, an MCP client, an AI agent. Infrastructure for intent-to-interface.</p>
       </div>
     </div>
@@ -295,7 +295,7 @@
 
   <!-- Architecture Stack -->
   <section class="rm-stack">
-    <h2>Architecture Layers</h2>
+    <h2>Architecture layers</h2>
 
     <div class="rm-layer" data-num="1" data-status="done">
       <span class="rm-layer__name">daub-classless.css</span>
@@ -310,37 +310,37 @@
     </div>
 
     <div class="rm-layer" data-num="3" data-status="done">
-      <span class="rm-layer__name">JSON-Render Spec</span>
+      <span class="rm-layer__name">JSON-Render spec</span>
       <span class="rm-layer__desc">AI outputs structured JSON, DAUB renders it as a live interface. Already working in the Playground — describe what you want, see it appear.</span>
       <span class="rm-layer__status rm-layer__status--done">Shipped</span>
     </div>
 
     <div class="rm-layer" data-num="4" data-status="done">
-      <span class="rm-layer__name">AI Playground</span>
+      <span class="rm-layer__name">AI playground</span>
       <span class="rm-layer__desc">7-stage pipeline: analyze, scaffold, generate, selfCheck, verify, repair, visual diff. 266 pre-made blocks across 34 categories with deployable thumbnails. Complexity-routed model selection.</span>
       <span class="rm-layer__status rm-layer__status--done">Shipped</span>
     </div>
 
     <div class="rm-layer" data-num="5" data-status="done">
-      <span class="rm-layer__name">MCP Server</span>
+      <span class="rm-layer__name">MCP server</span>
       <span class="rm-layer__desc">Remote edge server on Cloudflare. generate_ui, render_spec, validate_spec, get_component_catalog — any MCP client can generate DAUB interfaces.</span>
       <span class="rm-layer__status rm-layer__status--done">Shipped</span>
     </div>
 
     <div class="rm-layer" data-num="6" data-status="done">
-      <span class="rm-layer__name">React / JSX Wrappers</span>
+      <span class="rm-layer__name">React / JSX wrappers</span>
       <span class="rm-layer__desc">Typed JSX components wrapping DAUB's CSS classes, including conversation primitives. React and React DOM 19+, with the <code>@shadcn/react</code> 0.3.1 chat scroll engine. TypeScript, controlled &amp; uncontrolled modes. <code>npm install daub-react daub-ui</code> and build with your app's bundler.</span>
       <span class="rm-layer__status rm-layer__status--done">Shipped</span>
     </div>
 
     <div class="rm-layer" data-num="7" data-status="wip">
-      <span class="rm-layer__name">Intent Engine</span>
+      <span class="rm-layer__name">Intent engine</span>
       <span class="rm-layer__desc">Natural language in, UI specification out, live render. Say what you need and a considered interface materializes — with correct layout, proper hierarchy, and real data.</span>
       <span class="rm-layer__status rm-layer__status--wip">In Progress</span>
     </div>
 
     <div class="rm-layer" data-num="8" data-status="">
-      <span class="rm-layer__name">Agent Runtime</span>
+      <span class="rm-layer__name">Agent runtime</span>
       <span class="rm-layer__desc">Coordinated agents fetch data, choose layout, and handle actions. The interface is a byproduct of understanding — not a thing you build, but a thing that emerges.</span>
       <span class="rm-layer__status rm-layer__status--future">Future</span>
     </div>
@@ -354,13 +354,13 @@
 
   <!-- Version Timeline -->
   <section class="rm-timeline">
-    <h2>Release Timeline</h2>
+    <h2>Release timeline</h2>
     <p>Each release builds on the last. The bottom is infrastructure; the top is where it gets interesting.</p>
 
     <div class="rm-version">
       <div class="rm-version__tag">v3.0</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Classless Foundation</div>
+        <div class="rm-version__title">Classless foundation</div>
         <p class="rm-version__desc">Classless CSS layer — plain HTML looks good with zero classes. ROADMAP published. Expanded AI docs with llms-compact.txt for token-efficient contexts.</p>
       </div>
     </div>
@@ -368,7 +368,7 @@
     <div class="rm-version">
       <div class="rm-version__tag">v3.5</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">JSON-Render Spec + AI Playground</div>
+        <div class="rm-version__title">JSON-Render spec + AI playground</div>
         <p class="rm-version__desc">AI outputs structured JSON, DAUB renders live UI. The Playground — describe what you need, see it appear. Multi-LLM pipeline with complexity routing across 6 dimensions.</p>
       </div>
     </div>
@@ -376,7 +376,7 @@
     <div class="rm-version">
       <div class="rm-version__tag">v3.8</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">MCP Server on Cloudflare Edge</div>
+        <div class="rm-version__title">MCP server on Cloudflare edge</div>
         <p class="rm-version__desc">Remote MCP server: generate_ui, render_spec, validate_spec, get_component_catalog. Any MCP client — Claude, Cursor, custom agents — can generate DAUB interfaces.</p>
       </div>
     </div>
@@ -384,7 +384,7 @@
     <div class="rm-version">
       <div class="rm-version__tag">v3.9</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Complexity Routing + Figma Import</div>
+        <div class="rm-version__title">Complexity routing + Figma import</div>
         <p class="rm-version__desc">Prompts scored across 6 dimensions, routed to tiered models with exponential backoff. Figma OAuth import — screenshot capture and layout analysis feed into generation.</p>
       </div>
     </div>
@@ -392,7 +392,7 @@
     <div class="rm-version">
       <div class="rm-version__tag">v3.11</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Block Library</div>
+        <div class="rm-version__title">Block library</div>
         <p class="rm-version__desc">230+ pre-made blocks across 34 categories with multimodal RAG retrieval. Full QA audit — every block validated and screenshots regenerated.</p>
       </div>
     </div>
@@ -400,7 +400,7 @@
     <div class="rm-version">
       <div class="rm-version__tag">v3.13</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Production Validation</div>
+        <div class="rm-version__title">Production validation</div>
         <p class="rm-version__desc">Dashrock case study — first production deployment documented. Content integrity guards (mergeSpecFixes, measureTextContent). Theme switcher nudge for new visitors.</p>
       </div>
     </div>
@@ -408,7 +408,7 @@
     <div class="rm-version">
       <div class="rm-version__tag">v3.19</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Component Coverage + Gallery Repair</div>
+        <div class="rm-version__title">Component coverage + gallery repair</div>
         <p class="rm-version__desc">84-component catalog with COSS particle coverage mapped. Checkbox Group, Fieldset, Frame, Group, Meter, Number Field, Preview Card, and Toolbar shipped. Layout gallery thumbnails now deploy as lightweight WebP assets.</p>
       </div>
     </div>
@@ -416,7 +416,7 @@
     <div class="rm-version">
       <div class="rm-version__tag rm-version__tag--future">v3.20+</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Action Bindings + Persistence</div>
+        <div class="rm-version__title">Action bindings + persistence</div>
         <p class="rm-version__desc">Buttons that POST to real endpoints. Forms with submit handlers. Shareable URLs, version history, standalone HTML export. Generated UI becomes functional and outlives the session.</p>
       </div>
     </div>
@@ -424,7 +424,7 @@
     <div class="rm-version">
       <div class="rm-version__tag rm-version__tag--future">v4.0</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Intent Engine</div>
+        <div class="rm-version__title">Intent engine</div>
         <p class="rm-version__desc">"I need to track my expenses" becomes a spending dashboard. Context-aware generation — location, time, history inform the UI. Adaptive complexity that reveals depth as you engage.</p>
       </div>
     </div>
@@ -432,7 +432,7 @@
     <div class="rm-version">
       <div class="rm-version__tag rm-version__tag--future">v5.0</div>
       <div class="rm-version__body">
-        <div class="rm-version__title">Agent Runtime + Daub Place</div>
+        <div class="rm-version__title">Agent runtime + Daub Place</div>
         <p class="rm-version__desc">Multi-agent orchestration: one fetches data, another decides layout, a third handles actions. The device becomes the place where thought meets interface — ambient, anticipatory, always ready.</p>
       </div>
     </div>
@@ -440,7 +440,7 @@
 
   <!-- Vision Examples -->
   <section class="rm-vision">
-    <h2>Intent to Interface</h2>
+    <h2>Intent to interface</h2>
     <p>Describe what you need. The right interface appears — considered, contextual, ready to use.</p>
 
     <div class="rm-examples">
@@ -479,22 +479,22 @@
     <div class="rm-place__grid">
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="brain" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
-        <div class="rm-place__label">Think It</div>
+        <div class="rm-place__label">Think it</div>
         <p class="rm-place__desc">Voice, text, gesture — whatever's natural. No app to find, no menu to learn.</p>
       </div>
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="sparkles" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
-        <div class="rm-place__label">Shape It</div>
+        <div class="rm-place__label">Shape it</div>
         <p class="rm-place__desc">Intent becomes structure. Data arrives, layout resolves. Fitts's law, Hick's law, Miller's law — baked in, not bolted on.</p>
       </div>
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="layout" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
-        <div class="rm-place__label">See It</div>
+        <div class="rm-place__label">See it</div>
         <p class="rm-place__desc">A considered interface materializes. Warm surfaces, honest shadows, proper hierarchy. It looks like someone cared — because the system did.</p>
       </div>
       <div class="rm-place__item">
         <span class="rm-place__icon"><i data-lucide="zap" style="width:32px;height:32px;color:var(--db-terracotta);"></i></span>
-        <div class="rm-place__label">Do It</div>
+        <div class="rm-place__label">Do it</div>
         <p class="rm-place__desc">Act on what you see. The interface served its purpose, then it's gone. Next thought, next surface.</p>
       </div>
     </div>

@@ -173,6 +173,10 @@
       font-size: 0.6875rem; font-family: var(--db-font-ui);
       margin-bottom: 6px;
     }
+    #pg-generation-mode {
+      width: auto; max-width: 170px; min-width: 0; height: 28px;
+      padding: 2px 22px 2px 6px; font: inherit;
+    }
     .pg-options-examples-trigger {
       display: flex; align-items: center; gap: 3px;
       font-size: 0.6875rem; color: var(--db-warm-gray);
@@ -238,8 +242,11 @@
       position: relative;
       z-index: 10;
       transition: background 0.15s;
+      touch-action: none;
+      user-select: none;
     }
     .pg-divider:hover,
+    .pg-divider:focus-visible,
     .pg-divider--dragging {
       background: var(--db-terracotta);
     }
@@ -263,7 +270,9 @@
       z-index: 11;
       pointer-events: none;
     }
-    .pg-divider:hover .pg-divider__chevron {
+    .pg-divider:hover .pg-divider__chevron,
+    .pg-divider:focus-visible .pg-divider__chevron,
+    .pg-divider[aria-expanded="false"] .pg-divider__chevron {
       opacity: 1;
       pointer-events: auto;
     }
@@ -387,6 +396,7 @@
     .pg-chat__steps li::before { content: '\2713'; flex: 0 0 0.75rem; text-align: center; color: var(--db-success, #2e7d32); }
     .pg-chat__steps li.pg-chat__step--active { color: var(--db-ink); }
     .pg-chat__steps li.pg-chat__step--active::before { content: '\25CF'; font-size: 0.625rem; color: var(--db-terracotta); animation: pg-blink 1s infinite; }
+    .pg-chat__steps li.pg-chat__step--error::before { content: '!'; color: var(--db-error, #b33a3a); }
     .pg-chat__msg--stopped .pg-chat__steps li.pg-chat__step--active::before { content: '\25A0'; animation: none; }
     .pg-chat__msg--streaming:has(.pg-chat__steps)::after { content: none; }
     .pg-result-summary { font-size: 0.75rem; color: var(--db-ink); margin-top: 4px; }
@@ -410,6 +420,7 @@
     .pg-chat--has-messages .pg-options-examples-trigger,
     .pg-chat--has-messages .pg-chat__empty { display: none; }
     .pg-chat__input-wrap {
+      container: chat-composer / inline-size;
       border: 1px solid var(--db-sand);
       border-radius: 8px;
       background: var(--db-linen);
@@ -439,11 +450,15 @@
     }
     .pg-chat__input-actions {
       display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
       align-items: center;
       justify-content: space-between;
       padding: 0 6px 6px;
     }
     .pg-chat__attach-btn {
+      flex: none;
+      white-space: nowrap;
       background: none;
       border: none;
       cursor: pointer;
@@ -458,6 +473,8 @@
     }
     .pg-chat__attach-btn:hover { opacity: 1; background: color-mix(in srgb, var(--db-ink) 5%, transparent); }
     .pg-chat__send-hint {
+      flex: none;
+      margin-left: auto;
       font-size: 0.6875rem;
       color: var(--db-warm-gray);
       opacity: 0.4;
@@ -466,6 +483,8 @@
       white-space: nowrap;
     }
     .pg-chat__stop-btn {
+      flex: none;
+      margin-left: auto;
       background: none; border: 1px solid var(--db-terracotta); cursor: pointer;
       color: var(--db-terracotta); padding: 2px 8px; border-radius: 4px;
       font-size: 0.6875rem; font-family: var(--db-font-ui);
@@ -473,6 +492,17 @@
       transition: background 0.15s;
     }
     .pg-chat__stop-btn:hover { background: color-mix(in srgb, var(--db-terracotta) 10%, transparent); }
+    .pg-chat__input-actions > div { flex: none; }
+    .pg-chat__input-actions :is(svg, i) { flex: none; }
+    @container chat-composer (max-width: 320px) {
+      .pg-chat__input-actions :is(svg, i) { display: none; }
+    }
+    @container chat-composer (max-width: 260px) {
+      .pg-chat__send-hint { display: none; }
+    }
+    @container chat-composer (max-width: 220px) {
+      .pg-chat__attach-btn { padding-inline: 4px; }
+    }
     .pg-chat__msg--stopped { opacity: 0.6; }
     .pg-chat__img-strip {
       display: none;
@@ -784,6 +814,11 @@
       width: 100%;
       height: 100%;
     }
+    #panel-preview.pg-recursive-measure, #pg-pane-design.pg-recursive-measure {
+      display: flex !important; position: fixed; left: -10000px; top: 0;
+      width: var(--pg-measure-width); height: var(--pg-measure-height);
+      opacity: 0; pointer-events: none;
+    }
 
     /* Bottom tab bar — uses DAUB db-bottom-nav, hidden on desktop */
     @media (min-width: 1025px) {
@@ -817,7 +852,7 @@
     <li><a href="playground.html" class="db-nav__link--active">Playground</a></li>
     <li><a href="themes.html">Themes</a></li>
     <li><a href="roadmap.html">Roadmap</a></li>
-    <li><a href="case-studies.html">Case Studies</a></li>
+    <li><a href="case-studies.html">Case studies</a></li>
     <li><a href="llms.txt">AI Docs</a></li>
     <li>
       <a href="https://github.com/sliday/daub" class="db-nav__github" target="_blank" rel="noopener">
@@ -846,7 +881,7 @@
         <div class="pg-chat__messages" id="pg-chat-messages">
           <div class="pg-chat__empty" id="pg-chat-empty">
             <i data-lucide="sparkles" style="width:32px;height:32px;color:var(--db-terracotta);"></i>
-            <h3 class="db-h4" style="margin:12px 0 4px;">What Would You Like to Build?</h3>
+            <h3 class="db-h4" style="margin:12px 0 4px;">What would you like to build?</h3>
             <p class="db-caption db-text-muted">Describe a UI and watch it come to life with DAUB components.</p>
           </div>
         </div>
@@ -859,6 +894,10 @@
               Examples
             </button>
             <span style="flex:1"></span>
+            <select id="pg-generation-mode" aria-label="Generation mode">
+              <option value="direct">Direct</option>
+              <option value="snowflake">Recursive (experimental)</option>
+            </select>
             <a href="#" id="pg-byok-link" class="pg-byok-link">Own Key</a>
           </div>
           <div class="pg-chat__examples" id="pg-chat-examples">
@@ -902,8 +941,8 @@
     </div>
 
     <!-- Divider 1 -->
-    <div class="pg-divider" data-divider="1">
-      <span class="pg-divider__chevron" data-collapse="1">&lsaquo;</span>
+    <div class="pg-divider" data-divider="1" role="button" tabindex="0" aria-label="Collapse chat panel" aria-controls="panel-prompt" aria-expanded="true" title="Collapse chat panel">
+      <span class="pg-divider__chevron" aria-hidden="true">&lsaquo;</span>
     </div>
 
     <!-- RIGHT: Preview Panel (with Design / Structure / Code tabs) -->
@@ -1020,6 +1059,7 @@
 <script src="daub.js?v=3.20.6"></script>
 <script src="daub-render.js"></script>
 <script src="daub-openui-parser.js"></script>
+<script src="playground-snowflake.js?v=1"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -1046,6 +1086,8 @@ var $json       = document.getElementById('pg-json');
 var $previewFrame = document.getElementById('pg-preview-frame');
 var _isLoading = false;
 var $stopBtn    = document.getElementById('pg-stop-btn');
+var $generationMode = document.getElementById('pg-generation-mode');
+$generationMode.value = new URLSearchParams(location.search).get('design') === 'snowflake' ? 'snowflake' : 'direct';
 var $sendHint   = document.getElementById('pg-send-hint');
 var _abortCtrl = null;
 var _currentStream = { renderTimer: null, streamBubble: null };
@@ -1124,6 +1166,7 @@ function collectPreviewGeometry(root) {
         parentId: parent && root.contains(parent) ? parent.getAttribute('data-spec-id').slice(0, 160) : null,
         bounds: bounds(el.getBoundingClientRect()),
         rendered: el.getClientRects().length > 0 && style.visibility !== 'hidden' && style.visibility !== 'collapse',
+        placeholder: el.hasAttribute('data-pg-region'),
         padding: edges(style, 'padding'), margin: edges(style, 'margin'), border: edges(style, 'border', 'Width'),
         layout: layout,
         overflow: { x: el.scrollWidth > el.clientWidth + 1, y: el.scrollHeight > el.clientHeight + 1, clientWidth: el.clientWidth, clientHeight: el.clientHeight, scrollWidth: el.scrollWidth, scrollHeight: el.scrollHeight, scrollX: el.scrollLeft, scrollY: el.scrollTop }
@@ -1146,6 +1189,14 @@ async function captureMeasuredPreview(root, request, replyOrigin) {
     geometry = collectPreviewGeometry(root);
     var before = JSON.stringify(geometry);
     var animating = root.getAnimations && root.getAnimations({ subtree: true }).some(function(animation) { return animation.playState === 'running'; });
+    if (request.geometryOnly) {
+      // Browsers suspend animation frames in the offscreen measurement iframe.
+      await new Promise(function(resolve) { setTimeout(resolve, 32); });
+      geometry.stable = assetsReady && !animating && geometry.capture.bounds.width > 0 && before === JSON.stringify(collectPreviewGeometry(root));
+      geometry.capture.kind = 'dom-measurement';
+      parent.postMessage({ type: 'screenshot', requestId: request.requestId, data: null, geometry: geometry }, replyOrigin);
+      return;
+    }
     var bg = getComputedStyle(document.body).backgroundColor;
     if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') bg = getComputedStyle(document.documentElement).backgroundColor;
     var data = null;
@@ -1170,6 +1221,29 @@ async function captureMeasuredPreview(root, request, replyOrigin) {
   }
 }
 
+function markRecursiveRegions(root, spec, state) {
+  root.querySelectorAll('[data-pg-region], [data-pg-refining]').forEach(function(el) {
+    el.removeAttribute('data-pg-region');
+    el.removeAttribute('data-pg-refining');
+    el.removeAttribute('data-pg-region-size');
+  });
+  if (!state || !spec || !spec.elements) return;
+  root.querySelectorAll('[data-spec-id]').forEach(function(el) {
+    var id = el.getAttribute('data-spec-id');
+    var node = spec.elements[id];
+    if (!node) return;
+    var status = state[id] || 'pending';
+    if (status === 'running') el.setAttribute('data-pg-refining', '');
+    var children = node.children || node.props && node.props.children || [];
+    if (!['Stack', 'Grid'].includes(node.type) || children.length) return;
+    var label = id.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[-_]+/g, ' ');
+    label = label.charAt(0).toUpperCase() + label.slice(1);
+    var suffix = status === 'failed' ? 'Needs another pass' : status === 'running' ? 'Building...' : 'Pending';
+    el.setAttribute('data-pg-region', label + ' \u00b7 ' + suffix);
+    el.setAttribute('data-pg-region-size', /header|footer|bar/i.test(id) && !/sidebar/i.test(id) ? 'compact' : 'body');
+  });
+}
+
 function buildIframeSrcdoc(theme, scheme) {
   var themeAttr = theme ? ' data-theme="' + esc(theme) + '"' : '';
   var schemeAttr = scheme ? ' data-scheme="' + esc(scheme) + '"' : '';
@@ -1185,7 +1259,11 @@ function buildIframeSrcdoc(theme, scheme) {
     + '.pg-iframe-empty::after{content:attr(data-quote);'
     + 'white-space:pre-wrap;text-align:center;font-family:var(--db-font-heading);font-size:0.9375rem;'
     + 'font-style:italic;line-height:1.6;color:var(--db-warm-gray);opacity:0.6;max-width:260px;}'
-    + '.pg-preview-body{padding:16px;}</style>'
+    + '.pg-preview-body{padding:16px;}'
+    + '[data-pg-region]{position:relative;min-height:240px;min-width:0;outline:1px dashed var(--db-color-border);outline-offset:-1px;background:var(--db-color-surface);}'
+    + '[data-pg-region][data-pg-region-size="compact"]{min-height:72px;}'
+    + '[data-pg-region]::before{content:attr(data-pg-region);padding:16px;min-width:0;max-width:100%;overflow-wrap:anywhere;font:12px/1.5 var(--db-font-ui);color:var(--db-warm-gray);}'
+    + '[data-pg-refining]{outline:1px solid var(--db-terracotta);outline-offset:-1px;}</style>'
     + '</head><body>'
     + '<div id="pg-iframe-root" class="pg-iframe-empty"></div>'
     + '<script>(function(){var qs=['
@@ -1204,8 +1282,9 @@ function buildIframeSrcdoc(theme, scheme) {
     + '<script src="daub.js?v=3.20.6"><\/script>'
     + '<script>' + DAUB_RENDER_BODY.replace(/<\/script/gi, '<\\/script') + '<\/script>'
     + '<script>'
-    + collectPreviewGeometry.toString() + ';' + captureMeasuredPreview.toString() + ';'
+    + collectPreviewGeometry.toString() + ';' + captureMeasuredPreview.toString() + ';' + markRecursiveRegions.toString() + ';'
     + 'var root = document.getElementById("pg-iframe-root");'
+    + 'var _previewSpec = null;'
     // Opaque-origin frame: reply only to the embedding origin
     + 'var _po = ' + JSON.stringify(location.origin).replace(/[<>&\u2028\u2029]/g, function(c) { return '\\u' + ('000' + c.charCodeAt(0).toString(16)).slice(-4); }) + '; if (_po === "null") _po = "*";'
     // ---- Declarative State Engine (iframe runtime) ----
@@ -1314,6 +1393,7 @@ function buildIframeSrcdoc(theme, scheme) {
     // ---- End Declarative State Engine ----
     + 'window.addEventListener("message", function(e) {'
     + '  if (e.source !== window.parent || !e.data || !e.data.type) return;'
+    + '  if (e.data.type === "refinement") markRecursiveRegions(root, _previewSpec, e.data.state);'
     + '  if (e.data.type === "highlight" || e.data.type === "unhighlight") {'
     + '    var ids = Array.isArray(e.data.elements) ? e.data.elements : [];'
     + '    root.querySelectorAll("[data-spec-id]").forEach(function(el) {'
@@ -1321,6 +1401,7 @@ function buildIframeSrcdoc(theme, scheme) {
     + '    });'
     + '  }'
     + '  if (e.data.type === "render") {'
+    + '    _previewSpec = e.data.spec || null;'
     + '    root.className = "pg-preview-body";'
     + '    root.innerHTML = e.data.html;'
     + '    if (e.data.spec && e.data.spec.elements) {'
@@ -1351,6 +1432,7 @@ function buildIframeSrcdoc(theme, scheme) {
     + '      slot.parentNode.replaceChild(t.content, slot);'
     + '    });'
     + '    parent.postMessage({ type: "html", data: root.innerHTML, seq: e.data.seq }, _po);'
+    + '    markRecursiveRegions(root, _previewSpec, e.data.refinement);'
     + '    if (window.DAUB) { DAUB.init(root); if (DAUB.fixNestedRadius) DAUB.fixNestedRadius(root); }'
     + '    if (window.lucide) lucide.createIcons({ nodes: root.querySelectorAll("[data-lucide]") });'
     + '    window.__daubState = null;'
@@ -2480,7 +2562,7 @@ function capturePreview(options) {
       }
     }
     window.addEventListener('message', onMessage);
-    postToPreview({ type: 'screenshot', geometry: !!measured, requestId: requestId });
+    postToPreview({ type: 'screenshot', geometry: !!measured, geometryOnly: !!(options && options.geometryOnly), requestId: requestId });
   });
 }
 
@@ -2493,12 +2575,17 @@ function parseSseResponse(res) {
     text.split('\n').forEach(function(line) {
       line = line.trim();
       if (line.startsWith('data: ') && line !== 'data: [DONE]') {
-        try {
-          var chunk = JSON.parse(line.slice(6));
-          if (chunk.usage) usage = chunk.usage;
-          var c = chunk.choices && chunk.choices[0];
-          if (c && c.delta && c.delta.content) content += c.delta.content;
-        } catch(e) {}
+        var chunk;
+        try { chunk = JSON.parse(line.slice(6)); } catch(e) { return; }
+        if (chunk.error) {
+          var error = new Error(typeof chunk.error === 'string' ? chunk.error : chunk.error.message || 'Generator request failed');
+          error.status = Number(chunk.error.status || chunk.error.code) || undefined;
+          error.code = chunk.error.code;
+          throw error;
+        }
+        if (chunk.usage) usage = chunk.usage;
+        var c = chunk.choices && chunk.choices[0];
+        if (c && c.delta && c.delta.content) content += c.delta.content;
       }
     });
     return { content: content, usage: usage };
@@ -3737,6 +3824,12 @@ function renderChatHistory() {
     // Rebuild result bubble UI for assistant messages with version data
     if (msg.role === 'assistant' && msg.versionIdx != null && specVersions[msg.versionIdx]) {
       buildResultBubble(bubble, specVersions[msg.versionIdx].spec, msg.versionIdx);
+      if (msg.refinementStatus) {
+        var status = document.createElement('p');
+        status.className = 'pg-result-meta';
+        status.textContent = msg.refinementStatus;
+        bubble.appendChild(status);
+      }
     }
   });
   updateChatState();
@@ -3903,9 +3996,217 @@ function runBlockingGenerate(messages, streamBubble) {
   });
 }
 
+async function generateRecursive(prompt) {
+  if (!window.DaubSnowflake) { showJsonError('Recursive design could not load. Reload or choose Direct.'); return; }
+  if (!isDefaultMode) { showJsonError('Recursive design uses DAUB AI. Choose Direct to use your own key.'); return; }
+  if (pendingImages.length || pendingWebContexts.length || pendingFigmaContexts.length) {
+    showJsonError('Recursive design currently accepts text prompts. Choose Direct for attachments.'); return;
+  }
+  if (prompt.length > 4000) { showJsonError('Recursive prompts must be 4,000 characters or fewer.'); return; }
+  var controller = new AbortController();
+  _abortCtrl = controller;
+  var started = Date.now();
+  var lastSpec = currentSpec;
+  var lastGeometry = null;
+  var accepted = false;
+  var regionStates = Object.create(null);
+  var branchSteps = Object.create(null);
+  var phaseStep = null;
+  var queueStatus = '';
+  chatHistory.push({ role: 'user', content: prompt });
+  addChatBubble('user', prompt);
+  updateChatState();
+  $prompt.value = '';
+  $prompt.style.height = '';
+  var bubble = addChatBubble('ai', '');
+  _currentStream.streamBubble = bubble;
+  bubble.classList.add('pg-chat__msg--streaming');
+  hideJsonError();
+  setLoading(true);
+  function active() { return _abortCtrl === controller && !controller.signal.aborted; }
+  function updateRegions() { postToPreview({ type: 'refinement', state: regionStates }); }
+  controller.signal.addEventListener('abort', function() {
+    Object.keys(regionStates).forEach(function(id) { if (regionStates[id] === 'running') regionStates[id] = 'pending'; });
+    if (accepted && currentSpec === lastSpec) updateRegions();
+  }, { once: true });
+  function progressStep(event) {
+    if (event.phase === 'queue') {
+      queueStatus = event.active + '/' + event.concurrency + ' active, ' + event.queued + ' queued';
+      $status.textContent = queueStatus;
+      return;
+    }
+    var list = bubble.querySelector('.pg-chat__steps');
+    if (!list) {
+      list = document.createElement('ul');
+      list.className = 'pg-chat__steps';
+      bubble.appendChild(list);
+    }
+    var branch = ['refine', 'refined', 'branch-error'].includes(event.phase);
+    var item;
+    if (branch) {
+      if (phaseStep) phaseStep.classList.remove('pg-chat__step--active');
+      item = branchSteps[event.targetId];
+      if (!item) {
+        item = document.createElement('li');
+        item.dataset.branchId = event.targetId;
+        branchSteps[event.targetId] = item;
+        list.appendChild(item);
+      }
+      regionStates[event.targetId] = event.phase === 'refine' ? 'running' : event.phase === 'branch-error' ? 'failed' : 'ready';
+      item.className = event.phase === 'refine' ? 'pg-chat__step--active' : event.phase === 'branch-error' ? 'pg-chat__step--error' : '';
+      item.textContent = event.targetId + (event.phase === 'refine' ? ': building...' : event.phase === 'branch-error' ? ': needs another pass' : ': updated');
+      if (event.reason) item.title = event.reason;
+      updateRegions();
+    } else {
+      if (phaseStep) phaseStep.classList.remove('pg-chat__step--active');
+      phaseStep = document.createElement('li');
+      phaseStep.className = 'pg-chat__step--active';
+      phaseStep.textContent = event.phase === 'layout' ? 'Planning layout...' : 'Jev: checking level ' + (event.depth + 1);
+      list.appendChild(phaseStep);
+    }
+    var running = Object.keys(regionStates).filter(function(id) { return regionStates[id] === 'running'; });
+    $status.textContent = running.length ? 'Refining ' + running.length + (running.length === 1 ? ' region...' : ' regions in parallel...') : 'Checking refinements...';
+    if (!branch) $status.textContent = phaseStep.textContent;
+    if (queueStatus) $status.textContent = queueStatus;
+    $chatMessages.scrollTop = $chatMessages.scrollHeight;
+  }
+  function finish(label) {
+    if (!active()) return;
+    Object.keys(regionStates).forEach(function(id) { if (regionStates[id] === 'running') regionStates[id] = 'pending'; });
+    updateRegions();
+    if (phaseStep) phaseStep.classList.remove('pg-chat__step--active');
+    bubble.classList.remove('pg-chat__msg--streaming');
+    if (accepted) {
+      pushVersion(lastSpec, prompt + ' (recursive)');
+      specVersions[specVersions.length - 1].ms = Date.now() - started;
+      buildResultBubble(bubble, lastSpec);
+      chatHistory.push({ role: 'assistant', content: label, refinementStatus: label, versionIdx: specVersions.length - 1 });
+    } else bubble.textContent = '';
+    var status = document.createElement('p');
+    status.className = 'pg-result-meta';
+    status.textContent = label;
+    bubble.appendChild(status);
+    saveChatState();
+  }
+  try {
+    var result = await DaubSnowflake.run({
+      prompt: prompt,
+      scheduling: 'queue',
+      concurrency: 3,
+      initialSpec: currentSpec ? JSON.parse(JSON.stringify(currentSpec)) : null,
+      validTypes: VALID_TYPES.filter(function(type) { return type !== 'CustomHTML'; }),
+      signal: controller.signal,
+      generate: async function(step) {
+        var stage = step.stage === 'layout'
+          ? 'Create the complete page layout in this first pass: a root and at most six semantic region containers. Include all major regions needed by the request, never only navigation. For an app, use a vertical root containing header, body, and footer where needed; body is a Grid with columns:"sidebar-main" and separate sidebar and content region children. Keep the content region present even while empty. Establish orientation, widths, spacing, and responsive behavior before details. Use meaningful region IDs. Do not add leaf controls yet.'
+          : 'Refine ONLY subtree ' + JSON.stringify(step.targetId) + ' by one level. Repair its local layout and supply its immediate components or missing details. Return {"root":' + JSON.stringify(step.targetId) + ',"elements":{...}} containing that entire subtree and no elements outside it. Preserve existing IDs, types, content, and child order. NEVER replace a Stack with Navbar, BottomNav, Card or another type; add the desired component as a child instead. If the target already has child containers, repair only their arrangement now; later passes will populate those containers. Add at most twelve new elements. New composite children may have empty children arrays for their later refinement. Do not generate entire posts, feeds or pages inside one region pass.';
+        var instructions = '\n\nSNOWFLAKE STAGE: ' + step.stage + '\n' + stage
+          + '\nReturn valid JSON, not OpenUI or prose. Use only canonical component props. Prefix every NEW element ID with the target ID and a hyphen so independent region patches cannot collide. Stack direction is "horizontal" or "vertical", NEVER "row" or "column". For horizontal story strips use wrap:false and a bounded horizontally scrolling region; do not put stories in a tall centered card.'
+          + '\nPreserve the requested product conventions. For a social photo feed, prioritize navigation, a compact horizontal story row, and media-led posts with author/action rows. Use actual image URLs and sensible aspect ratios. Keep page sections unframed and text left aligned. Use native components, not CustomHTML or custom scripts. Do not create a landing page unless requested.'
+          + '\nUse Sidebar for vertical navigation inside a sidebar region. NavMenu renders a horizontal navigation row and must not go in a narrow sidebar. Populate each region with useful immediate content before adding deeper empty wrappers.'
+          + '\nUse no more than 160 elements in the whole page. The current subtree may already be complete: fix layout without inventing features. State, theme, and unrelated branches belong to the parent and cannot change in a subtree patch.';
+        var types = step.stage === 'layout' ? ['Stack', 'Grid'] : VALID_TYPES.filter(function(type) { return type !== 'CustomHTML' && type !== 'Layout'; });
+        var system = 'You implement one layer of a DAUB design tree. Return only a JSON object {"root":"id","elements":{"id":{"type":"Stack","props":{},"children":["child-id"]}}}. Children contain IDs, not nested objects. Include the target and its complete existing subtree. All references must exist; each element has one parent. Use only the props listed below; arbitrary style, class, width, and responsive props are ignored unless explicitly listed.\n'
+          + types.map(function(type) { return type + ': ' + (COMP_PROPS[type] || 'children'); }).join('\n')
+          + '\nUse Grid for responsive page columns, with columns:"sidebar-main" for navigation beside flexible main content. Nest another Grid for feed and supporting columns. Horizontal Stack wrap defaults to true; reserve it for content rows and toolbars, not page column structure. Do not set wrap:false on a multi-column page body. Reserve no-wrap for short toolbars and horizontally scrollable strips. Use Button with icon, size:"icon", label:"", and ariaLabel for compact navigation and post actions, not bare Icon. Fit the current measured viewport, including narrow mobile widths; allow headers to wrap and avoid centering oversized rows. A layout pass contains containers only. A detail pass may leave new child containers empty: the next recursive pass fills them. Do not add sample content outside this layer.';
+        var response = await fetch('/api/generate', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: step.signal,
+          body: JSON.stringify(Object.assign({ model: AUTO_MODEL, max_tokens: 8192, reasoning: { effort: 'medium' }, messages: [
+            { role: 'system', content: system + instructions },
+            { role: 'user', content: JSON.stringify({ request: prompt, depth: step.depth, targetId: step.targetId || null, currentSpec: step.spec || null, geometry: recursiveGeometry(step.geometry === undefined ? lastGeometry : step.geometry, step.targetId ? [step.targetId] : []) }) }
+          ] }, mainGenOpts()))
+        });
+        if (!response.ok) throw await recursiveRequestError(response);
+        var output = await parseSseResponse(response);
+        var clean = cleanJSON(output.content);
+        if (!clean) throw new Error('The generator returned no valid JSON.');
+        return JSON.parse(clean);
+      },
+      judge: async function(step) {
+        var response = await fetch('/api/refine-judge', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: step.signal,
+          body: JSON.stringify({ prompt: prompt, spec: step.spec, targets: step.targets, depth: step.depth, geometry: recursiveGeometry(step.geometry, step.targets) })
+        });
+        if (!response.ok) throw await recursiveRequestError(response);
+        return response.json();
+      },
+      measure: async function(step) {
+        var panel = document.getElementById('panel-preview');
+        var pane = document.getElementById('pg-pane-design');
+        var width = panel.clientWidth || document.documentElement.clientWidth;
+        var exposed = [];
+        [panel, pane].forEach(function(el) {
+          if (el.getClientRects().length) return;
+          el.style.setProperty('--pg-measure-width', width + 'px');
+          el.style.setProperty('--pg-measure-height', Math.max(300, innerHeight - 140) + 'px');
+          el.classList.add('pg-recursive-measure');
+          exposed.push(el);
+        });
+        try {
+          var capture = await capturePreview({ geometry: true, geometryOnly: true });
+          lastGeometry = capture && capture.geometry;
+          return recursiveGeometry(lastGeometry, step.targets);
+        } finally {
+          exposed.forEach(function(el) {
+            el.classList.remove('pg-recursive-measure');
+            el.style.removeProperty('--pg-measure-width');
+            el.style.removeProperty('--pg-measure-height');
+          });
+        }
+      },
+      onSpec: function(spec) {
+        if (!active()) return;
+        var next = JSON.parse(JSON.stringify(spec));
+        var rendered = renderElement(next.elements, next.root, 0);
+        if (!rendered || rendered.matches && (rendered.matches('[data-render-error]') || rendered.querySelector('[data-render-error]'))) {
+          throw new Error('A component could not render. The last valid preview has been kept.');
+        }
+        renderSpec(next, currentSpec, false, regionStates);
+        currentSpec = next;
+        lastSpec = next;
+        accepted = true;
+        $json.value = JSON.stringify(next, null, 2);
+        refreshJsonTree();
+        updatePreviewToolbar();
+        saveChatState();
+      },
+      onProgress: function(event) {
+        if (!active() || event.phase === 'done') return;
+        progressStep(event);
+      }
+    });
+    var reasons = { 'complete': 'Jev: no further refinement', 'partial': 'Some regions need another pass' + (result.failedTargets && result.failedTargets.length ? ': ' + result.failedTargets.join(', ') : ''), 'depth-limit': 'Depth limit reached', 'request-limit': 'Request limit reached', 'frontier-limit': 'Branch limit reached', 'time-limit': 'Time limit reached', 'no-progress': 'No further changes', 'element-limit': 'Component limit reached' };
+    finish(result.reason === 'complete' ? reasons.complete : 'Refinement paused: ' + (reasons[result.reason] || result.reason));
+  } catch (error) {
+    if (!active()) return;
+    finish('Refinement stopped: ' + error.message);
+    showJsonError(error.message);
+  } finally {
+    if (active()) { $status.textContent = ''; setLoading(false); _abortCtrl = null; }
+  }
+}
+
+async function recursiveRequestError(response) {
+  var data = await response.json().catch(function() { return {}; });
+  var error = new Error(typeof data.error === 'string' ? data.error : data.error && data.error.message || 'Request failed (HTTP ' + response.status + ').');
+  error.status = response.status;
+  return error;
+}
+
+function recursiveGeometry(geometry, targets) {
+  if (!geometry || !geometry.stable || !Array.isArray(geometry.elements)) return null;
+  var parents = geometry.elements.filter(function(el) { return targets.indexOf(el.id) !== -1; }).map(function(el) { return el.parentId; });
+  var relevant = geometry.elements.filter(function(el) { return targets.indexOf(el.id) !== -1 || targets.indexOf(el.parentId) !== -1 || parents.indexOf(el.id) !== -1; });
+  relevant.sort(function(a, b) { return Number(targets.indexOf(b.id) !== -1) - Number(targets.indexOf(a.id) !== -1); });
+  var report = Object.assign({}, geometry, { elements: relevant.slice(0, 24), truncated: geometry.truncated || relevant.length !== geometry.elements.length || relevant.length > 24 });
+  while (new TextEncoder().encode(JSON.stringify(report)).length > 30000 && report.elements.length) { report.elements.pop(); report.truncated = true; }
+  return report.elements.length ? report : null;
+}
+
 function generate() {
   var prompt = $prompt.value.trim();
   if (!prompt) return;
+  if ($generationMode.value === 'snowflake') { generateRecursive(prompt); return; }
 
   // Capture attached images, web contexts, and figma contexts before clearing
   var imagesForThisMsg = pendingImages.slice();
@@ -4557,6 +4858,7 @@ function generate() {
 
 function setLoading(on) {
   _isLoading = on;
+  $generationMode.disabled = on;
   if (on) {
     if ($provider) $provider.disabled = true;
     if ($model) $model.disabled = true;
@@ -4720,7 +5022,7 @@ function buildExportHtml() {
   var payload = JSON.stringify({ type: 'render', html: _iframeHtmlCache, spec: currentSpec, js: collectCustomJS(currentSpec), stateConfig: collectStateConfig(currentSpec) }).replace(/</g, '\\u003c');
   return buildIframeSrcdoc(_pgPreviewTheme || currentSpec.theme, _pgPreviewScheme)
     .replace('<base target="_blank">', '<base href="https://daub.dev/" target="_blank">')
-    .replace('</head>', '<title>DAUB UI Export</title></head>')
+    .replace('</head>', '<title>DAUB UI export</title></head>')
     .replace('</body>', '<script>window.postMessage(' + payload + ', "*");<\/script></body>');
 }
 
@@ -4917,7 +5219,7 @@ function updateGridForCollapse() {
   var grid = document.querySelector('.pg-grid');
   var p1 = document.getElementById('panel-prompt').classList.contains('pg-panel--collapsed');
   if (p1) {
-    grid.style.gridTemplateColumns = '40px 0px 3fr';
+    grid.style.gridTemplateColumns = '40px 6px 1fr';
   } else {
     try {
       var saved = localStorage.getItem('pg-grid-cols');
@@ -5040,7 +5342,7 @@ function autoFixSpec(spec) {
   return spec;
 }
 
-function renderSpec(spec, prevSpec, inert) {
+function renderSpec(spec, prevSpec, inert, refinement) {
   if (!spec || !spec.root || !spec.elements) {
     showJsonError('Spec must have "root" and "elements"');
     return;
@@ -5076,7 +5378,7 @@ function renderSpec(spec, prevSpec, inert) {
   var jsItems = collectCustomJS(spec);
   var stateConfig = collectStateConfig(spec);
   _iframeHtmlCache = tempDiv.innerHTML;
-  postToPreview({ type: 'render', html: tempDiv.innerHTML, spec: spec, js: jsItems, stateConfig: stateConfig, seq: ++_renderSeq, inert: !!inert });
+  postToPreview({ type: 'render', html: tempDiv.innerHTML, spec: spec, js: jsItems, stateConfig: stateConfig, seq: ++_renderSeq, inert: !!inert, refinement: refinement || null });
 }
 
 // Incremental diff: walk spec tree, find DOM nodes by data-spec-id, replace changed subtrees
@@ -7384,7 +7686,7 @@ renderChildren = window.renderChildren;
 // ---- Component props documentation (mirrors mcp/lib/prompt.js) ----
 var COMP_PROPS = {
   "Stack": "direction: \"vertical\"|\"horizontal\", gap: 0-6 (default 2=8px), justify: \"center\"|\"end\"|\"between\"|\"evenly\" (main-axis), align: \"center\"|\"end\"|\"start\"|\"stretch\" (cross-axis), wrap: bool (default true for horizontal), container: \"wide\"|\"narrow\"|true",
-  "Grid": "columns: 2-6, gap: 0-6 (default 2=8px), align: \"center\"|\"end\", container: \"wide\"|\"narrow\"|true",
+  "Grid": "columns: 1-12|\"sidebar-main\" (navigation + flexible content), gap: 0-6, align: \"center\"|\"end\", container: \"wide\"|\"narrow\"|true",
   "Surface": "variant: \"raised\"|\"inset\"|\"pressed\"",
   "Text": "tag: \"h1\"|\"h2\"|\"h3\"|\"h4\"|\"p\"|\"span\", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them",
   "Prose": "content: string (HTML), size: \"sm\"|\"lg\"|\"xl\"|\"2xl\"",
@@ -7659,6 +7961,7 @@ var SYSTEM_PROMPT = (function() {
   var guidelines = 'GUIDELINES:\n'
     + '- Use Stack as the root with direction:"vertical" for page-level layouts\n'
     + '- Use Grid with columns for equal-width grid arrangements\n'
+    + '- For navigation beside content, use Grid columns:"sidebar-main" with two children: the navigation column and the main content. Use nested Grid for page columns; reserve horizontal Stack for content rows and toolbars. Do not rely on intrinsic image widths to size page columns.\n'
     + '- Use Stack with direction:"horizontal" and justify:"between" for header rows, toolbars, and spaced-out content\n'
     + '- To center children use Stack justify:"center" align:"center"\n'
     + '- Stack/Grid gap uses spacing tokens 0-6 (0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px). Default is 2 (8px). Use gap:2-3 for tight rhythm, gap:4-5 for sections\n'
@@ -7849,6 +8152,7 @@ var OPENUI_SYSTEM_PROMPT = (function() {
   var guidelines = 'GUIDELINES:\n'
     + '- Use Stack as root with direction:"vertical" for page layouts\n'
     + '- Grid for equal-width arrangements\n'
+    + '- Grid columns:"sidebar-main" for navigation beside flexible main content; nested Grid for page columns. Horizontal Stack is for content rows and toolbars, not page column structure.\n'
     + '- Stack direction:"horizontal" justify:"between" for headers/toolbars\n'
     + '- Gap tokens: 0=0px, 1=4px, 2=8px, 3=12px, 4=16px, 5=24px, 6=32px\n'
     + '- Wrap related content in Card\n'
@@ -7910,65 +8214,75 @@ var OUTPUT_FORMAT = 'openui'; // 'openui' or 'json'
 (function initResizers() {
   var grid = document.querySelector('.pg-grid');
   var divider = document.querySelector('.pg-divider');
-  var startX, startWidths;
-
-  divider.addEventListener('mousedown', function(e) {
-    if (e.target.classList.contains('pg-divider__chevron')) return;
-    e.preventDefault();
-    startDrag(e.clientX);
-  });
-  divider.addEventListener('touchstart', function(e) {
-    if (e.target.classList.contains('pg-divider__chevron')) return;
-    e.preventDefault();
-    startDrag(e.touches[0].clientX);
-  }, { passive: false });
-
+  var panel = document.getElementById('panel-prompt');
   var chevron = divider.querySelector('.pg-divider__chevron');
-  if (chevron) {
-    chevron.addEventListener('click', function(e) {
-      e.stopPropagation();
-      var panel = document.getElementById('panel-prompt');
-      panel.classList.toggle('pg-panel--collapsed');
-      var collapsed = panel.classList.contains('pg-panel--collapsed');
-      this.textContent = collapsed ? '\u203A' : '\u2039';
-      updateGridForCollapse();
-    });
+  var drag = null, suppressClick = false;
+  var collapseWidth = 160, minWidth = 180;
+
+  function setCollapsed(collapsed) {
+    panel.classList.toggle('pg-panel--collapsed', collapsed);
+    panel.inert = collapsed;
+    divider.setAttribute('aria-expanded', String(!collapsed));
+    divider.setAttribute('aria-label', collapsed ? 'Expand chat panel' : 'Collapse chat panel');
+    divider.title = divider.getAttribute('aria-label');
+    chevron.textContent = collapsed ? '\u203A' : '\u2039';
+    updateGridForCollapse();
   }
 
-  function startDrag(clientX) {
-    if (document.querySelector('.pg-panel--collapsed')) return;
-    startX = clientX;
+  divider.addEventListener('click', function() {
+    if (suppressClick) { suppressClick = false; return; }
+    setCollapsed(!panel.classList.contains('pg-panel--collapsed'));
+  });
+  divider.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    if (!e.repeat) setCollapsed(!panel.classList.contains('pg-panel--collapsed'));
+  });
+  divider.addEventListener('pointerdown', function(e) {
+    if (!e.isPrimary || e.button !== 0 || drag) return;
+    suppressClick = false;
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, width: panel.getBoundingClientRect().width, columns: grid.style.gridTemplateColumns, collapsed: panel.classList.contains('pg-panel--collapsed'), moved: false };
+    divider.setPointerCapture(e.pointerId);
+  });
+
+  divider.addEventListener('pointermove', function(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var dx = e.clientX - drag.x;
+    if (!drag.moved && Math.hypot(dx, e.clientY - drag.y) < 4) return;
+    drag.moved = true;
+    suppressClick = true;
     divider.classList.add('pg-divider--dragging');
-    var panels = grid.querySelectorAll('.pg-panel');
-    startWidths = Array.from(panels).map(function(p) { return p.getBoundingClientRect().width; });
-    document.addEventListener('mousemove', onDrag);
-    document.addEventListener('mouseup', onEnd);
-    document.addEventListener('touchmove', onDrag, { passive: false });
-    document.addEventListener('touchend', onEnd);
-  }
-
-  function onDrag(e) {
-    var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    var dx = clientX - startX;
+    var leftW = drag.width + dx;
+    if (leftW < collapseWidth) { setCollapsed(true); return; }
+    if (panel.classList.contains('pg-panel--collapsed')) setCollapsed(false);
     var totalW = grid.clientWidth - 6;
-    var leftW = startWidths[0] + dx;
-    var rightW = startWidths[1] - dx;
-    var minW = 180;
-    if (leftW < minW) { rightW -= (minW - leftW); leftW = minW; }
-    if (rightW < minW) { leftW -= (minW - rightW); rightW = minW; }
+    leftW = Math.max(minWidth, Math.min(leftW, totalW - minWidth));
     var lPct = (leftW / totalW * 100).toFixed(1);
-    var rPct = (rightW / totalW * 100).toFixed(1);
+    var rPct = ((totalW - leftW) / totalW * 100).toFixed(1);
     grid.style.gridTemplateColumns = lPct + 'fr 6px ' + rPct + 'fr';
-  }
+  });
 
-  function onEnd() {
+  function onEnd(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var completed = drag;
+    drag = null;
     divider.classList.remove('pg-divider--dragging');
-    document.removeEventListener('mousemove', onDrag);
-    document.removeEventListener('mouseup', onEnd);
-    document.removeEventListener('touchmove', onDrag);
-    document.removeEventListener('touchend', onEnd);
-    try { localStorage.setItem('pg-grid-cols', grid.style.gridTemplateColumns); } catch(e) {}
+    if (e.type !== 'pointerup') {
+      suppressClick = true;
+      setCollapsed(completed.collapsed);
+      grid.style.gridTemplateColumns = completed.columns;
+    } else if (completed.moved && !panel.classList.contains('pg-panel--collapsed')) {
+      try { localStorage.setItem('pg-grid-cols', grid.style.gridTemplateColumns); } catch(e) {}
+    }
+    if (divider.hasPointerCapture(e.pointerId)) divider.releasePointerCapture(e.pointerId);
   }
+  divider.addEventListener('pointerup', onEnd);
+  divider.addEventListener('pointercancel', onEnd);
+  divider.addEventListener('lostpointercapture', onEnd);
+
+  window.matchMedia('(max-width: 1024px)').addEventListener('change', function(e) {
+    if (e.matches && panel.classList.contains('pg-panel--collapsed')) setCollapsed(false);
+  });
 
   // Restore saved proportions
   try {

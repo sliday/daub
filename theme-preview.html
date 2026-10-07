@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DAUB — Theme Preview</title>
+  <title>DAUB — Theme preview</title>
   <meta name="description" content="Test custom themes from the Daub Style Chrome extension. Paste CSS or drop JSON to see live DAUB components with your theme applied.">
   <meta name="theme-color" content="#C67B5C">
   <meta name="robots" content="index, follow">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="DAUB — Theme Preview">
+  <meta property="og:title" content="DAUB — Theme preview">
   <meta property="og:description" content="Test custom themes from the Daub Style Chrome extension. Paste CSS or drop JSON to see live DAUB components with your theme applied.">
   <meta property="og:url" content="https://daub.dev/theme-preview.html">
   <meta property="og:site_name" content="DAUB UI">
@@ -22,7 +22,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="DAUB — Theme Preview">
+  <meta name="twitter:title" content="DAUB — Theme preview">
   <meta name="twitter:description" content="Test custom themes from the Daub Style Chrome extension. Paste CSS or drop JSON to see live DAUB components.">
   <meta name="twitter:image" content="https://daub.dev/og-image.png?v=3.20.6">
   <meta name="twitter:site" content="@staskulesh">
@@ -151,7 +151,7 @@
     .tp-preview__label {
       font-family: var(--db-font-ui);
       font-size: 0.625rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.1em;
+      text-transform: none; letter-spacing: 0;
       color: var(--db-warm-gray); margin-bottom: 12px;
     }
     .tp-preview__row {
@@ -208,7 +208,7 @@
       <li><a href="themes.html">Themes</a></li>
       <li><a href="theme-preview.html" class="db-nav__link--active" aria-current="page">Preview</a></li>
       <li><a href="roadmap.html">Roadmap</a></li>
-      <li><a href="case-studies.html">Case Studies</a></li>
+      <li><a href="case-studies.html">Case studies</a></li>
       <li><a href="llms.txt">AI Docs</a></li>
     </ul>
   </nav>
@@ -217,7 +217,7 @@
     <!-- Input panel -->
     <div class="tp-input">
       <div class="tp-input__header">
-        <h1 style="font-size:1rem;margin:0 0 4px">Theme Preview</h1>
+        <h1 style="font-size:1rem;margin:0 0 4px">Theme preview</h1>
       </div>
       <div class="tp-input__tabs" role="group" aria-label="Theme format">
         <button class="tp-input__tab tp-input__tab--active" data-tab="css" aria-pressed="true">CSS</button>
@@ -267,7 +267,7 @@
         <div class="tp-preview__grid">
           <div class="db-card">
             <div class="db-card__body">
-              <h3 style="margin:0 0 8px">Card Title</h3>
+              <h3 style="margin:0 0 8px">Card title</h3>
               <p style="margin:0;font-size:0.875rem;color:var(--db-color-text-secondary)">Sample card content with some preview text to check typography and spacing.</p>
             </div>
             <div class="db-card__footer">
@@ -276,7 +276,7 @@
           </div>
           <div class="db-card db-card--interactive">
             <div class="db-card__body">
-              <h3 style="margin:0 0 8px">Interactive Card</h3>
+              <h3 style="margin:0 0 8px">Interactive card</h3>
               <p style="margin:0;font-size:0.875rem;color:var(--db-color-text-secondary)">This card has hover effects. Try hovering over it.</p>
             </div>
           </div>
@@ -284,7 +284,7 @@
       </div>
 
       <div class="tp-preview__section">
-        <div class="tp-preview__label">Form Fields</div>
+        <div class="tp-preview__label">Form fields</div>
         <div style="max-width:400px;display:flex;flex-direction:column;gap:12px">
           <div class="db-field"><label class="db-field__label" for="preview-name">Name</label><input type="text" class="db-field__input" id="preview-name" placeholder="Alice Chen"></div>
           <div class="db-field"><label class="db-field__label" for="preview-notes">Notes</label><textarea class="db-field__input" id="preview-notes" rows="2"></textarea></div>
@@ -372,10 +372,10 @@
       </div>
 
       <div class="tp-preview__section">
-        <div class="tp-preview__label">Modal Preview</div>
+        <div class="tp-preview__label">Modal preview</div>
         <div class="db-card" style="max-width:400px;padding:0">
           <div style="padding:20px 24px 0">
-            <h3 style="margin:0 0 4px">Confirm Action</h3>
+            <h3 style="margin:0 0 4px">Confirm action</h3>
             <p style="margin:0;font-size:0.875rem;color:var(--db-color-text-secondary)">Are you sure you want to proceed? This cannot be undone.</p>
           </div>
           <div style="padding:16px 24px;display:flex;gap:8px;justify-content:flex-end">
@@ -398,7 +398,7 @@
 
       <!-- Token inspector -->
       <div class="tp-tokens" id="token-inspector" style="display:none">
-        <div class="tp-preview__label">Applied Tokens</div>
+        <div class="tp-preview__label">Applied tokens</div>
         <div class="tp-tokens__grid" id="token-grid"></div>
       </div>
 

@@ -14,7 +14,7 @@ describe('Theme Preview page', () => {
   });
 
   it('should include all preview component sections', () => {
-    const sections = ['Buttons', 'Cards', 'Form Fields', 'Badges', 'Chips', 'Alerts', 'Table', 'Avatar', 'Progress', 'Skeleton', 'Modal Preview', 'Typography'];
+    const sections = ['Buttons', 'Cards', 'Form fields', 'Badges', 'Chips', 'Alerts', 'Table', 'Avatar', 'Progress', 'Skeleton', 'Modal preview', 'Typography'];
     for (const section of sections) {
       assert.ok(html.includes(section), `missing preview section: ${section}`);
     }

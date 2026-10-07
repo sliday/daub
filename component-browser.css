@@ -27,7 +27,7 @@ i[data-lucide], svg.lucide { width: 16px; height: 16px; flex-shrink: 0; }
 .library-label span { color: var(--library-muted); font-variant-numeric: tabular-nums; }
 .component-nav { flex: none; }
 .component-nav section + section { margin-top: 14px; }
-.component-nav h2 { margin: 0 0 4px; padding: 4px 8px; color: var(--library-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.component-nav h2 { margin: 0 0 4px; padding: 4px 8px; color: var(--library-muted); font-size: 11px; font-weight: 600; }
 .component-nav a { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; margin: 1px 0; border-radius: 4px; font-size: 13px; }
 .component-nav a:hover { background: var(--library-code); }
 .component-nav a[aria-current="page"] { background: var(--library-active); font-weight: 600; }

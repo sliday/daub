@@ -5,6 +5,7 @@ import { chromium, firefox, webkit } from 'playwright';
 
 const root = new URL('../../', import.meta.url);
 const catalog = JSON.parse(await readFile(new URL('components.json', root), 'utf8'));
+const displayName = component => (component.name[0] + component.name.slice(1).toLowerCase()).replace(/\b(css|otp)\b/gi, acronym => acronym.toUpperCase());
 const assets = new Map();
 for (const name of ['docs.html', 'components.html', 'site-nav.js', 'site-nav.css', 'component-browser.js', 'component-browser.css', 'component-preview.html', 'component-preview.js', 'components.json', 'daub.js', 'daub.css', 'assets/lucide.min.js']) {
   assets.set('/' + name, await readFile(new URL(name, root), 'utf8'));
@@ -30,7 +31,7 @@ after(async () => { await browser?.close(); });
 
 async function navigate(component) {
   await page.goto('http://daub.test/components.html#' + component.class.slice(3));
-  await page.getByRole('heading', { level: 1, name: component.name, exact: true }).waitFor();
+  await page.getByRole('heading', { level: 1, name: displayName(component), exact: true }).waitFor();
   await page.frameLocator('#component-preview').locator('#preview-root [class*="' + component.class + '"]').first().waitFor({ state: 'attached' });
 }
 
@@ -57,7 +58,9 @@ for (const component of catalog.components) {
   test(`component browser: ${component.name} renders its catalog example`, async () => {
     await navigate(component);
     assert.equal(await page.locator('#component-nav a').count(), catalog.components.length);
-    assert.equal(await page.locator('#component-nav [aria-current="page"]').textContent(), component.name);
+    assert.equal(await page.locator('#component-nav [aria-current="page"]').textContent(), displayName(component));
+    assert.equal(await page.locator('#breadcrumb-name').textContent(), displayName(component));
+    assert.equal(await page.title(), displayName(component) + ' | DAUB components');
     assert.equal(await page.locator('#component-source').textContent(), component.html);
     assert.equal(await page.frameLocator('#component-preview').locator('html').getAttribute('data-theme'), 'light');
     assert.deepEqual(errors, []);
@@ -77,12 +80,12 @@ test('legacy documentation links reach the shared guide and matching component p
     const legacy = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const component = catalog.components.find(item => item.name === name);
     await page.goto('http://daub.test/docs.html#' + legacy);
-    await page.getByRole('heading', { level: 1, name, exact: true }).waitFor();
+    await page.getByRole('heading', { level: 1, name: displayName(component), exact: true }).waitFor();
     assert.equal(new URL(page.url()).hash, '#' + component.class.slice(3));
     assert.equal(await page.locator('#getting-started').isVisible(), false);
   }
   await page.goto('http://daub.test/docs.html#cat-conversation');
-  await page.getByRole('heading', { level: 1, name: catalog.components.find(item => item.category === 'conversation').name, exact: true }).waitFor();
+  await page.getByRole('heading', { level: 1, name: displayName(catalog.components.find(item => item.category === 'conversation')), exact: true }).waitFor();
   assert.deepEqual(errors, []);
 });
 

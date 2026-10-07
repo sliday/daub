@@ -5,7 +5,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 
 const root = new URL('../../', import.meta.url);
 const assets = new Map();
-for (const file of ['chat-demo.html', 'chat-demo.css', 'chat-demo.js', 'chat-demo-shell.js', 'daub.css', 'daub.js', 'assets/lucide.min.js']) {
+for (const file of ['chat-demo.html', 'chat-demo.css', 'site-nav.css', 'chat-demo.js', 'chat-demo-shell.js', 'daub.css', 'daub.js', 'assets/lucide.min.js']) {
   assets.set('/' + file, await readFile(new URL(file, root)));
 }
 

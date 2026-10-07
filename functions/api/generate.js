@@ -22,6 +22,12 @@ export async function onRequestPost(context) {
     'Access-Control-Allow-Headers': 'Content-Type',
   };
 
+  const aborted = () => new Response(JSON.stringify({ error: 'Request aborted' }), {
+    status: 499,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+  if (request.signal.aborted) return aborted();
+
   if (env.RL_GENERATE) {
     try {
       const key = request.headers.get('CF-Connecting-IP') || 'unknown';
@@ -39,6 +45,7 @@ export async function onRequestPost(context) {
   try {
     body = await request.json();
   } catch {
+    if (request.signal.aborted) return aborted();
     return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -71,6 +78,7 @@ export async function onRequestPost(context) {
 
   let upstream;
   try {
+    if (request.signal.aborted) return aborted();
     upstream = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -89,9 +97,17 @@ export async function onRequestPost(context) {
       }, body.response_format !== false ? { response_format: { type: 'json_object' } } : {},
         model === 'openrouter/auto' && ALLOWED_COST_TIERS.includes(body.cost_tier) ? { plugins: [{ id: 'auto-router', cost_tier: body.cost_tier }] } : {},
         typeof body.session_id === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(body.session_id) ? { session_id: body.session_id } : {})),
-      signal: AbortSignal.timeout(60_000),
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(60_000)]),
     });
+    if (!upstream.ok) {
+      const errBody = await upstream.text();
+      return new Response(errBody, {
+        status: upstream.status,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
   } catch (e) {
+    if (request.signal.aborted) return aborted();
     if (e && (e.name === 'AbortError' || e.name === 'TimeoutError')) {
       return new Response(JSON.stringify({ error: 'Gateway Timeout: upstream LLM did not respond in time' }), {
         status: 504,
@@ -100,14 +116,6 @@ export async function onRequestPost(context) {
     }
     return new Response(JSON.stringify({ error: 'Bad Gateway: upstream LLM request failed' }), {
       status: 502,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-
-  if (!upstream.ok) {
-    const errBody = await upstream.text();
-    return new Response(errBody, {
-      status: upstream.status,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }

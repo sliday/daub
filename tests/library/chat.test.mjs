@@ -5,7 +5,7 @@ import { chromium, firefox, webkit } from 'playwright';
 
 const root = new URL('../../', import.meta.url);
 const assets = new Map();
-for (const name of ['chat-demo.html', 'chat-demo.css', 'chat-demo.js', 'chat-demo-shell.js', 'daub.css', 'daub.js', 'assets/lucide.min.js', 'case-studies/dashrock-overview.jpg']) {
+for (const name of ['chat-demo.html', 'chat-demo.css', 'site-nav.css', 'chat-demo.js', 'chat-demo-shell.js', 'daub.css', 'daub.js', 'assets/lucide.min.js', 'case-studies/dashrock-overview.jpg']) {
   assets.set('/' + name, await readFile(new URL(name, root)));
 }
 let browser, page;

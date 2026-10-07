@@ -152,7 +152,7 @@ and tooltips; keep the action slot inside `db-message__content`.
 ### Layout & Structure
 
 - **Stack** _(core, children first)_: a flexbox row or column that lays out its children (the usual page root). Props: `direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true`
-- **Grid** _(core, children first)_: an equal-width CSS grid of 2-6 columns. Props: `columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true`
+- **Grid** _(core, children first)_: an equal-width CSS grid of 2-6 columns. Props: `columns: 1-12|"sidebar-main" (navigation + flexible content), gap: 0-6, align: "center"|"end", container: "wide"|"narrow"|true`
 - **Surface** _(children first)_: a raised or inset background panel that groups content. Props: `variant: "raised"|"inset"|"pressed"`
 - **Text** _(core)_: a heading, paragraph or inline text. Props: `tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them`
 - **Prose**: long-form rich text such as an article body. Props: `content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"`

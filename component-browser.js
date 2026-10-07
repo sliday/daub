@@ -24,6 +24,10 @@
 
   function slug(component) { return component.class.slice(3); }
 
+  function displayName(component) {
+    return component.name.replace(/\S+/g, (word, offset) => offset === 0 || /^[A-Z\d]+$/.test(word) ? word : word.toLowerCase());
+  }
+
   function renderNotes(text) {
     const target = $('component-description');
     target.replaceChildren();
@@ -112,7 +116,7 @@
       for (const item of group) {
         const link = document.createElement('a');
         link.href = '#' + slug(item);
-        link.textContent = item.name;
+        link.textContent = displayName(item);
         if (selected === item) link.setAttribute('aria-current', 'page');
         section.appendChild(link);
       }
@@ -136,7 +140,7 @@
     if (guide) {
       selected = null;
       $('breadcrumb-name').textContent = ({ installation: 'Installation', react: 'React', chat: 'Chat', themes: 'Theming' })[key] || 'Getting started';
-      document.title = 'Getting started | DAUB Documentation';
+      document.title = 'Getting started | DAUB documentation';
       renderNav();
       if (document.body.dataset.sidebar === 'open') { setSidebar(false, false); $('guide-title').focus(); }
       if (key !== 'getting-started') $(key).scrollIntoView();
@@ -151,14 +155,14 @@
     if (key && key !== slug(selected)) history.replaceState(null, '', location.pathname + location.search + '#' + slug(selected));
     const index = components.indexOf(selected);
     window.scrollTo(0, 0);
-    document.title = selected.name + ' | DAUB Components';
-    $('component-title').textContent = selected.name;
-    $('breadcrumb-name').textContent = selected.name;
+    document.title = displayName(selected) + ' | DAUB components';
+    $('component-title').textContent = displayName(selected);
+    $('breadcrumb-name').textContent = displayName(selected);
     $('component-category').textContent = categories[selected.category] || selected.category;
     renderNotes(selected.notes || '');
     $('component-class').textContent = '.' + selected.class;
     $('component-behavior').textContent = selected.js ? 'JavaScript interaction' : 'CSS component';
-    iframe.title = selected.name + ' interactive preview';
+    iframe.title = displayName(selected) + ' interactive preview';
     iframe.style.height = (['controls', 'foundations'].includes(selected.category) ? 280 : 440) + 'px';
     const options = [new Option('Default', '')];
     for (const mod of selected.modifiers || []) options.push(new Option(mod.replace(/^--?/, '').replaceAll('-', ' '), mod));
@@ -182,7 +186,7 @@
       $(id).hidden = !item;
       if (item) {
         $(id).href = '#' + slug(item);
-        $(id).querySelector('span').textContent = item.name;
+        $(id).querySelector('span').textContent = displayName(item);
       }
     }
     showPanel('preview');
