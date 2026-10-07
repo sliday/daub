@@ -354,6 +354,25 @@ test('handler: prototype keys from Jev never resolve as archetype or theme', asy
   } finally { m.restore(); }
 });
 
+test('handler: non-string choices cannot coerce property lookups', async () => {
+  for (const choice of [['login'], ['nord'], { toString: null }]) {
+    const invalidArchetype = mockJev(({ body }) => Response.json({ answers: jevAnswers(body.questions, { archetype: choice, theme: 'default' }) }));
+    try {
+      const res = await post({ prompt: 'login page' });
+      assert.equal(res.status, 502);
+      assert.match((await res.json()).error, /no usable archetype/);
+    } finally { invalidArchetype.restore(); }
+    const invalidTheme = mockJev(({ body }) => Response.json({ answers: jevAnswers(body.questions, { archetype: 'login', theme: choice }) }));
+    try {
+      const res = await post({ prompt: 'login page' });
+      assert.equal(res.status, 200);
+      const out = await res.json();
+      assert.equal(out.theme_family, 'default');
+      assert.equal(out.theme, 'light');
+    } finally { invalidTheme.restore(); }
+  }
+});
+
 test('handler: Jev failures become 502 with a clear error', async () => {
   const cases = [
     () => { throw new TypeError('network down'); },

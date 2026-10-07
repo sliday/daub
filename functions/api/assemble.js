@@ -75,10 +75,10 @@ export async function handleAssemble({ prompt, apiKey, t0 = Date.now(), timeoutM
 
   const answers = (data && data.answers) || {};
   const arch = answers.archetype;
-  if (!arch || !Object.hasOwn(ARCHETYPES, arch.choice)) {
+  if (!arch || typeof arch.choice !== 'string' || !Object.hasOwn(ARCHETYPES, arch.choice)) {
     return [{ error: 'Decision model failed: response had no usable archetype answer' }, 502];
   }
-  const theme = answers.theme && Object.hasOwn(THEME_FAMILIES, answers.theme.choice) ? answers.theme.choice : 'default';
+  const theme = answers.theme && typeof answers.theme.choice === 'string' && Object.hasOwn(THEME_FAMILIES, answers.theme.choice) ? answers.theme.choice : 'default';
   const darkP = answers.dark && typeof answers.dark.noul === 'number' ? answers.dark.noul : 0;
   const scores = {};
   for (const b of CANDIDATES) {
