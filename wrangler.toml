@@ -8,10 +8,15 @@ pages_build_output_dir = "."
 # OPENVERSE_CLIENT_ID / OPENVERSE_CLIENT_SECRET: optional; /api/photo works without them. A free registered
 #   Openverse app raises the limit from 20/min, 200/day per egress IP to 100/min, 10,000/day.
 #
-# Rate-limit bindings (Pages does not accept [[unsafe.bindings]] in wrangler.toml):
-# Add via CF dashboard → Pages → daub → Settings → Functions → Bindings → Rate Limiting:
-#   RL_WEBLOOK  → 30 req / 60 s  (protects Browserbase)
-#   RL_GENERATE → 60 req / 60 s  (protects OpenRouter)
-#   RL_MCP      → 60 req / 60 s  (protects MCP + OpenRouter)
-#   RL_PHOTO    → 60 req / 60 s  (protects Openverse + Wikimedia Commons; counts /api/photo cache misses only)
-# Handler code fails open when a binding is missing, so deploy stays green.
+# SMART_QUOTA_SALT: optional secret salt for /api/smart quota keys. Set it once; changing it resets that day's counts.
+#
+# Rate limiting: Pages has no rate-limit binding type, so RL_WEBLOOK, RL_GENERATE, RL_MCP and RL_PHOTO
+# are unbound and the handlers skip those checks (they fail open). Before enabling Smart, verify WAF
+# protection for /api/* (60 requests / 10 s per IP, 10 s block) and restrict unprotected Pages hostnames.
+
+# Smart mode daily budget (/api/smart): 10 runs per IP per UTC day. Namespace title: DAUB_SMART_QUOTA.
+# /api/smart answers 503 without this binding; future callers must stay in normal mode.
+# This binding is shared by previews and production; isolate preview storage before Smart preview testing.
+[[kv_namespaces]]
+binding = "SMART_QUOTA"
+id = "1aeec0ea7a8b4a8d92f36574a432cc53"
