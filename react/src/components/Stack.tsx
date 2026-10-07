@@ -16,24 +16,31 @@ export interface StackProps extends ComponentProps<"div"> {
 
 export const Stack = forwardRef<HTMLDivElement, StackProps>(
   (
-    { direction, gap, justify, align, wrap, container, className, ...props },
+    { direction, gap, justify, align, wrap, container, className, style, ...props },
     ref,
   ) => (
     <div
       ref={ref}
       className={cn(
         "db-stack",
+        "db-flex",
+        direction !== "horizontal" && "db-flex--col",
         direction === "horizontal" && "db-stack--h",
         gap != null && `db-gap-${gap}`,
         justify && `db-justify-${justify}`,
         align && `db-align-${align}`,
-        wrap && "db-stack--wrap",
+        wrap && "db-flex--wrap",
         container === true && "db-container",
         container === "wide" && "db-container db-container--wide",
         container === "narrow" && "db-container db-container--narrow",
         className,
       )}
       {...props}
+      style={{
+        justifyContent: justify ? { start: "flex-start", end: "flex-end", center: "center", between: "space-between", around: "space-around" }[justify] : undefined,
+        alignItems: align ? { start: "flex-start", end: "flex-end", center: "center", stretch: "stretch" }[align] : undefined,
+        ...style,
+      }}
     />
   ),
 );

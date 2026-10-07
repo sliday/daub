@@ -1,9 +1,10 @@
-import { useRef } from "react";
+import { forwardRef, type ComponentProps, useContext, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../utils/cn";
-import { useEscapeKey, useFocusTrap } from "../hooks/useOverlay";
+import { useEscapeKey, useFocusTrap, useMergedRefs } from "../hooks/useOverlay";
+import { PortalThemeContext, portalTextStyle } from "./ThemeProvider";
 
-export interface AlertDialogProps {
+export interface AlertDialogProps extends Omit<ComponentProps<"div">, "onClose"> {
   open: boolean;
   onClose: () => void;
   title: string;
@@ -14,7 +15,7 @@ export interface AlertDialogProps {
   variant?: "danger" | "warning" | "info";
 }
 
-export function AlertDialog({
+export const AlertDialog = forwardRef<HTMLDivElement, AlertDialogProps>(function AlertDialog({
   open,
   onClose,
   title,
@@ -23,31 +24,41 @@ export function AlertDialog({
   cancelLabel = "Cancel",
   onConfirm,
   variant = "info",
-}: AlertDialogProps) {
+  ...props
+}, forwardedRef) {
   const ref = useRef<HTMLDivElement>(null);
-  useEscapeKey(onClose, open);
+  const setRef = useMergedRefs(ref, forwardedRef);
+  const theme = useContext(PortalThemeContext);
+  const titleId = useId();
+  const descriptionId = useId();
+  useEscapeKey(onClose, open, ref);
   useFocusTrap(ref, open);
 
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="db-modal-overlay db-modal-overlay--active" onClick={onClose}>
+    <div data-db-react="" data-theme={theme} style={portalTextStyle} className="db-alert-dialog db-alert-dialog--open" onClick={onClose}>
+      <div className="db-alert-dialog__overlay" />
       <div
-        ref={ref}
-        className="db-alert-dialog"
-        onClick={(e) => e.stopPropagation()}
+        {...props}
+        ref={setRef}
+        className={cn("db-alert-dialog__panel", props.className)}
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby={props["aria-labelledby"] ?? (props["aria-label"] ? undefined : titleId)}
+        aria-describedby={[props["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined}
+        tabIndex={-1}
+        onClick={(e) => { props.onClick?.(e); e.stopPropagation(); }}
       >
-        <h3>{title}</h3>
-        {description && <p>{description}</p>}
-        <div className="db-modal__footer">
-          <button className="db-btn db-btn--ghost" onClick={onClose}>
+        <h3 id={titleId} className="db-alert-dialog__title">{title}</h3>
+        {description && <p id={descriptionId} className="db-alert-dialog__desc">{description}</p>}
+        <div className="db-alert-dialog__actions">
+          <button type="button" className="db-btn db-btn--ghost" onClick={onClose}>
             {cancelLabel}
           </button>
           <button
-            className={cn(
-              "db-btn",
-              variant === "danger" ? "db-btn--danger" : "db-btn--primary"
-            )}
+            type="button"
+            className="db-btn db-btn--primary"
             onClick={() => { onConfirm?.(); onClose(); }}
           >
             {confirmLabel}
@@ -57,4 +68,4 @@ export function AlertDialog({
     </div>,
     document.body
   );
-}
+});

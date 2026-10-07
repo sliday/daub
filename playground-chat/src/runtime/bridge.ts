@@ -11,6 +11,7 @@ export interface PlaygroundBridge {
     fastMode: boolean;
   };
   renderSpec: (spec: any, prevSpec?: any) => void;
+  commitSpec: (spec: any, prompt: string) => void;
   postToPreview: (msg: any) => void;
   cleanJSON: (text: string) => string;
   repairJSON: (s: string) => any;
@@ -23,18 +24,14 @@ export interface PlaygroundBridge {
   refreshJsonTree: () => void;
   setJsonValue: (v: string) => void;
   openByokModal: () => void;
-  capturePreview: () => Promise<string>;
-  saveChatState: (history: any[]) => void;
-  streamFetch: (url: string, opts: any, onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, signal?: AbortSignal) => void;
   streamDefault: (messages: any[], onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, model?: string, signal?: AbortSignal) => void;
   streamOpenAI: (messages: any[], onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, signal?: AbortSignal) => void;
   streamAnthropic: (messages: any[], onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, signal?: AbortSignal) => void;
   streamOpenRouter: (messages: any[], onChunk: (s: string) => void, onDone: () => void, onError: (e: any) => void, signal?: AbortSignal) => void;
-  getExamples: () => string[];
   on: (event: string, fn: (data: any) => void) => void;
   emit: (event: string, data: any) => void;
 }
 
-export function getBridge(): PlaygroundBridge {
+export function getBridge(): PlaygroundBridge | undefined {
   return (window as any).__playgroundBridge;
 }

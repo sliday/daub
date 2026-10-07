@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { generateSpec } from './lib/generate.js';
 import { validateSpec } from './lib/validate.js';
 import { renderToHTML, buildPreviewURL, specSummary } from './lib/render.js';
-import { COMP_PROPS, COMP_CATEGORIES, VALID_TYPES } from './lib/prompt.js';
+import { COMP_PROPS, COMP_CATEGORIES, VALID_TYPES, THEMES } from './lib/prompt.js';
 
 const server = new McpServer({
   name: 'daub-mcp',
@@ -84,10 +84,7 @@ server.tool(
     const result = {
       categories: catalog,
       all_types: VALID_TYPES,
-      themes: {
-        light: ['light', 'bone', 'material-light', 'github', 'nord-light', 'solarized-light', 'catppuccin', 'gruvbox-light', 'paper', 'grunge-light'],
-        dark: ['dark', 'material-dark', 'github-dark', 'nord', 'solarized-dark', 'catppuccin-dark', 'gruvbox-dark', 'dracula', 'grunge-dark', 'synthwave', 'tokyo-night'],
-      },
+      themes: THEMES,
       spec_format: {
         description: 'DAUB specs use a flat element map with ID references',
         format: '{"theme":"<name>","root":"<element-id>","elements":{"<id>":{"type":"<ComponentType>","props":{...},"children":["<child-id>"]}}}',

@@ -1,4 +1,19 @@
+function DAUB_RENDER_FACTORY() {
     var MAX_DEPTH = 20;
+    var THEMES = {
+      light: ['light','grunge-light','solarized','ink-light','ember-light','bone','dracula-light','nord-light','one-dark-light','monokai-light','gruvbox-light','night-owl-light','github','catppuccin','tokyo-night-light','material-light','monospace-light','synthwave-light','shades-of-purple-light','ayu','horizon-light'],
+      dark: ['dark','grunge-dark','solarized-dark','ink','ember','bone-dark','dracula','nord','one-dark','monokai','gruvbox','night-owl','github-dark','catppuccin-dark','tokyo-night','material','monospace','synthwave','shades-of-purple','ayu-dark','horizon']
+    };
+
+    function normalizeTheme(theme) {
+      return THEMES.light.concat(THEMES.dark).indexOf(theme) >= 0 ? theme : 'light';
+    }
+
+    function serializeSpec(spec) {
+      return JSON.stringify(spec).replace(/[<>&\u2028\u2029]/g, function(c) {
+        return '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0');
+      });
+    }
     var RENDERING = Object.create(null); // element ids on the current render path (see specRef)
 
     // Safe HTML-entity escaping via textContent
@@ -6,7 +21,7 @@
       if (s == null) return '';
       var d = document.createElement('span');
       d.textContent = String(s);
-      return d.innerHTML;
+      return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
     
     // Sanitize HTML: allowlisted tags/attrs, strip event handlers & javascript: URIs
@@ -30,7 +45,7 @@
             if (aname.indexOf('on') === 0) continue;
             if (allowed.indexOf(aname) < 0) continue;
             var v = a.value;
-            if ((aname === 'href' || aname === 'src') && /^javascript:/i.test(v.replace(/[\u0000- ]/g, ''))) continue;
+            if ((aname === 'href' || aname === 'src') && !isSafeUrl(v)) continue;
             attrs += ' ' + aname + '="' + esc(v) + '"';
           }
           if (tag === 'a') attrs += ' rel="noopener" target="_blank"';
@@ -122,9 +137,20 @@
     // Guard against javascript: and data: URLs from AI-generated content
     function isSafeUrl(url) {
       if (!url || typeof url !== 'string') return false;
-      var trimmed = url.replace(/[\u0000- ]/g, '').toLowerCase();
+      var trimmed = url.replace(/[\u0000-\u0020\u007f]/g, '').toLowerCase();
       if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) return false;
       return true;
+    }
+
+    function setControlProps(el, p, label) {
+      if (p.id) el.id = p.id;
+      if (p.name) el.name = p.name;
+      if (p.label || p.ariaLabel || p['aria-label'] || label) el.setAttribute('aria-label', p['aria-label'] || p.ariaLabel || p.label || label);
+      if (p.disabled) el.disabled = true;
+      if (p.required) el.required = true;
+      if (p.readOnly) el.readOnly = true;
+      if (p.value != null && typeof p.value !== 'object') el.value = p.value;
+      if (p.error) el.setAttribute('aria-invalid', 'true');
     }
 
     // Cross-realm safe plain-object test (specs may come from a parent frame)
@@ -531,13 +557,13 @@
       return config;
     }
     
-    // ---- Component Renderers (67 types) ----
+    // ---- Component Renderers ----
 
     function renderElement(elements, id, depth) {
       if (depth > MAX_DEPTH) return document.createTextNode('[max depth]');
-      var def = elements[id];
+      var def = Object.prototype.hasOwnProperty.call(elements, id) ? elements[id] : null;
       if (!def) return null;
-      if (RENDERING[id]) return null; // cycle: an element listed inside itself (or a descendant)
+      if (RENDERING[id]) return document.createTextNode('[max depth]'); // cycle: an element listed inside itself (or a descendant)
     
       // Encode visible expression as data attribute for iframe-side evaluation
       if (def.visible != null) {
@@ -545,7 +571,7 @@
         // The iframe will evaluate this and toggle display
       }
     
-      var render = RENDERERS[def.type];
+      var render = Object.prototype.hasOwnProperty.call(RENDERERS, def.type) ? RENDERERS[def.type] : null;
       if (!render) {
         var el = document.createElement('div');
         el.className = 'db-alert db-alert--warning';
@@ -578,7 +604,12 @@
         RENDERING[id]--;
       }
       if (el && el.setAttribute) {
+        var buttons = el.querySelectorAll('button');
+        if (el.tagName === 'BUTTON' && !el.hasAttribute('type')) el.type = 'button';
+        buttons.forEach(function(button) { if (!button.hasAttribute('type') && !button.closest('.pg-custom-html')) button.type = 'button'; });
+        el.querySelectorAll('[data-lucide]').forEach(function(icon) { icon.setAttribute('aria-hidden', 'true'); });
         el.setAttribute('data-spec-id', id);
+        if (def.type === 'Message' && !el.hasAttribute('data-db-message-id')) el.setAttribute('data-db-message-id', id);
         // Encode declarative state metadata as data attributes for iframe runtime
         if (def.visible != null) {
           el.setAttribute('data-ds-visible', JSON.stringify(def.visible));
@@ -617,7 +648,7 @@
     // Parent of each element some other element references (a children entry or a prop holding its id; trigger-like
     // props excluded), for the orphan pass
     function orphanParents(els) {
-      var parentOf = {};
+      var parentOf = Object.create(null);
       Object.keys(els).forEach(function(pid) {
         (function refs(v, depth) {
           if (v == null || depth > 6) return;
@@ -632,7 +663,7 @@
     // Each one renders through its top-most unplaced ancestor, so a Modal's inline children render inside the Modal
     // instead of first standing alone and then again inside it. Returns [{id, node}] for each appended element
     function renderOrphans(spec, container) {
-      var els = spec.elements, rendered = {}, out = [];
+      var els = spec.elements, rendered = Object.create(null), out = [];
       container.querySelectorAll('[data-spec-id]').forEach(function(n) { rendered[n.getAttribute('data-spec-id')] = true; });
       var parentOf = orphanParents(els);
       Object.keys(els).forEach(function(id) {
@@ -718,7 +749,10 @@
       if (p.columns === 'sidebar-main') el.classList.add('db-grid--sidebar-main');
       else if (cols >= 2 && cols <= 6) el.classList.add('db-grid--' + cols);
       else if (cols > 6) el.style.gridTemplateColumns = 'repeat(' + Math.min(cols, 12) + ', minmax(0, 1fr))';
-      if (p.gap) el.classList.add('db-gap-' + Math.max(1, Math.min(6, p.gap)));
+      if (p.gap != null) {
+        if (Number(p.gap) === 0) el.style.gap = 'var(--db-space-0)';
+        else el.classList.add('db-gap-' + Math.max(1, Math.min(6, p.gap)));
+      }
       if (p.align === 'center') el.style.justifyItems = 'center';
       else if (p.align === 'end') el.style.justifyItems = 'end';
       (ch || []).forEach(function(id) {
@@ -769,7 +803,7 @@
       var cl = String(p.class || '').split(/\s+/);
       if (cl.indexOf('line-through') >= 0) el.style.textDecoration = 'line-through';
       if (cl.indexOf('text-muted') >= 0 || cl.indexOf('text-muted-foreground') >= 0) el.classList.add('db-text-muted');
-      el.textContent = c || '';
+      el.textContent = c != null ? c : '';
       return el;
     };
     
@@ -798,12 +832,17 @@
     // -- Button --
     RENDERERS.Button = function(p) {
       var el = document.createElement('button');
+      el.type = p.type === 'submit' || p.type === 'reset' ? p.type : 'button';
+      if (p.disabled || p.variant === 'disabled') el.disabled = true;
+      if (p.ariaLabel) el.setAttribute('aria-label', p.ariaLabel);
+      if (p.pressed != null) el.setAttribute('aria-pressed', String(!!p.pressed));
       var cls = 'db-btn';
       var bv = knownMod(p.variant, ['primary', 'secondary', 'ghost', 'icon-danger', 'icon-success', 'icon-accent'], { outline: 'secondary', 'default': 'secondary', link: 'ghost', destructive: 'icon-danger', danger: 'icon-danger' });
       var bs = knownMod(p.size, ['sm', 'lg', 'icon']);
       if (bv) cls += ' db-btn--' + bv;
       if (bs) cls += ' db-btn--' + bs;
       if (p.loading) { cls += ' db-btn--loading'; el.disabled = true; }
+      if (p.loading) el.setAttribute('aria-busy', 'true');
       el.className = cls;
       var ico = mkIcon(p.icon, 16);
       if (ico) {
@@ -818,6 +857,144 @@
     // -- ButtonGroup --
     RENDERERS.ButtonGroup = function(p, ch, els, d) {
       var el = mkEl('div', 'db-btn-group');
+      el.appendChild(renderChildren(els, ch, d));
+      return el;
+    };
+
+    RENDERERS.CheckboxGroup = function(p, ch, els, d) {
+      var el = mkEl('div', 'db-checkbox-group' + (p.inline ? ' db-checkbox-group--inline' : ''));
+      el.setAttribute('role', 'group');
+      if (p.label) {
+        var label = mkEl('span', 'db-checkbox-group__label', p.label);
+        label.id = 'checkbox-group-' + Math.random().toString(36).slice(2,8);
+        el.setAttribute('aria-labelledby', label.id);
+        el.appendChild(label);
+      } else el.setAttribute('aria-label', p['aria-label'] || p.ariaLabel || 'Options');
+      el.appendChild(renderChildren(els, ch, d));
+      if (p.helper) {
+        var helper = mkEl('span', 'db-checkbox-group__helper', p.helper);
+        helper.id = 'checkbox-helper-' + Math.random().toString(36).slice(2,8);
+        el.setAttribute('aria-describedby', helper.id);
+        el.appendChild(helper);
+      }
+      return el;
+    };
+
+    RENDERERS.Fieldset = function(p, ch, els, d) {
+      var el = mkEl('fieldset', 'db-fieldset');
+      el.disabled = !!p.disabled;
+      if (p.legend) el.appendChild(mkEl('legend', 'db-fieldset__legend', p.legend));
+      var content = mkEl('div', 'db-fieldset__content');
+      content.appendChild(renderChildren(els, ch, d));
+      el.appendChild(content);
+      if (p.helper) {
+        var helper = mkEl('span', 'db-fieldset__helper', p.helper);
+        helper.id = 'fieldset-helper-' + Math.random().toString(36).slice(2,8);
+        el.setAttribute('aria-describedby', helper.id);
+        el.appendChild(helper);
+      }
+      return el;
+    };
+
+    RENDERERS.Frame = function(p, ch, els, d) {
+      var el = mkEl('div', 'db-frame' + (p.flush ? ' db-frame--flush' : ''));
+      ['header', 'body', 'footer'].forEach(function(slot) {
+        var value = slot === 'body' ? ch : p[slot];
+        if (slot !== 'body' && value == null) return;
+        var part = mkEl('div', 'db-frame__' + slot);
+        if (Array.isArray(value)) part.appendChild(renderChildren(els, value, d));
+        else part.textContent = value;
+        el.appendChild(part);
+      });
+      return el;
+    };
+
+    RENDERERS.Group = function(p, ch, els, d) {
+      var el = mkEl('div', 'db-group' + (p.attached ? ' db-group--attached' : '') + (p.vertical ? ' db-group--vertical' : ''));
+      el.setAttribute('role', 'group');
+      el.setAttribute('aria-label', p['aria-label'] || p.ariaLabel || p.label || 'Controls');
+      el.appendChild(renderChildren(els, ch, d));
+      return el;
+    };
+
+    RENDERERS.Meter = function(p) {
+      var min = Number.isFinite(p.min) ? p.min : 0;
+      var max = Number.isFinite(p.max) && p.max > min ? p.max : Math.max(100, min + 1);
+      var value = Math.max(min, Math.min(max, Number.isFinite(p.value) ? p.value : 0));
+      var status = p.status === 'warning' || p.status === 'error' ? ' db-meter--' + p.status : '';
+      var el = mkEl('div', 'db-meter' + status);
+      el.setAttribute('role', 'meter');
+      el.setAttribute('aria-label', p['aria-label'] || p.ariaLabel || p.label || 'Measurement');
+      el.setAttribute('aria-valuemin', String(min));
+      el.setAttribute('aria-valuemax', String(max));
+      el.setAttribute('aria-valuenow', String(value));
+      el.style.setProperty('--db-meter', ((value - min) / (max - min) * 100) + '%');
+      el.appendChild(mkEl('div', 'db-meter__bar'));
+      return el;
+    };
+
+    RENDERERS.NumberField = function(p) {
+      var el = mkEl('div', 'db-number-field');
+      var label = p['aria-label'] || p.ariaLabel || p.label || 'Value';
+      el.setAttribute('role', 'group');
+      el.setAttribute('aria-label', label);
+      var decrease = mkEl('button', 'db-btn db-btn--secondary db-number-field__btn', '-');
+      var increase = mkEl('button', 'db-btn db-btn--secondary db-number-field__btn', '+');
+      decrease.type = increase.type = 'button';
+      decrease.setAttribute('aria-label', 'Decrease ' + label.toLowerCase());
+      increase.setAttribute('aria-label', 'Increase ' + label.toLowerCase());
+      var input = mkEl('input', 'db-input');
+      input.type = 'number';
+      if (Number.isFinite(p.min)) input.min = p.min;
+      if (Number.isFinite(p.max)) input.max = p.max;
+      input.step = Number.isFinite(p.step) && p.step > 0 ? p.step : 1;
+      setControlProps(input, p, label);
+      input.value = p.value != null && typeof p.value !== 'object' ? p.value : p.defaultValue != null ? p.defaultValue : p.min != null ? p.min : 0;
+      function sync() {
+        var value = input.valueAsNumber;
+        if (Number.isFinite(value)) {
+          if (Number.isFinite(p.min)) value = Math.max(p.min, value);
+          if (Number.isFinite(p.max)) value = Math.min(p.max, value);
+          input.value = value;
+        }
+        decrease.disabled = !!(p.disabled || p.readOnly || (Number.isFinite(p.min) && value <= p.min));
+        increase.disabled = !!(p.disabled || p.readOnly || (Number.isFinite(p.max) && value >= p.max));
+      }
+      decrease.addEventListener('click', function() { input.stepDown(); input.dispatchEvent(new Event('input', { bubbles: true })); });
+      increase.addEventListener('click', function() { input.stepUp(); input.dispatchEvent(new Event('input', { bubbles: true })); });
+      input.addEventListener('input', sync);
+      sync();
+      el.appendChild(decrease);
+      el.appendChild(input);
+      el.appendChild(increase);
+      return el;
+    };
+
+    RENDERERS.PreviewCard = function(p, ch, els, d) {
+      var el = mkEl('div', 'db-preview-card');
+      var trigger = mkEl(Array.isArray(p.trigger) ? 'span' : 'button', Array.isArray(p.trigger) ? 'db-preview-card__trigger' : 'db-btn db-btn--ghost db-preview-card__trigger');
+      if (Array.isArray(p.trigger)) trigger.appendChild(renderChildren(els, p.trigger, d));
+      else { trigger.type = 'button'; trigger.textContent = p.trigger || p.title || 'Preview'; }
+      el.appendChild(trigger);
+      var content = mkEl('div', 'db-preview-card__content');
+      if (p.media && (Array.isArray(p.media) || isSafeUrl(p.media))) {
+        var media = mkEl('div', 'db-preview-card__media');
+        if (Array.isArray(p.media)) media.appendChild(renderChildren(els, p.media, d));
+        else { var image = document.createElement('img'); image.src = p.media; image.alt = p.mediaAlt || ''; media.appendChild(image); }
+        content.appendChild(media);
+      }
+      if (p.title) content.appendChild(mkEl('div', 'db-preview-card__title', p.title));
+      if (p.description) content.appendChild(mkEl('div', 'db-preview-card__desc', p.description));
+      content.appendChild(renderChildren(els, ch, d));
+      el.appendChild(content);
+      return el;
+    };
+
+    RENDERERS.Toolbar = function(p, ch, els, d) {
+      var el = mkEl('div', 'db-toolbar' + (p.vertical ? ' db-toolbar--vertical' : ''));
+      el.setAttribute('role', 'toolbar');
+      el.setAttribute('aria-label', p['aria-label'] || p.ariaLabel || p.label || 'Tools');
+      el.setAttribute('aria-orientation', p.vertical ? 'vertical' : 'horizontal');
       el.appendChild(renderChildren(els, ch, d));
       return el;
     };
@@ -837,16 +1014,31 @@
         inp.className = 'db-field__input';
         inp.type = p.type || 'text';
         inp.placeholder = p.placeholder || '';
+        setControlProps(inp, p);
         // value is the text the field holds (placeholder only hints); as an attribute it survives serialized HTML
         if (isText(p.value)) inp.setAttribute('value', String(p.value));
         if (lbl) {
-          inp.id = 'db-field-' + Math.random().toString(36).slice(2, 8);
+          inp.id = p.id || 'db-field-' + Math.random().toString(36).slice(2, 8);
           lbl.htmlFor = inp.id;
         }
         el.appendChild(inp);
       }
+      var control = el.querySelector('input,select,textarea,button');
+      if (control && lbl) {
+        if (!control.id) control.id = 'db-field-' + Math.random().toString(36).slice(2, 8);
+        el.querySelectorAll('label').forEach(function(label) {
+          if (label !== lbl && label.htmlFor === control.id) label.remove();
+        });
+        lbl.htmlFor = control.id;
+        control.removeAttribute('aria-label');
+      }
+      if (control && p.error) control.setAttribute('aria-invalid', 'true');
       if (p.helper) {
         var help = mkEl('span', 'db-field__helper', p.helper);
+        if (control) {
+          help.id = 'db-helper-' + Math.random().toString(36).slice(2, 8);
+          control.setAttribute('aria-describedby', [control.getAttribute('aria-describedby'), help.id].filter(Boolean).join(' '));
+        }
         el.appendChild(help);
       }
       return el;
@@ -859,6 +1051,7 @@
       el.className = 'db-input' + (isz ? ' db-input--' + isz : '') + (p.error ? ' db-input--error' : '');
       el.type = p.type || 'text';
       el.placeholder = p.placeholder || '';
+      setControlProps(el, p, 'Text input');
       if (isText(p.value)) el.setAttribute('value', String(p.value));
       return withLabel(el, p.label, true);
     };
@@ -880,7 +1073,7 @@
     RENDERERS.InputIcon = function(p, ch, els, d) {
       var el = mkEl('div', 'db-input-icon' + (p.right ? ' db-input-icon--right' : ''));
       var ico = mkIcon(p.icon, 16);
-      if (ico) el.appendChild(ico);
+      if (ico) { ico.classList.add('db-input-icon__icon'); el.appendChild(ico); }
       el.appendChild(renderChildren(els, ch, d));
       return el;
     };
@@ -898,11 +1091,13 @@
       inp.className = 'db-input';
       inp.type = 'search';
       inp.placeholder = p.placeholder || 'Search...';
+      setControlProps(inp, p, 'Search');
       el.appendChild(inp);
       var clr = document.createElement('button');
       clr.className = 'db-search__clear';
       clr.type = 'button';
       clr.setAttribute('aria-label', 'Clear search');
+      clr.textContent = '\u00D7';
       el.appendChild(clr);
       return el;
     };
@@ -913,6 +1108,7 @@
       el.className = 'db-textarea' + (p.error ? ' db-textarea--error' : '');
       el.placeholder = p.placeholder || '';
       if (p.rows) el.rows = p.rows;
+      setControlProps(el, p, 'Message');
       if (isText(p.value)) el.textContent = String(p.value);
       return el;
     };
@@ -923,6 +1119,7 @@
       var inp = document.createElement('input');
       inp.className = 'db-checkbox__input';
       inp.type = 'checkbox';
+      if (p.disabled) inp.disabled = true;
       // Serialized HTML keeps state only in attributes; the property alone is dropped
       if (p.checked) { inp.checked = true; inp.setAttribute('checked', ''); }
       el.appendChild(inp);
@@ -946,14 +1143,17 @@
     // -- RadioGroup --
     RENDERERS.RadioGroup = function(p) {
       var el = mkEl('div', 'db-radio-group');
-      var name = 'rg-' + Math.random().toString(36).slice(2,8);
+      el.setAttribute('role', 'group');
+      if (p.label) el.setAttribute('aria-label', p.label);
+      var name = p.name || 'rg-' + Math.random().toString(36).slice(2,8);
       toOpts(p.options).forEach(function(opt) {
         var lbl = mkEl('label', 'db-radio');
         var inp = document.createElement('input');
         inp.className = 'db-radio__input';
         inp.type = 'radio';
         inp.name = name;
-        inp.value = opt.value || '';
+        inp.value = opt.value != null ? opt.value : '';
+        if (p.disabled || opt.disabled) inp.disabled = true;
         if (opt.value === p.selected) { inp.checked = true; inp.setAttribute('checked', ''); }
         lbl.appendChild(inp);
         lbl.appendChild(mkEl('span', 'db-radio__circle'));
@@ -968,6 +1168,10 @@
       var el = mkEl('div', 'db-switch');
       el.setAttribute('role', 'switch');
       el.tabIndex = 0;
+      if (p.disabled) {
+        el.setAttribute('aria-disabled', 'true');
+        el.tabIndex = -1;
+      }
       el.setAttribute('aria-checked', p.checked ? 'true' : 'false');
       var track = mkEl('span', 'db-switch__track');
       track.appendChild(mkEl('span', 'db-switch__thumb'));
@@ -989,6 +1193,7 @@
       inp.min = p.min != null ? p.min : 0;
       inp.max = p.max != null ? p.max : 100;
       inp.value = p.value != null ? p.value : 50;
+      setControlProps(inp, p, 'Value');
       if (p.step) inp.step = p.step;
       el.appendChild(inp);
       return el;
@@ -998,6 +1203,7 @@
     RENDERERS.Toggle = function(p) {
       var el = document.createElement('button');
       el.className = 'db-toggle' + (p.size === 'sm' ? ' db-toggle--sm' : '');
+      if (p.disabled) el.disabled = true;
       el.setAttribute('aria-pressed', p.pressed ? 'true' : 'false');
       el.textContent = p.label || '';
       return el;
@@ -1006,6 +1212,9 @@
     // -- ToggleGroup --
     RENDERERS.ToggleGroup = function(p, ch, els, d) {
       var el = mkEl('div', 'db-toggle-group');
+      el.setAttribute('role', 'group');
+      if (p.label) el.setAttribute('aria-label', p.label);
+      if (p.multi) el.setAttribute('data-multi', '');
       toOpts(p.options).forEach(function(opt) {
         var btn = document.createElement('button');
         btn.className = 'db-toggle';
@@ -1027,13 +1236,14 @@
       }
       var sel = document.createElement('select');
       sel.className = 'db-select__input';
+      setControlProps(sel, p, p.label ? null : 'Select option');
       if (lbl) {
-        sel.id = 'db-select-' + Math.random().toString(36).slice(2, 8);
+        sel.id = p.id || 'db-select-' + Math.random().toString(36).slice(2, 8);
         lbl.htmlFor = sel.id;
       }
       toOpts(p.options).forEach(function(o) {
         var opt = document.createElement('option');
-        opt.value = o.value || '';
+        opt.value = o.value != null ? o.value : '';
         opt.textContent = o.label || '';
         if (o.value === p.selected) opt.selected = true;
         sel.appendChild(opt);
@@ -1048,6 +1258,8 @@
       var trigger = document.createElement('button');
       trigger.className = 'db-custom-select__trigger';
       trigger.type = 'button';
+      if (p.label) trigger.setAttribute('aria-label', p.label);
+      if (p.disabled) trigger.disabled = true;
       var selectedOpt = toOpts(p.options).filter(function(o) { return o.selected; })[0];
       var triggerText = mkEl('span', selectedOpt ? 'db-custom-select__value' : 'db-custom-select__placeholder', selectedOpt ? selectedOpt.label : (p.placeholder || 'Select...'));
       trigger.appendChild(triggerText);
@@ -1065,12 +1277,15 @@
         var searchInp = document.createElement('input');
         searchInp.type = 'text';
         searchInp.placeholder = 'Search...';
+        searchInp.setAttribute('aria-label', 'Search options');
         searchDiv.appendChild(searchInp);
         dd.appendChild(searchDiv);
       }
       toOpts(p.options).forEach(function(o) {
         var optCls = 'db-custom-select__option' + (o.selected ? ' db-custom-select__option--selected' : '') + (o.disabled ? ' db-custom-select__option--disabled' : '');
-        dd.appendChild(mkEl('div', optCls, o.label || ''));
+        var option = mkEl('div', optCls, o.label || '');
+        option.setAttribute('data-value', o.value != null ? o.value : (o.label || ''));
+        dd.appendChild(option);
       });
       el.appendChild(dd);
       return el;
@@ -1089,17 +1304,23 @@
     // -- Label --
     RENDERERS.Label = function(p) {
       var el = mkEl('label', 'db-label' + (p.required ? ' db-label--required' : '') + (p.optional ? ' db-label--optional' : ''), p.text || '');
+      if (p.for || p.htmlFor) el.htmlFor = p.for || p.htmlFor;
       return el;
     };
     
     // -- Spinner --
     RENDERERS.Spinner = function(p) {
-      return mkEl('span', 'db-spinner' + (p.size ? ' db-spinner--' + p.size : ''));
+      var el = mkEl('span', 'db-spinner' + (p.size ? ' db-spinner--' + p.size : ''));
+      el.setAttribute('role', 'status');
+      el.setAttribute('aria-label', p.label || 'Loading');
+      return el;
     };
     
     // -- InputOTP --
     RENDERERS.InputOTP = function(p) {
       var el = mkEl('div', 'db-otp');
+      el.setAttribute('role', 'group');
+      el.setAttribute('aria-label', p.label || 'One-time code');
       var len = p.length || 6;
       var half = Math.ceil(len / 2);
       for (var i = 0; i < len; i++) {
@@ -1111,6 +1332,7 @@
         inp.type = 'text';
         inp.inputMode = 'numeric';
         inp.maxLength = 1;
+        inp.setAttribute('aria-label', 'Digit ' + (i + 1));
         el.appendChild(inp);
       }
       return el;
@@ -1123,11 +1345,16 @@
       list.setAttribute('role', 'tablist');
       var tabs = toArr(p.tabs);
       var activeIdx = 0;
+      tabs.forEach(function(t, i) { if (t.id === p.active) activeIdx = i; });
+      var tabsId = 'tabs-' + Math.random().toString(36).slice(2,8);
       tabs.forEach(function(t, i) {
-        if (t.id === p.active) activeIdx = i;
         var btn = document.createElement('button');
         btn.className = 'db-tabs__tab';
-        if (t.id === p.active) btn.setAttribute('aria-selected', 'true');
+        btn.id = tabsId + '-tab-' + i;
+        btn.setAttribute('role', 'tab');
+        if (i < ch.length) btn.setAttribute('aria-controls', tabsId + '-panel-' + i);
+        btn.setAttribute('aria-selected', String(i === activeIdx));
+        btn.tabIndex = i === activeIdx ? 0 : -1;
         btn.textContent = t.label || '';
         list.appendChild(btn);
       });
@@ -1135,6 +1362,9 @@
       // No children: a filter strip (Tabs(["All", "Done"], "All")) with no panels, not "All content" filler
       ch.forEach(function(cid, i) {
         var panel = mkEl('div', 'db-tabs__panel');
+        panel.id = tabsId + '-panel-' + i;
+        panel.setAttribute('role', 'tabpanel');
+        if (i < tabs.length) panel.setAttribute('aria-labelledby', tabsId + '-tab-' + i);
         if (i !== activeIdx) panel.hidden = true;
         var child = renderElement(els, cid, d + 1);
         if (child) panel.appendChild(child);
@@ -1177,22 +1407,30 @@
       var el = document.createElement('nav');
       el.className = 'db-pagination';
       el.setAttribute('aria-label', 'Pagination');
-      var total = Math.ceil((p.total || 1) / (p.perPage || 10));
-      var cur = p.current || 1;
+      var total = Math.max(1, Math.ceil((Number(p.total) || 1) / Math.max(1, Number(p.perPage) || 10)));
+      var cur = Math.max(1, Math.min(total, Number(p.current) || 1));
       var prev = document.createElement('button');
       prev.className = 'db-pagination__btn';
       prev.textContent = '\u00AB';
+      prev.setAttribute('aria-label', 'Previous page');
       if (cur <= 1) prev.disabled = true;
       el.appendChild(prev);
-      for (var i = 1; i <= Math.min(total, 5); i++) {
+      var start = Math.max(1, Math.min(cur - 2, total - 4));
+      var end = Math.min(total, start + 4);
+      if (start > 1) {
+        var first = mkEl('button', 'db-pagination__btn', '1');
+        el.appendChild(first);
+        if (start > 2) el.appendChild(mkEl('span', 'db-pagination__ellipsis', '...'));
+      }
+      for (var i = start; i <= end; i++) {
         var btn = document.createElement('button');
         btn.className = 'db-pagination__btn';
         btn.textContent = String(i);
         if (i === cur) btn.setAttribute('aria-current', 'page');
         el.appendChild(btn);
       }
-      if (total > 5) {
-        el.appendChild(mkEl('span', 'db-pagination__ellipsis', '...'));
+      if (end < total) {
+        if (end < total - 1) el.appendChild(mkEl('span', 'db-pagination__ellipsis', '...'));
         var last = document.createElement('button');
         last.className = 'db-pagination__btn';
         last.textContent = String(total);
@@ -1201,6 +1439,7 @@
       var next = document.createElement('button');
       next.className = 'db-pagination__btn';
       next.textContent = '\u00BB';
+      next.setAttribute('aria-label', 'Next page');
       if (cur >= total) next.disabled = true;
       el.appendChild(next);
       return el;
@@ -1231,12 +1470,12 @@
         var a = document.createElement('a');
         a.className = 'db-nav-menu__item' + (item.active ? ' db-nav-menu__item--active' : '');
         a.href = isSafeUrl(item.href) ? item.href : '#';
+        if (item.active) a.setAttribute('aria-current', 'page');
         a.textContent = item.label || '';
         el.appendChild(a);
       });
       return el;
     };
-    
     // -- Navbar --
     RENDERERS.Navbar = function(p, ch, els, d) {
       var el = document.createElement('nav');
@@ -1272,10 +1511,14 @@
     RENDERERS.Menubar = function(p) {
       var el = mkEl('div', 'db-menubar');
       toArr(p.items).forEach(function(item) {
-        var btn = document.createElement('button');
+        var btn = document.createElement(item.dropdown ? 'div' : 'button');
         btn.className = 'db-menubar__item';
         btn.textContent = item.label || '';
         if (item.dropdown) {
+          btn.tabIndex = 0;
+          btn.setAttribute('role', 'menuitem');
+          btn.setAttribute('aria-haspopup', 'menu');
+          btn.setAttribute('aria-expanded', 'false');
           var dd = mkEl('div', 'db-menubar__dropdown');
           toArr(item.dropdown).forEach(function(dItem) {
             dd.appendChild(mkEl('button', 'db-dropdown__item', dItem.label || ''));
@@ -1314,6 +1557,8 @@
           var a = document.createElement('a');
           a.className = 'db-sidebar__item' + (item.active ? ' db-sidebar__item--active' : '');
           a.setAttribute('data-tooltip', item.label || '');
+          a.setAttribute('aria-label', item.label || '');
+          if (item.active) a.setAttribute('aria-current', 'page');
           a.href = isSafeUrl(item.href) ? item.href : '#';
           var ico = mkIcon(item.icon, 16);
           if (ico) a.appendChild(ico);
@@ -1333,7 +1578,8 @@
       toArr(p.items).forEach(function(item) {
         var a = document.createElement('a');
         a.className = 'db-bottom-nav__item' + (item.active ? ' db-bottom-nav__item--active' : '');
-        a.href = '#';
+        a.href = isSafeUrl(item.href) ? item.href : '#';
+        if (item.active) a.setAttribute('aria-current', 'page');
         var ico = mkIcon(item.icon, 20);
         if (ico) a.appendChild(ico);
         a.appendChild(mkEl('span', null, item.label || ''));
@@ -1441,6 +1687,7 @@
         var chk = document.createElement('input');
         chk.className = 'db-data-table__check';
         chk.type = 'checkbox';
+        chk.setAttribute('aria-label', 'Select all rows');
         thChk.appendChild(chk);
         headRow.appendChild(thChk);
       }
@@ -1453,13 +1700,14 @@
       thead.appendChild(headRow);
       el.appendChild(thead);
       var tbody = document.createElement('tbody');
-      rows.forEach(function(r) {
+      rows.forEach(function(r, rowIndex) {
         var tr = document.createElement('tr');
         if (p.selectable) {
           var tdChk = document.createElement('td');
           var chk2 = document.createElement('input');
           chk2.className = 'db-data-table__check';
           chk2.type = 'checkbox';
+          chk2.setAttribute('aria-label', 'Select row ' + (rowIndex + 1));
           tdChk.appendChild(chk2);
           tr.appendChild(tdChk);
         }
@@ -1470,7 +1718,7 @@
           var refs = cellRefs(raw, els), act = refs ? null : actionCell(c, raw);
           if (refs || act) { td.appendChild(refs ? cellElements(els, refs, d) : act); tr.appendChild(td); return; }
           // Flatten object cell values (e.g. Badge specs) to string
-          var val = (raw && typeof raw === 'object') ? (raw.label || raw.text || raw.content || raw.value || '') : (raw == null ? '' : String(raw));
+          var val = (raw && typeof raw === 'object') ? (raw.label != null ? raw.label : raw.text != null ? raw.text : raw.content != null ? raw.content : raw.value != null ? raw.value : '') : (raw != null ? raw : '');
           // Auto-detect status badges
           if (/^(active|completed|shipped|approved|paid|live|verified|published|resolved)$/i.test(val)) {
             td.appendChild(mkEl('span', 'db-badge db-badge--new', val));
@@ -1536,7 +1784,7 @@
         img.src = p.src;
         img.alt = '';
         el.appendChild(img);
-      } else if (!p.src) {
+      } else {
         // No initials: child elements (a Text "DP") fill the circle instead of "?"
         if (!p.initials && toArr(ch).length) el.appendChild(renderChildren(els, ch, d));
         else el.textContent = p.initials || '?';
@@ -1561,7 +1809,7 @@
         if (i >= max) return;
         var a = e.data;
         var av = mkEl('div', 'db-avatar db-avatar--md');
-        if (a.src) {
+        if (a.src && isSafeUrl(a.src)) {
           var img = document.createElement('img');
           img.src = a.src;
           img.alt = '';
@@ -1581,14 +1829,21 @@
     RENDERERS.Calendar = function(p) {
       var el = mkEl('div', 'db-calendar');
       var now = new Date();
-      var selDate = p.selected ? new Date(p.selected) : null;
-      var todayDate = p.today ? new Date(p.today) : now;
+      function parseDate(value) {
+        if (!value) return null;
+        var parts = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        var date = parts ? new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3])) : new Date(value);
+        return isNaN(date.getTime()) ? null : date;
+      }
+      var selDate = parseDate(p.selected);
+      var todayDate = parseDate(p.today) || now;
       var viewDate = selDate || todayDate;
       var year = viewDate.getFullYear(), month = viewDate.getMonth();
       var hdr = mkEl('div', 'db-calendar__header');
       var prevBtn = document.createElement('button');
       prevBtn.className = 'db-calendar__nav';
       prevBtn.type = 'button';
+      prevBtn.setAttribute('aria-label', 'Previous month');
       var prevIco = document.createElement('i');
       prevIco.setAttribute('data-lucide', 'chevron-left');
       prevIco.style.width = '14px';
@@ -1600,6 +1855,7 @@
       var nextBtn = document.createElement('button');
       nextBtn.className = 'db-calendar__nav';
       nextBtn.type = 'button';
+      nextBtn.setAttribute('aria-label', 'Next month');
       var nextIco = document.createElement('i');
       nextIco.setAttribute('data-lucide', 'chevron-right');
       nextIco.style.width = '14px';
@@ -1652,9 +1908,11 @@
     RENDERERS.Chart = function(p) {
       var wrap = document.createElement('div');
       var bars = chartBars(p);
-      var maxVal = Math.max.apply(null, bars.map(function(b) { return toNum(b.max) || toNum(b.value) || 100; }));
+      var maxVal = Math.max.apply(null, bars.map(function(b) { return b.max != null ? toNum(b.max) : toNum(b.value); }));
       if (maxVal <= 0) maxVal = 100;
       var chart = mkEl('div', 'db-chart');
+      chart.setAttribute('role', 'img');
+      chart.setAttribute('aria-label', p.label || bars.map(function(b) { return (b.label || '') + ': ' + (b.value || 0); }).join(', ') || 'No data');
       bars.forEach(function(b) {
         var bar = mkEl('div', 'db-chart__bar');
         bar.style.height = Math.round((toNum(b.value) / maxVal) * 100) + '%';
@@ -1706,6 +1964,7 @@
         var dot = document.createElement('button');
         dot.className = 'db-carousel__dot' + (i === 0 ? ' db-carousel__dot--active' : '');
         dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        if (i === 0) dot.setAttribute('aria-current', 'true');
         dots.appendChild(dot);
       }
       el.appendChild(dots);
@@ -1727,6 +1986,7 @@
         var close = document.createElement('button');
         close.className = 'db-chip__close';
         close.textContent = '\u00D7';
+        close.setAttribute('aria-label', 'Remove ' + (p.label || 'chip'));
         el.appendChild(close);
       }
       return el;
@@ -1737,6 +1997,226 @@
       var el = mkEl('div', 'db-scroll-area' + (p.direction ? ' db-scroll-area--' + p.direction : ''));
       el.style.maxHeight = '300px';
       el.appendChild(renderChildren(els, ch, d));
+      return el;
+    };
+
+    RENDERERS.ChangeSummary = function(p, ch, els, d) {
+      function count(value) {
+        return typeof value === 'number' && Number.isFinite(value) ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.floor(value))) : 0;
+      }
+      function counts(cls, additions, deletions) {
+        var node = mkEl('span', cls);
+        var added = mkEl('span', 'db-change-summary__additions', '+' + additions);
+        added.setAttribute('role', 'img');
+        added.setAttribute('aria-label', additions + ' additions');
+        var deleted = mkEl('span', 'db-change-summary__deletions', '-' + deletions);
+        deleted.setAttribute('role', 'img');
+        deleted.setAttribute('aria-label', deletions + ' deletions');
+        node.appendChild(added);
+        node.appendChild(deleted);
+        return node;
+      }
+      var files = (Array.isArray(p.files) ? p.files : []).filter(function(file) { return file && !Array.isArray(file) && typeof file.path === 'string'; });
+      var additions = 0, deletions = 0;
+      var list = mkEl('ul', 'db-change-summary__files');
+      files.forEach(function(file) {
+        var added = count(file.additions), deleted = count(file.deletions);
+        additions = Math.min(Number.MAX_SAFE_INTEGER, additions + added);
+        deletions = Math.min(Number.MAX_SAFE_INTEGER, deletions + deleted);
+        var row = mkEl('li', 'db-change-summary__file');
+        var path = mkEl('span', 'db-change-summary__path', file.path);
+        path.setAttribute('title', file.path);
+        if (['added', 'modified', 'deleted'].indexOf(file.status) >= 0) {
+          row.setAttribute('data-status', file.status);
+          path.setAttribute('aria-label', file.path + ', ' + file.status);
+        }
+        row.appendChild(path);
+        row.appendChild(counts('db-change-summary__counts', added, deleted));
+        list.appendChild(row);
+      });
+      var title = typeof p.title === 'string' && p.title.trim() ? p.title : (files.length ? 'Edited ' + files.length + ' file' + (files.length === 1 ? '' : 's') : 'No files changed');
+      var el = mkEl('div', 'db-change-summary');
+      el.setAttribute('role', 'group');
+      el.setAttribute('aria-label', title);
+      var header = mkEl('div', 'db-change-summary__header');
+      var icon = mkEl('span', 'db-change-summary__icon');
+      icon.setAttribute('aria-hidden', 'true');
+      icon.innerHTML = iconHtml('files', 16);
+      header.appendChild(icon);
+      var heading = mkEl('div', 'db-change-summary__heading');
+      heading.appendChild(mkEl('div', 'db-change-summary__title', title));
+      if (typeof p.description === 'string' && p.description) heading.appendChild(mkEl('p', 'db-change-summary__description', p.description));
+      header.appendChild(heading);
+      var totals = counts('db-change-summary__totals', additions, deletions);
+      heading.appendChild(totals);
+      if (ch.length) {
+        var actions = mkEl('div', 'db-change-summary__actions');
+        actions.appendChild(renderChildren(els, ch, d));
+        header.appendChild(actions);
+      }
+      el.appendChild(header);
+      el.appendChild(list);
+      return el;
+    };
+
+    RENDERERS.ChatComposer = function(p) {
+      var el = mkEl('form', 'db-chat-composer');
+      var config = {};
+      ['models', 'model', 'effort', 'approval', 'mode', 'actions', 'capabilities', 'busy', 'placeholder'].forEach(function(key) {
+        if (p[key] != null) config[key] = p[key];
+      });
+      el.setAttribute('data-db-chat-options', serializeSpec(config));
+      if (p.id != null) el.id = String(p.id);
+      return el;
+    };
+
+    RENDERERS.MessageScroller = function(p, ch, els, d) {
+      var el = mkEl('div', 'db-message-scroller');
+      el.style.height = (Number.isFinite(p.height) && p.height > 0 ? p.height : 360) + 'px';
+      el.setAttribute('data-db-auto-scroll', p.autoScroll === false ? 'false' : 'true');
+      var position = ['start', 'end', 'last-anchor'].indexOf(p.defaultScrollPosition) >= 0 ? p.defaultScrollPosition : 'end';
+      el.setAttribute('data-db-scroll-position', position);
+      el.setAttribute('data-db-scroll-peek', Number.isFinite(p.peek) ? Math.max(0, p.peek) : 0);
+      var viewport = mkEl('div', 'db-message-scroller__viewport');
+      viewport.tabIndex = 0;
+      viewport.setAttribute('role', 'region');
+      viewport.setAttribute('aria-label', p['aria-label'] || p.ariaLabel || p.label || 'Conversation');
+      var content = mkEl('div', 'db-message-scroller__content');
+      (ch || []).forEach(function(id) {
+        var child = renderElement(els, id, d + 1);
+        if (!child) return;
+        var item = mkEl('div', 'db-message-scroller__item');
+        item.setAttribute('data-db-message-id', child.getAttribute && child.getAttribute('data-db-message-id') || id);
+        if (child.hasAttribute && child.hasAttribute('data-db-scroll-anchor')) item.setAttribute('data-db-scroll-anchor', child.getAttribute('data-db-scroll-anchor'));
+        if (child.removeAttribute) {
+          child.removeAttribute('data-db-message-id');
+          child.removeAttribute('data-db-scroll-anchor');
+        }
+        item.appendChild(child);
+        content.appendChild(item);
+      });
+      viewport.appendChild(content);
+      el.appendChild(viewport);
+      ['start', 'end'].forEach(function(target) {
+        var button = mkEl('button', 'db-message-scroller__button');
+        button.type = 'button';
+        button.setAttribute('data-db-scroll-to', target);
+        button.setAttribute('aria-label', 'Scroll to ' + target);
+        button.title = 'Scroll to ' + target;
+        button.innerHTML = iconHtml(target === 'start' ? 'arrow-up' : 'arrow-down');
+        el.appendChild(button);
+      });
+      return el;
+    };
+
+    RENDERERS.Message = function(p, ch, els, d) {
+      var el = mkEl('div', 'db-message' + (p.align === 'end' ? ' db-message--end' : ''));
+      if (p.messageId != null && String(p.messageId) !== '') el.setAttribute('data-db-message-id', p.messageId);
+      if (p.scrollAnchor) el.setAttribute('data-db-scroll-anchor', 'true');
+      if (p.avatar != null) {
+        var avatarProps = typeof p.avatar === 'object' ? p.avatar : { initials: String(p.avatar) };
+        var avatar = mkEl('div', 'db-message__avatar');
+        avatar.setAttribute('aria-hidden', 'true');
+        avatar.appendChild(RENDERERS.Avatar({ initials: avatarProps.initials, src: avatarProps.src, size: 'sm' }));
+        el.appendChild(avatar);
+      }
+      var content = mkEl('div', 'db-message__content');
+      if (p.name != null || p.timestamp != null) {
+        var header = mkEl('div', 'db-message__header');
+        if (p.name != null) header.appendChild(mkEl('span', null, p.name));
+        if (p.timestamp != null) header.appendChild(mkEl('time', null, p.timestamp));
+        content.appendChild(header);
+      }
+      content.appendChild(renderChildren(els, ch, d));
+      if (p.footer != null) content.appendChild(mkEl('div', 'db-message__footer', p.footer));
+      el.appendChild(content);
+      return el;
+    };
+
+    RENDERERS.Bubble = function(p, ch, els, d) {
+      var variant = ['primary', 'secondary', 'muted', 'tinted', 'outline', 'ghost', 'destructive'].indexOf(p.variant) >= 0 ? p.variant : 'primary';
+      var el = mkEl('div', 'db-bubble db-bubble--' + variant + (p.align === 'end' ? ' db-bubble--end' : ''));
+      var content = mkEl('div', 'db-bubble__content', p.content);
+      content.appendChild(renderChildren(els, ch, d));
+      el.appendChild(content);
+      if (Array.isArray(p.reactions) && p.reactions.length) {
+        var reactions = mkEl('div', 'db-bubble__reactions');
+        p.reactions.forEach(function(reaction) {
+          if (!reaction || typeof reaction !== 'object') return;
+          var label = reaction.label == null ? 'Reaction' : String(reaction.label);
+          var button = mkEl('button', 'db-btn db-btn--ghost db-btn--sm', label + (reaction.count != null ? ' ' + reaction.count : ''));
+          button.type = 'button';
+          button.setAttribute('aria-label', label);
+          button.setAttribute('aria-pressed', reaction.pressed ? 'true' : 'false');
+          reactions.appendChild(button);
+        });
+        el.appendChild(reactions);
+      }
+      return el;
+    };
+
+    RENDERERS.Attachment = function(p, ch, els, d) {
+      var state = ['idle', 'uploading', 'processing', 'error', 'done'].indexOf(p.state) >= 0 ? p.state : 'idle';
+      var el = mkEl('div', 'db-attachment' + (p.orientation === 'vertical' ? ' db-attachment--vertical' : '') + (p.size === 'sm' || p.size === 'xs' ? ' db-attachment--' + p.size : ''));
+      el.setAttribute('data-state', state);
+      el.setAttribute('aria-busy', state === 'uploading' || state === 'processing' ? 'true' : 'false');
+      var name = p.name == null ? 'Attachment' : String(p.name);
+      var media = mkEl('div', 'db-attachment__media');
+      if (isSafeUrl(p.src)) {
+        media.classList.add('db-attachment__media--image');
+        var image = mkEl('img');
+        image.src = p.src;
+        image.alt = p.alt == null ? name : String(p.alt);
+        media.appendChild(image);
+      } else {
+        media.setAttribute('aria-hidden', 'true');
+        media.innerHTML = iconHtml('file');
+      }
+      el.appendChild(media);
+      var content = mkEl('div', 'db-attachment__content');
+      content.appendChild(mkEl('div', 'db-attachment__title', name));
+      if (p.description != null) content.appendChild(mkEl('div', 'db-attachment__description', p.description));
+      if (state === 'uploading') {
+        var progress = mkEl('progress');
+        progress.max = 100;
+        progress.value = Math.max(0, Math.min(100, Number.isFinite(p.progress) ? p.progress : 0));
+        progress.setAttribute('aria-label', 'Upload ' + name);
+        progress.setAttribute('aria-valuenow', progress.value);
+        content.appendChild(progress);
+      }
+      el.appendChild(content);
+      if (isSafeUrl(p.href)) {
+        var trigger = mkEl('a', 'db-attachment__trigger');
+        trigger.href = p.href;
+        trigger.setAttribute('aria-label', 'Open ' + name);
+        el.appendChild(trigger);
+      }
+      if (ch && ch.length) {
+        var actions = mkEl('div', 'db-attachment__actions');
+        actions.appendChild(renderChildren(els, ch, d));
+        Array.prototype.forEach.call(actions.children, function(action) { if (action.matches('.db-btn--icon')) action.classList.add('db-attachment__action'); });
+        el.appendChild(actions);
+      }
+      return el;
+    };
+
+    RENDERERS.Marker = function(p, ch, els, d) {
+      var variant = p.variant === 'border' || p.variant === 'separator' ? ' db-marker--' + p.variant : '';
+      var el = mkEl('div', 'db-marker' + variant);
+      if (p.status || p.busy) {
+        el.setAttribute('role', 'status');
+        el.setAttribute('aria-live', 'polite');
+      }
+      if (p.busy != null) el.setAttribute('aria-busy', p.busy ? 'true' : 'false');
+      if (p.icon) {
+        var icon = mkEl('span', 'db-marker__icon');
+        icon.setAttribute('aria-hidden', 'true');
+        icon.innerHTML = iconHtml(p.icon);
+        el.appendChild(icon);
+      }
+      var content = mkEl('div', 'db-marker__content', p.content);
+      content.appendChild(renderChildren(els, ch, d));
+      el.appendChild(content);
       return el;
     };
     
@@ -1754,8 +2234,14 @@
     // -- Progress --
     RENDERERS.Progress = function(p) {
       var el = mkEl('div', 'db-progress' + (p.indeterminate ? ' db-progress--indeterminate' : ''));
+      var value = Math.max(0, Math.min(100, Number(p.value) || 0));
+      el.setAttribute('role', 'progressbar');
+      el.setAttribute('aria-label', p.label || 'Progress');
+      el.setAttribute('aria-valuemin', '0');
+      el.setAttribute('aria-valuemax', '100');
+      if (!p.indeterminate) el.setAttribute('aria-valuenow', String(value));
       var bar = mkEl('div', 'db-progress__bar');
-      bar.style.setProperty('--db-progress', (p.value || 0) + '%');
+      bar.style.setProperty('--db-progress', value + '%');
       el.appendChild(bar);
       return withLabel(el, p.label, true);
     };
@@ -1786,8 +2272,7 @@
         el.appendChild(iconWrap);
       }
       el.appendChild(mkEl('h3', 'db-empty__title', p.title || 'No items'));
-      el.appendChild(mkEl('p', 'db-empty__message', p.message || ''));
-      // Action children (a Button) sit centered under the message
+      el.appendChild(mkEl('p', 'db-empty__desc db-empty__message', p.message || ''));
       if (toArr(ch).length) el.appendChild(renderChildren(els, toArr(ch), d));
       return el;
     };
@@ -1816,8 +2301,13 @@
       el.id = p.id || 'modal-' + Math.random().toString(36).slice(2,8);
       el.setAttribute('aria-hidden', 'true');
       var modal = mkEl('div', 'db-modal');
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('aria-labelledby', el.id + '-title');
       var hdr = mkEl('div', 'db-modal__header');
-      hdr.appendChild(mkEl('h2', 'db-modal__title', p.title || 'Modal'));
+      var title = mkEl('h2', 'db-modal__title', p.title || 'Modal');
+      title.id = el.id + '-title';
+      hdr.appendChild(title);
       var closeBtn = document.createElement('button');
       closeBtn.className = 'db-modal__close';
       closeBtn.setAttribute('aria-label', 'Close');
@@ -1857,8 +2347,16 @@
       el.id = p.id || 'alert-' + Math.random().toString(36).slice(2,8);
       el.appendChild(mkEl('div', 'db-alert-dialog__overlay'));
       var panel = mkEl('div', 'db-alert-dialog__panel');
-      panel.appendChild(mkEl('h3', 'db-alert-dialog__title', p.title || 'Confirm'));
-      panel.appendChild(mkEl('p', 'db-alert-dialog__desc', p.description || ''));
+      panel.setAttribute('role', 'alertdialog');
+      panel.setAttribute('aria-modal', 'true');
+      panel.setAttribute('aria-labelledby', el.id + '-title');
+      var title = mkEl('h3', 'db-alert-dialog__title', p.title || 'Confirm');
+      title.id = el.id + '-title';
+      panel.appendChild(title);
+      var description = mkEl('p', 'db-alert-dialog__desc', p.description || '');
+      description.id = el.id + '-description';
+      if (p.description) panel.setAttribute('aria-describedby', description.id);
+      panel.appendChild(description);
       var footerIds = footerRefs(p.footer, els);
       var actionIds = footerIds.length ? footerIds : ch;
       var actions = mkEl('div', 'db-alert-dialog__actions');
@@ -1883,8 +2381,13 @@
       el.id = p.id || 'sheet-' + Math.random().toString(36).slice(2,8);
       el.appendChild(mkEl('div', 'db-sheet__overlay'));
       var panel = mkEl('div', 'db-sheet__panel');
+      panel.setAttribute('role', 'dialog');
+      panel.setAttribute('aria-modal', 'true');
+      panel.setAttribute('aria-labelledby', el.id + '-title');
       var hdr = mkEl('div', 'db-sheet__header');
-      hdr.appendChild(mkEl('span', 'db-sheet__title', p.title || 'Sheet'));
+      var title = mkEl('span', 'db-sheet__title', p.title || 'Sheet');
+      title.id = el.id + '-title';
+      hdr.appendChild(title);
       var closeBtn = document.createElement('button');
       closeBtn.className = 'db-sheet__close';
       closeBtn.setAttribute('aria-label', 'Close');
@@ -1904,6 +2407,9 @@
       el.id = p.id || 'drawer-' + Math.random().toString(36).slice(2,8);
       el.appendChild(mkEl('div', 'db-drawer__overlay'));
       var panel = mkEl('div', 'db-drawer__panel');
+      panel.setAttribute('role', 'dialog');
+      panel.setAttribute('aria-modal', 'true');
+      panel.setAttribute('aria-label', p.title || p.label || 'Drawer');
       panel.appendChild(mkEl('div', 'db-drawer__handle'));
       var body = mkEl('div', 'db-drawer__body');
       if (isText(p.title)) body.appendChild(mkEl('h3', 'db-h3', String(p.title)));
@@ -1924,7 +2430,7 @@
       } else {
         trig = document.createElement('button');
         trig.className = 'db-btn db-popover__trigger';
-        trig.textContent = 'Open';
+        trig.textContent = p.label || 'Details';
       }
       el.appendChild(trig);
       var content = mkEl('div', 'db-popover__content db-popover__content--' + (p.position || 'bottom'));
@@ -1936,6 +2442,9 @@
     // -- HoverCard --
     RENDERERS.HoverCard = function(p, ch, els, d) {
       var el = mkEl('div', 'db-hover-card');
+      var trigger = mkEl('button', 'db-btn db-btn--ghost', p.label || 'Details');
+      trigger.type = 'button';
+      el.appendChild(trigger);
       var content = mkEl('div', 'db-hover-card__content');
       content.appendChild(renderChildren(els, ch, d));
       el.appendChild(content);
@@ -2034,6 +2543,7 @@
       inputWrap.appendChild(searchIco);
       var inp = document.createElement('input');
       inp.className = 'db-command__input';
+      inp.setAttribute('aria-label', p.label || 'Search commands');
       inp.placeholder = p.placeholder || 'Search...';
       inputWrap.appendChild(inp);
       panel.appendChild(inputWrap);
@@ -2130,8 +2640,14 @@
     // -- DatePicker --
     RENDERERS.DatePicker = function(p) {
       var el = mkEl('div', 'db-date-picker');
-      if (p.label) el.appendChild(mkEl('label', 'db-label', p.label));
+      var id = p.id || 'date-' + Math.random().toString(36).slice(2,8);
+      if (p.label) {
+        var label = mkEl('label', 'db-label', p.label);
+        label.htmlFor = id;
+        el.appendChild(label);
+      }
       var trigger = document.createElement('button');
+      trigger.id = id;
       trigger.className = 'db-date-picker__trigger db-input';
       trigger.type = 'button';
       trigger.textContent = p.selected || p.placeholder || 'Select date...';
@@ -2154,7 +2670,7 @@
         el.appendChild(ico);
       }
       el.appendChild(mkEl('span', 'db-stat__label', p.label || ''));
-      el.appendChild(mkEl('span', 'db-stat__value', p.value || ''));
+      el.appendChild(mkEl('span', 'db-stat__value', p.value != null ? p.value : ''));
       if (p.trend) {
         // trend is "up"/"down"; free text ("+2.8% vs last month") shows as written, coloured by its leading sign or arrow
         var tr = String(p.trend), dir = tr === 'up' || tr === 'down' ? tr : /^[+\u2191]/.test(tr) ? 'up' : /^[-\u2212\u2193]/.test(tr) ? 'down' : '';
@@ -2181,11 +2697,9 @@
       }
       el.appendChild(hdr);
       var body = mkEl('div', 'db-chart-card__body');
-      if (!(ch && ch.length) && p.bars != null && chartBars(p).length) {
-        body.appendChild(RENDERERS.Chart({ bars: p.bars }));
-      } else {
-        body.appendChild(renderChildren(els, ch, d));
-      }
+      if (ch.length) body.appendChild(renderChildren(els, ch, d));
+      else if (p.bars != null && chartBars(p).length) body.appendChild(RENDERERS.Chart({ bars: p.bars, label: p.title }));
+      else body.appendChild(RENDERERS.EmptyState({ title: 'No data', message: 'No values for this period.' }));
       el.appendChild(body);
       return el;
     };
@@ -2217,7 +2731,7 @@
       var el = document.createElement('a');
       el.className = 'db-link';
       el.textContent = p.label || '';
-      if (p.href) el.href = isSafeUrl(p.href) ? p.href : '#';
+      if (isSafeUrl(p.href)) el.href = p.href;
       return el;
     };
 
@@ -2268,4 +2782,11 @@
       return el;
     };
     
-    // ---- Component props documentation (single source of truth for AI prompt) ----
+    return { MAX_DEPTH: MAX_DEPTH, esc: esc, sanitizeHtml: sanitizeHtml, iconHtml: iconHtml, mkEl: mkEl, isSafeUrl: isSafeUrl, setControlProps: setControlProps, createStateStore: createStateStore, resolveExpr: resolveExpr, resolveProps: resolveProps, dispatchAction: dispatchAction, collectStateConfig: collectStateConfig, renderElement: renderElement, renderChildren: renderChildren, renderOrphans: renderOrphans, orphanParents: orphanParents, normalizeProps: normalizeProps, mkIcon: mkIcon, lucideKey: lucideKey, knownMod: knownMod, isPlain: isPlain, toArr: toArr, toOpts: toOpts, toNum: toNum, footerRefs: footerRefs, specRef: specRef, entries: entries, kbdKeys: kbdKeys, isText: isText, withProp: withProp, fillAlias: fillAlias, isImgUrl: isImgUrl, withLabel: withLabel, chartBars: chartBars, tableShape: tableShape, tableScroll: tableScroll, actionCell: actionCell, cellRefs: cellRefs, cellElements: cellElements, dedupeControlLabels: dedupeControlLabels, RENDERERS: RENDERERS, THEMES: THEMES, normalizeTheme: normalizeTheme, serializeSpec: serializeSpec };
+}
+
+var DAUB_RENDER_BODY = 'Object.assign(globalThis, (' + DAUB_RENDER_FACTORY.toString() + ')());';
+if (typeof module === 'object' && module.exports) {
+  var daubRenderAPI = DAUB_RENDER_FACTORY();
+  module.exports = { DAUB_RENDER_FACTORY: DAUB_RENDER_FACTORY, DAUB_RENDER_BODY: DAUB_RENDER_BODY, RENDERER_TYPES: Object.keys(daubRenderAPI.RENDERERS), THEMES: daubRenderAPI.THEMES, normalizeTheme: daubRenderAPI.normalizeTheme, serializeSpec: daubRenderAPI.serializeSpec };
+} else Object.assign(globalThis, DAUB_RENDER_FACTORY());

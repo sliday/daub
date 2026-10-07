@@ -1,10 +1,15 @@
 // normalizeProps coercions for model-written props, checked in all three renderer copies:
 // playground.html (inline RENDERERS), daub-render.js (hosted MCP page) and mcp/lib/renderers.js (npm MCP).
-// Each copy's helper block (mkEl .. normalizeProps) runs in a vm with a stub DOM and a stub lucide build.
+// Canonical/generated bodies and the Playground helper block run in a vm with a stub DOM and a stub lucide build.
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import vm from 'node:vm';
+import { DAUB_RENDER_BODY as MCP_RENDER_BODY } from '../mcp/lib/renderers.js';
+
+const require = createRequire(import.meta.url);
+const { DAUB_RENDER_BODY } = require('../daub-render.js');
 
 // Lucide names the stub build knows; anything else is "not an icon" (mkIcon returns null)
 const LUCIDE = ['KeyRound', 'CircleCheck', 'Users', 'Headset', 'DollarSign', 'ShieldCheck', 'Minus', 'Check'];
@@ -13,24 +18,30 @@ function stubEl(tag) {
   return { tagName: String(tag).toUpperCase(), style: {}, attrs: {}, children: [], setAttribute(k, v) { this.attrs[k] = String(v); }, appendChild(c) { this.children.push(c); return c; } };
 }
 
-function load(file) {
-  const src = readFileSync(file, 'utf8');
-  const start = src.indexOf('function mkEl(');
-  const end = src.indexOf('// Visible label above a control');
-  assert.ok(start > 0 && end > start, file + ': helper block not found');
+function load(file, body) {
   const ctx = {
     document: { createElement: stubEl, createElementNS: (ns, tag) => stubEl(tag) },
     lucide: { icons: Object.fromEntries(LUCIDE.map(k => [k, []])) },
   };
   vm.createContext(ctx);
-  vm.runInContext('var RENDERING = Object.create(null);\n' + src.slice(start, end) + '\nthis.normalizeProps = normalizeProps;', ctx);
+  if (body !== undefined) {
+    assert.equal(typeof body, 'string', file + ': renderer body not found');
+    vm.runInContext(body, ctx);
+  } else {
+    const src = readFileSync(file, 'utf8');
+    const start = src.indexOf('function mkEl(');
+    const end = src.indexOf('// Visible label above a control');
+    assert.ok(start > 0 && end > start, file + ': helper block not found');
+    vm.runInContext('var RENDERING = Object.create(null);\n' + src.slice(start, end) + '\nthis.normalizeProps = normalizeProps;', ctx);
+  }
+  assert.equal(typeof ctx.normalizeProps, 'function', file + ': normalizeProps not exported');
   return ctx.normalizeProps;
 }
 
 const COPIES = {
   playground: load('playground.html'),
-  'daub-render': load('daub-render.js'),
-  'mcp-renderers': load('mcp/lib/renderers.js'),
+  'daub-render': load('daub-render.js', DAUB_RENDER_BODY),
+  'mcp-renderers': load('mcp/lib/renderers.js', MCP_RENDER_BODY),
 };
 
 // Run one normalizeProps call in every copy; all must agree, and the result must match `want` (a subset check)

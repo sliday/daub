@@ -103,7 +103,7 @@ function adjustForContrast(fgHex, bgHex, targetRatio) {
 }
 
 const themeBlockRe = /(\[data-theme="([^"]+)"\]\s*\{)([\s\S]*?)(\})/g;
-const rootBlockRe = /(:root\s*\{)([\s\S]*?)(\})/;
+const rootBlockRe = /(:root(?:\s*,\s*\[data-theme\])?\s*\{)([\s\S]*?)(\})/;
 
 const rootBlock = css.match(rootBlockRe);
 const rootVars = {};
@@ -128,19 +128,11 @@ function fixBlock(block, themeName) {
 
   if (!cream || !warmGray || !cream.startsWith('#') || !warmGray.startsWith('#')) return block;
 
-  const ratio1 = contrastRatio(hexToRgb(warmGray), hexToRgb(cream));
-  if (ratio1 < 4.5) {
-    // Find value that meets 4.7:1 against the harder background (cream or cream-dark)
-    let targetBg = cream;
-    if (creamDark && creamDark.startsWith('#')) {
-      const bgLum1 = luminance(hexToRgb(cream));
-      const bgLum2 = luminance(hexToRgb(creamDark));
-      const fgLum = luminance(hexToRgb(warmGray));
-      // Pick the bg closer to fg luminance (harder to contrast against)
-      if (Math.abs(fgLum - bgLum2) < Math.abs(fgLum - bgLum1)) {
-        targetBg = creamDark;
-      }
-    }
+  const backgrounds = [cream, creamDark, vars.white].filter(value => value && value.startsWith('#'));
+  const targetBg = backgrounds.reduce((hardest, background) =>
+    contrastRatio(hexToRgb(warmGray), hexToRgb(background)) < contrastRatio(hexToRgb(warmGray), hexToRgb(hardest)) ? background : hardest
+  );
+  if (contrastRatio(hexToRgb(warmGray), hexToRgb(targetBg)) < 4.5) {
     const fixed = adjustForContrast(warmGray, targetBg, 4.7);
     const escaped = warmGray.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     newBlock = newBlock.replace(

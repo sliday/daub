@@ -12,27 +12,39 @@ export interface ChartProps extends Omit<ComponentProps<"div">, "children"> {
 }
 
 export const Chart = forwardRef<HTMLDivElement, ChartProps>(
-  ({ bars, secondary, className, ...props }, ref) => (
+  ({ bars, secondary, className, ...props }, ref) => {
+    const boundedBars = bars.map(bar => ({ ...bar, value: Math.min(100, Math.max(0, Number.isNaN(bar.value) ? 0 : bar.value)) }));
+    const description = boundedBars.map((bar, i) => `${bar.label ?? `Bar ${i + 1}`}: ${bar.value}`).join("; ") || "No data";
+    return (
+    <>
     <div
       ref={ref}
+      data-db-react=""
+      role="img"
+      aria-label={props["aria-labelledby"] ? undefined : description}
       {...props}
       className={cn(
         "db-chart",
-        secondary && "db-chart--secondary",
         className,
       )}
     >
-      {bars.map((bar, i) => (
+      {boundedBars.map((bar, i) => (
         <div
           key={i}
-          className="db-chart__bar"
+          className={cn("db-chart__bar", secondary && "db-chart__bar--secondary")}
+          aria-hidden="true"
           style={{ height: `${bar.value}%` }}
-        >
-          {bar.label && <span className="db-chart__label">{bar.label}</span>}
-        </div>
+        />
       ))}
     </div>
-  ),
+    {boundedBars.some(bar => bar.label) && (
+      <div data-db-react="" className="db-chart__labels" aria-hidden="true">
+        {boundedBars.map((bar, i) => <span key={i}>{bar.label}</span>)}
+      </div>
+    )}
+    </>
+    );
+  },
 );
 
 Chart.displayName = "Chart";

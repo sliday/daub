@@ -3,7 +3,7 @@
 Two catalogs describe the same library:
 
 - **Spec types** are the element `type` values a json-render spec or OpenUI Lang can use. `daub-render.js`, the playground and the hosted MCP renderer turn them into DAUB markup. Props below come from `COMP_PROPS` in playground.html, the text the playground prompt shows a model.
-- **HTML classes** are the 84 CSS components in `components.json`. Use them when you write markup by hand. Full HTML for each one: `https://daub.dev/llms.txt`.
+- **HTML classes** are the 91 CSS components in `components.json`. Use them when you write markup by hand. Full HTML for each one: `https://daub.dev/llms.txt`.
 
 Legend for spec types: _core_ means the Jev picker always keeps it, and _children first_ means the OpenUI signature starts with `children`.
 
@@ -33,6 +33,119 @@ Each of these renders without an error and still looks broken. They were measure
 - **Destructive buttons.** Use variant `icon-danger` for a destructive text button such as "Delete account": it keeps its label and icon, draws them in the error color and has no fill. `danger` and `destructive` map to it.
 - **Dialog buttons.** Every button in a Modal `footer` or an AlertDialog's actions closes its dialog, the defaults (Cancel and Confirm, Cancel and Continue) and a custom "Delete account" included; the renderers mark them `data-db-dismiss` and daub.js closes the dialog after the click. A footer Button with `trigger` opens its overlay and leaves the dialog open under it. A footer Button with an `on` state action (a wizard's Back and Next) runs it and leaves the dialog open too. Any other button that must keep the dialog open belongs in the body. Escape closes the Modal, AlertDialog, Sheet or Drawer on top; the backdrop closes any of them.
 
+## Change Summary
+
+ChangeSummary is a static framed file summary. Use it inside Message/Bubble
+content without an extra Card. Load `daub.css`; it needs no `daub.js` controller.
+Files and counts come from the host. DAUB performs no file operations.
+Label fixtures as demo data and omit action controls unless the host wires them.
+
+```json
+{
+  "root": "summary",
+  "elements": {
+    "summary": {
+      "type": "ChangeSummary",
+      "props": {
+        "title": "Prepared 2 demo files",
+        "description": "Demo changes",
+        "files": [
+          { "path": "src/app.ts", "additions": 6, "deletions": 4, "status": "modified" },
+          { "path": "src/summary.ts", "additions": 42, "deletions": 0, "status": "added" }
+        ]
+      }
+    }
+  }
+}
+```
+
+OpenUI equivalent:
+
+```text
+root = ChangeSummary([], [{path: "src/app.ts", additions: 6, deletions: 4, status: "modified"}, {path: "src/summary.ts", additions: 42, deletions: 0, status: "added"}], "Prepared 2 demo files", "Demo changes")
+```
+
+Paths render as plain text. Finite numeric counts floor and clamp to
+`0..Number.MAX_SAFE_INTEGER`; other values become zero. Totals clamp at the
+same maximum. Ignore entries without string paths. The default host-data title
+is `Edited N file(s)` or `No files changed` for an empty list.
+Spec children are explicit host action IDs inside `__actions` in `__header`.
+Configure child buttons through their own props and handlers; `undoLabel` /
+`undoDisabled` configure only React callback-backed Undo buttons.
+React `onUndo` / `onViewChanges` receive button mouse events and render buttons
+only when supplied. Arbitrary children fill the action slot. The host owns
+undo and diff views. See `llms.txt` for the static HTML and React examples.
+
+## Chat Composition Recipe
+
+Build a local chat workspace with existing Sidebar and Navbar components, an
+unframed MessageScroller thread, and an empty ChatComposer root. Load `daub.js`
+and `daub.css`; run `DAUB.init(parent)` after mounting the rendered spec. Use
+host model choices for production. This example uses a demo-only simulated
+model and an activity marker that identifies the simulation.
+
+```json
+{
+  "theme": "github",
+  "root": "workspace",
+  "elements": {
+    "workspace": { "type": "Stack", "props": { "container": "wide", "gap": 4 }, "children": ["navbar", "body"] },
+    "navbar": { "type": "Navbar", "props": { "brand": "Local chat demo", "brandHref": "/chat-demo.html" }, "children": ["conversation-menu"] },
+    "conversation-menu": { "type": "Menubar", "props": { "items": [{ "label": "Conversation", "dropdown": [{ "label": "Rename" }, { "label": "Pin" }, { "label": "New conversation" }, { "label": "Copy transcript" }, { "label": "Export transcript" }, { "label": "Clear local state" }] }] } },
+    "body": { "type": "Grid", "props": { "columns": "sidebar-main", "gap": 4 }, "children": ["sidebar", "conversation"] },
+    "sidebar": { "type": "Sidebar", "props": { "sections": [{ "title": "Conversation", "items": [{ "label": "Messages", "icon": "messages-square", "href": "/chat-demo.html#conversation", "active": true }, { "label": "Activity", "icon": "activity", "href": "/chat-demo.html#activity" }, { "label": "Files", "icon": "files", "href": "/chat-demo.html#files" }, { "label": "Queue", "icon": "list-ordered", "href": "/chat-demo.html#queue" }] }] } },
+    "conversation": { "type": "Stack", "props": { "gap": 3 }, "children": ["thread", "composer"] },
+    "thread": { "type": "MessageScroller", "props": { "height": 360, "autoScroll": true, "defaultScrollPosition": "end" }, "children": ["activity", "reply"] },
+    "activity": { "type": "Marker", "props": { "content": "Demo-only simulated backend", "variant": "separator" } },
+    "reply": { "type": "Message", "props": { "name": "Demo assistant (simulated)", "messageId": "demo-1" }, "children": ["reply-body"] },
+    "reply-body": { "type": "Bubble", "props": { "content": "Your local draft is ready to review.", "variant": "ghost" } },
+    "composer": { "type": "ChatComposer", "props": { "id": "chat-composer", "models": [{ "id": "demo", "label": "Demo model (simulated)", "efforts": ["low", "high"] }], "model": "demo", "approval": "ask", "mode": "chat", "actions": [{ "id": "context", "label": "Local context", "icon": "file-text" }, { "id": "sketch", "label": "Local sketch", "icon": "pencil" }], "capabilities": { "queue": true, "steer": true, "attachments": true, "dictation": false }, "placeholder": "Write a draft" } }
+  }
+}
+```
+
+The host wires the conversation menu to rename, pin, create, copy, export, and
+clear local state. It renders Messages, Activity, Files, and Queue sidebar views;
+navigation markup supplies no backend or filesystem access. Keep the queue
+outside the composer panel and avoid wrapping the thread/composer in cards.
+For a phone-first workspace, replace the Sidebar icon rail with BottomNav.
+
+After mounting, call `DAUB.createChatComposer(document.getElementById('chat-composer'))`
+to get its idempotent handle. Handle cancelable `db:chat-send/steer/stop/action`
+events at the root. Preserve rejected drafts/queued items through
+`event.preventDefault()`, set busy during a host response, and drain queued
+requests through `takeNext()`. Extended Add actions use `detail.action` for local
+context or sketch UI; the host decides when to read or upload File objects.
+Configuration describes intent and grants no permissions. The host must enforce
+approval policy even when the user selects `auto`.
+
+Use `db:chat-change` (`detail.state` is composer state) to refresh pending-file and
+queue counts, or read `getState()` after host commands. `clearDraft()` clears
+pending text/files while preserving queued requests. Clear conversation history
+or the queue through separate host actions. React exposes the same controller
+through `onReady`, the form through `ref`, and native state events through
+`onChange`. Call `destroy()` when the host discards a native root; React handles
+that cleanup on unmount.
+
+### Message Hover Actions
+
+For native markup or `MessageFooter` in React, use `db-message__footer--hover`
+for the timestamp and action row. Hover and keyboard focus reveal it; touch
+devices keep it visible. The host supplies timestamps and button handlers.
+Keep status or Retry controls in a separate footer if they should stay visible.
+
+```html
+<div class="db-message__footer db-message__footer--hover">
+  <time datetime="2026-10-07T12:15:00Z">12:15 PM</time>
+  <div class="db-message__actions" role="group" aria-label="Message actions">
+    <button class="db-message__action" type="button" tabindex="0" aria-label="Copy message" title="Copy message"><i data-lucide="copy" aria-hidden="true"></i></button>
+  </div>
+</div>
+```
+
+Add icon buttons to `db-message__actions` to extend the row. Use accessible names
+and tooltips; keep the action slot inside `db-message__content`.
+
 ## Spec types
 
 <!-- BEGIN GENERATED:spec-types (tools/build-skill.mjs) -->
@@ -41,18 +154,21 @@ Each of these renders without an error and still looks broken. They were measure
 - **Stack** _(core, children first)_: a flexbox row or column that lays out its children (the usual page root). Props: `direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true`
 - **Grid** _(core, children first)_: an equal-width CSS grid of 2-6 columns. Props: `columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true`
 - **Surface** _(children first)_: a raised or inset background panel that groups content. Props: `variant: "raised"|"inset"|"pressed"`
-- **Text** _(core)_: a heading, paragraph or inline text. Props: `tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string, class: string ("db-text-muted" for secondary text)`
+- **Text** _(core)_: a heading, paragraph or inline text. Props: `tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", content: string (the visible text), class: string | UX: tag is the HTML element, content is the displayed text — never swap them`
 - **Prose**: long-form rich text such as an article body. Props: `content: string (HTML), size: "sm"|"lg"|"xl"|"2xl"`
 - **Separator** _(core)_: a horizontal or vertical divider line. Props: `vertical: bool, dashed: bool, label: string`
+- **Layout** _(children first)_: . Props: `deprecated alias for Stack/Grid: children, direction, columns, gap, align (main-axis), valign (cross-axis)`
+- **Divider**: . Props: `alias for Separator: vertical: bool, dashed: bool, label: string`
 - **Icon** _(core)_: a standalone Lucide icon. Props: `name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success"`
-- **Link**: an inline text hyperlink. Props: `label: string, class: string`
+- **Link**: an inline text hyperlink. Props: `label: string, href: string (safe URL), class: string`
+- **Frame** _(children first)_: . Props: `children: [body IDs], header: string|[childIds], footer: string|[childIds], flush: bool`
 
 ### Controls
 
-- **Button** _(core)_: a clickable action; trigger opens an overlay by id. Props: `label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id)`
+- **Button** _(core)_: a clickable action; trigger opens an overlay by id. Props: `label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id) | UX: one primary per view, loading:true during async, verb-first labels`
 - **ButtonGroup** _(children first)_: a row of joined buttons. Props: `(children are Buttons)`
-- **Field** _(children first)_: a labeled form input with helper or error text. Props: `label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string, value: string (prefilled text; placeholder is only a hint)`
-- **Input**: a single-line text input. Props: `placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time", value: string (prefilled text)`
+- **Field** _(children first)_: a labeled form input with helper or error text. Props: `label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string, value: string (prefilled text; placeholder is only a hint) | UX: always include label, helper for complex inputs, error near field`
+- **Input**: a single-line text input. Props: `placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time", value: string (prefilled text) | UX: wrap in Field for label+helper, or pair with Label`
 - **InputGroup** _(children first)_: an input with a prefix or suffix addon such as $ or .com. Props: `addonBefore: string, addonAfter: string (child is Input)`
 - **InputIcon** _(children first)_: an input with an icon inside it. Props: `icon: string, right: bool (child is Input)`
 - **Search**: a search box. Props: `placeholder: string`
@@ -69,26 +185,31 @@ Each of these renders without an error and still looks broken. They were measure
 - **Label**: a standalone form label. Props: `text: string, required: bool, optional: bool`
 - **Spinner**: a loading spinner. Props: `size: "sm"|"lg"|"xl"`
 - **InputOTP**: one-time passcode boxes for entering a verification code. Props: `length: number, separator: bool`
+- **CheckboxGroup** _(children first)_: . Props: `children: [Checkbox IDs], label: string, helper: string, inline: bool`
+- **Fieldset** _(children first)_: . Props: `children: [field IDs], legend: string, helper: string, disabled: bool`
+- **Group** _(children first)_: . Props: `children: [control IDs], attached: bool, vertical: bool, label: string or aria-label: string`
+- **NumberField**: . Props: `value: number, defaultValue: number, min: number, max: number, step: number (default 1), disabled: bool, readOnly: bool, name: string, label: string or aria-label: string`
+- **Toolbar** _(children first)_: . Props: `children: [control IDs], vertical: bool, label: string or aria-label: string`
 
 ### Navigation
 
 - **Tabs** _(children first)_: tabs that switch between panels of content. Props: `tabs: [{label, id}], active: string, children: [childIds] (one child per tab — each child becomes a tab panel; order matches tabs array)`
 - **Breadcrumbs**: a breadcrumb trail showing the page hierarchy. Props: `items: [{label, href}]`
 - **Pagination**: page number controls for long lists or tables. Props: `current: number, total: number, perPage: number`
-- **Stepper**: a multi-step progress indicator for wizards or checkout. Props: `steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool`
+- **Stepper**: a multi-step progress indicator for wizards or checkout. Props: `steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool | UX: one active step at a time, completed steps should be revisitable`
 - **NavMenu**: a horizontal row of navigation links. Props: `items: [{label, href, active: bool}]`
 - **Navbar** _(children first)_: a top header bar with brand and navigation. Props: `brand: string, brandHref: string`
 - **Menubar**: a desktop-app menu bar with File/Edit/View dropdowns. Props: `items: [{label, dropdown: [{label, href}]}]`
-- **Sidebar**: a vertical side navigation with sections. Props: `sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool`
-- **BottomNav**: a mobile bottom tab bar. Props: `items: [{label, icon, active, badge}]`
+- **Sidebar**: a vertical side navigation with sections. Props: `sections: [{title, items: [{label, icon, active, href}]}] (inline objects, NOT element ID references), collapsed: bool`
+- **BottomNav**: a mobile bottom tab bar. Props: `items: [{label, icon, active, badge}] | UX: max 5 items, icon+label always, highlight active`
 
 ### Data Display
 
-- **Card** _(core, children first)_: a titled container for related content. Props: `title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool`
+- **Card** _(core, children first)_: a titled container for related content. Props: `title: string, description: string, media: string (image URL only, NOT element IDs), footer: [childIds] (element IDs rendered in card footer area, NOT a boolean), interactive: bool, clip: bool | UX: footer is an array of element IDs not a boolean, media is a URL string not element IDs`
 - **Table**: a data table with columns and rows. Props: `columns: [{key, label, numeric}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), sortable: bool`
 - **DataTable**: an interactive data table with selectable rows. Props: `columns: [{key, label}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), selectable: bool`
 - **List**: a vertical list of items with title, secondary text and icon. Props: `items: [{title, secondary, icon}]`
-- **Badge**: a small status label or count. Props: `text: string, variant: "new"|"updated"|"warning"|"error"`
+- **Badge**: a small status label or count. Props: `text: string, variant: "new"|"updated"|"success"|"warning"|"error"`
 - **Avatar**: a user profile picture or initials. Props: `initials: string, src: string (image URL only; skip it with size: "sm"), size: "sm"|"md"|"lg"`
 - **AvatarGroup**: a stacked row of several user avatars. Props: `avatars: [{initials, src}], max: number`
 - **Calendar**: a month calendar grid for picking or showing dates. Props: `selected: "YYYY-MM-DD" (date to highlight), today: "YYYY-MM-DD" (today override)`
@@ -106,18 +227,20 @@ Each of these renders without an error and still looks broken. They were measure
 - **Skeleton**: loading placeholder shapes. Props: `variant: "text"|"heading"|"avatar"|"btn", lines: number`
 - **EmptyState**: a placeholder message shown when there is no content or nothing was found. Props: `icon: string, title: string, message: string, children: [childIds] (action Buttons shown under the message)`
 - **Tooltip** _(children first)_: a hint shown on hover. Props: `text: string, position: "top"|"bottom"|"left"|"right"`
+- **Meter**: . Props: `value: number (default 0), min: number (default 0), max: number (default 100), status: "success"|"warning"|"error", label: string or aria-label: string`
 
 ### Overlays
 
-- **Modal** _(children first)_: a dialog window over the page for forms or content. Props: `id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm)`
+- **Modal** _(children first)_: a dialog window over the page for forms or content. Props: `id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm) | UX: clear close affordance, confirm before dismiss with unsaved data`
 - **AlertDialog**: a confirmation dialog for destructive actions. Props: `id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue)`
 - **Sheet** _(children first)_: a side panel that slides over the page. Props: `id: string, position: "right"|"left"|"top"|"bottom"`
 - **Drawer** _(children first)_: a bottom drawer that slides up. Props: `id: string`
-- **Popover** _(children first)_: a small floating panel anchored to a button. Props: `position: "top"|"bottom"|"left"|"right", children: [childIds] (first child becomes the trigger when it is a Button or Link and there are 2+ children; other children are the content)`
+- **Popover** _(children first)_: a small floating panel anchored to a button. Props: `position: "top"|"bottom"|"left"|"right", children: [childIds] (first child becomes the trigger when it is a Button and there are 2+ children; other children are the content)`
 - **HoverCard** _(children first)_: a preview card shown when hovering a link or user. Props: (no props)
 - **DropdownMenu**: a menu of actions opened from a button. Props: `items: [{label, icon, separator, groupLabel, active: bool}]`
 - **ContextMenu**: a right-click menu of actions. Props: `items: [{label, icon, separator}]`
-- **CommandPalette**: a Cmd+K searchable command launcher. Props: `id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}]`
+- **CommandPalette**: a Cmd+K searchable command launcher. Props: `id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] (inline objects, NOT element ID references)`
+- **PreviewCard** _(children first)_: . Props: `trigger: string|[childIds], title: string, description: string, media: string (safe image URL)|[childIds], mediaAlt: string, children: [childIds]`
 
 ### Layout Utilities
 
@@ -130,6 +253,16 @@ Each of these renders without an error and still looks broken. They were measure
 
 - **StatCard**: a KPI metric card with a value and trend. Props: `label: string, value: string, trend: "up"|"down" (direction only, never an icon), trendValue: string, icon: string (Lucide name, pass named: icon: "users"), horizontal: bool`
 - **ChartCard** _(children first)_: a titled card that holds a chart. Props: `title: string, children: [Chart element] (empty ChartCard renders "No data"), bars: [{label, value, max}] (shortcut: renders a Chart when no children)`
+
+### Chat
+
+- **MessageScroller** _(children first)_: a streaming-aware conversation viewport that preserves history and reader position. Props: `children: [row IDs], height: number (default 360px), autoScroll: bool (default true), defaultScrollPosition: "start"|"end"|"last-anchor" (default "end"), peek: nonnegative number (default 0), label: string`
+- **Message** _(children first)_: a chat message row with sender, avatar, content, and footer. Props: `children: [content IDs], align: "start"|"end", avatar: string (initials)|{initials, src: safe image URL}, name: string, timestamp: string, messageId: string (defaults to element ID), scrollAnchor: bool, footer: string`
+- **Bubble** _(children first)_: a conversational text surface with user and assistant variants and reactions. Props: `children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled)`
+- **Attachment** _(children first)_: a file or image attachment with metadata, upload status, and separate actions. Props: `children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical"`
+- **Marker** _(children first)_: a chat activity status, system note, or date separator. Props: `children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool`
+- **ChangeSummary** _(children first)_: a static in-chat file change summary with addition/deletion totals and explicit host-provided actions. Props: `children: [action IDs] (explicit host-provided actions), files: [{path: string, additions?: number, deletions?: number, status?: "added"|"modified"|"deleted"}], title: string (default "Edited N file(s)"; empty: "No files changed"), description: string, undoLabel: string, undoDisabled: bool. Static markup, no daub.js requirement or file operations. Escape paths as plain text; floor finite counts and clamp rows/totals to 0..Number.MAX_SAFE_INTEGER; other counts become 0. No implicit buttons; host wires child actions. undoLabel/undoDisabled configure React onUndo buttons only. Label demo data with title "Prepared 2 demo files" and description "Demo changes"`
+- **ChatComposer**: a native rich message composer with local attachments, queue controls, model and effort selection, approval intent, plan mode, and user-started dictation. Props: `models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: "ask"|"auto", mode: "chat"|"plan", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights`
 
 ### Custom
 
@@ -164,21 +297,21 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 - **Date Picker**: `.db-date-picker` on `<div>`; parts `db-date-picker__trigger`* `db-date-picker__dropdown`*; needs daub.js. Wraps Calendar in a trigger/dropdown. Click trigger to open calendar.
 - **Checkbox Group**: `.db-checkbox-group` on `<div>`; modifiers `--inline`; parts `db-checkbox-group__label` `db-checkbox-group__helper`. Use --inline for horizontal checkbox sets.
 - **Fieldset**: `.db-fieldset` on `<fieldset>`; parts `db-fieldset__legend` `db-fieldset__content` `db-fieldset__helper`. Groups related form fields with a legend and helper text.
-- **Number Field**: `.db-number-field` on `<div>`; parts `db-number-field__btn` `db-input`*. Combines a numeric input with increment and decrement controls.
+- **Number Field**: `.db-number-field` on `<div>`; parts `db-number-field__btn` `db-input`*; needs daub.js. Combines a numeric input with increment and decrement controls.
 - **Accent Picker**: `.db-accent-picker` on `<div>`; parts `db-accent-picker__dot`*; needs daub.js. Color dots for accent override. data-accent="reset" restores theme default.
 
 ### foundations (5)
 
 - **Label**: `.db-label` on `<label>`; modifiers `--required` `--optional`. --required appends *, --optional appends (optional).
 - **Kbd**: `.db-kbd` on `<kbd>`; modifiers `--sm`. Keyboard key display. Use --sm for smaller inline size.
-- **Surface**: `.db-surface` on `<div>`; modifiers `--raised` `--inset` `--pressed`. Base surface with variants for depth/shadow effects.
-- **Elevation**: `.db-elevation` on `<div>`; modifiers `-1` `-2` `-3`. Shadow utility classes. Three levels of elevation.
+- **Surface**: `.db-surface` on `<div>`; modifiers `--raised` `--inset` `--pressed`. Background, radius, and depth styles. Add padding and spacing when composing a panel.
+- **Elevation**: `.db-elevation` on `<div>`; modifiers `-1` `-2` `-3`. Shadow-only utility classes with three levels of elevation. This example composes padded surfaces.
 - **Prose**: `.db-prose` on `<article>`; modifiers `--sm` `--lg` `--xl` `--2xl`. Typographic defaults for long-form content. Scale: --sm, --lg, --xl, --2xl.
 
 ### feedback (8)
 
 - **Spinner**: `.db-spinner` on `<span>`; modifiers `--sm` `--lg` `--xl`. Animated loading spinner. Inherits current text color.
-- **Toast**: `.db-toast` on `<div>`; modifiers `--success` `--error` `--warning` `--removing`; parts `db-toast__icon` `db-toast__content` `db-toast__title` `db-toast__message` `db-toast__close`; needs daub.js. Created via JS API only. String shorthand: DAUB.toast('msg'). Types: info, success, warning, error.
+- **Toast**: `.db-toast` on `<div>`; modifiers `--success` `--error` `--warning` `--removing`; parts `db-toast__icon` `db-toast__content` `db-toast__title` `db-toast__message` `db-toast__close`; needs daub.js. HTML shows toast anatomy. Create timed notifications with DAUB.toast('msg') or DAUB.toast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 4000 }). Types: info, success, warning, error.
 - **Toast Stack**: `.db-toast-stack` on `<div>`; needs daub.js; created at runtime. Container auto-created by JS when first toast fires. Fixed bottom-right.
 - **Alert**: `.db-alert` on `<div>`; modifiers `--info` `--warning` `--error` `--success`; parts `db-alert__icon` `db-alert__content` `db-alert__title`. Static inline alert. Variants: --info, --warning, --error, --success.
 - **Progress**: `.db-progress` on `<div>`; modifiers `--indeterminate`; parts `db-progress__bar`*. Set progress via --db-progress custom property. Add --indeterminate for animated state.
@@ -195,9 +328,9 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 - **Nav Menu**: `.db-nav-menu` on `<nav>`; parts `db-nav-menu__item`*. Horizontal navigation links. Use --active for current item.
 - **Navbar**: `.db-navbar` on `<nav>`; modifiers `--open`; parts `db-navbar__brand` `db-navbar__nav` `db-navbar__spacer` `db-navbar__actions` `db-navbar__toggle`; needs daub.js. Sticky top bar. At 640px and below db-navbar__nav collapses and db-navbar__toggle opens it; daub.js keeps the toggle's aria-expanded in step. JS: DAUB.toggleNavbar(el) or DAUB.toggleNavbar(el, open). The menu closes on outside click and Escape.
 - **Menubar**: `.db-menubar` on `<div>`; parts `db-menubar__item`* `db-menubar__dropdown`; needs daub.js. Desktop menu bar. Dropdown items use db-dropdown__item class.
-- **Sidebar**: `.db-sidebar` on `<aside>`; modifiers `--collapsed`; parts `db-sidebar__header` `db-sidebar__section` `db-sidebar__label` `db-sidebar__item`* `db-sidebar__footer` `db-sidebar__toggle`; needs daub.js. Collapsible via --collapsed. Items need data-tooltip for collapsed hover labels. JS: DAUB.toggleSidebar(el).
-- **Bottom Navigation**: `.db-bottom-nav` on `<nav>`; modifiers `--always`; parts `db-bottom-nav__item`* `db-bottom-nav__badge`. Fixed mobile bottom bar. Hidden on desktop unless --always. Safe-area aware.
-- **Toolbar**: `.db-toolbar` on `<div>`; modifiers `--vertical`; parts `db-toolbar__group` `db-toolbar__separator`. Groups action buttons and segmented controls in editor or dashboard surfaces.
+- **Sidebar**: `.db-sidebar` on `<aside>`; modifiers `--collapsed` `--expanded`; parts `db-sidebar__header` `db-sidebar__section` `db-sidebar__label` `db-sidebar__item`* `db-sidebar__footer` `db-sidebar__toggle`; needs daub.js. Starts as an icon rail on phones. Toggle with DAUB.toggleSidebar(el), or use --collapsed / --expanded. data-tooltip supplies labels on hover and keyboard focus.
+- **Bottom Navigation**: `.db-bottom-nav` on `<nav>`; modifiers `--always` `--static`; parts `db-bottom-nav__item`* `db-bottom-nav__badge`. Fixed mobile bottom bar. Hidden on desktop unless --always. Use --static for inline placement, as in this preview. Safe-area aware.
+- **Toolbar**: `.db-toolbar` on `<div>`; modifiers `--vertical`; parts `db-toolbar__group` `db-toolbar__separator`; needs daub.js. Groups action buttons and segmented controls in editor or dashboard surfaces.
 - **Theme Switcher**: `.db-theme-switcher` on `<div>`; parts `db-theme-switcher__toggle` `db-theme-switcher__popover`; needs daub.js. Auto-populates toggle + popover if empty. Popover shows 21 families in 4 categories + scheme buttons.
 
 ### data-display (15)
@@ -213,15 +346,15 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 - **Accordion**: `.db-accordion` on `<div>`; parts `db-accordion__item`* `db-accordion__trigger`* `db-accordion__icon` `db-accordion__content`*; needs daub.js. Single-open by default. Add data-multi for multi-open.
 - **Collapsible**: `.db-collapsible` on `<div>`; modifiers `--open`; parts `db-collapsible__trigger`* `db-collapsible__icon` `db-collapsible__content`*; needs daub.js. JS toggles open state and aria-expanded.
 - **Calendar**: `.db-calendar` on `<div>`; parts `db-calendar__header`* `db-calendar__title`* `db-calendar__nav`* `db-calendar__grid`* `db-calendar__day-label`* `db-calendar__day`*; needs daub.js. Day states: --today, --selected, --outside. JS handles month navigation.
-- **Carousel**: `.db-carousel` on `<div>`; parts `db-carousel__track`* `db-carousel__slide`* `db-carousel__btn` `db-carousel__dots` `db-carousel__dot`; needs daub.js. JS handles slide navigation, dot sync, and swipe.
+- **Carousel**: `.db-carousel` on `<div>`; parts `db-carousel__track`* `db-carousel__slide`* `db-carousel__btn` `db-carousel__dots` `db-carousel__dot`; needs daub.js. JS handles slide navigation, dot sync, and swipe. Text slides in this example reserve space for the overlay arrows.
 - **CSS Bar Chart**: `.db-chart` on `<div>`; parts `db-chart__bar`* `db-chart__labels`. Pure CSS bar chart. Set bar height via inline style. --secondary modifier for alt color.
 - **Stat Card**: `.db-stat` on `<div>`; modifiers `--horizontal`; parts `db-stat__label`* `db-stat__value`* `db-stat__change` `db-stat__icon`. KPI/metric card. --horizontal for row layout. __change--up (green) / --down (red). Optional __icon slot.
-- **Chart Card**: `.db-chart-card` on `<div>`; parts `db-chart-card__header` `db-chart-card__title` `db-chart-card__actions` `db-chart-card__body`*. Card wrapper for any chart. Header with title/actions. Body auto-sizes canvas to 100% width.
+- **Chart Card**: `.db-chart-card` on `<div>`; parts `db-chart-card__header` `db-chart-card__title` `db-chart-card__actions` `db-chart-card__body`*. Card wrapper for any chart. Example uses CSS bars without external chart dependencies. Header with title/actions. Body auto-sizes canvas to 100% width.
 
 ### overlays (12)
 
 - **Modal**: `.db-modal` on `<div>`; parts `db-modal__header` `db-modal__title` `db-modal__close` `db-modal__body` `db-modal__footer`; needs daub.js. Wrap in db-modal-overlay with id. Open: DAUB.openModal('id'). Close: DAUB.closeModal('id'). The close button, the backdrop, Escape and any button with data-db-dismiss close it too.
-- **Modal Overlay**: `.db-modal-overlay` on `<div>`; needs daub.js. Container for db-modal. Must have an id attribute for JS API.
+- **Modal Overlay**: `.db-modal-overlay` on `<div>`; needs daub.js. Backdrop container for db-modal. Keep the launcher outside the hidden overlay and match data-db-modal-trigger to its id. The close button, footer, backdrop, and Escape dismiss this example.
 - **Alert Dialog**: `.db-alert-dialog` on `<div>`; modifiers `--open`; parts `db-alert-dialog__overlay`* `db-alert-dialog__panel`* `db-alert-dialog__title` `db-alert-dialog__desc` `db-alert-dialog__actions`; needs daub.js. Open: DAUB.openAlertDialog('id'). data-action="cancel" auto-closes and takes focus on open. data-db-dismiss closes it from any button, a confirm action included; so do the backdrop and Escape.
 - **Sheet**: `.db-sheet` on `<div>`; modifiers `--open` `--right` `--left` `--top` `--bottom`; parts `db-sheet__overlay`* `db-sheet__panel`* `db-sheet__header` `db-sheet__title` `db-sheet__close` `db-sheet__body`; needs daub.js. Sides: --right (default), --left, --top, --bottom. Open: DAUB.openSheet('id'). The close button, the backdrop, Escape and any button with data-db-dismiss close it.
 - **Drawer**: `.db-drawer` on `<div>`; modifiers `--open`; parts `db-drawer__overlay`* `db-drawer__panel`* `db-drawer__handle` `db-drawer__body`; needs daub.js. Mobile-friendly bottom panel. Open: DAUB.openDrawer('id'). The backdrop, Escape and any button with data-db-dismiss close it.
@@ -235,7 +368,7 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 
 ### layout-utility (10)
 
-- **Resizable**: `.db-resizable` on `<div>`; parts `db-resizable__handle`*; needs daub.js. Handle positions: --right, --bottom. JS enables drag-to-resize.
+- **Resizable**: `.db-resizable` on `<div>`; parts `db-resizable__handle`*; needs daub.js. Handle positions: --right, --bottom. JS enables pointer and arrow-key resizing. This example adds inline size bounds and visible grips; its notes scroll within the panel.
 - **Separator**: `.db-separator` on `<hr>`; modifiers `--vertical` `--dashed`; parts `db-separator__label`. Horizontal divider. --vertical for flex row separators. --dashed for dashed style.
 - **Divider**: `.db-divider` on `<hr>`. Simple horizontal divider line.
 - **Scroll Area**: `.db-scroll-area` on `<div>`; modifiers `--horizontal` `--vertical`. Styled scrollbar container. --horizontal for horizontal scroll only.
@@ -245,6 +378,16 @@ Class names follow BEM: a block (`db-card`), parts (`db-card__title`) and modifi
 - **Grid**: `.db-grid` on `<div>`; modifiers `--2` `--3` `--4` `--5` `--6`. CSS grid utility. 2-6 columns. Auto-responsive: collapses at smaller screens.
 - **Frame**: `.db-frame` on `<div>`; modifiers `--flush`; parts `db-frame__header` `db-frame__body`* `db-frame__footer`. Use for embedded previews, canvases, screenshots, and inspector panels.
 - **Group**: `.db-group` on `<div>`; modifiers `--attached` `--vertical`. Generic control grouping. Use --attached for connected controls.
+
+### conversation (7)
+
+- **Message Scroller**: `.db-message-scroller` on `<div>`; parts `db-message-scroller__viewport`* `db-message-scroller__content`* `db-message-scroller__item`* `db-message-scroller__button`; needs daub.js. Streaming-aware conversation viewport. Stable data-db-message-id rows preserve position when history is prepended. Follow pauses when you scroll away; the latest-message control resumes it. See chat-demo.html for a working conversation.
+- **Message**: `.db-message` on `<div>`; modifiers `--end`; parts `db-message__avatar` `db-message__content`* `db-message__header` `db-message__footer`. Conversation row with avatar, sender metadata, content, and footer slots. Add --end for the sender side. Use db-message-group for consecutive messages from one participant.
+- **Bubble**: `.db-bubble` on `<div>`; modifiers `--primary` `--secondary` `--muted` `--tinted` `--outline` `--ghost` `--destructive` `--end`; parts `db-bubble__content`* `db-bubble__reactions`. Content-sized conversational surface with seven color variants and an optional reaction row. Ghost removes the frame for rich assistant content. Reaction state and events belong to your application.
+- **Attachment**: `.db-attachment` on `<div>`; modifiers `--vertical` `--sm` `--xs`; parts `db-attachment__media` `db-attachment__content`* `db-attachment__title`* `db-attachment__description` `db-attachment__actions` `db-attachment__trigger`. File or image attachment with metadata and sibling trigger/actions. Set data-state to idle, uploading, processing, error, or done. Use a native progress element for upload progress. Uploading, persistence, and actions belong to your app.
+- **Marker**: `.db-marker` on `<div>`; modifiers `--border` `--separator`; parts `db-marker__icon` `db-marker__content`*. Inline activity, bordered status row, or centered date separator. Use role=status for progress updates and db-shimmer for busy text; reduced motion disables the animation.
+- **Change Summary**: `.db-change-summary` on `<div>`; parts `db-change-summary__header`* `db-change-summary__icon` `db-change-summary__heading`* `db-change-summary__title`* `db-change-summary__description` `db-change-summary__totals`* `db-change-summary__additions`* `db-change-summary__deletions`* `db-change-summary__actions` `db-change-summary__files`* `db-change-summary__file` `db-change-summary__path` `db-change-summary__counts`. Static framed change summary; requires daub.css, not daub.js. Files and counts come from the host; this example uses demo data, not filesystem changes. Use a 14px or 16px Lucide files icon. Render paths as plain text, additions/deletions with accessible labels, and rows as a simple list. Spec/React counts floor finite numbers, clamp to 0..Number.MAX_SAFE_INTEGER, and clamp aggregate totals; other values become 0. Default title: Edited N file(s), or No files changed for an empty list. Add __actions only with host-wired controls. Spec children are explicit action IDs; renderers create no implicit Undo or View changes buttons. React onUndo/onViewChanges render buttons only when supplied; undoLabel and undoDisabled configure the callback-backed Undo button. The host owns file operations, undo, and diff views.
+- **Chat Composer**: `.db-chat-composer` on `<form>`; parts `db-chat-composer__queue` `db-chat-composer__queued-item` `db-chat-composer__queued-text` `db-chat-composer__queued-actions` `db-chat-composer__panel` `db-chat-composer__attachments` `db-chat-composer__input` `db-chat-composer__toolbar` `db-chat-composer__status` `db-chat-composer__add` `db-chat-composer__add-menu` `db-chat-composer__file-input` `db-chat-composer__folder-input` `db-chat-composer__model` `db-chat-composer__effort` `db-chat-composer__approval` `db-chat-composer__mode` `db-chat-composer__goal` `db-chat-composer__dictation` `db-chat-composer__dictation-bar` `db-chat-composer__dictation-cancel` `db-chat-composer__send` `db-chat-composer__stop` `db-chat-composer__dropzone`; needs daub.js. Requires daub.js and daub.css. DAUB.init() populates an empty native form from escaped data-db-chat-options JSON. Native API: DAUB.createChatComposer(root, options). Default models are demo-only (simulated). The host handles cancelable db:chat-send, db:chat-steer, db:chat-stop, and db:chat-action events and owns transport, uploads, approval enforcement, and persistence. Keep File objects local. Configuration describes intent, not access rights. React roots carry data-db-react and require an explicit controller call.
 
 `*` marks a required part.
 <!-- END GENERATED:html-classes -->

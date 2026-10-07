@@ -102,20 +102,23 @@ Positional order per type, with the prop types from the playground catalog. Prop
 Stack(children: [refs], direction: "vertical"|"horizontal", gap: 0-6 (default 2=8px), justify: "center"|"end"|"between"|"evenly" (main-axis), align: "center"|"end"|"start"|"stretch" (cross-axis), wrap: bool (default true for horizontal), container: "wide"|"narrow"|true)
 Grid(children: [refs], columns: 2-6, gap: 0-6 (default 2=8px), align: "center"|"end", container: "wide"|"narrow"|true)
 Surface(children: [refs], variant: "raised"|"inset"|"pressed")
-Text(content: string, tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", class: string ("db-text-muted" for secondary text))
+Text(content: string (the visible text), tag: "h1"|"h2"|"h3"|"h4"|"p"|"span", class: string | UX: tag is the HTML element)
 Prose(content: string (HTML), size: "sm"|"lg"|"xl"|"2xl")
 Separator(vertical: bool, dashed: bool, label: string)
+Layout(children: [refs], direction, columns, gap, align, valign)
+Divider(vertical, dashed: bool, label: string)
 Icon(name: string (Lucide icon name), size: "xs"|"sm"|"md"|"lg"|"xl", variant: "branded"|"success")
-Link(label: string, class: string)
+Link(label: string, href: string (safe URL), class: string)
+Frame(children: [body IDs], header: string|[childIds], footer: string|[childIds], flush: bool)
 ```
 
 ### Controls
 
 ```text
-Button(label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading: bool, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id))
+Button(label: string, variant: "primary"|"secondary"|"ghost"|"icon-danger"|"icon-success"|"icon-accent", size: "sm"|"lg"|"icon", loading:true during async, icon: string, trigger: "overlayId" (opens Modal/AlertDialog/Sheet/Drawer by id) | UX: one primary per view)
 ButtonGroup(children: [refs])
-Field(children: [refs], label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string, value: string (prefilled text; placeholder is only a hint))
-Input(placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time", value: string (prefilled text))
+Field(children: [refs], label: string, placeholder: string, type: "text"|"email"|"password"|"number", error: bool, helper: string, value: string (prefilled text; placeholder is only a hint) | UX: always include label)
+Input(placeholder: string, size: "sm"|"lg", error: bool, type: "text"|"email"|"password"|"number"|"tel"|"url"|"search"|"date"|"time", value: string (prefilled text) | UX: wrap in Field for label+helper)
 InputGroup(children: [refs], addonBefore: string, addonAfter: string (child is Input))
 InputIcon(children: [refs], icon: string, right: bool (child is Input))
 Search(placeholder: string)
@@ -132,6 +135,11 @@ Kbd(keys: [string])
 Label(text: string, required: bool, optional: bool)
 Spinner(size: "sm"|"lg"|"xl")
 InputOTP(length: number, separator: bool)
+CheckboxGroup(children: [Checkbox IDs], label: string, helper: string, inline: bool)
+Fieldset(children: [field IDs], legend: string, helper: string, disabled: bool)
+Group(children: [control IDs], attached: bool, vertical: bool, label: string or aria-label: string)
+NumberField(value: number, min: number, max: number, step: number (default 1), label: string or aria-label: string)  // named only: defaultValue, disabled, readOnly, name
+Toolbar(children: [control IDs], vertical: bool, label: string or aria-label: string)
 ```
 
 ### Navigation
@@ -140,22 +148,22 @@ InputOTP(length: number, separator: bool)
 Tabs(children: [childIds] (one child per tab — each child becomes a tab panel; order matches tabs array), tabs: [{label, id}], active: string)
 Breadcrumbs(items: [{label, href}])
 Pagination(current: number, total: number, perPage: number)
-Stepper(steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool)
+Stepper(steps: [{label, status: "completed"|"active"|"pending"}], vertical: bool | UX: one active step at a time)
 NavMenu(items: [{label, href, active: bool}])
 Navbar(children: [refs], brand: string, brandHref: string)
 Menubar(items: [{label, dropdown: [{label, href}]}])
-Sidebar(sections: [{title, items: [{label, icon, active, href}]}], collapsed: bool)
-BottomNav(items: [{label, icon, active, badge}])
+Sidebar(sections: [{title, items: [{label, icon, active, href}]}] (inline objects, NOT element ID references), collapsed: bool)
+BottomNav(items: [{label, icon, active, badge}] | UX: max 5 items)
 ```
 
 ### Data Display
 
 ```text
-Card(children: [refs], title: string, description: string, media: string, footer: [childIds], interactive: bool, clip: bool)
+Card(children: [refs], title: string, description: string, media: string (image URL only, NOT element IDs), footer: [childIds] (element IDs rendered in card footer area, NOT a boolean), interactive: bool, clip: bool | UX: footer is an array of element IDs not a boolean)
 Table(columns: [{key, label, numeric}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), sortable: bool)
 DataTable(columns: [{key, label}], rows: [{}] (a cell can list Button ids for row actions: {actions: [editBtn, deleteBtn]}), selectable: bool)
 List(items: [{title, secondary, icon}])
-Badge(text: string, variant: "new"|"updated"|"warning"|"error")
+Badge(text: string, variant: "new"|"updated"|"success"|"warning"|"error")
 Avatar(initials: string, src: string (image URL only; skip it with size: "sm"), size: "sm"|"md"|"lg")
 AvatarGroup(avatars: [{initials, src}], max: number)
 Calendar(selected: "YYYY-MM-DD" (date to highlight), today: "YYYY-MM-DD" (today override))
@@ -175,20 +183,22 @@ Progress(value: number, indeterminate: bool)
 Skeleton(variant: "text"|"heading"|"avatar"|"btn", lines: number)
 EmptyState(icon: string, title: string, message: string, children: [childIds] (action Buttons shown under the message))
 Tooltip(children: [refs], text: string, position: "top"|"bottom"|"left"|"right")
+Meter(value: number (default 0), min: number (default 0), max: number (default 100), status: "success"|"warning"|"error", label: string or aria-label: string)
 ```
 
 ### Overlays
 
 ```text
-Modal(children: [refs], id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm))
+Modal(children: [refs], id: string, title: string, footer: [childIds] (buttons for modal footer; omit for default Cancel/Confirm) | UX: clear close affordance)
 AlertDialog(id: string, title: string, description: string, footer: [childIds] (action buttons; omit for default Cancel/Continue))
 Sheet(children: [refs], id: string, position: "right"|"left"|"top"|"bottom")
 Drawer(children: [refs], id: string)
-Popover(children: [childIds] (first child becomes the trigger when it is a Button or Link and there are 2+ children; other children are the content), position: "top"|"bottom"|"left"|"right")
+Popover(children: [childIds] (first child becomes the trigger when it is a Button and there are 2+ children; other children are the content), position: "top"|"bottom"|"left"|"right")
 HoverCard(children: [refs])
 DropdownMenu(items: [{label, icon, separator, groupLabel, active: bool}])
 ContextMenu(items: [{label, icon, separator}])
-CommandPalette(id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}])
+CommandPalette(id: string, placeholder: string, groups: [{label, items: [{label, icon, shortcut}]}] (inline objects, NOT element ID references))
+PreviewCard(children: [childIds], trigger: string|[childIds], title: string, description: string, media: string (safe image URL)|[childIds], mediaAlt: string)
 ```
 
 ### Layout Utilities
@@ -207,15 +217,27 @@ StatCard(label: string, value: string, trend: "up"|"down" (direction only, never
 ChartCard(children: [Chart element] (empty ChartCard renders "No data"), title: string)  // named only: bars
 ```
 
+### Chat
+
+```text
+MessageScroller(children: [row IDs], height: number (default 360px), autoScroll: bool (default true), defaultScrollPosition: "start"|"end"|"last-anchor" (default "end"), peek: nonnegative number (default 0))  // named only: label
+Message(children: [content IDs], align: "start"|"end", avatar: string (initials)|{initials, src: safe image URL}, name: string, timestamp: string, messageId: string (defaults to element ID), scrollAnchor: bool, footer: string)
+Bubble(children: [content IDs], content: string (plain text), variant: "primary"|"default"|"secondary"|"muted"|"tinted"|"outline"|"ghost"|"destructive", align: "start"|"end", reactions: [{label, count, pressed}] (app-controlled))
+Attachment(children: [action IDs] (separate from overlay link), name: string, description: string, src: safe image URL, alt: string, href: safe URL, size: "sm"|"xs", state: "idle"|"uploading"|"processing"|"error"|"done" (default "idle"), progress: 0-100, orientation: "horizontal"|"vertical")
+Marker(children: [content IDs], content: string (plain text), icon: string (Lucide), variant: "border"|"separator", status: bool (polite live region), busy: bool)
+ChangeSummary(children: [action IDs] (explicit host-provided actions), files: [{path: string, additions?: number, deletions?: number, status?: "added"|"modified"|"deleted"}], title: string (default "Edited N file(s)"; empty: "No files changed"), description: string, undoLabel: string, undoDisabled: bool. Static markup)
+ChatComposer(models: [{id, label, efforts?: string[]}], model: string, effort: string, approval: "ask"|"auto", mode: "chat"|"plan", actions: [{id, label, icon?, disabled?}], capabilities: {queue?, steer?, attachments?, folders?, dictation?, approval?} (boolean flags), busy: bool, placeholder: string, id: string. Empty native form; requires daub.js and daub.css. Default model labels are demo-only (simulated). Host handles db:chat-send/steer/stop/action; configuration grants no access rights)
+```
+
 ### Custom
 
 ```text
 CustomHTML(html: string (raw HTML using DAUB classless CSS), css: string (CSS rules injected as a <style> tag), js: string (vanilla JS, receives "container" arg for this element and "preview" arg for the entire preview pane — use preview.querySelector('[data-spec-id="someId"]') to target other elements), children: [childIds] (standard DAUB component IDs rendered inside the container — html renders first, then children append after))
 ```
 
-Children-first types (21): Stack, Grid, Surface, ButtonGroup, Field, InputGroup, InputIcon, Tabs, Navbar, Card, AspectRatio, ScrollArea, Tooltip, Modal, Sheet, Drawer, Popover, HoverCard, Collapsible, Resizable, ChartCard.
+Children-first types (34): Stack, Grid, Surface, Layout, ButtonGroup, Field, InputGroup, InputIcon, CheckboxGroup, Fieldset, Group, Tabs, Navbar, Toolbar, Card, Frame, AspectRatio, ScrollArea, MessageScroller, Message, Bubble, Attachment, Marker, ChangeSummary, Tooltip, Modal, Sheet, Drawer, Popover, HoverCard, PreviewCard, Collapsible, Resizable, ChartCard.
 
 Children elsewhere: EmptyState (position 4), CustomHTML (position 4).
 
-Parser types: 72. Any other PascalCase name tokenizes as a plain identifier and becomes a dangling child reference.
+Parser types: 89. Any other PascalCase name tokenizes as a plain identifier and becomes a dangling child reference.
 <!-- END GENERATED:signatures -->

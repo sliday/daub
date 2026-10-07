@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Toast } from "./Toast";
+import { PortalThemeContext, portalTextStyle } from "./ThemeProvider";
 
 interface ToastItem {
   id: string;
@@ -26,6 +27,7 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 let uid = 0;
 
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const theme = useContext(PortalThemeContext);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const timers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
@@ -57,7 +59,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       {toasts.length > 0 &&
         createPortal(
-          <div className="db-toast-stack">
+          <div data-db-react="" data-theme={theme} style={portalTextStyle} className="db-toast-stack">
             {toasts.map((t) => (
               <Toast key={t.id} id={t.id} type={t.type} title={t.title} message={t.message} onDismiss={dismiss} />
             ))}

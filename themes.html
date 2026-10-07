@@ -18,7 +18,7 @@
   <meta property="og:description" content="Browse all 42 DAUB themes — 21 families with light and dark variants. Preview colors, components, and apply themes live.">
   <meta property="og:url" content="https://daub.dev/themes.html">
   <meta property="og:site_name" content="DAUB UI">
-  <meta property="og:image" content="https://daub.dev/og-image.png">
+  <meta property="og:image" content="https://daub.dev/og-image.png?v=3.20.6">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="DAUB Theme Gallery — 42 Themes">
@@ -28,7 +28,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="DAUB — Theme Gallery | 21 Families, 42 Variants">
   <meta name="twitter:description" content="Browse all 42 DAUB themes — 21 families with light and dark variants. Preview and apply live.">
-  <meta name="twitter:image" content="https://daub.dev/og-image.png">
+  <meta name="twitter:image" content="https://daub.dev/og-image.png?v=3.20.6">
   <meta name="twitter:site" content="@staskulesh">
 
   <!-- FOUC prevention -->
@@ -37,10 +37,11 @@
   </script>
 
   <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"></script>
+  <script src="assets/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ"></script>
 
   <!-- DAUB -->
-  <link rel="stylesheet" href="daub.css?v=3.20.5">
+  <link rel="stylesheet" href="daub.css?v=3.20.6">
+  <script src="site-nav.js" defer></script>
 
   <style>
     body { margin: 0; overflow-x: hidden; }
@@ -61,10 +62,10 @@
     .db-nav__github { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 500; color: var(--db-charcoal); text-decoration: none; padding: 6px 12px; border-radius: var(--db-radius-2); border: 1px solid var(--db-sand); transition: border-color var(--db-transition); }
     .db-nav__github:hover { border-color: var(--db-terracotta); }
     .db-nav__toggle { display: none; background: none; border: none; cursor: pointer; color: var(--db-charcoal); padding: 6px; }
-    @media (max-width: 768px) {
+    @media (max-width: 1100px) {
       .db-nav { flex-wrap: wrap; height: auto; padding: 8px 16px; gap: 4px; }
       .db-nav__toggle { display: block; }
-      .db-nav__links { display: none; position: absolute; top: 48px; left: 0; right: 0; flex-direction: column; background: var(--db-cream); border-bottom: 1px solid var(--db-sand); padding: 8px 16px; gap: 0; box-shadow: var(--db-shadow-2); z-index: 99; }
+      .db-nav__links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: var(--db-cream); border-bottom: 1px solid var(--db-sand); padding: 8px 16px; gap: 0; box-shadow: var(--db-shadow-2); z-index: 99; max-height: calc(100dvh - 48px); overflow-y: auto; }
       .db-nav__links li { width: 100%; }
       .db-nav__links a { display: block; width: 100%; padding: 10px 12px; font-size: 0.875rem; }
       .db-nav__github { width: 100%; justify-content: flex-start; border: none; padding: 10px 12px !important; }
@@ -217,17 +218,17 @@
 </head>
 <body>
   <header>
-  <nav class="db-nav">
+  <nav class="db-nav" aria-label="Main">
     <a href="index.html" class="db-nav__brand">DAUB</a>
-    <button class="db-nav__toggle" aria-label="Menu" onclick="this.closest('.db-nav').classList.toggle('db-nav--open')">
+    <button class="db-nav__toggle" aria-label="Menu" aria-controls="main-nav-links" aria-expanded="false" onclick="this.setAttribute('aria-expanded',String(this.closest('.db-nav').classList.toggle('db-nav--open')))">
       <i data-lucide="menu" style="width:20px;height:20px;"></i>
     </button>
-    <ul class="db-nav__links">
-      <li><a href="index.html#components-index">Components</a></li>
+    <ul class="db-nav__links" id="main-nav-links">
+      <li><a href="components.html">Components</a></li>
       <li><a href="docs.html">Docs</a></li>
       <li><a href="demo.html">Layouts</a></li>
       <li><a href="playground.html">Playground</a></li>
-      <li><a href="themes.html" class="db-nav__link--active">Themes</a></li>
+      <li><a href="themes.html" class="db-nav__link--active" aria-current="page">Themes</a></li>
       <li><a href="roadmap.html">Roadmap</a></li>
       <li><a href="case-studies.html">Case Studies</a></li>
       <li><a href="llms.txt">AI Docs</a></li>
@@ -243,13 +244,13 @@
 
   <section class="tg-hero">
     <h1>Theme Gallery</h1>
-    <p>21 theme families, 42 light &amp; dark variants. Click any card to preview it live on this page, then apply it across the library.</p>
+    <p>21 theme families, 42 light &amp; dark variants.</p>
   </section>
 
-  <div class="tg-filters">
-    <button class="active" data-filter="all">All (42)</button>
-    <button data-filter="light">Light</button>
-    <button data-filter="dark">Dark</button>
+  <div class="tg-filters" role="group" aria-label="Filter themes">
+    <button class="active" data-filter="all" aria-pressed="true">All (42)</button>
+    <button data-filter="light" aria-pressed="false">Light</button>
+    <button data-filter="dark" aria-pressed="false">Dark</button>
   </div>
 
   <div class="tg-grid" id="tg-grid"></div>
@@ -259,11 +260,11 @@
     <a href="theme-preview.html">Test it in Theme Preview &rarr;</a></p>
   </section>
 
-  <script src="daub.js?v=3.20.5"></script>
+  <script src="daub.js?v=3.20.6"></script>
   <script>
   (function() {
     var THEMES = [
-      { id: '', name: 'Default', scheme: 'light' },
+      { id: 'light', name: 'Default', scheme: 'light' },
       { id: 'dark', name: 'Dark', scheme: 'dark' },
       { id: 'grunge-light', name: 'Grunge Light', scheme: 'light' },
       { id: 'grunge-dark', name: 'Grunge Dark', scheme: 'dark' },
@@ -309,13 +310,27 @@
 
     var SWATCH_PROPS = ['--db-cream', '--db-terracotta', '--db-ink', '--db-sand', '--db-charcoal'];
     var grid = document.getElementById('tg-grid');
-    var currentTheme = document.documentElement.getAttribute('data-theme') || '';
+    var currentTheme = DAUB.getTheme();
+    var defaultTokens = {};
+    Array.from(document.styleSheets).forEach(function(sheet) {
+      if (!sheet.href || sheet.href.indexOf('daub.css') === -1) return;
+      Array.from(sheet.cssRules).forEach(function(rule) {
+        if (rule.selectorText === ':root') {
+          Array.from(rule.style).forEach(function(prop) { defaultTokens[prop] = rule.style.getPropertyValue(prop); });
+        }
+      });
+    });
 
     function buildCard(theme) {
       var card = document.createElement('div');
       card.className = 'tg-card';
       card.setAttribute('data-scheme-type', theme.scheme);
-      if (theme.id) card.setAttribute('data-theme', theme.id);
+      card.setAttribute('data-theme', theme.id);
+      if (theme.id === 'light') {
+        Object.keys(defaultTokens).forEach(function(prop) {
+          card.style.setProperty(prop, defaultTokens[prop]);
+        });
+      }
 
       var swatchesHtml = SWATCH_PROPS.map(function(prop) {
         return '<div class="tg-card__swatch" data-prop="' + prop + '"></div>';
@@ -338,17 +353,12 @@
         '</div>' +
         '<div class="tg-card__footer">' +
           '<span class="db-chip db-chip--neutral" style="font-size:0.6875rem;">' + (theme.id || 'default') + '</span>' +
-          '<button class="tg-card__apply' + (isActive ? ' active' : '') + '">' + (isActive ? 'Active' : 'Apply') + '</button>' +
+          '<button class="tg-card__apply' + (isActive ? ' active' : '') + '" aria-label="Apply ' + theme.name + ' theme" aria-pressed="' + isActive + '">' + (isActive ? 'Active' : 'Apply') + '</button>' +
         '</div>';
 
       card.querySelector('.tg-card__apply').addEventListener('click', function() {
-        if (theme.id) {
-          document.documentElement.setAttribute('data-theme', theme.id);
-          localStorage.setItem('db-theme', theme.id);
-        } else {
-          document.documentElement.removeAttribute('data-theme');
-          localStorage.removeItem('db-theme');
-        }
+        DAUB.setTheme(theme.id);
+        DAUB.setScheme(theme.scheme);
         currentTheme = theme.id;
         updateSwatches();
         updateActiveButtons();
@@ -373,6 +383,7 @@
       grid.querySelectorAll('.tg-card__apply').forEach(function(btn) {
         var card = btn.closest('.tg-card');
         var cardTheme = card.getAttribute('data-theme') || '';
+        btn.setAttribute('aria-pressed', String(cardTheme === currentTheme));
         if (cardTheme === currentTheme) {
           btn.textContent = 'Active';
           btn.classList.add('active');
@@ -396,8 +407,9 @@
     // Filters
     document.querySelectorAll('.tg-filters button').forEach(function(btn) {
       btn.addEventListener('click', function() {
-        document.querySelectorAll('.tg-filters button').forEach(function(b) { b.classList.remove('active'); });
+        document.querySelectorAll('.tg-filters button').forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         var filter = btn.getAttribute('data-filter');
         grid.querySelectorAll('.tg-card').forEach(function(card) {
           if (filter === 'all') {
@@ -408,6 +420,12 @@
         });
       });
     });
+
+    new MutationObserver(function() {
+      currentTheme = DAUB.getTheme();
+      updateSwatches();
+      updateActiveButtons();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'style'] });
 
     // Init Lucide
     if (window.lucide) lucide.createIcons();

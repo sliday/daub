@@ -54,9 +54,15 @@ export function loadSources() {
   const require = createRequire(import.meta.url);
   const parser = require(join(ROOT, 'daub-openui-parser.js'));
   const mcpCats = literalAfter(mcp, /const COMP_CATEGORIES\s*=/, 'mcp.js');
-  // get_component_catalog lists the light and dark theme of each family in mcp.js THEME_FAMILIES
-  if (!/themes:\s*\{\s*light:\s*LIGHT_THEMES,\s*dark:\s*DARK_THEMES\s*\}/.test(mcp)) throw new Error('build-skill: get_component_catalog themes not found in mcp.js');
-  const mcpFamilies = literalAfter(mcp, /const THEME_FAMILIES\s*=/, 'mcp.js');
+  let mcpCatalogThemes;
+  if (/themes:\s*THEMES\b/.test(mcp)) {
+    const sharedThemes = require(join(ROOT, 'daub-render.js')).THEMES;
+    mcpCatalogThemes = Array.isArray(sharedThemes) ? sharedThemes : sharedThemes.light.concat(sharedThemes.dark);
+  } else {
+    if (!/themes:\s*\{\s*light:\s*LIGHT_THEMES,\s*dark:\s*DARK_THEMES\s*\}/.test(mcp)) throw new Error('build-skill: get_component_catalog themes not found in mcp.js');
+    const mcpFamilies = literalAfter(mcp, /const THEME_FAMILIES\s*=/, 'mcp.js');
+    mcpCatalogThemes = Object.values(mcpFamilies).flatMap(f => [f.light, f.dark]);
+  }
   const llms = read('llms.txt');
   const character = {};
   for (const m of llms.matchAll(/^\| ([^|`]+?) \| `([^`]+)` \| `([^`]+)` \| ([^|]+?) \|$/gm)) character[m[2] + '/' + m[3]] = { label: m[1], character: m[4] };
@@ -73,7 +79,7 @@ export function loadSources() {
     mcpTypes: mcpCats.flatMap(([, types]) => types),
     mcpTools: literalAfter(mcp, /const TOOLS\s*=/, 'mcp.js'),
     mcpBlocks: literalAfter(mcp, /const BLOCK_INDEX\s*=/, 'mcp.js'),
-    mcpCatalogThemes: Object.values(mcpFamilies).flatMap(f => [f.light, f.dark]),
+    mcpCatalogThemes,
     themes: literalAfter(daub, /var THEMES\s*=/, 'daub.js'),
     families: literalAfter(daub, /var THEME_FAMILIES\s*=/, 'daub.js'),
     themeCategories: literalAfter(daub, /var THEME_CATEGORIES\s*=/, 'daub.js'),

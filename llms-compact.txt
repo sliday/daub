@@ -1,10 +1,11 @@
 # DAUB UI — Compact Reference
 
-> Version: 3.20.5
+> Version: 3.20.6
+> HTML catalog: 91 components | Browser/OpenUI/MCP: 89 renderer types
 > Full docs: https://daub.dev/llms.txt
 > CSS: https://daub.dev/daub.css | JS: https://daub.dev/daub.js
 > Classless: https://daub.dev/daub-classless.css
-> React: `npm install daub-react daub-ui` (78 typed JSX components)
+> React: `npm install daub-react daub-ui` (React and React DOM 19+, typed JSX components and compound chat primitives; @shadcn/react 0.3.1 scroll engine; app bundler required)
 > Prefix: `db-` (classes), `--db-` (CSS vars)
 
 ## Quick Start
@@ -12,6 +13,75 @@
 <link rel="stylesheet" href="https://daub.dev/daub.css">
 <script src="https://daub.dev/daub.js"></script>
 ```
+
+## Chat Components
+
+Chat primitives: MessageScroller, Message, Bubble, Attachment, Marker, ChangeSummary, ChatComposer.
+Your app owns messages, AI transport, uploads, persistence, and reaction selection.
+Use ChatComposer for native rich input. Example: `chat-demo.html`.
+
+- `db-message-scroller` > `__viewport` > `__content` > `__item[data-db-message-id]`; mark anchors with `data-db-scroll-anchor="true"`. Sibling `__button[data-db-scroll-to="start|end"]` controls. Root height 360px; `data-db-auto-scroll="true|false"` (default true), `data-db-scroll-position="start|end|last-anchor"` (default end), `data-db-scroll-peek="0"` (nonnegative pixels). Run `DAUB.init(parent)` after adding markup.
+- `db-message` / `--end`; parts `__avatar`, `__content`, `__header`, `__footer`; group `db-message-group`.
+- `db-bubble` / `--primary` (default), `--secondary`, `--muted`, `--tinted`, `--outline`, `--ghost`, `--destructive`, `--end`; parts `__content`, `__reactions`; group `db-bubble-group`.
+- `db-attachment` / `--vertical`, `--sm`, `--xs`; parts `__media` (`--image`), `__content`, `__title`, `__description`, sibling overlay link `__trigger` and `__actions` > `__action`. Group `db-attachment-group`. `data-state="idle|uploading|processing|error|done"`. Keep buttons outside the overlay anchor; app controls state/progress.
+- `db-marker` / `--border`, `--separator`; parts `__icon`, `__content`. `role="status"` for live status; `aria-busy="true"` during work. `db-shimmer` on text, `db-scroll-fade` on scroll viewports.
+- `db-change-summary`: static framed file list with labelled `__additions` / `__deletions`, `__totals`, and optional `__actions` inside `__header`. Other parts: `__icon` (Lucide files, 14/16px), `__heading`, `__title`, `__description`, `__files` (ul), `__file` (li), `__path`, `__counts`. No `daub.js` requirement. Props: files `[{path:string,additions?:number,deletions?:number,status?:"added"|"modified"|"deleted"}]`, title?, description?, undoLabel?, undoDisabled?. Default `Edited N file(s)`; empty `No files changed`. Escape paths as plain text; floor finite counts and clamp rows/totals to `0..Number.MAX_SAFE_INTEGER`; other counts become 0. No file operations or implicit buttons. Spec children are host-wired action IDs; undoLabel/undoDisabled configure only React onUndo buttons. Examples: title `Prepared 2 demo files`, description `Demo changes`, no actions.
+- `db-chat-composer` on an empty `<form data-db-chat-options="escaped JSON">`. Requires `daub.js` and `daub.css`; `DAUB.init(parent)` enhances native roots. Options: models `[{id,label,efforts?:string[]}]`, model, effort, approval `ask|auto`, mode `chat|plan`, actions `[{id,label,icon?,disabled?}]`, capabilities `{queue?,steer?,attachments?,folders?,dictation?,approval?}` (boolean flags), busy, placeholder. Default models are demo-only (simulated). Queue, steer, attachments, approval, and supported dictation default on; folders need browser support. The queue sits outside the composer panel. Dictation requires a user command.
+
+OpenUI: children first, named metadata. Attachment/ChangeSummary children are actions; other
+chat children render inside content. Plain text props escape HTML; image/link
+URLs use the renderer URL guard. Bubble reactions accept `[{label,count,pressed}]`.
+
+```text
+MessageScroller(children, height, autoScroll, defaultScrollPosition, peek)
+Message(children, align, avatar, name, timestamp, messageId, scrollAnchor, footer)
+Bubble(children, content, variant, align, reactions)
+Attachment(children, name, description, src, alt, href, size, state, progress, orientation)
+Marker(children, content, icon, variant, status, busy)
+ChangeSummary(children, files, title, description, undoLabel, undoDisabled)
+ChatComposer(models, model, effort, approval, mode, actions, capabilities, busy, placeholder, id)
+```
+
+Native API (mount root first): `DAUB.createMessageScroller(root, {autoScroll,
+scrollPosition, scrollPeek})` returns a handle or null. Handle: `scrollToStart`,
+`scrollToEnd`, `scrollToMessage(id, {block, behavior})`, `getState`, `destroy`.
+Commands return booleans. State: `{atStart,atEnd,currentAnchorId,visibleMessageIds}`;
+listen for bubbling `db:message-scroll`. Native option names differ from renderer
+props `defaultScrollPosition` and `peek`. Destroy before discarding the handle.
+
+`DAUB.createChatComposer(root, options)` merges explicit options over
+`data-db-chat-options`. Controller: `getState`, `setBusy`, `setStatus`, `setDraft`, `clearDraft`,
+`attachFiles(File[])`, `getQueue`, `takeNext`, `removeQueued(id)`,
+`editQueued(id,text)`, `steerQueued(id)`, `setModel`, `setEffort`, `setMode`,
+`setApproval`, `setGoal(string|null)`, `startDictation`, `stopDictation`, `destroy`.
+Cancelable events: `db:chat-send/steer` (`detail.request`), `db:chat-stop`,
+`db:chat-action` (`detail.action`). Informational: `db:chat-queue/config/dictation`;
+`db:chat-change` carries `detail.state` for sidebar counts. `clearDraft()` clears
+pending text/files and preserves the queue.
+Prevent default to retain rejected drafts or queued items. Requests: id, text,
+local File[], model, effort, approval, mode, optional goal. Host sets busy during
+responses, drains the queue, and owns transport and approval enforcement.
+Configuration grants no access rights. No reading/uploading File content without
+host action. Destroy cancels dictation and disposes listeners/preview URLs.
+
+React `ChangeSummary`: typed `files`, title?, description?, undoLabel? (default
+Undo), undoDisabled? (default false), div props/ref, action children, and
+`onUndo` / `onViewChanges` (React button mouse event handlers). Each callback
+renders its button only when supplied. The host owns undo and diff views.
+No `daub.js` requirement; React escapes text and supports SSR.
+
+React `ChatComposer`: models, model, effort, approval, mode, actions, capabilities,
+busy, placeholder, plus id, form props, form ref, and `onReady(controller)`.
+Set an initial goal through `onReady(controller)` with `controller.setGoal(...)`;
+goal is not a React prop. Load `daub.js` before mounting; SSR needs no window.
+React-owned `data-db-react` roots skip native auto-init. `onSend`, `onSteer`,
+`onStop`, `onAction`, `onQueue`, `onConfig`, `onDictation`, `onChange` receive native
+CustomEvents; callbacks can preventDefault. Scalar props use native setters.
+Changes to models/actions/capabilities/placeholder update the existing controller
+and preserve drafts and queued requests. Unmount calls destroy.
+`onChange` receives `CustomEvent<{state: ChatComposerState}>`. Compose Sidebar and Navbar
+around MessageScroller plus ChatComposer; see the AI-facing recipe in
+`references/components.md`. The host supplies menu actions and sidebar views.
 
 ## Top 15 Components
 

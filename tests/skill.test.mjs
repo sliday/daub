@@ -150,7 +150,7 @@ describe('daub-ui skill: examples', () => {
       tg: { type: 'Toggle', props: { label: 'Email notifications' } },
       ic: { type: 'Icon', props: { name: 'star' } },
       b: { type: 'Button', props: { label: 'Open', trigger: 'nope' } },
-      stray: { type: 'Divider' },
+      stray: { type: 'UnknownComponent' },
     };
     Object.assign(els, {
       tgl: { type: 'ToggleGroup', props: { options: [{ label: 'Yearly (save 20%)', value: 'y' }], selected: 'y' } },
@@ -163,7 +163,7 @@ describe('daub-ui skill: examples', () => {
     els.page.children.push('tgl', 'sa', 'vis', 'row');
     const r = lintSpec({ theme: 'paper', root: 'page', elements: els }, LINT_OPTS);
     const all = r.errors.concat(r.warnings).join('\n');
-    for (const needle of ['unknown theme "paper"', 'Text reads "content", not "text"', 'content and tag are swapped', 'renders "No data"', 'takes data objects', 'use Switch', 'gap is a 0-6 token', 'trigger "nope"', 'stray (Divider): unknown type', 'not reachable', 'root: no container', 'use one word per option', 'hides the rows below', 'belong on the element', 'its icon collapses']) {
+    for (const needle of ['unknown theme "paper"', 'Text reads "content", not "text"', 'content and tag are swapped', 'renders "No data"', 'takes data objects', 'use Switch', 'gap is a 0-6 token', 'trigger "nope"', 'stray (UnknownComponent): unknown type', 'not reachable', 'root: no container', 'use one word per option', 'hides the rows below', 'belong on the element', 'its icon collapses']) {
       assert.ok(all.includes(needle), `lint should report: ${needle}\n${all}`);
     }
   });

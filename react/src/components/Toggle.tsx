@@ -10,7 +10,7 @@ export interface ToggleProps extends Omit<ComponentProps<"button">, "onChange"> 
 }
 
 export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
-  ({ pressed, defaultPressed, onChange, size, className, children, ...props }, ref) => {
+  ({ pressed, defaultPressed, onChange, size, className, children, onClick, ...props }, ref) => {
     const [on, setOn] = useControllable(pressed, defaultPressed ?? false, onChange);
 
     return (
@@ -24,8 +24,12 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
           className,
         )}
         aria-pressed={on}
-        onClick={() => setOn(!on)}
+        onClick={(event) => {
+          onClick?.(event);
+          if (!event.defaultPrevented) setOn(!on);
+        }}
         {...props}
+        data-db-react=""
       >
         {children}
       </button>

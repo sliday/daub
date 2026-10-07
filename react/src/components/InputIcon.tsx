@@ -12,8 +12,9 @@ export const InputIcon = forwardRef<HTMLDivElement, InputIconProps>(
       ref={ref}
       className={cn("db-input-icon", right && "db-input-icon--right", className)}
       {...props}
+      data-db-react=""
     >
-      {icon && <span>{icon}</span>}
+      {icon && <span className="db-input-icon__icon" aria-hidden="true">{icon}</span>}
       {children}
     </div>
   ),

@@ -42,7 +42,7 @@ Page recipes that combine blocks well:
 ## Index
 
 <!-- BEGIN GENERATED:index (tools/build-skill.mjs) -->
-266 blocks in 34 categories. 228 of them are listed by the hosted MCP `get_block_library` (marked MCP); every file is served at `https://daub.dev/blocks/<file>`.
+266 blocks in 34 categories. 266 of them are listed by the hosted MCP `get_block_library` (marked MCP); every file is served at `https://daub.dev/blocks/<file>`.
 
 ### app-specific (6)
 
@@ -144,35 +144,35 @@ Page recipes that combine blocks well:
 
 ### cta (30)
 
-- `cta-abstract-images-01` 17 el: Stack, Grid, Text, ButtonGroup, Button, Image. File `blocks/cta/cta-abstract-images-01.json`
+- `cta-abstract-images-01` 17 el, MCP: Stack, Grid, Text, ButtonGroup, Button, Image. File `blocks/cta/cta-abstract-images-01.json`
 - `cta-banner-01` 8 el, MCP: Surface, Stack, Text, Button. File `blocks/cta/cta-banner-01.json`
-- `cta-card-horizontal-01` 10 el: Stack, Card, Text, ButtonGroup, Button. File `blocks/cta/cta-card-horizontal-01.json`
-- `cta-card-horizontal-split-01` 11 el: Stack, Surface, Card, Text, ButtonGroup, Button. File `blocks/cta/cta-card-horizontal-split-01.json`
-- `cta-card-vertical-01` 10 el: Stack, Card, Text, ButtonGroup, Button. File `blocks/cta/cta-card-vertical-01.json`
+- `cta-card-horizontal-01` 10 el, MCP: Stack, Card, Text, ButtonGroup, Button. File `blocks/cta/cta-card-horizontal-01.json`
+- `cta-card-horizontal-split-01` 11 el, MCP: Stack, Surface, Card, Text, ButtonGroup, Button. File `blocks/cta/cta-card-horizontal-split-01.json`
+- `cta-card-vertical-01` 10 el, MCP: Stack, Card, Text, ButtonGroup, Button. File `blocks/cta/cta-card-vertical-01.json`
 - `cta-download-01` 17 el, MCP: Grid, Stack, Badge, Text, Button, Image, Chip. File `blocks/cta/cta-download-01.json`
 - `cta-floating-01` 10 el, MCP: Surface, Stack, Badge, Text, Button. File `blocks/cta/cta-floating-01.json`
-- `cta-iphone-mockup-01` 14 el: Stack, Grid, Text, List, ButtonGroup, Button, Image. File `blocks/cta/cta-iphone-mockup-01.json`
-- `cta-iphone-mockup-02` 9 el: Stack, Text, ButtonGroup, Button, Image. File `blocks/cta/cta-iphone-mockup-02.json`
-- `cta-iphone-mockup-03` 9 el: Stack, Text, ButtonGroup, Button, Image. File `blocks/cta/cta-iphone-mockup-03.json`
-- `cta-iphone-mockup-04` 14 el: Stack, Grid, Image, Text, List, ButtonGroup, Button. File `blocks/cta/cta-iphone-mockup-04.json`
-- `cta-screen-mockup-01` 14 el: Stack, Grid, Text, List, ButtonGroup, Button, Image. File `blocks/cta/cta-screen-mockup-01.json`
-- `cta-screen-mockup-02` 9 el: Stack, Text, ButtonGroup, Button, Image. File `blocks/cta/cta-screen-mockup-02.json`
-- `cta-screen-mockup-03` 9 el: Stack, Text, ButtonGroup, Button, Image. File `blocks/cta/cta-screen-mockup-03.json`
-- `cta-screen-mockup-04` 20 el: Stack, Grid, Image, Text, Badge, ButtonGroup, Button. File `blocks/cta/cta-screen-mockup-04.json`
+- `cta-iphone-mockup-01` 14 el, MCP: Stack, Grid, Text, List, ButtonGroup, Button, Image. File `blocks/cta/cta-iphone-mockup-01.json`
+- `cta-iphone-mockup-02` 9 el, MCP: Stack, Text, ButtonGroup, Button, Image. File `blocks/cta/cta-iphone-mockup-02.json`
+- `cta-iphone-mockup-03` 9 el, MCP: Stack, Text, ButtonGroup, Button, Image. File `blocks/cta/cta-iphone-mockup-03.json`
+- `cta-iphone-mockup-04` 14 el, MCP: Stack, Grid, Image, Text, List, ButtonGroup, Button. File `blocks/cta/cta-iphone-mockup-04.json`
+- `cta-screen-mockup-01` 14 el, MCP: Stack, Grid, Text, List, ButtonGroup, Button, Image. File `blocks/cta/cta-screen-mockup-01.json`
+- `cta-screen-mockup-02` 9 el, MCP: Stack, Text, ButtonGroup, Button, Image. File `blocks/cta/cta-screen-mockup-02.json`
+- `cta-screen-mockup-03` 9 el, MCP: Stack, Text, ButtonGroup, Button, Image. File `blocks/cta/cta-screen-mockup-03.json`
+- `cta-screen-mockup-04` 20 el, MCP: Stack, Grid, Image, Text, Badge, ButtonGroup, Button. File `blocks/cta/cta-screen-mockup-04.json`
 - `cta-simple-01` 6 el, MCP: Stack, Text, ButtonGroup, Button. File `blocks/cta/cta-simple-01.json`
-- `cta-simple-centered-01` 8 el: Stack, Text, ButtonGroup, Button. File `blocks/cta/cta-simple-centered-01.json`
-- `cta-simple-left-01` 8 el: Stack, Text, ButtonGroup, Button. File `blocks/cta/cta-simple-left-01.json`
-- `cta-simple-logos-01` 17 el: Stack, Text, ButtonGroup, Button, Separator, Icon. File `blocks/cta/cta-simple-logos-01.json`
-- `cta-simple-logos-02` 25 el: Stack, Grid, Text, ButtonGroup, Button, Icon. File `blocks/cta/cta-simple-logos-02.json`
+- `cta-simple-centered-01` 8 el, MCP: Stack, Text, ButtonGroup, Button. File `blocks/cta/cta-simple-centered-01.json`
+- `cta-simple-left-01` 8 el, MCP: Stack, Text, ButtonGroup, Button. File `blocks/cta/cta-simple-left-01.json`
+- `cta-simple-logos-01` 17 el, MCP: Stack, Text, ButtonGroup, Button, Separator, Icon. File `blocks/cta/cta-simple-logos-01.json`
+- `cta-simple-logos-02` 25 el, MCP: Stack, Grid, Text, ButtonGroup, Button, Icon. File `blocks/cta/cta-simple-logos-02.json`
 - `cta-split-01` 21 el, MCP: Stack, Badge, Text, Surface, Field, Input, Button. File `blocks/cta/cta-split-01.json`
-- `cta-split-image-01` 9 el: Grid, Stack, Text, List, ButtonGroup, Button, Image. File `blocks/cta/cta-split-image-01.json`
-- `cta-split-image-02` 9 el: Grid, Image, Stack, Text, ButtonGroup, Button. File `blocks/cta/cta-split-image-02.json`
-- `cta-split-image-03` 11 el: Stack, Image, Card, Text, ButtonGroup, Button. File `blocks/cta/cta-split-image-03.json`
-- `cta-split-image-04` 10 el: Grid, Image, Stack, Text, List, ButtonGroup, Button. File `blocks/cta/cta-split-image-04.json`
-- `cta-split-image-quote-01` 27 el: Grid, Stack, Text, Badge, Button, Image, Surface, Avatar. File `blocks/cta/cta-split-image-quote-01.json`
-- `cta-split-image-quote-02` 18 el: Grid, Stack, Image, Surface, Text, Avatar, Button. File `blocks/cta/cta-split-image-quote-02.json`
-- `cta-split-image-quote-03` 15 el: Grid, Stack, Text, Button, Image, Avatar. File `blocks/cta/cta-split-image-quote-03.json`
-- `cta-split-image-quote-04` 16 el: Stack, Image, Surface, Text, Avatar, Button. File `blocks/cta/cta-split-image-quote-04.json`
+- `cta-split-image-01` 9 el, MCP: Grid, Stack, Text, List, ButtonGroup, Button, Image. File `blocks/cta/cta-split-image-01.json`
+- `cta-split-image-02` 9 el, MCP: Grid, Image, Stack, Text, ButtonGroup, Button. File `blocks/cta/cta-split-image-02.json`
+- `cta-split-image-03` 11 el, MCP: Stack, Image, Card, Text, ButtonGroup, Button. File `blocks/cta/cta-split-image-03.json`
+- `cta-split-image-04` 10 el, MCP: Grid, Image, Stack, Text, List, ButtonGroup, Button. File `blocks/cta/cta-split-image-04.json`
+- `cta-split-image-quote-01` 27 el, MCP: Grid, Stack, Text, Badge, Button, Image, Surface, Avatar. File `blocks/cta/cta-split-image-quote-01.json`
+- `cta-split-image-quote-02` 18 el, MCP: Grid, Stack, Image, Surface, Text, Avatar, Button. File `blocks/cta/cta-split-image-quote-02.json`
+- `cta-split-image-quote-03` 15 el, MCP: Grid, Stack, Text, Button, Image, Avatar. File `blocks/cta/cta-split-image-quote-03.json`
+- `cta-split-image-quote-04` 16 el, MCP: Stack, Image, Surface, Text, Avatar, Button. File `blocks/cta/cta-split-image-quote-04.json`
 - `cta-with-form-01` 11 el, MCP: Stack, Text, Field, Input, Button, AvatarGroup. File `blocks/cta/cta-with-form-01.json`
 
 ### dashboard (12)
@@ -182,7 +182,7 @@ Page recipes that combine blocks well:
 - `chart-section-01` 5 el, MCP: Grid, ChartCard, Chart. File `blocks/dashboard/chart-section-01.json`
 - `dashboard-header-01` 8 el, MCP: Stack, Text, DatePicker, Button. File `blocks/dashboard/dashboard-header-01.json`
 - `data-table-01` 11 el, MCP: Stack, Search, Select, ButtonGroup, Button, DataTable, Pagination. File `blocks/dashboard/data-table-01.json`
-- `empty-state-panel-01` 6 el: Surface, Stack, EmptyState, Button. File `blocks/dashboard/empty-state-panel-01.json`
+- `empty-state-panel-01` 6 el, MCP: Surface, Stack, EmptyState, Button. File `blocks/dashboard/empty-state-panel-01.json`
 - `header-01` 28 el, MCP: Stack, Navbar, Avatar, Text, Search, Button, Badge, Separator, Breadcrumbs, Tabs. File `blocks/dashboard/header-01.json`
 - `kanban-board-01` 20 el, MCP: Grid, Stack, Text, Badge, Card. File `blocks/dashboard/kanban-board-01.json`
 - `notification-panel-01` 8 el, MCP: Stack, Text, Badge, Button, List. File `blocks/dashboard/notification-panel-01.json`
@@ -210,19 +210,19 @@ Page recipes that combine blocks well:
 
 ### error-pages (16)
 
-- `404-illustration-01` 10 el: Stack, Text, Button, Image. File `blocks/error-pages/404-illustration-01.json`
-- `404-illustration-02` 10 el: Stack, Text, Search, Button, Image. File `blocks/error-pages/404-illustration-02.json`
-- `404-illustration-03` 10 el: Stack, Text, Button, Image. File `blocks/error-pages/404-illustration-03.json`
-- `404-illustration-04` 10 el: Stack, Text, Search, Button, Image. File `blocks/error-pages/404-illustration-04.json`
+- `404-illustration-01` 10 el, MCP: Stack, Text, Button, Image. File `blocks/error-pages/404-illustration-01.json`
+- `404-illustration-02` 10 el, MCP: Stack, Text, Search, Button, Image. File `blocks/error-pages/404-illustration-02.json`
+- `404-illustration-03` 10 el, MCP: Stack, Text, Button, Image. File `blocks/error-pages/404-illustration-03.json`
+- `404-illustration-04` 10 el, MCP: Stack, Text, Search, Button, Image. File `blocks/error-pages/404-illustration-04.json`
 - `404-page-01` 16 el, MCP: Stack, Image, Text, Search, Button, ButtonGroup, Link. File `blocks/error-pages/404-page-01.json`
-- `404-simple-01` 8 el: Stack, Text, Button. File `blocks/error-pages/404-simple-01.json`
-- `404-simple-02` 18 el: Stack, Text, Button, Link. File `blocks/error-pages/404-simple-02.json`
-- `404-simple-03` 8 el: Stack, Icon, Text, Button. File `blocks/error-pages/404-simple-03.json`
-- `404-simple-04` 28 el: Stack, Text, Button, Card, Icon, Link. File `blocks/error-pages/404-simple-04.json`
-- `404-split-image-01` 9 el: Grid, Stack, Text, Button, Image. File `blocks/error-pages/404-split-image-01.json`
-- `404-split-image-02` 9 el: Grid, Stack, Text, Search, Button, Image. File `blocks/error-pages/404-split-image-02.json`
-- `404-split-image-03` 10 el: Stack, Text, Button, Image. File `blocks/error-pages/404-split-image-03.json`
-- `404-split-image-04` 20 el: Stack, Text, Search, Button, Link, Image. File `blocks/error-pages/404-split-image-04.json`
+- `404-simple-01` 8 el, MCP: Stack, Text, Button. File `blocks/error-pages/404-simple-01.json`
+- `404-simple-02` 18 el, MCP: Stack, Text, Button, Link. File `blocks/error-pages/404-simple-02.json`
+- `404-simple-03` 8 el, MCP: Stack, Icon, Text, Button. File `blocks/error-pages/404-simple-03.json`
+- `404-simple-04` 28 el, MCP: Stack, Text, Button, Card, Icon, Link. File `blocks/error-pages/404-simple-04.json`
+- `404-split-image-01` 9 el, MCP: Grid, Stack, Text, Button, Image. File `blocks/error-pages/404-split-image-01.json`
+- `404-split-image-02` 9 el, MCP: Grid, Stack, Text, Search, Button, Image. File `blocks/error-pages/404-split-image-02.json`
+- `404-split-image-03` 10 el, MCP: Stack, Text, Button, Image. File `blocks/error-pages/404-split-image-03.json`
+- `404-split-image-04` 20 el, MCP: Stack, Text, Search, Button, Link, Image. File `blocks/error-pages/404-split-image-04.json`
 - `500-page-01` 15 el, MCP: Stack, Image, Text, Surface, ButtonGroup, Button, Alert. File `blocks/error-pages/500-page-01.json`
 - `coming-soon-01` 27 el, MCP: Stack, Badge, Text, Progress, Chip, Surface, Input, Button, Grid, Card. File `blocks/error-pages/coming-soon-01.json`
 - `maintenance-page-01` 26 el, MCP: Stack, Image, Text, Separator, Progress, Input, Button. File `blocks/error-pages/maintenance-page-01.json`
@@ -395,7 +395,7 @@ Page recipes that combine blocks well:
 
 - `stats-counter-01` 17 el, MCP: Surface, Stack, Text, Grid. File `blocks/stats/stats-counter-01.json`
 - `stats-grid-01` 8 el, MCP: Stack, Text, Grid, StatCard. File `blocks/stats/stats-grid-01.json`
-- `stats-strip-01` 16 el: Stack, Text, Separator. File `blocks/stats/stats-strip-01.json`
+- `stats-strip-01` 16 el, MCP: Stack, Text, Separator. File `blocks/stats/stats-strip-01.json`
 - `stats-with-description-01` 27 el, MCP: Stack, Badge, Text, Button, Grid, Surface, Chip. File `blocks/stats/stats-with-description-01.json`
 
 ### team (4)

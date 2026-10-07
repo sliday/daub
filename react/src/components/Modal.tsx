@@ -1,9 +1,10 @@
-import { type ReactNode, useRef } from "react";
+import { forwardRef, type ComponentProps, type ReactNode, useContext, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../utils/cn";
-import { useEscapeKey, useFocusTrap } from "../hooks/useOverlay";
+import { useEscapeKey, useFocusTrap, useMergedRefs } from "../hooks/useOverlay";
+import { PortalThemeContext, portalTextStyle } from "./ThemeProvider";
 
-export interface ModalProps {
+export interface ModalProps extends Omit<ComponentProps<"div">, "onClose"> {
   open: boolean;
   onClose: () => void;
   title?: string;
@@ -12,24 +13,34 @@ export interface ModalProps {
   children?: ReactNode;
 }
 
-export function Modal({ open, onClose, title, footer, className, children }: ModalProps) {
+export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal({ open, onClose, title, footer, className, children, ...props }, forwardedRef) {
   const ref = useRef<HTMLDivElement>(null);
-  useEscapeKey(onClose, open);
+  const setRef = useMergedRefs(ref, forwardedRef);
+  const theme = useContext(PortalThemeContext);
+  const titleId = useId();
+  const labelledBy = props["aria-labelledby"] ?? (!props["aria-label"] && title ? titleId : undefined);
+  useEscapeKey(onClose, open, ref);
   useFocusTrap(ref, open);
 
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="db-modal-overlay db-modal-overlay--active" onClick={onClose}>
+    <div data-db-react="" data-theme={theme} style={portalTextStyle} className="db-modal-overlay db-modal--open" onClick={onClose}>
       <div
-        ref={ref}
-        className={cn("db-modal db-modal--active", className)}
-        onClick={(e) => e.stopPropagation()}
+        {...props}
+        ref={setRef}
+        className={cn("db-modal", className)}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={labelledBy}
+        aria-label={props["aria-label"] ?? (labelledBy ? undefined : "Dialog")}
+        tabIndex={-1}
+        onClick={(e) => { props.onClick?.(e); e.stopPropagation(); }}
       >
         {title && (
           <div className="db-modal__header">
-            <h3>{title}</h3>
-            <button className="db-btn db-btn--ghost db-btn--icon" onClick={onClose}>
+            <h3 id={titleId} className="db-modal__title">{title}</h3>
+            <button type="button" className="db-modal__close" aria-label="Close" onClick={onClose}>
               &times;
             </button>
           </div>
@@ -40,4 +51,4 @@ export function Modal({ open, onClose, title, footer, className, children }: Mod
     </div>,
     document.body
   );
-}
+});

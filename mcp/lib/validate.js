@@ -1,4 +1,4 @@
-import { VALID_TYPES } from './prompt.js';
+import { RENDERER_TYPES as VALID_TYPES, THEMES } from './renderers.js';
 
 // Link/Icon stay out of the prompt's type list, but playground specs use them and renderers.js draws them
 const validTypeSet = new Set([...VALID_TYPES, 'Link', 'Icon']);
@@ -6,14 +6,17 @@ const validTypeSet = new Set([...VALID_TYPES, 'Link', 'Icon']);
 export function validateSpec(spec) {
   const issues = [];
   if (!spec || typeof spec !== 'object') return { valid: false, issues: ['Spec is not an object'], element_count: 0, components_used: [] };
-  if (!spec.elements || typeof spec.elements !== 'object') issues.push('Missing "elements" object');
+  if (Array.isArray(spec)) return { valid: false, issues: ['Spec is not an object'], element_count: 0, components_used: [] };
+  if (!spec.elements || typeof spec.elements !== 'object' || Array.isArray(spec.elements)) issues.push('Missing "elements" object');
+  if (spec.theme != null && !THEMES.light.concat(THEMES.dark).includes(spec.theme)) issues.push(`Unknown theme "${spec.theme}"`);
   if (!spec.root) issues.push('Missing "root"');
-  if (spec.root && spec.elements && !spec.elements[spec.root]) issues.push(`Root "${spec.root}" not found in elements`);
+  if (spec.root && spec.elements && !Object.hasOwn(spec.elements, spec.root)) issues.push(`Root "${spec.root}" not found in elements`);
 
   const componentsUsed = new Set();
 
   if (spec.elements) {
     for (const [id, def] of Object.entries(spec.elements)) {
+      if (!def || typeof def !== 'object' || Array.isArray(def)) { issues.push(`Element "${id}" is not an object`); continue; }
       if (!def.type) {
         issues.push(`Element "${id}" missing "type"`);
       } else {
@@ -22,23 +25,30 @@ export function validateSpec(spec) {
           issues.push(`Unknown type "${def.type}" on element "${id}"`);
         }
       }
-      const children = def.children || [];
+      const children = def.children || def.props?.children || [];
+      if (!Array.isArray(children)) { issues.push(`Element "${id}" children must be an array`); continue; }
       for (const cid of children) {
-        if (!spec.elements[cid]) {
+        if (!Object.hasOwn(spec.elements, cid)) {
           issues.push(`Element "${id}" references missing child "${cid}"`);
         }
+      }
+      for (const slot of ['header', 'footer', 'trigger', 'media']) {
+        const refs = def.props?.[slot];
+        const isSlot = (slot === 'footer' && ['Card','Modal','AlertDialog','Frame'].includes(def.type)) || (slot === 'header' && def.type === 'Frame') || (['trigger','media'].includes(slot) && def.type === 'PreviewCard');
+        if (isSlot && Array.isArray(refs)) for (const cid of refs) if (!Object.hasOwn(spec.elements, cid)) issues.push(`Element "${id}" ${slot} references missing child "${cid}"`);
       }
     }
   }
 
   const warnings = [];
   if (spec.elements) {
-    const parentPrimaryButtons = {};
+    const parentPrimaryButtons = Object.create(null);
     for (const [id, def] of Object.entries(spec.elements)) {
+      if (!def || typeof def !== 'object') continue;
       if (def.type === 'BottomNav' && def.props?.items?.length > 5) {
         warnings.push(`BottomNav "${id}" has ${def.props.items.length} items (max 5 recommended)`);
       }
-      if (def.type === 'Text' && (!def.props?.content || def.props.content === '')) {
+      if (def.type === 'Text' && (def.props?.content == null || def.props.content === '')) {
         warnings.push(`Text "${id}" has empty content`);
       }
       if (def.type === 'Card' && !def.props?.title && (!def.children || def.children.length === 0)) {
@@ -54,15 +64,15 @@ export function validateSpec(spec) {
         warnings.push(`ChartCard "${id}" has no Chart child or bars; it will render "No data"`);
       }
       if (def.type === 'Button' && def.props?.variant === 'primary') {
-        const parentId = Object.entries(spec.elements).find(([, p]) => p.children?.includes(id))?.[0] || 'root';
+        const parentId = Object.entries(spec.elements).find(([, p]) => Array.isArray(p?.children) && p.children.includes(id))?.[0] || 'root';
         (parentPrimaryButtons[parentId] = parentPrimaryButtons[parentId] || []).push(id);
       }
       if (def.type === 'Input' && !def.props?.label) {
         const hasLabelParent = Object.values(spec.elements).some(
-          p => p.type === 'Field' && p.children?.includes(id)
+          p => p?.type === 'Field' && Array.isArray(p.children) && p.children.includes(id)
         );
         const hasAdjacentLabel = Object.values(spec.elements).some(
-          p => p.children?.includes(id) && p.children?.some(
+          p => Array.isArray(p?.children) && p.children.includes(id) && p.children.some(
             cid => spec.elements[cid]?.type === 'Label' || spec.elements[cid]?.type === 'Field'
           )
         );
@@ -90,7 +100,7 @@ export function validateSpec(spec) {
 export function autoFixSpec(spec) {
   if (!spec || !spec.elements) return spec;
   for (const def of Object.values(spec.elements)) {
-    if (def.children) {
+    if (def && Array.isArray(def.children)) {
       def.children = def.children.filter(cid => !!spec.elements[cid]);
     }
   }

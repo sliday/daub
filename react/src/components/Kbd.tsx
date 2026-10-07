@@ -9,7 +9,7 @@ export const Kbd = forwardRef<HTMLElement, KbdProps>(
   ({ keys, className, children, ...props }, ref) => {
     if (keys && keys.length > 0) {
       return (
-        <span ref={ref as React.Ref<HTMLSpanElement>} className={className}>
+        <span ref={ref as React.Ref<HTMLSpanElement>} className={className} {...props}>
           {keys.map((key, i) => (
             <span key={i}>
               {i > 0 && " + "}

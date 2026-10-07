@@ -14,6 +14,7 @@ export const Breadcrumbs = forwardRef<HTMLElement, BreadcrumbsProps>(
   ({ items, className, ...props }, ref) => (
     <nav
       ref={ref}
+      data-db-react=""
       aria-label="Breadcrumb"
       {...props}
       className={cn("db-breadcrumbs", className)}
@@ -25,8 +26,10 @@ export const Breadcrumbs = forwardRef<HTMLElement, BreadcrumbsProps>(
             <li key={i}>
               {isLast ? (
                 <span aria-current="page">{item.label}</span>
-              ) : (
+              ) : item.href ? (
                 <a href={item.href}>{item.label}</a>
+              ) : (
+                <span>{item.label}</span>
               )}
             </li>
           );

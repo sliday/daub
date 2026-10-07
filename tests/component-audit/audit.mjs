@@ -13,13 +13,13 @@ import { chromium } from 'playwright';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '../..'); // /Users/stas/Playground/daub
-const OUT_DIR = resolve(ROOT, 'test-results/component-audit');
+const OUT_DIR = resolve(ROOT, process.env.AUDIT_OUTPUT || 'test-results/component-audit');
 const SHOT_DIR = resolve(OUT_DIR, 'screenshots');
 const REPORT_JSON = resolve(OUT_DIR, 'report.json');
 const REPORT_MD = resolve(OUT_DIR, 'report.md');
 const PORT = Number(process.env.AUDIT_PORT || 8877);
 const BASE = `http://127.0.0.1:${PORT}`;
-const VIEWPORT = { width: 800, height: 600 };
+const VIEWPORT = { width: Number(process.env.AUDIT_WIDTH || 800), height: Number(process.env.AUDIT_HEIGHT || 600) };
 const PER_COMPONENT_BUDGET_MS = 6000;
 
 if (!existsSync(OUT_DIR)) mkdirSync(OUT_DIR, { recursive: true });
@@ -314,6 +314,11 @@ async function auditOne(page, component) {
 
     const violations = await page.evaluate(A11Y_RULES);
     result.checks.pa11y_violations = violations || [];
+    const brokenImages = await page.locator('#slot img').evaluateAll(images => images.filter(image => !image.complete || image.naturalWidth === 0).map(image => image.getAttribute('src')));
+    if (brokenImages.length) {
+      result.checks.layout_ok = false;
+      result.checks.layout_issues.push('unloaded images: ' + brokenImages.join(', '));
+    }
 
     if (component.js) {
       const hasJsError = captured.some(e => /daub|init|DaubError/i.test(e));
@@ -368,7 +373,7 @@ function buildMarkdown(report) {
   lines.push('');
   lines.push('## Summary');
   lines.push('');
-  lines.push(`Audited all ${report.length} components from components.json against daub.css (${(daubCss.length/1024).toFixed(0)}KB) and daub.js in a headless Chromium 800×600 viewport. Each entry was rendered, checked for layout collapse/overflow, spec selector presence, modifier parity, accessibility (contrast, accessible names, alt text) and runtime console errors. Overlay-like components (modal, popover, tooltip, toast, etc.) are not expected to be visible when idle; their layout checks are relaxed accordingly. Classification: red = remove candidate, yellow = fixable, green = keep.`);
+  lines.push(`Audited all ${report.length} components from components.json against daub.css (${(daubCss.length/1024).toFixed(0)}KB) and daub.js in a headless Chromium ${VIEWPORT.width}×${VIEWPORT.height} viewport. Each entry was rendered, checked for layout collapse/overflow, spec selector presence, modifier parity, accessibility (contrast, accessible names, alt text) and runtime console errors. Overlay-like components (modal, popover, tooltip, toast, etc.) are not expected to be visible when idle; their layout checks are relaxed accordingly. Classification: red = remove candidate, yellow = fixable, green = keep.`);
   lines.push('');
   lines.push('## Category breakdown');
   lines.push('');
@@ -407,7 +412,7 @@ async function main() {
   const server = await startServer();
   console.log(`[audit] serving ${ROOT} on ${BASE}`);
 
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true, ...(process.env.AUDIT_BROWSER ? { executablePath: process.env.AUDIT_BROWSER } : {}) });
   const context = await browser.newContext({ viewport: VIEWPORT });
   const page = await context.newPage();
   const report = [];
