@@ -1,8 +1,57 @@
-# Code Generation Pipeline
+# Code generation pipeline
+
+## Production flow
+
+Hybrid is the only production generation path. Old `design=direct` and
+`design=snowflake` URLs open the same Playground without a mode selector.
+[Archived modes](docs/archive/playground-generation-modes.md) document Direct
+and Recursive for research; they cannot run through the production UI. Saved
+specifications and exports remain readable.
+
+```text
+Prompt -> structured design brief + acceptance contract
+       -> validate screens, flow, bindings and journeys
+       -> complete native design -> measured layout repair
+       -> compile recipe or generate controller
+       -> exercise journeys and inspect reached screens
+       -> bounded correction -> preview and export
+```
+
+The strict contract includes `brief` in the existing planning response. It defines
+scope, assumptions, screens/states, transitions, edge cases and public outputs.
+Validation caps it at 14,000 characters, six screens, twelve transitions, six edge
+cases and eight output fields. Initial screens name rendered target IDs; later
+screens name a frozen journey whose final state exposes their anchors. Validation
+adds explicit visibility assertions, and geometry checks inspect reached screens
+at 390px and 1200px, including results. Repairs preserve the screen anchor IDs.
+
+The chat renders the brief as escaped text in a collapsible section and preserves
+it in saved specs. No additional model call plans or formats the document.
+Edge-case references do not prove that a model chose adequate assertions; human
+review still checks scope and semantic coverage. Browser evidence cannot certify
+aesthetic quality.
 
 All references are to `playground.html` unless noted.
 
-## Overview
+## Historical Direct/Recursive overview
+
+This overview records retired entry functions and is not the production flow.
+
+`runDesignPipeline` serves Direct and Recursive. The sandbox executes the
+`_shared_state` initializer once, then runs isolated chunk closures in that
+initializer's lexical scope. `playground-quality.js` rejects non-JSON state
+seeds and records initialization and event-handler errors. Invalid shared
+initialization stops dependent chunks instead of running them without state.
+
+Both simple and complex multi-chunk designs receive an assembly review. Chunk
+prompts request interaction tests that assert visible results. The final runtime
+check can request one code repair for observed errors, then checks again. The UI
+reports unresolved errors or `Runtime checked; behavior needs review`; absence
+of JavaScript exceptions does not establish working product behavior. Manual
+interaction checks and rendered evidence remain part of release acceptance.
+Late event-handler errors also update the saved conversation status. Cleanup
+preserves code-only handler nodes, and exported scripts use literal replacement
+callbacks so dollar sequences in generated JavaScript survive serialization.
 
 ```
 User prompt
@@ -25,16 +74,154 @@ Spec rendered in preview iframe
     |
     +-- Analyze -> Visual Check -> Route by complexity:
     |
-    |   none -----> done
-    |   trivial --> single-shot code -> verify loop -> done
-    |   simple ---> plan -> parallel chunks -> assemble -> verify loop -> done
-    |   complex --> plan -> parallel chunks -> retry failed -> assemble
-    |                   -> test -> review -> verify loop -> done
+    |   none -----> runtime check
+    |   trivial --> single-shot code -> runtime check
+    |   simple/complex --> plan -> parallel chunks -> retry failed -> assemble
+    |                   -> test -> review -> runtime check
     v
   Done
 ```
 
-## Recursive Design Experiment
+## Hybrid implementation
+
+Open `/playground.html`. Hybrid accepts text prompts through DAUB AI and
+keeps `openrouter/auto` with strict schemas and required provider parameters.
+
+1. Generate the design brief, requirements and browser journeys. Validate the contract, allowing
+   one correction before freezing it. Compile missing `assertChanged` baseline
+   snapshots before interactions; reject empty expected-text assertions and
+   change assertions without an intervening action. Limit contracts to eight
+   region requirements rather than enumerating a question dataset as screens.
+   Freeze explicit initial fixtures, reject contradictory output assertions, and
+   use named controls plus visibility checkpoints for conditional panels.
+2. Design all planned screens in one native-component page. Validate child references and
+   frozen contract bindings, allowing one correction before publishing the draft.
+3. Inspect fresh sandbox frames at 1200px and 390px. Record geometry, required
+   regions, overflow, clipped visible text/controls, render errors and broken images. Do not request a paid
+   advisory review. Browser success verifies measured checks and journeys;
+   it does not certify visual quality or aesthetic preference.
+4. Propose up to three independent region repairs in parallel. Inspect candidates
+   against the latest whole page in sequence. Accept a repair only when it resolves
+   its target defect, introduces no new defect and retains passing checks.
+   Send only the affected subtree, required bindings and read-only ancestor
+   layout context. Deduplicate the same defect on an unchanged region across
+   viewports and rounds; changed regions remain eligible for another repair.
+   Preserve every recipe-bound item as well as the IDs used by requirements and
+   journeys. Replacing a region cannot silently drop filter cards.
+5. Generate one controller with JSON state, a reducer, a render function,
+   tracked event bindings and an output function. Run the frozen journeys in fresh frames at both widths.
+   Allow one behavior-only correction using observed failures. Keep that correction
+   only if it removes defects without new failures or losing passing checks.
+   Export the same tested controller. Keep the prior draft for measured regressions
+   or runtime failures; report failing journeys as incomplete.
+
+`playground-hybrid.js` caps a run at 18 model requests, two repair rounds, three
+workers and 180 seconds. It reserves two requests for behavior and its correction,
+and stops starting repair work in the last third of the time budget. In-flight
+requests can still reach the deadline; the UI then retains the accepted draft.
+Healthy static and recipe-backed pages need two model calls (contract and draft).
+Custom behavior adds a third. Structured schemas travel in `response_format`;
+the system message does not repeat their JSON. Planning asks custom journeys to
+cover recovery or post-completion edits and keeps terminal output assertions
+consistent with the final journey state.
+Quota/auth/provider failures stop work; cancellation prevents late publication.
+Each structured call can retry output truncation once with a 32,768-token ceiling
+and a compact-response instruction. Both attempts share the existing request and
+time limits. Truncated JSON never reaches the renderer. The chat shows the active
+stage, elapsed time and received stream bytes instead of a static draft label.
+`playground-hybrid-ui.js` owns provider and UI integration,
+`playground-hybrid-checks.js` owns browser evidence, and `playground-behavior.js`
+owns action -> state -> render and listener disposal.
+
+`playground-behavior-recipes.js` compiles validated data and bindings into tested
+quiz, radio-selection and card-filter controllers. Planning selects the recipe
+and supplies its dataset. Before freezing the contract, the application builds
+deterministic full-flow journeys from that descriptor. It validates compatible
+bindings in the draft, then compiles behavior without another model request.
+New quiz plans include separate question/results containers, a score, a text-only
+answer review and Restart. The compiler swaps screen visibility and clears answers
+on restart. Journeys cover completion, Back with preserved answers, and restart;
+filter journeys separate empty results from restoration. New screen-based quiz
+plans use at most 16 questions so screen assertions fit the 40-step bound. Larger
+requested quizzes use custom generation without reducing the requested count.
+Legacy six-binding quiz descriptors remain readable. Unsupported workflows use
+custom generation.
+The behavior response can also
+choose `recipe: {kind, bindings, data}` with empty code strings, or `recipe: null`
+with generated code for unsupported workflows. The compiler checks component
+types and stable bindings; it never evaluates descriptor text as JavaScript.
+Filters preserve existing cards and images. Exports embed the compiled controller
+and need no recipe-module dependency. Cart, to-do and other workflows still use
+generated code. Recipe scores are demonstration data, not validated assessments.
+
+### Prototype outputs
+
+Hybrid adds inline JavaScript after the layout checks. Its `program.output(state)`
+function body returns a plain JSON object. The runtime publishes a detached
+snapshot after rendering each accepted state transition. Invalid output or a
+render failure clears the snapshot. It does not transmit or persist answers.
+The runtime scopes a `[hidden]` display rule to its own preview so component CSS
+cannot expose hidden errors or results. Disposal removes that rule.
+
+Read the visible prototype from the Playground host:
+
+```js
+const result = await window.DaubPlayground.getOutput();
+```
+
+Read or subscribe within an exported prototype:
+
+```js
+const result = window.DaubPrototype.getOutput();
+const unsubscribe = window.DaubPrototype.subscribe(result => {
+  if (result?.completed) consume(result.answers);
+});
+// Call unsubscribe() when the reader no longer needs updates.
+```
+
+The host uses a source-checked, request-correlated iframe bridge. A preview
+replacement invalidates pending reads. Uncoded drafts and consent-gated shared
+pages return `null`; exports keep the controller and local output API. These are
+JavaScript APIs, not server endpoints. Treat generated output as untrusted data.
+
+Contracts distinguish `when: "initial"` from `when: "complete"` requirements.
+Use `when: "present"` for conditional panels that must exist but can be hidden.
+Journeys check those panels with `assertVisible` and `assertHidden` at the relevant
+step, instead of requiring errors, recovery and success to coexist at completion.
+Grouped button clicks need a unique visible label; checkbox groups accept exact
+values or unique labels. The `fixtures` object defines a shared initial state for
+the draft, controller and journeys. Numeric output assertions stay numeric; no
+string coercion masks type errors. Function declarations with matching hook
+parameters normalize to function bodies before sandbox execution.
+Completion journeys set `complete: true` and run the whole flow before checking
+the result panel. A ten-step quiz must contain ten questions, preserve selected
+answers, and complete all ten steps. Its output includes `completed`, `step`,
+`total`, `answers` (question ID, question and answer), and a result summary.
+Frozen `outputAssertions` compare JSON values or array/string lengths through
+safe dot-separated paths. For example, `answers` length `10` and `completed`
+equals `true` prevent a first-screen-only demo from passing completion checks.
+
+Limits: model-authored journeys do not establish full product coverage. Browser
+probes cannot judge aesthetic quality or overall composition. Hybrid performs
+at most one behavior correction and reports remaining failures. Passing automated
+checks still requires human design review.
+
+After coding, Hybrid also smoke-tests up to six initially visible native Button
+elements per viewport that the frozen journeys do not click. Each test starts
+in a fresh sandbox and checks for a visible or output-API response. A listener
+or dispatched action alone does not count. These checks share the existing single
+behavior-repair attempt; healthy pages need no additional model request. A repair
+cannot remove an action from coverage by hiding or disabling it. Recipe-backed
+pages retain the no-coding-call path and report extra-action failures for review.
+Evidence records selected, skipped and unprobed actions. This bounded initial-state
+check does not prove the meaning of a response, external effects, or later states.
+
+## Historical implementation notes
+
+The remaining sections describe retired behavior for reference. Their selectors,
+entry functions and rollout instructions do not apply to the production Playground.
+
+### Recursive design experiment
 
 In the native playground chat, select **Recursive (experimental)** or open
 `/playground?design=snowflake`. Direct remains the default. This experiment accepts
@@ -43,9 +230,9 @@ React chat use the Direct path.
 
 The Playground uses `playground-snowflake.js` with `scheduling: 'queue'`:
 
-1. Generate the complete page shell with semantic layout regions, then render it.
-   Empty regions show preview-only placeholders so the header, navigation,
-   content, and footer retain visible space before their detail arrives.
+1. Generate a complete minimal native page, including its requested content and
+   controls, then render it. Choose regions from the task; do not prescribe a
+   sidebar for a form or quiz. The client enables `completeLayout: true`.
 2. Measure the rendered regions and ask Jev which ones need detail.
 3. Refine up to three independent regions concurrently from their judged snapshots.
    Merge each accepted subtree into the latest spec and publish it before waiting
@@ -54,6 +241,19 @@ The Playground uses `playground-snowflake.js` with `scheduling: 'queue'`:
 4. Recheck each finished region and enqueue its children without waiting for slow
    siblings. A FIFO queue gives waiting regions a turn before new descendants.
    Audit ancestors after the queue drains before reporting completion.
+5. Run one serialized full-page reconciliation (`reconcile: true`), even when
+   Jev reports no missing detail. Supply the request, current spec, screenshot,
+   geometry and unresolved regions. This pass may remove duplicates, replace
+   component types and reorder children while preserving the root ID. Validate
+   the replacement, then recheck the root with Jev and the empty-region audit.
+
+The module retains its old shell-first behavior unless callers enable these
+options. Parallel branches still cannot remove siblings or change existing
+types. Hybrid mode can repair a rejected branch once with its validation error
+and a fresh snapshot; repairs share the existing deadline and request budget.
+The initial complete-page request also gets one validation-guided repair for
+local decoding or semantic errors. Provider errors, refusals, empty responses
+and token-limit endings do not trigger that repair.
 
 Generator and Jev jobs share three async worker slots, configurable through
 `concurrency` from 1 to 4. These are concurrent network jobs, not browser threads.
@@ -66,10 +266,37 @@ The generator uses the existing `/api/generate` proxy and Auto Router. The judge
 uses `/api/refine-judge`, which batches independent `noul` questions through the
 existing Jev Decisions helper. Each question receives the original request, the
 current spec, target ID, depth, and optional measured geometry. The generator also
-receives geometry from its judgment snapshot. Hidden mobile previews render offscreen during
-measurement; geometry-only captures skip screenshot reconstruction. Jev returns a
+receives geometry from its judgment snapshot. During measurement, the client
+temporarily renders hidden mobile previews inside the viewport with zero opacity
+and no pointer events, then restores their display state. This avoids Chromium
+suspending offscreen screenshot work. Geometry-only captures skip screenshot
+reconstruction. Jev returns a
 probability that the target needs more detail; the provisional threshold is 0.65.
 This threshold needs evaluation across prompt families before default activation.
+
+Recursive design, reconciliation, subtree, and spacing generation require strict JSON Schema
+responses. The proxy forwards the schema and sets `provider.require_parameters`
+so providers cannot ignore the requested format. It does not retry without the
+schema when no compatible endpoint exists. Existing Direct/OpenUI calls retain
+their explicit text format; other JSON calls require JSON-mode support.
+
+The wire schema uses an element array with IDs and property name/value entries.
+Nested property objects use an `entries` array, allowing strict closed-object
+schemas without restricting component-specific keys. The client decodes this
+format into the existing ID-keyed spec before graph and content validation.
+It rejects duplicate IDs/properties and schema violations. Refusal, empty output,
+and token-limit endings stop the call with distinct messages, even if partial
+output parses as JSON. Structured output does not replace semantic validation or
+guarantee completion within a provider's token budget.
+Recursive generation requests `reasoning.effort: "none"`: these bounded steps
+should produce output instead of spending the request deadline on thinking.
+The client rejects streams without a finish reason or completion marker, even
+when the connection closes with HTTP 200. Auto Router and strict schemas remain
+required; the client does not retry a failed request without those constraints.
+For the exact HTTP 400 rejection that reasoning cannot be disabled, the proxy
+retries once with provider-default reasoning. It keeps the model, strict schema,
+parameter requirement, cancellation signal and original 60-second deadline.
+Other 400 errors, quota errors and rate limits do not trigger this retry.
 
 The client allows 24 model requests, 160 elements, 12 targets per judge batch, a maximum
 depth of 5, and two minutes per run. Generator and judge calls share the request
@@ -77,12 +304,35 @@ budget. An invalid subtree response marks that region incomplete while siblings
 continue. Quota responses, authentication failures, and rate limits stop the run
 without retries. Cancel pending requests before returning on a global stop.
 The UI retains the last valid preview and distinguishes completion from a limit
-or failure. Stop and New Chat cancel pending work. Recursive mode does not run the
-Direct path's interactivity pipeline; generated controls may still need behavior.
+or failure. Stop and New Chat cancel pending work. Completed Recursive designs
+enter the same interactivity pipeline as Direct. A partial or no-progress result
+with no empty layout regions can also receive behavior; it retains the unresolved
+refinement status. Provider errors, empty designs and limit stops skip this stage.
 Branch progress appears in the chat and preview. Placeholder styling stays out
 of saved specs and exports; measured geometry marks placeholder regions so the
 judge can distinguish their reserved space from finished content.
+Empty regions show theme-aware skeletons: compact header/footer rows, sidebar
+navigation rows, and content blocks. Running regions pulse unless reduced motion
+is enabled. The pulse changes opacity only and does not invalidate geometry
+captures. Failed regions remain static; the chat retains their failure status.
 Child groups with more than 12 targets use multiple queued judge batches.
+
+After refinement, the client measures the full layout and asks Jev to check
+vertical rhythm, horizontal gutters, and alignment. This spacing pass has its own
+30-second deadline and at most three model calls: judge, one repair, and rejudge.
+It skips runs that hit the overall time limit or fail with a provider error.
+The design and spacing limits total 27 calls and 150 seconds, excluding the
+shared behavior pipeline. Stop and New Chat cancel this
+pass too. Direct mode includes spacing in its existing visual-check prompt.
+
+Spacing review requires stable, complete geometry for up to 160 elements.
+The judge evaluates rendered gaps, grouping, and intentional touching rather
+than requiring uniform spacing. Repairs may change only existing Stack/Grid
+`gap` and `align`, or Stack `justify`. Content, child order, types, state, and
+theme remain unchanged. The client remeasures accepted repairs before reporting
+`Spacing checked`. Remaining defects produce `Spacing needs another pass`;
+missing measurements, invalid repairs, or a deadline produce `Spacing not verified`.
+These outcomes do not turn an incomplete recursive run into a completed one.
 
 The judge requires `RL_GENERATE` or an exact HTTPS host configured through
 `REFINEMENT_WAF_HOST` with verified WAF protection. Pages production uses
@@ -96,6 +346,7 @@ The endpoint rejects cross-origin browser requests, invalid graphs, oversized
 bodies, and missing decision scores. It never accepts a client model or API key.
 
 Tests: `tests/playground/snowflake.test.mjs`,
+`tests/playground/snowflake-spacing.test.mjs`,
 `tests/playground/snowflake-browser.test.mjs`, and `tests/refine-judge.test.mjs`.
 
 ## Backend Proxy

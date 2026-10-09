@@ -40,23 +40,23 @@ after(async () => {
   if (server) await new Promise((done) => server.close(done));
 });
 
-async function open(t, { savedSpec = null, width = 1440, react = false, bundleFailure = false } = {}) {
+async function open(t, { savedSpec = null, width = 1440, query = '' } = {}) {
   const context = await browser.newContext({ viewport: { width, height: 900 } });
   t.after(() => context.close());
   await context.route('**/*', async (route) => {
     const url = route.request().url();
     if (!url.startsWith(base) || url.includes('/api/')) return route.abort();
-    if (bundleFailure && url.endsWith('index.playground-chat.js')) return route.abort();
     return route.continue();
   });
   await context.addInitScript((value) => {
     if (window !== window.top) return;
     localStorage.setItem('isolation-secret', 'parent-only');
     if (value) sessionStorage.setItem('pg-current-spec', JSON.stringify(value));
+    window.__workflowPostToPreview = message => document.querySelector('#pg-preview-frame').contentWindow.postMessage(message, '*');
   }, savedSpec);
   const page = await context.newPage();
   page.setDefaultTimeout(5000);
-  await page.goto(base + '/playground.html' + (react ? '?react-chat' : ''));
+  await page.goto(base + '/playground.html' + query);
   return page;
 }
 
@@ -65,7 +65,74 @@ test('restores the preview after iframe readiness', async (t) => {
   await page.frameLocator('#pg-preview-frame').getByText('Restored preview', { exact: true }).waitFor({ timeout: 3000 });
 });
 
-test('composer hides narrow-panel icons instead of squeezing them and keeps actions usable', async t => {
+test('shared lexical state survives independent chunks in preview and downloaded HTML', async t => {
+  const page = await open(t, { savedSpec: { root: 'root', elements: {
+    root: { type: 'Stack', children: ['next', '_shared_state', 'render', 'events'] },
+    next: { type: 'Button', props: { label: 'Next' } },
+    _shared_state: { type: 'CustomHTML', props: { js: 'const questions = ["First question", "Second question"]; let currentQuestion = 0;' } },
+    render: { type: 'CustomHTML', props: { js: 'const button = preview.querySelector("[data-spec-id=next]"); button.textContent = questions[currentQuestion];' } },
+    events: { type: 'CustomHTML', props: { js: 'const button = preview.querySelector("[data-spec-id=next]"); button.addEventListener("click", () => { currentQuestion++; button.textContent = questions[currentQuestion]; });' } }
+  } } });
+  const frame = page.frameLocator('#pg-preview-frame');
+  await frame.getByRole('button', { name: 'First question' }).click();
+  await frame.getByRole('button', { name: 'Second question' }).waitFor();
+  const pending = page.waitForEvent('download');
+  await page.locator('#pg-download').click();
+  const html = await readFile(await (await pending).path(), 'utf8');
+  await page.setContent(html);
+  await page.getByRole('button', { name: 'First question' }).click();
+  await page.getByRole('button', { name: 'Second question' }).waitFor();
+});
+
+test('preview health reports initialization and interaction exceptions', async t => {
+  const page = await open(t, { savedSpec: { root: 'code', elements: {
+    code: { type: 'CustomHTML', props: { html: '<button>Run</button>', js: 'container.querySelector("button").onclick = () => { throw new Error("interaction failed"); }; throw new Error("initialization failed");' } }
+  } } });
+  await page.frameLocator('#pg-preview-frame').getByRole('button', { name: 'Run' }).click();
+  const errors = await page.evaluate(() => new Promise(resolve => {
+    const frame = document.querySelector('#pg-preview-frame').contentWindow;
+    const requestId = 'health-regression';
+    function receive(event) {
+      if (event.source !== frame || event.data?.type !== 'health' || event.data.requestId !== requestId) return;
+      window.removeEventListener('message', receive);
+      resolve(event.data.errors);
+    }
+    window.addEventListener('message', receive);
+    window.__workflowPostToPreview({ type: 'health', requestId });
+  }));
+  assert.ok(errors.some(error => error.includes('initialization failed')), JSON.stringify(errors));
+  assert.ok(errors.some(error => error.includes('interaction failed')), JSON.stringify(errors));
+});
+
+test('HTML export preserves dollar replacement patterns in generated JavaScript', async t => {
+  const code = 'const tokens = ["$&", "$`", "$\'", "$$"]; container.querySelector("button").onclick = () => { container.querySelector("output").textContent = tokens.join("|") + " $" + 12; };';
+  const page = await open(t, { savedSpec: { root: 'code', elements: {
+    code: { type: 'CustomHTML', props: { html: '<button>Calculate</button><output></output>', js: code } }
+  } } });
+  const pending = page.waitForEvent('download');
+  await page.locator('#pg-download').click();
+  const html = await readFile(await (await pending).path(), 'utf8');
+  await page.setContent(html);
+  await page.getByRole('button', { name: 'Calculate' }).click();
+  assert.equal(await page.locator('output').textContent(), "$&|$`|$'|$$ $12");
+});
+
+test('legacy behavior merged into native props still runs in preview and export', async t => {
+  const page = await open(t, { savedSpec: { root: 'next', elements: {
+    next: { type: 'Button', props: { label: 'First question', js: 'container.onclick = () => { container.textContent = "Second question"; };' } }
+  } } });
+  const frame = page.frameLocator('#pg-preview-frame');
+  await frame.getByRole('button', { name: 'First question' }).click();
+  await frame.getByRole('button', { name: 'Second question' }).waitFor();
+  const pending = page.waitForEvent('download');
+  await page.locator('#pg-download').click();
+  const html = await readFile(await (await pending).path(), 'utf8');
+  await page.setContent(html);
+  await page.getByRole('button', { name: 'First question' }).click();
+  await page.getByRole('button', { name: 'Second question' }).waitFor();
+});
+
+test('text-only composer keeps Stop usable and attachment controls hidden across panel widths', async t => {
   const page = await open(t);
   await page.addScriptTag({ content: await readFile(resolve(root, 'assets/lucide.min.js'), 'utf8') });
   await page.evaluate(() => lucide.createIcons());
@@ -100,7 +167,11 @@ test('composer hides narrow-panel icons instead of squeezing them and keeps acti
           hintVisible: getComputedStyle(wrap.querySelector('#pg-send-hint')).display !== 'none'
         };
       });
-      assert.deepEqual(state.labels, generating ? ['Image', 'File', 'Link', 'Figma', 'Stop'] : ['Image', 'File', 'Link', 'Figma']);
+      assert.deepEqual(state.labels, generating ? ['Stop'] : []);
+      for (const id of ['pg-attach-img', 'pg-attach', 'pg-weblook', 'pg-figma']) {
+        assert.equal(await page.locator('#' + id).isVisible(), false);
+        assert.equal(await page.locator('#' + id).isDisabled(), true);
+      }
       assert.equal(state.clipped, false, JSON.stringify({ panelWidth, generating, state }));
       assert.equal(state.overlap, false);
       assert.equal(state.hintVisible, !generating && state.contentWidth > 260);
@@ -112,9 +183,11 @@ test('composer hides narrow-panel icons instead of squeezing them and keeps acti
   }
 });
 
-test('the live JSON prompt exposes all canonical props and supported types', async (t) => {
-  const page = await open(t, { react: true });
-  const prompt = await page.evaluate(() => window.__playgroundBridge.getSystemPrompt());
+test('the retained JSON prompt exposes all canonical props and supported types', async (t) => {
+  const page = await open(t);
+  const html = await readFile(new URL('../../playground.html', import.meta.url), 'utf8');
+  const source = html.slice(html.indexOf('var COMP_PROPS ='), html.indexOf('// ---- OpenUI Lang system prompt'));
+  const prompt = await page.evaluate(source => new Function('RENDERERS', 'DAUB', source + ';return SYSTEM_PROMPT;')(window.RENDERERS, window.DAUB), source);
   for (const type of VALID_TYPES) assert.ok(prompt.includes('- ' + type + ': { ' + COMP_PROPS[type] + ' }'), type + ' props missing from prompt');
   assert.deepEqual(await page.evaluate(() => Object.keys(window.RENDERERS)), VALID_TYPES);
 });
@@ -331,9 +404,23 @@ test('downloads HTML with custom JavaScript and declarative state', async (t) =>
   assert.equal(await page.evaluate(() => window.__daubState._state.count), 1);
 });
 
-test('falls back to vanilla chat if the React bundle fails to load', async (t) => {
-  const page = await open(t, { react: true, bundleFailure: true });
+test('legacy React URLs retain the vanilla composer and route generation to Hybrid', async (t) => {
+  const page = await open(t, { query: '?react-chat&design=direct' });
+  const stages = [];
+  await page.route('**/api/generate', async route => {
+    stages.push(route.request().postDataJSON().response_format?.json_schema?.name);
+    await route.fulfill({ status: 429, json: { error: 'Fixture quota exceeded' } });
+  });
   assert.equal(await page.locator('#pg-prompt').isVisible(), true);
+  assert.equal(await page.locator('#pg-chat-mount, #pg-generation-mode').count(), 0);
+  assert.equal(await page.evaluate(() => typeof window.__playgroundBridge), 'undefined');
+  assert.equal(await page.locator('script[src*="index.playground-chat.js"]').count(), 0);
+  await page.locator('#pg-prompt').fill('Build a title');
+  await page.locator('#pg-prompt').press('Enter');
+  await page.waitForFunction(() => window.__hybridLastRun);
+  assert.deepEqual(stages, ['hybrid_contract']);
+  assert.equal(await page.evaluate(() => window.__hybridLastRun.reason), 'provider-error');
+  await page.locator('#pg-stop-btn').waitFor({ state: 'hidden' });
 });
 
 test('exposes accessible editor, prompt, preview, and keyboard tabs', async (t) => {
@@ -369,17 +456,19 @@ test('copies an edited share spec and runnable HTML', async (t) => {
 });
 
 test('exports the preview theme and scheme chosen after rendering', async (t) => {
-  const page = await open(t, { savedSpec: spec, react: true });
+  const page = await open(t, { savedSpec: spec });
   await page.evaluate(() => {
-    window.__playgroundBridge.postToPreview({ type: 'theme', value: 'grape' });
-    window.__playgroundBridge.postToPreview({ type: 'scheme', value: 'dark' });
+    DAUB.setTheme('dracula');
   });
+  await page.frameLocator('#pg-preview-frame').locator('html[data-theme="dracula"]').waitFor();
+  await page.evaluate(() => DAUB.setScheme('dark'));
+  await page.frameLocator('#pg-preview-frame').locator('html[data-scheme="dark"]').waitFor();
   const downloadPromise = page.waitForEvent('download');
   await page.locator('#pg-download').click();
   const html = await readFile(await (await downloadPromise).path(), 'utf8');
   await page.setContent(html);
   await page.locator('[data-spec-id="title"]').waitFor();
-  assert.equal(await page.locator('html').getAttribute('data-theme'), 'grape');
+  assert.equal(await page.locator('html').getAttribute('data-theme'), 'dracula');
   assert.equal(await page.locator('html').getAttribute('data-scheme'), 'dark');
 });
 
@@ -409,12 +498,12 @@ test('isolates custom JavaScript from parent storage and DOM while retaining loc
 });
 
 test('supports highlight and unhighlight messages without parent DOM access', async (t) => {
-  const page = await open(t, { savedSpec: spec, react: true });
+  const page = await open(t, { savedSpec: spec });
   const title = page.frameLocator('#pg-preview-frame').locator('[data-spec-id="title"]');
   await title.waitFor();
-  await page.evaluate(() => window.__playgroundBridge.postToPreview({ type: 'highlight', elements: ['title'] }));
+  await page.evaluate(() => window.__workflowPostToPreview({ type: 'highlight', elements: ['title'] }));
   await title.locator('xpath=self::*[contains(@class,"db-skeleton")]').waitFor();
-  await page.evaluate(() => window.__playgroundBridge.postToPreview({ type: 'unhighlight', elements: ['title'] }));
+  await page.evaluate(() => window.__workflowPostToPreview({ type: 'unhighlight', elements: ['title'] }));
   await title.locator('xpath=self::*[contains(@class,"db-skeleton")]').waitFor({ state: 'hidden' });
 });
 
@@ -429,7 +518,7 @@ test('rejects a forged render message from the preview window itself', async (t)
 });
 
 test('accepts screenshot replies only from the expected opaque preview', async (t) => {
-  const page = await open(t, { savedSpec: spec, react: true });
+  const page = await open(t, { savedSpec: spec });
   const preview = page.frames().find((frame) => frame.parentFrame());
   await preview.locator('[data-spec-id="title"]').waitFor();
   await preview.evaluate(() => {
@@ -439,7 +528,7 @@ test('accepts screenshot replies only from the expected opaque preview', async (
   const source = html.slice(html.indexOf('function capturePreview(options)'), html.indexOf('// ---- SSE response parser'));
   const result = await page.evaluate(async (source) => {
     const capture = new Function('$previewFrame', 'currentSpec', 'postToPreview', 'var _renderSeq = 0;' + source + ';return capturePreview();');
-    const pending = capture(document.querySelector('#pg-preview-frame'), window.__playgroundBridge.getCurrentSpec(), window.__playgroundBridge.postToPreview);
+    const pending = capture(document.querySelector('#pg-preview-frame'), JSON.parse(document.querySelector('#pg-json').value), window.__workflowPostToPreview);
     window.postMessage({ type: 'screenshot', data: 'forged' }, '*');
     return pending;
   }, source);
@@ -447,7 +536,7 @@ test('accepts screenshot replies only from the expected opaque preview', async (
 });
 
 test('uses the screenshot fallback when html2canvas cannot clone an opaque iframe', async (t) => {
-  const page = await open(t, { savedSpec: spec, react: true });
+  const page = await open(t, { savedSpec: spec });
   const preview = page.frames().find((frame) => frame.parentFrame());
   await preview.locator('[data-spec-id="title"]').waitFor();
   await preview.evaluate(() => {
@@ -462,7 +551,7 @@ test('uses the screenshot fallback when html2canvas cannot clone an opaque ifram
       resolve(event.data.data);
     }
     window.addEventListener('message', receive);
-    window.__playgroundBridge.postToPreview({ type: 'screenshot' });
+    window.__workflowPostToPreview({ type: 'screenshot' });
   }));
   assert.equal(result, 'data:image/jpeg;base64,fallback');
 });
@@ -472,18 +561,18 @@ async function captureGeometry(page, requestId = 'geometry-test') {
     const frame = document.querySelector('#pg-preview-frame').contentWindow;
     const timer = setTimeout(() => { window.removeEventListener('message', receive); reject(new Error('Capture timeout')); }, 5000);
     function receive(event) {
-      if (event.source !== frame || event.data?.type !== 'screenshot') return;
+      if (event.source !== frame || event.data?.type !== 'screenshot' || event.data.requestId !== requestId) return;
       clearTimeout(timer);
       window.removeEventListener('message', receive);
       resolve(event.data);
     }
     window.addEventListener('message', receive);
-    window.__playgroundBridge.postToPreview({ type: 'screenshot', geometry: true, requestId });
+    window.__workflowPostToPreview({ type: 'screenshot', geometry: true, requestId });
   }), requestId);
 }
 
 test('captures bounded layout geometry with hierarchy, box model and scroll coordinates', async (t) => {
-  const page = await open(t, { savedSpec: spec, react: true });
+  const page = await open(t, { savedSpec: spec });
   const preview = page.frames().find((frame) => frame.parentFrame());
   await preview.locator('[data-spec-id="title"]').waitFor();
   await preview.evaluate(() => {
@@ -510,7 +599,7 @@ test('captures bounded layout geometry with hierarchy, box model and scroll coor
 });
 
 test('geometry reports transformed and hidden elements and caps large previews on mobile', async (t) => {
-  const page = await open(t, { savedSpec: spec, react: true, width: 390 });
+  const page = await open(t, { savedSpec: spec, width: 390 });
   await page.locator('[data-panel="preview"]').click();
   await page.locator('[data-viewport="mobile"]').click();
   const preview = page.frames().find((frame) => frame.parentFrame());
@@ -533,7 +622,7 @@ test('geometry reports transformed and hidden elements and caps large previews o
 });
 
 test('marks geometry unstable when layout changes during screenshot capture', async (t) => {
-  const page = await open(t, { savedSpec: spec, react: true });
+  const page = await open(t, { savedSpec: spec });
   const preview = page.frames().find((frame) => frame.parentFrame());
   await preview.locator('[data-spec-id="title"]').waitFor();
   await preview.evaluate(() => {
@@ -547,7 +636,7 @@ test('marks geometry unstable when layout changes during screenshot capture', as
 });
 
 test('measured capture correlates replies and rejects obsolete render revisions', async (t) => {
-  const page = await open(t, { savedSpec: spec, react: true });
+  const page = await open(t, { savedSpec: spec });
   const preview = page.frames().find((frame) => frame.parentFrame());
   await preview.locator('[data-spec-id="title"]').waitFor();
   await preview.evaluate(() => {
@@ -560,7 +649,7 @@ test('measured capture correlates replies and rejects obsolete render revisions'
   const source = html.slice(html.indexOf('function capturePreview(options)'), html.indexOf('// ---- SSE response parser'));
   const result = await page.evaluate(async (source) => {
     const build = new Function('$previewFrame', 'currentSpec', 'postToPreview', 'var _renderSeq = 1;' + source + '; return { capturePreview, change: function() { _renderSeq++; } };');
-    const controller = build(document.querySelector('#pg-preview-frame'), window.__playgroundBridge.getCurrentSpec(), window.__playgroundBridge.postToPreview);
+    const controller = build(document.querySelector('#pg-preview-frame'), JSON.parse(document.querySelector('#pg-json').value), window.__workflowPostToPreview);
     const fresh = await controller.capturePreview({ geometry: true });
     const stale = controller.capturePreview({ geometry: true });
     controller.change();
@@ -577,10 +666,34 @@ test('measured capture correlates replies and rejects obsolete render revisions'
   });
   const unstable = await page.evaluate((source) => {
     const capture = new Function('$previewFrame', 'currentSpec', 'postToPreview', 'var _renderSeq = 1;' + source + ';return capturePreview({ geometry: true });');
-    return capture(document.querySelector('#pg-preview-frame'), window.__playgroundBridge.getCurrentSpec(), window.__playgroundBridge.postToPreview);
+    return capture(document.querySelector('#pg-preview-frame'), JSON.parse(document.querySelector('#pg-json').value), window.__workflowPostToPreview);
   }, source);
   assert.equal(unstable.screenshot, 'data:image/jpeg;base64,unstable');
   assert.equal(unstable.geometry, null);
+});
+
+test('SSE errors retain quota and rate-limit status instead of looking like empty JSON', async () => {
+  const html = await readFile(resolve(root, 'playground.html'), 'utf8');
+  const source = html.slice(html.indexOf('function parseSseResponse(res)'), html.indexOf('// ---- Content integrity guard'));
+  const limits = [];
+  const parse = new Function('stopForProviderLimit', source + ';return parseSseResponse;')(status => limits.push(Number(status)));
+  for (const status of [401, 402, 403, 429]) {
+    await assert.rejects(parse(new Response('data: ' + JSON.stringify({ error: { code: status, message: 'Provider failure' } }) + '\n\n')), error => error.status === status);
+  }
+  assert.deepEqual(limits, [401, 402, 403, 429]);
+  const parsed = await parse(new Response('data: invalid\n\ndata: {"choices":[{"delta":{"content":"{}"}}]}\n\ndata: [DONE]\n\n'));
+  assert.equal(parsed.content, '{}');
+  const truncated = await parse(new Response('data: ' + JSON.stringify({ choices: [{ delta: { content: '{}' }, finish_reason: 'length' }] }) + '\n\n'));
+  assert.equal(truncated.finishReason, 'length');
+  const refused = await parse(new Response('data: ' + JSON.stringify({ choices: [{ delta: { refusal: 'Declined' }, finish_reason: 'stop' }] }) + '\n\n'));
+  assert.equal(refused.refused, true);
+  const interrupted = await parse(new Response('data:' + JSON.stringify({ choices: [{ delta: { content: '', reasoning: 'thinking' }, finish_reason: null }] }) + '\n\n'));
+  assert.equal(interrupted.completed, false);
+  assert.equal(interrupted.content, '');
+  const noSpace = await parse(new Response('data:' + JSON.stringify({ choices: [{ delta: { content: '{}' }, finish_reason: 'stop' }] }) + '\n\n'));
+  assert.equal(noSpace.completed, true);
+  assert.equal(noSpace.content, '{}');
+  assert.equal((await parse(new Response('data:[DONE]\n\n'))).completed, true);
 });
 
 test('both visual reviewers send measured geometry alongside images and the spec', async () => {
@@ -605,13 +718,13 @@ test('both visual reviewers send measured geometry alongside images and the spec
 });
 
 test('runs chunk tests in the opaque preview and rejects forged test-result replies', async (t) => {
-  const page = await open(t, { savedSpec: spec, react: true });
+  const page = await open(t, { savedSpec: spec });
   await page.frameLocator('#pg-preview-frame').locator('[data-spec-id="title"]').waitFor();
   const html = await readFile(new URL('../../playground.html', import.meta.url), 'utf8');
   const source = html.slice(html.indexOf('function runChunkTests('), html.indexOf('function reviewAndAssemble('));
   const results = await page.evaluate(async (source) => {
     const run = new Function('postToPreview', source + ';return runChunkTests([{chunkId:"isolated",success:true,elements:[{id:"title",test:"return new Promise(function(resolve) { setTimeout(function() { resolve(); }, 30); });"}]}], 200);');
-    const pending = run(window.__playgroundBridge.postToPreview);
+    const pending = run(window.__workflowPostToPreview);
     window.postMessage({ type: 'testResults', results: [{ chunkId: 'forged', pass: true }] }, '*');
     return pending;
   }, source);
@@ -627,58 +740,4 @@ test('preserves declarative state actions in the opaque preview', async (t) => {
   const toggle = page.frameLocator('#pg-preview-frame').getByRole('button', { name: 'Disabled', exact: true });
   await toggle.click();
   await page.frameLocator('#pg-preview-frame').getByRole('button', { name: 'Enabled', exact: true }).waitFor();
-});
-
-test('React example selection fills the controlled composer and retains provider settings', async (t) => {
-  const page = await open(t, { react: true });
-  await page.locator('#pg-chat-mount').getByText('Settings page with tabs and form fields', { exact: true }).click();
-  assert.equal(await page.locator('[data-aui-composer-input]').inputValue(), 'Settings page with tabs and form fields');
-  await page.locator('#pg-chat-mount').getByRole('button', { name: 'Own Key' }).click();
-  assert.equal(await page.locator('#pg-byok-modal').getAttribute('aria-hidden'), 'false');
-});
-
-test('React chat commits successful responses and updates later request context', async (t) => {
-  const page = await open(t, { react: true });
-  let request;
-  await page.route('**/api/generate', async (route) => {
-    request = route.request().postDataJSON();
-    await route.fulfill({ contentType: 'text/event-stream', body: 'data: ' + JSON.stringify({ choices: [{ delta: { content: JSON.stringify(spec) } }] }) + '\n\ndata: [DONE]\n\n' });
-  });
-  await page.locator('[data-aui-composer-input]').fill('Build a title');
-  await page.locator('#pg-chat-mount').getByRole('button', { name: 'Send' }).click();
-  await page.frameLocator('#pg-preview-frame').getByText('Restored preview', { exact: true }).waitFor();
-  assert.equal(await page.evaluate(() => window.__playgroundBridge.getCurrentSpec().root), 'title');
-  await page.locator('[data-aui-composer-input]').fill('Change the title');
-  await page.locator('#pg-chat-mount').getByRole('button', { name: 'Send' }).click();
-  await page.locator('#pg-chat-mount').getByRole('button', { name: 'Send' }).waitFor();
-  assert.ok(request.messages.some((message) => message.role === 'assistant' && message.content === JSON.stringify(spec)));
-});
-
-test('React Stop cancels without persisting a spec', async (t) => {
-  const page = await open(t, { react: true });
-  let release;
-  await page.route('**/api/generate', async (route) => {
-    await new Promise((resolve) => { release = resolve; });
-    await route.abort();
-  });
-  await page.locator('[data-aui-composer-input]').fill('Build a title');
-  await page.locator('#pg-chat-mount').getByRole('button', { name: 'Send' }).click();
-  await page.locator('#pg-chat-mount').getByRole('button', { name: 'Stop' }).click();
-  release?.();
-  await page.locator('#pg-chat-mount').getByRole('button', { name: 'Send' }).waitFor();
-  assert.equal(await page.evaluate(() => sessionStorage.getItem('pg-current-spec')), null);
-});
-
-test('React chat surfaces provider errors and makes one request for a quota error', async (t) => {
-  const page = await open(t, { react: true });
-  let requests = 0;
-  await page.route('**/api/generate', async (route) => {
-    requests++;
-    await route.fulfill({ status: 429, contentType: 'application/json', body: JSON.stringify({ error: { message: 'Quota exceeded' } }) });
-  });
-  await page.locator('[data-aui-composer-input]').fill('Build a title');
-  await page.locator('#pg-chat-mount').getByRole('button', { name: 'Send' }).click();
-  await page.locator('#pg-chat-mount [role="alert"]').waitFor();
-  assert.equal(requests, 1);
-  assert.equal(await page.evaluate(() => window.__playgroundBridge.getCurrentSpec()), null);
 });

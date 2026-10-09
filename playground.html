@@ -6,7 +6,7 @@
   <title>DAUB — Playground</title>
   <script src="site-nav.js" defer></script>
   <meta name="description" content="Interactive Playground for DAUB UI Kit: prompt an AI, get a json-render spec, and see live DAUB component previews with all 91 components.">
-  <meta name="keywords" content="DAUB playground, json-render, generative UI, AI components, CSS components, live preview, BYOK">
+  <meta name="keywords" content="DAUB playground, json-render, generative UI, AI components, CSS components, live preview">
   <meta name="theme-color" content="#C67B5C">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://daub.dev/playground.html">
@@ -173,10 +173,7 @@
       font-size: 0.6875rem; font-family: var(--db-font-ui);
       margin-bottom: 6px;
     }
-    #pg-generation-mode {
-      width: auto; max-width: 170px; min-width: 0; height: 28px;
-      padding: 2px 22px 2px 6px; font: inherit;
-    }
+    #pg-byok-link[hidden], #pg-byok-modal[hidden], .pg-chat__attach-btn[hidden] { display: none; }
     .pg-options-examples-trigger {
       display: flex; align-items: center; gap: 3px;
       font-size: 0.6875rem; color: var(--db-warm-gray);
@@ -797,8 +794,6 @@
       border-radius: 0; font-weight: 500;
     }
     .pg-preview-tabs .db-tabs__tab[aria-selected="true"] { font-weight: 500; }
-    /* Status text shares the tab box so "Streaming…" sits on the tab baseline */
-    #pg-status { height: 36px; line-height: 34px; border-bottom: 2px solid transparent; box-sizing: border-box; font-weight: 500; }
     .pg-preview-pane { display: none; flex: 1; overflow: auto; min-height: 0; }
     .pg-preview-pane--active { display: flex; flex-direction: column; }
     .pg-code-view {
@@ -815,7 +810,7 @@
       height: 100%;
     }
     #panel-preview.pg-recursive-measure, #pg-pane-design.pg-recursive-measure {
-      display: flex !important; position: fixed; left: -10000px; top: 0;
+      display: flex !important; position: fixed; left: 0; top: 0; z-index: -1;
       width: var(--pg-measure-width); height: var(--pg-measure-height);
       opacity: 0; pointer-events: none;
     }
@@ -894,11 +889,7 @@
               Examples
             </button>
             <span style="flex:1"></span>
-            <select id="pg-generation-mode" aria-label="Generation mode">
-              <option value="direct">Direct</option>
-              <option value="snowflake">Recursive (experimental)</option>
-            </select>
-            <a href="#" id="pg-byok-link" class="pg-byok-link">Own Key</a>
+            <a href="#" id="pg-byok-link" class="pg-byok-link" hidden inert>Own Key</a>
           </div>
           <div class="pg-chat__examples" id="pg-chat-examples">
             <div style="display:flex;flex-wrap:wrap;gap:4px;padding:4px 0;">
@@ -915,16 +906,16 @@
             <textarea class="db-textarea" id="pg-prompt" aria-label="Describe a UI" rows="1" placeholder="Describe the UI you want to build..."></textarea>
             <div class="pg-chat__input-actions">
               <div style="display:flex;align-items:center;gap:2px;">
-                <button class="pg-chat__attach-btn" id="pg-attach-img" title="Attach image">
+                <button class="pg-chat__attach-btn" id="pg-attach-img" hidden disabled title="Attach image">
                   <i data-lucide="image" style="width:13px;height:13px;"></i> Image
                 </button>
-                <button class="pg-chat__attach-btn" id="pg-attach" title="Attach file">
+                <button class="pg-chat__attach-btn" id="pg-attach" hidden disabled title="Attach file">
                   <i data-lucide="paperclip" style="width:13px;height:13px;"></i> File
                 </button>
-                <button class="pg-chat__attach-btn" id="pg-weblook" title="Attach web page">
+                <button class="pg-chat__attach-btn" id="pg-weblook" hidden disabled title="Attach web page">
                   <i data-lucide="globe" style="width:13px;height:13px;"></i> Link
                 </button>
-                <button class="pg-chat__attach-btn" id="pg-figma" title="Attach Figma design">
+                <button class="pg-chat__attach-btn" id="pg-figma" hidden disabled title="Attach Figma design">
                   <i data-lucide="figma" style="width:13px;height:13px;"></i> Figma
                 </button>
               </div>
@@ -933,8 +924,8 @@
                 <i data-lucide="square" style="width:11px;height:11px;"></i> Stop
               </button>
             </div>
-            <input type="file" id="pg-file-input-img" accept="image/*" multiple style="display:none;">
-            <input type="file" id="pg-file-input" accept="image/*,application/pdf" multiple style="display:none;">
+            <input type="file" disabled id="pg-file-input-img" accept="image/*" multiple style="display:none;">
+            <input type="file" disabled id="pg-file-input" accept="image/*,application/pdf" multiple style="display:none;">
           </div>
         </div>
       </div>
@@ -953,7 +944,7 @@
           <button class="db-tabs__tab pg-tab" id="pg-tab-structure" role="tab" data-tab="structure" aria-controls="pg-pane-structure" aria-selected="false" tabindex="-1">Structure</button>
           <button class="db-tabs__tab pg-tab" id="pg-tab-code" role="tab" data-tab="code" aria-controls="pg-pane-code" aria-selected="false" tabindex="-1">Code</button>
         </div>
-        <span class="db-caption db-text-muted" id="pg-status" style="font-family:var(--db-font-ui);white-space:nowrap;"></span>
+        <span id="pg-status" hidden></span>
         <span style="flex:1"></span>
         <button class="db-btn db-btn--ghost db-btn--sm" id="pg-render" title="Render" aria-label="Render JSON" style="display:none;"><i data-lucide="play" style="width:12px;height:12px;"></i></button>
         <div class="db-btn-group" id="pg-viewport-toggle" style="display:none;">
@@ -1016,7 +1007,7 @@
 <div class="db-theme-switcher" role="group" aria-label="Theme switcher"></div>
 
 <!-- BYOK Settings Modal -->
-<div class="db-modal-overlay" id="pg-byok-modal" aria-hidden="true">
+<div class="db-modal-overlay" id="pg-byok-modal" hidden inert aria-hidden="true">
   <div class="db-modal" data-db-texture="glass" style="max-width:380px;">
     <div class="db-modal__header">
       <div class="db-modal__title">Use Your Own Key</div>
@@ -1060,6 +1051,12 @@
 <script src="daub-render.js"></script>
 <script src="daub-openui-parser.js"></script>
 <script src="playground-snowflake.js?v=1"></script>
+<script src="playground-quality.js?v=1"></script>
+<script src="playground-behavior.js?v=2"></script>
+<script src="playground-behavior-recipes.js?v=2"></script>
+<script src="playground-hybrid.js?v=3"></script>
+<script src="playground-hybrid-checks.js?v=4"></script>
+<script src="playground-hybrid-ui.js?v=5"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -1086,8 +1083,6 @@ var $json       = document.getElementById('pg-json');
 var $previewFrame = document.getElementById('pg-preview-frame');
 var _isLoading = false;
 var $stopBtn    = document.getElementById('pg-stop-btn');
-var $generationMode = document.getElementById('pg-generation-mode');
-$generationMode.value = new URLSearchParams(location.search).get('design') === 'snowflake' ? 'snowflake' : 'direct';
 var $sendHint   = document.getElementById('pg-send-hint');
 var _abortCtrl = null;
 var _currentStream = { renderTimer: null, streamBubble: null };
@@ -1138,8 +1133,31 @@ var $byokModal    = document.getElementById('pg-byok-modal');
 var $byokModalClose = document.getElementById('pg-byok-modal-close');
 var $byokSave     = document.getElementById('pg-byok-save');
 
+function rejectUnsupportedInput(e) {
+  if (e) { e.preventDefault(); e.stopImmediatePropagation(); }
+  DAUB.toast({ type: 'error', message: 'Generation supports text prompts with DAUB AI. Attachments and own API keys are not supported.' });
+}
+[$attach, $attachImg, $weblook, $figma, $fileInput, $fileInputImg, $provider, $model, $apikey, $byokSave].forEach(function(control) {
+  control.disabled = true;
+  control.addEventListener('click', rejectUnsupportedInput, true);
+  control.addEventListener('change', rejectUnsupportedInput, true);
+});
+[$byokLink, $defaultLink].forEach(function(control) { control.addEventListener('click', rejectUnsupportedInput, true); });
+$prompt.addEventListener('paste', function(e) {
+  var data = e.clipboardData;
+  if (data && (data.files.length || Array.from(data.items).some(function(item) { return item.kind === 'file'; }) || /figma\.com\/(file|design|proto)\//i.test(data.getData('text/plain')))) rejectUnsupportedInput(e);
+}, true);
+$chatPanel.addEventListener('drop', function(e) {
+  var data = e.dataTransfer;
+  if (data && (data.files.length || /figma\.com\/(file|design|proto)\//i.test(data.getData('text/plain')))) rejectUnsupportedInput(e);
+}, true);
+$chatPanel.addEventListener('dragover', function(e) {
+  if (e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files')) e.preventDefault();
+});
+
 // ---- Iframe preview bootstrap ----
-function collectPreviewGeometry(root) {
+function collectPreviewGeometry(root, limit) {
+  limit = limit || 80;
   var origin = root.getBoundingClientRect();
   function number(value) { return Math.round(value * 100) / 100; }
   function bounds(rect) {
@@ -1153,8 +1171,8 @@ function collectPreviewGeometry(root) {
     version: 1, units: 'css-px', coordinateSpace: 'preview-root-border-box',
     viewport: { width: innerWidth, height: innerHeight, scrollX: scrollX, scrollY: scrollY, devicePixelRatio: devicePixelRatio },
     capture: { bounds: bounds(origin), viewportX: number(origin.left), viewportY: number(origin.top) },
-    totalElements: nodes.length, truncated: nodes.length > 80,
-    elements: Array.from(nodes).slice(0, 80).map(function(el) {
+    totalElements: nodes.length, truncated: nodes.length > limit,
+    elements: Array.from(nodes).slice(0, limit).map(function(el) {
       var style = getComputedStyle(el);
       var parent = el.parentElement && el.parentElement.closest('[data-spec-id]');
       var layout = {};
@@ -1186,13 +1204,14 @@ async function captureMeasuredPreview(root, request, replyOrigin) {
       Promise.all(assets).then(function() { assetsReady = true; }),
       new Promise(function(resolve) { setTimeout(resolve, 1000); })
     ]);
-    geometry = collectPreviewGeometry(root);
+    var limit = request.spacing ? 160 : 80;
+    geometry = collectPreviewGeometry(root, limit);
     var before = JSON.stringify(geometry);
-    var animating = root.getAnimations && root.getAnimations({ subtree: true }).some(function(animation) { return animation.playState === 'running'; });
+    var animating = root.getAnimations && root.getAnimations({ subtree: true }).some(function(animation) { return animation.playState === 'running' && animation.animationName !== 'pg-region-pulse'; });
     if (request.geometryOnly) {
       // Browsers suspend animation frames in the offscreen measurement iframe.
       await new Promise(function(resolve) { setTimeout(resolve, 32); });
-      geometry.stable = assetsReady && !animating && geometry.capture.bounds.width > 0 && before === JSON.stringify(collectPreviewGeometry(root));
+      geometry.stable = assetsReady && !animating && geometry.capture.bounds.width > 0 && before === JSON.stringify(collectPreviewGeometry(root, limit));
       geometry.capture.kind = 'dom-measurement';
       parent.postMessage({ type: 'screenshot', requestId: request.requestId, data: null, geometry: geometry }, replyOrigin);
       return;
@@ -1212,7 +1231,7 @@ async function captureMeasuredPreview(root, request, replyOrigin) {
       data = await htmlToImage.toJpeg(root, { quality: 0.7, pixelRatio: 1, skipFonts: true, backgroundColor: bg });
       backend = 'html-to-image';
     }
-    geometry.stable = assetsReady && !animating && before === JSON.stringify(collectPreviewGeometry(root));
+    geometry.stable = assetsReady && !animating && before === JSON.stringify(collectPreviewGeometry(root, limit));
     geometry.capture.backend = backend;
     geometry.capture.kind = 'dom-reconstruction';
     parent.postMessage({ type: 'screenshot', requestId: request.requestId, data: data, geometry: geometry }, replyOrigin);
@@ -1222,10 +1241,12 @@ async function captureMeasuredPreview(root, request, replyOrigin) {
 }
 
 function markRecursiveRegions(root, spec, state) {
+  root.querySelectorAll('.pg-region-skeleton').forEach(function(el) { el.remove(); });
   root.querySelectorAll('[data-pg-region], [data-pg-refining]').forEach(function(el) {
     el.removeAttribute('data-pg-region');
     el.removeAttribute('data-pg-refining');
     el.removeAttribute('data-pg-region-size');
+    el.removeAttribute('data-pg-region-state');
   });
   if (!state || !spec || !spec.elements) return;
   root.querySelectorAll('[data-spec-id]').forEach(function(el) {
@@ -1239,8 +1260,49 @@ function markRecursiveRegions(root, spec, state) {
     var label = id.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[-_]+/g, ' ');
     label = label.charAt(0).toUpperCase() + label.slice(1);
     var suffix = status === 'failed' ? 'Needs another pass' : status === 'running' ? 'Building...' : 'Pending';
+    var kind = /sidebar|nav/i.test(id) && !/navbar/i.test(id) ? 'sidebar' : /header|footer|bar/i.test(id) ? 'compact' : 'body';
     el.setAttribute('data-pg-region', label + ' \u00b7 ' + suffix);
-    el.setAttribute('data-pg-region-size', /header|footer|bar/i.test(id) && !/sidebar/i.test(id) ? 'compact' : 'body');
+    el.setAttribute('data-pg-region-size', kind);
+    el.setAttribute('data-pg-region-state', status);
+    var skeleton = document.createElement('div');
+    skeleton.className = 'pg-region-skeleton';
+    skeleton.setAttribute('role', 'img');
+    skeleton.setAttribute('aria-label', label + ': ' + suffix);
+    function shape(parent, name) {
+      var part = document.createElement('span');
+      part.className = 'db-skeleton pg-sk-' + name;
+      parent.appendChild(part);
+    }
+    function row() {
+      var part = document.createElement('div');
+      part.className = 'pg-sk-row';
+      skeleton.appendChild(part);
+      return part;
+    }
+    var shapes = document.createElement('div');
+    shapes.className = 'pg-sk-shapes';
+    shapes.setAttribute('aria-hidden', 'true');
+    var brand = row();
+    shape(brand, kind === 'body' ? 'heading' : 'icon');
+    if (kind !== 'body') shape(brand, 'title');
+    if (kind === 'compact') shape(brand, 'action');
+    else if (kind === 'sidebar') {
+      for (var index = 0; index < 4; index++) {
+        var item = row();
+        shape(item, 'dot');
+        shape(item, index % 2 ? 'short' : 'line');
+      }
+    } else {
+      shape(skeleton, 'line');
+      shape(skeleton, 'short');
+      shape(skeleton, 'content');
+      var actions = row();
+      shape(actions, 'button');
+      shape(actions, 'button');
+    }
+    while (skeleton.firstChild) shapes.appendChild(skeleton.firstChild);
+    skeleton.appendChild(shapes);
+    el.appendChild(skeleton);
   });
 }
 
@@ -1260,10 +1322,30 @@ function buildIframeSrcdoc(theme, scheme) {
     + 'white-space:pre-wrap;text-align:center;font-family:var(--db-font-heading);font-size:0.9375rem;'
     + 'font-style:italic;line-height:1.6;color:var(--db-warm-gray);opacity:0.6;max-width:260px;}'
     + '.pg-preview-body{padding:16px;}'
-    + '[data-pg-region]{position:relative;min-height:240px;min-width:0;outline:1px dashed var(--db-color-border);outline-offset:-1px;background:var(--db-color-surface);}'
-    + '[data-pg-region][data-pg-region-size="compact"]{min-height:72px;}'
-    + '[data-pg-region]::before{content:attr(data-pg-region);padding:16px;min-width:0;max-width:100%;overflow-wrap:anywhere;font:12px/1.5 var(--db-font-ui);color:var(--db-warm-gray);}'
-    + '[data-pg-refining]{outline:1px solid var(--db-terracotta);outline-offset:-1px;}</style>'
+    + '[data-pg-region]{position:relative;min-height:240px;min-width:0;background:color-mix(in srgb,var(--db-color-surface) 55%,transparent);}'
+    + '[data-pg-region][data-pg-region-size="compact"]{min-height:80px;}'
+    + '.pg-region-skeleton{position:absolute;inset:20px;overflow:hidden;pointer-events:none;}'
+    + '.pg-sk-shapes{display:flex;flex-direction:column;gap:12px;height:100%;min-width:0;}'
+    + '.pg-sk-row{display:flex;align-items:center;gap:12px;min-width:0;flex-shrink:0;}'
+    + '.pg-region-skeleton .db-skeleton{display:block;flex-shrink:0;height:10px;max-width:100%;border-radius:4px;box-shadow:none;background:color-mix(in srgb,var(--db-ink) 10%,var(--db-color-surface));}'
+    + '.pg-region-skeleton .db-skeleton::after{display:none;}'
+    + '.pg-region-skeleton .pg-sk-heading{width:42%;height:20px;margin-bottom:4px;}'
+    + '.pg-region-skeleton .pg-sk-title{width:35%;height:14px;}'
+    + '.pg-region-skeleton .pg-sk-line{width:78%;flex-shrink:1;}'
+    + '.pg-region-skeleton .pg-sk-short{width:54%;flex-shrink:1;}'
+    + '.pg-region-skeleton .pg-sk-icon{width:28px;height:28px;border-radius:6px;}'
+    + '.pg-region-skeleton .pg-sk-dot{width:14px;height:14px;}'
+    + '.pg-region-skeleton .pg-sk-content{width:100%;flex:1;min-height:32px;opacity:.45;}'
+    + '.pg-region-skeleton .pg-sk-button{width:72px;height:28px;max-width:35%;}'
+    + '.pg-region-skeleton .pg-sk-action{width:64px;height:28px;margin-left:auto;flex-shrink:1;}'
+    + '[data-pg-region-size="sidebar"] .pg-sk-shapes{gap:24px;}'
+    + '[data-pg-region-size="compact"] .pg-sk-shapes{justify-content:center;}'
+    + '[data-pg-refining]:not([data-pg-region]){outline:1px solid color-mix(in srgb,var(--db-terracotta) 45%,transparent);outline-offset:3px;}'
+    + '[data-pg-refining] .pg-region-skeleton{animation:pg-region-pulse 1.8s ease-in-out infinite;}'
+    + '[data-pg-region-state="failed"] .pg-region-skeleton{animation:none;opacity:.5;}'
+    + '@keyframes pg-region-pulse{0%,100%{opacity:.55}50%{opacity:1}}'
+    + '@media(prefers-reduced-motion:reduce){[data-pg-refining] .pg-region-skeleton{animation:none;}}'
+    + '</style>'
     + '</head><body>'
     + '<div id="pg-iframe-root" class="pg-iframe-empty"></div>'
     + '<script>(function(){var qs=['
@@ -1283,6 +1365,7 @@ function buildIframeSrcdoc(theme, scheme) {
     + '<script>' + DAUB_RENDER_BODY.replace(/<\/script/gi, '<\\/script') + '<\/script>'
     + '<script>'
     + collectPreviewGeometry.toString() + ';' + captureMeasuredPreview.toString() + ';' + markRecursiveRegions.toString() + ';'
+    + 'var hybridProbe = ' + DaubHybridChecks.probe.toString() + ';'
     + 'var root = document.getElementById("pg-iframe-root");'
     + 'var _previewSpec = null;'
     // Opaque-origin frame: reply only to the embedding origin
@@ -1391,8 +1474,18 @@ function buildIframeSrcdoc(theme, scheme) {
     + '  return _ds;'
     + '};'
     // ---- End Declarative State Engine ----
+    + 'var _healthSeq = null;'
+    + 'var _outputController = null;'
+    + '(' + DaubQuality.installHealthTracking.toString() + ')(function(error) { parent.postMessage({type:"runtime-error", seq:_healthSeq, error:error}, _po); });'
+    + 'var executeCustomJS = ' + DaubQuality.executeCustomJS.toString() + ';'
     + 'window.addEventListener("message", function(e) {'
     + '  if (e.source !== window.parent || !e.data || !e.data.type) return;'
+    + '  if (e.data.type === "hybrid-probe") hybridProbe(root, e.data, _po);'
+    + '  if (e.data.type === "prototype-output" && (_po === "*" || e.origin === _po) && typeof e.data.requestId === "string" && e.data.requestId.length <= 80 && e.data.seq === _healthSeq) {'
+    + '    var result = null, failure = null; try { result = _outputController && _outputController === root.__daubBehaviorController ? _outputController.getOutput() : null; } catch (error) { failure = "Prototype output is unavailable"; }'
+    + '    parent.postMessage({type:"prototype-output-result", requestId:e.data.requestId, seq:_healthSeq, output:result, error:failure}, _po);'
+    + '  }'
+    + '  if (e.data.type === "health") parent.postMessage({ type: "health", requestId: e.data.requestId, errors: window.__pgRuntimeErrors.slice() }, _po);'
     + '  if (e.data.type === "refinement") markRecursiveRegions(root, _previewSpec, e.data.state);'
     + '  if (e.data.type === "highlight" || e.data.type === "unhighlight") {'
     + '    var ids = Array.isArray(e.data.elements) ? e.data.elements : [];'
@@ -1401,6 +1494,11 @@ function buildIframeSrcdoc(theme, scheme) {
     + '    });'
     + '  }'
     + '  if (e.data.type === "render") {'
+    + '    _outputController = null;'
+    + '    if (root.__daubBehaviorController) root.__daubBehaviorController.dispose();'
+    + '    var priorController = root.__daubBehaviorController;'
+    + '    window.__pgRuntimeErrors = [];'
+    + '    _healthSeq = e.data.seq;'
     + '    _previewSpec = e.data.spec || null;'
     + '    root.className = "pg-preview-body";'
     + '    root.innerHTML = e.data.html;'
@@ -1437,14 +1535,9 @@ function buildIframeSrcdoc(theme, scheme) {
     + '    if (window.lucide) lucide.createIcons({ nodes: root.querySelectorAll("[data-lucide]") });'
     + '    window.__daubState = null;'
     + '    if (e.data.stateConfig) { window.__daubState = window.__initDaubState(root, e.data.stateConfig); }'
-    + '    if (e.data.js && e.data.js.length) {'
-    + '      e.data.js.forEach(function(item) {'
-    + '        try {'
-    + '          var container = item.id ? root.querySelector("[data-spec-id=\\"" + item.id + "\\"]") : root;'
-    // eslint-disable-line -- intentional: user-authored JS via AI chat in playground context
-    + '          (new Function("container", "preview", "{\\n" + item.code + "\\n}"))(container || root, root);'
-    + '        } catch(err) { console.error("CustomHTML JS error:", err); }'
-    + '      });'
+    + '    if (!e.data.inert && e.data.js && e.data.js.length) {'
+    + '      executeCustomJS(root, e.data.js, function(error) { window.__pgReportError(error); console.error("CustomHTML JS error:", error); });'
+    + '      if (_previewSpec && _previewSpec.hybrid && _previewSpec.hybrid.program && root.__daubBehaviorController !== priorController) _outputController = root.__daubBehaviorController;'
     + '    }'
     + '  }'
     + '  if (e.data.type === "theme") {'
@@ -1454,6 +1547,8 @@ function buildIframeSrcdoc(theme, scheme) {
     + '    document.documentElement.setAttribute("data-scheme", e.data.value);'
     + '  }'
     + '  if (e.data.type === "clear") {'
+    + '    _outputController = null;'
+    + '    if (root.__daubBehaviorController) root.__daubBehaviorController.dispose();'
     + '    root.className = "pg-iframe-empty";'
     + '    root.innerHTML = "";'
     + '    document.documentElement.removeAttribute("data-theme");'
@@ -1510,9 +1605,10 @@ function buildIframeSrcdoc(theme, scheme) {
 function collectCustomJS(spec) {
   var jsItems = [];
   if (!spec || !spec.elements) return jsItems;
+  if (spec.hybrid && spec.hybrid.program) return [{ id: spec.root, code: DaubBehavior.toScript(spec.hybrid.program) }];
   Object.keys(spec.elements).forEach(function(id) {
     var def = spec.elements[id];
-    if (def.type === 'CustomHTML' && def.props && def.props.js) {
+    if (def.props && def.props.js) {
       var item = { id: def.props.forId || id, code: def.props.js };
       if (id === '_shared_state') jsItems.unshift(item); else jsItems.push(item); // chunk code expects these globals to exist
     }
@@ -1531,6 +1627,10 @@ $previewFrame.srcdoc = buildIframeSrcdoc();
 
 // Helper to post message to iframe
 function postToPreview(msg) {
+  if ((msg.type === 'render' || msg.type === 'clear') && _prototypeOutputRequests) {
+    _prototypeOutputRequests.forEach(function(request) { request.reject(new Error('Preview changed before output was read')); });
+  }
+  if (msg.type === 'render' || msg.type === 'clear') _runtimeReport = null;
   if (msg.type === 'theme') _pgPreviewTheme = msg.value;
   if (msg.type === 'scheme') _pgPreviewScheme = msg.value;
   if (msg.type === 'clear') _pgPreviewTheme = null;
@@ -1543,8 +1643,41 @@ function postToPreview(msg) {
 // Cache for iframe HTML (used by copy/download)
 var _iframeHtmlCache = '';
 var _renderSeq = 0;
+var _runtimeReport = null;
+var _prototypeOutputRequests = new Map();
+window.DaubPlayground = Object.freeze({
+  getOutput: function() {
+    return new Promise(function(resolve, reject) {
+      if (!currentSpec || !currentSpec.hybrid || !currentSpec.hybrid.program) { resolve(null); return; }
+      if (!_previewReady || !$previewFrame.contentWindow) { reject(new Error('Preview is not ready')); return; }
+      var requestId = crypto.randomUUID(), seq = _renderSeq;
+      function finish(error, output) {
+        clearTimeout(timer); _prototypeOutputRequests.delete(requestId);
+        if (error) reject(error); else resolve(output);
+      }
+      var timer = setTimeout(function() { finish(new Error('Prototype output request timed out')); }, 3000);
+      _prototypeOutputRequests.set(requestId, { seq: seq, resolve: function(output) { finish(null, output); }, reject: function(error) { finish(error); } });
+      postToPreview({ type: 'prototype-output', requestId: requestId, seq: seq });
+    });
+  }
+});
 window.addEventListener('message', function(e) {
   if (e.source !== $previewFrame.contentWindow) return;
+  if (e.data && e.data.type === 'prototype-output-result') {
+    var request = _prototypeOutputRequests.get(e.data.requestId);
+    if (!request || e.data.seq !== request.seq || e.data.seq !== _renderSeq) return;
+    if (e.data.error) request.reject(new Error('Prototype output is unavailable'));
+    else {
+      try {
+        var output = JSON.parse(JSON.stringify(e.data.output));
+        if (output !== null && (typeof output !== 'object' || Array.isArray(output))) throw new Error('Invalid prototype output');
+        request.resolve(output);
+      } catch (error) { request.reject(new Error('Invalid prototype output')); }
+    }
+  }
+  if (e.data && e.data.type === 'runtime-error' && e.data.seq === _renderSeq && _runtimeReport && _runtimeReport.seq === _renderSeq) {
+    _runtimeReport.onError(String(e.data.error).slice(0, 300));
+  }
   if (e.data && e.data.type === 'html') {
     if (e.data.seq != null && e.data.seq !== _renderSeq) return; // stale echo of an older render
     _iframeHtmlCache = e.data.data || '';
@@ -1861,16 +1994,8 @@ var MODELS = {
 // ---- Persist settings ----
 function loadSettings() {
   try {
-    var p = localStorage.getItem('pg-provider') || 'openai';
-    if ($provider) { $provider.value = p; updateModelOptions(p); }
-    var m = localStorage.getItem('pg-model');
-    if (m && $model) $model.value = m;
-    var keys = JSON.parse(localStorage.getItem('pg-apikeys') || '{}');
-    if (keys[p] && $apikey) $apikey.value = keys[p];
-    localStorage.removeItem('pg-fast-mode'); // Fast mode removed; drop the stale key
-    updateFigmaStatus();
     // Chat state
-    isDefaultMode = localStorage.getItem('pg-use-default') !== 'false';
+    isDefaultMode = true;
     try { chatHistory = JSON.parse(sessionStorage.getItem('pg-chat-history') || '[]'); } catch(e2) { chatHistory = []; }
     try { currentSpec = JSON.parse(sessionStorage.getItem('pg-current-spec') || 'null'); } catch(e3) { currentSpec = null; }
   } catch(e) {}
@@ -1964,11 +2089,6 @@ window.addEventListener('message', function(e) {
   }
 });
 
-
-// Fetch client ID on load
-fetch('/api/figma').then(function(r) { return r.json(); }).then(function(d) {
-  if (d.clientId) figmaClientId = d.clientId;
-}).catch(function() {});
 
 // Auto-refresh token if near expiry
 function ensureFigmaToken() {
@@ -2359,6 +2479,13 @@ function callOpenRouter(messages) {
 }
 
 // ---- Streaming SSE helper ----
+function stopForProviderLimit(status) {
+  if (Number(status) !== 402 && Number(status) !== 429) return;
+  showJsonError('Generation stopped: provider quota or rate limit (HTTP ' + status + ').');
+  if (_abortCtrl) _abortCtrl.abort();
+  setLoading(false);
+}
+
 function streamFetch(url, headers, body, onChunk, onDone, onError, signal) {
   if (typeof ReadableStream === 'undefined') { onError('no-stream'); return; }
   fetch(url, {
@@ -2368,6 +2495,7 @@ function streamFetch(url, headers, body, onChunk, onDone, onError, signal) {
     signal: signal
   }).then(function(res) {
     if (!res.ok) {
+      stopForProviderLimit(res.status);
       return res.json().catch(function() { return {}; }).then(function(err) {
         throw new Error((err.error && err.error.message) || 'HTTP ' + res.status);
       });
@@ -2388,7 +2516,16 @@ function streamFetch(url, headers, body, onChunk, onDone, onError, signal) {
           if (!line || line.startsWith(':')) continue;
           if (line === 'data: [DONE]') { doneOnce = true; onDone(); return; }
           if (line.startsWith('data: ')) {
-            try { onChunk(JSON.parse(line.slice(6))); } catch (e) {}
+            var packet;
+            try { packet = JSON.parse(line.slice(6)); } catch (e) { continue; }
+            if (packet.error) {
+              doneOnce = true;
+              stopForProviderLimit(packet.error.status || packet.error.code);
+              reader.cancel().catch(function() {});
+              onError(new Error(typeof packet.error === 'string' ? packet.error : packet.error.message || 'Provider stream failed'));
+              return;
+            }
+            onChunk(packet);
           } else if (line.startsWith('event: ')) {
             // store event type for next data line (Anthropic)
             buf = 'event:' + line.slice(7) + '\n' + buf;
@@ -2545,6 +2682,17 @@ function repairJSON(s, asString) {
 // ---- Screenshot capture for self-check ----
 function capturePreview(options) {
   if (!currentSpec) return Promise.resolve(null);
+  var panel = document.getElementById('panel-preview');
+  var pane = document.getElementById('pg-pane-design');
+  var exposed = [];
+  var width = panel && panel.clientWidth || document.documentElement.clientWidth;
+  [panel, pane].forEach(function(el) {
+    if (!el || el.getClientRects().length) return;
+    el.style.setProperty('--pg-measure-width', width + 'px');
+    el.style.setProperty('--pg-measure-height', Math.max(300, innerHeight - 140) + 'px');
+    el.classList.add('pg-recursive-measure');
+    exposed.push(el);
+  });
   var measured = options && options.geometry;
   var requestId = crypto.randomUUID();
   var revision = _renderSeq;
@@ -2562,22 +2710,34 @@ function capturePreview(options) {
       }
     }
     window.addEventListener('message', onMessage);
-    postToPreview({ type: 'screenshot', geometry: !!measured, geometryOnly: !!(options && options.geometryOnly), requestId: requestId });
+    postToPreview({ type: 'screenshot', geometry: !!measured, geometryOnly: !!(options && options.geometryOnly), spacing: !!(options && options.spacing), requestId: requestId });
+  }).finally(function() {
+    exposed.forEach(function(el) {
+      el.classList.remove('pg-recursive-measure');
+      el.style.removeProperty('--pg-measure-width');
+      el.style.removeProperty('--pg-measure-height');
+    });
   });
 }
 
 // ---- SSE response parser (shared by selfCheck, analyzeInteractivity, generateInteractiveCode) ----
 function parseSseResponse(res) {
-  if (!res.ok) throw new Error('HTTP ' + res.status);
+  if (!res.ok) { stopForProviderLimit(res.status); throw new Error('HTTP ' + res.status); }
   return res.text().then(function(text) {
     var content = '';
     var usage = null;
+    var finishReason = null;
+    var refused = false;
+    var completed = false;
     text.split('\n').forEach(function(line) {
       line = line.trim();
-      if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+      if (line.startsWith('data:')) {
+        var data = line.slice(5).trim();
+        if (data === '[DONE]') { completed = true; return; }
         var chunk;
-        try { chunk = JSON.parse(line.slice(6)); } catch(e) { return; }
+        try { chunk = JSON.parse(data); } catch(e) { return; }
         if (chunk.error) {
+          stopForProviderLimit(chunk.error.status || chunk.error.code);
           var error = new Error(typeof chunk.error === 'string' ? chunk.error : chunk.error.message || 'Generator request failed');
           error.status = Number(chunk.error.status || chunk.error.code) || undefined;
           error.code = chunk.error.code;
@@ -2585,10 +2745,12 @@ function parseSseResponse(res) {
         }
         if (chunk.usage) usage = chunk.usage;
         var c = chunk.choices && chunk.choices[0];
+        if (c && c.finish_reason) finishReason = c.finish_reason;
+        if (c && c.delta && c.delta.refusal) refused = true;
         if (c && c.delta && c.delta.content) content += c.delta.content;
       }
     });
-    return { content: content, usage: usage };
+    return { content: content, usage: usage, finishReason: finishReason, refused: refused, completed: completed || !!finishReason };
   });
 }
 
@@ -2664,7 +2826,7 @@ function selfCheck(spec, screenshotDataUrl, signal, geometry) {
   var checkPrompt = 'You are a UI design reviewer. Below is the JSON spec and a screenshot of how it rendered.\n\n'
     + '## DESIGN RULES\n' + LAYOUT_RULES + '\n\n'
     + '## YOUR TASK\nCheck the screenshot against these rules:\n\n'
-    + '1. **Spacing & Grid**: Inner gaps < outer gaps? Consistent 8pt grid?\n'
+    + '1. **Spacing & Grid**: Inspect BOTH axes throughout the page. Compare measured sibling edges, not just declared gap values. Keep related controls together and leave larger separation between sections. Check heading-to-progress, progress-to-question, question-to-help, help-to-options, options-to-actions, horizontal gutters, and shared left/right edges. Preserve intentional joined controls and overlays; do not impose one uniform gap on unrelated groups. Use the existing spacing tokens.\n'
     + '2. **Hierarchy**: Primary content visually dominant?\n'
     + '3. **Rendering**: All components visible? No overlapping/clipped elements? No broken layouts?\n\n'
     + '## CRITICAL CONSTRAINTS\n'
@@ -2994,14 +3156,17 @@ function visualDiff(spec, renderedScreenshot, originalImageDataUrl, signal, geom
 }
 
 // ---- Interactivity pipeline: analyze spec → generate code ----
-function analyzeInteractivity(spec, signal) {
+function analyzeInteractivity(spec, signal, request) {
   var prompt = 'You are analyzing a UI spec to determine if it needs custom JavaScript code.\n\n'
+    + 'ORIGINAL REQUEST: ' + (request || '') + '\n\n'
     + 'The spec uses DAUB components (buttons, cards, inputs, tabs, etc.) but some UIs need custom logic:\n'
     + '- Games (Tetris, Snake, puzzles) need game loops, canvas, collision detection\n'
     + '- Quizzes need scoring, question flow, timer logic\n'
     + '- Interactive tools need calculators, converters, real-time updates\n'
     + '- Dashboards with live data need chart updates, filtering\n'
     + '- Forms with complex validation, multi-step wizards\n\n'
+    + '- Submit/save actions need validation and visible feedback, even in a small form. If no backend exists, provide an honest local demo state; do not claim authentication, delivery or persistence.\n'
+    + '- Follow the whole requested flow: a quiz ends in a result, choosing an inbox message replaces its body as well as its heading, filters hide actual rows, and quantity changes update totals.\n'
     + 'Simple UIs (landing pages, profiles, static dashboards) do NOT need custom code.\n\n'
     + 'Return JSON: { "needed": true/false, "complexity": "none|trivial|simple|complex", "description": "what the code should do", "elements": ["spec-id-1", ...], "scaffold": "// code..." }\n'
     + '"complexity" grades the interactivity:\n'
@@ -3048,8 +3213,11 @@ function analyzeInteractivity(spec, signal) {
   .catch(function(e) { if (e.name === 'AbortError') return null; dwarn('[analyzeInteractivity] failed:', e); return null; });
 }
 
+var GENERATED_DOM_CONTRACT = 'DOM CONTRACT: data-spec-id may identify a wrapper. NumberField contains input[type="number"] and emits bubbling input/change on stepper clicks; listen to input for totals. List rows use .db-list__item and .db-list__title; delegate clicks to the closest row and map its index to props.items. Do not invent row IDs, roles, or selection events. Shared initializer bindings are available to all chunks; use the exact names and access pattern it declares. Keep chunk-local names isolated. After an interaction update all dependent text, counts, totals and selected states.\n';
+
 function generateInteractiveCode(spec, analysis, onProgress, signal) {
   var prompt = 'You are a JavaScript developer. You receive a DAUB UI component spec and must add interactive code.\n\n'
+    + GENERATED_DOM_CONTRACT
     + 'TASK: ' + analysis.description + '\n\n'
     + 'CODE SCAFFOLD (structural guide, may have errors \u2014 use as starting point):\n'
     + '```\n' + (analysis.scaffold || '// no scaffold') + '\n```\n\n'
@@ -3123,19 +3291,7 @@ function generateInteractiveCode(spec, analysis, onProgress, signal) {
 // ---- Map-reduce pipeline: plan → execute chunks → review ----
 
 function parseStateDefs(stateArray) {
-  if (!stateArray || !stateArray.length) return '';
-  return stateArray.map(function(s) {
-    // Parse "(name value)" → "window.name = value;" (must be global — chunks run in separate Function scopes)
-    var m = s.match(/^\((\w+)\s+(.+)\)$/);
-    if (!m) return '// ' + s;
-    var val = m[2];
-    if (val === 'true' || val === 'false') return 'window.' + m[1] + ' = ' + val + ';';
-    if (val === 'null') return 'window.' + m[1] + ' = null;';
-    if (!isNaN(Number(val))) return 'window.' + m[1] + ' = ' + val + ';';
-    // String or complex value
-    if (val.charAt(0) === '[' || val.charAt(0) === '{') return 'window.' + m[1] + ' = ' + val + ';';
-    return 'window.' + m[1] + ' = ' + JSON.stringify(val) + ';';
-  }).join('\n'); // newline: a '// ' fallback entry must not comment out the entries after it
+  return DaubQuality.parseStateDefs(stateArray);
 }
 
 // sharedStateInit runs as CustomHTML js: '' when usable, else why it is not (prose seeds break every chunk)
@@ -3159,6 +3315,7 @@ function planCodeArchitecture(spec, analysis, signal) {
     + '- Chunks must be implementable independently by a junior developer\n'
     + '- Set chunk "effort" to match complexity: "trivial" (wire a click handler), "low" (simple state + DOM updates), "medium" (game loop, multi-step logic)\n'
     + '- "state" declares ALL shared variables as S-expressions: ["(score 0)", "(running false)", "(speed 500)"]\n'
+    + '- Every state value must be a JSON literal: quoted strings, numbers, booleans, null, complete arrays or objects. Never use (array ...), (set), prose, or abbreviated seed data.\n'
     + '- sharedStateInit must be executable JS that assigns literal seed data (real arrays/objects), never a description\n'
     + '- "wire" describes how chunks interact AFTER independent implementation\n'
     + '- Cross-chunk communication: use preview.dispatchEvent(new CustomEvent("daub:stateChange", {detail:{...}}))\n'
@@ -3208,7 +3365,7 @@ function planCodeArchitecture(spec, analysis, signal) {
         var stateProblem = stateInitProblem(plan.sharedStateInit);
         if (stateProblem) {
           dlog('[planCodeArchitecture] dropped sharedStateInit (' + stateProblem + '):', String(plan.sharedStateInit).slice(0, 200));
-          plan.sharedStateInit = '';
+          return null;
         }
         if (plan.wire && !plan.wiring) plan.wiring = plan.wire;
         for (var ci = 0; ci < plan.chunks.length; ci++) {
@@ -3249,14 +3406,15 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
   var maxTokens = tokensMap[chunk.effort] || 8192;
 
   var prompt = 'You are implementing ONE piece of an interactive UI. Focus ONLY on your assigned task.\n\n'
+    + GENERATED_DOM_CONTRACT
     + 'YOUR TASK: ' + chunk.description + '\n\n'
-    + 'SHARED STATE (already declared as globals, just use them):\n' + (plan.sharedStateInit || '// none') + '\n\n'
+    + 'SHARED INITIALIZER (runs once before your chunk; use its exact bindings):\n' + (plan.sharedStateInit || '// none') + '\n\n'
     + 'ELEMENTS YOU OWN (by data-spec-id):\n' + JSON.stringify(relevantEls, null, 2) + '\n\n'
     + 'RULES:\n'
     + '- Access elements: preview.querySelector(\'[data-spec-id="id"]\')\n'
     + '- "container" = this CustomHTML element, "preview" = entire preview root\n'
     + '- Never declare variables named container or preview (they are provided); query elements with preview.querySelector(\'[data-spec-id="id"]\')\n'
-    + '- Shared state vars are globals — read/write them directly\n'
+    + '- Read/write existing shared bindings; do not redeclare or reset them\n'
     + '- For cross-chunk events: preview.dispatchEvent(new CustomEvent("daub:stateChange", {detail:{key:val}}))\n'
     + '- Listen for cross-chunk events: preview.addEventListener("daub:stateChange", function(e) {...})\n'
     + '- Use vanilla JS only. No frameworks, no imports, no fetch\n'
@@ -3278,7 +3436,7 @@ function executeChunk(spec, plan, chunk, modelOverride, signal) {
     + 'Return JSON:\n'
     + '{ "chunkId": "' + chunk.id + '", "elements": [{ "id": "element-spec-id", "js": "...", "html": "...", "css": "...", "test": "..." }] }\n'
     + 'Only include properties (js/html/css/test) that you actually set.\n'
-    + '"test" is optional: a JS function body receiving (container, preview) that validates the acceptance criteria.\n'
+    + 'Include "test": a JS function body receiving (container, preview) that performs the requested interaction and asserts its visible result. Do not only assert that controls exist.\n'
     + 'Throw Error on failure, return normally on success. For async checks (animations, short timers), return a Promise.\n\n'
     + VALID_TYPES_HINT + '\n'
     + 'Return ONLY JSON.';
@@ -3527,6 +3685,7 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
   }
 
   var prompt = 'You are a senior developer reviewing code assembled from parallel chunks. Your job: make it work as one cohesive unit.\n\n'
+    + GENERATED_DOM_CONTRACT
     + 'ORIGINAL PLAN:\n' + JSON.stringify(plan, null, 2) + '\n\n'
     + 'WIRING NOTES: ' + (plan.wiring || 'none') + '\n\n'
     + failedSection
@@ -3537,6 +3696,7 @@ function reviewAndAssemble(originalSpec, plan, assembledSpec, conflicts, failedC
     + '- Implement any FAILED CHUNKS that are missing from the assembly\n'
     + '- Verify shared state variables are used consistently\n'
     + '- Wire cross-chunk interactions (events, state updates)\n'
+    + '- Check that every called shared function exists. Never hide missing behavior behind typeof function checks. For Next, update the visible question and progress, not only an index.\n'
     + '- Fix broken element references (data-spec-id)\n'
     + '- Never declare variables named container or preview (they are provided); query elements with preview.querySelector(\'[data-spec-id="id"]\')\n'
     + '- Make it fully functional — not stubs\n'
@@ -3819,17 +3979,19 @@ function renderChatHistory() {
   // Remove all bubbles but keep the empty state
   var bubbles = $chatMessages.querySelectorAll('.pg-chat__msg');
   bubbles.forEach(function(b) { b.remove(); });
-  chatHistory.forEach(function(msg) {
+  chatHistory.forEach(function(msg, index) {
     var bubble = addChatBubble(msg.role === 'user' ? 'user' : 'ai', msg.content, msg.images || null);
     // Rebuild result bubble UI for assistant messages with version data
     if (msg.role === 'assistant' && msg.versionIdx != null && specVersions[msg.versionIdx]) {
       buildResultBubble(bubble, specVersions[msg.versionIdx].spec, msg.versionIdx);
-      if (msg.refinementStatus) {
+      if (msg.refinementStatus || msg.verification) {
         var status = document.createElement('p');
         status.className = 'pg-result-meta';
-        status.textContent = msg.refinementStatus;
+        status.textContent = [msg.refinementStatus, msg.verification].filter(Boolean).join('\n');
         bubble.appendChild(status);
       }
+    } else if (msg.role === 'assistant' && !chatHistory.slice(index + 1).some(function(item) { return item.role === 'assistant'; }) && currentSpec && currentSpec.hybrid && currentSpec.hybrid.contract && currentSpec.hybrid.contract.brief && window.DaubHybridUI) {
+      bubble.appendChild(DaubHybridUI.renderBrief(currentSpec.hybrid.contract.brief));
     }
   });
   updateChatState();
@@ -3933,10 +4095,11 @@ function buildResultBubble(bubble, spec, verIdx) {
   actions.appendChild(revertBtn);
 
   bubble.appendChild(actions);
+  if (spec.hybrid && spec.hybrid.contract && spec.hybrid.contract.brief && window.DaubHybridUI) bubble.appendChild(DaubHybridUI.renderBrief(spec.hybrid.contract.brief));
 
   bubble.style.cursor = 'pointer';
   bubble.onclick = function(e) {
-    if (e.target.tagName === 'BUTTON') return;
+    if (e.target.tagName === 'BUTTON' || e.target.closest('details')) return;
     detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
   };
 }
@@ -3996,195 +4159,17 @@ function runBlockingGenerate(messages, streamBubble) {
   });
 }
 
-async function generateRecursive(prompt) {
-  if (!window.DaubSnowflake) { showJsonError('Recursive design could not load. Reload or choose Direct.'); return; }
-  if (!isDefaultMode) { showJsonError('Recursive design uses DAUB AI. Choose Direct to use your own key.'); return; }
-  if (pendingImages.length || pendingWebContexts.length || pendingFigmaContexts.length) {
-    showJsonError('Recursive design currently accepts text prompts. Choose Direct for attachments.'); return;
-  }
-  if (prompt.length > 4000) { showJsonError('Recursive prompts must be 4,000 characters or fewer.'); return; }
-  var controller = new AbortController();
-  _abortCtrl = controller;
-  var started = Date.now();
-  var lastSpec = currentSpec;
-  var lastGeometry = null;
-  var accepted = false;
-  var regionStates = Object.create(null);
-  var branchSteps = Object.create(null);
-  var phaseStep = null;
-  var queueStatus = '';
-  chatHistory.push({ role: 'user', content: prompt });
-  addChatBubble('user', prompt);
-  updateChatState();
-  $prompt.value = '';
-  $prompt.style.height = '';
-  var bubble = addChatBubble('ai', '');
-  _currentStream.streamBubble = bubble;
-  bubble.classList.add('pg-chat__msg--streaming');
-  hideJsonError();
-  setLoading(true);
-  function active() { return _abortCtrl === controller && !controller.signal.aborted; }
-  function updateRegions() { postToPreview({ type: 'refinement', state: regionStates }); }
-  controller.signal.addEventListener('abort', function() {
-    Object.keys(regionStates).forEach(function(id) { if (regionStates[id] === 'running') regionStates[id] = 'pending'; });
-    if (accepted && currentSpec === lastSpec) updateRegions();
-  }, { once: true });
-  function progressStep(event) {
-    if (event.phase === 'queue') {
-      queueStatus = event.active + '/' + event.concurrency + ' active, ' + event.queued + ' queued';
-      $status.textContent = queueStatus;
-      return;
-    }
-    var list = bubble.querySelector('.pg-chat__steps');
-    if (!list) {
-      list = document.createElement('ul');
-      list.className = 'pg-chat__steps';
-      bubble.appendChild(list);
-    }
-    var branch = ['refine', 'refined', 'branch-error'].includes(event.phase);
-    var item;
-    if (branch) {
-      if (phaseStep) phaseStep.classList.remove('pg-chat__step--active');
-      item = branchSteps[event.targetId];
-      if (!item) {
-        item = document.createElement('li');
-        item.dataset.branchId = event.targetId;
-        branchSteps[event.targetId] = item;
-        list.appendChild(item);
-      }
-      regionStates[event.targetId] = event.phase === 'refine' ? 'running' : event.phase === 'branch-error' ? 'failed' : 'ready';
-      item.className = event.phase === 'refine' ? 'pg-chat__step--active' : event.phase === 'branch-error' ? 'pg-chat__step--error' : '';
-      item.textContent = event.targetId + (event.phase === 'refine' ? ': building...' : event.phase === 'branch-error' ? ': needs another pass' : ': updated');
-      if (event.reason) item.title = event.reason;
-      updateRegions();
-    } else {
-      if (phaseStep) phaseStep.classList.remove('pg-chat__step--active');
-      phaseStep = document.createElement('li');
-      phaseStep.className = 'pg-chat__step--active';
-      phaseStep.textContent = event.phase === 'layout' ? 'Planning layout...' : 'Jev: checking level ' + (event.depth + 1);
-      list.appendChild(phaseStep);
-    }
-    var running = Object.keys(regionStates).filter(function(id) { return regionStates[id] === 'running'; });
-    $status.textContent = running.length ? 'Refining ' + running.length + (running.length === 1 ? ' region...' : ' regions in parallel...') : 'Checking refinements...';
-    if (!branch) $status.textContent = phaseStep.textContent;
-    if (queueStatus) $status.textContent = queueStatus;
-    $chatMessages.scrollTop = $chatMessages.scrollHeight;
-  }
-  function finish(label) {
-    if (!active()) return;
-    Object.keys(regionStates).forEach(function(id) { if (regionStates[id] === 'running') regionStates[id] = 'pending'; });
-    updateRegions();
-    if (phaseStep) phaseStep.classList.remove('pg-chat__step--active');
-    bubble.classList.remove('pg-chat__msg--streaming');
-    if (accepted) {
-      pushVersion(lastSpec, prompt + ' (recursive)');
-      specVersions[specVersions.length - 1].ms = Date.now() - started;
-      buildResultBubble(bubble, lastSpec);
-      chatHistory.push({ role: 'assistant', content: label, refinementStatus: label, versionIdx: specVersions.length - 1 });
-    } else bubble.textContent = '';
-    var status = document.createElement('p');
-    status.className = 'pg-result-meta';
-    status.textContent = label;
-    bubble.appendChild(status);
-    saveChatState();
-  }
-  try {
-    var result = await DaubSnowflake.run({
-      prompt: prompt,
-      scheduling: 'queue',
-      concurrency: 3,
-      initialSpec: currentSpec ? JSON.parse(JSON.stringify(currentSpec)) : null,
-      validTypes: VALID_TYPES.filter(function(type) { return type !== 'CustomHTML'; }),
-      signal: controller.signal,
-      generate: async function(step) {
-        var stage = step.stage === 'layout'
-          ? 'Create the complete page layout in this first pass: a root and at most six semantic region containers. Include all major regions needed by the request, never only navigation. For an app, use a vertical root containing header, body, and footer where needed; body is a Grid with columns:"sidebar-main" and separate sidebar and content region children. Keep the content region present even while empty. Establish orientation, widths, spacing, and responsive behavior before details. Use meaningful region IDs. Do not add leaf controls yet.'
-          : 'Refine ONLY subtree ' + JSON.stringify(step.targetId) + ' by one level. Repair its local layout and supply its immediate components or missing details. Return {"root":' + JSON.stringify(step.targetId) + ',"elements":{...}} containing that entire subtree and no elements outside it. Preserve existing IDs, types, content, and child order. NEVER replace a Stack with Navbar, BottomNav, Card or another type; add the desired component as a child instead. If the target already has child containers, repair only their arrangement now; later passes will populate those containers. Add at most twelve new elements. New composite children may have empty children arrays for their later refinement. Do not generate entire posts, feeds or pages inside one region pass.';
-        var instructions = '\n\nSNOWFLAKE STAGE: ' + step.stage + '\n' + stage
-          + '\nReturn valid JSON, not OpenUI or prose. Use only canonical component props. Prefix every NEW element ID with the target ID and a hyphen so independent region patches cannot collide. Stack direction is "horizontal" or "vertical", NEVER "row" or "column". For horizontal story strips use wrap:false and a bounded horizontally scrolling region; do not put stories in a tall centered card.'
-          + '\nPreserve the requested product conventions. For a social photo feed, prioritize navigation, a compact horizontal story row, and media-led posts with author/action rows. Use actual image URLs and sensible aspect ratios. Keep page sections unframed and text left aligned. Use native components, not CustomHTML or custom scripts. Do not create a landing page unless requested.'
-          + '\nUse Sidebar for vertical navigation inside a sidebar region. NavMenu renders a horizontal navigation row and must not go in a narrow sidebar. Populate each region with useful immediate content before adding deeper empty wrappers.'
-          + '\nUse no more than 160 elements in the whole page. The current subtree may already be complete: fix layout without inventing features. State, theme, and unrelated branches belong to the parent and cannot change in a subtree patch.';
-        var types = step.stage === 'layout' ? ['Stack', 'Grid'] : VALID_TYPES.filter(function(type) { return type !== 'CustomHTML' && type !== 'Layout'; });
-        var system = 'You implement one layer of a DAUB design tree. Return only a JSON object {"root":"id","elements":{"id":{"type":"Stack","props":{},"children":["child-id"]}}}. Children contain IDs, not nested objects. Include the target and its complete existing subtree. All references must exist; each element has one parent. Use only the props listed below; arbitrary style, class, width, and responsive props are ignored unless explicitly listed.\n'
-          + types.map(function(type) { return type + ': ' + (COMP_PROPS[type] || 'children'); }).join('\n')
-          + '\nUse Grid for responsive page columns, with columns:"sidebar-main" for navigation beside flexible main content. Nest another Grid for feed and supporting columns. Horizontal Stack wrap defaults to true; reserve it for content rows and toolbars, not page column structure. Do not set wrap:false on a multi-column page body. Reserve no-wrap for short toolbars and horizontally scrollable strips. Use Button with icon, size:"icon", label:"", and ariaLabel for compact navigation and post actions, not bare Icon. Fit the current measured viewport, including narrow mobile widths; allow headers to wrap and avoid centering oversized rows. A layout pass contains containers only. A detail pass may leave new child containers empty: the next recursive pass fills them. Do not add sample content outside this layer.';
-        var response = await fetch('/api/generate', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: step.signal,
-          body: JSON.stringify(Object.assign({ model: AUTO_MODEL, max_tokens: 8192, reasoning: { effort: 'medium' }, messages: [
-            { role: 'system', content: system + instructions },
-            { role: 'user', content: JSON.stringify({ request: prompt, depth: step.depth, targetId: step.targetId || null, currentSpec: step.spec || null, geometry: recursiveGeometry(step.geometry === undefined ? lastGeometry : step.geometry, step.targetId ? [step.targetId] : []) }) }
-          ] }, mainGenOpts()))
-        });
-        if (!response.ok) throw await recursiveRequestError(response);
-        var output = await parseSseResponse(response);
-        var clean = cleanJSON(output.content);
-        if (!clean) throw new Error('The generator returned no valid JSON.');
-        return JSON.parse(clean);
-      },
-      judge: async function(step) {
-        var response = await fetch('/api/refine-judge', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: step.signal,
-          body: JSON.stringify({ prompt: prompt, spec: step.spec, targets: step.targets, depth: step.depth, geometry: recursiveGeometry(step.geometry, step.targets) })
-        });
-        if (!response.ok) throw await recursiveRequestError(response);
-        return response.json();
-      },
-      measure: async function(step) {
-        var panel = document.getElementById('panel-preview');
-        var pane = document.getElementById('pg-pane-design');
-        var width = panel.clientWidth || document.documentElement.clientWidth;
-        var exposed = [];
-        [panel, pane].forEach(function(el) {
-          if (el.getClientRects().length) return;
-          el.style.setProperty('--pg-measure-width', width + 'px');
-          el.style.setProperty('--pg-measure-height', Math.max(300, innerHeight - 140) + 'px');
-          el.classList.add('pg-recursive-measure');
-          exposed.push(el);
-        });
-        try {
-          var capture = await capturePreview({ geometry: true, geometryOnly: true });
-          lastGeometry = capture && capture.geometry;
-          return recursiveGeometry(lastGeometry, step.targets);
-        } finally {
-          exposed.forEach(function(el) {
-            el.classList.remove('pg-recursive-measure');
-            el.style.removeProperty('--pg-measure-width');
-            el.style.removeProperty('--pg-measure-height');
-          });
-        }
-      },
-      onSpec: function(spec) {
-        if (!active()) return;
-        var next = JSON.parse(JSON.stringify(spec));
-        var rendered = renderElement(next.elements, next.root, 0);
-        if (!rendered || rendered.matches && (rendered.matches('[data-render-error]') || rendered.querySelector('[data-render-error]'))) {
-          throw new Error('A component could not render. The last valid preview has been kept.');
-        }
-        renderSpec(next, currentSpec, false, regionStates);
-        currentSpec = next;
-        lastSpec = next;
-        accepted = true;
-        $json.value = JSON.stringify(next, null, 2);
-        refreshJsonTree();
-        updatePreviewToolbar();
-        saveChatState();
-      },
-      onProgress: function(event) {
-        if (!active() || event.phase === 'done') return;
-        progressStep(event);
-      }
-    });
-    var reasons = { 'complete': 'Jev: no further refinement', 'partial': 'Some regions need another pass' + (result.failedTargets && result.failedTargets.length ? ': ' + result.failedTargets.join(', ') : ''), 'depth-limit': 'Depth limit reached', 'request-limit': 'Request limit reached', 'frontier-limit': 'Branch limit reached', 'time-limit': 'Time limit reached', 'no-progress': 'No further changes', 'element-limit': 'Component limit reached' };
-    finish(result.reason === 'complete' ? reasons.complete : 'Refinement paused: ' + (reasons[result.reason] || result.reason));
-  } catch (error) {
-    if (!active()) return;
-    finish('Refinement stopped: ' + error.message);
-    showJsonError(error.message);
-  } finally {
-    if (active()) { $status.textContent = ''; setLoading(false); _abortCtrl = null; }
+function applyPromptViewport(prompt) {
+  var _promptLower = prompt.toLowerCase();
+  var _isMobilePrompt = /\bmobile[- ]optimized\b|\bmobile\s*app\b|\bmobile\s*application\b|\bios\s*app\b|\bandroid\s*app\b|\bphone\s*app\b|\bsmartphone\b|\biphone\b|\bmobile\s*screen\b|\bmobile\s*ui\b|\bmobile\s*layout\b|\bmobile\s*view\b|\bnative\s*app\b|\bbottom.?nav\b|\bapp\s*shell\b/.test(_promptLower);
+  if (_isMobilePrompt) {
+    $panelPreviewBody.classList.add('pg-panel__body--mobile');
+    document.querySelectorAll('.pg-viewport-btn').forEach(function(b) { b.classList.remove('pg-viewport-btn--active'); });
+    var mobileBtn = document.querySelector('.pg-viewport-btn[data-viewport="mobile"]');
+    if (mobileBtn) mobileBtn.classList.add('pg-viewport-btn--active');
   }
 }
+
 
 async function recursiveRequestError(response) {
   var data = await response.json().catch(function() { return {}; });
@@ -4203,670 +4188,491 @@ function recursiveGeometry(geometry, targets) {
   return report.elements.length ? report : null;
 }
 
+function spacingGeometry(geometry) {
+  if (!geometry || !Array.isArray(geometry.elements)) return null;
+  return Object.assign({}, geometry, { elements: geometry.elements.map(function(el) {
+    var layout = {};
+    ['display', 'flexDirection', 'rowGap', 'columnGap', 'justifyContent', 'alignItems', 'overflowX', 'overflowY'].forEach(function(key) { layout[key] = el.layout[key]; });
+    return { id: el.id, parentId: el.parentId, bounds: el.bounds, rendered: el.rendered, placeholder: el.placeholder, padding: el.padding, margin: el.margin, layout: layout };
+  }) });
+}
+
 function generate() {
   var prompt = $prompt.value.trim();
   if (!prompt) return;
-  if ($generationMode.value === 'snowflake') { generateRecursive(prompt); return; }
+  if (!window.DaubHybridUI) { showJsonError('Generation could not load. Reload the page to try again.'); return; }
+  return DaubHybridUI.create({
+    mainGenOpts, AUTO_MODEL, recursiveRequestError, parseSseResponse, VALID_TYPES, COMP_PROPS,
+    collectCustomJS, buildIframeSrcdoc, showJsonError, applyPromptViewport, chatHistory,
+    addChatBubble, updateChatState, $prompt, hideJsonError, setLoading, GENERATED_DOM_CONTRACT,
+    renderSpec, $json, refreshJsonTree, updatePreviewToolbar, saveChatState, $status,
+    pushVersion, specVersions, buildResultBubble,
+    get currentSpec() { return currentSpec; }, set currentSpec(value) { currentSpec = value; },
+    get controller() { return _abortCtrl; }, set controller(value) { _abortCtrl = value; },
+    get stream() { return _currentStream; },
+    get isDefaultMode() { return isDefaultMode; },
+    get hasAttachments() { return !!(pendingImages.length || pendingWebContexts.length || pendingFigmaContexts.length); }
+  }).generate(prompt);
+}
 
-  // Capture attached images, web contexts, and figma contexts before clearing
-  var imagesForThisMsg = pendingImages.slice();
-  var webContextsForThisMsg = pendingWebContexts.slice();
-  var figmaContextsForThisMsg = pendingFigmaContexts.slice();
-  var hasOriginalImage = imagesForThisMsg.length > 0 && !imagesForThisMsg[0].isPdf;
-  var originalImageUrl = hasOriginalImage ? imagesForThisMsg[0].dataUrl : null;
+function checkPreviewHealth(signal) {
+  var requestId = crypto.randomUUID();
+  var revision = _renderSeq;
+  var source = $previewFrame.contentWindow;
+  return new Promise(function(resolve) {
+    var timer;
+    function finish(value) {
+      clearTimeout(timer);
+      window.removeEventListener('message', receive);
+      signal.removeEventListener('abort', abort);
+      resolve(value);
+    }
+    function abort() { finish(null); }
+    function receive(event) {
+      if (event.source !== source || !event.data || event.data.type !== 'health' || event.data.requestId !== requestId) return;
+      finish(revision === _renderSeq ? event.data.errors : null);
+    }
+    if (signal.aborted) { resolve(null); return; }
+    signal.addEventListener('abort', abort, { once: true });
+    window.addEventListener('message', receive);
+    timer = setTimeout(function() { finish(null); }, 2500);
+    postToPreview({ type: 'health', requestId: requestId });
+  });
+}
 
-  // Figma contexts always route through the default AI backend
-  var useDefault = isDefaultMode || figmaContextsForThisMsg.length > 0;
+function runDesignPipeline(spec, prompt, streamBubble, _chatIdx, signal, originalImageUrl) {
+  var hasOriginalImage = !!originalImageUrl;
+  var _routedModel = _lastRoutedModel;
+  var pipelineFailed = false;
+  var verification = null;
+  // Interactivity pipeline: analyze → generate code → self-check
+  var finalSpec = spec;
+  // SVG icons (static, trusted content)
+  var _svgAnalyze = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+  var _svgCode = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>';
+  var _svgEye = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var _svgDone = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  var _svgDash = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+  // Build pipeline tracker in bubble
+  var pipeDetails = document.createElement('details');
+  pipeDetails.className = 'pg-pipeline';
+  pipeDetails.open = true;
+  var pipeSummary = document.createElement('summary');
+  pipeSummary.textContent = 'Processing\u2026';
+  pipeDetails.appendChild(pipeSummary);
+  function _mkStep(iconHtml, label) {
+    var s = document.createElement('div');
+    s.className = 'pg-pipeline__step';
+    var ico = document.createElement('span');
+    ico.className = 'pg-pipeline__icon';
+    ico.innerHTML = iconHtml; // safe: static SVG constants, not user content
+    var lbl = document.createElement('span');
+    lbl.className = 'pg-pipeline__label';
+    lbl.textContent = label;
+    var stats = document.createElement('span');
+    stats.className = 'pg-pipeline__stats';
+    s.appendChild(ico);
+    s.appendChild(lbl);
+    s.appendChild(stats);
+    s._stats = stats;
+    s._startTime = Date.now();
+    pipeDetails.appendChild(s);
+    return s;
+  }
+  var stepAnalyze = _mkStep(_svgAnalyze, 'Analyzing interactivity\u2026');
+  var stepCheck = _mkStep(_svgEye, hasOriginalImage ? 'Comparing with target\u2026' : 'Visual check\u2026');
+  var _svgLayout = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>';
+  var _svgPlay = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  var _svgDoc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+  var stepPlan = _mkStep(_svgLayout, 'Planning architecture\u2026');
+  var stepExecute = _mkStep(_svgPlay, 'Executing chunks\u2026');
+  var codeProgress = document.createElement('div');
+  codeProgress.className = 'pg-pipeline__progress';
+  pipeDetails.appendChild(codeProgress);
+  var _svgTest = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="13" y2="11"/></svg>';
+  var stepTest = _mkStep(_svgTest, 'Running tests\u2026');
+  var stepReview = _mkStep(_svgDoc, 'Reviewing assembly\u2026');
+  stepAnalyze.classList.add('pg-pipeline__step--active');
+  streamBubble.appendChild(pipeDetails);
+  function _pipeDone(step, label, statsText) {
+    step.classList.remove('pg-pipeline__step--active');
+    step.classList.add('pg-pipeline__step--done');
+    step.querySelector('.pg-pipeline__icon').innerHTML = _svgDone; // safe: static SVG constant
+    step.querySelector('.pg-pipeline__label').textContent = label;
+    if (statsText && step._stats) step._stats.textContent = statsText;
+    else if (step._stats && step._startTime) {
+      step._stats.textContent = ((Date.now() - step._startTime) / 1000).toFixed(1) + 's';
+    }
+  }
+  function _pipeSkip(step, label) {
+    step.classList.remove('pg-pipeline__step--active');
+    step.classList.add('pg-pipeline__step--skip');
+    step.querySelector('.pg-pipeline__icon').innerHTML = _svgDash; // static SVG
+    step.querySelector('.pg-pipeline__label').textContent = label;
+  }
+  function _addSkeleton(elements) {
+    if (!elements || !elements.length) return;
+    postToPreview({ type: 'highlight', elements: elements });
+  }
+  function _removeSkeleton(elements) {
+    if (!elements || !elements.length) return;
+    postToPreview({ type: 'unhighlight', elements: elements });
+  }
+  function _pipeFinish() {
+    pipeSummary.textContent = 'Checking runtime...';
+    pipeDetails.open = false;
+  }
+  function _pipeCollapse(container) {
+    try {
+      var steps = container.querySelectorAll('.pg-pipeline__step--done, .pg-pipeline__step--skip');
+      if (steps.length < 2) return;
+      if (container.querySelector('.pg-pipeline__collapsed')) return;
+      var details = document.createElement('details');
+      details.className = 'pg-pipeline__collapsed';
+      var summary = document.createElement('summary');
+      summary.textContent = steps.length + ' steps completed';
+      summary.style.cssText = 'cursor:pointer;font-size:12px;color:#888;padding:2px 0;';
+      details.appendChild(summary);
+      for (var i = 0; i < steps.length; i++) {
+        details.appendChild(steps[i]);
+      }
+      var firstActive = container.querySelector('.pg-pipeline__step:not(.pg-pipeline__step--done):not(.pg-pipeline__step--skip)');
+      if (firstActive) {
+        container.insertBefore(details, firstActive);
+      } else {
+        container.appendChild(details);
+      }
+    } catch(e) { console.warn('[_pipeCollapse] error:', e); }
+  }
 
-  if (!useDefault) {
-    var key = $apikey ? $apikey.value.trim() : '';
-    if (!key) {
-      showJsonError('Please add your API key in the settings below.');
+  function _applySpec(s, suffix) {
+    if (signal.aborted) return;
+    var issues = validateSpec(s);
+    if (issues.length) {
+      console.warn('[pipeline] Spec validation issues (' + suffix + '):', issues);
+      s = autoFixSpec(s);
+    }
+    finalSpec = s;
+    $json.value = JSON.stringify(s, null, 2);
+    var prev = currentSpec;
+    currentSpec = s;
+    pushVersion(s, prompt + ' (' + suffix + ')');
+    if (_routedModel) specVersions[specVersions.length - 1].model = _routedModel;
+    renderSpec(s, prev);
+    refreshJsonTree();
+    updatePreviewToolbar();
+    buildResultBubble(streamBubble, s);
+    if (chatHistory[_chatIdx] && chatHistory[_chatIdx].refinementStatus) {
+      var refinement = document.createElement('p');
+      refinement.className = 'pg-result-meta';
+      refinement.textContent = chatHistory[_chatIdx].refinementStatus;
+      streamBubble.appendChild(refinement);
+    }
+    streamBubble.appendChild(pipeDetails);
+    if (chatHistory[_chatIdx]) {
+      chatHistory[_chatIdx].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(s) + ' components (' + suffix + ')';
+      chatHistory[_chatIdx].versionIdx = specVersions.length - 1;
+    }
+    saveChatState();
+  }
+
+  var _analysis = null; // shared across pipeline steps
+
+  $status.textContent = 'Analyzing interactivity\u2026';
+  var _pipeSignal = signal;
+  if (_pipeSignal) _pipeSignal.addEventListener('abort', function() {
+    if (_analysis) _removeSkeleton(_analysis.elements);
+    if (verification) return;
+    pipeDetails.querySelectorAll('.pg-pipeline__step:not(.pg-pipeline__step--done):not(.pg-pipeline__step--skip)').forEach(function(s) {
+      var lbl = s.querySelector('.pg-pipeline__label').textContent;
+      _pipeSkip(s, s.classList.contains('pg-pipeline__step--active') ? 'Stopped' : lbl.replace(/\u2026$/, ''));
+    });
+    pipeSummary.textContent = 'Stopped';
+  });
+  return analyzeInteractivity(spec, _pipeSignal, prompt).then(function(analysis) {
+    if (signal.aborted) return;
+    _analysis = analysis;
+    if (analysis && analysis.needed) {
+      var desc = (analysis.description || 'yes');
+      var cplx = analysis.complexity ? ' [' + analysis.complexity + ']' : '';
+      var analyzeLabel = (analysis.scaffold ? 'Analyzed + scaffold' : (desc.length > 60 ? desc.slice(0, 57) + '\u2026' : desc)) + cplx;
+      _pipeDone(stepAnalyze, analyzeLabel);
+    } else {
+      _pipeSkip(stepAnalyze, 'No custom code needed');
+    }
+  }).then(function() {
+    if (signal.aborted) return;
+    // ---- Visual check / visual diff (runs on initial spec, before code gen) ----
+    stepCheck.classList.add('pg-pipeline__step--active');
+    $status.textContent = hasOriginalImage ? 'Comparing with target\u2026' : 'Visual check\u2026';
+    return capturePreview({ geometry: true }).then(function(capture) {
+      if (signal.aborted) return;
+      if (!capture || !capture.screenshot) {
+        _pipeSkip(stepCheck, 'No screenshot');
+        return;
+      }
+      var checkPromise = hasOriginalImage
+        ? visualDiff(finalSpec, capture.screenshot, originalImageUrl, _pipeSignal, capture.geometry)
+        : selfCheck(finalSpec, capture.screenshot, _pipeSignal, capture.geometry);
+      return checkPromise.then(function(fixedSpec) {
+        if (signal.aborted) return;
+        if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(finalSpec)) {
+          var merged = mergeSpecFixes(finalSpec, fixedSpec);
+          _pipeDone(stepCheck, hasOriginalImage ? 'Matched to target' : 'Applied fixes');
+          _applySpec(merged, hasOriginalImage ? 'visual-diff' : 'auto-fixed');
+        } else {
+          _pipeDone(stepCheck, hasOriginalImage ? 'Close match' : 'Looks good');
+        }
+      });
+    });
+  }).then(function() {
+    if (signal.aborted) return;
+    // ---- Code generation pipeline (complexity-routed) ----
+    var _complexity = (_analysis && _analysis.complexity) || 'none';
+    if (!_analysis || !_analysis.needed) _complexity = 'none';
+    dlog('[pipeline] complexity:', _complexity);
+
+    if (_complexity === 'none') {
+      _pipeSkip(stepPlan, 'Skipped');
+      _pipeSkip(stepExecute, 'Skipped');
+      _pipeSkip(stepTest, 'Skipped');
+      _pipeSkip(stepReview, 'Skipped');
+      _pipeFinish();
+      $status.textContent = '';
       return;
     }
-  }
-  clearImageStrip();
 
-  // Add user bubble
-  var imageEntries = imagesForThisMsg.map(function(d) { return { url: d.dataUrl, isPdf: !!d.isPdf, name: d.fileName || '' }; });
-  var webEntries = webContextsForThisMsg.map(function(wc) { return { isWeb: true, url: wc.url, title: wc.title }; });
-  var figmaEntries = figmaContextsForThisMsg.map(function(fc) { return { isFigma: true, url: fc.url, title: fc.name }; });
-  var allEntries = imageEntries.concat(webEntries).concat(figmaEntries);
-  chatHistory.push({ role: 'user', content: prompt, images: allEntries.length ? allEntries : undefined });
-  addChatBubble('user', prompt, allEntries.length ? allEntries : null);
-  updateChatState();
-  $prompt.value = '';
-  $prompt.style.height = '';
-
-  // Add streaming indicator bubble
-  _currentStream.streamBubble = addChatBubble('ai', '');
-  _currentStream.streamBubble.classList.add('pg-chat__msg--streaming');
-  var streamBubble = _currentStream.streamBubble;
-  var _genStart = Date.now();
-
-  // Auto-switch to mobile viewport for mobile app prompts
-  var _promptLower = prompt.toLowerCase();
-  var _isMobilePrompt = /\bmobile\s*app\b|\bmobile\s*application\b|\bios\s*app\b|\bandroid\s*app\b|\bphone\s*app\b|\bsmartphone\b|\biphone\b|\bmobile\s*screen\b|\bmobile\s*ui\b|\bmobile\s*layout\b|\bmobile\s*view\b|\bnative\s*app\b|\bbottom.?nav\b|\bapp\s*shell\b/.test(_promptLower);
-  if (_isMobilePrompt) {
-    $panelPreviewBody.classList.add('pg-panel__body--mobile');
-    document.querySelectorAll('.pg-viewport-btn').forEach(function(b) { b.classList.remove('pg-viewport-btn--active'); });
-    var mobileBtn = document.querySelector('.pg-viewport-btn[data-viewport="mobile"]');
-    if (mobileBtn) mobileBtn.classList.add('pg-viewport-btn--active');
-  }
-
-  saveSettings();
-  setLoading(true);
-  $status.textContent = 'Streaming\u2026';
-  hideJsonError();
-  $json.value = '';
-  updateRenderVisibility();
-  progressivePrevSpec = currentSpec;
-  if (!currentSpec) {
-    postToPreview({ type: 'clear' });
-  }
-
-  _abortCtrl = new AbortController();
-  // Jev only sees the typed text, so attachments skip the picker (full catalog)
-  var _hasAttachments = imagesForThisMsg.length || webContextsForThisMsg.length || figmaContextsForThisMsg.length;
-  var analysisPromise;
-  // The layout brief runs only for attachments: on text asks it cost ~7 s of first paint with no quality gain (brief eval, 2026-09-29)
-  if (!currentSpec && _hasAttachments) {
-    $status.textContent = 'Analyzing layout\u2026';
-    analysisPromise = analyzeLayout(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, _abortCtrl.signal);
-  } else {
-    analysisPromise = Promise.resolve(null);
-  }
-  var preSignal = _abortCtrl.signal;
-  if (!_hasAttachments) $status.textContent = 'Choosing components\u2026';
-  var pickPromise = _hasAttachments ? Promise.resolve(null) : chooseComponents(prompt, preSignal);
-  if (!_hasAttachments) bubbleStep(streamBubble, 'Choosing components\u2026');
-  else if (!currentSpec) bubbleStep(streamBubble, 'Reading the attachments and planning the layout\u2026');
-  var messages; // set after analysis completes
-  var accumulated = '';
-  var continuations = 0;
-  var MAX_CONTINUATIONS = 2;
-  var retries = 0;
-  var MAX_RETRIES = 3;
-  var usingFallback = false;
-  var _streamParser = null;
-  var _detectedFormat = null;
-  _currentStream.renderTimer = setInterval(function() {
-    if (!accumulated) return;
-    // Only cache a decisive result: a first tick of "__theme" (no "=" yet) reads as 'unknown'
-    if (!_detectedFormat) { var _fmt = DaubOpenUI.detectFormat(accumulated); if (_fmt !== 'unknown') _detectedFormat = _fmt; }
-    if (_detectedFormat === 'openui') {
-      if (!_streamParser) _streamParser = DaubOpenUI.createStreamingOpenUIParser();
-      var result = _streamParser.push(accumulated);
-      if (result.spec && result.spec.root && result.spec.elements) {
-        renderSpec(result.spec, progressivePrevSpec);
-        progressivePrevSpec = result.spec;
-        $status.textContent = 'Rendering\u2026';
-        var _n = countComponents(result.spec);
-        if (_n) bubbleStepText(streamBubble, 'Building the UI\u2026 ' + _n + (_n === 1 ? ' element' : ' elements') + ' so far');
-      }
-    } else {
-      tryProgressiveRender(accumulated);
+    // -- Single-shot fallback (existing generateInteractiveCode) --
+    function _singleShotPath() {
+      stepExecute.classList.add('pg-pipeline__step--active');
+      $status.textContent = 'Generating code (single-shot)\u2026';
+      _addSkeleton(_analysis.elements);
+      return generateInteractiveCode(finalSpec, _analysis, function(bytes, lines, secs) {
+        codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
+      }, _pipeSignal).then(function(updatedSpec) {
+        if (signal.aborted) return;
+        _removeSkeleton(_analysis.elements);
+        if (updatedSpec) {
+          _pipeDone(stepExecute, 'Code added (single-shot)');
+          _pipeSkip(stepTest, 'Skipped');
+          _pipeSkip(stepReview, 'Skipped');
+          _applySpec(updatedSpec, 'interactive');
+        } else {
+          _pipeSkip(stepExecute, 'Code generation failed');
+          _pipeSkip(stepTest, 'Skipped');
+          _pipeSkip(stepReview, 'Skipped');
+        }
+      });
     }
-    refreshJsonTree();
-  }, 300);
-  var renderTimer = _currentStream.renderTimer;
 
-  var streamFn;
-  var provider;
-  if (useDefault) {
-    streamFn = streamDefault;
-  } else {
-    provider = $provider ? $provider.value : 'openai';
-    streamFn = provider === 'anthropic' ? streamAnthropic : provider === 'openrouter' ? streamOpenRouter : streamOpenAI;
-  }
+    // ---- Trivial path: single-shot, skip plan ----
+    if (_complexity === 'trivial') {
+      _pipeSkip(stepPlan, 'Trivial');
+      return _singleShotPath().then(function() {
+        if (signal.aborted) return;
+        _pipeFinish();
+      });
+    }
 
-  function doRetryOrFallback(reason) {
-    clearInterval(renderTimer);
-    var retrySignal = _abortCtrl ? _abortCtrl.signal : null;
-    retries++;
-    accumulated = '';
-    _detectedFormat = null; // the render timer is stopped, so onDone re-detects from the retry's text
-    $json.value = '';
-    if (retries <= MAX_RETRIES) {
-      $status.textContent = 'Retry ' + retries + '/' + MAX_RETRIES + ' \u2014 ' + reason;
-      bubbleStep(streamBubble, 'Retry ' + retries + ' of ' + MAX_RETRIES + ': ' + reason);
-      setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages, usingFallback ? FALLBACK_MODEL : undefined); }, 500);
-    } else if (useDefault && !usingFallback) {
-      usingFallback = true;
-      retries = 0;
-      $status.textContent = 'Switching to fallback model\u2026';
-      bubbleStep(streamBubble, 'Switching to the fallback model\u2026');
-      setTimeout(function() { if (!retrySignal || retrySignal.aborted) return; startStream(messages, FALLBACK_MODEL); }, 500);
-    } else {
-      clearInterval(renderTimer);
+    // Multi-chunk designs need a wiring review even when individual chunks are simple.
+
+    // ---- Complex path: full pipeline (plan → execute → test → review → verify) ----
+    stepPlan.classList.add('pg-pipeline__step--active');
+    $status.textContent = 'Planning architecture\u2026';
+    return planCodeArchitecture(finalSpec, _analysis, _pipeSignal).then(function(plan) {
+      if (signal.aborted) return;
+      // Fallback: plan failed or ≤1 chunk
+      if (!plan || !plan.chunks || plan.chunks.length <= 1) {
+        _pipeSkip(stepPlan, plan ? 'Single-shot' : 'Plan failed');
+        return _singleShotPath();
+      }
+      _pipeDone(stepPlan, plan.chunks.length + ' chunks planned');
+
+      // ---- Step: Execute (map-reduce path) ----
+      stepExecute.classList.add('pg-pipeline__step--active');
+      $status.textContent = 'Executing ' + plan.chunks.length + ' chunks\u2026';
+      _addSkeleton(_analysis.elements);
+      return executeChunksParallel(finalSpec, plan, function(result, done, total) {
+        var sym = result.success ? '\u2713' : '\u2717';
+        var tokStr = result.usage && result.usage.completion_tokens ? ' \u00B7 ' + result.usage.completion_tokens + 'tok' : '';
+        codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')' + tokStr;
+      }, _pipeSignal).then(function(chunkResults) {
+        if (signal.aborted) return;
+        _removeSkeleton(_analysis.elements);
+        var succeeded = chunkResults.filter(function(r) { return r.success; });
+        var failed = chunkResults.filter(function(r) { return !r.success; });
+        if (!succeeded.length) {
+          _pipeSkip(stepExecute, 'All chunks failed');
+          return _singleShotPath();
+        }
+
+        // ---- Retry failed chunks with upgraded model ----
+        var retryPromise;
+        if (failed.length) {
+          _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
+          codeProgress.textContent = 'Retrying ' + failed.length + ' chunk' + (failed.length > 1 ? 's' : '') + ' with Flash\u2026';
+          $status.textContent = 'Retrying ' + failed.length + ' failed chunk' + (failed.length > 1 ? 's' : '') + '\u2026';
+          retryPromise = retryFailedChunks(finalSpec, plan, failed, function(result, done, total) {
+            var sym = result.success ? '\u2713' : '\u2717';
+            codeProgress.textContent = 'Retry: ' + sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
+          }, _pipeSignal).then(function(retryResults) {
+            if (signal.aborted) return;
+            // Merge retry successes into main results
+            var retriedOk = 0;
+            retryResults.forEach(function(rr) {
+              if (rr.success) {
+                retriedOk++;
+                // Replace the failed result with the retry success
+                for (var ri = 0; ri < chunkResults.length; ri++) {
+                  if (chunkResults[ri].chunkId === rr.chunkId) { chunkResults[ri] = rr; break; }
+                }
+              }
+            });
+            var stillFailed = chunkResults.filter(function(r) { return !r.success; });
+            if (retriedOk) {
+              codeProgress.textContent = succeeded.length + retriedOk + '/' + chunkResults.length + ' chunks succeeded (' + retriedOk + ' retried)';
+            }
+            if (stillFailed.length) {
+              dlog('[pipeline] chunks still failed after retry:', stillFailed.map(function(r) { return r.chunkId; }));
+              codeProgress.textContent += ' \u2014 ' + stillFailed.length + ' \u2192 Kimi';
+            }
+            return chunkResults;
+          });
+        } else {
+          _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
+          retryPromise = Promise.resolve(chunkResults);
+        }
+
+        return retryPromise.then(function(finalResults) {
+        if (signal.aborted) return;
+        // Collect remaining failed chunk definitions for Kimi to implement
+        var failedChunks = [];
+        finalResults.forEach(function(cr) {
+          if (!cr.success) {
+            var chunkDef = plan.chunks.filter(function(ch) { return ch.id === cr.chunkId; })[0];
+            if (chunkDef) failedChunks.push(chunkDef);
+          }
+        });
+        if (failedChunks.length) {
+          dlog('[pipeline] failed chunks passed to review:', failedChunks.map(function(c) { return c.id; }));
+        }
+
+        // ---- Client-side assembly ----
+        var assembled = assembleChunkResults(finalSpec, plan, finalResults);
+        if (assembled.conflicts.length) {
+          dlog('[pipeline] conflicts:', assembled.conflicts);
+        }
+
+        // ---- Step: Test ----
+        stepTest.classList.add('pg-pipeline__step--active');
+        $status.textContent = 'Running tests\u2026';
+        _applySpec(assembled.spec, 'test-render');
+        var testFailures = [];
+        return runChunkTests(finalResults, 2000).then(function(testResults) {
+          if (signal.aborted) return;
+          if (testResults.length) {
+            var passed = testResults.filter(function(t) { return t.pass; }).length;
+            var total = testResults.length;
+            testFailures = testResults.filter(function(t) { return !t.pass; });
+            if (testFailures.length) {
+              _pipeDone(stepTest, passed + '/' + total + ' tests passed');
+              dlog('[pipeline:test] failures:', testFailures);
+            } else {
+              _pipeDone(stepTest, 'All ' + total + ' tests passed');
+            }
+          } else {
+            _pipeSkip(stepTest, 'No tests returned');
+          }
+
+        // ---- Step: Review ----
+        _pipeCollapse(pipeDetails);
+        stepReview.classList.add('pg-pipeline__step--active');
+        $status.textContent = failedChunks.length
+          ? 'Reviewing + implementing ' + failedChunks.length + ' failed chunk' + (failedChunks.length > 1 ? 's' : '') + '\u2026'
+          : 'Reviewing assembly\u2026';
+        return reviewAndAssemble(finalSpec, plan, assembled.spec, assembled.conflicts, failedChunks, function(bytes, lines, secs) {
+          codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
+        }, testFailures, _pipeSignal).then(function(reviewedSpec) {
+          if (signal.aborted) return;
+          if (reviewedSpec) {
+            _pipeDone(stepReview, 'Review complete');
+            _applySpec(reviewedSpec, 'interactive');
+          } else {
+            _pipeDone(stepReview, 'Review failed, using raw assembly');
+            _applySpec(assembled.spec, 'interactive (raw)');
+          }
+
+        }).catch(function(revErr) {
+          if (signal.aborted) return;
+          console.error('[pipeline:review] error:', revErr);
+          _pipeDone(stepReview, 'Review errored');
+          _applySpec(assembled.spec, 'interactive (raw)');
+        });
+        }); // runChunkTests.then
+      }); // retryPromise.then
+      });
+    }).then(function() {
+      if (signal.aborted) return;
+      _pipeFinish();
       $status.textContent = '';
-      showJsonError(reason);
-      streamBubble.classList.remove('pg-chat__msg--streaming');
-      streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
-      streamBubble.textContent = 'Parse error \u2014 ' + reason;
+    });
+  }).catch(function(err) {
+    if (signal.aborted) return;
+    pipelineFailed = true;
+    console.error('[pipeline] uncaught:', err);
+  }).then(async function() {
+    if (signal.aborted) return finalSpec;
+    $status.textContent = 'Checking runtime...';
+    var runtimeErrors = await checkPreviewHealth(signal);
+    if (runtimeErrors && runtimeErrors.length && !pipelineFailed && !signal.aborted) {
+      var repair = await generateInteractiveCode(finalSpec, {
+        description: 'Repair these observed runtime errors without duplicating controls: ' + runtimeErrors.join('; ') + '. Original request: ' + prompt,
+        elements: Object.keys(finalSpec.elements), scaffold: ''
+      }, function() {}, signal);
+      if (repair && !signal.aborted) {
+        _applySpec(repair, 'runtime repair');
+        runtimeErrors = await checkPreviewHealth(signal);
+      }
+    }
+    if (signal.aborted) return finalSpec;
+    var issues = DaubQuality.audit(finalSpec).concat(runtimeErrors || []);
+    verification = pipelineFailed ? 'Generation needs review'
+      : runtimeErrors === null ? 'Runtime not verified'
+      : issues.length ? 'Needs review: ' + issues.join('; ')
+      : 'Runtime checked; behavior needs review';
+    pipeSummary.textContent = verification;
+    pipeDetails.open = pipelineFailed || runtimeErrors === null || issues.length > 0;
+    if (chatHistory[_chatIdx]) {
+      chatHistory[_chatIdx].verification = verification;
+      chatHistory[_chatIdx].versionIdx = specVersions.length - 1;
+    }
+    _runtimeReport = { seq: _renderSeq, onError: function(error) {
+      verification = 'Runtime error: ' + error;
+      pipeSummary.textContent = verification;
+      pipeDetails.open = true;
+      if (chatHistory[_chatIdx]) chatHistory[_chatIdx].verification = verification;
+      saveChatState();
+    } };
+    saveChatState();
+    return finalSpec;
+  }).finally(function() {
+    if (_abortCtrl && _abortCtrl.signal === signal) {
+      if (_analysis) _removeSkeleton(_analysis.elements);
+      $status.textContent = '';
       setLoading(false);
     }
-  }
-
-  function startStream(msgs, model) {
-    _abortCtrl = new AbortController();
-    var signal = _abortCtrl.signal;
-    var callStreamFn = function(m, onT, onD, onE) {
-      if (useDefault) streamDefault(m, onT, onD, onE, model || AUTO_MODEL, signal, model ? null : mainGenOpts());
-      else streamFn(m, onT, onD, onE, signal);
-    };
-    callStreamFn(msgs,
-      function onText(chunk) {
-        accumulated += chunk;
-        $json.value = accumulated;
-        $json.scrollTop = $json.scrollHeight;
-      },
-      function onDone() {
-        if (signal.aborted) return; // streamFetch reports abort via onDone
-        // Auto-continue if response was truncated (finish_reason: "length")
-        if (_lastFinishReason === 'length' && continuations < MAX_CONTINUATIONS) {
-          continuations++;
-          $status.textContent = 'Continuing (' + continuations + '/' + MAX_CONTINUATIONS + ')\u2026';
-          bubbleStep(streamBubble, 'Output hit the length limit, continuing (' + continuations + ' of ' + MAX_CONTINUATIONS + ')\u2026');
-          var contMsg = (_detectedFormat || DaubOpenUI.detectFormat(accumulated)) === 'openui'
-            ? 'Continue the openui-lang code from where you stopped. Output ONLY remaining statements, no repetition, no explanation.'
-            : 'Continue the JSON exactly from where you stopped. Output ONLY the remaining JSON, no repetition, no explanation.';
-          var contMsgs = msgs.concat([
-            { role: 'assistant', content: accumulated },
-            { role: 'user', content: contMsg }
-          ]);
-          startStream(contMsgs, model);
-          return;
-        }
-        clearInterval(renderTimer);
-        var finalFormat = _detectedFormat || DaubOpenUI.detectFormat(accumulated);
-        var spec;
-        if (finalFormat === 'openui') {
-          spec = DaubOpenUI.openUItoSpec(accumulated);
-          if (spec) $json.value = JSON.stringify(spec, null, 2);
-        } else {
-          var clean = cleanJSON(accumulated);
-          try {
-            spec = JSON.parse(clean);
-          } catch (e1) {
-            spec = repairJSON(clean);
-          }
-        }
-        if (spec && spec.root && spec.elements) {
-          $json.value = JSON.stringify(spec, null, 2);
-          $status.textContent = usingFallback ? 'Rendered via fallback model' : '';
-          var prevSpec2 = progressivePrevSpec || currentSpec;
-          currentSpec = spec;
-          pushVersion(spec, prompt);
-          var _routedModel = useDefault ? _lastRoutedModel : '';
-          if (_routedModel) specVersions[specVersions.length - 1].model = _routedModel;
-          specVersions[specVersions.length - 1].ms = Date.now() - _genStart;
-          renderSpec(spec, prevSpec2);
-          refreshJsonTree();
-          updatePreviewToolbar();
-          streamBubble.classList.remove('pg-chat__msg--streaming');
-          buildResultBubble(streamBubble, spec);
-          var _chatIdx = chatHistory.push({ role: 'assistant', content: 'v' + specVersions.length + ' \u00B7 ' + countComponents(spec) + ' components', versionIdx: specVersions.length - 1 }) - 1;
-          saveChatState();
-          // Interactivity pipeline: analyze → generate code → self-check
-          var finalSpec = spec;
-          // SVG icons (static, trusted content)
-          var _svgAnalyze = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
-          var _svgCode = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>';
-          var _svgEye = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
-          var _svgDone = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-          var _svgDash = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-          // Build pipeline tracker in bubble
-          var pipeDetails = document.createElement('details');
-          pipeDetails.className = 'pg-pipeline';
-          pipeDetails.open = true;
-          var pipeSummary = document.createElement('summary');
-          pipeSummary.textContent = 'Processing\u2026';
-          pipeDetails.appendChild(pipeSummary);
-          function _mkStep(iconHtml, label) {
-            var s = document.createElement('div');
-            s.className = 'pg-pipeline__step';
-            var ico = document.createElement('span');
-            ico.className = 'pg-pipeline__icon';
-            ico.innerHTML = iconHtml; // safe: static SVG constants, not user content
-            var lbl = document.createElement('span');
-            lbl.className = 'pg-pipeline__label';
-            lbl.textContent = label;
-            var stats = document.createElement('span');
-            stats.className = 'pg-pipeline__stats';
-            s.appendChild(ico);
-            s.appendChild(lbl);
-            s.appendChild(stats);
-            s._stats = stats;
-            s._startTime = Date.now();
-            pipeDetails.appendChild(s);
-            return s;
-          }
-          var stepAnalyze = _mkStep(_svgAnalyze, 'Analyzing interactivity\u2026');
-          var stepCheck = _mkStep(_svgEye, hasOriginalImage ? 'Comparing with target\u2026' : 'Visual check\u2026');
-          var _svgLayout = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>';
-          var _svgPlay = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-          var _svgDoc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
-          var stepPlan = _mkStep(_svgLayout, 'Planning architecture\u2026');
-          var stepExecute = _mkStep(_svgPlay, 'Executing chunks\u2026');
-          var codeProgress = document.createElement('div');
-          codeProgress.className = 'pg-pipeline__progress';
-          pipeDetails.appendChild(codeProgress);
-          var _svgTest = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="13" y2="11"/></svg>';
-          var stepTest = _mkStep(_svgTest, 'Running tests\u2026');
-          var stepReview = _mkStep(_svgDoc, 'Reviewing assembly\u2026');
-          stepAnalyze.classList.add('pg-pipeline__step--active');
-          streamBubble.appendChild(pipeDetails);
-          function _pipeDone(step, label, statsText) {
-            step.classList.remove('pg-pipeline__step--active');
-            step.classList.add('pg-pipeline__step--done');
-            step.querySelector('.pg-pipeline__icon').innerHTML = _svgDone; // safe: static SVG constant
-            step.querySelector('.pg-pipeline__label').textContent = label;
-            if (statsText && step._stats) step._stats.textContent = statsText;
-            else if (step._stats && step._startTime) {
-              step._stats.textContent = ((Date.now() - step._startTime) / 1000).toFixed(1) + 's';
-            }
-          }
-          function _pipeSkip(step, label) {
-            step.classList.remove('pg-pipeline__step--active');
-            step.classList.add('pg-pipeline__step--skip');
-            step.querySelector('.pg-pipeline__icon').innerHTML = _svgDash; // static SVG
-            step.querySelector('.pg-pipeline__label').textContent = label;
-          }
-          function _addSkeleton(elements) {
-            if (!elements || !elements.length) return;
-            postToPreview({ type: 'highlight', elements: elements });
-          }
-          function _removeSkeleton(elements) {
-            if (!elements || !elements.length) return;
-            postToPreview({ type: 'unhighlight', elements: elements });
-          }
-          function _pipeFinish() {
-            pipeSummary.textContent = 'Pipeline complete';
-            pipeDetails.open = false;
-          }
-          function _pipeCollapse(container) {
-            try {
-              var steps = container.querySelectorAll('.pg-pipeline__step--done, .pg-pipeline__step--skip');
-              if (steps.length < 2) return;
-              if (container.querySelector('.pg-pipeline__collapsed')) return;
-              var details = document.createElement('details');
-              details.className = 'pg-pipeline__collapsed';
-              var summary = document.createElement('summary');
-              summary.textContent = steps.length + ' steps completed';
-              summary.style.cssText = 'cursor:pointer;font-size:12px;color:#888;padding:2px 0;';
-              details.appendChild(summary);
-              for (var i = 0; i < steps.length; i++) {
-                details.appendChild(steps[i]);
-              }
-              var firstActive = container.querySelector('.pg-pipeline__step:not(.pg-pipeline__step--done):not(.pg-pipeline__step--skip)');
-              if (firstActive) {
-                container.insertBefore(details, firstActive);
-              } else {
-                container.appendChild(details);
-              }
-            } catch(e) { console.warn('[_pipeCollapse] error:', e); }
-          }
-
-          function _applySpec(s, suffix) {
-            if (signal.aborted) return;
-            var issues = validateSpec(s);
-            if (issues.length) {
-              console.warn('[pipeline] Spec validation issues (' + suffix + '):', issues);
-              s = autoFixSpec(s);
-            }
-            finalSpec = s;
-            $json.value = JSON.stringify(s, null, 2);
-            var prev = currentSpec;
-            currentSpec = s;
-            pushVersion(s, prompt + ' (' + suffix + ')');
-            if (_routedModel) specVersions[specVersions.length - 1].model = _routedModel;
-            renderSpec(s, prev);
-            refreshJsonTree();
-            updatePreviewToolbar();
-            buildResultBubble(streamBubble, s);
-            streamBubble.appendChild(pipeDetails);
-            if (chatHistory[_chatIdx]) chatHistory[_chatIdx].content = 'v' + specVersions.length + ' \u00B7 ' + countComponents(s) + ' components (' + suffix + ')';
-            saveChatState();
-          }
-
-          var _analysis = null; // shared across pipeline steps
-
-          $status.textContent = 'Analyzing interactivity\u2026';
-          var _pipeSignal = _abortCtrl ? _abortCtrl.signal : null;
-          if (_pipeSignal) _pipeSignal.addEventListener('abort', function() {
-            if (_analysis) _removeSkeleton(_analysis.elements);
-            if (pipeSummary.textContent === 'Pipeline complete') return;
-            pipeDetails.querySelectorAll('.pg-pipeline__step:not(.pg-pipeline__step--done):not(.pg-pipeline__step--skip)').forEach(function(s) {
-              var lbl = s.querySelector('.pg-pipeline__label').textContent;
-              _pipeSkip(s, s.classList.contains('pg-pipeline__step--active') ? 'Stopped' : lbl.replace(/\u2026$/, ''));
-            });
-            pipeSummary.textContent = 'Stopped';
-          });
-          analyzeInteractivity(spec, _pipeSignal).then(function(analysis) {
-            if (signal.aborted) return;
-            _analysis = analysis;
-            if (analysis && analysis.needed) {
-              var desc = (analysis.description || 'yes');
-              var cplx = analysis.complexity ? ' [' + analysis.complexity + ']' : '';
-              var analyzeLabel = (analysis.scaffold ? 'Analyzed + scaffold' : (desc.length > 60 ? desc.slice(0, 57) + '\u2026' : desc)) + cplx;
-              _pipeDone(stepAnalyze, analyzeLabel);
-            } else {
-              _pipeSkip(stepAnalyze, 'No custom code needed');
-            }
-          }).then(function() {
-            if (signal.aborted) return;
-            // ---- Visual check / visual diff (runs on initial spec, before code gen) ----
-            stepCheck.classList.add('pg-pipeline__step--active');
-            $status.textContent = hasOriginalImage ? 'Comparing with target\u2026' : 'Visual check\u2026';
-            return capturePreview({ geometry: true }).then(function(capture) {
-              if (signal.aborted) return;
-              if (!capture || !capture.screenshot) {
-                _pipeSkip(stepCheck, 'No screenshot');
-                return;
-              }
-              var checkPromise = hasOriginalImage
-                ? visualDiff(finalSpec, capture.screenshot, originalImageUrl, _pipeSignal, capture.geometry)
-                : selfCheck(finalSpec, capture.screenshot, _pipeSignal, capture.geometry);
-              return checkPromise.then(function(fixedSpec) {
-                if (signal.aborted) return;
-                if (fixedSpec && JSON.stringify(fixedSpec) !== JSON.stringify(finalSpec)) {
-                  var merged = mergeSpecFixes(finalSpec, fixedSpec);
-                  _pipeDone(stepCheck, hasOriginalImage ? 'Matched to target' : 'Applied fixes');
-                  _applySpec(merged, hasOriginalImage ? 'visual-diff' : 'auto-fixed');
-                } else {
-                  _pipeDone(stepCheck, hasOriginalImage ? 'Close match' : 'Looks good');
-                }
-              });
-            });
-          }).then(function() {
-            if (signal.aborted) return;
-            // ---- Code generation pipeline (complexity-routed) ----
-            var _complexity = (_analysis && _analysis.complexity) || 'none';
-            if (!_analysis || !_analysis.needed) _complexity = 'none';
-            dlog('[pipeline] complexity:', _complexity);
-
-            if (_complexity === 'none') {
-              _pipeSkip(stepPlan, 'Skipped');
-              _pipeSkip(stepExecute, 'Skipped');
-              _pipeSkip(stepTest, 'Skipped');
-              _pipeSkip(stepReview, 'Skipped');
-              _pipeFinish();
-              $status.textContent = '';
-              setLoading(false);
-              return;
-            }
-
-            function _runVerifyLoop() { return Promise.resolve(); }
-
-            // -- Single-shot fallback (existing generateInteractiveCode) --
-            function _singleShotPath() {
-              stepExecute.classList.add('pg-pipeline__step--active');
-              $status.textContent = 'Generating code (single-shot)\u2026';
-              _addSkeleton(_analysis.elements);
-              return generateInteractiveCode(finalSpec, _analysis, function(bytes, lines, secs) {
-                codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
-              }, _pipeSignal).then(function(updatedSpec) {
-                if (signal.aborted) return;
-                _removeSkeleton(_analysis.elements);
-                if (updatedSpec) {
-                  _pipeDone(stepExecute, 'Code added (single-shot)');
-                  _pipeSkip(stepTest, 'Skipped');
-                  _pipeSkip(stepReview, 'Skipped');
-                  _applySpec(updatedSpec, 'interactive');
-                  return _runVerifyLoop();
-                } else {
-                  _pipeSkip(stepExecute, 'Code generation failed');
-                  _pipeSkip(stepTest, 'Skipped');
-                  _pipeSkip(stepReview, 'Skipped');
-                }
-              });
-            }
-
-            // ---- Trivial path: single-shot, skip plan ----
-            if (_complexity === 'trivial') {
-              _pipeSkip(stepPlan, 'Trivial');
-              return _singleShotPath().then(function() {
-                if (signal.aborted) return;
-                _pipeFinish(); $status.textContent = ''; setLoading(false);
-              });
-            }
-
-            // ---- Simple path: plan + execute, skip review ----
-            if (_complexity === 'simple') {
-              stepPlan.classList.add('pg-pipeline__step--active');
-              $status.textContent = 'Planning architecture\u2026';
-              return planCodeArchitecture(finalSpec, _analysis, _pipeSignal).then(function(plan) {
-                if (signal.aborted) return;
-                if (!plan || !plan.chunks || plan.chunks.length <= 1) {
-                  _pipeSkip(stepPlan, plan ? 'Single-shot' : 'Plan failed');
-                  _pipeSkip(stepReview, 'Simple');
-                  return _singleShotPath();
-                }
-                _pipeDone(stepPlan, plan.chunks.length + ' chunks planned');
-                stepExecute.classList.add('pg-pipeline__step--active');
-                $status.textContent = 'Executing ' + plan.chunks.length + ' chunks\u2026';
-                _addSkeleton(_analysis.elements);
-                return executeChunksParallel(finalSpec, plan, function(result, done, total) {
-                  var sym = result.success ? '\u2713' : '\u2717';
-                  codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
-                }, _pipeSignal).then(function(chunkResults) {
-                  if (signal.aborted) return;
-                  _removeSkeleton(_analysis.elements);
-                  var succeeded = chunkResults.filter(function(r) { return r.success; });
-                  if (!succeeded.length) {
-                    _pipeSkip(stepExecute, 'All chunks failed');
-                    _pipeSkip(stepReview, 'Simple');
-                    return _singleShotPath();
-                  }
-                  _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
-                  _pipeSkip(stepTest, 'Simple');
-                  _pipeSkip(stepReview, 'Simple');
-                  var assembled = assembleChunkResults(finalSpec, plan, chunkResults);
-                  _applySpec(assembled.spec, 'interactive');
-                  return _runVerifyLoop();
-                });
-              }).then(function() {
-                if (signal.aborted) return;
-                _pipeFinish(); $status.textContent = ''; setLoading(false);
-              });
-            }
-
-            // ---- Complex path: full pipeline (plan → execute → test → review → verify) ----
-            stepPlan.classList.add('pg-pipeline__step--active');
-            $status.textContent = 'Planning architecture\u2026';
-            return planCodeArchitecture(finalSpec, _analysis, _pipeSignal).then(function(plan) {
-              if (signal.aborted) return;
-              // Fallback: plan failed or ≤1 chunk
-              if (!plan || !plan.chunks || plan.chunks.length <= 1) {
-                _pipeSkip(stepPlan, plan ? 'Single-shot' : 'Plan failed');
-                return _singleShotPath();
-              }
-              _pipeDone(stepPlan, plan.chunks.length + ' chunks planned');
-
-              // ---- Step: Execute (map-reduce path) ----
-              stepExecute.classList.add('pg-pipeline__step--active');
-              $status.textContent = 'Executing ' + plan.chunks.length + ' chunks\u2026';
-              _addSkeleton(_analysis.elements);
-              return executeChunksParallel(finalSpec, plan, function(result, done, total) {
-                var sym = result.success ? '\u2713' : '\u2717';
-                var tokStr = result.usage && result.usage.completion_tokens ? ' \u00B7 ' + result.usage.completion_tokens + 'tok' : '';
-                codeProgress.textContent = sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')' + tokStr;
-              }, _pipeSignal).then(function(chunkResults) {
-                if (signal.aborted) return;
-                _removeSkeleton(_analysis.elements);
-                var succeeded = chunkResults.filter(function(r) { return r.success; });
-                var failed = chunkResults.filter(function(r) { return !r.success; });
-                if (!succeeded.length) {
-                  _pipeSkip(stepExecute, 'All chunks failed');
-                  return _singleShotPath();
-                }
-
-                // ---- Retry failed chunks with upgraded model ----
-                var retryPromise;
-                if (failed.length) {
-                  _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
-                  codeProgress.textContent = 'Retrying ' + failed.length + ' chunk' + (failed.length > 1 ? 's' : '') + ' with Flash\u2026';
-                  $status.textContent = 'Retrying ' + failed.length + ' failed chunk' + (failed.length > 1 ? 's' : '') + '\u2026';
-                  retryPromise = retryFailedChunks(finalSpec, plan, failed, function(result, done, total) {
-                    var sym = result.success ? '\u2713' : '\u2717';
-                    codeProgress.textContent = 'Retry: ' + sym + ' ' + result.chunkId + ' (' + done + '/' + total + ')';
-                  }, _pipeSignal).then(function(retryResults) {
-                    if (signal.aborted) return;
-                    // Merge retry successes into main results
-                    var retriedOk = 0;
-                    retryResults.forEach(function(rr) {
-                      if (rr.success) {
-                        retriedOk++;
-                        // Replace the failed result with the retry success
-                        for (var ri = 0; ri < chunkResults.length; ri++) {
-                          if (chunkResults[ri].chunkId === rr.chunkId) { chunkResults[ri] = rr; break; }
-                        }
-                      }
-                    });
-                    var stillFailed = chunkResults.filter(function(r) { return !r.success; });
-                    if (retriedOk) {
-                      codeProgress.textContent = succeeded.length + retriedOk + '/' + chunkResults.length + ' chunks succeeded (' + retriedOk + ' retried)';
-                    }
-                    if (stillFailed.length) {
-                      dlog('[pipeline] chunks still failed after retry:', stillFailed.map(function(r) { return r.chunkId; }));
-                      codeProgress.textContent += ' \u2014 ' + stillFailed.length + ' \u2192 Kimi';
-                    }
-                    return chunkResults;
-                  });
-                } else {
-                  _pipeDone(stepExecute, succeeded.length + '/' + chunkResults.length + ' chunks succeeded');
-                  retryPromise = Promise.resolve(chunkResults);
-                }
-
-                return retryPromise.then(function(finalResults) {
-                if (signal.aborted) return;
-                // Collect remaining failed chunk definitions for Kimi to implement
-                var failedChunks = [];
-                finalResults.forEach(function(cr) {
-                  if (!cr.success) {
-                    var chunkDef = plan.chunks.filter(function(ch) { return ch.id === cr.chunkId; })[0];
-                    if (chunkDef) failedChunks.push(chunkDef);
-                  }
-                });
-                if (failedChunks.length) {
-                  dlog('[pipeline] failed chunks passed to review:', failedChunks.map(function(c) { return c.id; }));
-                }
-
-                // ---- Client-side assembly ----
-                var assembled = assembleChunkResults(finalSpec, plan, finalResults);
-                if (assembled.conflicts.length) {
-                  dlog('[pipeline] conflicts:', assembled.conflicts);
-                }
-
-                // ---- Step: Test ----
-                stepTest.classList.add('pg-pipeline__step--active');
-                $status.textContent = 'Running tests\u2026';
-                _applySpec(assembled.spec, 'test-render');
-                var testFailures = [];
-                return runChunkTests(finalResults, 2000).then(function(testResults) {
-                  if (signal.aborted) return;
-                  if (testResults.length) {
-                    var passed = testResults.filter(function(t) { return t.pass; }).length;
-                    var total = testResults.length;
-                    testFailures = testResults.filter(function(t) { return !t.pass; });
-                    if (testFailures.length) {
-                      _pipeDone(stepTest, passed + '/' + total + ' tests passed');
-                      dlog('[pipeline:test] failures:', testFailures);
-                    } else {
-                      _pipeDone(stepTest, 'All ' + total + ' tests passed');
-                    }
-                  } else {
-                    _pipeSkip(stepTest, 'No tests returned');
-                  }
-
-                // ---- Step: Review ----
-                _pipeCollapse(pipeDetails);
-                stepReview.classList.add('pg-pipeline__step--active');
-                $status.textContent = failedChunks.length
-                  ? 'Reviewing + implementing ' + failedChunks.length + ' failed chunk' + (failedChunks.length > 1 ? 's' : '') + '\u2026'
-                  : 'Reviewing assembly\u2026';
-                return reviewAndAssemble(finalSpec, plan, assembled.spec, assembled.conflicts, failedChunks, function(bytes, lines, secs) {
-                  codeProgress.textContent = bytes.toLocaleString() + ' bytes \u00B7 ' + lines + ' lines \u00B7 ' + secs + 's';
-                }, testFailures, _pipeSignal).then(function(reviewedSpec) {
-                  if (signal.aborted) return;
-                  if (reviewedSpec) {
-                    _pipeDone(stepReview, 'Review complete');
-                    _applySpec(reviewedSpec, 'interactive');
-                  } else {
-                    _pipeDone(stepReview, 'Review failed, using raw assembly');
-                    _applySpec(assembled.spec, 'interactive (raw)');
-                  }
-
-                  return _runVerifyLoop();
-                }).catch(function(revErr) {
-                  if (signal.aborted) return;
-                  console.error('[pipeline:review] error:', revErr);
-                  _pipeDone(stepReview, 'Review errored');
-                  _applySpec(assembled.spec, 'interactive (raw)');
-                });
-                }); // runChunkTests.then
-              }); // retryPromise.then
-              });
-            }).then(function() {
-              if (signal.aborted) return;
-              _pipeFinish();
-              $status.textContent = '';
-              setLoading(false);
-            });
-          }).catch(function(err) { if (signal.aborted) return; console.error('[pipeline] uncaught:', err); _pipeFinish(); $status.textContent = ''; setLoading(false); });
-        } else {
-          doRetryOrFallback('Invalid or incomplete JSON response');
-        }
-      },
-      function onError(err) {
-        if (signal.aborted) return;
-        clearInterval(renderTimer);
-        if (err === 'no-stream') {
-          runBlockingGenerate(messages, streamBubble);
-          return;
-        }
-        $status.textContent = '';
-        streamBubble.className = 'pg-chat__msg pg-chat__msg--error';
-        streamBubble.textContent = err.message || String(err);
-        setLoading(false);
-      }
-    );
-  }
-  Promise.all([analysisPromise, pickPromise]).then(function(res) {
-    if (preSignal.aborted) return; // stopped before streaming began
-    var analysisBrief = res[0];
-    if (analysisBrief) dlog('[analyzeLayout] Brief:', analysisBrief.slice(0, 200));
-    else if (!currentSpec) console.warn('[analyzeLayout] Skipped or failed');
-    messages = buildMessages(prompt, imagesForThisMsg, webContextsForThisMsg, figmaContextsForThisMsg, analysisBrief, res[1]);
-    $status.textContent = 'Streaming\u2026';
-    // Swap the planning step for what it produced, then show the build step
-    var _picked = (res[1] || []).filter(function(t) { return PICK_CORE.indexOf(t) === -1; });
-    var _planDone = [];
-    if (analysisBrief) _planDone.push('Planned the layout');
-    else if (!currentSpec && _hasAttachments) _planDone.push('Layout planning skipped');
-    if (_picked.length) _planDone.push('Picked ' + _picked.length + ' components: ' + _picked.slice(0, 5).join(', ') + (_picked.length > 5 ? ' +' + (_picked.length - 5) + ' more' : ''));
-    else if (!_hasAttachments) _planDone.push('Using the full component catalog');
-    if (_planDone.length) {
-      bubbleStepText(streamBubble, _planDone[0]);
-      for (var _pi = 1; _pi < _planDone.length; _pi++) bubbleStep(streamBubble, _planDone[_pi]);
-    }
-    bubbleStep(streamBubble, 'Building the UI\u2026');
-    startStream(messages);
   });
 }
 
 function setLoading(on) {
   _isLoading = on;
-  $generationMode.disabled = on;
+  $chatPanel.setAttribute('aria-busy', String(on));
   if (on) {
     if ($provider) $provider.disabled = true;
     if ($model) $model.disabled = true;
     $stopBtn.style.display = '';
     $sendHint.style.display = 'none';
   } else {
-    if ($provider) $provider.disabled = false;
-    if ($model) $model.disabled = false;
     $stopBtn.style.display = 'none';
     $sendHint.style.display = '';
     $prompt.focus();
@@ -5023,7 +4829,7 @@ function buildExportHtml() {
   return buildIframeSrcdoc(_pgPreviewTheme || currentSpec.theme, _pgPreviewScheme)
     .replace('<base target="_blank">', '<base href="https://daub.dev/" target="_blank">')
     .replace('</head>', '<title>DAUB UI export</title></head>')
-    .replace('</body>', '<script>window.postMessage(' + payload + ', "*");<\/script></body>');
+    .replace('</body>', function() { return '<script>window.postMessage(' + payload + ', "*");<\/script></body>'; });
 }
 
 $download.addEventListener('click', function() {
@@ -5170,7 +4976,7 @@ $newChat.addEventListener('click', function() {
 });
 
 // ---- BYOK modal ----
-function openByokModal() { DAUB.openModal($byokModal); }
+function openByokModal() { rejectUnsupportedInput(); }
 function closeByokModal() { DAUB.closeModal($byokModal); }
 
 $byokLink.addEventListener('click', function(e) {
@@ -5311,6 +5117,7 @@ function autoFixSpec(spec) {
     var el = spec.elements[id];
     var type = el.type || (el.props && el.props.type);
     if (type !== 'CustomHTML') return;
+    if (el.props && (el.props.js || el.props.css)) return;
     // Check if this CustomHTML id is a "-container"/"-wrapper"/"-script" suffix of an existing component
     var baseId = id.replace(/[-_](container|wrapper|script|handler|logic|code)$/i, '');
     if (baseId !== id && componentById[baseId]) {
@@ -8400,10 +8207,11 @@ function _loadSharedSpec() {
       $json.value = JSON.stringify(spec, null, 2);
       refreshJsonTree();
       updatePreviewToolbar();
-      // Links can come from anyone: render without CustomHTML js until the user opts in
+      // Links can come from anyone: pause custom code and Hybrid programs until consent.
       var safeSpec = spec;
       if (collectCustomJS(spec).length || _hasInlineCode(spec)) {
         safeSpec = JSON.parse(JSON.stringify(spec));
+        if (safeSpec.hybrid) delete safeSpec.hybrid.program;
         Object.keys(safeSpec.elements).forEach(function(id) {
           var d = safeSpec.elements[id];
           if (d && d.props) delete d.props.js;
@@ -8435,86 +8243,6 @@ window.addEventListener('hashchange', function() {
   _loadSharedSpec();
 });
 
-// ---- assistant-ui React Chat bridge (expose IIFE-scoped vars) ----
-if (new URLSearchParams(location.search).has('react-chat')) {
-  window.__playgroundBridge = {
-    getSystemPrompt: function() { return SYSTEM_PROMPT || ''; },
-    getCurrentSpec: function() { return currentSpec; },
-    getSpecVersions: function() { return specVersions; },
-    getOutputFormat: function() { return OUTPUT_FORMAT; },
-    isDefaultMode: function() { return isDefaultMode; },
-    getProviderConfig: function() {
-      return {
-        provider: $provider ? $provider.value : 'default',
-        model: $model ? $model.value : null,
-        apiKey: $apikey ? $apikey.value : null
-      };
-    },
-    renderSpec: function(s, p) { renderSpec(s, p); },
-    commitSpec: function(s, p) { commitSpec(s, p); },
-    postToPreview: function(m) { postToPreview(m); },
-    cleanJSON: function(t) { return cleanJSON(t); },
-    repairJSON: function(s) { return repairJSON(s); },
-    pushVersion: function(s, p) { pushVersion(s, p); },
-    revertToVersion: function(i) { revertToVersion(i); },
-    setLoading: function(o) { setLoading(o); },
-    showJsonError: function(m) { showJsonError(m); },
-    hideJsonError: function() { hideJsonError(); },
-    updatePreviewToolbar: function() { updatePreviewToolbar(); },
-    refreshJsonTree: function() { refreshJsonTree(); },
-    setJsonValue: function(v) { $json.value = v; },
-    openByokModal: function() { openByokModal(); },
-    streamDefault: function(msgs, c, d, e, model, sig) { streamDefault(msgs, c, d, e, model || AUTO_MODEL, sig, model ? null : mainGenOpts()); },
-    streamOpenAI: function(msgs, c, d, e, sig) { streamOpenAI(msgs, c, d, e, sig); },
-    streamAnthropic: function(msgs, c, d, e, sig) { streamAnthropic(msgs, c, d, e, sig); },
-    streamOpenRouter: function(msgs, c, d, e, sig) { streamOpenRouter(msgs, c, d, e, sig); },
-    on: function(ev, fn) { if (!this._l) this._l = {}; (this._l[ev] = this._l[ev] || []).push(fn); },
-    emit: function(ev, d) { (this._l && this._l[ev] || []).forEach(function(f) { f(d); }); }
-  };
-}
-
-})();
-</script>
-
-<script>
-// ---- assistant-ui React Chat mount (feature-flagged) ----
-(function() {
-  if (!new URLSearchParams(location.search).has('react-chat')) return;
-
-  var vanillaChat = document.querySelector('.pg-panel__body.pg-chat');
-  if (vanillaChat) {
-    var mount = document.createElement('div');
-    mount.id = 'pg-chat-mount';
-    mount.style.cssText = 'display:flex;flex-direction:column;height:100%;overflow:hidden;';
-    vanillaChat.parentNode.insertBefore(mount, vanillaChat);
-    vanillaChat.style.display = 'none';
-  }
-
-  var newChatBtn = document.getElementById('pg-new-chat');
-  if (newChatBtn) {
-    newChatBtn.addEventListener('click', function() {
-      if (window.__chatBridge && window.__chatBridge.clearChat) window.__chatBridge.clearChat();
-    });
-  }
-
-  var s = document.createElement('script');
-  s.src = 'index.playground-chat.js';
-  s.onload = function() {
-    var el = document.getElementById('pg-chat-mount');
-    if (el && window.DaubChat && window.DaubChat.mount) {
-      window.DaubChat.mount(el);
-    } else {
-      restoreVanillaChat();
-    }
-  };
-  function restoreVanillaChat() {
-    var el = document.getElementById('pg-chat-mount');
-    if (el) el.remove();
-    if (vanillaChat) vanillaChat.style.display = '';
-    DAUB.toast({ type: 'error', message: 'Could not load React chat. Using the standard chat.' });
-  }
-  s.onerror = restoreVanillaChat;
-  document.body.appendChild(s);
 })();
 </script>
 

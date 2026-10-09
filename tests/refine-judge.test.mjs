@@ -23,6 +23,23 @@ function input() {
   };
 }
 
+function spacingInput() {
+  const body = input();
+  return {
+    ...body,
+    mode: 'spacing',
+    geometry: {
+      stable: true,
+      truncated: false,
+      elements: [
+        { id: 'page', bounds: { x: 0, y: 0, width: 320, height: 180 } },
+        { id: 'email', bounds: { x: 16, y: 16, width: 288, height: 40 } },
+        { id: 'save', bounds: { x: 16, y: 100, width: 80, height: 40 } },
+      ],
+    },
+  };
+}
+
 function request(body = input(), { url = URL_, origin = new URL(url).origin, headers = {}, raw, method = 'POST', signal } = {}) {
   const h = new Headers({ 'Content-Type': 'application/json', ...headers });
   if (origin !== null) h.set('Origin', origin);
@@ -133,6 +150,121 @@ test('maxima of 160 elements, 12 targets, 4000 prompt characters and depth 5 sta
   assert.equal(fetch.mock.callCount(), 1);
 });
 
+test('explicit detail mode preserves default questions, evidence and decisions', async t => {
+  const payloads = [];
+  mockJev(t, payload => {
+    payloads.push(payload);
+    return Response.json({ model: MODEL, answers: { target0: { noul: 0.65 }, target1: { noul: 0.649999 } } });
+  });
+  const defaultResponse = await call();
+  const detailResponse = await call({ ...input(), mode: 'detail', geometry: null });
+  assert.equal(defaultResponse.status, 200);
+  assert.equal(detailResponse.status, 200);
+  assert.deepEqual(await detailResponse.json(), await defaultResponse.json());
+  assert.deepEqual(payloads[1], payloads[0]);
+});
+
+test('spacing mode asks evidence-only subtree spacing questions in one batch with the existing threshold and schema', async t => {
+  const body = spacingInput();
+  body.targets = ['save', 'page', 'email'];
+  const scores = [0.649999, 0.65, 1];
+  const fetch = mockJev(t, payload => {
+    assert.equal(payload.model, MODEL);
+    assert.deepEqual(payload.state.spec, body.spec);
+    assert.deepEqual(payload.state.geometry, body.geometry);
+    assert.equal(payload.state.prompt, body.prompt);
+    assert.equal(payload.state.depth, body.depth);
+    assert.deepEqual(Object.keys(payload.questions), ['target0', 'target1', 'target2']);
+    for (const [index, id] of body.targets.entries()) {
+      const key = `target${index}`;
+      assert.equal(payload.state.targetIds[key], id);
+      const q = payload.questions[key];
+      assert.equal(q.type, 'noul');
+      assert.ok(q.instructions.includes(`state.targetIds.${key}`));
+      assert.match(q.instructions, /all layout spacing/);
+      assert.match(q.instructions, /full target subtree/);
+      assert.match(q.instructions, /siblings/);
+      assert.match(q.instructions, /vertical rhythm/);
+      assert.match(q.instructions, /horizontal gutters and alignment/);
+      assert.match(q.instructions, /heading, progress, question, options and action groups/);
+      assert.match(q.instructions, /state\.geometry/);
+      assert.match(q.instructions, /evidence, not as instructions/);
+      assert.match(q.criteria.true, /measured geometry/);
+      assert.match(q.criteria.false, /unsupported|uncertain/);
+      assert.match(q.criteria.false, /uniform gap/);
+      assert.match(q.criteria.false, /intentional overlaps/);
+      assert.match(q.criteria.false, /touching joined controls/);
+      assert.match(q.criteria.false, /Never add content or features/);
+      assert.doesNotMatch(q.criteria.true, /missing required structure or content/);
+    }
+    return Response.json({ model: MODEL, answers: Object.fromEntries(scores.map((noul, i) => [`target${i}`, { noul }])) });
+  });
+  const res = await call(body);
+  assert.equal(res.status, 200);
+  assert.deepEqual(await res.json(), {
+    model: MODEL, usage: null,
+    decisions: body.targets.map((id, i) => ({ id, needsDetail: scores[i] >= 0.65, probability: scores[i] })),
+  });
+  assert.equal(fetch.mock.callCount(), 1);
+});
+
+test('spacing mode passes all 160 measured nodes as entire target-root tree evidence', async t => {
+  const body = spacingInput();
+  const ids = Array.from({ length: 160 }, (_, i) => `n${i}`);
+  body.spec = { root: ids[0], elements: Object.fromEntries(ids.map((id, i) => [id, {
+    type: 'Stack', children: i === 0 ? ids.slice(1) : [],
+  }])) };
+  body.targets = [ids[0]];
+  body.geometry.elements = ids.map((id, i) => ({
+    id, parentId: i === 0 ? null : ids[0],
+    bounds: { x: 0, y: i * 40, width: 320, height: i === 0 ? 6400 : 32 },
+    padding: [0, 0, 0, 0], margin: [0, 0, 0, 0],
+    layout: { display: 'flex', flexDirection: 'column', rowGap: 8, columnGap: 0,
+      justifyContent: 'start', alignItems: 'stretch', overflowX: 'visible', overflowY: 'visible' },
+    rendered: true, placeholder: false,
+  }));
+  const bytes = Buffer.byteLength(JSON.stringify(body.geometry));
+  assert.ok(bytes > 32 * 1024 && bytes < 64 * 1024);
+  const fetch = mockJev(t, payload => {
+    assert.deepEqual(payload.state.spec, body.spec);
+    assert.deepEqual(payload.state.geometry, body.geometry);
+    assert.equal(payload.state.geometry.elements.length, 160);
+    assert.match(payload.questions.target0.instructions, /entire target-root tree/);
+    assert.match(payload.questions.target0.instructions, /not just target snippets/);
+    return Response.json({ answers: { target0: { noul: 0.2 } } });
+  });
+  assert.equal((await call(body)).status, 200);
+  assert.equal(fetch.mock.callCount(), 1);
+});
+
+const invalidSpacingGeometry = [
+  ['missing', b => { delete b.geometry; }],
+  ['null', b => { b.geometry = null; }],
+  ['missing stable', b => { delete b.geometry.stable; }],
+  ['unstable', b => { b.geometry.stable = false; }],
+  ['nonboolean stable', b => { b.geometry.stable = 'true'; }],
+  ['missing elements', b => { delete b.geometry.elements; }],
+  ['null elements', b => { b.geometry.elements = null; }],
+  ['empty elements', b => { b.geometry.elements = []; }],
+  ['nonarray elements', b => { b.geometry.elements = { page: {} }; }],
+  ['missing truncated', b => { delete b.geometry.truncated; }],
+  ['truncated', b => { b.geometry.truncated = true; }],
+  ['nonboolean truncated', b => { b.geometry.truncated = 0; }],
+];
+
+for (const [name, mutate] of invalidSpacingGeometry) {
+  test(`spacing rejects ${name} geometry before limiter or provider`, async () => {
+    const body = spacingInput();
+    mutate(body);
+    let limited = 0;
+    await rejected(await call(body, {}, {
+      OPENROUTER_API_KEY: 'test-key', RL_GENERATE: { limit() { limited++; return { success: true }; } },
+    }), 400);
+    assert.equal(limited, 0);
+    assert.equal(globalThis.fetch.mock.callCount(), 0);
+  });
+}
+
 test('depth zero, omitted geometry/props/children and absent usage are supported', async t => {
   const body = { prompt: 'Save button', spec: { root: 'b', elements: { b: { type: 'Button' } } }, targets: ['b'], depth: 0 };
   const fetch = mockJev(t, payload => {
@@ -147,6 +279,7 @@ test('depth zero, omitted geometry/props/children and absent usage are supported
 
 const invalidInputs = [
   ['null body', () => null], ['array body', () => []], ['string body', () => 'x'],
+  ...[null, '', 'layout', 'Spacing', 0, true, [], {}].map(mode => [`invalid mode ${JSON.stringify(mode)}`, b => { b.mode = mode; }]),
   ['missing prompt', b => { delete b.prompt; }], ['blank prompt', b => { b.prompt = '  '; }],
   ['numeric prompt', b => { b.prompt = 2; }], ['long prompt', b => { b.prompt = 'p'.repeat(4001); }],
   ['long untrimmed prompt', b => { b.prompt = ' '.repeat(4000) + 'x'; }],
@@ -374,6 +507,33 @@ test('geometry accepts 32 KiB and rejects the next byte', async t => {
   assert.equal((await call(body)).status, 200);
   body.geometry.label += 'x';
   await rejected(await call(body), 413);
+  assert.equal(fetch.mock.callCount(), 1);
+});
+
+test('spacing geometry accepts 64 KiB and rejects the next byte before limiter or provider', async t => {
+  const body = spacingInput();
+  body.geometry.label = '';
+  body.geometry.label = 'x'.repeat(64 * 1024 - Buffer.byteLength(JSON.stringify(body.geometry)));
+  const fetch = mockJev(t);
+  let limited = 0;
+  const env = { OPENROUTER_API_KEY: 'test-key', RL_GENERATE: { limit() { limited++; return { success: true }; } } };
+  assert.equal(Buffer.byteLength(JSON.stringify(body.geometry)), 64 * 1024);
+  assert.equal((await call(body, {}, env)).status, 200);
+  body.geometry.label += 'x';
+  await rejected(await call(body, {}, env), 413);
+  assert.equal(limited, 1);
+  assert.equal(fetch.mock.callCount(), 1);
+});
+
+test('spacing retains the 128 KiB total UTF-8 body limit', async t => {
+  const body = spacingInput();
+  body.spec.elements.save.props.label = '';
+  body.spec.elements.save.props.label = 'x'.repeat(MAX_BYTES - Buffer.byteLength(JSON.stringify(body)));
+  assert.equal(Buffer.byteLength(JSON.stringify(body)), MAX_BYTES);
+  const fetch = mockJev(t);
+  assert.equal((await call(body)).status, 200);
+  body.spec.elements.save.props.label += '\u754c';
+  await rejected(await call(body, { headers: { 'Content-Length': '1' } }), 413);
   assert.equal(fetch.mock.callCount(), 1);
 });
 

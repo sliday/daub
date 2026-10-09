@@ -4,7 +4,7 @@
 // openrouter/auto picks the model per prompt; pinned ids stay allowed for the fallback path and cached clients
 const DEFAULT_MODEL = 'openrouter/auto';
 const ALLOWED_MODELS = [DEFAULT_MODEL, 'google/gemini-3-flash-preview', 'google/gemini-3.1-pro-preview', 'google/gemini-3.1-flash-lite', 'moonshotai/kimi-k2.5'];
-const ALLOWED_EFFORTS = ['low', 'medium', 'high'];
+const ALLOWED_EFFORTS = ['none', 'low', 'medium', 'high'];
 // Auto Router cost band; unset routes at roughly "low". Capped at medium on the server key.
 const ALLOWED_COST_TIERS = ['low', 'medium'];
 
@@ -66,6 +66,21 @@ export async function onRequestPost(context) {
     });
   }
 
+  let responseFormat = body.response_format === false ? null : { type: 'json_object' };
+  if (body.response_format && typeof body.response_format === 'object') {
+    const format = body.response_format;
+    const schema = format.json_schema;
+    if (format.type === 'json_schema' && schema && /^[A-Za-z0-9_-]{1,64}$/.test(schema.name)
+      && schema.strict === true && schema.schema && schema.schema.type === 'object'
+      && JSON.stringify(schema.schema).length <= 65536) {
+      responseFormat = { type: 'json_schema', json_schema: { name: schema.name, strict: true, schema: schema.schema } };
+    } else if (format.type !== 'json_object') {
+      return new Response(JSON.stringify({ error: 'A valid strict JSON schema is required' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+  }
+
   const apiKey = env.OPENROUTER_API_KEY;
   if (!apiKey) {
     return new Response(JSON.stringify({ error: 'Server misconfigured: missing API key' }), {
@@ -79,28 +94,41 @@ export async function onRequestPost(context) {
   let upstream;
   try {
     if (request.signal.aborted) return aborted();
-    upstream = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': 'https://daub.dev',
-        'X-Title': 'DAUB Playground',
-      },
-      body: JSON.stringify(Object.assign({
-        model,
-        messages: body.messages,
-        temperature: 0.7,
-        max_tokens: Math.min(Math.max(parseInt(body.max_tokens) || 16384, 1), 32768),
-        stream: true,
-        reasoning: { effort: body.reasoning && ALLOWED_EFFORTS.includes(body.reasoning.effort) ? body.reasoning.effort : 'medium' },
-      }, body.response_format !== false ? { response_format: { type: 'json_object' } } : {},
-        model === 'openrouter/auto' && ALLOWED_COST_TIERS.includes(body.cost_tier) ? { plugins: [{ id: 'auto-router', cost_tier: body.cost_tier }] } : {},
-        typeof body.session_id === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(body.session_id) ? { session_id: body.session_id } : {})),
-      signal: AbortSignal.any([request.signal, AbortSignal.timeout(60_000)]),
-    });
-    if (!upstream.ok) {
+    const upstreamBody = Object.assign({
+      model,
+      messages: body.messages,
+      temperature: 0.7,
+      max_tokens: Math.min(Math.max(parseInt(body.max_tokens) || 16384, 1), 32768),
+      stream: true,
+      reasoning: { effort: body.reasoning && ALLOWED_EFFORTS.includes(body.reasoning.effort) ? body.reasoning.effort : 'medium' },
+    }, responseFormat ? { response_format: responseFormat, provider: { require_parameters: true } } : {},
+      model === 'openrouter/auto' && ALLOWED_COST_TIERS.includes(body.cost_tier) ? { plugins: [{ id: 'auto-router', cost_tier: body.cost_tier }] } : {},
+      typeof body.session_id === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(body.session_id) ? { session_id: body.session_id } : {});
+    const signal = AbortSignal.any([request.signal, AbortSignal.timeout(60_000)]);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      signal.throwIfAborted();
+      upstream = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+          'HTTP-Referer': 'https://daub.dev',
+          'X-Title': 'DAUB Playground',
+        },
+        body: JSON.stringify(upstreamBody),
+        signal,
+      });
+      if (upstream.ok) break;
       const errBody = await upstream.text();
+      if (attempt === 0 && upstream.status === 400 && upstreamBody.reasoning.effort === 'none') {
+        let message;
+        try { message = JSON.parse(errBody)?.error?.message; } catch {}
+        if (message === 'Reasoning is mandatory for this endpoint and cannot be disabled.') {
+          // Use provider defaults without weakening the schema or renewing the deadline.
+          delete upstreamBody.reasoning;
+          continue;
+        }
+      }
       return new Response(errBody, {
         status: upstream.status,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
