@@ -44,9 +44,9 @@ const counter = {
 };
 const form = {
   title: 'Contact form', brief: ['Collect a name and show the local result.'], interactive: true,
-  html: '<main id="prototype-app"><form id="contact"><label for="name">Name</label><input id="name" class="db-input"><button id="save" class="db-btn" type="button">Save</button></form><output id="result">No submission</output></main>',
+  html: '<main id="prototype-app"><form id="contact"><label for="name">Name</label><input id="name" class="db-input"><button id="save" class="db-btn" type="submit">Save</button></form><output id="result">No submission</output></main>',
   css: '#prototype-app { padding: 16px; } #contact { display: grid; gap: 12px; } #result { display: block; }',
-  js: 'api.publish({name:"",completed:false}); api.on("#save", "click", () => { const name = container.querySelector("#name").value; container.querySelector("#result").textContent = "Saved " + name; api.publish({name,completed:true}); });',
+  js: 'api.publish({name:"",completed:false}); api.on("#contact", "submit", event => { event.preventDefault(); const name = container.querySelector("#name").value; container.querySelector("#result").textContent = "Saved " + name; api.publish({name,completed:true}); });',
   smoke: [
     { action: 'fill', selector: '#name', value: 'Ada' },
     { action: 'click', selector: '#save', value: '' },
@@ -303,7 +303,7 @@ test('downloaded prototype keeps an opaque preview and exposes live output throu
   await page.setContent(html);
   const frame = page.frameLocator('#prototype-preview');
   await frame.getByLabel('Name', { exact: true }).waitFor();
-  assert.equal(await page.locator('#prototype-preview').getAttribute('sandbox'), 'allow-scripts');
+  assert.equal(await page.locator('#prototype-preview').getAttribute('sandbox'), 'allow-scripts allow-forms');
   assert.equal(await page.locator('#prototype-preview').evaluate(el => el.contentDocument), null);
   assert.deepEqual(await page.evaluate(async () => await DaubPrototype.getOutput()), { name: '', completed: false });
   await frame.getByLabel('Name', { exact: true }).fill('Lin');
@@ -347,7 +347,7 @@ for (const hasWrapperId of [false, true]) {
     await page.locator('#pg-download').click();
     const html = await readFile(await (await pending).path(), 'utf8');
     await page.setContent(html);
-    assert.equal(await page.locator('#prototype-preview').getAttribute('sandbox'), 'allow-scripts');
+    assert.equal(await page.locator('#prototype-preview').getAttribute('sandbox'), 'allow-scripts allow-forms');
     await assertScopedStyles('#prototype-preview');
     assert.deepEqual(await page.evaluate(async () => await DaubPrototype.getOutput()), { count: 1 });
     assert.equal(calls.length, 1);

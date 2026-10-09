@@ -182,7 +182,7 @@ test('saved legacy JSON renders and exports without generating or losing custom 
   assert.match(html, /Production fixture/);
   assert.match(html, /exportFixture/);
   assert.match(html, /<base href="https:\/\/daub.dev\/"/);
-  assert.equal(await page.locator('#pg-preview-frame').getAttribute('sandbox'), 'allow-scripts');
+  assert.equal(await page.locator('#pg-preview-frame').getAttribute('sandbox'), 'allow-scripts allow-forms');
   assert.deepEqual(calls, []);
 });
 

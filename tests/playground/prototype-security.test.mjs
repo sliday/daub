@@ -93,6 +93,37 @@ async function childFrame(page, selector) {
   return (await page.locator(selector).elementHandle()).contentFrame();
 }
 
+for (const exported of [false, true]) test('native form destinations stay blocked in ' + (exported ? 'exports' : 'previews'), async t => {
+  const page = await open(t);
+  let selector = '#pg-preview-frame';
+  if (exported) {
+    const downloading = page.waitForEvent('download');
+    await page.locator('#pg-download').click();
+    const html = await readFile(await (await downloading).path(), 'utf8');
+    await page.route(base + '/__form-export', route => route.fulfill({ contentType: 'text/html', body: html }));
+    await page.goto(base + '/__form-export');
+    selector = '#prototype-preview';
+  }
+  const frame = await childFrame(page, selector);
+  await frame.waitForFunction(() => window.DaubPrototype?.getOutput()?.keys === 0);
+  assert.equal(await page.locator(selector).evaluate(el => el.contentDocument), null);
+  const directive = await frame.evaluate(action => new Promise(resolve => {
+    const timeout = setTimeout(() => resolve('missing violation'), 2000);
+    document.addEventListener('securitypolicyviolation', event => {
+      clearTimeout(timeout);
+      resolve(event.effectiveDirective);
+    }, { once: true });
+    const form = document.createElement('form');
+    form.action = action;
+    form.method = 'POST';
+    form.target = '_self';
+    document.body.appendChild(form);
+    form.submit();
+  }), base + '/api/forbidden-form');
+  assert.equal(directive, 'form-action');
+  assert.deepEqual(await page.evaluate(() => DaubPlayground.getOutput()), { keys: 0 });
+});
+
 test('export navigation never resends the spec and rejects pending and forged foreign output', async t => {
   const page = await open(t);
   const downloading = page.waitForEvent('download');
@@ -103,7 +134,7 @@ test('export navigation never resends the spec and rejects pending and forged fo
   const frame = await childFrame(page, '#prototype-preview');
   await frame.waitForFunction(() => window.DaubPrototype?.getOutput()?.keys === 0);
   await page.waitForFunction(() => __securityMessages.some(message => message.type === 'html'));
-  assert.equal(await page.locator('#prototype-preview').getAttribute('sandbox'), 'allow-scripts');
+  assert.equal(await page.locator('#prototype-preview').getAttribute('sandbox'), 'allow-scripts allow-forms');
   assert.equal(await page.locator('#prototype-preview').evaluate(el => el.contentDocument), null);
   assert.deepEqual(await page.evaluate(() => DaubPrototype.getOutput()), { keys: 0 });
   const bootstrap = await frame.evaluate(() => __securityMessages.filter(message => message.type === 'render').map(message => ({ seq: message.seq, title: message.spec.prototype.title })));

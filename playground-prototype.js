@@ -181,7 +181,7 @@
     var jobs = [1200, 390].map(async function(width) {
       if (signal.aborted) throw new DOMException('Canceled', 'AbortError');
       var frame = document.createElement('iframe'), id = crypto.randomUUID();
-      frame.setAttribute('sandbox', 'allow-scripts'); frame.setAttribute('aria-hidden', 'true'); frame.tabIndex = -1;
+      frame.setAttribute('sandbox', 'allow-scripts allow-forms'); frame.setAttribute('aria-hidden', 'true'); frame.tabIndex = -1;
       frame.dataset.prototypeProbe = '';
       frame.style.cssText = 'position:fixed;left:0;top:0;opacity:0;pointer-events:none;z-index:-1;border:0;width:' + width + 'px;height:900px';
       return new Promise(function(resolve, reject) {

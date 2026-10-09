@@ -54,6 +54,28 @@ negative cases for unused color and border color
 (`/private/tmp/daub-jev-review.tap`). These smoke checks are bounded behavioral
 evidence, not a pixel-equivalence guarantee.
 
+## Production canary and form correction
+
+Commit `c7bdf64` reached production. The live contact-form canary made one Jev
+selection in 673 ms and selected eight components. Generation reused Button,
+Text Field, Textarea, Alert, Surface and Container. Both generated attempts
+failed the confirmation assertion: Chrome blocked native form submission before
+the JavaScript submit listener ran because the frame lacked `allow-forms`.
+Dispatching the submit event in the recorded form produced the confirmation and
+published the expected data, isolating the failure to the host sandbox.
+
+The follow-up permits form events and adds `form-action 'none'` CSP to preview,
+probe and export documents. Frames retain opaque origins. All 57 targeted
+browser, production-route and security tests passed, including CSP violations
+for attempted submission destinations in preview and export. Replaying the exact
+recorded response passed both widths in 750 ms with one mocked generation.
+Manual browser checks covered empty-field errors, confirmation, published
+name/email/message and reset. Evidence lives under
+`/private/tmp/daub-jev-production/`; no additional provider call powered the replay.
+The final full suite passed 2,524 tests with one skip and no failures
+(`/private/tmp/daub-jev-form-release.tap`, concurrency two). Read-only security
+review found no blocking findings in the form correction.
+
 ## Speed round
 
 The client now checks both viewports concurrently, with a limit of two opaque
@@ -149,5 +171,5 @@ generation evidence in this run.
 
 The opaque sandbox protects the parent origin. Managed timers/listeners support
 cleanup; they do not prevent arbitrary code from consuming CPU. Export tests
-check navigation invalidation and source correlation. No deployment forms part
-of this verification.
+check navigation invalidation and source correlation. The earlier local checks
+predate deployment; the production canary section records the release evidence.

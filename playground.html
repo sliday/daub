@@ -966,7 +966,7 @@
       <div class="pg-panel__body" id="pg-preview-body" style="display:flex;flex-direction:column;padding:0;min-height:0;">
         <!-- Design mode (default) -->
         <div class="pg-preview-pane pg-preview-pane--active" id="pg-pane-design" role="tabpanel" aria-labelledby="pg-tab-design" data-pane="design">
-          <iframe class="pg-preview" id="pg-preview-frame" title="UI preview" sandbox="allow-scripts" style="border:none;width:100%;height:100%;"></iframe>
+          <iframe class="pg-preview" id="pg-preview-frame" title="UI preview" sandbox="allow-scripts allow-forms" style="border:none;width:100%;height:100%;"></iframe>
         </div>
         <!-- Structure mode -->
         <div class="pg-preview-pane pg-json-area" id="pg-pane-structure" role="tabpanel" aria-labelledby="pg-tab-structure" data-pane="structure">
@@ -1060,7 +1060,7 @@
 <script src="playground-prototype-runtime.js?v=1"></script>
 <script src="assets/vendor/tetris-core.js?v=1"></script>
 <script src="playground-prototype-engines.js?v=1"></script>
-<script src="playground-prototype.js?v=2"></script>
+<script src="playground-prototype.js?v=3"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -1315,6 +1315,7 @@ function buildIframeSrcdoc(theme, scheme, exported, probeOnly) {
   var schemeAttr = scheme ? ' data-scheme="' + esc(scheme) + '"' : '';
   return '<!DOCTYPE html><html lang="en"' + themeAttr + schemeAttr + '>'
     + '<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
+    + '<meta http-equiv="Content-Security-Policy" content="form-action \'none\'">'
     + '<base target="_blank">'
     + '<link rel="stylesheet" href="daub.css?v=3.20.6">'
     + '<script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"><\/script>'
@@ -4894,7 +4895,7 @@ function buildExportHtml() {
       + JSON.stringify(documentSource).replace(/</g, '\\u003c') + ',' + JSON.stringify(initial).replace(/</g, '\\u003c') + ');';
     return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
       + '<title>' + esc(currentSpec.prototype.title || 'DAUB prototype') + '</title><style>html,body{margin:0;height:100%}iframe{display:block;border:0;width:100%;height:100%}</style></head>'
-      + '<body><iframe id="prototype-preview" title="Prototype" sandbox="allow-scripts"></iframe><script>' + boot + '<\/script></body></html>';
+      + '<body><iframe id="prototype-preview" title="Prototype" sandbox="allow-scripts allow-forms"></iframe><script>' + boot + '<\/script></body></html>';
   }
   var payload = JSON.stringify({ type: 'render', html: _iframeHtmlCache, spec: currentSpec, js: collectCustomJS(currentSpec), stateConfig: collectStateConfig(currentSpec) }).replace(/</g, '\\u003c');
   return buildIframeSrcdoc(_pgPreviewTheme || currentSpec.theme, _pgPreviewScheme)

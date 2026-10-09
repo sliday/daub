@@ -76,6 +76,10 @@ embed an opaque iframe and expose asynchronous `DaubPrototype.getOutput()` in th
 outer document. Shared code still requires consent. The sandbox isolates the
 parent origin; managed APIs are a lifecycle aid, not a security boundary against
 arbitrary generated JavaScript or CPU exhaustion.
+Preview, probe and export frames permit native form events with `allow-forms`.
+Their document CSP sets `form-action 'none'`, so generated handlers can process
+submissions while the browser blocks native submission destinations. Frames
+remain opaque and cannot access the parent DOM.
 
 New specs retain HTML, CSS and raw JS in a `CustomHTML` root plus `prototype`
 metadata. Existing component specs, Hybrid controllers and saved exports remain
