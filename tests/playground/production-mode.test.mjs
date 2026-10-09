@@ -17,9 +17,10 @@ const brief = {
 };
 const contract = { interactive: false, fixtures: '{}', recipe: null, brief,
   requirements: [{ id: 'heading', targetId: 'headline', text: 'Production fixture', when: 'initial' }], journeys: [] };
-const wire = { root: spec.root, elements: Object.entries(spec.elements).map(([id, node]) => ({
-  id, type: node.type, children: node.children, props: Object.entries(node.props).map(([name, value]) => ({ name, value })),
-})) };
+const prototype = {
+  title: 'Production fixture', brief: ['A static page with a heading.'], interactive: false,
+  html: '<main id="prototype-app"><h2>Production fixture</h2></main>', css: '', js: '', smoke: [],
+};
 const preferences = { 'pg-use-default': 'false', 'pg-provider': 'anthropic', 'pg-model': 'legacy-model',
   'pg-generation-mode': 'direct', 'pg-apikeys': '{"anthropic":"saved-test-key"}', 'pg-fast-mode': 'true' };
 let server, browser, base;
@@ -45,6 +46,10 @@ async function open(t, query = '', options = {}) {
   const calls = [], unexpected = [], errors = [];
   await context.route('**/*', async route => {
     const url = route.request().url();
+    if (url === base + '/api/choose') {
+      const body = route.request().postDataJSON();
+      return route.fulfill({ json: { model: 'fixture-jev', scores: Object.fromEntries(Object.keys(body.components).map(key => [key, 0.1])) } });
+    }
     if (url === base + '/api/generate') {
       const body = route.request().postDataJSON(), stage = body.response_format?.json_schema?.name;
       calls.push(stage);
@@ -52,7 +57,7 @@ async function open(t, query = '', options = {}) {
       assert.equal(body.response_format.json_schema.strict, true);
       assert.ok(!route.request().postData().includes('saved-test-key'));
       if (options.fail) return route.fulfill({ status: 429, json: { error: 'Rate limit exceeded' } });
-      const result = { hybrid_contract: contract, hybrid_draft: wire }[stage];
+      const result = stage === 'playground_prototype' ? prototype : null;
       if (!result) { unexpected.push(stage); return route.fulfill({ status: 500, json: { error: 'Unexpected stage' } }); }
       return route.fulfill({ contentType: 'text/event-stream', body: 'data: ' + JSON.stringify({ choices: [{ delta: { content: JSON.stringify(result) }, finish_reason: 'stop' }] }) + '\n\ndata: [DONE]\n\n' });
     }
@@ -76,7 +81,7 @@ async function open(t, query = '', options = {}) {
 async function submit(page) {
   await page.locator('#pg-prompt').fill('A static page titled Production fixture.');
   await page.locator('#pg-prompt').press('Enter');
-  await page.waitForFunction(() => window.__hybridLastRun && document.querySelector('.pg-chat').getAttribute('aria-busy') === 'false');
+  await page.waitForFunction(() => window.__prototypeLastRun && document.querySelector('.pg-chat').getAttribute('aria-busy') === 'false');
 }
 
 test('production removes both old entry implementations and the selector', async () => {
@@ -84,15 +89,14 @@ test('production removes both old entry implementations and the selector', async
   assert.doesNotMatch(html, /id="pg-generation-mode"|function generateRecursive\(/);
   assert.equal((html.match(/function generate\(/g) || []).length, 1);
   const entry = html.slice(html.indexOf('function generate()'), html.indexOf('function checkPreviewHealth('));
-  assert.match(entry, /return DaubHybridUI\.create/);
+  assert.match(entry, /return DaubPrototypeUI\.create/);
   assert.doesNotMatch(entry, /streamDefault|runBlockingGenerate|design=/);
-  assert.match(html, /playground-hybrid-ui\.js\?v=5/);
-  assert.match(html, /playground-behavior-recipes\.js\?v=2/);
-  assert.match(html, /playground-hybrid-checks\.js\?v=4/);
+  assert.match(html, /playground-prototype\.js\?v=/);
+  assert.match(html, /playground-prototype-runtime\.js\?v=/);
 });
 
 for (const query of ['', '?design=direct', '?design=snowflake', '?design=hybrid', '?react-chat&design=direct']) {
-  test('Hybrid is the sole generation route for ' + (query || 'the default URL'), async t => {
+  test('quick prototype is the sole generation route for ' + (query || 'the default URL'), async t => {
     const { page, calls } = await open(t, query);
     assert.equal(await page.locator('#pg-generation-mode').count(), 0);
     assert.equal(await page.locator('#pg-chat-mount').count(), 0);
@@ -100,26 +104,27 @@ for (const query of ['', '?design=direct', '?design=snowflake', '?design=hybrid'
       assert.equal(await page.locator('#' + id).isVisible(), false, id);
     }
     await submit(page);
-    assert.deepEqual(calls, ['hybrid_contract', 'hybrid_draft']);
-    assert.equal(await page.evaluate(() => window.__hybridLastRun.reason), 'complete');
+    assert.deepEqual(calls, ['playground_prototype']);
+    assert.equal(await page.evaluate(() => window.__prototypeLastRun.reason), 'complete');
     assert.equal(await page.locator('#pg-status').isVisible(), false);
-    assert.equal(await page.locator('#pg-chat-messages .pg-result-meta').filter({ hasText: 'Browser checks passed; review design' }).count(), 1);
-    assert.equal(await page.locator('#pg-chat-messages summary').filter({ hasText: 'Design brief' }).count(), 1);
+    assert.equal(await page.locator('#pg-chat-messages .pg-result-meta').filter({ hasText: 'Prototype ready' }).count(), 1);
+    assert.equal(await page.locator('#pg-chat-messages summary').filter({ hasText: 'Prototype brief' }).count(), 1);
     assert.deepEqual(await page.evaluate(keys => Object.fromEntries(keys.map(key => [key, localStorage.getItem(key)])), Object.keys(preferences)), preferences);
     await page.frameLocator('#pg-preview-frame').getByText('Production fixture', { exact: true }).waitFor();
     if (!query) {
       await page.screenshot({ path: '/tmp/daub-production-desktop.png' });
       await page.reload();
-      assert.equal(await page.locator('#pg-chat-messages summary').filter({ hasText: 'Design brief' }).count(), 1);
-      assert.deepEqual(calls, ['hybrid_contract', 'hybrid_draft']);
+      assert.equal(await page.locator('#pg-chat-messages summary').filter({ hasText: 'Prototype brief' }).count(), 1);
+      assert.deepEqual(calls, ['playground_prototype']);
     }
   });
 }
 
-test('URL prompt auto-submit also uses Hybrid', async t => {
+test('URL prompt auto-submit also uses the quick prototype', async t => {
   const { page, calls } = await open(t, '?design=snowflake&prompt=Production%20fixture');
-  await page.waitForFunction(() => window.__hybridLastRun);
-  assert.deepEqual(calls, ['hybrid_contract', 'hybrid_draft']);
+  await page.waitForFunction(() => window.__prototypeLastRun);
+  assert.deepEqual(calls, ['playground_prototype']);
+  assert.equal(await page.evaluate(() => window.__prototypeLastRun.reason), 'complete');
 });
 
 test('unsupported key, attachment, paste and drop attempts reject without requests', async t => {
@@ -150,12 +155,15 @@ test('unsupported key, attachment, paste and drop attempts reject without reques
   assert.equal(await page.locator('#pg-img-strip').textContent(), '');
 });
 
-test('a provider limit stops Hybrid without a Direct fallback', async t => {
+test('a provider limit stops the quick prototype without a Direct fallback', async t => {
   const { page, calls } = await open(t, '?design=direct', { fail: true });
   await submit(page);
-  assert.deepEqual(calls, ['hybrid_contract']);
-  assert.equal(await page.evaluate(() => window.__hybridLastRun.reason), 'provider-error');
-  assert.equal(await page.locator('[data-hybrid-probe]').count(), 0);
+  assert.deepEqual(calls, ['playground_prototype']);
+  assert.equal(await page.evaluate(() => window.__prototypeLastRun.reason), 'provider-error');
+  assert.equal(await page.evaluate(() => window.__prototypeLastRun.requests), 1);
+  assert.match(await page.evaluate(() => window.__prototypeLastRun.error), /429|rate limit/i);
+  assert.equal(await page.locator('#pg-chat-messages .pg-result-meta').innerText(), 'Provider limit reached: Rate limit exceeded');
+  assert.equal(await page.locator('[data-prototype-probe]').count(), 0);
 });
 
 test('saved legacy JSON renders and exports without generating or losing custom code', async t => {

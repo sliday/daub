@@ -6,8 +6,9 @@
 // generating text, so it only works on /api/alpha/decisions (not chat/completions).
 // We ask one yes/no ("noul") question per component, all in one request.
 
-// Pinned version: an alias can shift probabilities (and the tuned 0.45 threshold) under us. Re-probe before bumping.
+// Keep existing judge callers pinned; component selection follows the requested latest alias.
 const MODEL = 'typesafe/jev-1.13-20260917';
+const PICKER_MODEL = '~typesafe/jev-latest';
 const MAX_PROMPT = 4000;
 const MAX_COMPONENTS = 120;
 const MAX_DESC = 400;
@@ -60,7 +61,7 @@ export async function onRequestPost(context) {
   }
 
   try {
-    return json(await decideComponents({ prompt, components: comps, apiKey: env.OPENROUTER_API_KEY }), 200);
+    return json(await decideComponents({ prompt, components: comps, apiKey: env.OPENROUTER_API_KEY, signal: request.signal }), 200);
   } catch (e) {
     return json({ error: (e && e.message) || 'Upstream error' }, (e && e.status) || 502);
   }
@@ -74,7 +75,7 @@ function fail(message, status) {
 
 // Reusable Jev call (also used by functions/api/mcp.js). Resolves to { model, scores, usage };
 // throws an Error with .status (400 bad name, 500 no key, 502/504 upstream, or upstream's status).
-export async function decideComponents({ prompt, components, apiKey, timeoutMs = 10_000, title = 'DAUB Playground' }) {
+export async function decideComponents({ prompt, components, apiKey, timeoutMs = 10_000, title = 'DAUB Playground', signal }) {
   const names = Object.keys(components || {});
   const questions = {};
   for (const name of names) {
@@ -91,20 +92,21 @@ export async function decideComponents({ prompt, components, apiKey, timeoutMs =
     };
   }
 
-  const data = await jevDecide({ state: { request: String(prompt).slice(0, MAX_PROMPT) }, questions, apiKey, timeoutMs, title });
+  const data = await jevDecide({ state: { request: String(prompt).slice(0, MAX_PROMPT) }, questions, apiKey, timeoutMs, title, signal, model: PICKER_MODEL });
 
   const scores = {};
   const answers = (data && data.answers) || {};
   for (const name of names) {
     const a = answers[name];
-    if (a && typeof a.noul === 'number') scores[name] = a.noul;
+    if (!a || a.type !== 'noul' || !Number.isFinite(a.noul) || a.noul < 0 || a.noul > 1) throw fail('Invalid component decision: ' + name, 502);
+    scores[name] = a.noul;
   }
-  return { model: (data && data.model) || MODEL, scores, usage: (data && data.usage) || null };
+  return { model: (data && data.model) || PICKER_MODEL, scores, usage: (data && data.usage) || null };
 }
 
 // One Decisions API round trip (also used by functions/api/assemble.js). Resolves to the
 // parsed response ({ model, answers, usage }); throws an Error with .status like decideComponents.
-export async function jevDecide({ state, questions, apiKey, timeoutMs = 10_000, title = 'DAUB Playground', signal }) {
+export async function jevDecide({ state, questions, apiKey, timeoutMs = 10_000, title = 'DAUB Playground', signal, model = MODEL }) {
   if (!apiKey) throw fail('Server misconfigured: missing API key', 500);
   if (signal?.aborted) throw fail('Request aborted', 499);
 
@@ -118,7 +120,7 @@ export async function jevDecide({ state, questions, apiKey, timeoutMs = 10_000, 
         'HTTP-Referer': 'https://daub.dev',
         'X-Title': title,
       },
-      body: JSON.stringify({ model: MODEL, state, questions }),
+      body: JSON.stringify({ model, state, questions }),
       signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)]) : AbortSignal.timeout(timeoutMs),
     });
   } catch (e) {

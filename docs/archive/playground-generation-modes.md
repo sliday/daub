@@ -38,17 +38,35 @@ those experiments in the team's eventual integration commit.
 
 ## Host contract
 
-`generate()` invokes `DaubHybridUI.create(host).generate(prompt)`. The existing
+`generate()` invokes `DaubPrototypeUI.create(host).generate(prompt)`. The existing
 host getters for `currentSpec`, `controller`, `stream`, `isDefaultMode` and
 `hasAttachments` remain. Tests can observe loading through
 `.pg-chat[aria-busy="true"]`; completion restores `aria-busy="false"`.
 `#pg-status` remains hidden, while the chat shows generation progress.
 
-`buildResultBubble` uses `DaubHybridUI.renderBrief` for a saved contract brief.
-The Hybrid UI owns brief validation and rendering; the host adds no script.
-Asset revisions: Hybrid UI `v=5`, Hybrid scheduler `v=3`, behavior recipes `v=2`,
-Hybrid checks `v=4`.
-No production build configuration changes accompany this retirement.
+`buildResultBubble` retains `DaubHybridUI.renderBrief` for saved contract briefs
+and displays the new prototype's five-point brief as escaped text. The quick
+prototype path returns markup, styling, behavior and smoke steps together. See
+`PIPELINE.md` for the active runtime and output APIs.
+
+## Contract-first Hybrid retirement
+
+Revision `f38b3f547b6b0208cb97bf36058d54f1308bf9f8` contains the last deployed
+contract-first host. That path planned requirements and journeys, generated a
+native layout, then compiled a recipe or generated a controller. Its mandatory
+stages delayed the first working interaction. The reported Tetris case contained
+a text board, a fabricated test control and no behavior program.
+
+The quick prototype path keeps a brief but includes it in the implementation
+response. It permits canvas and managed animation, and checks a short interaction
+in isolated frames. It allows at most one correction. Saved controller specs
+continue to use `playground-behavior.js`; the retired scheduler and contract
+validators remain available for reference and unit tests.
+
+`tests/archive/hybrid-browser.reference.mjs` preserves the old host integration
+assertions. It requires the contract-first host and does not run in the active
+suite. The new browser tests cover the replacement behavior rather than skipping
+failures or weakening assertions in the old tests.
 
 ## Verification and historical tests
 
@@ -97,5 +115,6 @@ that a legacy React URL uses Hybrid with one request on a mocked quota error.
 
 The 11 production-mode cases replace mode-selection integration coverage.
 Standalone Snowflake module tests remain active and unchanged. Current Hybrid
-coverage lives in `hybrid-browser.test.mjs` and `hybrid-contract.test.mjs`; `visual.mjs` still needs
+coverage lives in `prototype-browser.test.mjs`, `prototype-runtime.test.mjs`,
+`prototype-validation.test.mjs` and the retained `hybrid-contract.test.mjs`; `visual.mjs` still needs
 integration changes if used as a React-specific visual runner.

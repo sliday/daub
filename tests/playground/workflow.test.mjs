@@ -404,9 +404,13 @@ test('downloads HTML with custom JavaScript and declarative state', async (t) =>
   assert.equal(await page.evaluate(() => window.__daubState._state.count), 1);
 });
 
-test('legacy React URLs retain the vanilla composer and route generation to Hybrid', async (t) => {
+test('legacy React URLs retain the vanilla composer and route generation to the quick prototype', async (t) => {
   const page = await open(t, { query: '?react-chat&design=direct' });
   const stages = [];
+  await page.route('**/api/choose', route => {
+    const body = route.request().postDataJSON();
+    return route.fulfill({ json: { model: 'fixture-jev', scores: Object.fromEntries(Object.keys(body.components).map(key => [key, 0.1])) } });
+  });
   await page.route('**/api/generate', async route => {
     stages.push(route.request().postDataJSON().response_format?.json_schema?.name);
     await route.fulfill({ status: 429, json: { error: 'Fixture quota exceeded' } });
@@ -417,9 +421,12 @@ test('legacy React URLs retain the vanilla composer and route generation to Hybr
   assert.equal(await page.locator('script[src*="index.playground-chat.js"]').count(), 0);
   await page.locator('#pg-prompt').fill('Build a title');
   await page.locator('#pg-prompt').press('Enter');
-  await page.waitForFunction(() => window.__hybridLastRun);
-  assert.deepEqual(stages, ['hybrid_contract']);
-  assert.equal(await page.evaluate(() => window.__hybridLastRun.reason), 'provider-error');
+  await page.waitForFunction(() => window.__prototypeLastRun);
+  assert.deepEqual(stages, ['playground_prototype']);
+  assert.equal(await page.evaluate(() => window.__prototypeLastRun.reason), 'provider-error');
+  assert.equal(await page.evaluate(() => window.__prototypeLastRun.requests), 1);
+  assert.match(await page.evaluate(() => window.__prototypeLastRun.error), /429|quota/i);
+  assert.equal(await page.locator('#pg-chat-messages .pg-result-meta').innerText(), 'Provider limit reached: Fixture quota exceeded');
   await page.locator('#pg-stop-btn').waitFor({ state: 'hidden' });
 });
 

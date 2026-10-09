@@ -1057,6 +1057,10 @@
 <script src="playground-hybrid.js?v=3"></script>
 <script src="playground-hybrid-checks.js?v=4"></script>
 <script src="playground-hybrid-ui.js?v=5"></script>
+<script src="playground-prototype-runtime.js?v=1"></script>
+<script src="assets/vendor/tetris-core.js?v=1"></script>
+<script src="playground-prototype-engines.js?v=1"></script>
+<script src="playground-prototype.js?v=2"></script>
 <script>
 // ============================================================
 //  DAUB Playground — json-render Generative UI
@@ -1306,7 +1310,7 @@ function markRecursiveRegions(root, spec, state) {
   });
 }
 
-function buildIframeSrcdoc(theme, scheme) {
+function buildIframeSrcdoc(theme, scheme, exported, probeOnly) {
   var themeAttr = theme ? ' data-theme="' + esc(theme) + '"' : '';
   var schemeAttr = scheme ? ' data-scheme="' + esc(scheme) + '"' : '';
   return '<!DOCTYPE html><html lang="en"' + themeAttr + schemeAttr + '>'
@@ -1314,8 +1318,8 @@ function buildIframeSrcdoc(theme, scheme) {
     + '<base target="_blank">'
     + '<link rel="stylesheet" href="daub.css?v=3.20.6">'
     + '<script src="https://cdn.jsdelivr.net/npm/lucide@0.576.0/dist/umd/lucide.min.js" integrity="sha384-b05ba3pt6xaC7F4r130arhf8cF18GH/gKu9JDz/NMf+BhLlBVwIWUdAZSpf1IWRZ" crossorigin="anonymous"><\/script>'
-    + '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
-    + '<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js" integrity="sha384-Tha/42qsYmpYmQ07pX+nJzkKumO0BzKJxK/uzVc7xyBQxVCUgQBhQIG8L7vXK+9C" crossorigin="anonymous"><\/script>'
+    + (probeOnly ? '' : '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"><\/script>'
+    + '<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js" integrity="sha384-Tha/42qsYmpYmQ07pX+nJzkKumO0BzKJxK/uzVc7xyBQxVCUgQBhQIG8L7vXK+9C" crossorigin="anonymous"><\/script>')
     + '<style>html,body{margin:0;min-height:100%;}'
     + '.pg-iframe-empty{display:flex;align-items:center;justify-content:center;min-height:100vh;}'
     + '.pg-iframe-empty::after{content:attr(data-quote);'
@@ -1366,10 +1370,11 @@ function buildIframeSrcdoc(theme, scheme) {
     + '<script>'
     + collectPreviewGeometry.toString() + ';' + captureMeasuredPreview.toString() + ';' + markRecursiveRegions.toString() + ';'
     + 'var hybridProbe = ' + DaubHybridChecks.probe.toString() + ';'
+    + 'var prototypeProbe = ' + DaubPrototypeUI.probe.toString() + ';'
     + 'var root = document.getElementById("pg-iframe-root");'
     + 'var _previewSpec = null;'
     // Opaque-origin frame: reply only to the embedding origin
-    + 'var _po = ' + JSON.stringify(location.origin).replace(/[<>&\u2028\u2029]/g, function(c) { return '\\u' + ('000' + c.charCodeAt(0).toString(16)).slice(-4); }) + '; if (_po === "null") _po = "*";'
+    + 'var _po = ' + JSON.stringify(exported ? '*' : location.origin).replace(/[<>&\u2028\u2029]/g, function(c) { return '\\u' + ('000' + c.charCodeAt(0).toString(16)).slice(-4); }) + '; if (_po === "null") _po = "*";'
     // ---- Declarative State Engine (iframe runtime) ----
     + 'window.__initDaubState = function(root, sc) {'
     + '  var _ds = { _state: sc.initialState || {}, _subs: [] };'
@@ -1481,8 +1486,9 @@ function buildIframeSrcdoc(theme, scheme) {
     + 'window.addEventListener("message", function(e) {'
     + '  if (e.source !== window.parent || !e.data || !e.data.type) return;'
     + '  if (e.data.type === "hybrid-probe") hybridProbe(root, e.data, _po);'
+    + '  if (e.data.type === "prototype-probe") prototypeProbe(root, e.data, _po);'
     + '  if (e.data.type === "prototype-output" && (_po === "*" || e.origin === _po) && typeof e.data.requestId === "string" && e.data.requestId.length <= 80 && e.data.seq === _healthSeq) {'
-    + '    var result = null, failure = null; try { result = _outputController && _outputController === root.__daubBehaviorController ? _outputController.getOutput() : null; } catch (error) { failure = "Prototype output is unavailable"; }'
+    + '    var result = null, failure = null; try { result = _outputController && (_outputController === root.__daubBehaviorController || _outputController === window.DaubPrototype) ? _outputController.getOutput() : null; } catch (error) { failure = "Prototype output is unavailable"; }'
     + '    parent.postMessage({type:"prototype-output-result", requestId:e.data.requestId, seq:_healthSeq, output:result, error:failure}, _po);'
     + '  }'
     + '  if (e.data.type === "health") parent.postMessage({ type: "health", requestId: e.data.requestId, errors: window.__pgRuntimeErrors.slice() }, _po);'
@@ -1497,6 +1503,7 @@ function buildIframeSrcdoc(theme, scheme) {
     + '    _outputController = null;'
     + '    if (root.__daubBehaviorController) root.__daubBehaviorController.dispose();'
     + '    var priorController = root.__daubBehaviorController;'
+    + '    if (window.__daubPrototypeDispose) window.__daubPrototypeDispose();'
     + '    window.__pgRuntimeErrors = [];'
     + '    _healthSeq = e.data.seq;'
     + '    _previewSpec = e.data.spec || null;'
@@ -1529,6 +1536,9 @@ function buildIframeSrcdoc(theme, scheme) {
     + '      });'
     + '      slot.parentNode.replaceChild(t.content, slot);'
     + '    });'
+    + '    if (_previewSpec && _previewSpec.prototype && !root.querySelector("#prototype-app")) {'
+    + '      var app = root.querySelector(".pg-custom-html"); if (app) app.id = "prototype-app";'
+    + '    }'
     + '    parent.postMessage({ type: "html", data: root.innerHTML, seq: e.data.seq }, _po);'
     + '    markRecursiveRegions(root, _previewSpec, e.data.refinement);'
     + '    if (window.DAUB) { DAUB.init(root); if (DAUB.fixNestedRadius) DAUB.fixNestedRadius(root); }'
@@ -1538,6 +1548,7 @@ function buildIframeSrcdoc(theme, scheme) {
     + '    if (!e.data.inert && e.data.js && e.data.js.length) {'
     + '      executeCustomJS(root, e.data.js, function(error) { window.__pgReportError(error); console.error("CustomHTML JS error:", error); });'
     + '      if (_previewSpec && _previewSpec.hybrid && _previewSpec.hybrid.program && root.__daubBehaviorController !== priorController) _outputController = root.__daubBehaviorController;'
+    + '      if (_previewSpec && _previewSpec.prototype) _outputController = window.DaubPrototype;'
     + '    }'
     + '  }'
     + '  if (e.data.type === "theme") {'
@@ -1549,6 +1560,7 @@ function buildIframeSrcdoc(theme, scheme) {
     + '  if (e.data.type === "clear") {'
     + '    _outputController = null;'
     + '    if (root.__daubBehaviorController) root.__daubBehaviorController.dispose();'
+    + '    if (window.__daubPrototypeDispose) window.__daubPrototypeDispose();'
     + '    root.className = "pg-iframe-empty";'
     + '    root.innerHTML = "";'
     + '    document.documentElement.removeAttribute("data-theme");'
@@ -1605,6 +1617,12 @@ function buildIframeSrcdoc(theme, scheme) {
 function collectCustomJS(spec) {
   var jsItems = [];
   if (!spec || !spec.elements) return jsItems;
+  if (spec.prototype) {
+    var prototype = spec.elements[spec.root];
+    if (!prototype || !prototype.props || !prototype.props.js) return [];
+    var engine = /DaubPrototypeEngines/.test(prototype.props.js) ? DaubPrototypeEngines.toScript() + '\n' : '';
+    return [{ id: spec.root, code: engine + DaubPrototypeRuntime.toScript(prototype.props.js) }];
+  }
   if (spec.hybrid && spec.hybrid.program) return [{ id: spec.root, code: DaubBehavior.toScript(spec.hybrid.program) }];
   Object.keys(spec.elements).forEach(function(id) {
     var def = spec.elements[id];
@@ -1648,7 +1666,7 @@ var _prototypeOutputRequests = new Map();
 window.DaubPlayground = Object.freeze({
   getOutput: function() {
     return new Promise(function(resolve, reject) {
-      if (!currentSpec || !currentSpec.hybrid || !currentSpec.hybrid.program) { resolve(null); return; }
+      if (!currentSpec || !(currentSpec.hybrid && currentSpec.hybrid.program) && !currentSpec.prototype) { resolve(null); return; }
       if (!_previewReady || !$previewFrame.contentWindow) { reject(new Error('Preview is not ready')); return; }
       var requestId = crypto.randomUUID(), seq = _renderSeq;
       function finish(error, output) {
@@ -1945,7 +1963,7 @@ var LAYOUT_RULES = '# DAUB Layout Principles\n\n'
 + '| No visual hierarchy | Squint test — fix until it passes |';
 
 function stopGeneration() {
-  if (_abortCtrl) { _abortCtrl.abort(); _abortCtrl = null; }
+  if (_abortCtrl) _abortCtrl.abort();
 }
 
 function _cleanupCurrentStream() {
@@ -1998,6 +2016,7 @@ function loadSettings() {
     isDefaultMode = true;
     try { chatHistory = JSON.parse(sessionStorage.getItem('pg-chat-history') || '[]'); } catch(e2) { chatHistory = []; }
     try { currentSpec = JSON.parse(sessionStorage.getItem('pg-current-spec') || 'null'); } catch(e3) { currentSpec = null; }
+    try { specVersions = JSON.parse(sessionStorage.getItem('pg-spec-versions') || '[]'); if (!Array.isArray(specVersions)) specVersions = []; } catch(e4) { specVersions = []; }
   } catch(e) {}
 }
 
@@ -2021,6 +2040,7 @@ function saveChatState() {
     });
     sessionStorage.setItem('pg-chat-history', JSON.stringify(stripped));
     sessionStorage.setItem('pg-current-spec', currentSpec ? JSON.stringify(currentSpec) : 'null');
+    sessionStorage.setItem('pg-spec-versions', JSON.stringify(specVersions));
   } catch(e) {}
 }
 
@@ -2887,7 +2907,7 @@ function selfCheck(spec, screenshotDataUrl, signal, geometry) {
   .catch(function(e) { if (e.name === 'AbortError') return null; return null; });
 }
 
-// ---- Component picker: Jev decision model (typesafe/jev-1.13-20260917) via /api/choose ----
+// ---- Component picker: legacy helper using Jev latest via /api/choose ----
 // Asks one yes/no question per component and resolves to the picked type list,
 // or null (use the full catalog) on any failure, timeout, or empty pick.
 var PICK_CORE = ['Stack', 'Grid', 'Text', 'Card', 'Button', 'Icon', 'Separator'];
@@ -4034,7 +4054,7 @@ function buildResultBubble(bubble, spec, verIdx) {
   verSpan.className = 'pg-result-ver';
   verSpan.textContent = 'v' + (verIdx + 1);
   header.appendChild(verSpan);
-  header.appendChild(document.createTextNode(' \u00B7 ' + n + ' components'));
+  header.appendChild(document.createTextNode(' \u00B7 ' + (spec.prototype ? spec.prototype.title : n + ' components')));
   bubble.appendChild(header);
 
   // Meta: timestamp
@@ -4050,7 +4070,7 @@ function buildResultBubble(bubble, spec, verIdx) {
     if (t && ['Stack', 'Grid', 'Text', 'Separator'].indexOf(t) === -1) _useCounts[t] = (_useCounts[t] || 0) + 1;
   });
   var _top = Object.keys(_useCounts).sort(function(a, b) { return _useCounts[b] - _useCounts[a]; });
-  if (_top.length) {
+  if (_top.length && !spec.prototype) {
     var summary = document.createElement('div');
     summary.className = 'pg-result-summary';
     summary.textContent = _top.slice(0, 5).map(function(t) { return _useCounts[t] > 1 ? t + ' \u00D7' + _useCounts[t] : t; }).join(', ') + (_top.length > 5 ? ' +' + (_top.length - 5) + ' more' : '');
@@ -4096,6 +4116,14 @@ function buildResultBubble(bubble, spec, verIdx) {
 
   bubble.appendChild(actions);
   if (spec.hybrid && spec.hybrid.contract && spec.hybrid.contract.brief && window.DaubHybridUI) bubble.appendChild(DaubHybridUI.renderBrief(spec.hybrid.contract.brief));
+  if (spec.prototype && Array.isArray(spec.prototype.brief) && spec.prototype.brief.length) {
+    var brief = document.createElement('details');
+    var briefTitle = document.createElement('summary');
+    briefTitle.textContent = 'Prototype brief';
+    brief.appendChild(briefTitle);
+    spec.prototype.brief.forEach(function(point) { var p = document.createElement('p'); p.textContent = point; brief.appendChild(p); });
+    bubble.appendChild(brief);
+  }
 
   bubble.style.cursor = 'pointer';
   bubble.onclick = function(e) {
@@ -4200,8 +4228,8 @@ function spacingGeometry(geometry) {
 function generate() {
   var prompt = $prompt.value.trim();
   if (!prompt) return;
-  if (!window.DaubHybridUI) { showJsonError('Generation could not load. Reload the page to try again.'); return; }
-  return DaubHybridUI.create({
+  if (!window.DaubPrototypeUI) { showJsonError('Generation could not load. Reload the page to try again.'); return; }
+  return DaubPrototypeUI.create({
     mainGenOpts, AUTO_MODEL, recursiveRequestError, parseSseResponse, VALID_TYPES, COMP_PROPS,
     collectCustomJS, buildIframeSrcdoc, showJsonError, applyPromptViewport, chatHistory,
     addChatBubble, updateChatState, $prompt, hideJsonError, setLoading, GENERATED_DOM_CONTRACT,
@@ -4823,8 +4851,51 @@ document.querySelectorAll('.pg-viewport-btn').forEach(function(btn) {
 });
 
 // ---- Download HTML handler ----
+function mountPrototypeExport(frame, srcdoc, payload) {
+  var ready = false, initialized = false, invalidated = false, pending = new Map();
+  frame.addEventListener('load', function() {
+    ready = false;
+    if (initialized) {
+      invalidated = true;
+      pending.forEach(function(request) { clearTimeout(request.timer); request.reject(new Error('Prototype navigated away')); });
+      pending.clear();
+      return;
+    }
+    initialized = true;
+    frame.contentWindow.postMessage(payload, '*');
+  });
+  window.addEventListener('message', function(event) {
+    if (invalidated || event.source !== frame.contentWindow || !event.data) return;
+    if (event.data.type === 'html' && event.data.seq === payload.seq) ready = true;
+    if (event.data.type !== 'prototype-output-result' || event.data.seq !== payload.seq) return;
+    var request = pending.get(event.data.requestId);
+    if (!request) return;
+    clearTimeout(request.timer); pending.delete(event.data.requestId);
+    if (event.data.error) request.reject(new Error(event.data.error)); else request.resolve(event.data.output);
+  });
+  window.DaubPrototype = window.DaubPlayground = Object.freeze({ getOutput: function() {
+    return new Promise(function(resolve, reject) {
+      if (!ready) { reject(new Error('Prototype is not ready')); return; }
+      var id = crypto.randomUUID();
+      var timer = setTimeout(function() { pending.delete(id); reject(new Error('Prototype output request timed out')); }, 3000);
+      pending.set(id, { resolve: resolve, reject: reject, timer: timer });
+      frame.contentWindow.postMessage({ type: 'prototype-output', requestId: id, seq: payload.seq }, '*');
+    });
+  } });
+  frame.srcdoc = srcdoc;
+}
 function buildExportHtml() {
   if (!currentSpec) return '';
+  if (currentSpec.prototype) {
+    var documentSource = buildIframeSrcdoc(_pgPreviewTheme || currentSpec.theme, _pgPreviewScheme, true)
+      .replace('<base target="_blank">', '<base href="https://daub.dev/" target="_blank">');
+    var initial = { type: 'render', seq: crypto.randomUUID(), html: '', spec: currentSpec, js: collectCustomJS(currentSpec) };
+    var boot = '(' + mountPrototypeExport.toString() + ')(document.getElementById("prototype-preview"),'
+      + JSON.stringify(documentSource).replace(/</g, '\\u003c') + ',' + JSON.stringify(initial).replace(/</g, '\\u003c') + ');';
+    return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
+      + '<title>' + esc(currentSpec.prototype.title || 'DAUB prototype') + '</title><style>html,body{margin:0;height:100%}iframe{display:block;border:0;width:100%;height:100%}</style></head>'
+      + '<body><iframe id="prototype-preview" title="Prototype" sandbox="allow-scripts"></iframe><script>' + boot + '<\/script></body></html>';
+  }
   var payload = JSON.stringify({ type: 'render', html: _iframeHtmlCache, spec: currentSpec, js: collectCustomJS(currentSpec), stateConfig: collectStateConfig(currentSpec) }).replace(/</g, '\\u003c');
   return buildIframeSrcdoc(_pgPreviewTheme || currentSpec.theme, _pgPreviewScheme)
     .replace('<base target="_blank">', '<base href="https://daub.dev/" target="_blank">')
@@ -4953,6 +5024,7 @@ $prompt.addEventListener('input', function() {
 // ---- New Chat ----
 $newChat.addEventListener('click', function() {
   stopGeneration();
+  _abortCtrl = null;
   if (_isLoading) _cleanupCurrentStream();
   chatHistory = [];
   currentSpec = null;

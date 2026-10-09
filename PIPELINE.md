@@ -2,34 +2,84 @@
 
 ## Production flow
 
-Hybrid is the only production generation path. Old `design=direct` and
+Quick prototyping is the Playground's goal. Hybrid is the only production entry. Old `design=direct` and
 `design=snowflake` URLs open the same Playground without a mode selector.
 [Archived modes](docs/archive/playground-generation-modes.md) document Direct
 and Recursive for research; they cannot run through the production UI. Saved
 specifications and exports remain readable.
 
 ```text
-Prompt -> structured design brief + acceptance contract
-       -> validate screens, flow, bindings and journeys
-       -> complete native design -> measured layout repair
-       -> compile recipe or generate controller
-       -> exercise journeys and inspect reached screens
-       -> bounded correction -> preview and export
+Prompt -> Jev component selection (one batch)
+       -> one structured response: short brief + HTML + CSS + behavior + smoke steps
+       -> validate -> publish a usable prototype
+       -> isolated browser checks at 390px and 1200px
+       -> at most one correction -> preserve preview, JSON and export
 ```
 
-The strict contract includes `brief` in the existing planning response. It defines
-scope, assumptions, screens/states, transitions, edge cases and public outputs.
-Validation caps it at 14,000 characters, six screens, twelve transitions, six edge
-cases and eight output fields. Initial screens name rendered target IDs; later
-screens name a frozen journey whose final state exposes their anchors. Validation
-adds explicit visibility assertions, and geometry checks inspect reached screens
-at 390px and 1200px, including results. Repairs preserve the screen anchor IDs.
+`playground-prototype.js` uses `openrouter/auto` with a strict `playground_prototype`
+schema. The proxy retains `provider.require_parameters`. The five-point brief
+shares the generation response with the implementation. One correction can repair
+malformed output or browser failures; HTTP/provider errors stop the run. Each
+generation request has a 75-second client deadline. The default path makes one
+Jev request and one generation request, with at most one generation correction.
+It does not run a separate planner, visual judge or coding stage.
 
-The chat renders the brief as escaped text in a collapsible section and preserves
-it in saved specs. No additional model call plans or formats the document.
-Edge-case references do not prove that a model chose adequate assertions; human
-review still checks scope and semantic coverage. Browser evidence cannot certify
-aesthetic quality.
+The picker calls `/api/choose`, which uses `~typesafe/jev-latest` through the
+OpenRouter Decisions API. One batch evaluates the 91 entries in `components.json`
+with independent yes/no questions. The client takes up to eight scores at or
+above 0.45, ordered by relevance, and gives the generator their real class names,
+notes and complete HTML examples within a 12,000-character budget. A large
+example can fall back to class/notes guidance; the picker never truncates HTML.
+Selections guide reuse without forbidding custom layout, canvas or base controls.
+The picker includes the prior prototype title/brief for edits, and corrections
+reuse the same selection rather than spending another decision request.
+
+Selection has a five-second client deadline. Invalid or incomplete scores,
+network failures and timeouts show a fallback notice and keep generation
+available. HTTP 402/429 stops before generation without retry. Stop cancels the
+picker, and stale results cannot start a new generator. Other judge callers keep
+their pinned model. The response records the resolved selection model because
+the requested alias can move to a newer Jev version.
+
+The response includes a body fragment, scoped CSS, a JavaScript function body and
+up to twelve smoke steps. Interactive prototypes must include an action and an
+assertion. The browser checks runtime errors, page overflow and visible canvas
+content, then exercises the supplied actions. Corrections retain the original
+checks. Independent frames protect the user's current preview state. These checks
+do not prove complete functionality, suitable visual design or adequate test
+coverage. Review the core workflow before using a prototype with other people.
+
+Both viewport checks run concurrently, with a limit of two opaque frames. Probes
+load DAUB and icons but omit screenshot libraries; visible previews and exports
+retain them. Stop removes both probes. Smoke steps wait after input actions and
+explicit waits, not after read-only assertions. Generation includes engine
+instructions only for Tetris requests or edits to existing engine-backed code.
+Streaming progress updates use a 250ms throttle; phase changes update immediately.
+
+`window.__prototypeLastTiming` records per-request input/output character counts,
+first response byte and response completion times, the first preview publication
+time and cumulative browser-check time. Its `selection` field records status,
+resolved model, selected component names and elapsed time. Times use milliseconds. First byte can
+include SSE metadata; preview publication does not measure first paint. Failed
+or canceled requests can retain null timings. Diagnostics contain no generated
+content or credentials and do not change the saved specification. Use recorded
+responses to compare client time separately from provider generation latency.
+
+`playground-prototype-runtime.js` runs generated code inside an opaque iframe.
+The function receives `container` and `api`: `on(target, event, handler)`,
+`every(milliseconds, callback)`, `frame(callback)` and `publish(object)`.
+The runtime disposes listeners and timers on replacement and pauses scheduled
+work while the document is hidden. Code can return a cleanup function. The iframe
+provides synchronous `window.DaubPrototype.getOutput()` and `subscribe(listener)`;
+the host provides asynchronous `window.DaubPlayground.getOutput()`. New exports
+embed an opaque iframe and expose asynchronous `DaubPrototype.getOutput()` in the
+outer document. Shared code still requires consent. The sandbox isolates the
+parent origin; managed APIs are a lifecycle aid, not a security boundary against
+arbitrary generated JavaScript or CPU exhaustion.
+
+New specs retain HTML, CSS and raw JS in a `CustomHTML` root plus `prototype`
+metadata. Existing component specs, Hybrid controllers and saved exports remain
+readable. The chat displays the escaped brief in a collapsible section.
 
 All references are to `playground.html` unless noted.
 
@@ -82,7 +132,11 @@ Spec rendered in preview iframe
   Done
 ```
 
-## Hybrid implementation
+## Historical contract-first Hybrid implementation
+
+The following records the retired contract-first pipeline in
+`playground-hybrid-ui.js`. The production entry no longer calls it. Keep this
+reference and its unit coverage while saved designs still use its controller format.
 
 Open `/playground.html`. Hybrid accepts text prompts through DAUB AI and
 keeps `openrouter/auto` with strict schemas and required provider parameters.
