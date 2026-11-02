@@ -3042,6 +3042,11 @@ textarea.db-field__input {
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
+  /* overflow-x: auto computes overflow-y to auto too, which would clip a focused tab's
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space and pull it back with
+     an equal negative margin so the box's own footprint in the page is unchanged. */
+  padding-block: var(--db-focus-ring-width);
+  margin-block: calc(var(--db-focus-ring-width) * -1);
 }
 
 .db-tabs__tab {
@@ -3175,6 +3180,11 @@ textarea.db-field__input {
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
+  /* overflow-x: auto computes overflow-y to auto too, which would clip a focused button's
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space and pull it back with
+     an equal negative margin so the box's own footprint in the page is unchanged. */
+  padding-block: var(--db-focus-ring-width);
+  margin-block: calc(var(--db-focus-ring-width) * -1);
 }
 
 .db-pagination__btn {
@@ -4817,6 +4827,11 @@ meter.db-meter::-moz-meter-bar {
   /* A squeezed column scrolls the button row instead of letting buttons spill past it.
      min-width: 0 overrides the flex/grid item's automatic min-content size, which
      otherwise keeps the box at its unscrolled width and defeats the scrollbar. */
+  /* overflow-x: auto computes overflow-y to auto too, which would clip a focused button's
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space and pull it back with
+     an equal negative margin so the box's own footprint in the page is unchanged. */
+  padding-block: var(--db-focus-ring-width);
+  margin-block: calc(var(--db-focus-ring-width) * -1);
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
@@ -5721,6 +5736,11 @@ meter.db-meter::-moz-meter-bar {
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
+  /* overflow-x: auto computes overflow-y to auto too, which would clip a focused item's
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space and pull it back with
+     an equal negative margin so the box's own footprint in the page is unchanged. */
+  padding-block: var(--db-focus-ring-width);
+  margin-block: calc(var(--db-focus-ring-width) * -1);
 }
 .db-nav-menu--vertical {
   flex-direction: column;
