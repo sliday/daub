@@ -3035,7 +3035,10 @@ textarea.db-field__input {
   gap: var(--db-space-1);
   border-bottom: 1px solid var(--db-sand);
   padding: 0 var(--db-space-1);
-  /* A squeezed column scrolls the tab row instead of letting tabs spill past it */
+  /* A squeezed column scrolls the tab row instead of letting tabs spill past it.
+     min-width: 0 overrides the flex/grid item's automatic min-content size, which
+     otherwise keeps the box at its unscrolled width and defeats the scrollbar. */
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
@@ -3165,7 +3168,10 @@ textarea.db-field__input {
   gap: var(--db-space-1);
   font-family: var(--db-font-ui);
   font-size: 0.875rem;
-  /* A squeezed column or card scrolls the page list instead of letting it spill past its own box */
+  /* A squeezed column or card scrolls the page list instead of letting it spill past its own box.
+     min-width: 0 overrides the flex/grid item's automatic min-content size, which otherwise
+     keeps the box at its unscrolled width and defeats the scrollbar (e.g. Card's flex body). */
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
@@ -4781,7 +4787,10 @@ meter.db-meter::-moz-meter-bar {
   border: 1px solid var(--db-sand);
   border-radius: var(--db-radius-2);
   max-width: 100%;
-  /* A squeezed column scrolls the segment row instead of letting segments spill past it */
+  /* A squeezed column scrolls the segment row instead of letting segments spill past it.
+     min-width: 0 overrides the flex/grid item's automatic min-content size, which
+     otherwise keeps the box at its unscrolled width and defeats the scrollbar. */
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
@@ -4805,7 +4814,10 @@ meter.db-meter::-moz-meter-bar {
   display: inline-flex;
   gap: 0;
   max-width: 100%;
-  /* A squeezed column scrolls the button row instead of letting buttons spill past it */
+  /* A squeezed column scrolls the button row instead of letting buttons spill past it.
+     min-width: 0 overrides the flex/grid item's automatic min-content size, which
+     otherwise keeps the box at its unscrolled width and defeats the scrollbar. */
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
@@ -5702,7 +5714,10 @@ meter.db-meter::-moz-meter-bar {
   display: flex;
   align-items: center;
   gap: var(--db-space-1);
-  /* A squeezed column or navbar scrolls the item row instead of letting it spill into a neighbour */
+  /* A squeezed column or navbar scrolls the item row instead of letting it spill into a neighbour.
+     min-width: 0 overrides the flex/grid item's automatic min-content size, which
+     otherwise keeps the box at its unscrolled width and defeats the scrollbar. */
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
