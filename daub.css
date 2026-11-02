@@ -3035,6 +3035,20 @@ textarea.db-field__input {
   gap: var(--db-space-1);
   border-bottom: 1px solid var(--db-sand);
   padding: 0 var(--db-space-1);
+  /* A squeezed column scrolls the tab row instead of letting tabs spill past it.
+     min-width: 0 overrides the flex/grid item's automatic min-content size, which
+     otherwise keeps the box at its unscrolled width and defeats the scrollbar. */
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--db-sand) transparent;
+  /* overflow-x: auto computes overflow-y to auto too, which would clip a focused tab's
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space on top only — the
+     bottom keeps its original 0 padding so .db-tabs__tab's margin-bottom: -1px still lands
+     the active tab's border-bottom on this list's own border-bottom instead of leaving a
+     gap. No compensating negative margin: that pulled this box above .db-tabs's own top
+     edge, since .db-tabs has no padding of its own to absorb it. */
+  padding-top: var(--db-focus-ring-width);
 }
 
 .db-tabs__tab {
@@ -3161,6 +3175,18 @@ textarea.db-field__input {
   gap: var(--db-space-1);
   font-family: var(--db-font-ui);
   font-size: 0.875rem;
+  /* A squeezed column or card scrolls the page list instead of letting it spill past its own box.
+     min-width: 0 overrides the flex/grid item's automatic min-content size, which otherwise
+     keeps the box at its unscrolled width and defeats the scrollbar (e.g. Card's flex body). */
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--db-sand) transparent;
+  /* overflow-x: auto computes overflow-y to auto too, which would clip a focused button's
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space. No compensating
+     negative margin: that pulls this box above its own parent's top edge when the parent
+     (e.g. Card's flex body) has no padding to absorb it, causing a new child_overflow. */
+  padding-block: var(--db-focus-ring-width);
 }
 
 .db-pagination__btn {
@@ -4772,6 +4798,14 @@ meter.db-meter::-moz-meter-bar {
   background: var(--db-cream-dark);
   border: 1px solid var(--db-sand);
   border-radius: var(--db-radius-2);
+  max-width: 100%;
+  /* A squeezed column scrolls the segment row instead of letting segments spill past it.
+     min-width: 0 overrides the flex/grid item's automatic min-content size, which
+     otherwise keeps the box at its unscrolled width and defeats the scrollbar. */
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--db-sand) transparent;
 }
 
 .db-toggle-group .db-toggle {
@@ -4791,6 +4825,19 @@ meter.db-meter::-moz-meter-bar {
 .db-btn-group {
   display: inline-flex;
   gap: 0;
+  max-width: 100%;
+  /* A squeezed column scrolls the button row instead of letting buttons spill past it.
+     min-width: 0 overrides the flex/grid item's automatic min-content size, which
+     otherwise keeps the box at its unscrolled width and defeats the scrollbar. */
+  /* overflow-x: auto computes overflow-y to auto too, which would clip a focused button's
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space. No compensating
+     negative margin: that pulls this box above its own parent's top edge when the parent
+     has no padding to absorb it, causing a new child_overflow. */
+  padding-block: var(--db-focus-ring-width);
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--db-sand) transparent;
 }
 
 .db-btn-group .db-btn {
@@ -5684,6 +5731,18 @@ meter.db-meter::-moz-meter-bar {
   display: flex;
   align-items: center;
   gap: var(--db-space-1);
+  /* A squeezed column or navbar scrolls the item row instead of letting it spill into a neighbour.
+     min-width: 0 overrides the flex/grid item's automatic min-content size, which
+     otherwise keeps the box at its unscrolled width and defeats the scrollbar. */
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--db-sand) transparent;
+  /* overflow-x: auto computes overflow-y to auto too, which would clip a focused item's
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space. No compensating
+     negative margin: that pulls this box above its own parent's top edge when the parent
+     (e.g. Navbar) has no padding to absorb it, causing a new child_overflow. */
+  padding-block: var(--db-focus-ring-width);
 }
 .db-nav-menu--vertical {
   flex-direction: column;
