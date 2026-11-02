@@ -3043,10 +3043,12 @@ textarea.db-field__input {
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
   /* overflow-x: auto computes overflow-y to auto too, which would clip a focused tab's
-     outer box-shadow ring (--db-focus-ring-width). Reserve that space and pull it back with
-     an equal negative margin so the box's own footprint in the page is unchanged. */
-  padding-block: var(--db-focus-ring-width);
-  margin-block: calc(var(--db-focus-ring-width) * -1);
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space on top only — the
+     bottom keeps its original 0 padding so .db-tabs__tab's margin-bottom: -1px still lands
+     the active tab's border-bottom on this list's own border-bottom instead of leaving a
+     gap. No compensating negative margin: that pulled this box above .db-tabs's own top
+     edge, since .db-tabs has no padding of its own to absorb it. */
+  padding-top: var(--db-focus-ring-width);
 }
 
 .db-tabs__tab {
@@ -3181,10 +3183,10 @@ textarea.db-field__input {
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
   /* overflow-x: auto computes overflow-y to auto too, which would clip a focused button's
-     outer box-shadow ring (--db-focus-ring-width). Reserve that space and pull it back with
-     an equal negative margin so the box's own footprint in the page is unchanged. */
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space. No compensating
+     negative margin: that pulls this box above its own parent's top edge when the parent
+     (e.g. Card's flex body) has no padding to absorb it, causing a new child_overflow. */
   padding-block: var(--db-focus-ring-width);
-  margin-block: calc(var(--db-focus-ring-width) * -1);
 }
 
 .db-pagination__btn {
@@ -4828,10 +4830,10 @@ meter.db-meter::-moz-meter-bar {
      min-width: 0 overrides the flex/grid item's automatic min-content size, which
      otherwise keeps the box at its unscrolled width and defeats the scrollbar. */
   /* overflow-x: auto computes overflow-y to auto too, which would clip a focused button's
-     outer box-shadow ring (--db-focus-ring-width). Reserve that space and pull it back with
-     an equal negative margin so the box's own footprint in the page is unchanged. */
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space. No compensating
+     negative margin: that pulls this box above its own parent's top edge when the parent
+     has no padding to absorb it, causing a new child_overflow. */
   padding-block: var(--db-focus-ring-width);
-  margin-block: calc(var(--db-focus-ring-width) * -1);
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
@@ -5737,10 +5739,10 @@ meter.db-meter::-moz-meter-bar {
   scrollbar-width: thin;
   scrollbar-color: var(--db-sand) transparent;
   /* overflow-x: auto computes overflow-y to auto too, which would clip a focused item's
-     outer box-shadow ring (--db-focus-ring-width). Reserve that space and pull it back with
-     an equal negative margin so the box's own footprint in the page is unchanged. */
+     outer box-shadow ring (--db-focus-ring-width). Reserve that space. No compensating
+     negative margin: that pulls this box above its own parent's top edge when the parent
+     (e.g. Navbar) has no padding to absorb it, causing a new child_overflow. */
   padding-block: var(--db-focus-ring-width);
-  margin-block: calc(var(--db-focus-ring-width) * -1);
 }
 .db-nav-menu--vertical {
   flex-direction: column;
