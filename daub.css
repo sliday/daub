@@ -2164,6 +2164,9 @@ a:hover { color: var(--db-clay); }
   line-height: 1.2;
   font-variation-settings: 'WONK' 1;
   text-shadow: var(--db-text-emboss);
+  /* An unbreakable token (email, URL, API key) wraps instead of running past the box;
+     same safety net already applied per-component elsewhere (toast, attachment, chat). */
+  overflow-wrap: anywhere;
 }
 
 .db-h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: var(--db-space-5); }
@@ -2171,7 +2174,7 @@ a:hover { color: var(--db-clay); }
 .db-h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: var(--db-space-3); }
 .db-h4 { font-size: 1rem; font-weight: 600; margin-bottom: var(--db-space-2); }
 
-.db-body { font-family: var(--db-font-body); font-size: 1rem; line-height: 1.6; }
+.db-body { font-family: var(--db-font-body); font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
 .db-body--sm { font-size: 0.875rem; }
 .db-body--xs { font-size: 0.75rem; }
 
@@ -3351,12 +3354,14 @@ textarea.db-field__input {
   font-weight: 600;
   color: var(--db-ink);
   text-shadow: var(--db-text-emboss);
+  overflow-wrap: anywhere;
 }
 
 .db-card__desc {
   font-size: 0.875rem;
   color: var(--db-warm-gray);
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .db-card__footer {
@@ -3494,12 +3499,14 @@ a.db-card[href]:active {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--db-charcoal);
+  overflow-wrap: anywhere;
 }
 
 .db-list__secondary {
   font-size: 0.8125rem;
   color: var(--db-warm-gray);
   margin-top: 2px;
+  overflow-wrap: anywhere;
 }
 
 /* ------------------------------------------------------------
