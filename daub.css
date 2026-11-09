@@ -5734,7 +5734,7 @@ meter.db-meter::-moz-meter-bar {
   position: sticky;
   top: 0;
   z-index: 1000;
-  height: 56px;
+  min-height: 56px;
   padding: 0 var(--db-space-5);
   background: var(--db-color-surface);
   border-bottom: 1px solid var(--db-border, var(--db-sand));
