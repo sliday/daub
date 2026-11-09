@@ -1049,7 +1049,11 @@ function DAUB_RENDER_FACTORY() {
       if (control && lbl) {
         if (!control.id) control.id = 'db-field-' + Math.random().toString(36).slice(2, 8);
         el.querySelectorAll('label').forEach(function(label) {
-          if (label !== lbl && label.htmlFor === control.id) label.remove();
+          // Only drop a child's own label when it duplicates Field's label text
+          // (e.g. CustomSelect's hidden-select label echoing the trigger text).
+          // A child component can carry a *different* label of its own (Select's
+          // "label" prop, DatePicker's "label" prop) — that text must survive.
+          if (label !== lbl && label.htmlFor === control.id && label.textContent.trim().toLowerCase() === lbl.textContent.trim().toLowerCase()) label.remove();
         });
         lbl.htmlFor = control.id;
         control.removeAttribute('aria-label');
