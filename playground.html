@@ -5986,7 +5986,10 @@ RENDERERS.Stack = function(p, ch, els, d) {
   var isH = p.direction === 'horizontal';
   el.style.display = 'flex';
   el.style.flexDirection = isH ? 'row' : 'column';
-  el.style.gap = 'var(--db-space-' + Math.max(0, Math.min(6, p.gap != null ? p.gap : 2)) + ')';
+  var gapIdx = Math.max(0, Math.min(6, p.gap != null ? p.gap : 2));
+  // See daub-render.js Stack for why 'between'/'evenly' gets a gap floor.
+  if ((p.justify === 'between' || p.justify === 'evenly') && gapIdx < 2) gapIdx = 2;
+  el.style.gap = 'var(--db-space-' + gapIdx + ')';
   if (isH && p.wrap !== false) el.style.flexWrap = 'wrap';
   if (p.justify === 'center') el.style.justifyContent = 'center';
   else if (p.justify === 'end') el.style.justifyContent = 'flex-end';
