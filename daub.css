@@ -123,6 +123,11 @@
   /* Text color for accent backgrounds — always light for readability on terracotta/accent */
   --db-on-accent: var(--db-white);
 
+  /* Badge background: --db-error alone is too light for AA text in many themes
+     (notification badge text is always --db-on-accent, never themeable on its own).
+     Themes where --db-error fails override this with a darker literal below. */
+  --db-badge-error-bg: var(--db-error);
+
   /* Per-element texture */
   --db-element-texture: none;
   --db-element-texture-opacity: 0;
@@ -547,6 +552,7 @@ body::before {
   --db-ink: #F5F0E1;
   --db-white: #363029;
   --db-error: #E05A4A;
+  --db-badge-error-bg: #923B30;
   --db-success: #8BAF8B;
   --db-warning: #E4B85C;
 
@@ -632,6 +638,7 @@ body::before {
   --db-ink: #E8E2D6;
   --db-white: #262220;
   --db-error: #D04A3A;
+  --db-badge-error-bg: #873026;
   --db-success: #7A9A7A;
   --db-warning: #D4A040;
 
@@ -678,6 +685,7 @@ body::before {
   --db-ink: #073642;
   --db-white: #fdf6e3;
   --db-error: #dc322f;
+  --db-badge-error-bg: #8F211F;
   --db-success: #859900;
   --db-warning: #b58900;
 
@@ -753,6 +761,7 @@ body::before {
   --db-ink: #E8ECF4;
   --db-white: #242840;
   --db-error: #D06060;
+  --db-badge-error-bg: #873E3E;
   --db-success: #70A880;
   --db-warning: #D4B060;
 
@@ -791,6 +800,7 @@ body::before {
   --db-ink: #1C2030;
   --db-white: #F5F7FC;
   --db-error: #C05050;
+  --db-badge-error-bg: #7D3434;
   --db-success: #508868;
   --db-warning: #B89840;
 
@@ -828,6 +838,7 @@ body::before {
   --db-ink: #F0E4D4;
   --db-white: #2A2018;
   --db-error: #E06040;
+  --db-badge-error-bg: #923E2A;
   --db-success: #80A870;
   --db-warning: #E0A840;
 
@@ -939,6 +950,7 @@ body::before {
   --db-ink: #E8E8E8;
   --db-white: #222222;
   --db-error: #D05050;
+  --db-badge-error-bg: #873434;
   --db-success: #70A070;
   --db-warning: #C0A040;
 
@@ -978,6 +990,7 @@ body::before {
   --db-ink: #F8F8F2;
   --db-white: #343746;
   --db-error: #FF5555;
+  --db-badge-error-bg: #A63737;
   --db-success: #50FA7B;
   --db-warning: #F1FA8C;
   --db-shadow-rgb: 15,15,25;
@@ -1046,6 +1059,7 @@ body::before {
   --db-ink: #ECEFF4;
   --db-white: #3B4252;
   --db-error: #BF616A;
+  --db-badge-error-bg: #7C3F45;
   --db-success: #A3BE8C;
   --db-warning: #EBCB8B;
   --db-shadow-rgb: 20,23,30;
@@ -1081,6 +1095,7 @@ body::before {
   --db-ink: #2E3440;
   --db-white: #F0F3F8;
   --db-error: #BF616A;
+  --db-badge-error-bg: #7C3F45;
   --db-success: #A3BE8C;
   --db-warning: #D08770;
   --db-shadow-rgb: 46,52,64;
@@ -1116,6 +1131,7 @@ body::before {
   --db-ink: #ABB2BF;
   --db-white: #333842;
   --db-error: #E06C75;
+  --db-badge-error-bg: #92464C;
   --db-success: #98C379;
   --db-warning: #E5C07B;
   --db-shadow-rgb: 18,20,24;
@@ -1151,6 +1167,7 @@ body::before {
   --db-ink: #383A42;
   --db-white: #FFFFFF;
   --db-error: #E4564A;
+  --db-badge-error-bg: #943830;
   --db-success: #50A14F;
   --db-warning: #C18401;
   --db-shadow-rgb: 56,58,66;
@@ -1186,6 +1203,7 @@ body::before {
   --db-ink: #F8F8F2;
   --db-white: #333428;
   --db-error: #F92672;
+  --db-badge-error-bg: #A2194A;
   --db-success: #A6E22E;
   --db-warning: #E6DB74;
   --db-shadow-rgb: 15,15,12;
@@ -1254,6 +1272,7 @@ body::before {
   --db-ink: #FBF1C7;
   --db-white: #3C3836;
   --db-error: #FB4934;
+  --db-badge-error-bg: #A32F22;
   --db-success: #B8BB26;
   --db-warning: #FABD2F;
   --db-shadow-rgb: 15,15,14;
@@ -1324,6 +1343,7 @@ body::before {
   --db-ink: #D6DEEB;
   --db-white: #0B2942;
   --db-error: #EF5350;
+  --db-badge-error-bg: #9B3634;
   --db-success: #22DA6E;
   --db-warning: #ADDB67;
   --db-shadow-rgb: 1,10,20;
@@ -1359,6 +1379,7 @@ body::before {
   --db-ink: #403F53;
   --db-white: #FFFFFF;
   --db-error: #DE3D3B;
+  --db-badge-error-bg: #902826;
   --db-success: #08916A;
   --db-warning: #C96765;
   --db-shadow-rgb: 64,63,83;
@@ -1426,6 +1447,7 @@ body::before {
   --db-ink: #C9D1D9;
   --db-white: #161B22;
   --db-error: #F85149;
+  --db-badge-error-bg: #A1352F;
   --db-success: #3FB950;
   --db-warning: #D29922;
   --db-shadow-rgb: 5,8,12;
@@ -1493,6 +1515,7 @@ body::before {
   --db-ink: #CDD6F4;
   --db-white: #2A2A3C;
   --db-error: #F38BA8;
+  --db-badge-error-bg: #9E5A6D;
   --db-success: #A6E3A1;
   --db-warning: #F9E2AF;
   --db-shadow-rgb: 12,12,20;
@@ -1527,6 +1550,7 @@ body::before {
   --db-ink: #C0CAF5;
   --db-white: #24283B;
   --db-error: #F7768E;
+  --db-badge-error-bg: #A14D5C;
   --db-success: #9ECE6A;
   --db-warning: #E0AF68;
   --db-shadow-rgb: 12,12,20;
@@ -1594,6 +1618,7 @@ body::before {
   --db-ink: #A6ACCD;
   --db-white: #343848;
   --db-error: #F07178;
+  --db-badge-error-bg: #9C494E;
   --db-success: #C3E88D;
   --db-warning: #FFCB6B;
   --db-shadow-rgb: 18,20,30;
@@ -1629,6 +1654,7 @@ body::before {
   --db-ink: #263238;
   --db-white: #FFFFFF;
   --db-error: #E53935;
+  --db-badge-error-bg: #952522;
   --db-success: #558B2F;
   --db-warning: #F9A825;
   --db-shadow-rgb: 38,50,56;
@@ -1746,6 +1772,7 @@ body::before {
   --db-ink: #FFF5F6;
   --db-white: #362A4A;
   --db-error: #F97E72;
+  --db-badge-error-bg: #A2524A;
   --db-success: #72F1B8;
   --db-warning: #FAB795;
   --db-shadow-rgb: 15,10,25;
@@ -1814,6 +1841,7 @@ body::before {
   --db-ink: #E0DEF5;
   --db-white: #383262;
   --db-error: #EC3A37;
+  --db-badge-error-bg: #992624;
   --db-success: #3AD900;
   --db-warning: #FF9D00;
   --db-shadow-rgb: 18,15,40;
@@ -1917,6 +1945,7 @@ body::before {
   --db-ink: #E6E1CF;
   --db-white: #151920;
   --db-error: #F07178;
+  --db-badge-error-bg: #9C494E;
   --db-success: #91B362;
   --db-warning: #FFD580;
   --db-shadow-rgb: 5,5,10;
@@ -1951,6 +1980,7 @@ body::before {
   --db-ink: #E0DEF4;
   --db-white: #272938;
   --db-error: #E95678;
+  --db-badge-error-bg: #97384E;
   --db-success: #29D398;
   --db-warning: #FAC29A;
   --db-shadow-rgb: 10,10,15;
@@ -5988,7 +6018,7 @@ meter.db-meter::-moz-meter-bar {
   font-size: 0.5625rem; font-weight: 700;
   line-height: 16px; text-align: center;
   color: var(--db-on-accent);
-  background: var(--db-error);
+  background: var(--db-badge-error-bg);
   border-radius: var(--db-radius-full);
   padding: 0 4px;
 }
