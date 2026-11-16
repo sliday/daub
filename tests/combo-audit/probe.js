@@ -686,7 +686,9 @@
       // Popover / dropdown / collapsible handlers in daub.js only toggle these classes.
       case 'Popover': el.classList.add('db-popover--open'); break;
       case 'DropdownMenu': el.classList.add('db-dropdown--open'); break;
-      case 'Collapsible': el.classList.add('db-collapsible--open'); var t = el.querySelector('.db-collapsible__trigger'); if (t) t.setAttribute('aria-expanded', 'true'); break;
+      // daub.js's real click handler also clears content.hidden (setDisclosure); matching
+      // that here keeps the probe's own shown() check from treating open content as hidden.
+      case 'Collapsible': el.classList.add('db-collapsible--open'); var t = el.querySelector('.db-collapsible__trigger'); if (t) t.setAttribute('aria-expanded', 'true'); var cc = el.querySelector('.db-collapsible__content'); if (cc) cc.hidden = false; break;
     }
     return 'ok';
   }
