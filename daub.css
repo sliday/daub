@@ -4032,7 +4032,7 @@ dialog.db-modal[open]::backdrop {
   height: 100%;
 }
 
-.db-alert__content { flex: 1; }
+.db-alert__content { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 
 .db-alert__title {
   font-weight: 600;
@@ -4070,6 +4070,7 @@ dialog.db-modal[open]::backdrop {
   font-size: 0.875rem;
   color: var(--db-warm-gray);
   max-width: 320px;
+  overflow-wrap: anywhere;
   margin-bottom: var(--db-space-5);
 }
 
