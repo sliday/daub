@@ -4716,7 +4716,7 @@ meter.db-meter::-moz-meter-bar {
 
 .db-scroll-area::-webkit-scrollbar-thumb:hover { background: var(--db-warm-gray); }
 
-.db-scroll-area--horizontal { overflow-x: auto; overflow-y: hidden; }
+.db-scroll-area--horizontal { overflow-x: auto; overflow-y: auto; }
 .db-scroll-area--vertical { overflow-x: hidden; overflow-y: auto; }
 
 /* ------------------------------------------------------------
