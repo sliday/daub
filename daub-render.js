@@ -2282,6 +2282,9 @@ function DAUB_RENDER_FACTORY() {
       wrapper.style.display = 'flex';
       wrapper.style.flexDirection = 'column';
       wrapper.style.gap = '8px';
+      // Without a width a wrapper in a horizontal Stack shrinks to its (width-less) children and renders 0px wide
+      wrapper.style.width = '100%';
+      wrapper.style.minWidth = '120px';
       for (var i = 0; i < lines; i++) {
         wrapper.appendChild(mkEl('div', 'db-skeleton' + (p.variant ? ' db-skeleton--' + p.variant : ' db-skeleton--text')));
       }
