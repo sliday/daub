@@ -6041,6 +6041,8 @@ meter.db-meter::-moz-meter-bar {
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
   text-align: center;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .db-calendar__day-label {
