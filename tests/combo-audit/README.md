@@ -34,7 +34,7 @@ All checks run in the page (`probe.js`) and report the nearest element with `dat
 | Check | Fires when |
 | --- | --- |
 | `console_error` | `console.error`, page error, a renderer throw (`[daub-render]` warning, `data-render-error`), or an `Unknown: <Type>` notice |
-| `lint` (info) | DAUB dev-mode structure warnings from `daub.js` `_validate()` (`DAUB: .db-tabs missing __list child`). It only runs on localhost, so hosted users never see it. A Field that wraps `.db-input`, `.db-select`, `.db-textarea`, `.db-custom-select` or a native control does not count |
+| `lint` (info) | DAUB dev-mode structure warnings from `daub.js` `_validate()` (`DAUB: .db-tabs missing __list child`). It only runs on localhost, so hosted users never see it. A Field that wraps `.db-input`, `.db-select`, `.db-textarea`, `.db-custom-select`, `.db-switch`, a `button` (Toggle, ToggleGroup, a plain Button) or a native control does not count |
 | `zero_size` | a leaf that should be visible renders 0 wide or 0 high and has no visible descendant. Hidden-by-design parts (closed overlays, inactive tabs, closed accordion items, `<option>`) are skipped |
 | `page_overflow` | `side: right`: `documentElement.scrollWidth > clientWidth`; `culprits` lists the boxes that first cross the right edge. `side: left`: an in-flow box (no clipping or positioned ancestor) starts left of the viewport, where nobody can scroll to it (a centred row wider than its column) |
 | `child_overflow` | an in-flow box sticks out of its parent's border box by more than 1px. `spill` = parent is `overflow: visible`. `clip` = parent cuts it off (>2px). Scroll containers and boxes that clip on purpose (carousel, avatar, progress) are skipped |

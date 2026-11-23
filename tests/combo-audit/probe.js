@@ -149,7 +149,7 @@
   var OVERLAY_TYPES = { Modal: 1, Sheet: 1, Drawer: 1, AlertDialog: 1, CommandPalette: 1, ContextMenu: 1 };
   var CONTAINER_TYPES = { Stack: 1, Grid: 1, Card: 1, Surface: 1, Tabs: 1, Accordion: 1, Collapsible: 1, ScrollArea: 1, ChartCard: 1, Layout: 1, Resizable: 1, Carousel: 1 };
   var PANEL_OF = { Modal: '.db-modal', Sheet: '.db-sheet__panel', Drawer: '.db-drawer__panel', AlertDialog: '.db-alert-dialog__panel', Popover: '.db-popover__content', DropdownMenu: '.db-dropdown__content', CommandPalette: '.db-command__panel' };
-  var FIELD_CONTROLS = '.db-field__input, .db-input, .db-select, .db-textarea, .db-custom-select, .db-otp, input, select, textarea';
+  var FIELD_CONTROLS = '.db-field__input, .db-input, .db-select, .db-textarea, .db-custom-select, .db-otp, .db-switch, button, input, select, textarea';
   // Faded on purpose (outside-month days, placeholder hints) or coloured by the block author (CustomHTML).
   var CONTRAST_EXEMPT = '.db-calendar__day--outside, .db-custom-select__placeholder, .pg-custom-html';
   var NEAR_MISS = 0.25; // ratios within this of the AA threshold report as contrast_near (info)
