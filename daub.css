@@ -2398,8 +2398,8 @@ a:hover { color: var(--db-clay); }
   transition: all var(--db-transition);
   position: relative;
   user-select: none;
-  line-height: 1;
-  white-space: nowrap;
+  line-height: 1.2;
+  max-width: 100%;
   text-shadow: var(--db-text-emboss-subtle);
 }
 
