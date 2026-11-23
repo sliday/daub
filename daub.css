@@ -4099,6 +4099,7 @@ dialog.db-modal[open]::backdrop {
 
 .db-skeleton--text {
   height: 14px;
+  min-width: 120px; /* a width-less line in a flex row would collapse to 0 */
   margin-bottom: var(--db-space-3);
 }
 
